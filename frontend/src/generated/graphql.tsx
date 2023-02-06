@@ -2657,6 +2657,19 @@ export type FormWithAnswersQuery = {
   } | null;
 };
 
+export type AllJanuscriptQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllJanuscriptQuery = {
+  __typename?: "Queries";
+  allJanuscript?: Array<{
+    __typename?: "JanuscriptDocumentType";
+    title: string;
+    thumbnail?: string | null;
+    year?: number | null;
+    webLink?: string | null;
+  }> | null;
+};
+
 export type ListingFragment = {
   __typename?: "ListingType";
   id: string;
@@ -6370,6 +6383,34 @@ export const FormWithAnswersDocument = {
     ...FormWithAnswersFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FormWithAnswersQuery, FormWithAnswersQueryVariables>;
+export const AllJanuscriptDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "allJanuscript" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allJanuscript" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+                { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
+                { kind: "Field", name: { kind: "Name", value: "year" } },
+                { kind: "Field", name: { kind: "Name", value: "webLink" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllJanuscriptQuery, AllJanuscriptQueryVariables>;
 export const CreateListingDocument = {
   kind: "Document",
   definitions: [

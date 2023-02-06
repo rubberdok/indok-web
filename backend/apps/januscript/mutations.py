@@ -37,7 +37,7 @@ class UpdateJanuscriptDocument(graphene.Mutation):
         thumbnail = graphene.String()
         id = graphene.ID()
         date = graphene.DateTime()
-        file_location = graphene.String()
+        # file_location = graphene.String()
         web_link = graphene.String()
 
     ok = graphene.Boolean()

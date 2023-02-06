@@ -2,10 +2,10 @@ import { Card, CardActionArea, CardContent, CardMedia, Grid } from "@mui/materia
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-import { ArchiveByTypesQuery } from "@/generated/graphql";
+import { AllJanuscriptQuery } from "@/generated/graphql";
 
 type Props = {
-  documents?: ArchiveByTypesQuery["archiveByTypes"];
+  documents?: AllJanuscriptQuery["allJanuscript"];
 };
 
 export const DocumentList: React.FC<Props> = ({ documents }) => {
@@ -20,13 +20,13 @@ export const DocumentList: React.FC<Props> = ({ documents }) => {
       alignItems="stretch"
       sx={(theme) => ({ mb: theme.spacing(8) })}
     >
-      {documents.map((doc) => (
-        <Grid item md={3} xs={12} sm={6} key={doc.id}>
+      {documents.map((doc, i) => (
+        <Grid item md={3} xs={12} sm={6} key={i}>
           <Card sx={{ height: "100%" }}>
             <CardActionArea href={doc.webLink ?? ""} sx={{ height: "100%" }}>
               <CardMedia
                 component="img"
-                image={"https://www.januslinjeforening.no/wp-content/uploads/2016/12/JanuScript_logo.png"}
+                image={doc.thumbnail}
                 height="150"
                 sx={{
                   objectPosition: "top",
@@ -35,12 +35,6 @@ export const DocumentList: React.FC<Props> = ({ documents }) => {
               <CardContent>
                 <Typography gutterBottom variant="subtitle2">
                   {doc.title}
-                </Typography>
-                <Typography variant="caption">
-                  {doc.typeDoc
-                    .replace(/_/g, " ")
-                    .replace("ARBOKER", "ÅRBØKER")
-                    .replace("STOTTE FRA HS", "STØTTE FRA HS")}
                 </Typography>
               </CardContent>
             </CardActionArea>

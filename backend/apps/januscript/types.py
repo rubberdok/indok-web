@@ -1,7 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from .google_drive_api import GoogleDriveAPI
 from .models import JanuscriptDocument
 
 
@@ -11,7 +10,8 @@ class JanuscriptDocumentType(DjangoObjectType):
     class Meta:
         model = JanuscriptDocument
 
-    @staticmethod
+
+"""     @staticmethod
     def resolve_thumbnail(root: JanuscriptDocument, info):
         drive = GoogleDriveAPI()
-        return drive.get_thumbnail(root.file_location)
+        return drive.get_thumbnail(root.file_location) """

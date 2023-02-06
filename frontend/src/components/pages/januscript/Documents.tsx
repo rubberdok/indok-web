@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 
-import { ArchiveByTypesDocument } from "@/generated/graphql";
+import { AllJanuscriptDocument } from "@/generated/graphql";
 
 import { DocumentList } from "./DocumentList";
 
@@ -12,16 +12,9 @@ type Props = {
 };
 
 export const Documents: React.FC<Props> = ({ documentTypes, year }) => {
-  const { refetch, loading, data, error } = useQuery(ArchiveByTypesDocument, {
-    variables: { documentTypes, year },
-    ssr: false,
-  });
+  const { loading, data, error } = useQuery(AllJanuscriptDocument);
 
-  useEffect(() => {
-    refetch({ documentTypes, year });
-  }, [documentTypes, year, refetch]);
-
-  if (loading) return <p style={{ textAlign: "center" }}></p>;
+  if (loading) return <p style={{ textAlign: "center" }}>Loading...</p>;
 
   if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
 
@@ -30,7 +23,7 @@ export const Documents: React.FC<Props> = ({ documentTypes, year }) => {
       <Typography variant="h4" gutterBottom>
         {year}
       </Typography>
-      <DocumentList documents={data?.archiveByTypes} />
+      <DocumentList documents={data?.allJanuscript} />
     </Box>
   );
 };

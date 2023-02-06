@@ -1,0 +1,8 @@
+query allJanuscript {
+ allJanuscript {
+    title
+    thumbnail
+    year
+    webLink
+    }
+}
