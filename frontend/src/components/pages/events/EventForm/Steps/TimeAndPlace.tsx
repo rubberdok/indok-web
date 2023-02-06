@@ -23,13 +23,6 @@ export const TimeAndPlace: React.FC = () => {
           type="datetime-local"
           label="Starttid"
           InputLabelProps={{ shrink: true }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <CalendarMonthRounded />
-              </InputAdornment>
-            ),
-          }}
         />
         <TextField
           {...register("timeAndPlace.end")}
@@ -40,13 +33,6 @@ export const TimeAndPlace: React.FC = () => {
           type="datetime-local"
           label="Sluttid"
           InputLabelProps={{ shrink: true }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <CalendarMonthRounded />
-              </InputAdornment>
-            ),
-          }}
         />
       </Stack>
       <Typography variant="subtitle2">Sted</Typography>

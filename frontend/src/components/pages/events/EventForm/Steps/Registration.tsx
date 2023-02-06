@@ -56,13 +56,6 @@ export const Registration: React.FC = () => {
           type="datetime-local"
           label="Påmelding åpner"
           InputLabelProps={{ shrink: true }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <CalendarMonthRounded />
-              </InputAdornment>
-            ),
-          }}
         />
 
         <TextField
@@ -75,13 +68,6 @@ export const Registration: React.FC = () => {
           type="datetime-local"
           label="Påmelding stenger"
           InputLabelProps={{ shrink: true }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <CalendarMonthRounded />
-              </InputAdornment>
-            ),
-          }}
         />
       </Stack>
       <Typography variant="subtitle2">Plasser</Typography>
