@@ -8,7 +8,7 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 /** Component for showing the create event page. */
-const CreateEventsPage: NextPageWithLayout = () => {
+const NewEventPage: NextPageWithLayout = () => {
   const { data } = useQuery(UserOrganizationsDocument);
   const organizations = data?.user?.organizations ?? [];
   return (
@@ -21,10 +21,10 @@ const CreateEventsPage: NextPageWithLayout = () => {
   );
 };
 
-CreateEventsPage.getLayout = (page) => (
+NewEventPage.getLayout = (page) => (
   <Layout>
     <RootStyle>{page}</RootStyle>
   </Layout>
 );
 
-export default CreateEventsPage;
+export default NewEventPage;
