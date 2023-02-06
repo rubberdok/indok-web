@@ -1,4 +1,4 @@
 -r base.txt
 
-black==23.1.0
+black>=23.1.0
 flake8==5.0.4
