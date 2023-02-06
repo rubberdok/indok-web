@@ -1,4 +1,4 @@
-import { CalendarMonthRounded, PlaceOutlined } from "@mui/icons-material";
+import { PlaceOutlined } from "@mui/icons-material";
 import { InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
