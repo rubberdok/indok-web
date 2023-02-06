@@ -1,4 +1,4 @@
-import { CalendarMonthRounded, PeopleOutlineRounded } from "@mui/icons-material";
+import { PeopleOutlineRounded } from "@mui/icons-material";
 import { Divider, FormControlLabel, InputAdornment, Stack, Switch, TextField, Typography } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
