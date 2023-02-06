@@ -104,9 +104,26 @@ const dark: ThemeOptions["palette"] = {
   },
 };
 
+/*  primary?: PaletteColorOptions;
+  secondary?: PaletteColorOptions;
+  error?: PaletteColorOptions;
+  warning?: PaletteColorOptions;
+  info?: PaletteColorOptions;
+  success?: PaletteColorOptions;
+  mode?: PaletteMode;
+  tonalOffset?: PaletteTonalOffset;
+  contrastThreshold?: number;
+  common?: Partial<CommonColors>;
+  grey?: ColorPartial;
+  text?: Partial<TypeText>;
+  divider?: string;
+  action?: Partial<TypeAction>;
+  background?: Partial<TypeBackground>;
+ */
+
 export const janus: ThemeOptions["palette"] = {
   primary: {
-    main: "#2D6365",
+    main: "#800020",
     contrastText: "#fff",
   },
   secondary: {
@@ -121,11 +138,11 @@ export const janus: ThemeOptions["palette"] = {
     main: "#FF3B30",
     contrastText: "#fff",
   },
+  grey,
   warning: {
     main: "#FF9500",
     contrastText: "#fff",
   },
-  grey,
   success: {
     main: "#34C759",
     contrastText: "#fff",
@@ -136,9 +153,13 @@ export const janus: ThemeOptions["palette"] = {
     main: "#2C2C2E",
     contrastText: "#fff",
   },
+  common: {
+    black: "#000",
+    white: "#FAF9F6",
+  },
   background: {
-    elevated: "#f0f0f0",
-    default: "#fff",
-    paper: "#fff",
+    elevated: "#FAF9F6",
+    default: "#FAF9F6",
+    paper: "#FAF9F6",
   },
 };

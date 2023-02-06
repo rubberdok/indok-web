@@ -9,5 +9,7 @@ export const shadows: (mode: PaletteMode) => ThemeOptions["shadows"] = (mode) =>
       return createShadow(grey[400]);
     case "dark":
       return createShadow("#000");
+    case "janus":
+      return createShadow("#000");
   }
 };

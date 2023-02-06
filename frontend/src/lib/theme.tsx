@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
   createTheme,
@@ -14,25 +15,10 @@ type Props = {
   children: React.ReactNode;
 };
 
-const getColorTheme = () => {
-  if (typeof window !== "undefined") {
-    const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
-    if (prefersDarkMode.matches) {
-      return "dark";
-    }
-  }
-  return "light";
-};
-
 export const ThemeProvider: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
-  const location = typeof window !== "undefined" ? window.location : { pathname: "" };
-  console.log(location.pathname);
-  const isJanusTheme = location.pathname.includes("janus");
+  const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const themeOptions: ThemeOptions = useMemo(
-    () => getDesignTokens(isJanusTheme ? "janus" : getColorTheme()),
-    [isJanusTheme]
-  );
+  const themeOptions: ThemeOptions = useMemo(() => getDesignTokens(isDarkMode ? "dark" : "light"), [isDarkMode]);
 
   const theme = createTheme(themeOptions);
   const responsiveTheme = responsiveFontSizes(theme);
@@ -40,7 +26,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<Props>> = ({ childr
   return (
     <MUIThemeProvider theme={responsiveTheme}>
       <Head>
-        <meta name="theme-color" />
+        <meta name="theme-color" content={isDarkMode ? "#121212" : "#fff"} />
       </Head>
       <CssBaseline />
       {children}
