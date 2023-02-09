@@ -1,0 +1,91 @@
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
+
+import { MemberCard } from "@/components/pages/about/MemberCard";
+import { BoardMember } from "@/components/pages/about/MemberCard/types";
+import { Template } from "@/components/pages/Janus/Template";
+import { Layout } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
+
+const JanusPage: NextPageWithLayout = () => {
+  const boardMembers: BoardMember[] = [
+    {
+      rank: 1,
+      name: "Oskar Gåsø",
+      position: "President Janus",
+      email: "president@janulinjeforening.no",
+    },
+    {
+      rank: 2,
+      name: "Fannar ",
+      position: "Janus web.sjef",
+      email: "president@janulinjeforening.no",
+    },
+  ];
+
+  return (
+    <Template title="Om Janus linjeforening" description="Janus er indøkslinjeforening">
+      <Typography variant="body1" paragraph>
+        Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
+        («moderforeningen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
+        ivrige sjeler og over 20 ulike underforeninger, hvor alt fra veldedighet og ølbrygging til fadderuker og
+        case-trening står på agendaen.
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        Janus
+      </Typography>
+      <Typography variant="body1" paragraph>
+        Janus er i romersk mytologi guden for portene, dørene, døråpningene, alle begynnelser og enhver slutt. Han er
+        som regel avbildet med to ansikter på et hode som er vendt i hver sin retning. En tolkning er at det ene
+        ansiktet ser framover i tid og det andre tilbake til fortiden. Janus ble hyppig benyttet for å symbolisere
+        endringer og overganger slik som utvikling fra fortiden til framtiden, av en visjon til en annen visjon, unge
+        mennesker som vokser opp og endres fra barn til ungdom og fra ungdom til voksen, og fra et univers til et annet
+        univers.
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        Vår oppgave er å sørge for at indøkstudentene får en fantastisk studietid!
+      </Typography>
+      <Typography variant="body1" paragraph>
+        Det første møtet med Janus er 1. klassingenes første skoledag! Vi jobber hardt med å planlegge og gjennomføre
+        fadderukene på Indøk slik at alle nye skal føle seg som en del av indøkfamilien så raskt som mulig. Janus
+        arrangerer mange forskjellige eventer gjennom hele skoleåret, og har et ønske om å ha et tilbud som gjør at alle
+        er med på noe i løpet av året. Dette omfavner alt fra tradisjonsrike Indøk-arrangementer som
+        immatrikuleringsball, Winter Games og Åretur til curling, talentkonkurranser og adventsfrokoster.
+      </Typography>
+      <Typography variant="body1" paragraph>
+        Janus-styret er også Indøks ansikt utad. Som styremedlem er man så heldig å bli invitert på andre
+        linjeforeningers arrangementer som ball, jubileer og revyer, og på den måten knytte bånd på tvers av
+        studieretninger, universiteter og høyskoler.
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        Janusvalget
+      </Typography>
+      <Typography variant="body1" paragraph>
+        Valg av nye styremedlemmer foregår på Janusvalget, der alle indøkere kan møte opp og har stemmerett. Om man
+        ønsker, kan man gi styret beskjed på forhånd at man vil stille til valg, men det er også fullt mulig å kunngjøre
+        at man stiller når vi ber kandidatene tre frem. Det er også åpent for benkeforslag fra salen. Om våren velges
+        det ny president, nestleder, JanuScript-redaktør, websjef, hyttetursjef og kjellersjef, mens det på høsten er
+        festsjef, eventsjef, PR-sjef og sekretær som velges.
+      </Typography>
+      <Typography variant="body1" paragraph>
+        For hvert verv bes kandidatene holde en kort appell for forsamlingen der det redegjøres for motivasjon for
+        vervet. Det er også lagt opp til at kandidaten legger inn et element der man på sin egen måte viser hvem man er.
+        Deretter vil det åpnes for spørsmål fra salen. Nøl ikke med å ta kontakt dersom det er noe du lurer på:)
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        Medlemmer
+      </Typography>
+      <Grid container spacing={2} alignItems="stretch" justifyContent="center">
+        {boardMembers.map((member) => (
+          <Grid key={member.rank} item xs={12} md={6}>
+            <MemberCard member={member} />
+          </Grid>
+        ))}
+      </Grid>
+    </Template>
+  );
+};
+
+JanusPage.getLayout = (page) => <Layout>{page}</Layout>;
+
+export default JanusPage;

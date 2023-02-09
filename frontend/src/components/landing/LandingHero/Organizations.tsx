@@ -9,7 +9,7 @@ import "swiper/css";
 import { OrganizationLink, Organization } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
-  { name: "Janus", externalUrl: "https://www.januslinjeforening.no" },
+  { name: "Janus", internalUrl: "/janus/info" },
   { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
   { name: "Indøk Kultur", internalUrl: "/about/organization?category=kultur" },
