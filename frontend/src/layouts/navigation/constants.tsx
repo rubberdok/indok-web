@@ -9,4 +9,5 @@ export const routes: Route[] = [
   { title: "Hyttebooking", path: "/cabins" },
   { title: "Arkiv", path: "/archive", permission: "archive.view_archivedocument" },
   { title: "Om oss", path: "/about" },
+  { title: "Nettbutikk", path: "/shop" },
 ];
