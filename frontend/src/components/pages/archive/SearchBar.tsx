@@ -25,15 +25,16 @@ type Props = {
   searchFilter: string;
   handleSearchFilterChanged: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearchFilterCanceled: () => void;
+  placeholder: string;
 };
 
-export const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged }) => {
+export const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged, placeholder }) => {
   return (
     <RootStyle>
       <SearchStyle
         value={searchFilter}
         onChange={handleSearchFilterChanged}
-        placeholder="Søk etter dokumenter..."
+        placeholder={placeholder}
         startAdornment={
           <InputAdornment position="start">
             <Search />
