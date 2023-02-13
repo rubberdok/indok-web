@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cabins", "0020_auto_20211111_1825"),
         ("cabins", "0021_booking_is_declined"),

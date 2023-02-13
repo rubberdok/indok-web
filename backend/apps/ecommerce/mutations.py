@@ -15,7 +15,6 @@ from .vipps_utils import VippsApi
 
 
 class InitiateOrder(graphene.Mutation):
-
     redirect = graphene.String()
     order_id = graphene.UUID()
     vipps_api = VippsApi()
@@ -149,7 +148,6 @@ class CreateProductInput(graphene.InputObjectType):
 
 
 class CreateProduct(graphene.Mutation):
-
     ok = graphene.Boolean()
     product = graphene.Field(ProductType)
 
@@ -158,7 +156,6 @@ class CreateProduct(graphene.Mutation):
 
     @staff_member_required
     def mutate(self, info, product_data):
-
         try:
             organization = Organization.objects.get(id=product_data.get("organization_id"))
         except Organization.DoesNotExist:
