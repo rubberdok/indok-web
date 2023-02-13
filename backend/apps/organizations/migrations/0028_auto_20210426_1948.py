@@ -13,7 +13,6 @@ def add_existing_members_to_primary_group(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("organizations", "0027_auto_20210426_1843"),
     ]

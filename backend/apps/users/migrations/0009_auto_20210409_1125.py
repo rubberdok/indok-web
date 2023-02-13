@@ -45,7 +45,6 @@ def remove_default_permission_for_existing_users(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0008_auto_20210327_1615"),
     ]
