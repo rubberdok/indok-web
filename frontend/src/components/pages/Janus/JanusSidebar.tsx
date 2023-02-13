@@ -17,6 +17,10 @@ const NAV_ITEMS = [
         path: "/janus/kjellerbooking",
       },
       {
+        title: "Bildegalleri",
+        path: "/janus/bildegalleri",
+      },
+      {
         title: "Indøk-kalender",
         path: "https://calendar.google.com/calendar/u/0/r?cid=c3AzcnJlNGhoamZvZmo4MTI0anA1azA5M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ",
       },
