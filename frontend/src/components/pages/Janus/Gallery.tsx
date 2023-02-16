@@ -1,4 +1,4 @@
-import axios from "axios";
+import { RequireContext } from "@types/webpack";
 import React, { useState } from "react";
 
 interface Image {
@@ -7,7 +7,15 @@ interface Image {
 }
 
 const ImageGallery: React.FC = () => {
-  const [images, setImages] = useState<Image[]>([]);
+  function importAll(r: __WebpackModuleApi.RequireContext): { [key: string]: string } {
+    const images: { [key: string]: string } = {};
+    r.keys().map((item, index) => {
+      images[item.replace("./", "")] = r(item);
+    });
+    return images;
+  }
+
+  const images = importAll(require.context("./images", false, /\.(png|jpe?g|svg)$/));
 
   return (
     <div>
