@@ -42,7 +42,6 @@ import {
   EventDocument,
   EventSignOffDocument,
   EventSignUpDocument,
-  ServerTimeDocument,
   UserWithEventsAndOrgsDocument,
 } from "@/generated/graphql";
 import { calendarFile } from "@/utils/calendars";
