@@ -91,8 +91,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const { data: userData } = useQuery(UserWithEventsAndOrgsDocument);
 
-  const { data: timeData } = useQuery(ServerTimeDocument, { fetchPolicy: "network-only" });
-
   const {
     data: eventData,
     error: eventError,
@@ -195,7 +193,7 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                         onChange={(e) => setExtraInformation(e.target.value)}
                       />
                     )}
-                  {timeData?.serverTime && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
+                  {event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                     <Stack spacing={2}>
                       <CountdownButton
                         countDownDate={event.signupOpenDate ?? ""}
@@ -215,7 +213,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                             !event.userAttendance?.isOnWaitingList)
                         }
                         onClick={handleClick}
-                        currentTime={timeData.serverTime}
                       />
                       {event.bindingSignup && (
                         <LabeledIcon
