@@ -16,10 +16,10 @@ import {
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import range from "lodash/range";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
+import { Link } from "@/components";
 import {
   currentGradeYear,
   isVegetarian,
@@ -79,9 +79,14 @@ export const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-tes
           <Grid container>
             {kind === "update" && (
               <Grid item>
-                <Link href="/profile" passHref>
-                  <Button fullWidth variant="text" startIcon={<ArrowBack />} />
-                </Link>
+                <Button
+                  component={Link}
+                  href="/profile"
+                  noLinkStyle
+                  fullWidth
+                  variant="text"
+                  startIcon={<ArrowBack />}
+                />
               </Grid>
             )}
             <Grid item data-test-id={`${ID_PREFIX}title`}>

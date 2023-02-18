@@ -1,9 +1,10 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/future/image";
-import Link from "next/link";
 
 import Hovedbygget from "~/public/static/landing/hovedbygget.webp";
+
+import { NextLinkComposed } from "../Link";
 
 export const LandingSection: React.FC = () => {
   const theme = useTheme();
@@ -59,11 +60,9 @@ export const LandingSection: React.FC = () => {
                   studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
                 </Typography>
 
-                <Link href="/about/board" passHref>
-                  <Button variant="contained" size="medium">
-                    Les mer
-                  </Button>
-                </Link>
+                <Button component={NextLinkComposed} to="/about/board" variant="contained" size="medium">
+                  Les mer
+                </Button>
               </Grid>
             </Grid>
           </Grid>

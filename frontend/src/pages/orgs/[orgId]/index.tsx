@@ -8,7 +8,7 @@ import { OrganizationListings } from "@/components/pages/listings/organization/O
 import { OrganizationHero } from "@/components/pages/organization/OrganizationHero";
 import { OrgMembers } from "@/components/pages/organization/OrgMembers";
 import { AdminOrganizationDocument } from "@/generated/graphql";
-import { Layout, RootStyle } from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 const OrganizationDetailPage: NextPageWithLayout = () => {
@@ -46,10 +46,6 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
   );
 };
 
-OrganizationDetailPage.getLayout = (page) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
+OrganizationDetailPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default OrganizationDetailPage;

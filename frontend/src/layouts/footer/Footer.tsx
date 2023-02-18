@@ -1,11 +1,11 @@
-import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import Image from "next/future/image";
-import NextLink, { LinkProps } from "next/link";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 
+import { Link, LinkProps } from "@/components";
 import { Logo } from "@/components/Logo";
 import { Vercel } from "@/components/Vercel";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -65,15 +65,13 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
                 <Typography variant="h6" mb={1}>
                   Lenker
                 </Typography>
-                <NextLinkItem href="/baksida">Baksida</NextLinkItem>
-                <NextLinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
+                <LinkItem href="/baksida">Baksida</LinkItem>
+                <LinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
                   IØT adferdskodeks
-                </NextLinkItem>
-                <NextLinkItem href="/about">Om oss</NextLinkItem>
-                <NextLinkItem href="https://www.indøk.no">Studieside</NextLinkItem>
-                <NextLinkItem href="https://github.com/rubberdok/indok-web/issues/new/choose">
-                  Oppdaget en feil?
-                </NextLinkItem>
+                </LinkItem>
+                <LinkItem href="/about">Om oss</LinkItem>
+                <LinkItem href="https://www.indøk.no">Studieside</LinkItem>
+                <LinkItem href="https://github.com/rubberdok/indok-web/issues/new/choose">Oppdaget en feil?</LinkItem>
                 <Box mt={2}>
                   <Vercel />
                 </Box>
@@ -94,9 +92,9 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
           width="100%"
         >
           <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
-            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
+            <LinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
               Hall of Fame
-            </NextLinkItem>
+            </LinkItem>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
               <Image
                 src={rubberdokLogo}
@@ -116,29 +114,19 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
   );
 };
 
-type NextLinkItemProps = LinkProps & {
-  children: ReactNode;
-  sx?: SxProps;
-  onClick?: () => void;
-};
-
-const NextLinkItem: React.FC<React.PropsWithChildren<NextLinkItemProps>> = ({ children, sx, onClick, ...other }) => {
+const LinkItem: React.FC<LinkProps> = ({ sx, ...props }) => {
   return (
-    <NextLink passHref {...other}>
-      <Link
-        variant="body3"
-        onClick={onClick}
-        sx={{
-          mt: 1,
-          color: "text.secondary",
-          "&:hover": {
-            color: "text.primary",
-          },
-          ...sx,
-        }}
-      >
-        {children}
-      </Link>
-    </NextLink>
+    <Link
+      variant="body3"
+      sx={{
+        mt: 1,
+        color: "text.secondary",
+        "&:hover": {
+          color: "text.primary",
+        },
+        ...sx,
+      }}
+      {...props}
+    />
   );
 };

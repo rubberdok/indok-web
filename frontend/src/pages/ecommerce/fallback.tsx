@@ -20,10 +20,10 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 import Image from "next/future/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
+import { Link } from "@/components";
 import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
 import { AttemptCapturePaymentDocument, PaymentStatus, UserDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
@@ -151,9 +151,9 @@ const FallbackPage: NextPageWithLayout = () => {
           </CardContent>
           {userData?.user && (
             <CardActions>
-              <Link href="/ecommerce" passHref>
-                <Button>Gå til mine betalinger</Button>
-              </Link>
+              <Button component={Link} noLinkStyle href="/ecommerce">
+                Gå til mine betalinger
+              </Button>
             </CardActions>
           )}
         </Card>

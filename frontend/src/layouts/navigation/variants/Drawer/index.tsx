@@ -15,7 +15,6 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
 
-  const closeDrawer = () => setOpen(false);
   return (
     <Box sx={{ display: { xs: "block", md: "none" }, width: "100%" }}>
       <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%" }}>
@@ -40,18 +39,11 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
                 if (route.permission) {
                   return (
                     <PermissionRequired permission={route.permission} key={route.title}>
-                      <NavigationLink route={route} active={pathname.includes(route.path)} onClick={closeDrawer} />
+                      <NavigationLink route={route} active={pathname.includes(route.path)} />
                     </PermissionRequired>
                   );
                 }
-                return (
-                  <NavigationLink
-                    key={route.title}
-                    route={route}
-                    active={pathname.includes(route.path)}
-                    onClick={closeDrawer}
-                  />
-                );
+                return <NavigationLink key={route.title} route={route} active={pathname.includes(route.path)} />;
               })}
               <Divider />
 

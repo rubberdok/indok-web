@@ -1,13 +1,13 @@
 import { ArrowForward } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link as MuiLink } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Image from "next/future/image";
-import Link from "next/link";
 import React from "react";
 
+import { Link } from "@/components";
 import { ListingWithFormIdFragment } from "@/generated/graphql";
 
 dayjs.extend(timezone);
@@ -47,12 +47,10 @@ export const TitleCard: React.FC<Props> = ({ listing }) => {
           )}
           <Grid container xs sm={12} item direction="column">
             {listing?.readMoreUrl ? (
-              <Link href={listing.readMoreUrl} passHref>
-                <MuiLink target="_blank" color="text.primary">
-                  <Typography variant="h4" component="h4" align="center" gutterBottom>
-                    {listing?.organization.name}
-                  </Typography>
-                </MuiLink>
+              <Link href={listing.readMoreUrl} target="_blank" noLinkStyle>
+                <Typography variant="h4" component="h4" align="center" gutterBottom>
+                  {listing?.organization.name}
+                </Typography>
               </Link>
             ) : (
               <Typography variant="h4" component="h4" align="center" gutterBottom>
@@ -65,11 +63,16 @@ export const TitleCard: React.FC<Props> = ({ listing }) => {
             </Typography>
             {link && (
               <Grid container item justifyContent="center">
-                <Link href={link} passHref>
-                  <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                    Søk her
-                  </Button>
-                </Link>
+                <Button
+                  component={Link}
+                  href={link}
+                  noLinkStyle
+                  variant="contained"
+                  color="primary"
+                  endIcon={<ArrowForward />}
+                >
+                  Søk her
+                </Button>
               </Grid>
             )}
           </Grid>

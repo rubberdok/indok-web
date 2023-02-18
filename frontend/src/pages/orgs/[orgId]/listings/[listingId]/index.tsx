@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { Link } from "@/components";
 import { EditForm } from "@/components/pages/forms/formAdmin/EditForm";
 import { FormResponse } from "@/components/pages/forms/formAdmin/FormResponse";
 import { OrganizationListing } from "@/components/pages/listings/organization/OrganizationListing";
@@ -72,11 +72,16 @@ const ListingAdminPage: NextPageWithLayout = () => {
         <Grid item>
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <Link href={`/orgs/${orgId}`} passHref>
-                <Button fullWidth variant="contained" startIcon={<ArrowBack />}>
-                  Tilbake
-                </Button>
-              </Link>
+              <Button
+                component={Link}
+                href={`/orgs/${orgId}`}
+                noLinkStyle
+                fullWidth
+                variant="contained"
+                startIcon={<ArrowBack />}
+              >
+                Tilbake
+              </Button>
             </Grid>
             {data?.listing?.form?.responses && (
               <Grid item>

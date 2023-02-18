@@ -1,8 +1,8 @@
 import { Create } from "@mui/icons-material";
-import { Typography, Card, CardContent, Grid, CardActions, Button } from "@mui/material";
-import Link from "next/link";
+import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 
+import { Link } from "@/components";
 import * as components from "@/components/MarkdownForm/components";
 import { ListingFragment } from "@/generated/graphql";
 
@@ -22,9 +22,14 @@ export const OrganizationListing: React.FC<Props> = ({ listing }) => (
         <CardActions>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link passHref href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}>
-                <Button startIcon={<Create />}>Rediger</Button>
-              </Link>
+              <Button
+                component={Link}
+                noLinkStyle
+                href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}
+                startIcon={<Create />}
+              >
+                Rediger
+              </Button>
             </Grid>
           </Grid>
         </CardActions>
