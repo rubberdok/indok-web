@@ -3,7 +3,7 @@ import { Button, ButtonProps, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
-import { NextLinkComposed } from "@/components/Link";
+import { Link } from "@/components";
 import { UserDocument } from "@/generated/graphql";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
@@ -21,14 +21,9 @@ type Props = {
  * If a user is logged in, it renders the children.
  * While loading, will render as a rectangular skeleton.
  */
-export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps>> = ({
-  redirect,
-  redirectPath,
-  children,
-  fallback,
-  "data-test-id": dataTestId,
-  ...buttonProps
-}) => {
+export const LoginRequired: React.FC<
+  React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size">>
+> = ({ redirect, redirectPath, children, fallback, "data-test-id": dataTestId, ...buttonProps }) => {
   const router = useRouter();
   let path: string | undefined = redirectPath;
   if (redirect) {
@@ -42,11 +37,12 @@ export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps
     return (
       <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
         <Button
-          component={NextLinkComposed}
-          to={url}
           size="medium"
           variant="contained"
           color="primary"
+          component={Link}
+          noLinkStyle
+          href={url}
           {...buttonProps}
         >
           Logg inn
@@ -65,8 +61,9 @@ export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps
 
   return (
     <Button
-      to={url}
-      component={NextLinkComposed}
+      component={Link}
+      noLinkStyle
+      href={url}
       size="medium"
       variant="contained"
       color="primary"
