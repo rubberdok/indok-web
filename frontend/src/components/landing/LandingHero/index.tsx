@@ -1,8 +1,8 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/future/image";
-import Link from "next/link";
 
+import { NextLinkComposed } from "@/components";
 import Hero from "~/public/static/landing/hero.webp";
 
 import { OrganizationsSlider } from "./OrganizationsSlider";
@@ -43,16 +43,12 @@ export const LandingHero: React.FC = () => {
                 </Grid>
 
                 <Stack spacing={{ xs: 1.5, md: 2 }} direction={{ xs: "column", md: "row" }}>
-                  <Link passHref href="/about">
-                    <Button variant="contained" size="large">
-                      Les om foreningen
-                    </Button>
-                  </Link>
-                  <Link passHref href="/events">
-                    <Button variant="contained" color="contrast" size="large">
-                      Se arrangementer
-                    </Button>
-                  </Link>
+                  <Button component={NextLinkComposed} to="/about" variant="contained" size="large">
+                    Les om foreningen
+                  </Button>
+                  <Button component={NextLinkComposed} to="/events" variant="contained" color="contrast" size="large">
+                    Se arrangementer
+                  </Button>
                 </Stack>
               </Stack>
             </Grid>

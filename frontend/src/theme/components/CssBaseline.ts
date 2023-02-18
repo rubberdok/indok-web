@@ -2,7 +2,7 @@ import { ThemeOptions } from "@mui/material";
 
 export const CssBaseline: ThemeOptions["components"] = {
   MuiCssBaseline: {
-    styleOverrides: (theme) => ({
+    styleOverrides: {
       "*": {
         margin: 0,
         padding: 0,
@@ -25,16 +25,6 @@ export const CssBaseline: ThemeOptions["components"] = {
       ".footer": {
         flexShrink: 0,
       },
-      // List
-      "& ul, & ol": {
-        paddingLeft: 24,
-        "& li": {
-          lineHeight: 2,
-        },
-      },
-      a: {
-        color: theme.palette.primary.main,
-      },
-    }),
+    },
   },
 };

@@ -1,6 +1,7 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Grid } from "@mui/material";
 import Image, { StaticImageData } from "next/future/image";
-import Link from "next/link";
+
+import { Link } from "@/components";
 
 type Props = {
   title: string;
@@ -28,11 +29,16 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
           <CardContent>{children}</CardContent>
           {actionText && actionLink && (
             <CardActions sx={{ ml: 1 }}>
-              <Link passHref href={actionLink}>
-                <Button color="contrast" variant="text" data-test-id={`${dataTestId}link`}>
-                  {actionText}
-                </Button>
-              </Link>
+              <Button
+                component={Link}
+                noLinkStyle
+                href={actionLink}
+                color="contrast"
+                variant="text"
+                data-test-id={`${dataTestId}link`}
+              >
+                {actionText}
+              </Button>
             </CardActions>
           )}
         </Grid>

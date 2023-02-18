@@ -1,10 +1,10 @@
 import { MailOutline, Phone } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, Chip, Container, Divider, Grid, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 
+import { Link } from "@/components";
 import * as markdownComponents from "@/components/MarkdownForm/components";
 import { Title } from "@/components/Title";
 import { Layout } from "@/layouts/Layout";
@@ -50,9 +50,13 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
                         </Typography>
                         <br />
                         {member.mail && (
-                          <Link href={`mailto:${member.mail}`}>
-                            <Chip size="small" label={member.mail} icon={<MailOutline />} />
-                          </Link>
+                          <Chip
+                            component={Link}
+                            href={`mailto:${member.mail}`}
+                            size="small"
+                            label={member.mail}
+                            icon={<MailOutline />}
+                          />
                         )}
                         {member.mail && member.phoneNumber && <br />}
                         {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}

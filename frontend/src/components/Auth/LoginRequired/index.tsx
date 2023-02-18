@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
+import { NextLinkComposed } from "@/components/Link";
 import { UserDocument } from "@/generated/graphql";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
@@ -41,11 +41,16 @@ export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps
   if (loading) {
     return (
       <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
-        <Link href={url} passHref>
-          <Button size="medium" variant="contained" color="primary" {...buttonProps}>
-            Logg inn
-          </Button>
-        </Link>
+        <Button
+          component={NextLinkComposed}
+          to={url}
+          size="medium"
+          variant="contained"
+          color="primary"
+          {...buttonProps}
+        >
+          Logg inn
+        </Button>
       </Skeleton>
     );
   }
@@ -59,10 +64,16 @@ export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps
   }
 
   return (
-    <Link href={url} passHref>
-      <Button size="medium" variant="contained" color="primary" data-test-id={dataTestId} {...buttonProps}>
-        Logg inn
-      </Button>
-    </Link>
+    <Button
+      to={url}
+      component={NextLinkComposed}
+      size="medium"
+      variant="contained"
+      color="primary"
+      data-test-id={dataTestId}
+      {...buttonProps}
+    >
+      Logg inn
+    </Button>
   );
 };

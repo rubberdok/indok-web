@@ -1,6 +1,8 @@
 import { Grid, Typography } from "@mui/material";
 import Image, { StaticImageData } from "next/future/image";
 
+import { Link } from "@/components";
+
 type Props = {
   name: string;
   position?: string;
@@ -35,9 +37,9 @@ export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) 
       </Grid>
       {email && (
         <Grid item md>
-          <a href={`mailto:${email}`}>
-            <Typography variant="overline">{email}</Typography>
-          </a>
+          <Link variant="overline" href={`mailto:${email}`}>
+            {email}
+          </Link>
         </Grid>
       )}
     </Grid>

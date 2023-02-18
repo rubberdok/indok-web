@@ -21,6 +21,7 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 
+import { Link } from "@/components";
 import { OrderCellContent } from "@/components/pages/ecommerce/OrderCellContent";
 import { OrderFragment, UserDocument, UserOrdersDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
@@ -58,9 +59,7 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
               <Grid item xs={12}>
                 <Alert variant="filled" severity="info">
                   Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                    kontakt@rubberdok.no
-                  </a>
+                  <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
               {error ? (

@@ -1,12 +1,13 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
 import { styled } from "@mui/system";
-import Link from "next/link";
 import { FreeMode, Navigation } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import { OrganizationLink, Organization } from "./OrganizationLink";
+import { NextLinkComposed } from "@/components/Link";
+
+import { Organization, OrganizationLink } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
   { name: "Janus", externalUrl: "https://www.januslinjeforening.no" },
@@ -97,11 +98,16 @@ export const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange })
             </SwiperSlide>
           ))}
           <SwiperSlide>
-            <Link passHref href="/about/organization">
-              <Button color="contrast" variant="contained" size="large" endIcon={<ArrowForward />}>
-                Alle organisasjoner
-              </Button>
-            </Link>
+            <Button
+              component={NextLinkComposed}
+              to="/about/organization"
+              color="contrast"
+              variant="contained"
+              size="large"
+              endIcon={<ArrowForward />}
+            >
+              Alle organisasjoner
+            </Button>
           </SwiperSlide>
         </Swiper>
       </Box>
