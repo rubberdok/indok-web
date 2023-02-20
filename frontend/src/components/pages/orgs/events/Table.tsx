@@ -62,6 +62,7 @@ export const AttendeeTable: React.FC<Props> = ({ attendees, tickets, eventId }) 
                 E-mail
               </Typography>
             </TableCell>
+            <TableCell>Ekstra informasjon</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -72,12 +73,19 @@ export const AttendeeTable: React.FC<Props> = ({ attendees, tickets, eventId }) 
                 <TableCell>{attendee.hasBoughtTicket ? <Check color="success" /> : <Close color="error" />}</TableCell>
               )}
               <TableCell>
-                {attendee.user.firstName} {attendee.user.lastName}
+                <Typography variant="inherit" noWrap>
+                  {attendee.user.firstName} {attendee.user.lastName}
+                </Typography>
               </TableCell>
               <TableCell>{attendee.userGradeYear}</TableCell>
               <TableCell>{attendee.userAllergies}</TableCell>
               <TableCell>{attendee.userPhoneNumber}</TableCell>
               <TableCell>{attendee.userEmail}</TableCell>
+              <TableCell>
+                <Typography maxWidth="20rem" noWrap textOverflow="ellipsis" variant="inherit">
+                  {attendee.extraInformation}
+                </Typography>
+              </TableCell>
               <TableCell>
                 <IconButton
                   onClick={() =>
