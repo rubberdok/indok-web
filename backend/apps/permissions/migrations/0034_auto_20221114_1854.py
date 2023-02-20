@@ -8,21 +8,21 @@ def migrate_org_groups(apps, schema_editor):
     ResponsibleGroup = apps.get_model("permissions", "ResponsibleGroup")
     for responsible_group in ResponsibleGroup.objects.all():
         if responsible_group.name == "HR":
-            # ResponsibleGroup names format is "Organization:Type" (e.g. "Organization:ADMIN")
+            # ResponsibleGroup names format is "Organization:Type" (ex "Rubberdøk:ADMIN")
             # Type is either "ADMIN" or "MEMBER"
             # ResponsibleGroup has a group field which is a django.contrib.auth.models.Group with outdated names
             # Change the Type in group name to "ADMIN" or "MEMBER" depending on the ResponsibleGroup name (e.g. "Organization:HR:uuid" -> "Organization:ADMIN:uuid")
             # Change ResponsibleGroup.group_type from "HR" or "PRIMARY" to "ADMIN" or "MEMBER"
             responsible_group.name = f"{responsible_group.organization.name}:{ADMIN_GROUP_TYPE}"
             responsible_group.group.name = (
-                f"{responsible_group.organization.name}:{ADMIN_GROUP_TYPE}:git{responsible_group.group.uuid}"
+                f"{responsible_group.organization.name}:{ADMIN_GROUP_TYPE}:git{responsible_group.uuid}"
             )
             responsible_group.group_type = ADMIN_GROUP_TYPE
             responsible_group.save()
         if responsible_group.name == "Medlem":
             responsible_group.name = f"{responsible_group.organization.name}:{MEMBER_GROUP_TYPE}"
             responsible_group.group.name = (
-                f"{responsible_group.organization.name}:{MEMBER_GROUP_TYPE}:{responsible_group.group.uuid}"
+                f"{responsible_group.organization.name}:{MEMBER_GROUP_TYPE}:{responsible_group.uuid}"
             )
             responsible_group.group_type = MEMBER_GROUP_TYPE
             responsible_group.save()
