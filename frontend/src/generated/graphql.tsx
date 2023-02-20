@@ -1853,6 +1853,7 @@ export type AdminEventFragment = {
     userGradeYear: number;
     userAllergies?: string | null;
     userPhoneNumber: string;
+    extraInformation: string;
     hasBoughtTicket?: boolean | null;
     user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
   }> | null;
@@ -1862,6 +1863,7 @@ export type AdminEventFragment = {
     userGradeYear: number;
     userAllergies?: string | null;
     userPhoneNumber: string;
+    extraInformation: string;
     user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
   }> | null;
   userAttendance?: {
@@ -1878,6 +1880,7 @@ export type SignUpFragment = {
   userGradeYear: number;
   userAllergies?: string | null;
   userPhoneNumber: string;
+  extraInformation: string;
   user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
 };
 
@@ -1887,6 +1890,7 @@ export type SignUpWithTicketFragment = {
   userGradeYear: number;
   userAllergies?: string | null;
   userPhoneNumber: string;
+  extraInformation: string;
   hasBoughtTicket?: boolean | null;
   user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
 };
@@ -2228,6 +2232,7 @@ export type AdminEventQuery = {
       userGradeYear: number;
       userAllergies?: string | null;
       userPhoneNumber: string;
+      extraInformation: string;
       hasBoughtTicket?: boolean | null;
       user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
     }> | null;
@@ -2237,6 +2242,7 @@ export type AdminEventQuery = {
       userGradeYear: number;
       userAllergies?: string | null;
       userPhoneNumber: string;
+      extraInformation: string;
       user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
     }> | null;
     userAttendance?: {
@@ -3601,6 +3607,7 @@ export const SignUpWithTicketFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
           { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
           { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
           { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
         ],
       },
@@ -3633,6 +3640,7 @@ export const SignUpFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
           { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
           { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
         ],
       },
     },
