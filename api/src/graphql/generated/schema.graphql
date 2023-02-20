@@ -19,12 +19,21 @@ type Cabin {
 
 scalar DateTime
 
+type LogoutResponse {
+  status: LogoutStatus!
+}
+
+enum LogoutStatus {
+  ERROR
+  SUCCESS
+}
+
 type Mutation {
-  authenticate(code: String!): User!
+  authenticate(code: String!): UserResponse!
   createUser(firstName: String!): User
-  logout: Boolean!
+  logout: LogoutResponse!
   newBooking(data: NewBookingInput!): Booking!
-  redirectUrl(state: String): String!
+  redirectUrl(state: String): RedirectUrlResponse!
   updateBookingStatus(id: ID!, status: Status!): Booking!
   updateUser(data: UpdateUserInput!, id: ID!): User!
 }
@@ -39,15 +48,13 @@ input NewBookingInput {
   startDate: DateTime!
 }
 
-type Permission {
-  id: ID!
-  name: String!
+type Query {
+  user: UserResponse!
+  users: UsersResponse!
 }
 
-type Query {
-  hasPermission(permission: String!): Boolean!
-  user: User
-  users: [User!]!
+type RedirectUrlResponse {
+  url: String!
 }
 
 enum Status {
@@ -75,7 +82,15 @@ type User {
   graduationYearUpdatedAt: DateTime
   id: ID!
   lastName: String!
-  permissions: [Permission!]!
   phoneNumber: String
   username: String!
+}
+
+type UserResponse {
+  user: User
+}
+
+type UsersResponse {
+  total: Int!
+  users: [User!]!
 }

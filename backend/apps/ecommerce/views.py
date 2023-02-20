@@ -13,7 +13,6 @@ from .vipps_utils import VippsApi
 
 
 class VippsCallback(APIView):
-
     vipps_api = VippsApi()
 
     @transaction.atomic

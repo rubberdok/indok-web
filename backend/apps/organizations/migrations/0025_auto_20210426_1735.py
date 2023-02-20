@@ -17,7 +17,6 @@ def set_primary_groups(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("organizations", "0024_auto_20210422_2020"),
     ]

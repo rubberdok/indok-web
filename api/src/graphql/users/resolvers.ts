@@ -1,26 +1,38 @@
-import { Resolvers } from "@/graphql/generated/types";
+import { Resolvers } from "../generated/types";
 
-const resolvers: Resolvers = {
+export const resolvers: Resolvers = {
   Query: {
-    user: (_root, _args, ctx) => {
-      if (ctx.req.session.user) {
-        return ctx.userService.get(ctx.req.session.user.id);
+    async user(_root, _args, ctx) {
+      const { userId } = ctx.req.session;
+      if (userId) {
+        const user = await ctx.userService.get(userId);
+        return {
+          user: user,
+        };
       }
-      return null;
+      return {
+        user: null,
+      };
     },
-    users: (_root, _args, ctx) => {
-      return ctx.userService.getAll();
+
+    async users(_root, _args, ctx) {
+      const users = await ctx.userService.getAll();
+      return {
+        users,
+        total: users.length,
+      };
     },
   },
+
   Mutation: {
-    updateUser: (_root, { id, data }, ctx) => {
+    updateUser(_root, { id, data }, ctx) {
       return ctx.userService.update(id, data);
     },
   },
+
   User: {
-    permissions: (user, _args, ctx) => ctx.permissionService.getAllByUser(user.id),
-    canUpdateYear: (user, _args, ctx) => ctx.userService.canUpdateYear(user),
+    canUpdateYear(user, _args, ctx) {
+      return ctx.userService.canUpdateYear(user);
+    },
   },
 };
-
-export default resolvers;

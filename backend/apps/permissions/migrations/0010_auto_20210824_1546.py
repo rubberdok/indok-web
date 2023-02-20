@@ -16,7 +16,6 @@ def delete_orphan_groups(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("permissions", "0009_auto_20210824_1515"),
     ]

@@ -16,7 +16,7 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         linter: [black, flake8]
@@ -43,7 +43,7 @@ jobs:
 
   build:
     name: Build backend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     env:
       dockerfile: backend-production
@@ -78,7 +78,7 @@ jobs:
 
       - name: Build backend image
         id: build-image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: backend
           file: backend/Dockerfile.prod
@@ -94,7 +94,7 @@ jobs:
         id: push-image
         # If this is run on the main branch, and is a production image, it should be pushed to ECR
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: backend
           file: backend/Dockerfile.prod
@@ -113,7 +113,7 @@ jobs:
 
   api:
     name: API tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
 
     services:
@@ -170,7 +170,7 @@ jobs:
           fail_ci_if_error: true
 
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       uuid: ${{ steps.uuid.outputs.value }}
     steps:
@@ -183,7 +183,7 @@ jobs:
 
   build-frontend:
     name: Build frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     env:
       dockerfile: frontend-test
@@ -210,7 +210,7 @@ jobs:
 
       - name: Build frontend image
         id: build-image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: frontend
           file: frontend/Dockerfile.prod
@@ -232,7 +232,7 @@ jobs:
   e2e:
     needs: [prepare, build, build-frontend]
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -262,7 +262,7 @@ jobs:
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v4.2.0
+        uses: cypress-io/github-action@v5.0.9
         with:
           record: true
           parallel: true
@@ -280,7 +280,7 @@ jobs:
 
   deploy:
     name: Deploy to ECS
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     needs: [api, e2e]
     if: github.ref == 'refs/heads/main'
@@ -340,7 +340,7 @@ jobs:
           wait-for-service-stability: true
 
       - name: Sentry release
-        uses: getsentry/action-release@v1.2.0
+        uses: getsentry/action-release@v1.2.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ env.SENTRY_ORG }}

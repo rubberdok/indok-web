@@ -1,14 +1,14 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-  schema: "src/graphql/**/type-defs.ts",
+  overwrite: true,
+  schema: "src/graphql/type-defs.ts",
   generates: {
     "src/graphql/generated/types.ts": {
       config: {
         useIndexSignature: true,
         showUnusedMappers: true,
         immutableTypes: true,
-        nonOptionalTypename: true,
         strictScalars: true,
 
         scalars: {
@@ -21,7 +21,6 @@ const config: CodegenConfig = {
 
         mappers: {
           User: "@prisma/client#User",
-          Permission: "@prisma/client#Permission",
           Cabin: "@prisma/client#Cabin",
           Booking: "@prisma/client#Booking",
         },
@@ -31,9 +30,6 @@ const config: CodegenConfig = {
     "src/graphql/generated/schema.graphql": {
       plugins: ["schema-ast"],
     },
-  },
-  hooks: {
-    afterAllFileWrite: ["prettier --write"],
   },
 };
 

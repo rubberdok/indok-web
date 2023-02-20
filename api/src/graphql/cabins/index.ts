@@ -1,2 +1,2 @@
-export { default as typeDefs } from "./type-defs";
-export { default as resolvers } from "./resolvers";
+export { typeDefs } from "./type-defs";
+export { resolvers } from "./resolvers";

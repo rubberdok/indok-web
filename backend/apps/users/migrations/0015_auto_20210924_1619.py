@@ -20,7 +20,6 @@ def set_all_users_to_indok(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0014_auto_20210924_1037"),
     ]
