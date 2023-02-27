@@ -1,13 +1,13 @@
 coverage==6.5.0
 cryptography==39.0.1
 django-alive==1.2.1
-django-anymail[postmark]==8.6
+django-anymail[postmark]==9.0
 django-cors-headers==3.13.0
 django-environ==0.9.0
 django-guardian==2.4.0
 django-multiselectfield==0.1.12
-django-phonenumber-field==7.0.0
-Django==3.2.17
+django-phonenumber-field==7.0.2
+Django==3.2.18
 djangorestframework==3.14.0
 factory-boy==3.2.1
 google-api-python-client==2.77.0
@@ -23,6 +23,6 @@ psycopg2-binary==2.9.5
 PyJWT==2.6.0
 PyYAML==6.0
 typing-extensions==4.4.0
-WeasyPrint==57.1
+WeasyPrint==57.2
 whitenoise==6.2.0
-XlsxWriter==3.0.3
+XlsxWriter==3.0.8
