@@ -1,9 +1,9 @@
 import { Prisma, User } from "@prisma/client";
 import { inject, injectable } from "tsyringe";
 
-import { CoreTypes } from "@/core";
-import { Database } from "@/core/interfaces";
-import { IUserRepository } from "@/repositories/users/interfaces";
+import { CoreTypes, Database } from "@/core";
+
+import { IUserRepository } from "./interfaces";
 
 @injectable()
 export class UserRepository implements IUserRepository {

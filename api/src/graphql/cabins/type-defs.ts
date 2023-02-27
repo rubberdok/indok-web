@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-const typeDefs = gql`
+export const typeDefs = gql`
   input NewBookingInput {
     cabinId: ID!
     startDate: DateTime!
@@ -42,5 +42,3 @@ const typeDefs = gql`
     status: Status!
   }
 `;
-
-export default typeDefs;

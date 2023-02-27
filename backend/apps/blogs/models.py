@@ -14,7 +14,6 @@ class Blog(models.Model):
 
 
 class BlogPost(models.Model):
-
     title = models.CharField(max_length=150)
     text = models.TextField()
     publish_date = models.DateTimeField(auto_now_add=True)

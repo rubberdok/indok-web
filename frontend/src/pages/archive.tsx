@@ -29,6 +29,7 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
     Guidelines: { active: false, title: "Støtte fra HS" },
     Regulation: { active: false, title: "Foreningens lover" },
     Statues: { active: false, title: "Utveksling" },
+    Januscript: { active: false, title: "Januscript" },
     Others: { active: false, title: "Annet" },
   });
 
@@ -92,6 +93,7 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
                 Guidelines: { active: false, title: "Støtte fra HS" },
                 Regulation: { active: false, title: "Foreningens lover" },
                 Statues: { active: false, title: "Utveksling" },
+                Januscript: { active: false, title: "Januscript" },
                 Others: { active: false, title: "Annet" },
               });
               setViewFeatured(true);

@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("organizations", "0006_organization_color"),
         ("organizations", "0005_merge_20201005_1654"),

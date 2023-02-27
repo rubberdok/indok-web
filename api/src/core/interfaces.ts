@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Session, SessionData } from "express-session";
 import { ServerClient } from "postmark";
 
@@ -11,7 +11,7 @@ export interface ISessionContext {
 
 declare module "express-session" {
   interface SessionData {
-    user: User | null;
+    userId: string | null;
     codeVerifier: string;
   }
 }

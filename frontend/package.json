@@ -23,7 +23,7 @@
     "url": "github.com/rubberdok/indok-web"
   },
   "dependencies": {
-    "@apollo/client": "^3.3.20",
+    "@apollo/client": "^3.7.1",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.9.0",
     "@emotion/server": "^11.4.0",
@@ -51,10 +51,10 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.6",
+    "@babel/core": "^7.20.2",
     "@graphql-codegen/cli": "2.13.8",
     "@graphql-codegen/typed-document-node": "^2.3.5",
-    "@graphql-codegen/typescript": "2.8.0",
+    "@graphql-codegen/typescript": "2.8.1",
     "@graphql-codegen/typescript-operations": "2.5.4",
     "@graphql-typed-document-node/core": "^3.1.1",
     "@types/node": "^16.11.22",
@@ -63,12 +63,12 @@
     "@types/react-swipeable-views": "^0.13.0",
     "@types/react-swipeable-views-utils": "^0.13.2",
     "@types/styled-components": "^5.1.10",
-    "@types/validator": "^13.1.4",
+    "@types/validator": "^13.7.10",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "cypress": "^10.1.0",
     "eslint": "^7.29.0",
-    "eslint-config-next": "^12.1.0",
+    "eslint-config-next": "^13.1.6",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^3.5.1",
     "eslint-plugin-cypress": "^2.12.1",

@@ -3,7 +3,7 @@ env:
   node: true
 
 ignorePatterns:
-  - "**/generated/**"
+  - "src/graphql/generated"
   - dist
 
 plugins:
