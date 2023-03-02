@@ -18,7 +18,7 @@ UserAttendance = TypedDict(
         "is_signed_up": bool,
         "is_on_waiting_list": bool,
         "has_bought_ticket": bool,
-        "position_on_waitinglist": int,
+        "position_on_waiting_list": int,
     },
 )
 
