@@ -35,7 +35,6 @@ type Props = {
   isSignedUp: boolean;
   /** Whether the user viewing the page is on the waiting list for the event */
   isOnWaitingList: boolean;
-  positionOnWaitinglist: number;
   /** Whether the event is full (all available slots are taken) */
   isFull: boolean;
   /** Whether the button should show a loading symbol */
@@ -46,21 +45,17 @@ type Props = {
   onClick: () => void;
 };
 
-const ButtonText: React.FC<Props> = ({
-  isSignedUp,
-  isOnWaitingList,
+/** Component for the count down button on the detail page of an attendable event. */
+export const CountdownButton: React.FC<Props> = ({
   countDownDate,
   currentTime,
+  isSignedUp,
+  isOnWaitingList,
   isFull,
-  positionOnWaitinglist,
+  loading,
+  disabled,
+  onClick,
 }) => {
-  const translate = (timeWord: string, time: number) => {
-    if (timeWord === "days") return time > 1 ? "dager" : "dag";
-    if (timeWord === "hours") return time > 1 ? "timer" : "time";
-    if (timeWord === "minutes") return time > 1 ? "minutter" : "minutt";
-    if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
-  };
-
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
 
@@ -77,6 +72,24 @@ const ButtonText: React.FC<Props> = ({
 
   const currentTimeParts = Object.keys(timeLeft).filter((interval) => timeLeft[interval] !== 0);
 
+  const translate = (timeWord: string, time: number) => {
+    if (timeWord === "days") return time > 1 ? "dager" : "dag";
+    if (timeWord === "hours") return time > 1 ? "timer" : "time";
+    if (timeWord === "minutes") return time > 1 ? "minutter" : "minutt";
+    if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
+  };
+
+  /**
+   * `timeparts` is a list containing the elements of time that are not 0,
+   * e.g. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"].
+   * The actual time left is stored in the Record<string, number> called timeLeft.
+   *
+   * Shows remaining time until the event opens on the following formats depending on how much time is left:
+   * - XX days and YY hours
+   * - XX hours and YY minutes
+   * - XX minutes  (minutes left >= 10)
+   * - XX minutes and YY seconds (minutes left < 10)
+   */
   const getCurrentTimeLeft = (timeparts: string[]) => {
     if (timeparts.length === 1) {
       return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])}`;
@@ -94,67 +107,6 @@ const ButtonText: React.FC<Props> = ({
     } ${translate(timeparts[1], timeLeft[timeparts[1]])}`;
   };
 
-  if (currentTimeParts.length !== 0) return <>{getCurrentTimeLeft(currentTimeParts)}</>;
-  if (isSignedUp) return <>Meld av</>;
-  if (isOnWaitingList) {
-    if (positionOnWaitinglist === 2) {
-      return (
-        <>
-          Det er en person foran deg i ventelisten
-          <br /> Trykk her for å melde av
-        </>
-      );
-    } else if (positionOnWaitinglist === 1) {
-      return (
-        <>
-          Du er på første plass i ventelisten <br />
-          Trykk her for å melde av
-        </>
-      );
-    } else
-      return (
-        <>
-          Det er {positionOnWaitinglist - 1} personer foran deg i ventelisten
-          <br /> Trykk her for å melde av
-        </>
-      );
-  }
-
-  if (isFull) return <>Meld på venteliste</>;
-  return <>Meld På</>;
-};
-
-/**
- * Component for the count down button on the detail page of an attendable event
- *
- * Props:
- * - countDownDate: the date that is counted down to
- * - currentTime: the time right now
- * - isSignedUp: whether the user viewing the page is signed up to the event
- * - isOnWaitingList: whether the user viewing the page is on the waiting list for the event
- * - isFull: whether the event is full (all available slots are taken)
- * - loading: whether the button should show a loading symbol
- * - disabled: whether the button should be disabled
- * - onClick: metod called when the count down button is clicked
- * - styleClassName: styled class
- */
-
-export const CountdownButton: React.FC<Props> = ({
-  countDownDate,
-  currentTime,
-  isSignedUp,
-  isOnWaitingList,
-  positionOnWaitinglist,
-  isFull,
-  loading,
-  disabled,
-  onClick,
-}) => {
-  const [now] = useState(dayjs(currentTime));
-  const [timeLeft] = useState(calculateTimeLeft(countDownDate, now));
-
-  const currentTimeParts = Object.keys(timeLeft).filter((interval) => timeLeft[interval] !== 0);
-
   return (
     <Box sx={{ float: "left" }}>
       <LoadingButton
@@ -167,16 +119,15 @@ export const CountdownButton: React.FC<Props> = ({
         disabled={currentTimeParts.length !== 0 || disabled}
         loading={loading}
       >
-        <ButtonText
-          countDownDate={countDownDate}
-          currentTime={currentTime}
-          isSignedUp={isSignedUp}
-          isOnWaitingList={isOnWaitingList}
-          positionOnWaitinglist={positionOnWaitinglist}
-          isFull={isFull}
-          loading={loading}
-          onClick={onClick}
-        />
+        {currentTimeParts.length !== 0
+          ? getCurrentTimeLeft(currentTimeParts)
+          : isSignedUp
+          ? "Meld av"
+          : isOnWaitingList
+          ? "Meld av venteliste"
+          : isFull
+          ? "Meld på venteliste"
+          : "Meld på"}
       </LoadingButton>
     </Box>
   );

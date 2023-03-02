@@ -32,7 +32,6 @@ fragment Event on EventType {
     isSignedUp
     isOnWaitingList
     hasBoughtTicket
-    positionOnWaitinglist
   }
   isFull
   hasExtraInformation
