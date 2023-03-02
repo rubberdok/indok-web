@@ -35,7 +35,7 @@ type Props = {
   isSignedUp: boolean;
   /** Whether the user viewing the page is on the waiting list for the event */
   isOnWaitingList: boolean;
-  positionOnWaitinglist: number;
+  positionOnWaitingList: number;
   /** Whether the event is full (all available slots are taken) */
   isFull: boolean;
   /** Whether the button should show a loading symbol */
@@ -52,7 +52,7 @@ const ButtonText: React.FC<Props> = ({
   countDownDate,
   currentTime,
   isFull,
-  positionOnWaitinglist,
+  positionOnWaitingList,
 }) => {
   const translate = (timeWord: string, time: number) => {
     if (timeWord === "days") return time > 1 ? "dager" : "dag";
@@ -97,14 +97,14 @@ const ButtonText: React.FC<Props> = ({
   if (currentTimeParts.length !== 0) return <>{getCurrentTimeLeft(currentTimeParts)}</>;
   if (isSignedUp) return <>Meld av</>;
   if (isOnWaitingList) {
-    if (positionOnWaitinglist === 2) {
+    if (positionOnWaitingList === 2) {
       return (
         <>
           Det er en person foran deg i ventelisten
           <br /> Trykk her for å melde av
         </>
       );
-    } else if (positionOnWaitinglist === 1) {
+    } else if (positionOnWaitingList === 1) {
       return (
         <>
           Du er på første plass i ventelisten <br />
@@ -114,7 +114,7 @@ const ButtonText: React.FC<Props> = ({
     } else
       return (
         <>
-          Det er {positionOnWaitinglist - 1} personer foran deg i ventelisten
+          Det er {positionOnWaitingList - 1} personer foran deg i ventelisten
           <br /> Trykk her for å melde av
         </>
       );
@@ -144,7 +144,7 @@ export const CountdownButton: React.FC<Props> = ({
   currentTime,
   isSignedUp,
   isOnWaitingList,
-  positionOnWaitinglist,
+  positionOnWaitingList,
   isFull,
   loading,
   disabled,
@@ -172,7 +172,7 @@ export const CountdownButton: React.FC<Props> = ({
           currentTime={currentTime}
           isSignedUp={isSignedUp}
           isOnWaitingList={isOnWaitingList}
-          positionOnWaitinglist={positionOnWaitinglist}
+          positionOnWaitingList={positionOnWaitingList}
           isFull={isFull}
           loading={loading}
           onClick={onClick}
