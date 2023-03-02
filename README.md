@@ -607,7 +607,7 @@ please see [CONTRIBUTING](CONTRIBUDING.md).
 
 Found a bug, got a suggestion, or something we should know about? Take a look at the
 [roadmap](https://github.com/orgs/rubberdok/projects/2) and
-[file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap!
+[file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap.
 
 ## Acknowledgements
 
