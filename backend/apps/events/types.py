@@ -137,7 +137,7 @@ class EventType(DjangoObjectType):
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
             "has_bought_ticket": has_bought_ticket(event, user),
-            "position_on_waitinglist": resolve_position_on_waiting_list(event, user),
+            "position_on_waiting_list": resolve_position_on_waiting_list(event, user),
         }
 
     @staticmethod
