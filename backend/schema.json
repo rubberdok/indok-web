@@ -3316,18 +3316,6 @@
                 "name": "Boolean",
                 "ofType": null
               }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "positionOnWaitinglist",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
             }
           ],
           "inputFields": null,

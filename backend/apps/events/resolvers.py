@@ -14,7 +14,6 @@ from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
 from .models import Category, Event, SignUp
 
-
 DEFAULT_REPORT_FIELDS = {
     "signup_timestamp",
     "event_title",
