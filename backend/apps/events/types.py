@@ -38,8 +38,6 @@ def has_bought_ticket(event: Event, user: User) -> bool:
 
 
 def resolve_position_on_waiting_list(event: Event, user: User) -> Optional[int]:
-    # some wierd shit can happen if the caller is not on the list,
-    # but we dont think it matters as it will only ever be called when people are on it
     if event.is_attendable:
         wait_list = event.users_on_waiting_list
         for i in range(len(wait_list)):
@@ -48,10 +46,8 @@ def resolve_position_on_waiting_list(event: Event, user: User) -> Optional[int]:
                 return position
             else:
                 position += 1
-    else:
-        # this might be a case we need to handle, but probably not
-        return None
-    return None
+    # The return statement below should never execute, but just in case it gives a rediculos number.
+    return 99999
 
 
 class UserAttendingType(graphene.ObjectType):
