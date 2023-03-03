@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material";
-import Image, { StaticImageData } from "next/future/image";
+import Image, { StaticImageData } from "next/image";
 
 import { Link } from "@/components";
 

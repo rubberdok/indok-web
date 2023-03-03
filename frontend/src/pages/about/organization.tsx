@@ -2,7 +2,7 @@ import { Card, CardActionArea, CardMedia, Stack, Tab, Tabs, Typography } from "@
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import { GetStaticProps } from "next";
-import Image from "next/future/image";
+import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";

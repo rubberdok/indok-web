@@ -2,7 +2,7 @@ import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/ma
 import { styled, useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
-import Image from "next/future/image";
+import Image from "next/image";
 import { useState } from "react";
 
 import { Link, LinkProps } from "@/components";

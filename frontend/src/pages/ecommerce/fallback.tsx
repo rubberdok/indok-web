@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import Image from "next/future/image";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 

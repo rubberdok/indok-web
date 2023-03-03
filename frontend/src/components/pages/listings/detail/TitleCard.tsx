@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import Image from "next/future/image";
+import Image from "next/image";
 import React from "react";
 
 import { Link } from "@/components";
