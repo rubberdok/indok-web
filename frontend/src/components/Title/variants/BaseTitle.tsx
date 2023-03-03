@@ -9,7 +9,7 @@ import { TLink } from "@/components/Breadcrumbs/types";
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
-const Image = dynamic(() => import("next/future/image"));
+const Image = dynamic(() => import("next/image"));
 
 export type Props = {
   title?: string;
