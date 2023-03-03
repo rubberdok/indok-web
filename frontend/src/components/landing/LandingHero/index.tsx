@@ -1,6 +1,6 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/future/image";
+import Image from "next/image";
 
 import { NextLinkComposed } from "@/components";
 import Hero from "~/public/static/landing/hero.webp";
