@@ -19,7 +19,6 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
     variables: {
       id: listing.id,
     },
-    ssr: false,
   });
 
   const descriptionWithTitle = (desc: string | undefined) => {
@@ -68,7 +67,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           alignItems="flex-start"
           spacing={4}
         >
-          <Grid item xs={12} sm={6} md={5} direction="column">
+          <Grid item xs={12} sm={6} md={5}>
             <TitleCard listing={data?.listing ?? undefined} />
           </Grid>
           <Grid item xs={12} sm={6} md={7}>
