@@ -36,10 +36,10 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
   return (
     <>
       <Title
-        title="Arkiv"
+        title="Dokumenter"
         breadcrumbs={[
           { name: "Hjem", href: "/" },
-          { name: "Arkiv", href: "/archive" },
+          { name: "Dokumenter", href: "/archive" },
         ]}
       />
 
