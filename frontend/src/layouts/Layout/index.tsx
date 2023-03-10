@@ -14,7 +14,6 @@ export { RootStyle } from "../styles";
 type Props = {
   children: ReactNode;
   disableGutter?: boolean;
-  transparentHeader?: boolean;
   disabledHeader?: boolean;
   disabledFooter?: boolean;
   simpleHeader?: boolean;
@@ -23,7 +22,6 @@ type Props = {
 
 export const Layout: React.FC<React.PropsWithChildren<Props>> = ({
   children,
-  transparentHeader,
   disabledHeader,
   disabledFooter,
   simpleHeader,
@@ -36,7 +34,7 @@ export const Layout: React.FC<React.PropsWithChildren<Props>> = ({
       <Head>
         <meta name="theme-color" content={`${theme.palette.background.default}`} key="theme-color" />
       </Head>
-      {!disabledHeader && simpleHeader ? <HeaderSimple /> : <Header transparent={transparentHeader} />}
+      {!disabledHeader && simpleHeader ? <HeaderSimple /> : <Header />}
       <div className="content">{children}</div>
       {!disabledFooter && (
         <footer className="footer">
