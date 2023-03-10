@@ -30,7 +30,10 @@ export const LandingHero: React.FC = () => {
                   <Grid item>
                     <Typography
                       variant="overline"
-                      sx={{ color: (theme) => (theme.palette.mode === "light" ? "primary.main" : "primary.light") }}
+                      sx={(theme) => ({
+                        [theme.getColorSchemeSelector("light")]: { color: "primary.main" },
+                        [theme.getColorSchemeSelector("dark")]: { color: "primary.light" },
+                      })}
                     >
                       Foreningen for studentene ved
                     </Typography>

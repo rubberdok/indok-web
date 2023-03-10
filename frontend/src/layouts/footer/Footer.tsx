@@ -19,7 +19,12 @@ const Watermark = styled("div")(({ theme }) => ({
   backgroundSize: 500,
   backgroundPosition: "right center",
   backgroundRepeat: "no-repeat",
-  opacity: theme.palette.mode === "light" ? 0.1 : 0.3,
+  [theme.getColorSchemeSelector("light")]: {
+    opacity: 0.1,
+  },
+  [theme.getColorSchemeSelector("dark")]: {
+    opacity: 0.3,
+  },
   position: "absolute",
   width: "600px",
   height: "100%",
@@ -95,14 +100,22 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
             <LinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
               Hall of Fame
             </LinkItem>
-            <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
+            <Link
+              href="https://github.com/rubberdok/indok-web"
+              rel="noreferrer noopener"
+              sx={(theme) => ({
+                [theme.getColorSchemeSelector("dark")]: {
+                  filter: "invert(1)",
+                  opacity: 0.8,
+                },
+              })}
+            >
               <Image
                 src={rubberdokLogo}
                 alt="Rubberdøk"
                 style={{
                   width: "48px",
                   height: "24px",
-                  ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }),
                 }}
               />
             </Link>

@@ -24,7 +24,7 @@ export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) 
           aspectRatio: "1 / 1",
           overflow: "hidden",
           marginBottom: (theme) => theme.spacing(2),
-          backgroundColor: (theme) => theme.palette.primary.light,
+          backgroundColor: (theme) => theme.vars.palette.primary.light,
           position: "relative" /* If you want text inside of it */,
         }}
       >

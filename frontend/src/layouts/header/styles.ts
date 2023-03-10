@@ -1,5 +1,5 @@
 import { AppBar as MuiAppBar, AppBarProps as MuiAppBarProps } from "@mui/material";
-import { alpha, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "../../theme/constants";
 
@@ -16,11 +16,11 @@ export const AppBar = styled(MuiAppBar, {
     height: HEADER_DESKTOP_HEIGHT,
   },
 
-  color: theme.palette.text.primary,
-  backgroundColor: theme.palette.background.default,
+  color: theme.vars.palette.text.primary,
+  backgroundColor: theme.vars.palette.background.default,
 
   ...(transparent && {
-    color: theme.palette.common.white,
+    color: theme.vars.palette.common.white,
     backgroundColor: "transparent",
   }),
 
@@ -39,25 +39,34 @@ export const AppBar = styled(MuiAppBar, {
   /* Replace default box shadow with our own */
   boxShadow: "none",
   /* Drop shadow, hidden when not scrolling to avoid flicker when scrolling starts */
-  filter:
-    theme.palette.mode === "light"
-      ? `drop-shadow(0 25px 25px ${alpha(theme.palette.common.black, 0)})`
-      : `drop-shadow(0 4px 3px ${alpha(theme.palette.common.black, 0)}) drop-shadow(0 2px 2px ${alpha(
-          theme.palette.common.black,
-          0
-        )})`,
 
-  /* When scrolling, show drop shadow and shrink the app bar on desktop */
-  ...(scrolling && {
-    filter:
-      theme.palette.mode === "light"
-        ? `drop-shadow(0 25px 25px ${alpha(theme.palette.common.black, 0.06)})`
-        : `drop-shadow(0 4px 3px ${alpha(theme.palette.common.black, 0.07)}) drop-shadow(0 2px 2px ${alpha(
-            theme.palette.common.black,
-            0.06
-          )})`,
-    [theme.breakpoints.up("md")]: {
-      height: HEADER_DESKTOP_HEIGHT - 20,
-    },
-  }),
+  ...(scrolling
+    ? {
+        [theme.getColorSchemeSelector("light")]: {
+          filter: `drop-shadow(0 25px 25px rgba(${theme.vars.palette.shadowChannel} / 0.06)`,
+        },
+
+        [theme.getColorSchemeSelector("dark")]: {
+          filter: `
+        drop-shadow(0 4px 3px rgba(${theme.vars.palette.shadowChannel} / 0.07))
+        drop-shadow(0 2px 2px rgba(${theme.vars.palette.shadowChannel} / 0.06))
+      `,
+        },
+
+        [theme.breakpoints.up("md")]: {
+          height: HEADER_DESKTOP_HEIGHT - 20,
+        },
+      }
+    : {
+        [theme.getColorSchemeSelector("light")]: {
+          filter: `drop-shadow(0 25px 25px rgba(${theme.vars.palette.shadowChannel} / 0))`,
+        },
+
+        [theme.getColorSchemeSelector("dark")]: {
+          filter: `
+        drop-shadow(0 4px 3px rgba(${theme.vars.palette.shadowChannel} / 0))
+        drop-shadow(0 2px 2px rgba(${theme.vars.palette.shadowChannel} / 0))
+      `,
+        },
+      }),
 }));

@@ -181,7 +181,7 @@ export const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-tes
                   ))}
                 </NativeSelect>
                 {formik.touched.graduationYear && Boolean(formik.errors.graduationYear) && (
-                  <FormHelperText sx={{ color: (theme) => theme.palette.error.main }}>
+                  <FormHelperText sx={{ color: (theme) => theme.vars.palette.error.main }}>
                     {formik.touched.graduationYear && formik.errors.graduationYear}
                   </FormHelperText>
                 )}

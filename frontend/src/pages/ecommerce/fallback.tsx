@@ -110,7 +110,7 @@ const FallbackPage: NextPageWithLayout = () => {
                   <List
                     sx={{
                       width: "50%",
-                      backgroundColor: (theme) => theme.palette.background.paper,
+                      backgroundColor: (theme) => theme.vars.palette.background.paper,
                       textAlign: "center",
                       marginTop: "50px",
                     }}

@@ -8,7 +8,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",
   right: theme.spacing(1),
   top: theme.spacing(1),
-  color: theme.palette.grey[500],
+  color: theme.vars.palette.grey[500],
 }));
 
 type Props = {

@@ -33,7 +33,7 @@ export const OrganizationsSlider: React.FC = () => {
         width: "100vw",
         py: { xs: 4, md: 6 },
         px: 1,
-        bgcolor: (theme) => theme.palette.background.elevated,
+        bgcolor: (theme) => theme.vars.palette.background.elevated,
         borderTop: "1px solid",
         borderBottom: "1px solid",
         borderColor: "divider",
