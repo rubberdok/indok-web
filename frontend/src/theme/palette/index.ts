@@ -45,13 +45,17 @@ export const light: PaletteOptions = {
     dark: "#1C1C1E",
     main: "#2C2C2E",
     contrastText: "#fff",
+    lightChannel: colorChannel("#3A3A3C"),
+    darkChannel: colorChannel("#1C1C1E"),
+    mainChannel: colorChannel("#2C2C2E"),
+    contrastTextChannel: colorChannel("#fff"),
   },
   background: {
     elevated: "#f0f0f0",
     default: "#fff",
     paper: "#fff",
   },
-  shadowChannel: colorChannel("#C4CDD5"),
+  shadowChannel: colorChannel("#CCCCCC"),
 };
 
 export const dark: PaletteOptions = {
@@ -84,6 +88,10 @@ export const dark: PaletteOptions = {
     main: "#F2F2F7",
     light: "#fff",
     contrastText: "#000",
+    mainChannel: colorChannel("#F2F2F7"),
+    darkChannel: colorChannel("#E5E5EA"),
+    lightChannel: colorChannel("#fff"),
+    contrastTextChannel: colorChannel("#000"),
   },
   shadowChannel: colorChannel("#000"),
 };
