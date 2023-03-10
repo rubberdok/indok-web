@@ -1,10 +1,5 @@
-import { Color } from "@mui/material";
-import { ThemeOptions } from "@mui/material/styles";
-
-export const palette = (mode: "light" | "dark"): ThemeOptions["palette"] => ({
-  mode,
-  ...(mode === "light" ? light : dark),
-});
+import { Color, PaletteOptions } from "@mui/material";
+import { colorChannel } from "@mui/system/colorManipulator";
 
 const grey: Partial<Color> = {
   50: "#FFFFFF",
@@ -19,7 +14,7 @@ const grey: Partial<Color> = {
   900: "#161C24",
 };
 
-const light: ThemeOptions["palette"] = {
+export const light: PaletteOptions = {
   primary: {
     main: "#2D6365",
     contrastText: "#fff",
@@ -56,9 +51,10 @@ const light: ThemeOptions["palette"] = {
     default: "#fff",
     paper: "#fff",
   },
+  shadowChannel: colorChannel("#C4CDD5"),
 };
 
-const dark: ThemeOptions["palette"] = {
+export const dark: PaletteOptions = {
   background: {
     elevated: grey[900],
     default: "#0f1217",
@@ -89,4 +85,5 @@ const dark: ThemeOptions["palette"] = {
     light: "#fff",
     contrastText: "#000",
   },
+  shadowChannel: colorChannel("#000"),
 };

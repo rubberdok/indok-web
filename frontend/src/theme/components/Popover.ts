@@ -8,7 +8,7 @@ export const Popover: ThemeOptions["components"] = {
     styleOverrides: {
       paper: ({ theme }) => ({
         borderRadius: Number(theme.shape.borderRadius) * 1.5,
-        border: `solid 1px ${alpha(theme.palette.grey[500], 0.08)}`,
+        border: `solid 1px ${alpha(theme.vars.palette.grey[500], 0.08)}`,
       }),
     },
   },

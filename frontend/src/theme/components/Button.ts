@@ -1,4 +1,4 @@
-import { alpha, ThemeOptions } from "@mui/material/styles";
+import { ThemeOptions } from "@mui/material/styles";
 
 export const Button: ThemeOptions["components"] = {
   MuiButton: {
@@ -9,7 +9,7 @@ export const Button: ThemeOptions["components"] = {
     styleOverrides: {
       root: ({ theme }) => ({
         "&.MuiButton-outlinedInherit": {
-          borderColor: alpha(theme.palette.text.primary, 0.25),
+          borderColor: `rgba(${theme.vars.palette.text.primaryChannel} / 0.25)`,
         },
         textTransform: "none",
         "& .MuiLoadingButton-text": {

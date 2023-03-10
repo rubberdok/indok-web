@@ -1,6 +1,7 @@
 import type {} from "@mui/material/Button";
-import type {} from "@mui/material/styles";
+import type { Theme, CssVarsTheme } from "@mui/material/styles";
 import type {} from "@mui/material/Typography";
+import type {} from "@mui/material/themeCssVarsAugmentation";
 
 declare module "@mui/material/styles" {
   interface TypeBackground {
@@ -17,8 +18,14 @@ declare module "@mui/material/styles" {
     body3?: React.CSSProperties;
   }
 
+  function responsiveFontSizes(
+    theme: Omit<Theme, "palette"> & CssVarsTheme,
+    options?: ResponsiveFontSizesOptions
+  ): Omit<Theme, "palette"> & CssVarsTheme;
+
   interface CustomPalette {
     contrast?: PaletteOptions["primary"];
+    shadowChannel: string;
   }
   interface Palette extends CustomPalette {}
   interface PaletteOptions extends CustomPalette {}

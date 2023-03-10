@@ -21,7 +21,7 @@ export const Input: ThemeOptions["components"] = {
       root: ({ theme }) => ({
         borderRadius: theme.shape.borderRadius,
         "&.Mui-error": {
-          backgroundColor: alpha(theme.palette.error.main, 0.08),
+          backgroundColor: `rgba(${theme.vars.palette.error.mainChannel} / 0.08)`,
         },
       }),
     },
@@ -34,7 +34,7 @@ export const Input: ThemeOptions["components"] = {
         },
         "&.Mui-disabled": {
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: theme.palette.action.disabledBackground,
+            borderColor: theme.vars.palette.action.disabledBackground,
           },
         },
       }),
