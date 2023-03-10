@@ -1,4 +1,6 @@
+import { useTheme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { ReactNode } from "react";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
@@ -28,8 +30,12 @@ export const Layout: React.FC<React.PropsWithChildren<Props>> = ({
   simpleFooter,
   disableGutter,
 }) => {
+  const theme = useTheme();
   return (
     <>
+      <Head>
+        <meta name="theme-color" content={`${theme.palette.background.default}`} key="theme-color" />
+      </Head>
       {!disabledHeader && simpleHeader ? <HeaderSimple /> : <Header transparent={transparentHeader} />}
       <div className="content">{children}</div>
       {!disabledFooter && (

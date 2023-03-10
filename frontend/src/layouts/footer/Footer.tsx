@@ -1,5 +1,5 @@
-import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
+import { Box, Container, Divider, Grid, NoSsr, Paper, Stack, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -10,6 +10,8 @@ import { Logo } from "@/components/Logo";
 import { Vercel } from "@/components/Vercel";
 import { useResponsive } from "@/hooks/useResponsive";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
+
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
 const HallOfFame = dynamic(() => import("./HallOfFame").then((mod) => mod.HallOfFame));
@@ -44,7 +46,6 @@ type Props = {
 export const Footer: React.FC<Props> = ({ disableGutter }) => {
   const isDesktop = useResponsive({ query: "up", key: "md" });
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
 
   return (
     <>
@@ -88,14 +89,12 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
       </Paper>
 
       <Container>
-        <Stack
-          py={3}
-          spacing={3}
-          direction="row-reverse"
-          justifyContent="space-between"
-          alignItems="center"
-          width="100%"
-        >
+        <Stack py={3} spacing={3} direction="row" justifyContent="space-between" alignItems="center" width="100%">
+          <Box>
+            <NoSsr>
+              <ColorModeSwitcher />
+            </NoSsr>
+          </Box>
           <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
             <LinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
               Hall of Fame
