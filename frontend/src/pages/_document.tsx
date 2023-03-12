@@ -31,6 +31,7 @@ export default class MyDocument extends Document {
             defaultMode: "system",
             colorSchemeStorageKey: "color-scheme",
             modeStorageKey: "mode",
+            attribute: "data-color-scheme",
           })}
           <Main />
           <NextScript />

@@ -25,9 +25,7 @@ const ArrowStyle = styled(IconButton)(({ theme }) => ({
   cursor: "pointer",
   display: "none",
   position: "absolute",
-  [theme.getColorSchemeSelector("light")]: {
-    backgroundColor: theme.vars.palette.grey[800],
-  },
+  backgroundColor: theme.vars.palette.grey[800],
   [theme.getColorSchemeSelector("dark")]: {
     backgroundColor: theme.vars.palette.grey[600],
   },

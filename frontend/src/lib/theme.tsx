@@ -24,6 +24,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<Props>> = ({ childr
       defaultMode="system"
       colorSchemeStorageKey="color-scheme"
       modeStorageKey="mode"
+      attribute="data-color-scheme"
     >
       <CssBaseline />
       {children}

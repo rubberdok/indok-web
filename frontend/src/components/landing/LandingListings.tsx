@@ -53,9 +53,7 @@ export const LandingListings: React.FC = () => {
                 <Typography
                   variant="overline"
                   sx={(theme) => ({
-                    [theme.getColorSchemeSelector("light")]: {
-                      color: "primary.main",
-                    },
+                    color: "primary.main",
                     [theme.getColorSchemeSelector("dark")]: {
                       color: "primary.light",
                     },

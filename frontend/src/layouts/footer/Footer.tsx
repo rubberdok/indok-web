@@ -21,9 +21,7 @@ const Watermark = styled("div")(({ theme }) => ({
   backgroundSize: 500,
   backgroundPosition: "right center",
   backgroundRepeat: "no-repeat",
-  [theme.getColorSchemeSelector("light")]: {
-    opacity: 0.1,
-  },
+  opacity: 0.1,
   [theme.getColorSchemeSelector("dark")]: {
     opacity: 0.3,
   },
