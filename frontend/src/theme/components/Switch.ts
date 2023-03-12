@@ -12,7 +12,7 @@ export const Switch: ThemeOptions["components"] = {
         width: 14,
         height: 14,
         boxShadow: "none",
-        color: `${theme.palette.common.white} !important`,
+        color: `${theme.vars.palette.common.white} !important`,
       }),
       track: ({ theme }) => ({
         opacity: 1,

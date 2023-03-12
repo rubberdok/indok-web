@@ -32,7 +32,7 @@ export const Layout: React.FC<React.PropsWithChildren<Props>> = ({
   return (
     <>
       <Head>
-        <meta name="theme-color" content={`${theme.palette.background.default}`} key="theme-color" />
+        <meta name="theme-color" content={theme.palette.background.default} key="theme-color" />
       </Head>
       {!disabledHeader && simpleHeader ? <HeaderSimple /> : <Header />}
       <div className="content">{children}</div>
