@@ -95,7 +95,7 @@ export const calculatePrice = (
   }
 };
 
-export const convertDateFormat = (date?: string): string => "DD-MM-YYYY";
+export const convertDateFormat = (date?: string): string => dayjs(date).format("DD-MM-YYYY");
 
 export const getDecisionEmailInput = (
   booking: AdminBookingFragment,
