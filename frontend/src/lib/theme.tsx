@@ -19,7 +19,12 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<Props>> = ({ childr
   const responsiveTheme = responsiveFontSizes(theme);
 
   return (
-    <CssVarsProvider theme={responsiveTheme}>
+    <CssVarsProvider
+      theme={responsiveTheme}
+      defaultMode="system"
+      colorSchemeStorageKey="color-scheme"
+      modeStorageKey="mode"
+    >
       <CssBaseline />
       {children}
     </CssVarsProvider>

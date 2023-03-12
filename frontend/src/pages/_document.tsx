@@ -27,7 +27,11 @@ export default class MyDocument extends Document {
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>
-          {getInitColorSchemeScript()}
+          {getInitColorSchemeScript({
+            defaultMode: "system",
+            colorSchemeStorageKey: "color-scheme",
+            modeStorageKey: "mode",
+          })}
           <Main />
           <NextScript />
         </body>
