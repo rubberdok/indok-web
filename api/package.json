@@ -55,7 +55,7 @@
     "@typescript-eslint/parser": "^5.43.0",
     "concurrently": "^7.5.0",
     "dotenv-cli": "^6.0.0",
-    "eslint": "^8.27.0",
+    "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
