@@ -1,23 +1,27 @@
 import { ApolloServerErrorCode } from "@apollo/server/errors";
 import { GraphQLError } from "graphql";
 
-import { Resolvers } from "@/graphql/generated/types";
+import { Resolvers, LogoutStatus } from "../generated/types";
 
-const resolvers: Resolvers = {
+export const resolvers: Resolvers = {
   Mutation: {
-    redirectUrl: async (_root, { state }, ctx) => {
+    redirectUrl(_root, { state }, ctx) {
       const { url, codeVerifier } = ctx.authService.ssoUrl(state);
       ctx.req.session.codeVerifier = codeVerifier;
-      return url;
+      return { url };
     },
-    logout: async (_root, _args, ctx) => {
-      ctx.req.session.user = null;
+
+    logout(_root, _args, ctx) {
+      ctx.req.session.userId = null;
       ctx.req.session.save(() => {
         ctx.req.session.regenerate(() => true);
       });
-      return true;
+      return {
+        status: LogoutStatus.Success,
+      };
     },
-    authenticate: async (_root, { code }, ctx) => {
+
+    async authenticate(_root, { code }, ctx) {
       if (!ctx.req.session.codeVerifier) {
         throw new GraphQLError("authorization failed", {
           extensions: { code: ApolloServerErrorCode.INTERNAL_SERVER_ERROR },
@@ -28,12 +32,16 @@ const resolvers: Resolvers = {
           code,
           codeVerifier: ctx.req.session.codeVerifier,
         });
-        ctx.req.session.user = user;
+
+        ctx.req.session.userId = user.id;
         ctx.req.session.save();
         ctx.req.session.regenerate(() => null);
-        return user;
+
+        return {
+          user,
+        };
       } catch (err) {
-        ctx.req.session.user = null;
+        ctx.req.session.userId = null;
         throw err;
       } finally {
         ctx.req.session.codeVerifier = undefined;
@@ -41,5 +49,3 @@ const resolvers: Resolvers = {
     },
   },
 };
-
-export default resolvers;

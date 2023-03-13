@@ -22,7 +22,6 @@ def set_all_users_to_not_indok(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0013_auto_20210923_1805"),
     ]

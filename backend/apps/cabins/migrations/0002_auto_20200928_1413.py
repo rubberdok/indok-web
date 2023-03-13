@@ -10,7 +10,6 @@ def create_cabins(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cabins", "0001_initial"),
     ]

@@ -29,16 +29,17 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
     Guidelines: { active: false, title: "Støtte fra HS" },
     Regulation: { active: false, title: "Foreningens lover" },
     Statues: { active: false, title: "Utveksling" },
+    Januscript: { active: false, title: "Januscript" },
     Others: { active: false, title: "Annet" },
   });
 
   return (
     <>
       <Title
-        title="Arkiv"
+        title="Dokumenter"
         breadcrumbs={[
           { name: "Hjem", href: "/" },
-          { name: "Arkiv", href: "/archive" },
+          { name: "Dokumenter", href: "/archive" },
         ]}
       />
 
@@ -92,6 +93,7 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
                 Guidelines: { active: false, title: "Støtte fra HS" },
                 Regulation: { active: false, title: "Foreningens lover" },
                 Statues: { active: false, title: "Utveksling" },
+                Januscript: { active: false, title: "Januscript" },
                 Others: { active: false, title: "Annet" },
               });
               setViewFeatured(true);

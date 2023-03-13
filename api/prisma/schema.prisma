@@ -17,24 +17,21 @@ model GoogleDocument {
 }
 
 model User {
-  id                      String       @id @default(uuid())
-  feideId                 String       @unique
-  createdAt               DateTime     @default(now())
-  updatedAt               DateTime     @updatedAt
-  lastLogin               DateTime     @default(now())
-  firstLogin              Boolean      @default(true)
+  id                      String    @id @default(uuid())
+  feideId                 String    @unique
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  lastLogin               DateTime  @default(now())
+  firstLogin              Boolean   @default(true)
   firstName               String
   lastName                String
-  email                   String       @unique
-  username                String       @unique
-  roles                   Role[]
-  permissions             Permission[]
-  Event                   Event[]
+  email                   String    @unique
+  username                String    @unique
   graduationYear          Int?
   graduationYearUpdatedAt DateTime?
   allergies               String?
   phoneNumber             String?
-  isSuperUser             Boolean      @default(false)
+  isSuperUser             Boolean   @default(false)
 }
 
 model Organization {
@@ -45,34 +42,22 @@ model Organization {
 
 model Event {
   id             String       @id @default(uuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   name           String
   description    String?
   startAt        DateTime
-  endAt          DateTime?
-  openAt         DateTime?
+  endAt          DateTime
   location       String?
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
-  publisher      User         @relation(fields: [userId], references: [id])
-  userId         String
 }
 
 model Role {
-  id          String       @id @default(uuid())
-  createdAt   DateTime     @default(now())
-  name        String       @unique
-  permissions Permission[]
-  User        User?        @relation(fields: [userId], references: [id])
-  userId      String?
-}
-
-model Permission {
-  id     String  @id @default(uuid())
-  name   String  @unique
-  role   Role?   @relation(fields: [roleId], references: [id])
-  roleId String?
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  name      String   @unique
+  userId    String?
 }
 
 // Cabins

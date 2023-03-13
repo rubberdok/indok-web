@@ -13,7 +13,6 @@ def slugify_missing_organizations(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("organizations", "0013_auto_20210208_1758"),
     ]

@@ -142,7 +142,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
           size={isMobile ? "small" : "large"}
           variant="contained"
         >
-          {activeStep == 3 ? "Send søknad" : "Neste"}
+          {activeStep == 3 ? "Send" : "Neste"}
           <KeyboardArrowRight />
         </Button>
       </Box>
@@ -235,7 +235,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
             </Card>
           ))}
       </Stack>
-      {isMobile && activeStep != 3 ? (
+      {isMobile ? (
         <MobileStepper
           steps={4}
           position="bottom"

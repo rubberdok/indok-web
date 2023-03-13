@@ -29,9 +29,7 @@ const faqs = [
             <Typography>Avbestilling innen to uker før bestilt ankomstdato er gebyrfritt.</Typography>
           </li>
           <li>
-            <Typography>
-              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av leien.
-            </Typography>
+            <Typography>Avbestilling etter dette medfører et gebyr på 30% av leien.</Typography>
           </li>
         </ul>
       </Box>

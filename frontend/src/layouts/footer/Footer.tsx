@@ -66,6 +66,9 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
                   Lenker
                 </Typography>
                 <NextLinkItem href="/baksida">Baksida</NextLinkItem>
+                <NextLinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
+                  IØT adferdskodeks
+                </NextLinkItem>
                 <NextLinkItem href="/about">Om oss</NextLinkItem>
                 <NextLinkItem href="https://www.indøk.no">Studieside</NextLinkItem>
                 <NextLinkItem href="https://github.com/rubberdok/indok-web/issues/new/choose">

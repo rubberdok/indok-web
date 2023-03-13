@@ -188,7 +188,8 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                       <TextField
                         label="Ekstrainformasjon"
                         multiline
-                        rows={2}
+                        rows={3}
+                        fullWidth
                         required
                         placeholder="Skriv her..."
                         onChange={(e) => setExtraInformation(e.target.value)}

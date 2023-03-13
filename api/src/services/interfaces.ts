@@ -1,9 +1,7 @@
-import { Permission, Prisma, Role, User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 
-import { PermissionString } from "@/services/permissions/types";
-
-export { ICabinService } from "@/services/cabins/interfaces";
-export { IMailService } from "@/services/mail/interfaces";
+export { ICabinService } from "./cabins/interfaces";
+export { IMailService } from "./mail/interfaces";
 
 export interface IUserService {
   update(id: string, data: Prisma.UserUpdateInput): Promise<User>;
@@ -13,12 +11,6 @@ export interface IUserService {
   getByFeideID(feideId: string): Promise<User | null>;
   create(data: Prisma.UserCreateInput): Promise<User>;
   canUpdateYear(user: User): boolean;
-}
-
-export interface IPermissionService {
-  hasPermission(user: User, permission: PermissionString | string): Promise<boolean>;
-  getAllByUser(id: string): Promise<Permission[]>;
-  permissionRequired(permissionHolder: User | Role, permission: PermissionString): Promise<void>;
 }
 
 export interface GetUserParams {

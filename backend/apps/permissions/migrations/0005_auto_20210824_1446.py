@@ -51,7 +51,6 @@ def move_permission_groups_to_one_to_one_field(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("permissions", "0004_auto_20210824_1446"),
     ]

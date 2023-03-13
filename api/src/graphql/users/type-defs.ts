@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-const typeDefs = gql`
+export const typeDefs = gql`
   input UpdateUserInput {
     firstName: String!
     lastName: String!
@@ -9,9 +9,18 @@ const typeDefs = gql`
     graduationYear: Int
   }
 
-  type Query {
-    user: User
+  type UsersResponse {
     users: [User!]!
+    total: Int!
+  }
+
+  type UserResponse {
+    user: User
+  }
+
+  type Query {
+    user: UserResponse!
+    users: UsersResponse!
   }
 
   type Mutation {
@@ -25,7 +34,6 @@ const typeDefs = gql`
     firstName: String!
     username: String!
     createdAt: String!
-    permissions: [Permission!]!
     firstLogin: Boolean!
     canUpdateYear: Boolean!
     graduationYear: Int
@@ -34,5 +42,3 @@ const typeDefs = gql`
     graduationYearUpdatedAt: DateTime
   }
 `;
-
-export default typeDefs;

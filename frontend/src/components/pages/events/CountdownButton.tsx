@@ -46,21 +46,15 @@ type Props = {
   onClick: () => void;
 };
 
-const ButtonText: React.FC<Props> = ({
-  isSignedUp,
-  isOnWaitingList,
+/** Component for the count down button on the detail page of an attendable event. */
+export const CountdownButton: React.FC<Props> = ({
   countDownDate,
   currentTime,
+  isSignedUp,
+  isOnWaitingList,
   isFull,
   positionOnWaitingList,
 }) => {
-  const translate = (timeWord: string, time: number) => {
-    if (timeWord === "days") return time > 1 ? "dager" : "dag";
-    if (timeWord === "hours") return time > 1 ? "timer" : "time";
-    if (timeWord === "minutes") return time > 1 ? "minutter" : "minutt";
-    if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
-  };
-
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
 
@@ -77,6 +71,24 @@ const ButtonText: React.FC<Props> = ({
 
   const currentTimeParts = Object.keys(timeLeft).filter((interval) => timeLeft[interval] !== 0);
 
+  const translate = (timeWord: string, time: number) => {
+    if (timeWord === "days") return time > 1 ? "dager" : "dag";
+    if (timeWord === "hours") return time > 1 ? "timer" : "time";
+    if (timeWord === "minutes") return time > 1 ? "minutter" : "minutt";
+    if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
+  };
+
+  /**
+   * `timeparts` is a list containing the elements of time that are not 0,
+   * e.g. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"].
+   * The actual time left is stored in the Record<string, number> called timeLeft.
+   *
+   * Shows remaining time until the event opens on the following formats depending on how much time is left:
+   * - XX days and YY hours
+   * - XX hours and YY minutes
+   * - XX minutes  (minutes left >= 10)
+   * - XX minutes and YY seconds (minutes left < 10)
+   */
   const getCurrentTimeLeft = (timeparts: string[]) => {
     if (timeparts.length === 1) {
       return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])}`;

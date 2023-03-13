@@ -12,7 +12,6 @@ def populate_email_field(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0007_auto_20210312_1746"),
     ]
