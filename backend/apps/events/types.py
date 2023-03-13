@@ -54,7 +54,7 @@ class UserAttendingType(graphene.ObjectType):
     is_signed_up = graphene.Boolean()
     is_on_waiting_list = graphene.Boolean()
     has_bought_ticket = graphene.Boolean()
-    position_on_waitinglist = graphene.Int()
+    position_on_waiting_list = graphene.Int()
 
 
 class SignUpType(DjangoObjectType):

@@ -1348,7 +1348,7 @@ export type UserAttendingType = {
   hasBoughtTicket?: Maybe<Scalars["Boolean"]>;
   isOnWaitingList?: Maybe<Scalars["Boolean"]>;
   isSignedUp?: Maybe<Scalars["Boolean"]>;
-  positionOnWaitinglist?: Maybe<Scalars["Int"]>;
+  positionOnWaitingList?: Maybe<Scalars["Int"]>;
 };
 
 export type UserInput = {
@@ -1778,7 +1778,7 @@ export type EventFragment = {
     isSignedUp?: boolean | null;
     isOnWaitingList?: boolean | null;
     hasBoughtTicket?: boolean | null;
-    positionOnWaitinglist?: number | null;
+    positionOnWaitingList?: number | null;
   } | null;
   product?: { __typename?: "ProductType"; id: string } | null;
 };
@@ -1985,7 +1985,7 @@ export type UpdateEventMutation = {
         isSignedUp?: boolean | null;
         isOnWaitingList?: boolean | null;
         hasBoughtTicket?: boolean | null;
-        positionOnWaitinglist?: number | null;
+        positionOnWaitingList?: number | null;
       } | null;
       product?: { __typename?: "ProductType"; id: string } | null;
     } | null;
@@ -2078,7 +2078,7 @@ export type EventQuery = {
       isSignedUp?: boolean | null;
       isOnWaitingList?: boolean | null;
       hasBoughtTicket?: boolean | null;
-      positionOnWaitinglist?: number | null;
+      positionOnWaitingList?: number | null;
     } | null;
     product?: { __typename?: "ProductType"; id: string } | null;
   } | null;
@@ -3483,7 +3483,7 @@ export const EventFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
                 { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
                 { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
-                { kind: "Field", name: { kind: "Name", value: "positionOnWaitinglist" } },
+                { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
               ],
             },
           },
