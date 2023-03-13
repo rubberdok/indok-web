@@ -45,7 +45,7 @@
     "@swc/helpers": "^0.4.14",
     "@swc/jest": "^0.2.24",
     "@types/connect-redis": "^0.0.19",
-    "@types/cors": "^2.8.12",
+    "@types/cors": "^2.8.13",
     "@types/crypto-js": "^4.1.1",
     "@types/express-session": "^1.17.5",
     "@types/jest": "^28.1.4",
