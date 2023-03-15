@@ -58,7 +58,7 @@
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.2",
-    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^28.1.2",
     "jest-mock-extended": "^3.0.3",
