@@ -1,6 +1,6 @@
 import { NoSsr } from "@mui/material";
 
-import { LandingHero, LandingListings, LandingPromo } from "@/components/landing";
+import { LandingHero, LandingListings } from "@/components/landing";
 import { LandingSection } from "@/components/landing/LandingSection";
 import { Layout } from "@/layouts/Layout";
 
@@ -13,7 +13,6 @@ const IndexPage: NextPageWithLayout = () => {
       <LandingSection />
       <NoSsr>
         <LandingListings />
-        <LandingPromo />
       </NoSsr>
     </>
   );
