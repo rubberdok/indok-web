@@ -17,12 +17,15 @@ const poppins = Poppins({
   weight: ["400", "500", "600"],
   fallback: ["sans-serif"],
   variable: "--font-poppins",
+  display: "swap",
 });
 
 const merriweather = Merriweather({
   subsets: ["latin"],
   weight: ["400", "700", "900"],
   variable: "--font-merriweather",
+  display: "swap",
+  fallback: ["serif"],
 });
 
 initializeDayjs();
