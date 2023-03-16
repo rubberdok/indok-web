@@ -1,5 +1,5 @@
 import { ArrowForward } from "@mui/icons-material";
-import { Button, Container, Stack, Typography } from "@mui/material";
+import { Button, Container, NoSsr, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -38,35 +38,37 @@ export const OrganizationsSlider: React.FC = () => {
             },
           }}
         >
-          <Swiper cssMode spaceBetween={parseInt(theme.spacing(4))} slidesPerView="auto" direction="horizontal">
-            <SwiperSlide>
-              <Typography variant="h4" component="h2">
-                Våre
-                <br />
-                foreninger
-              </Typography>
-            </SwiperSlide>
-            {organizations.map((org) => (
-              <SwiperSlide key={org.name}>
-                <OrganizationLink organization={org} />
-              </SwiperSlide>
-            ))}
-            <SwiperSlide>
-              <Button
-                component={Link}
-                noLinkStyle
-                href="/about/organization"
-                color="contrast"
-                variant="contained"
-                size="large"
-                endIcon={<ArrowForward />}
-              >
-                <Typography variant="inherit" noWrap>
-                  Alle organisasjoner
+          <NoSsr>
+            <Swiper cssMode spaceBetween={parseInt(theme.spacing(4))} slidesPerView="auto" direction="horizontal">
+              <SwiperSlide>
+                <Typography variant="h4" component="h2">
+                  Våre
+                  <br />
+                  foreninger
                 </Typography>
-              </Button>
-            </SwiperSlide>
-          </Swiper>
+              </SwiperSlide>
+              {organizations.map((org) => (
+                <SwiperSlide key={org.name}>
+                  <OrganizationLink organization={org} />
+                </SwiperSlide>
+              ))}
+              <SwiperSlide>
+                <Button
+                  component={Link}
+                  noLinkStyle
+                  href="/about/organization"
+                  color="contrast"
+                  variant="contained"
+                  size="large"
+                  endIcon={<ArrowForward />}
+                >
+                  <Typography variant="inherit" noWrap>
+                    Alle organisasjoner
+                  </Typography>
+                </Button>
+              </SwiperSlide>
+            </Swiper>
+          </NoSsr>
         </Stack>
       </Container>
     </Container>
