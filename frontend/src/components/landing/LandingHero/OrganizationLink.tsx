@@ -23,7 +23,7 @@ type Props = {
 
 export const OrganizationLink: React.FC<Props> = ({ organization }) => {
   return (
-    <Card sx={{ boxShadow: (theme) => theme.shadows[24] }}>
+    <Card elevation={6}>
       <CardActionArea
         sx={{ px: 4, py: 3 }}
         component={NextLinkComposed}
@@ -39,7 +39,7 @@ export const OrganizationLink: React.FC<Props> = ({ organization }) => {
               bgcolor: "primary.main",
             }}
           />
-          <Typography variant="h6" component="p">
+          <Typography variant="h6" component="p" noWrap>
             {organization.name}
           </Typography>
           {organization.externalUrl && <OpenInNew fontSize="small" />}
