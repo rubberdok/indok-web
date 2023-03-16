@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
 import { Logo } from "@/components/Logo";
+import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 import { LoginButton } from "@/layouts/components/LoginButton";
 
 import { NavigationProps } from "../../types";
@@ -34,7 +35,10 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
         >
           <Box px={3} pt={2}>
             <Stack direction="column" spacing={2}>
-              <Logo />
+              <Stack direction="row" justifyContent="space-between">
+                <Logo />
+                <ColorModeSwitcher />
+              </Stack>
               {routes.map((route) => {
                 if (route.permission) {
                   return (

@@ -2,6 +2,7 @@ import { Box, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 
 import { PermissionRequired } from "@/components/Auth";
+import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 import { LoginButton } from "@/layouts/components/LoginButton";
 
 import { NavigationProps } from "../../types";
@@ -24,7 +25,10 @@ export const Basic: React.FC<NavigationProps> = ({ routes }) => {
             return <NavigationLink route={route} active={pathname.includes(route.path)} key={route.title} />;
           })}
         </Stack>
-        <LoginButton data-test-id="app-bar-login" />
+        <Stack direction="row" gap={2}>
+          <ColorModeSwitcher />
+          <LoginButton data-test-id="app-bar-login" />
+        </Stack>
       </Stack>
     </Box>
   );
