@@ -1,7 +1,9 @@
 import { ApolloProvider } from "@apollo/client";
 import { CacheProvider, EmotionCache } from "@emotion/react";
+import clsx from "clsx";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
+import { Poppins, Merriweather } from "next/font/google";
 import Head from "next/head";
 import { ReactElement, ReactNode } from "react";
 
@@ -9,6 +11,19 @@ import { PageProps, useApollo } from "@/lib/apolloClient";
 import { initializeDayjs } from "@/lib/dayjs";
 import { createEmotionCache } from "@/lib/emotion";
 import { ThemeProvider } from "@/lib/theme";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  fallback: ["sans-serif"],
+  variable: "--font-poppins",
+});
+
+const merriweather = Merriweather({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  variable: "--font-merriweather",
+});
 
 initializeDayjs();
 
@@ -28,6 +43,7 @@ const App = (props: CustomAppProps): JSX.Element => {
   const { pageProps, err, Component, emotionCache = clientSideEmotionCache } = props;
   const apolloClient = useApollo(pageProps);
   const getLayout = Component.getLayout ?? ((page) => page);
+  const fonts = clsx(poppins.variable, merriweather.variable);
 
   return (
     <CacheProvider value={emotionCache}>
@@ -42,7 +58,9 @@ const App = (props: CustomAppProps): JSX.Element => {
           />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         </Head>
-        <ThemeProvider>{getLayout(<Component {...pageProps} err={err} />)}</ThemeProvider>
+        <ThemeProvider>
+          <main className={fonts}>{getLayout(<Component {...pageProps} err={err} />)}</main>
+        </ThemeProvider>
       </ApolloProvider>
     </CacheProvider>
   );
