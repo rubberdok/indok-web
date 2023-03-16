@@ -18,6 +18,7 @@ const poppins = Poppins({
   fallback: ["sans-serif"],
   variable: "--font-poppins",
   display: "swap",
+  preload: true,
 });
 
 const merriweather = Merriweather({
@@ -26,6 +27,7 @@ const merriweather = Merriweather({
   variable: "--font-merriweather",
   display: "swap",
   fallback: ["serif"],
+  preload: true,
 });
 
 initializeDayjs();
