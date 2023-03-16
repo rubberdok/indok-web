@@ -3,12 +3,11 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import clsx from "clsx";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
-import { Poppins, Merriweather } from "next/font/google";
+import { Merriweather, Poppins } from "next/font/google";
 import Head from "next/head";
 import { ReactElement, ReactNode } from "react";
 
 import { PageProps, useApollo } from "@/lib/apolloClient";
-import { initializeDayjs } from "@/lib/dayjs";
 import { createEmotionCache } from "@/lib/emotion";
 import { ThemeProvider } from "@/lib/theme";
 
@@ -27,8 +26,6 @@ const merriweather = Merriweather({
   display: "swap",
   fallback: ["serif"],
 });
-
-initializeDayjs();
 
 export type NextPageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
   getLayout?: (page: ReactElement) => ReactNode;
