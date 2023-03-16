@@ -11,18 +11,6 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
 
-          {/* Fonts */}
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-
-          <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap"
-            rel="stylesheet"
-          />
           <meta name="emotion-insertion-point" content="" />
           {(this.props as any).emotionStyleTags}
         </Head>
