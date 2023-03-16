@@ -1,12 +1,12 @@
-import { Card, CardActionArea, CardMedia, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Stack, Tab, Tabs, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import { GetStaticProps } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
 
+import { Link } from "@/components";
 import { TabPanel } from "@/components/pages/about/TabPanel";
 import { Template } from "@/components/pages/about/Template";
 import { Layout } from "@/layouts/Layout";
@@ -26,15 +26,6 @@ type Post = {
 type Props = {
   posts: Post[];
 } & Post;
-
-const StyledCardActionArea = styled(CardActionArea)(({ theme }) => ({
-  display: "flex",
-  height: "180px",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  textAlign: "center",
-  padding: theme.spacing(2, 3),
-}));
 
 const StyledCardMedia = styled(CardMedia)(() => ({
   height: "100px",
@@ -126,65 +117,72 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
           .filter((post) => (router.query.category != undefined ? post.frontmatter.tag == router.query.category : post))
           .map(({ frontmatter: { title, logo }, slug }) => (
             <Grid key={slug} item xs={12} sm={6} md={4}>
-              <Card>
-                <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${slug}`} passHref>
-                  <StyledCardActionArea>
-                    {logo ? <StyledCardMedia image={logo} /> : ""}
-                    <div>
-                      <Typography variant="body2">{title}</Typography>
-                    </div>
-                  </StyledCardActionArea>
-                </Link>
+              <Card sx={{ height: "100%" }}>
+                <CardActionArea
+                  href={`/about/organizations/${slug}`}
+                  noLinkStyle
+                  component={Link}
+                  sx={{ height: "100%" }}
+                >
+                  <CardContent sx={{ justifyContent: "center" }}>
+                    {logo ? <StyledCardMedia image={logo} sx={{ mb: 2 }} /> : ""}
+                    <Typography variant="body2" textAlign="center">
+                      {title}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
               </Card>
             </Grid>
           ))}
-        {router.query.category == undefined || router.query.category == "annet" ? (
+        {(router.query.category == undefined || router.query.category == "annet") && (
           <>
             <Grid item xs={12} sm={6} md={4}>
-              <Card>
-                <a href="https://bindeleddet.no/" rel="norefferer noopener">
-                  <StyledCardActionArea>
-                    <StyledCardMedia image="/img/bindeleddetlogo.png" />
-                    <div>
-                      <Typography variant="body1" color="textPrimary">
-                        Bindeleddet
-                      </Typography>
-                    </div>
-                  </StyledCardActionArea>
-                </a>
+              <Card sx={{ height: "100%" }}>
+                <CardActionArea href="https://bindeleddet.no/" noLinkStyle component={Link} sx={{ height: "100%" }}>
+                  <CardContent sx={{ justifyContent: "center" }}>
+                    <StyledCardMedia image="/img/bindeleddetlogo.png" sx={{ mb: 2 }} />
+                    <Typography variant="body2" textAlign="center">
+                      Bindeleddet
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Card>
-                <a href="https://sites.google.com/view/estiem-ntnu" rel="norefferer noopener">
-                  <StyledCardActionArea>
-                    <StyledCardMedia image="/img/estiemlogo.png" />
-                    <div>
-                      <Typography variant="body1" color="textPrimary">
-                        ESTIEM
-                      </Typography>
-                    </div>
-                  </StyledCardActionArea>
-                </a>
+              <Card sx={{ height: "100%" }}>
+                <CardActionArea
+                  href="https://sites.google.com/view/estiem-ntnu"
+                  noLinkStyle
+                  component={Link}
+                  sx={{ height: "100%" }}
+                >
+                  <CardContent sx={{ justifyContent: "center" }}>
+                    <StyledCardMedia image="/img/estiemlogo.png" sx={{ mb: 2 }} />
+                    <Typography variant="body2" textAlign="center">
+                      ESTIEM
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Card>
-                <a href="https://januslinjeforening.no/" rel="norefferer noopener">
-                  <StyledCardActionArea>
-                    <StyledCardMedia image="/img/januslogo.png" />
-                    <div>
-                      <Typography variant="body1" color="textPrimary">
-                        Janus
-                      </Typography>
-                    </div>
-                  </StyledCardActionArea>
-                </a>
+              <Card sx={{ height: "100%" }}>
+                <CardActionArea
+                  href="https://januslinjeforening.no/"
+                  noLinkStyle
+                  component={Link}
+                  sx={{ height: "100%" }}
+                >
+                  <CardContent sx={{ justifyContent: "center" }}>
+                    <StyledCardMedia image="/img/januslogo.png" sx={{ mb: 2 }} />
+                    <Typography variant="body2" textAlign="center">
+                      Janus
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
               </Card>
             </Grid>
           </>
-        ) : (
-          ""
         )}
       </Grid>
     </Template>
