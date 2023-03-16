@@ -27,6 +27,7 @@ export const LandingSection: React.FC = () => {
         <Image
           src={Hovedbygget}
           fill
+          loading="eager"
           style={{ objectFit: "cover", objectPosition: "center" }}
           placeholder="blur"
           alt=""
