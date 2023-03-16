@@ -7,7 +7,7 @@ import { cabinImages } from "./ImageSlider/imageData";
 import { ImageSlider } from "./ImageSlider/ImageSlider";
 
 const RootStyle = styled("div")(({ theme }) => ({
-  background: theme.palette.background.elevated,
+  background: theme.vars.palette.background.elevated,
   position: "relative",
   display: "flex",
   [theme.breakpoints.down("md")]: {

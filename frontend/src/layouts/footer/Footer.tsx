@@ -1,5 +1,5 @@
 import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -19,7 +19,10 @@ const Watermark = styled("div")(({ theme }) => ({
   backgroundSize: 500,
   backgroundPosition: "right center",
   backgroundRepeat: "no-repeat",
-  opacity: theme.palette.mode === "light" ? 0.1 : 0.3,
+  opacity: 0.1,
+  [theme.getColorSchemeSelector("dark")]: {
+    opacity: 0.3,
+  },
   position: "absolute",
   width: "600px",
   height: "100%",
@@ -39,7 +42,6 @@ type Props = {
 export const Footer: React.FC<Props> = ({ disableGutter }) => {
   const isDesktop = useResponsive({ query: "up", key: "md" });
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
 
   return (
     <>
@@ -95,14 +97,22 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
             <LinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
               Hall of Fame
             </LinkItem>
-            <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
+            <Link
+              href="https://github.com/rubberdok/indok-web"
+              rel="noreferrer noopener"
+              sx={(theme) => ({
+                [theme.getColorSchemeSelector("dark")]: {
+                  filter: "invert(1)",
+                  opacity: 0.8,
+                },
+              })}
+            >
               <Image
                 src={rubberdokLogo}
                 alt="Rubberdøk"
                 style={{
                   width: "48px",
                   height: "24px",
-                  ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }),
                 }}
               />
             </Link>

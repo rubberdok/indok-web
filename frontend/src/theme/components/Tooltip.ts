@@ -4,10 +4,10 @@ export const Tooltip: ThemeOptions["components"] = {
   MuiTooltip: {
     styleOverrides: {
       tooltip: ({ theme }) => ({
-        backgroundColor: theme.palette.grey[800],
+        backgroundColor: theme.vars.palette.grey[800],
       }),
       arrow: ({ theme }) => ({
-        color: theme.palette.grey[800],
+        color: theme.vars.palette.grey[800],
       }),
     },
   },

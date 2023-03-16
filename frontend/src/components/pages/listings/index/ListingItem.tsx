@@ -71,7 +71,7 @@ export const ListingItem: React.FC<Props> = ({ listing }) => {
             sx={(theme) => ({
               objectFit: "contain",
               objectPosition: "center",
-              background: theme.palette.background.paper,
+              background: theme.vars.palette.background.paper,
               [theme.breakpoints.up("sm")]: {
                 margin: "-50px auto 0",
                 width: 112,

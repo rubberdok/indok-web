@@ -11,7 +11,7 @@ export const LandingListings: React.FC = () => {
   return (
     <Box
       sx={{
-        bgcolor: (theme) => theme.palette.background.elevated,
+        bgcolor: (theme) => theme.vars.palette.background.elevated,
         display: { xs: "block", md: "grid" },
         gridTemplateColumns: "repeat(2, 1fr)",
         position: "relative",
@@ -52,10 +52,13 @@ export const LandingListings: React.FC = () => {
               <Grid item>
                 <Typography
                   variant="overline"
-                  sx={{
-                    color: (theme) => (theme.palette.mode === "light" ? "primary.main" : "primary.light"),
+                  sx={(theme) => ({
+                    color: "primary.main",
+                    [theme.getColorSchemeSelector("dark")]: {
+                      color: "primary.light",
+                    },
                     mb: 3,
-                  }}
+                  })}
                 >
                   Sosialt
                 </Typography>

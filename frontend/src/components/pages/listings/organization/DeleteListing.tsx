@@ -9,7 +9,6 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-import { WarningButton } from "@/components/ui/WarningButton";
 import { DeleteListingDocument, OrgAdminListingFragment } from "@/generated/graphql";
 
 type Props = {
@@ -35,28 +34,30 @@ export const DeleteListing: React.FC<Props> = ({ listing, onClose }) => {
     <Dialog open={listing !== undefined} onClose={onClose} fullWidth>
       {listing && (
         <>
+          <DialogTitle>Slett verv</DialogTitle>
           <DialogContent>
-            <DialogTitle>Slett verv</DialogTitle>
             <DialogContentText>
               Er du sikker på at du vil slette vervet <b>{listing.title}</b>?
             </DialogContentText>
             <FormHelperText error>Dette vil også slette alle søknader du har fått på vervet.</FormHelperText>
           </DialogContent>
           <DialogActions>
-            <WarningButton
-              onClick={() => {
-                deleteListing({ variables: { id: listing.id } });
-                onClose();
-              }}
-            >
-              Slett verv
-            </WarningButton>
             <Button
               onClick={() => {
                 onClose();
               }}
             >
               Avbryt
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                deleteListing({ variables: { id: listing.id } });
+                onClose();
+              }}
+            >
+              Slett verv
             </Button>
           </DialogActions>
         </>

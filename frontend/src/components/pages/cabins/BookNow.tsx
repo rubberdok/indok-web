@@ -9,7 +9,7 @@ import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
 export const BookNow: React.FC = () => {
   const { data } = useQuery(CabinsAndResponsiblesDocument);
   return (
-    <Card sx={{ bgcolor: (theme) => theme.palette.grey[900], height: "100%" }} elevation={0}>
+    <Card sx={{ bgcolor: (theme) => theme.vars.palette.grey[900], height: "100%" }} elevation={0}>
       <CardContent sx={{ height: "100%" }}>
         <Stack
           direction="row"

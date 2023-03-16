@@ -4,12 +4,12 @@ export const Chip: ThemeOptions["components"] = {
   MuiChip: {
     styleOverrides: {
       outlined: ({ theme }) => ({
-        borderColor: theme.palette.grey[500],
+        borderColor: theme.vars.palette.grey[500],
         "&.MuiChip-colorPrimary": {
-          borderColor: theme.palette.primary.main,
+          borderColor: theme.vars.palette.primary.main,
         },
         "&.MuiChip-colorSecondary": {
-          borderColor: theme.palette.secondary.main,
+          borderColor: theme.vars.palette.secondary.main,
         },
       }),
       //

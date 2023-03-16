@@ -1,6 +1,6 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import { FreeMode, Navigation } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -25,16 +25,19 @@ const ArrowStyle = styled(IconButton)(({ theme }) => ({
   cursor: "pointer",
   display: "none",
   position: "absolute",
-  backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[600],
-  color: theme.palette.common.white,
+  backgroundColor: theme.vars.palette.grey[800],
+  [theme.getColorSchemeSelector("dark")]: {
+    backgroundColor: theme.vars.palette.grey[600],
+  },
+  color: theme.vars.palette.common.white,
   opacity: 0.88,
   zIndex: 1000,
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
   transition: "0.1s ease all",
   "&:hover": {
     opacity: 1,
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.grey[900],
+    color: theme.vars.palette.common.white,
+    backgroundColor: theme.vars.palette.grey[900],
   },
   "&.right": {
     right: theme.spacing(3),
