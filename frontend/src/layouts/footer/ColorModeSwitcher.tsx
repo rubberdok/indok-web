@@ -1,26 +1,41 @@
-import { LightMode, DarkMode, SettingsBrightness } from "@mui/icons-material";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Brightness6, DarkMode, LightMode } from "@mui/icons-material";
+import { Box, IconButton, Slide, Tooltip } from "@mui/material";
 import { useColorScheme } from "@mui/material/styles";
+import { useRef } from "react";
 
 export const ColorModeSwitcher: React.FC = () => {
+  const containerRef = useRef(null);
   const { mode, setMode } = useColorScheme();
 
-  function handleModeChange(_: React.MouseEvent<HTMLElement>, newMode: "system" | "light" | "dark" | null) {
-    if (newMode === null) return;
-    setMode(newMode);
-  }
-
   return (
-    <ToggleButtonGroup exclusive value={mode} size="small" onChange={handleModeChange} color="standard">
-      <ToggleButton value="light">
-        <LightMode fontSize="inherit" />
-      </ToggleButton>
-      <ToggleButton value="system">
-        <SettingsBrightness fontSize="inherit" />
-      </ToggleButton>
-      <ToggleButton value="dark">
-        <DarkMode fontSize="inherit" />
-      </ToggleButton>
-    </ToggleButtonGroup>
+    <Box ref={containerRef}>
+      {mode === "light" && (
+        <Slide direction="up" in={mode === "light"}>
+          <Tooltip title="Dag">
+            <IconButton size="small" onClick={() => setMode("dark")} sx={{ color: "text.primary" }}>
+              <LightMode fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Slide>
+      )}
+      {mode === "dark" && (
+        <Slide direction="up" in={mode === "dark"}>
+          <Tooltip title="Natt">
+            <IconButton size="small" onClick={() => setMode("system")} sx={{ color: "text.primary" }}>
+              <DarkMode fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Slide>
+      )}
+      {mode === "system" && (
+        <Slide direction="up" in={mode === "system"}>
+          <Tooltip title="Automatisk">
+            <IconButton size="small" onClick={() => setMode("light")} sx={{ color: "text.primary" }}>
+              <Brightness6 fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Slide>
+      )}
+    </Box>
   );
 };
