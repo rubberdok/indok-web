@@ -1,5 +1,5 @@
 import { Brightness6, DarkMode, LightMode } from "@mui/icons-material";
-import { Box, IconButton, Slide, Tooltip } from "@mui/material";
+import { IconButton, Slide, Stack, Tooltip } from "@mui/material";
 import { useColorScheme } from "@mui/material/styles";
 import { useRef } from "react";
 
@@ -8,7 +8,7 @@ export const ColorModeSwitcher: React.FC = () => {
   const { mode, setMode } = useColorScheme();
 
   return (
-    <Box ref={containerRef}>
+    <Stack ref={containerRef} justifyContent="center" alignItems="center">
       {mode === "light" && (
         <Slide direction="up" in={mode === "light"}>
           <Tooltip title="Dag">
@@ -36,6 +36,6 @@ export const ColorModeSwitcher: React.FC = () => {
           </Tooltip>
         </Slide>
       )}
-    </Box>
+    </Stack>
   );
 };
