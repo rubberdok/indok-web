@@ -15,6 +15,11 @@ export const NavigationLink: React.FC<Props> = ({ active, route }) => {
       underline="none"
       fontWeight={(theme) => theme.typography.fontWeightMedium}
       color={active ? "text.primary" : "text.secondary"}
+      sx={{
+        ":hover": {
+          color: "text.primary",
+        },
+      }}
     >
       {route.title}
     </Link>
