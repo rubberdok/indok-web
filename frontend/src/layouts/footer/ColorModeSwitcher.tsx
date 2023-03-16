@@ -10,7 +10,7 @@ export const ColorModeSwitcher: React.FC = () => {
   return (
     <Stack ref={containerRef} justifyContent="center" alignItems="center">
       {mode === "light" && (
-        <Slide direction="up" in={mode === "light"}>
+        <Slide direction="down" in={mode === "light"} container={containerRef.current}>
           <Tooltip title="Dag">
             <IconButton size="small" onClick={() => setMode("dark")} sx={{ color: "text.primary" }}>
               <LightMode fontSize="small" />
@@ -19,7 +19,7 @@ export const ColorModeSwitcher: React.FC = () => {
         </Slide>
       )}
       {mode === "dark" && (
-        <Slide direction="up" in={mode === "dark"}>
+        <Slide direction="down" in={mode === "dark"} container={containerRef.current}>
           <Tooltip title="Natt">
             <IconButton size="small" onClick={() => setMode("system")} sx={{ color: "text.primary" }}>
               <DarkMode fontSize="small" />
@@ -28,7 +28,7 @@ export const ColorModeSwitcher: React.FC = () => {
         </Slide>
       )}
       {mode === "system" && (
-        <Slide direction="up" in={mode === "system"}>
+        <Slide direction="down" in={mode === "system"} container={containerRef.current}>
           <Tooltip title="Automatisk">
             <IconButton size="small" onClick={() => setMode("light")} sx={{ color: "text.primary" }}>
               <Brightness6 fontSize="small" />
