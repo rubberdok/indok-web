@@ -1,65 +1,76 @@
-import { Box, Container, Typography, Stack, NoSsr } from "@mui/material";
-import { useRef, useState, useEffect } from "react";
+import { ArrowForward } from "@mui/icons-material";
+import { Button, Container, NoSsr, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import { Organizations } from "./Organizations";
+// Import Swiper styles
+import "swiper/css";
+
+import { Link } from "@/components";
+
+import { Organization, OrganizationLink } from "./OrganizationLink";
+
+const organizations: Readonly<Organization[]> = [
+  { name: "Janus", externalUrl: "https://www.januslinjeforening.no" },
+  { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
+  { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
+  { name: "Indøk Kultur", internalUrl: "/about/organization?category=kultur" },
+  { name: "Rubberdøk", internalUrl: "/about/organizations/rubberdok" },
+  { name: "Hytteforeningen", internalUrl: "/about/organizations/hytteforeningen" },
+  { name: "Janus IF", internalUrl: "/about/organization?category=idrett" },
+] as const;
 
 export const OrganizationsSlider: React.FC = () => {
-  const orgsTitleEl = useRef<HTMLElement>();
-
-  const [sliderActiveIndex, setSliderActiveIndex] = useState(0);
-  const [sliderOffsetX, setSliderOffsetX] = useState(0);
-
-  const onActiveIndexChange = (index: number) => {
-    setSliderActiveIndex(index);
-  };
-
-  const updateSliderOffset = () => {
-    if (orgsTitleEl.current) {
-      setSliderOffsetX(orgsTitleEl.current.offsetWidth + orgsTitleEl.current.offsetLeft);
-    }
-  };
-
-  useEffect(() => {
-    updateSliderOffset();
-    window.addEventListener("resize", updateSliderOffset);
-    return () => {
-      window.removeEventListener("resize", updateSliderOffset);
-    };
-  }, []);
+  const theme = useTheme();
 
   return (
-    <Box
-      sx={{
-        width: "100vw",
-        py: { xs: 4, md: 6 },
-        px: 1,
-        bgcolor: (theme) => theme.vars.palette.background.elevated,
-        borderTop: "1px solid",
-        borderBottom: "1px solid",
-        borderColor: "divider",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
+    <Container maxWidth={false} disableGutters sx={{ bgcolor: "background.elevated", py: 4 }}>
       <Container>
-        <Stack direction="row" minWidth="max-content" alignItems="center">
-          <Box ref={orgsTitleEl}>
-            <Typography
-              variant="h4"
-              sx={{
-                opacity: sliderActiveIndex == 0 ? 1 : 0,
-                transition: (theme) => theme.transitions.create("opacity"),
-              }}
-            >
-              Våre <br />
-              Foreninger
-            </Typography>
-          </Box>
+        <Stack
+          direction="row"
+          spacing={8}
+          sx={{
+            "& .swiper-slide": {
+              width: "min-content",
+              display: "flex",
+              alignItems: "center",
+            },
+          }}
+        >
           <NoSsr>
-            <Organizations onActiveIndexChange={onActiveIndexChange} offsetX={sliderOffsetX + 48} />
+            <Swiper cssMode spaceBetween={parseInt(theme.spacing(4))} slidesPerView="auto" direction="horizontal">
+              <SwiperSlide>
+                <Typography variant="h4" component="h2">
+                  Våre
+                  <br />
+                  foreninger
+                </Typography>
+              </SwiperSlide>
+              {organizations.map((org) => (
+                <SwiperSlide key={org.name}>
+                  <OrganizationLink organization={org} />
+                </SwiperSlide>
+              ))}
+              <SwiperSlide>
+                <Button
+                  component={Link}
+                  noLinkStyle
+                  href="/about/organization"
+                  color="contrast"
+                  variant="contained"
+                  size="large"
+                  endIcon={<ArrowForward />}
+                >
+                  <Typography variant="inherit" noWrap>
+                    Alle organisasjoner
+                  </Typography>
+                </Button>
+              </SwiperSlide>
+            </Swiper>
           </NoSsr>
         </Stack>
       </Container>
-    </Box>
+    </Container>
   );
 };
