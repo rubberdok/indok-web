@@ -36,6 +36,7 @@ export const OrganizationsSlider: React.FC = () => {
               display: "flex",
               alignItems: "center",
             },
+            minHeight: "4.5rem",
           }}
         >
           <NoSsr>

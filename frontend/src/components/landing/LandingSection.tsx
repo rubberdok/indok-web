@@ -30,6 +30,7 @@ export const LandingSection: React.FC = () => {
           style={{ objectFit: "cover", objectPosition: "center" }}
           placeholder="blur"
           alt=""
+          priority
           sizes={`
             (max-width: ${theme.breakpoints.values.xs}px) 100vw,
             50vw,
