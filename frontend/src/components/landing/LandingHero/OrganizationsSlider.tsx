@@ -29,13 +29,12 @@ export const OrganizationsSlider: React.FC = () => {
       <Container>
         <Stack
           direction="row"
-          spacing={8}
           sx={{
             "& .swiper-slide": {
               width: "min-content",
               display: "flex",
-              alignItems: "center",
             },
+            minHeight: "4.75rem",
           }}
         >
           <NoSsr>
