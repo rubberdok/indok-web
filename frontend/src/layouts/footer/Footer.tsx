@@ -64,7 +64,7 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
 
             <Grid item xs={12} md={7}>
               <Stack alignItems="flex-start">
-                <Typography variant="h6" mb={1}>
+                <Typography variant="h6" component="p" mb={1}>
                   Lenker
                 </Typography>
                 <LinkItem href="/baksida">Baksida</LinkItem>
