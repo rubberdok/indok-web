@@ -33,6 +33,7 @@
     "@mui/lab": "^5.0.0-alpha.122",
     "@mui/material": "^5.11.12",
     "@sentry/nextjs": "^7.37.2",
+    "@vercel/analytics": "^0.1.11",
     "dayjs": "^1.10.5",
     "deepmerge": "^4.2.2",
     "formik": "^2.2.9",
