@@ -48,7 +48,7 @@
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
     "swiper": "^9.1.0",
-    "validator": "^13.6.0",
+    "validator": "^13.9.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -64,7 +64,7 @@
     "@types/react-swipeable-views": "^0.13.0",
     "@types/react-swipeable-views-utils": "^0.13.2",
     "@types/styled-components": "^5.1.10",
-    "@types/validator": "^13.7.10",
+    "@types/validator": "^13.7.14",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "cypress": "^10.1.0",
