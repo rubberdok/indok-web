@@ -1,5 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 import { CacheProvider, EmotionCache } from "@emotion/react";
+import { Analytics } from "@vercel/analytics/react";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -30,21 +31,24 @@ const App = (props: CustomAppProps): JSX.Element => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <CacheProvider value={emotionCache}>
-      <ApolloProvider client={apolloClient}>
-        <Head>
-          <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
-          <meta
-            name="description"
-            content="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
+    <>
+      <CacheProvider value={emotionCache}>
+        <ApolloProvider client={apolloClient}>
+          <Head>
+            <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
+            <meta
+              name="description"
+              content="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
              for all studentfrivillighet på masterstudiet Indøk ved NTNU. Arrangementer, verv, 
              og oversikt over det sosiale på Indøk."
-          />
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider>{getLayout(<Component {...pageProps} err={err} />)}</ThemeProvider>
-      </ApolloProvider>
-    </CacheProvider>
+            />
+            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+          </Head>
+          <ThemeProvider>{getLayout(<Component {...pageProps} err={err} />)}</ThemeProvider>
+        </ApolloProvider>
+      </CacheProvider>
+      <Analytics />
+    </>
   );
 };
 
