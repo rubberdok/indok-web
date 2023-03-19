@@ -1,8 +1,8 @@
-import { Box, Button, Container, Unstable_Grid2 as Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 
-import { Link, NextLinkComposed } from "@/components";
+import { Link } from "@/components";
 import Hero from "~/public/static/landing/hero.webp";
 
 import { OrganizationsSlider } from "./OrganizationsSlider";
