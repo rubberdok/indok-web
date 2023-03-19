@@ -83,7 +83,7 @@ export const LandingHero: React.FC = () => {
           </Box>
         </Container>
 
-        <Box display={{ xs: "none", md: "block" }} gridColumn={{ md: "8 / -1" }} gridRow="1" position="relative">
+        <Box display={{ xs: "none", md: "block" }} gridColumn="8 / -1" gridRow="1" position="relative">
           <Image
             src={Hero}
             fill
