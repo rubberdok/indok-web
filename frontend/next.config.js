@@ -13,7 +13,7 @@ const getPresets = () => {
       // JavaScript `RegExp`s. See https://docs.rs/regex.
       reactRemoveProperties: { properties: ["^data-test-id$"] },
       removeConsole: {
-        exclude: ["error"],
+        exclude: ["error", "time", "timeEnd", "timeLog"],
       },
     };
   }
