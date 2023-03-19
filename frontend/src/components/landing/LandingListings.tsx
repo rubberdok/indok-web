@@ -11,7 +11,7 @@ export const LandingListings: React.FC = () => {
   return (
     <Box
       sx={{
-        bgcolor: (theme) => theme.vars.palette.background.elevated,
+        bgcolor: "background.elevated",
         display: { xs: "block", md: "grid" },
         gridTemplateColumns: "repeat(2, 1fr)",
         position: "relative",
@@ -49,7 +49,7 @@ export const LandingListings: React.FC = () => {
         <Grid container direction="row" justifyContent={{ xs: "center", md: "flex-start" }}>
           <Grid item md={6} sm={8} xs={12}>
             <Grid container my={{ xs: 6, md: 12 }} direction="column" alignItems={{ xs: "center", md: "flex-start" }}>
-              <Grid item>
+              <Grid item sx={{ mr: { xs: 0, md: 2 } }}>
                 <Typography
                   variant="overline"
                   sx={(theme) => ({
