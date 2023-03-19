@@ -22,7 +22,7 @@ type Props = {
  * While loading, will render as a rectangular skeleton.
  */
 export const LoginRequired: React.FC<
-  React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size">>
+  React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size" | "variant">>
 > = ({ redirect, redirectPath, children, fallback, "data-test-id": dataTestId, ...buttonProps }) => {
   const router = useRouter();
   let path: string | undefined = redirectPath;

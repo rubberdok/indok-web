@@ -15,7 +15,7 @@ export const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTe
   const { data } = useQuery(UserDocument);
 
   return (
-    <LoginRequired size="medium" color="contrast" data-test-id={dataTestId} fullWidth={fullWidth}>
+    <LoginRequired size="medium" color="contrast" data-test-id={dataTestId} fullWidth={fullWidth} variant="text">
       <Button
         component={Link}
         href="/profile"
