@@ -16,7 +16,7 @@ export const LandingHero: React.FC = () => {
         position="relative"
         columnGap={4}
         gridTemplateColumns="repeat(12, 1fr)"
-        height="80vh"
+        height={{ md: "80vh" }}
         maxHeight={{ md: "1250px", xs: "900px" }}
         minHeight="565px"
       >
