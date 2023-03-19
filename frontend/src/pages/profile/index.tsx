@@ -42,9 +42,7 @@ const userInitials = (firstName: string, lastName: string): string => {
 };
 
 const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
-  console.time("render");
   const { data } = useQuery(UserDocument);
-  console.timeLog("render", "User fetched");
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   return (
@@ -85,7 +83,6 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
               Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
             </Typography>
           </Grid>
-          <>{console.timeLog("render", "Rendered avatar and text")}</>
 
           <Grid container item justifyContent="center" alignItems="stretch" spacing={4}>
             <Grid item xs={12} md={6} lg={5}>
@@ -106,7 +103,6 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
             <Grid item xs={12} md={6} lg={5}>
               <Orders data-test-id={`${ID_PREFIX}orders-`} />
             </Grid>
-            <>{console.timeLog("render", "Rendered cards without permissions")}</>
             <Grid item xs={12} md={6} lg={5}>
               <PermissionRequired permission="cabins.manage_booking">
                 <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
@@ -118,8 +114,6 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           </Grid>
         </Grid>
       </Container>
-      {console.timeLog("render", "render finished")}
-      {console.timeEnd("render")}
     </>
   );
 };
@@ -133,18 +127,12 @@ ProfilePage.getLayout = (page) => (
 export default ProfilePage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  console.time("SSP");
   const client = initializeApollo({}, ctx);
-  console.timeLog("SSP", "Apollo initialized");
   const { data, error } = await client.query({ query: UserDocument });
-  console.timeLog("SSP", "User fetched");
 
   if (error) return { notFound: true };
-  console.timeLog("SSP", "Error checked");
   if (!data.user) {
     return { redirect: { destination: generateFeideLoginUrl("/profile"), permanent: false } };
   }
-  console.timeLog("SSP", "Redirect checked");
-  console.timeEnd("SSP");
   return addApolloState(client, { props: { user: data.user } });
 };
