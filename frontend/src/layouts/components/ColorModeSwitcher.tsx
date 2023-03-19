@@ -54,36 +54,21 @@ export const ColorModeSwitcher: React.FC = () => {
         <DialogTitle>Utseende</DialogTitle>
         <DialogContent>
           <Grid container direction="row" spacing={2} sx={{ aspectRatio: "11/4" }}>
-            <Grid
-              container
-              direction="column"
-              spacing={1}
-              data-color-scheme="light"
-              xs={4}
-              onClick={() => setMode("light")}
-              role="button"
-            >
+            <Grid container direction="column" spacing={1} data-color-scheme="light" xs={4}>
               <Grid xs>
                 <Card
                   variant="outlined"
                   sx={{
-                    bgcolor: "background.elevated",
                     width: "100%",
                     height: "100%",
                     position: "relative",
                   }}
                 >
-                  <CardActionArea sx={{ width: "100%", height: "100%" }}>
-                    <CardContent
-                      sx={(theme) => ({ width: "100%", height: "100%", padding: theme.spacing(2, 0, 0, 2) })}
-                    >
-                      <Grow in={mode === "light"}>
-                        <CheckCircle sx={{ position: "absolute", bottom: 0, right: 0, color: "text.primary" }} />
-                      </Grow>
-                      <Card sx={(theme) => ({ width: "150%", height: "150%", p: theme.spacing(1) })}>
-                        <Typography sx={{ lineHeight: 1 }}>Aa</Typography>
-                      </Card>
-                    </CardContent>
+                  <CardActionArea sx={{ width: "100%", height: "100%" }} onClick={() => setMode("light")}>
+                    <Grow in={mode === "light"} appear={false}>
+                      <CheckCircle sx={{ position: "absolute", bottom: 0, right: 0, color: "text.primary" }} />
+                    </Grow>
+                    <CardContentPreview />
                   </CardActionArea>
                 </Card>
               </Grid>
@@ -91,35 +76,21 @@ export const ColorModeSwitcher: React.FC = () => {
                 <Typography variant="body2">Lys</Typography>
               </Grid>
             </Grid>
-            <Grid
-              container
-              direction="column"
-              spacing={1}
-              data-color-scheme="dark"
-              xs={4}
-              onClick={() => setMode("dark")}
-            >
+            <Grid container direction="column" spacing={1} data-color-scheme="dark" xs={4}>
               <Grid xs>
                 <Card
                   variant="outlined"
                   sx={{
-                    bgcolor: "background.elevated",
                     width: "100%",
                     height: "100%",
                     position: "relative",
                   }}
                 >
-                  <CardActionArea sx={{ width: "100%", height: "100%" }}>
-                    <CardContent
-                      sx={(theme) => ({ width: "100%", height: "100%", padding: theme.spacing(2, 0, 0, 2) })}
-                    >
-                      <Grow in={mode === "dark"}>
-                        <CheckCircle sx={{ position: "absolute", bottom: 0, right: 0, color: "text.primary" }} />
-                      </Grow>
-                      <Card sx={(theme) => ({ width: "150%", height: "150%", p: theme.spacing(1) })}>
-                        <Typography sx={{ lineHeight: 1 }}>Aa</Typography>
-                      </Card>
-                    </CardContent>
+                  <CardActionArea sx={{ width: "100%", height: "100%" }} onClick={() => setMode("dark")}>
+                    <Grow in={mode === "dark"} appear={false}>
+                      <CheckCircle sx={{ position: "absolute", bottom: 0, right: 0, color: "text.primary" }} />
+                    </Grow>
+                    <CardContentPreview />
                   </CardActionArea>
                 </Card>
               </Grid>
@@ -127,46 +98,19 @@ export const ColorModeSwitcher: React.FC = () => {
                 <Typography variant="body2">Mørk</Typography>
               </Grid>
             </Grid>
-            <Grid container direction="column" spacing={1} xs={4} onClick={() => setMode("system")}>
+            <Grid container direction="column" spacing={1} xs={4}>
               <Grid container xs spacing={0}>
                 <Card variant="outlined" sx={{ height: "100%", width: "100%", padding: "none", position: "relative" }}>
-                  <CardActionArea sx={{ height: "100%", width: "100%" }}>
+                  <CardActionArea sx={{ height: "100%", width: "100%" }} onClick={() => setMode("system")}>
                     <Grid container sx={{ height: "100%" }} xs>
                       <Grid xs={6} data-color-scheme="dark">
-                        <CardContent
-                          sx={(theme) => ({
-                            borderTopRightRadius: 0,
-                            borderBottomRightRadius: 0,
-                            bgcolor: "background.elevated",
-                            padding: theme.spacing(2, 0, 0, 2),
-                            width: "100%",
-                            height: "100%",
-                          })}
-                        >
-                          <Card sx={(theme) => ({ width: "150%", height: "150%", p: theme.spacing(1) })}>
-                            <Typography sx={{ lineHeight: 1 }}>Aa</Typography>
-                          </Card>
-                        </CardContent>
+                        <CardContentPreview />
                       </Grid>
                       <Grid xs={6} data-color-scheme="light">
-                        <CardContent
-                          sx={(theme) => ({
-                            margin: "none",
-                            borderTopRightRadius: 0,
-                            borderBottomRightRadius: 0,
-                            bgcolor: "background.elevated",
-                            padding: theme.spacing(2, 0, 0, 2),
-                            width: "100%",
-                            height: "100%",
-                          })}
-                        >
-                          <Card sx={(theme) => ({ width: "150%", height: "150%", p: theme.spacing(1) })}>
-                            <Typography sx={{ lineHeight: 1 }}>Aa</Typography>
-                          </Card>
-                        </CardContent>
-                        <Grow in={mode === "system"}>
+                        <Grow in={mode === "system"} appear={false}>
                           <CheckCircle sx={{ position: "absolute", bottom: 0, right: 0, color: "text.primary" }} />
                         </Grow>
+                        <CardContentPreview />
                       </Grid>
                     </Grid>
                   </CardActionArea>
@@ -182,3 +126,20 @@ export const ColorModeSwitcher: React.FC = () => {
     </>
   );
 };
+
+function CardContentPreview() {
+  return (
+    <CardContent
+      sx={(theme) => ({
+        width: "100%",
+        height: "100%",
+        padding: theme.spacing(2, 0, 0, 2),
+        bgcolor: "background.elevated",
+      })}
+    >
+      <Card sx={(theme) => ({ width: "150%", height: "150%", p: theme.spacing(1) })}>
+        <Typography sx={{ lineHeight: 1 }}>Aa</Typography>
+      </Card>
+    </CardContent>
+  );
+}
