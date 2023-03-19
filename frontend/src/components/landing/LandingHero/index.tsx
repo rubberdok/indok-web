@@ -1,4 +1,4 @@
-import { Box, Button, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
+import { Box, Button, Container, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 
@@ -12,49 +12,60 @@ export const LandingHero: React.FC = () => {
   return (
     <>
       <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(12, 1fr)",
-          gap: 4,
-          height: { md: "80vh" },
-          maxHeight: "1250px",
-          minHeight: "565px",
-          position: "relative",
-        }}
+        display="grid"
+        position="relative"
+        columnGap={4}
+        gridTemplateColumns="repeat(12, 1fr)"
+        height={{ md: "80vh" }}
+        maxHeight={{ md: "1250px", xs: "900px" }}
+        minHeight="565px"
       >
-        <Container sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1" }}>
-          <Grid container direction="row">
-            <Grid container md={6} xs={12} spacing={4} mt={14} mb={8}>
+        <Container
+          sx={{
+            gridColumn: "1 / -1",
+            gridRow: "1",
+            display: "grid",
+            gridTemplateColumns: "repeat(12, 1fr)",
+          }}
+        >
+          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} mt={14} mb={8} display="flex" justifyContent="center">
+            <Grid
+              container
+              direction="column"
+              position="relative"
+              justifyContent="center"
+              alignItems={{ xs: "center", md: "flex-start" }}
+              spacing={2}
+            >
               <Grid>
-                <Stack spacing={2} alignItems={{ xs: "center", md: "flex-start" }}>
-                  <Typography
-                    variant="overline"
-                    sx={(theme) => ({
-                      color: "primary.main",
-                      [theme.getColorSchemeSelector("dark")]: { color: "primary.light" },
-                    })}
-                  >
-                    Foreningen for studentene ved
-                  </Typography>
-                  <Typography variant="h1" textAlign={{ xs: "center", md: "left" }}>
-                    Industriell Økonomi & Teknologiledelse
-                  </Typography>
-                </Stack>
+                <Typography
+                  variant="overline"
+                  sx={(t) => ({
+                    color: "primary.main",
+                    [t.getColorSchemeSelector("dark")]: { color: "primary.light" },
+                  })}
+                >
+                  Foreningen for studentene ved
+                </Typography>
+              </Grid>
+              <Grid>
+                <Typography variant="h1" textAlign={{ xs: "center", md: "left" }}>
+                  Industriell Økonomi & Teknologiledelse
+                </Typography>
               </Grid>
               <Grid
                 container
                 xs={12}
                 justifyContent={{ xs: "center", md: "flex-start" }}
                 alignItems={{ xs: "center", md: "flex-start" }}
-                spacing={2}
                 direction={{ xs: "column", md: "row" }}
               >
-                <Grid xs={10} sm={8} md={6} lg={5}>
+                <Grid xs={10} sm={8} md={5} lg={5}>
                   <Button fullWidth component={Link} noLinkStyle href="/about" variant="contained" size="large">
                     Les om foreningen
                   </Button>
                 </Grid>
-                <Grid xs={10} sm={8} md={6} lg={5}>
+                <Grid xs={10} sm={8} md={5} lg={5}>
                   <Button
                     fullWidth
                     component={Link}
@@ -69,16 +80,10 @@ export const LandingHero: React.FC = () => {
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </Container>
-        <Box
-          sx={{
-            position: "relative",
-            gridColumn: "8 / -1",
-            gridRow: "1",
-            display: { xs: "none", md: "block" },
-          }}
-        >
+
+        <Box display={{ xs: "none", md: "block" }} gridColumn="8 / -1" gridRow="1" position="relative">
           <Image
             src={Hero}
             fill
@@ -87,7 +92,7 @@ export const LandingHero: React.FC = () => {
             alt=""
             priority
             sizes={`
-              (max-width: ${theme.breakpoints.values.sm}px) 0vw,
+              ${theme.breakpoints.down("sm")} 0vw,
               40vw,
             `}
           />
