@@ -49,14 +49,12 @@ export const LandingHero: React.FC = () => {
                 spacing={2}
                 direction={{ xs: "column", md: "row" }}
               >
-                <Grid xs={10} md={5}>
+                <Grid xs={10} sm={8} md={6} lg={5}>
                   <Button fullWidth component={Link} noLinkStyle href="/about" variant="contained" size="large">
-                    <Typography variant="inherit" noWrap>
-                      Les om foreningen
-                    </Typography>
+                    Les om foreningen
                   </Button>
                 </Grid>
-                <Grid xs={10} md={5}>
+                <Grid xs={10} sm={8} md={6} lg={5}>
                   <Button
                     fullWidth
                     component={Link}
@@ -66,9 +64,7 @@ export const LandingHero: React.FC = () => {
                     color="contrast"
                     size="large"
                   >
-                    <Typography variant="inherit" noWrap>
-                      Se arrangementer
-                    </Typography>
+                    Se arrangementer
                   </Button>
                 </Grid>
               </Grid>
