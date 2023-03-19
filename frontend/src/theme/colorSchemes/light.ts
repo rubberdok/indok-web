@@ -55,5 +55,5 @@ export const light: PaletteOptions = {
     default: "#fff",
     paper: "#fff",
   },
-  shadowChannel: colorChannel("#CCCCCC"),
+  shadowChannel: colorChannel("#161C24"),
 };

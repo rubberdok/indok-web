@@ -42,7 +42,7 @@ export const AppBar = styled(MuiAppBar, {
 
   /* When scrolling, show drop shadow and shrink the app bar on desktop */
   ...(scrolling && {
-    filter: `drop-shadow(0px 25px 25px rgba(${theme.vars.palette.shadowChannel} / 0.25))`,
+    filter: `drop-shadow(0px 25px 25px rgba(${theme.vars.palette.shadowChannel} / 0.12))`,
     [theme.getColorSchemeSelector("dark")]: {
       filter: `
       drop-shadow(0 4px 3px rgba(${theme.vars.palette.shadowChannel} / 0.07))
