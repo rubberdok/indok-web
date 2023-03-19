@@ -135,9 +135,20 @@ function CardContentPreview() {
         height: "100%",
         padding: theme.spacing(2, 0, 0, 2),
         bgcolor: "background.elevated",
+        "&:last-child": {
+          paddingBottom: 0,
+        },
       })}
     >
-      <Card sx={(theme) => ({ width: "150%", height: "150%", p: theme.spacing(1) })}>
+      <Card
+        sx={(theme) => ({
+          width: "100%",
+          height: "100%",
+          p: theme.spacing(1),
+          borderBottomLeftRadius: 0,
+          borderTopRightRadius: 0,
+        })}
+      >
         <Typography sx={{ lineHeight: 1 }}>Aa</Typography>
       </Card>
     </CardContent>
