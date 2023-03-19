@@ -25,18 +25,17 @@ export const OrganizationsSlider: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <Container maxWidth={false} disableGutters sx={{ bgcolor: "background.elevated", py: 4 }}>
+    <Container maxWidth={false} disableGutters sx={{ bgcolor: "background.elevated" }}>
       <Container>
         <Stack
           direction="row"
-          spacing={8}
           sx={{
             "& .swiper-slide": {
               width: "min-content",
               display: "flex",
               alignItems: "center",
             },
-            minHeight: "4.5rem",
+            minHeight: `calc(2rem + ${theme.spacing(15)})`,
           }}
         >
           <NoSsr>
@@ -49,7 +48,7 @@ export const OrganizationsSlider: React.FC = () => {
                 </Typography>
               </SwiperSlide>
               {organizations.map((org) => (
-                <SwiperSlide key={org.name}>
+                <SwiperSlide key={org.name} style={{ padding: theme.spacing(4, 0) }}>
                   <OrganizationLink organization={org} />
                 </SwiperSlide>
               ))}
