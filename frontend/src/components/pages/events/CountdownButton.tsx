@@ -123,6 +123,41 @@ export const CountdownButton: React.FC<Props> = ({
   disabled,
   onClick,
 }) => {
+  const { timeLeft, countdownText } = useCountdown(countDownDate);
+
+  return (
+    <Box sx={{ float: "left" }}>
+      <LoadingButton
+        fullWidth
+        sx={{ minWidth: (theme) => theme.spacing(30) }}
+        size="large"
+        variant={timeLeft > 0 ? "text" : "contained"}
+        color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
+        onClick={onClick}
+        disabled={timeLeft > 0 || disabled}
+        loading={loading}
+      >
+        <ButtonText
+          countdownText={countdownText}
+          isOpen={timeLeft <= 0}
+          isSignedUp={isSignedUp}
+          isOnWaitingList={isOnWaitingList}
+          positionOnWaitingList={positionOnWaitingList}
+          isFull={isFull}
+        />
+      </LoadingButton>
+    </Box>
+  );
+};
+
+/**
+ * Creates a countdown based on the server time until the given `date`.
+ * The countdown is updated approximately every 500 milliseconds, and should be resistant to drift.
+ * @param date The date that is counted down to
+ * @returns The time left until the event starts, in milliseconds
+ * @returns A formatted countdown string, for more details, see [relative time](https://day.js.org/docs/en/customization/relative-time)
+ */
+function useCountdown(date: string) {
   /**
    * Difference between the client time and the server time at the time of the last server time query.
    */
@@ -167,11 +202,11 @@ export const CountdownButton: React.FC<Props> = ({
   /**
    * Time left until the event starts, in milliseconds
    */
-  const timeLeft = dayjs(countDownDate).diff(adjustedClientTime);
+  const timeLeft = dayjs(date).diff(adjustedClientTime);
   /**
    * A formatted countdown string, for more details, see [relative time](https://day.js.org/docs/en/customization/relative-time)
    */
-  const countdownText = dayjs(countDownDate).from(adjustedClientTime);
+  const countdownText = dayjs(date).from(adjustedClientTime);
 
   useEffect(() => {
     /**
@@ -192,27 +227,5 @@ export const CountdownButton: React.FC<Props> = ({
     };
   });
 
-  return (
-    <Box sx={{ float: "left" }}>
-      <LoadingButton
-        fullWidth
-        sx={{ minWidth: (theme) => theme.spacing(30) }}
-        size="large"
-        variant={timeLeft > 0 ? "text" : "contained"}
-        color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
-        onClick={onClick}
-        disabled={timeLeft > 0 || disabled}
-        loading={loading}
-      >
-        <ButtonText
-          countdownText={countdownText}
-          isOpen={timeLeft <= 0}
-          isSignedUp={isSignedUp}
-          isOnWaitingList={isOnWaitingList}
-          positionOnWaitingList={positionOnWaitingList}
-          isFull={isFull}
-        />
-      </LoadingButton>
-    </Box>
-  );
-};
+  return { timeLeft, countdownText };
+}
