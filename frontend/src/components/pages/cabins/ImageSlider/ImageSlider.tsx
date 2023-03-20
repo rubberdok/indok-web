@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import MobileStepper from "@mui/material/MobileStepper";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/future/image";
+import Image from "next/image";
 import React from "react";
 import SwipeableViews from "react-swipeable-views";
 

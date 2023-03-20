@@ -59,9 +59,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
               <Grid item xs={12}>
                 <Alert variant="filled" severity="info">
                   Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                    kontakt@rubberdok.no
-                  </a>
+                  <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
               {!(productId && quantity) ? (

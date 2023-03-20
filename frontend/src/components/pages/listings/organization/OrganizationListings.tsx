@@ -11,9 +11,9 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { useState } from "react";
 
+import { Link } from "@/components";
 import { DeleteListing } from "@/components/pages/listings/organization/DeleteListing";
 import { AdminOrganizationFragment, OrgAdminListingFragment } from "@/generated/graphql";
 
@@ -47,11 +47,16 @@ export const OrganizationListings: React.FC<Props> = ({ organization }) => {
                     <TableCell>{dayjs(listing.deadline).format("LLL")}</TableCell>
                     <TableCell size="small" align="right">
                       <Stack spacing={1} direction="row" justifyContent="flex-end">
-                        <Link href={`${organization.id}/listings/${listing.id}`} passHref>
-                          <Button variant="contained" color="secondary" startIcon={<Create />}>
-                            Administrer
-                          </Button>
-                        </Link>
+                        <Button
+                          component={Link}
+                          noLinkStyle
+                          href={`${organization.id}/listings/${listing.id}`}
+                          variant="contained"
+                          color="secondary"
+                          startIcon={<Create />}
+                        >
+                          Administrer
+                        </Button>
                         <Button
                           variant="contained"
                           color="error"
@@ -72,11 +77,16 @@ export const OrganizationListings: React.FC<Props> = ({ organization }) => {
           </TableContainer>
         )}
         <div>
-          <Link passHref href={`${organization.id}/listings/new`}>
-            <Button variant="outlined" color="contrast" startIcon={<Add />}>
-              Opprett nytt verv
-            </Button>
-          </Link>
+          <Button
+            component={Link}
+            noLinkStyle
+            href={`${organization.id}/listings/new`}
+            variant="outlined"
+            color="contrast"
+            startIcon={<Add />}
+          >
+            Opprett nytt verv
+          </Button>
         </div>
       </Stack>
     </>

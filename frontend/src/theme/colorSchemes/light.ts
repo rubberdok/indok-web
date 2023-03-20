@@ -1,10 +1,5 @@
-import { Color } from "@mui/material";
-import { ThemeOptions } from "@mui/material/styles";
-
-export const palette = (mode: "light" | "dark"): ThemeOptions["palette"] => ({
-  mode,
-  ...(mode === "light" ? light : dark),
-});
+import { Color, PaletteOptions } from "@mui/material";
+import { colorChannel } from "@mui/system/colorManipulator";
 
 const grey: Partial<Color> = {
   50: "#FFFFFF",
@@ -19,7 +14,7 @@ const grey: Partial<Color> = {
   900: "#161C24",
 };
 
-const light: ThemeOptions["palette"] = {
+export const light: PaletteOptions = {
   primary: {
     main: "#2D6365",
     contrastText: "#fff",
@@ -50,43 +45,15 @@ const light: ThemeOptions["palette"] = {
     dark: "#1C1C1E",
     main: "#2C2C2E",
     contrastText: "#fff",
+    lightChannel: colorChannel("#3A3A3C"),
+    darkChannel: colorChannel("#1C1C1E"),
+    mainChannel: colorChannel("#2C2C2E"),
+    contrastTextChannel: colorChannel("#fff"),
   },
   background: {
     elevated: "#f0f0f0",
     default: "#fff",
     paper: "#fff",
   },
-};
-
-const dark: ThemeOptions["palette"] = {
-  background: {
-    elevated: grey[900],
-    default: "#0f1217",
-    paper: grey[800],
-  },
-  error: {
-    main: "#FF4530",
-    contrastText: "#fff",
-  },
-  warning: {
-    main: "#FF9F0A",
-    contrastText: "#fff",
-  },
-  grey,
-  success: {
-    main: "#30D158",
-    contrastText: "#fff",
-  },
-  primary: {
-    main: "#3E878A",
-  },
-  secondary: {
-    main: "#F37F31",
-  },
-  contrast: {
-    dark: "#E5E5EA",
-    main: "#F2F2F7",
-    light: "#fff",
-    contrastText: "#000",
-  },
+  shadowChannel: colorChannel("#161C24"),
 };

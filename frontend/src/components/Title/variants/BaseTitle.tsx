@@ -1,7 +1,7 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { SxProps, Theme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
-import { ImageProps, StaticImageData } from "next/future/image";
+import { ImageProps, StaticImageData } from "next/image";
 
 import { Breadcrumbs, Props as BreadcrumbProps } from "@/components/Breadcrumbs";
 import { TLink } from "@/components/Breadcrumbs/types";
@@ -9,7 +9,7 @@ import { TLink } from "@/components/Breadcrumbs/types";
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
-const Image = dynamic(() => import("next/future/image"));
+const Image = dynamic(() => import("next/image"));
 
 export type Props = {
   title?: string;

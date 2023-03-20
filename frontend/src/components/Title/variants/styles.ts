@@ -12,8 +12,8 @@ export const RootStyle = styled(Box, {
   shouldForwardProp: (prop) => prop !== "disableGutters",
 })<RootProps>(({ theme, disableGutters }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
-  backgroundColor: theme.palette.background.elevated,
-  color: theme.palette.text.primary,
+  backgroundColor: theme.vars.palette.background.elevated,
+  color: theme.vars.palette.text.primary,
   [theme.breakpoints.up("md")]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
   },

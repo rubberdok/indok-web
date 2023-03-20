@@ -5,9 +5,9 @@ export const Table: ThemeOptions["components"] = {
     styleOverrides: {
       root: ({ theme }) => ({
         "&.Mui-selected": {
-          backgroundColor: theme.palette.action.selected,
+          backgroundColor: theme.vars.palette.action.selected,
           "&:hover": {
-            backgroundColor: theme.palette.action.hover,
+            backgroundColor: theme.vars.palette.action.hover,
           },
         },
       }),
@@ -19,8 +19,8 @@ export const Table: ThemeOptions["components"] = {
         borderBottom: "none",
       },
       head: ({ theme }) => ({
-        color: theme.palette.text.secondary,
-        backgroundColor: theme.palette.background.paper,
+        color: theme.vars.palette.text.secondary,
+        backgroundColor: theme.vars.palette.background.paper,
         "&:first-of-type": {
           paddingLeft: theme.spacing(3),
           borderTopLeftRadius: theme.shape.borderRadius,
@@ -33,8 +33,7 @@ export const Table: ThemeOptions["components"] = {
         },
       }),
       stickyHeader: ({ theme }) => ({
-        backgroundColor: theme.palette.background.paper,
-        backgroundImage: `linear-gradient(to bottom, ${theme.palette.background.paper} 0%, ${theme.palette.background.paper} 100%)`,
+        backgroundColor: theme.vars.palette.background.paper,
       }),
       body: ({ theme }) => ({
         "&:first-of-type": {
@@ -49,7 +48,7 @@ export const Table: ThemeOptions["components"] = {
   MuiTablePagination: {
     styleOverrides: {
       root: ({ theme }) => ({
-        borderTop: `solid 1px ${theme.palette.divider}`,
+        borderTop: `solid 1px ${theme.vars.palette.divider}`,
       }),
       toolbar: {
         height: 64,

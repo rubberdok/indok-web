@@ -9,11 +9,11 @@ export const Slider: ThemeOptions["components"] = {
     styleOverrides: {
       markLabel: ({ theme }) => ({
         fontSize: 13,
-        color: theme.palette.text.disabled,
+        color: theme.vars.palette.text.disabled,
       }),
       valueLabel: ({ theme }) => ({
         borderRadius: 8,
-        backgroundColor: theme.palette.grey[800],
+        backgroundColor: theme.vars.palette.grey[800],
       }),
     },
   },

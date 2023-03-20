@@ -1,4 +1,4 @@
 export { Breadcrumbs } from "./Breadcrumbs";
 export { LabeledIcon } from "./LabeledIcon";
 export { Logo } from "./Logo";
-export { NavigationSidebar } from "./NavigationSidebar";
+export { default as Link, type LinkProps, NextLinkComposed } from "./Link";

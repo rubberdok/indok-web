@@ -1,6 +1,7 @@
 import { Box, SxProps, Typography } from "@mui/material";
-import NextLink from "next/link";
 import { memo } from "react";
+
+import Link from "./Link";
 
 type Props = { sx?: SxProps };
 
@@ -12,7 +13,7 @@ type Props = { sx?: SxProps };
  */
 export const Logo: React.FC<Props> = memo(function Logo({ sx }) {
   return (
-    <NextLink href="/" passHref>
+    <Link href="/" underline="none" color="text.primary">
       <Box
         sx={{
           width: 75,
@@ -26,6 +27,6 @@ export const Logo: React.FC<Props> = memo(function Logo({ sx }) {
           INDØK
         </Typography>
       </Box>
-    </NextLink>
+    </Link>
   );
 });

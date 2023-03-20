@@ -1,15 +1,15 @@
 import { useQuery } from "@apollo/client";
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Card, CardContent, Divider, Stack, Typography } from "@mui/material";
-import Link from "next/link";
 import React from "react";
 
+import { NextLinkComposed } from "@/components/Link";
 import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
 
 export const BookNow: React.FC = () => {
   const { data } = useQuery(CabinsAndResponsiblesDocument);
   return (
-    <Card sx={{ bgcolor: (theme) => theme.palette.grey[900], height: "100%" }} elevation={0}>
+    <Card sx={{ bgcolor: (theme) => theme.vars.palette.grey[900], height: "100%" }} elevation={0}>
       <CardContent sx={{ height: "100%" }}>
         <Stack
           direction="row"
@@ -32,11 +32,16 @@ export const BookNow: React.FC = () => {
             <Typography variant="subtitle2">Intern: 110 kr</Typography>
             <Typography variant="subtitle2">Ekstern: 270 kr</Typography>
           </Stack>
-          <Link href="/cabins/book" passHref>
-            <Button variant="contained" size="large" color="success" endIcon={<ArrowForward />}>
-              Book nå
-            </Button>
-          </Link>
+          <Button
+            component={NextLinkComposed}
+            to="/cabins/book"
+            variant="contained"
+            size="large"
+            color="success"
+            endIcon={<ArrowForward />}
+          >
+            Book nå
+          </Button>
         </Stack>
       </CardContent>
     </Card>

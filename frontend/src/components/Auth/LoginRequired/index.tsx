@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
+import { Link } from "@/components";
 import { UserDocument } from "@/generated/graphql";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
@@ -21,14 +21,9 @@ type Props = {
  * If a user is logged in, it renders the children.
  * While loading, will render as a rectangular skeleton.
  */
-export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps>> = ({
-  redirect,
-  redirectPath,
-  children,
-  fallback,
-  "data-test-id": dataTestId,
-  ...buttonProps
-}) => {
+export const LoginRequired: React.FC<
+  React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size" | "variant">>
+> = ({ redirect, redirectPath, children, fallback, "data-test-id": dataTestId, ...buttonProps }) => {
   const router = useRouter();
   let path: string | undefined = redirectPath;
   if (redirect) {
@@ -41,11 +36,17 @@ export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps
   if (loading) {
     return (
       <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
-        <Link href={url} passHref>
-          <Button size="medium" variant="contained" color="primary" {...buttonProps}>
-            Logg inn
-          </Button>
-        </Link>
+        <Button
+          size="medium"
+          variant="contained"
+          color="primary"
+          component={Link}
+          noLinkStyle
+          href={url}
+          {...buttonProps}
+        >
+          Logg inn
+        </Button>
       </Skeleton>
     );
   }
@@ -59,10 +60,17 @@ export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps
   }
 
   return (
-    <Link href={url} passHref>
-      <Button size="medium" variant="contained" color="primary" data-test-id={dataTestId} {...buttonProps}>
-        Logg inn
-      </Button>
-    </Link>
+    <Button
+      component={Link}
+      noLinkStyle
+      href={url}
+      size="medium"
+      variant="contained"
+      color="primary"
+      data-test-id={dataTestId}
+      {...buttonProps}
+    >
+      Logg inn
+    </Button>
   );
 };

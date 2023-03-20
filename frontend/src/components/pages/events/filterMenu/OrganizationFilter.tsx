@@ -35,7 +35,7 @@ export const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) 
 
   if (error) {
     return (
-      <Grid item sx={{ color: (theme) => theme.palette.error.main }}>
+      <Grid item sx={{ color: (theme) => theme.vars.palette.error.main }}>
         <Typography variant="body1">Noe gikk galt</Typography>
       </Grid>
     );
