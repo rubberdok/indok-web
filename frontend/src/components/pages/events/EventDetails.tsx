@@ -42,7 +42,6 @@ import {
   EventDocument,
   EventSignOffDocument,
   EventSignUpDocument,
-  ServerTimeDocument,
   UserWithEventsAndOrgsDocument,
 } from "@/generated/graphql";
 import { calendarFile } from "@/utils/calendars";
@@ -90,8 +89,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [eventSignOff, { loading: signOffLoading }] = useMutation(EventSignOffDocument);
 
   const { data: userData } = useQuery(UserWithEventsAndOrgsDocument);
-
-  const { data: timeData } = useQuery(ServerTimeDocument, { fetchPolicy: "network-only" });
 
   const {
     data: eventData,
@@ -195,10 +192,10 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                         onChange={(e) => setExtraInformation(e.target.value)}
                       />
                     )}
-                  {timeData?.serverTime && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
+                  {event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                     <Stack spacing={2}>
                       <CountdownButton
-                        countDownDate={event.signupOpenDate ?? ""}
+                        countdownDate={event.signupOpenDate ?? ""}
                         isSignedUp={event.userAttendance?.isSignedUp ?? false}
                         isOnWaitingList={event.userAttendance?.isOnWaitingList ?? false}
                         positionOnWaitingList={event.userAttendance?.positionOnWaitingList ?? 0}
@@ -215,7 +212,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                             !event.userAttendance?.isOnWaitingList)
                         }
                         onClick={handleClick}
-                        currentTime={timeData.serverTime}
                       />
                       {event.bindingSignup && (
                         <LabeledIcon
