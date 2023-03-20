@@ -85,7 +85,7 @@ const ButtonText: React.FC<ButtonTextProps> = ({
 
 type Props = {
   /** The date that is counted down to */
-  countDownDate: string;
+  countdownDate: string;
   /** Whether the user viewing the page is signed up to the event */
   isSignedUp: boolean;
   /** Whether the user viewing the page is on the waiting list for the event */
@@ -114,7 +114,7 @@ type Props = {
  * - onClick: metod called when the count down button is clicked
  */
 export const CountdownButton: React.FC<Props> = ({
-  countDownDate,
+  countdownDate,
   isSignedUp,
   isOnWaitingList,
   positionOnWaitingList,
@@ -123,7 +123,7 @@ export const CountdownButton: React.FC<Props> = ({
   disabled,
   onClick,
 }) => {
-  const { timeLeft, countdownText } = useCountdown(countDownDate);
+  const { timeLeft, countdownText } = useCountdown(countdownDate);
 
   return (
     <Box sx={{ float: "left" }}>

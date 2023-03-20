@@ -195,7 +195,7 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                   {event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                     <Stack spacing={2}>
                       <CountdownButton
-                        countDownDate={event.signupOpenDate ?? ""}
+                        countdownDate={event.signupOpenDate ?? ""}
                         isSignedUp={event.userAttendance?.isSignedUp ?? false}
                         isOnWaitingList={event.userAttendance?.isOnWaitingList ?? false}
                         positionOnWaitingList={event.userAttendance?.positionOnWaitingList ?? 0}
