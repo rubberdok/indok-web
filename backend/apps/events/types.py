@@ -70,7 +70,7 @@ def resolve_position_on_waiting_list(event: Event, user: User) -> Optional[int]:
         wait_list = event.users_on_waiting_list
         for i in range(len(wait_list)):
             if wait_list[i] == user:
-                i + 1
+                return i + 1
     return None
 
 
