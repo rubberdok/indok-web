@@ -69,13 +69,9 @@ def resolve_position_on_waiting_list(event: Event, user: User) -> Optional[int]:
     if event.is_attendable:
         wait_list = event.users_on_waiting_list
         for i in range(len(wait_list)):
-            position: int = 1
             if wait_list[i] == user:
-                return position
-            else:
-                position += 1
-    # The return statement below should never execute, but just in case it gives a rediculos number.
-    return 99999
+                i + 1
+    return None
 
 
 class EventType(DjangoObjectType):
