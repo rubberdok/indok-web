@@ -1,3 +1,5 @@
+from typing import Optional
+
 import graphene
 from graphene_django import DjangoObjectType
 
@@ -9,3 +11,7 @@ class ArchiveDocumentType(DjangoObjectType):
 
     class Meta:
         model = ArchiveDocument
+
+    @staticmethod
+    def resolve_thumbnail(instance: ArchiveDocument, info) -> Optional[str]:
+        return f"https://drive.google.com/thumbnail?authuser=0&sz=w320&id={instance.file_location}"
