@@ -5009,6 +5009,12 @@
               "description": "Annet",
               "isDeprecated": false,
               "name": "ANNET"
+            },
+            {
+              "deprecationReason": null,
+              "description": "Januscript",
+              "isDeprecated": false,
+              "name": "JANUSCRIPT"
             }
           ],
           "fields": null,
