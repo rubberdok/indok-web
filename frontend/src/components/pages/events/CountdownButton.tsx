@@ -60,7 +60,7 @@ const ButtonText: React.FC<ButtonTextProps> = ({
     if (positionOnWaitingList === 2)
       return (
         <>
-          Det er en person foran deg i ventelisten
+          Det er én person foran deg i ventelisten
           <br /> Trykk her for å melde av
         </>
       );
