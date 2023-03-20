@@ -1780,6 +1780,7 @@ export type EventFragment = {
     isSignedUp?: boolean | null;
     isOnWaitingList?: boolean | null;
     hasBoughtTicket?: boolean | null;
+    positionOnWaitingList?: number | null;
   } | null;
   product?: { __typename?: "ProductType"; id: string } | null;
 };
@@ -1990,6 +1991,7 @@ export type UpdateEventMutation = {
         isSignedUp?: boolean | null;
         isOnWaitingList?: boolean | null;
         hasBoughtTicket?: boolean | null;
+        positionOnWaitingList?: number | null;
       } | null;
       product?: { __typename?: "ProductType"; id: string } | null;
     } | null;
@@ -2082,6 +2084,7 @@ export type EventQuery = {
       isSignedUp?: boolean | null;
       isOnWaitingList?: boolean | null;
       hasBoughtTicket?: boolean | null;
+      positionOnWaitingList?: number | null;
     } | null;
     product?: { __typename?: "ProductType"; id: string } | null;
   } | null;
@@ -3488,6 +3491,7 @@ export const EventFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
                 { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
                 { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+                { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
               ],
             },
           },
