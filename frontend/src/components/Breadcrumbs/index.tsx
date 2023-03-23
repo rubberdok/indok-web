@@ -27,7 +27,7 @@ export const Breadcrumbs: React.FC<React.PropsWithChildren<Props>> = ({
       noWrap
       variant="body3"
       sx={(theme) => ({
-        color: theme.palette.text.primary,
+        color: theme.vars.palette.text.primary,
         ...(onDark && {
           opacity: 0.48,
           color: "common.white",

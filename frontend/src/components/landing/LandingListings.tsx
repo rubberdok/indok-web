@@ -1,16 +1,17 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/future/image";
-import Link from "next/link";
+import Image from "next/image";
 
 import Social from "~/public/img/gang.jpg";
+
+import { NextLinkComposed } from "../Link";
 
 export const LandingListings: React.FC = () => {
   const theme = useTheme();
   return (
     <Box
       sx={{
-        bgcolor: (theme) => theme.palette.background.elevated,
+        bgcolor: "background.elevated",
         display: { xs: "block", md: "grid" },
         gridTemplateColumns: "repeat(2, 1fr)",
         position: "relative",
@@ -48,13 +49,16 @@ export const LandingListings: React.FC = () => {
         <Grid container direction="row" justifyContent={{ xs: "center", md: "flex-start" }}>
           <Grid item md={6} sm={8} xs={12}>
             <Grid container my={{ xs: 6, md: 12 }} direction="column" alignItems={{ xs: "center", md: "flex-start" }}>
-              <Grid item>
+              <Grid item sx={{ mr: { xs: 0, md: 2 } }}>
                 <Typography
                   variant="overline"
-                  sx={{
-                    color: (theme) => (theme.palette.mode === "light" ? "primary.main" : "primary.light"),
+                  sx={(theme) => ({
+                    color: "primary.main",
+                    [theme.getColorSchemeSelector("dark")]: {
+                      color: "primary.light",
+                    },
                     mb: 3,
-                  }}
+                  })}
                 >
                   Sosialt
                 </Typography>
@@ -64,11 +68,9 @@ export const LandingListings: React.FC = () => {
                   engasjere seg!
                 </Typography>
 
-                <Link href="/listings" passHref>
-                  <Button variant="contained" size="medium">
-                    Søk verv
-                  </Button>
-                </Link>
+                <Button component={NextLinkComposed} to="/listings" variant="contained" size="medium">
+                  Søk verv
+                </Button>
               </Grid>
             </Grid>
           </Grid>

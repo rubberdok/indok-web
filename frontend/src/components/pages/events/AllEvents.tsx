@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { Add, List, Tune } from "@mui/icons-material";
 import { Button, CircularProgress, Drawer, Grid, Hidden, Paper, Stack, Typography } from "@mui/material";
-import Link from "next/link";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
+import { NextLinkComposed } from "@/components/Link";
 import { AllEventsDocument, DefaultEventsDocument, UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
 
@@ -80,21 +80,26 @@ export const AllEvents: React.FC = () => {
           </Hidden>
           <Stack direction="row" spacing={1}>
             {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-              <Link href="/events/new" passHref>
-                <Button variant="contained" color="contrast" startIcon={<Add />}>
-                  Opprett
-                </Button>
-              </Link>
+              <Button
+                component={NextLinkComposed}
+                to="/events/new"
+                variant="contained"
+                color="contrast"
+                startIcon={<Add />}
+              >
+                Opprett
+              </Button>
             )}
             {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-              <Link
-                href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
-                passHref
+              <Button
+                component={NextLinkComposed}
+                to={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
+                variant="contained"
+                color="contrast"
+                startIcon={<List />}
               >
-                <Button variant="contained" color="contrast" startIcon={<List />}>
-                  Mine arrangementer
-                </Button>
-              </Link>
+                Mine arrangementer
+              </Button>
             )}
           </Stack>
         </Paper>

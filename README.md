@@ -341,6 +341,10 @@ Now the frontend should be running at `localhost:3000`! You can check it out in 
 If you want to close the frontend, press `Ctrl + C` in the terminal where it runs. To start it again, type `yarn dev`
 inside `indok-web/frontend` (if dependencies have changed, you may have to run `yarn` first).
 
+##### Troubleshooting
+
+If you are having fetching errors try changing, `NEXT_PUBLIC_INTERNAL_API_URL=localhost:8000` to `NEXT_PUBLIC_INTERNAL_API_URL=http://127.0.0.1:8000`
+
 ### VSCode
 
 First of all, we recommend installing the following extensions:
@@ -607,7 +611,7 @@ please see [CONTRIBUTING](CONTRIBUDING.md).
 
 Found a bug, got a suggestion, or something we should know about? Take a look at the
 [roadmap](https://github.com/orgs/rubberdok/projects/2) and
-[file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap!
+[file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap.
 
 ## Acknowledgements
 

@@ -1,4 +1,4 @@
-import { StaticImageData } from "next/future/image";
+import { StaticImageData } from "next/image";
 
 import _00 from "~/public/static/cabins/00.jpg";
 import _01 from "~/public/static/cabins/01.jpg";

@@ -3316,6 +3316,18 @@
                 "name": "Boolean",
                 "ofType": null
               }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "positionOnWaitingList",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
             }
           ],
           "inputFields": null,
@@ -5009,6 +5021,12 @@
               "description": "Annet",
               "isDeprecated": false,
               "name": "ANNET"
+            },
+            {
+              "deprecationReason": null,
+              "description": "Januscript",
+              "isDeprecated": false,
+              "name": "JANUSCRIPT"
             }
           ],
           "fields": null,

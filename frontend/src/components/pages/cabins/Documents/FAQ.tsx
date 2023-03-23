@@ -4,8 +4,9 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
 import React from "react";
+
+import { Link } from "@/components";
 
 const faqs = [
   {
@@ -29,9 +30,7 @@ const faqs = [
             <Typography>Avbestilling innen to uker før bestilt ankomstdato er gebyrfritt.</Typography>
           </li>
           <li>
-            <Typography>
-              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av leien.
-            </Typography>
+            <Typography>Avbestilling etter dette medfører et gebyr på 30% av leien.</Typography>
           </li>
         </ul>
       </Box>
@@ -42,7 +41,7 @@ const faqs = [
     answer: (
       <Typography>
         Det gjøres ved å sende mail til{" "}
-        <a href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</a>.
+        <Link href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</Link>.
       </Typography>
     ),
   },

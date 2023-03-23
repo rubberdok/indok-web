@@ -6,10 +6,6 @@ import { Logo } from "../../../components";
 import { Navigation } from "../../navigation";
 import { AppBar } from "../styles";
 
-type Props = {
-  transparent?: boolean;
-};
-
 type ScrollProps = {
   children: React.ReactElement;
 };
@@ -26,10 +22,10 @@ const ElevationScroll: React.FC<React.PropsWithChildren<ScrollProps>> = ({ child
   });
 };
 
-export const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
+export const Basic: React.FC<AppBarProps> = (props) => {
   return (
     <ElevationScroll>
-      <AppBar transparent={transparent} {...props}>
+      <AppBar {...props}>
         <Container
           sx={{
             display: "flex",

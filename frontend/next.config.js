@@ -42,27 +42,25 @@ const moduleExports = {
   swcMinify: true,
   /* https://nextjs.org/docs/advanced-features/output-file-tracing */
   output: "standalone",
-  experimental: {
-    /**
-     * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
-     * See https://mui.com/material-ui/guides/minimizing-bundle-size/#option-2 for reasoning.
-     * In short, top level imports from "@mui/icons-material" will load the entire
-     * "@mui/icons-material" package, which is a lot of code.
-     * Instead, we do some compiler magic to only load the modules we need.
-     */
-    modularizeImports: {
-      "@mui/icons-material": {
-        transform: "@mui/icons-material/{{member}}",
-      },
-      "@mui/material": {
-        transform: "@mui/material/{{member}}",
-      },
-      "@mui/lab": {
-        transform: "@mui/lab/{{member}}",
-      },
-      lodash: {
-        transform: "lodash/{{member}}",
-      },
+  /**
+   * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
+   * See https://mui.com/material-ui/guides/minimizing-bundle-size/#option-2 for reasoning.
+   * In short, top level imports from "@mui/icons-material" will load the entire
+   * "@mui/icons-material" package, which is a lot of code.
+   * Instead, we do some compiler magic to only load the modules we need.
+   */
+  modularizeImports: {
+    "@mui/icons-material": {
+      transform: "@mui/icons-material/{{member}}",
+    },
+    "@mui/material": {
+      transform: "@mui/material/{{member}}",
+    },
+    "@mui/lab": {
+      transform: "@mui/lab/{{member}}",
+    },
+    lodash: {
+      transform: "lodash/{{member}}",
     },
   },
   images: {
@@ -89,10 +87,8 @@ const moduleExports = {
     return config;
   },
   sentry: {
-    // Disable the Sentry CLI and manually manage releases and source maps
-    // To make Sentry work more nicely with CI/CD, as build != release for us.
-    disableServerWebpackPlugin: true,
-    disableClientWebpackPlugin: true,
+    disableServerWebpackPlugin: process.env.SENTRY_DISABLE_SEVER_WEBPACK_PLUGIN === "true",
+    disableClientWebpackPlugin: process.env.SENTRY_DISABLE_CLIENT_WEBPACK_PLUGIN === "true",
   },
 };
 

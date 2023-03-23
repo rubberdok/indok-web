@@ -1,6 +1,7 @@
 import { OpenInNew } from "@mui/icons-material";
 import { Box, Card, CardActionArea, Stack, Typography } from "@mui/material";
-import Link from "next/link";
+
+import { NextLinkComposed } from "@/components";
 
 type External = {
   externalUrl: string;
@@ -22,26 +23,28 @@ type Props = {
 
 export const OrganizationLink: React.FC<Props> = ({ organization }) => {
   return (
-    <Card sx={{ boxShadow: (theme) => theme.shadows[24] }}>
-      <Link passHref href={organization.externalUrl ?? organization.internalUrl}>
-        <CardActionArea sx={{ px: 4, py: 3 }}>
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Box
-              sx={{
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                opacity: organization.externalUrl ? 1 : 0.44,
-                bgcolor: "primary.main",
-              }}
-            />
-            <Typography variant="h6" component="p">
-              {organization.name}
-            </Typography>
-            {organization.externalUrl && <OpenInNew fontSize="small" />}
-          </Stack>
-        </CardActionArea>
-      </Link>
+    <Card elevation={6}>
+      <CardActionArea
+        sx={{ px: 4, py: 3 }}
+        component={NextLinkComposed}
+        to={organization.externalUrl ?? organization.internalUrl}
+      >
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Box
+            sx={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              opacity: organization.externalUrl ? 1 : 0.44,
+              bgcolor: "primary.main",
+            }}
+          />
+          <Typography variant="h6" component="p" noWrap>
+            {organization.name}
+          </Typography>
+          {organization.externalUrl && <OpenInNew fontSize="small" />}
+        </Stack>
+      </CardActionArea>
     </Card>
   );
 };

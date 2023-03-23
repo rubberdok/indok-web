@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { ErrorOutline } from "@mui/icons-material";
 import {
-  PlaceOutlined,
-  CreditCardRounded,
-  MailOutline,
-  SettingsRounded,
-  SchoolRounded,
-  CreateRounded,
-  WidgetsOutlined,
   CalendarTodayOutlined,
+  CreateRounded,
+  CreditCardRounded,
+  ErrorOutline,
+  MailOutline,
+  PlaceOutlined,
+  SchoolRounded,
+  SettingsRounded,
+  WidgetsOutlined,
 } from "@mui/icons-material";
 import {
   Alert as MuiAlert,
@@ -28,7 +28,6 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -37,12 +36,12 @@ import { PermissionRequired } from "@/components/Auth";
 import { LoginRequired } from "@/components/Auth/LoginRequired";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { LabeledIcon } from "@/components/LabeledIcon";
+import { NextLinkComposed } from "@/components/Link";
 import * as components from "@/components/MarkdownForm/components";
 import {
   EventDocument,
   EventSignOffDocument,
   EventSignUpDocument,
-  ServerTimeDocument,
   UserWithEventsAndOrgsDocument,
 } from "@/generated/graphql";
 import { calendarFile } from "@/utils/calendars";
@@ -90,8 +89,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [eventSignOff, { loading: signOffLoading }] = useMutation(EventSignOffDocument);
 
   const { data: userData } = useQuery(UserWithEventsAndOrgsDocument);
-
-  const { data: timeData } = useQuery(ServerTimeDocument, { fetchPolicy: "network-only" });
 
   const {
     data: eventData,
@@ -188,18 +185,20 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                       <TextField
                         label="Ekstrainformasjon"
                         multiline
-                        rows={2}
+                        rows={3}
+                        fullWidth
                         required
                         placeholder="Skriv her..."
                         onChange={(e) => setExtraInformation(e.target.value)}
                       />
                     )}
-                  {timeData?.serverTime && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
+                  {event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                     <Stack spacing={2}>
                       <CountdownButton
-                        countDownDate={event.signupOpenDate ?? ""}
+                        countdownDate={event.signupOpenDate ?? ""}
                         isSignedUp={event.userAttendance?.isSignedUp ?? false}
                         isOnWaitingList={event.userAttendance?.isOnWaitingList ?? false}
+                        positionOnWaitingList={event.userAttendance?.positionOnWaitingList ?? 0}
                         isFull={event.isFull ?? false}
                         loading={signOffLoading || signUpLoading || eventLoading}
                         disabled={
@@ -213,7 +212,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                             !event.userAttendance?.isOnWaitingList)
                         }
                         onClick={handleClick}
-                        currentTime={timeData.serverTime}
                       />
                       {event.bindingSignup && (
                         <LabeledIcon
@@ -233,14 +231,15 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                     (event.userAttendance.hasBoughtTicket ? (
                       <MuiAlert severity="success">Du har betalt for billett</MuiAlert>
                     ) : (
-                      <Link
-                        href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
-                        passHref
+                      <Button
+                        component={NextLinkComposed}
+                        to={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
+                        size="large"
+                        variant="contained"
+                        color="primary"
                       >
-                        <Button size="large" variant="contained" color={"primary"}>
-                          Gå til betaling
-                        </Button>
-                      </Link>
+                        Gå til betaling
+                      </Button>
                     ))}
                 </PermissionRequired>
               </>
@@ -277,11 +276,15 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
               >
                 Rediger
               </Button>
-              <Link href={`/orgs/${event.organization.id}/events/${eventId}`} passHref>
-                <Button variant="contained" color="contrast" startIcon={<SettingsRounded />}>
-                  Administrer
-                </Button>
-              </Link>
+              <Button
+                component={NextLinkComposed}
+                to={`/orgs/${event.organization.id}/events/${eventId}`}
+                variant="contained"
+                color="contrast"
+                startIcon={<SettingsRounded />}
+              >
+                Administrer
+              </Button>
             </Stack>
           </Paper>
         )}

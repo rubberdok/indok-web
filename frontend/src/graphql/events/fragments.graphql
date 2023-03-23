@@ -32,6 +32,7 @@ fragment Event on EventType {
     isSignedUp
     isOnWaitingList
     hasBoughtTicket
+    positionOnWaitingList
   }
   isFull
   hasExtraInformation
@@ -140,6 +141,7 @@ fragment SignUp on SignUpType {
   userGradeYear
   userAllergies
   userPhoneNumber
+  extraInformation
 }
 
 fragment SignUpWithTicket on SignUpType {
@@ -152,5 +154,6 @@ fragment SignUpWithTicket on SignUpType {
   userGradeYear
   userAllergies
   userPhoneNumber
+  extraInformation
   hasBoughtTicket
 }

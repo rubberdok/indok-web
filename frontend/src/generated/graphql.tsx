@@ -98,6 +98,8 @@ export enum ArchiveDocumentTypeDoc {
   ForeningensLover = "FORENINGENS_LOVER",
   /** Generalforsamling */
   Generalforsamling = "GENERALFORSAMLING",
+  /** Januscript */
+  Januscript = "JANUSCRIPT",
   /** Støtte fra HS */
   StotteFraHs = "STOTTE_FRA_HS",
   /** Utveksling */
@@ -1348,6 +1350,7 @@ export type UserAttendingType = {
   hasBoughtTicket?: Maybe<Scalars["Boolean"]>;
   isOnWaitingList?: Maybe<Scalars["Boolean"]>;
   isSignedUp?: Maybe<Scalars["Boolean"]>;
+  positionOnWaitingList?: Maybe<Scalars["Int"]>;
 };
 
 export type UserInput = {
@@ -1777,6 +1780,7 @@ export type EventFragment = {
     isSignedUp?: boolean | null;
     isOnWaitingList?: boolean | null;
     hasBoughtTicket?: boolean | null;
+    positionOnWaitingList?: number | null;
   } | null;
   product?: { __typename?: "ProductType"; id: string } | null;
 };
@@ -1853,6 +1857,7 @@ export type AdminEventFragment = {
     userGradeYear: number;
     userAllergies?: string | null;
     userPhoneNumber: string;
+    extraInformation: string;
     hasBoughtTicket?: boolean | null;
     user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
   }> | null;
@@ -1862,6 +1867,7 @@ export type AdminEventFragment = {
     userGradeYear: number;
     userAllergies?: string | null;
     userPhoneNumber: string;
+    extraInformation: string;
     user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
   }> | null;
   userAttendance?: {
@@ -1878,6 +1884,7 @@ export type SignUpFragment = {
   userGradeYear: number;
   userAllergies?: string | null;
   userPhoneNumber: string;
+  extraInformation: string;
   user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
 };
 
@@ -1887,6 +1894,7 @@ export type SignUpWithTicketFragment = {
   userGradeYear: number;
   userAllergies?: string | null;
   userPhoneNumber: string;
+  extraInformation: string;
   hasBoughtTicket?: boolean | null;
   user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
 };
@@ -1983,6 +1991,7 @@ export type UpdateEventMutation = {
         isSignedUp?: boolean | null;
         isOnWaitingList?: boolean | null;
         hasBoughtTicket?: boolean | null;
+        positionOnWaitingList?: number | null;
       } | null;
       product?: { __typename?: "ProductType"; id: string } | null;
     } | null;
@@ -2075,6 +2084,7 @@ export type EventQuery = {
       isSignedUp?: boolean | null;
       isOnWaitingList?: boolean | null;
       hasBoughtTicket?: boolean | null;
+      positionOnWaitingList?: number | null;
     } | null;
     product?: { __typename?: "ProductType"; id: string } | null;
   } | null;
@@ -2228,6 +2238,7 @@ export type AdminEventQuery = {
       userGradeYear: number;
       userAllergies?: string | null;
       userPhoneNumber: string;
+      extraInformation: string;
       hasBoughtTicket?: boolean | null;
       user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
     }> | null;
@@ -2237,6 +2248,7 @@ export type AdminEventQuery = {
       userGradeYear: number;
       userAllergies?: string | null;
       userPhoneNumber: string;
+      extraInformation: string;
       user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
     }> | null;
     userAttendance?: {
@@ -3479,6 +3491,7 @@ export const EventFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
                 { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
                 { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+                { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
               ],
             },
           },
@@ -3601,6 +3614,7 @@ export const SignUpWithTicketFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
           { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
           { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
           { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
         ],
       },
@@ -3633,6 +3647,7 @@ export const SignUpFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
           { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
           { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
         ],
       },
     },

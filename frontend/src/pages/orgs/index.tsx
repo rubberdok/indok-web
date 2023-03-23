@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Card, CardActionArea, CircularProgress, Container, Grid, Typography } from "@mui/material";
-import Link from "next/link";
 
+import { Link } from "@/components";
 import { UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
@@ -22,13 +22,11 @@ const OrganizationPage: NextPageWithLayout = () => {
             data.user.organizations.map((org) => (
               <Grid item key={org.id}>
                 <Card>
-                  <Link passHref href={`orgs/${org.id}`}>
-                    <CardActionArea sx={{ p: 4 }}>
-                      <Typography variant="h5" align="center">
-                        {org.name}
-                      </Typography>
-                    </CardActionArea>
-                  </Link>
+                  <CardActionArea sx={{ p: 4 }} component={Link} href={`orgs/${org.id}`}>
+                    <Typography variant="h5" align="center">
+                      {org.name}
+                    </Typography>
+                  </CardActionArea>
                 </Card>
               </Grid>
             ))

@@ -1,5 +1,7 @@
 import { Card, CardHeader, CardContent, Typography } from "@mui/material";
 
+import { Link } from "@/components";
+
 import { ItvMember } from "./types";
 
 type Props = {
@@ -12,7 +14,7 @@ export const ItvCard: React.VFC<Props> = ({ member }) => {
       <CardHeader title={member.name} />
       <CardContent>
         <Typography variant="body1" component="p">
-          E-post: <a href={`mailto:${member.email}`}>{member.email}</a>
+          E-post: <Link href={`mailto:${member.email}`}>{member.email}</Link>
         </Typography>
       </CardContent>
     </Card>

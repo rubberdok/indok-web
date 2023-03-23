@@ -1,8 +1,8 @@
-import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/future/image";
-import Link from "next/link";
+import Image from "next/image";
 
+import { Link } from "@/components";
 import Hero from "~/public/static/landing/hero.webp";
 
 import { OrganizationsSlider } from "./OrganizationsSlider";
@@ -12,60 +12,78 @@ export const LandingHero: React.FC = () => {
   return (
     <>
       <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(12, 1fr)",
-          gap: 4,
-          height: { md: "80vh" },
-          maxHeight: "1250px",
-          minHeight: "565px",
-          position: "relative",
-        }}
+        display="grid"
+        position="relative"
+        columnGap={4}
+        gridTemplateColumns="repeat(12, 1fr)"
+        height={{ md: "80vh" }}
+        maxHeight={{ md: "1250px", xs: "900px" }}
+        minHeight="565px"
       >
-        <Container sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1" }}>
-          <Grid container direction="row">
-            <Grid item md={5} xs={12}>
-              <Stack spacing={4} mt={14} mb={8}>
-                <Grid container gap={2} direction="column" alignItems={{ xs: "center", md: "flex-start" }}>
-                  <Grid item>
-                    <Typography
-                      variant="overline"
-                      sx={{ color: (theme) => (theme.palette.mode === "light" ? "primary.main" : "primary.light") }}
-                    >
-                      Foreningen for studentene ved
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography variant="h1" textAlign={{ xs: "center", md: "left" }}>
-                      Industriell Økonomi & Teknologiledelse
-                    </Typography>
-                  </Grid>
-                </Grid>
-
-                <Stack spacing={{ xs: 1.5, md: 2 }} direction={{ xs: "column", md: "row" }}>
-                  <Link passHref href="/about">
-                    <Button variant="contained" size="large">
-                      Les om foreningen
-                    </Button>
-                  </Link>
-                  <Link passHref href="/events">
-                    <Button variant="contained" color="contrast" size="large">
-                      Se arrangementer
-                    </Button>
-                  </Link>
-                </Stack>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Container>
-        <Box
+        <Container
           sx={{
-            position: "relative",
-            gridColumn: "8 / -1",
+            gridColumn: "1 / -1",
             gridRow: "1",
-            display: { xs: "none", md: "block" },
+            display: "grid",
+            gridTemplateColumns: "repeat(12, 1fr)",
           }}
         >
+          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} mt={14} mb={8} display="flex" justifyContent="center">
+            <Grid
+              container
+              direction="column"
+              position="relative"
+              justifyContent="center"
+              alignItems={{ xs: "center", md: "flex-start" }}
+              spacing={2}
+            >
+              <Grid>
+                <Typography
+                  variant="overline"
+                  sx={(t) => ({
+                    color: "primary.main",
+                    [t.getColorSchemeSelector("dark")]: { color: "primary.light" },
+                  })}
+                >
+                  Foreningen for studentene ved
+                </Typography>
+              </Grid>
+              <Grid>
+                <Typography variant="h1" textAlign={{ xs: "center", md: "left" }}>
+                  Industriell Økonomi & Teknologiledelse
+                </Typography>
+              </Grid>
+              <Grid
+                container
+                xs={12}
+                justifyContent={{ xs: "center", md: "flex-start" }}
+                alignItems={{ xs: "center", md: "flex-start" }}
+                direction={{ xs: "column", md: "row" }}
+              >
+                <Grid xs={10} sm={8} md={5} lg={5}>
+                  <Button fullWidth component={Link} noLinkStyle href="/about" variant="contained" size="large">
+                    Les om foreningen
+                  </Button>
+                </Grid>
+                <Grid xs={10} sm={8} md={5} lg={5}>
+                  <Button
+                    fullWidth
+                    component={Link}
+                    noLinkStyle
+                    href="/events"
+                    variant="contained"
+                    color="contrast"
+                    size="large"
+                  >
+                    Se arrangementer
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+
+        <Box display={{ xs: "none", md: "block" }} gridColumn="8 / -1" gridRow="1" position="relative">
           <Image
             src={Hero}
             fill
@@ -74,7 +92,7 @@ export const LandingHero: React.FC = () => {
             alt=""
             priority
             sizes={`
-              (max-width: ${theme.breakpoints.values.sm}px) 0vw,
+              ${theme.breakpoints.down("sm")} 0vw,
               40vw,
             `}
           />

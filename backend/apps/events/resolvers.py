@@ -22,6 +22,7 @@ DEFAULT_REPORT_FIELDS = {
     "signup_user_grade_year",
     "signup_user_email",
     "signup_user_phone_number",
+    "signup_extra_information",
     "user_allergies",
     "attendance_status",
     "order_timestamp",
