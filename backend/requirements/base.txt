@@ -25,4 +25,4 @@ PyYAML==6.0
 typing-extensions==4.5.0
 WeasyPrint==58.1
 whitenoise==6.4.0
-XlsxWriter==3.0.9
+XlsxWriter==3.1.0
