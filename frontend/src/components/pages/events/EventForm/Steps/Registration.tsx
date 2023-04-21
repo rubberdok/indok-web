@@ -1,5 +1,18 @@
 import { PeopleOutlineRounded } from "@mui/icons-material";
-import { Divider, FormControlLabel, InputAdornment, Stack, Switch, TextField, Typography } from "@mui/material";
+import {
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IEventForm } from "../schema";
@@ -12,34 +25,24 @@ export const Registration: React.FC = () => {
     formState: { errors },
   } = useFormContext<IEventForm>();
 
-  const disabled = !watch("registration.isAttendable");
-
   return (
     <Stack direction="column" spacing={2}>
       <Stack direction="column" justifyContent="flex-start" alignItems="flex-start">
         <Controller
-          name="registration.isAttendable"
+          name="registration.attendance"
           control={control}
           render={({ field }) => (
-            <FormControlLabel
-              control={<Switch {...field} checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />}
-              label={<Typography variant="subtitle2">Påmelding</Typography>}
-              labelPlacement="start"
-              sx={{ ml: 0 }}
-            />
-          )}
-        />
-        <Controller
-          name="registration.details.binding"
-          control={control}
-          render={({ field }) => (
-            <FormControlLabel
-              disabled={disabled}
-              control={<Switch {...field} checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />}
-              label="Bindende påmelding"
-              labelPlacement="start"
-              sx={{ ml: 0 }}
-            />
+            <FormControl variant="filled" fullWidth error={Boolean(errors.registration?.attendance)}>
+              <InputLabel htmlFor="select-attendance">Påmeldingstype</InputLabel>
+              <Select {...field} id="select-attendance">
+                <MenuItem value="closed">Ingen påmelding</MenuItem>
+                <MenuItem value="open">Påmelding</MenuItem>
+                <MenuItem value="binding">Bindende påmelding</MenuItem>
+              </Select>
+              <FormHelperText error={Boolean(errors.registration?.attendance)}>
+                {errors.registration?.attendance?.message}
+              </FormHelperText>
+            </FormControl>
           )}
         />
       </Stack>
