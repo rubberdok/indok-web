@@ -4,8 +4,8 @@ import { Alert, Button, Card, CardContent, CardHeader, Snackbar, Stack, Typograp
 import dayjs from "dayjs";
 import { useState } from "react";
 
+import { NextLinkComposed } from "@/components";
 import { AttendeeExport } from "@/components/pages/events/AttendeeExport";
-import { EditEvent } from "@/components/pages/events/EditEvent";
 import { AdminEventDocument } from "@/generated/graphql";
 
 import { EmailDialog } from "./EmailDialog";
@@ -36,9 +36,6 @@ export const EventInformation: React.FC<Props> = ({ event }) => {
 
   return (
     <>
-      {openModal === "edit" && (
-        <EditEvent event={event} onClose={() => setOpenModal(false)} open={openModal === "edit"} />
-      )}
       {openModal === "email" && (
         <EmailDialog
           eventId={event.id}
@@ -67,7 +64,14 @@ export const EventInformation: React.FC<Props> = ({ event }) => {
           title={
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="inherit">Informasjon</Typography>
-              <Button onClick={() => setOpenModal("edit")} startIcon={<Edit />}>
+              <Button
+                component={NextLinkComposed}
+                to={{
+                  pathname: "/orgs/[orgId]/events/[eventId]/edit",
+                  query: { eventId: event.id, orgId: event.organization.id },
+                }}
+                startIcon={<Edit />}
+              >
                 Rediger
               </Button>
             </Stack>

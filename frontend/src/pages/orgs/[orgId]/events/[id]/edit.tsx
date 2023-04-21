@@ -6,12 +6,12 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 const EditEventPage: NextPageWithLayout = () => {
-  const { id } = useRouter().query;
+  const { id, orgId } = useRouter().query;
 
   const router = useRouter();
 
   function onCompleted() {
-    router.push(`/events/${id}`);
+    router.push(`/orgs/${orgId}/events/${id}`);
   }
 
   if (id && typeof id === "string") {

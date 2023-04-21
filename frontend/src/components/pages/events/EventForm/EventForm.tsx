@@ -82,7 +82,7 @@ type Props = {
  */
 export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, onSubmit, title, submitText }) => {
   const router = useRouter();
-  const { step, id } = router.query;
+  const { step } = router.query;
 
   const activeStep: StepIndex = parseQuery(step);
 
@@ -125,14 +125,12 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
   } = methods;
 
   function navigateToStep(step: StepIndex) {
-    let query: Record<string, string | number> = {
-      step,
-    };
-
-    if (id && typeof id === "string") query = { ...query, id };
     router.push(
       {
-        query,
+        query: {
+          ...router.query,
+          step,
+        },
       },
       undefined,
       {
