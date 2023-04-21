@@ -30,5 +30,5 @@ const ListingsPage: NextPageWithLayout = () => {
   );
 };
 
-ListingsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+ListingsPage.getLayout = (page) => <Layout>{page}</Layout>;
 export default ListingsPage;

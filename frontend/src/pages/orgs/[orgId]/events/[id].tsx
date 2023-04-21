@@ -40,7 +40,7 @@ const AdminEventPage: NextPageWithLayout = () => {
             { href: "/", name: "Hjem" },
             { href: "/orgs", name: "Foreninger" },
             { href: `/orgs/${event.organization.id}`, name: event.organization.name },
-            { name: event.title },
+            { name: event.title, href: `/orgs/${event.organization.id}/events/${event.id}` },
           ]}
           variant="dark"
         />

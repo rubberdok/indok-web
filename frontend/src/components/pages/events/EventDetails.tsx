@@ -151,7 +151,11 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
         <Container>
           <Breadcrumbs
             sx={{ mb: { xs: 5, md: 8 } }}
-            links={[{ name: "Hjem", href: "/" }, { name: "Arrangementer", href: "/events" }, { name: event.title }]}
+            links={[
+              { name: "Hjem", href: "/" },
+              { name: "Arrangementer", href: "/events" },
+              { name: event.title, href: `/events/${event.id}` },
+            ]}
           />
           <Stack
             direction={{ xs: "column", md: "row" }}

@@ -9,13 +9,9 @@ export const Title: React.FC<React.PropsWithChildren<Props>> = ({ variant = "nor
   if (variant === "normal") return <BaseTitle {...props}>{children}</BaseTitle>;
   if (variant === "dark")
     return (
-      <BaseTitle
-        sx={{ backgroundColor: "grey.900", color: "common.white" }}
-        {...props}
-        BreadcrumbProps={{ onDark: true }}
-      >
-        {children}
-      </BaseTitle>
+      <div data-color-scheme="dark">
+        <BaseTitle {...props}>{children}</BaseTitle>
+      </div>
     );
   return null;
 };
