@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Card, CardActions, CardContent, CardHeader, Step, StepLabel, Stepper } from "@mui/material";
+import dayjs from "dayjs";
 import deepmerge from "deepmerge";
 import { isEmpty } from "lodash";
 import { useRouter } from "next/router";
@@ -96,8 +97,8 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
           gradeYears: [],
         },
         timeAndPlace: {
-          start: undefined,
-          end: undefined,
+          start: dayjs().add(1, "day").format("YYYY-MM-DDT18:15"),
+          end: dayjs().add(1, "day").format("YYYY-MM-DDT20:00"),
           location: "",
         },
         registration: {
