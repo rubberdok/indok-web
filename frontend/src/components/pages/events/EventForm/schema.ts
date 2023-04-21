@@ -74,8 +74,8 @@ const infoSchema: yup.ObjectSchema<InfoSchema> = yup.object({
 
 type TimeAndPlaceSchema = {
   location: string;
-  start: Date | null;
-  end: Date | null;
+  start: Date;
+  end: Date;
 };
 
 /**
@@ -85,15 +85,13 @@ type TimeAndPlaceSchema = {
 const timeAndPlaceSchema: yup.ObjectSchema<TimeAndPlaceSchema> = yup
   .object({
     location: yup.string().max(100, "Maks 100 tegn").label("Sted").defined(),
-    start: yup.date().min(new Date()).required().nullable().default(null).defined().label("Starttid"),
+    start: yup.date().min(new Date()).required().label("Starttid").nonNullable(),
     end: yup
       .date()
       .required()
+      .nonNullable()
       .min(new Date())
       .min(yup.ref("start"), ({ label }) => `${label} må være etter starttiden`)
-      .nullable()
-      .default(null)
-      .defined()
       .label("Sluttid"),
   })
   .required();
