@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { IEventForm, schema } from "./schema";
-import { Review, TimeAndPlace, Info, Registration } from "./Steps";
+import { Info, Registration, Review, TimeAndPlace } from "./Steps";
 import { Organization } from "./types";
 
 const steps = {
@@ -67,7 +67,10 @@ function parseQuery(step: string | string[] | undefined): StepIndex {
 type Props = {
   organizations: Organization[];
   defaultValues?: Partial<IEventForm>;
+  values?: Partial<IEventForm>;
   onSubmit: (data: IEventForm) => void;
+  title: string;
+  submitText: string;
 };
 
 /**
@@ -77,7 +80,7 @@ type Props = {
  * Validation is performed on submission, and the validation must pass for `onSubmit` to be called.
  * Otherwise, the user is informed about the errors in the form.
  */
-export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, onSubmit }) => {
+export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, onSubmit, title, submitText }) => {
   const router = useRouter();
   const { step } = router.query;
 
@@ -86,7 +89,7 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
   const methods = useForm<IEventForm>({
     resolver: yupResolver(schema),
     mode: "onTouched",
-    defaultValues: deepmerge(
+    defaultValues: deepmerge<IEventForm, Partial<IEventForm>>(
       {
         info: {
           organizer: organizations[0]?.id ?? "",
@@ -95,19 +98,20 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
           shortDescription: null,
           description: "",
           gradeYears: [],
+          contactEmail: "",
         },
         timeAndPlace: {
-          start: dayjs().add(1, "day").format("YYYY-MM-DDT18:15"),
-          end: dayjs().add(1, "day").format("YYYY-MM-DDT20:00"),
+          start: dayjs().add(1, "day").set("hour", 18).set("minute", 15).toDate(),
+          end: dayjs().add(1, "day").set("hour", 20).set("minute", 0).toDate(),
           location: "",
         },
         registration: {
-          isAttendable: false,
+          variant: "closed",
           details: {
+            requiresExtraInformation: false,
             availableSeats: null,
-            deadline: undefined,
-            signUpOpen: undefined,
-            binding: false,
+            deadline: dayjs().add(1, "day").set("hour", 18).set("minute", 15).toDate(),
+            signUpOpen: dayjs().toDate(),
           },
         },
       },
@@ -124,6 +128,7 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
     router.push(
       {
         query: {
+          ...router.query,
           step,
         },
       },
@@ -139,7 +144,7 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormProvider {...methods}>
         <Card>
-          <CardHeader title="Nytt arrangement" />
+          <CardHeader title={title} />
           <CardContent>
             <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3 }}>
               {Object.values(steps).map(({ label, slug }, index) => (
@@ -161,7 +166,7 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
             </Button>
             {steps[activeStep].slug === "review" ? (
               <Button variant="contained" type="submit" key="submit">
-                Lag Arrangement
+                {submitText}
               </Button>
             ) : (
               <Button variant="contained" key="next" onClick={() => navigateToStep(nextStep(activeStep))}>

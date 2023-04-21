@@ -29,9 +29,9 @@ export const Category: React.FC<Props> = ({ disabled }) => {
           fullWidth
           error={Boolean(error || errors.info?.category)}
         >
-          <InputLabel htmlFor="select-category">Kategori</InputLabel>
-          <Select {...field}>
-            <MenuItem value={""}>
+          <InputLabel id="select-category-label">Kategori</InputLabel>
+          <Select {...field} labelId="select-category-label" id="select-registration">
+            <MenuItem value="">
               <em>Ingen kategori</em>
             </MenuItem>
             {data?.allCategories?.map((category) => (

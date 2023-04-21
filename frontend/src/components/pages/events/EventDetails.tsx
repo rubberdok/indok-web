@@ -11,7 +11,6 @@ import {
   WidgetsOutlined,
 } from "@mui/icons-material";
 import {
-  Alert as MuiAlert,
   Box,
   Button,
   Card,
@@ -21,8 +20,9 @@ import {
   Grid,
   Hidden,
   LinearProgress,
-  Paper,
+  Alert as MuiAlert,
   Snackbar as MuiSnackbar,
+  Paper,
   Stack,
   TextField,
   Typography,
@@ -32,11 +32,11 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
+import { Link, NextLinkComposed } from "@/components";
 import { PermissionRequired } from "@/components/Auth";
 import { LoginRequired } from "@/components/Auth/LoginRequired";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { LabeledIcon } from "@/components/LabeledIcon";
-import { NextLinkComposed } from "@/components/Link";
 import * as components from "@/components/MarkdownForm/components";
 import {
   EventDocument,
@@ -47,7 +47,6 @@ import {
 import { calendarFile } from "@/utils/calendars";
 
 import { CountdownButton } from "./CountdownButton";
-import { EditEvent } from "./EditEvent";
 
 type AlertProps = {
   open: boolean;
@@ -97,8 +96,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
     refetch: refetchEventData,
   } = useQuery(EventDocument, { variables: { id: eventId } });
 
-  const [openEditEvent, setOpenEditEvent] = useState(false);
-
   if (eventLoading) return <LinearProgress variant="indeterminate" sx={{ width: 1, mb: "100vh" }} />;
 
   if (eventError) return <p>Error :(</p>;
@@ -146,7 +143,6 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   return (
     <>
-      {openEditEvent && <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={event} />}
       <Box width="100%" py={5} bgcolor="background.elevated" pb={{ xs: 5, md: 10 }}>
         <Container>
           <Breadcrumbs
@@ -274,9 +270,8 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                 variant="contained"
                 color="contrast"
                 startIcon={<CreateRounded />}
-                onClick={() => {
-                  setOpenEditEvent(true);
-                }}
+                component={Link}
+                href={`/events/${eventId}/edit`}
               >
                 Rediger
               </Button>

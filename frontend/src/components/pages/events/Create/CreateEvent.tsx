@@ -49,15 +49,16 @@ export const CreateEvent: React.FC<Props> = ({ organizations }) => {
           endTime: data.timeAndPlace.end.toISOString(),
           shortDescription: data.info.shortDescription,
           categoryId: data.info.category || null,
-          isAttendable: data.registration.isAttendable,
+          isAttendable: data.registration.variant !== "closed",
           organizationId: data.info.organizer,
           allowedGradeYears: data.info.gradeYears?.length ? data.info.gradeYears : undefined,
-          ...(data.registration.isAttendable
+          ...(data.registration.variant !== "closed"
             ? {
-                bindingSignup: data.registration.details.binding,
+                bindingSignup: data.registration.variant === "binding",
                 signupOpenDate: data.registration.details.signUpOpen?.toISOString(),
                 deadline: data.registration.details.deadline?.toISOString(),
                 availableSlots: data.registration.details.availableSeats,
+                hasExtraInformation: data.registration.details.requiresExtraInformation,
               }
             : {}),
         },
@@ -77,7 +78,12 @@ export const CreateEvent: React.FC<Props> = ({ organizations }) => {
           <Alert severity="error">Noe gikk galt</Alert>
         </Snackbar>
       )}
-      <EventForm onSubmit={handleCreateEvent} organizations={organizations} />
+      <EventForm
+        title="Nytt arrangement"
+        submitText="Lag arrangement"
+        onSubmit={handleCreateEvent}
+        organizations={organizations}
+      />
     </>
   );
 };
