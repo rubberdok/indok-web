@@ -15,7 +15,7 @@ import {
   ResponseFragment,
 } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 /** Page for organization admins to administer a listing, edit its application form, and review applicants. */
 const ListingAdminPage: NextPageWithLayout = () => {

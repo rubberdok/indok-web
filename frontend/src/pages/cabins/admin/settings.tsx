@@ -5,7 +5,7 @@ import { BookingSemesterPicker } from "@/components/pages/cabins/Admin/BookingSe
 import { CabinInfoPicker } from "@/components/pages/cabins/Admin/CabinInfoPicker";
 import { Title } from "@/components/Title";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const SettingsPage: NextPageWithLayout = () => {
   return (

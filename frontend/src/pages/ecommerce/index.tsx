@@ -26,7 +26,7 @@ import { OrderCellContent } from "@/components/pages/ecommerce/OrderCellContent"
 import { OrderFragment, UserDocument, UserOrdersDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import { HeaderValuePair } from "@/types/utils";
 
 const orderFields: HeaderValuePair<OrderFragment>[] = [

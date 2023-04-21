@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { AnswerForm } from "@/components/pages/forms/AnswerForm";
 import { FormWithAnswersDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 const FormPage: NextPageWithLayout = () => {

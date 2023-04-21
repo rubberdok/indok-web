@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { UserForm } from "@/components/pages/profile/UserForm";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const ID_PREFIX = "editUser-";
 

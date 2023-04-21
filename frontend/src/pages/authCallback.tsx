@@ -8,9 +8,8 @@ import { useEffect } from "react";
 import { Link } from "@/components";
 import { AuthUserDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/lib/next";
 import Bug from "~/public/illustrations/Bug.svg";
-
-import { NextPageWithLayout } from "./_app";
 
 const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   code,

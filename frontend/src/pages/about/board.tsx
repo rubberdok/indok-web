@@ -5,7 +5,7 @@ import { MemberCard } from "@/components/pages/about/MemberCard";
 import { BoardMember } from "@/components/pages/about/MemberCard/types";
 import { Template } from "@/components/pages/about/Template";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const BoardPage: NextPageWithLayout = () => {
   const boardMembers: BoardMember[] = [

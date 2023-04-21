@@ -20,7 +20,7 @@ import { StepComponent } from "@/components/pages/cabins/StepComponent";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
 import {
   allValuesFilled,

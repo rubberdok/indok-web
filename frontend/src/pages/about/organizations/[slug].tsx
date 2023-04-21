@@ -8,7 +8,7 @@ import { Link } from "@/components";
 import * as markdownComponents from "@/components/MarkdownForm/components";
 import { Title } from "@/components/Title";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import { Article, getPostBySlug, getPostsSlugs } from "@/utils/posts";
 
 const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticProps>> = ({ post, frontmatter }) => {

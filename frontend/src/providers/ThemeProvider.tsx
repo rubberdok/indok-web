@@ -8,11 +8,7 @@ import React, { useMemo } from "react";
 
 import { getCssVarsDesignTokens } from "@/theme";
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export const ThemeProvider: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
+export const ThemeProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const themeOptions = useMemo(() => getCssVarsDesignTokens(), []);
 
   const theme = extendTheme(themeOptions);

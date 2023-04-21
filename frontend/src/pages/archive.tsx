@@ -12,8 +12,7 @@ import { Title } from "@/components/Title";
 import { HasPermissionDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-
-import { NextPageWithLayout } from "./_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const [yearFilter, setYearFilter] = useState("");

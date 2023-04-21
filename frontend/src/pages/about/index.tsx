@@ -2,7 +2,7 @@ import { Box, Paper, Typography } from "@mui/material";
 
 import { Template } from "@/components/pages/about/Template";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const AboutPage: NextPageWithLayout = () => {
   return (

@@ -4,7 +4,7 @@ import { Card, CardActionArea, CircularProgress, Container, Grid, Typography } f
 import { Link } from "@/components";
 import { UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const OrganizationPage: NextPageWithLayout = () => {
   const { data } = useQuery(UserWithEventsAndOrgsDocument);

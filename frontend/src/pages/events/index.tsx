@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AllEvents } from "@/components/pages/events/AllEvents";
 import { Title } from "@/components/Title";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const links = [
   { name: "Hjem", href: "/" },

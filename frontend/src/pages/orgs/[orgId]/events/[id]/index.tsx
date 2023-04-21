@@ -6,7 +6,7 @@ import { Attendees, EventInformation, Waitlist } from "@/components/pages/orgs/e
 import { Title } from "@/components/Title";
 import { AdminEventDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const AdminEventPage: NextPageWithLayout = () => {
   const { id } = useRouter().query;

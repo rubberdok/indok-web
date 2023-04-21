@@ -9,7 +9,7 @@ import { OrganizationHero } from "@/components/pages/organization/OrganizationHe
 import { OrgMembers } from "@/components/pages/organization/OrgMembers";
 import { AdminOrganizationDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const OrganizationDetailPage: NextPageWithLayout = () => {
   const router = useRouter();

@@ -28,7 +28,7 @@ import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog"
 import { ProductDocument, UserDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
