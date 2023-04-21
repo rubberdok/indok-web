@@ -119,8 +119,8 @@ const registrationSchema: yup.ObjectSchema<RegistrationSchema> = yup.object({
       deadline: yup.date().min(new Date()).required().label("Sluttid"),
       availableSeats: yup.number().min(0).default(null).nullable().label("Antall plasser"),
     })
-    .when("isAttendable", {
-      is: false,
+    .when("variant", {
+      is: "closed",
       then: () => yup.object(),
     }),
 });
