@@ -1,15 +1,16 @@
 import { PeopleOutlineRounded } from "@mui/icons-material";
 import {
+  Checkbox,
   Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
+  Unstable_Grid2 as Grid,
   InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -25,27 +26,31 @@ export const Registration: React.FC = () => {
     formState: { errors },
   } = useFormContext<IEventForm>();
 
+  const disabled = watch("registration.attendance") === "closed";
+
   return (
     <Stack direction="column" spacing={2}>
-      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start">
-        <Controller
-          name="registration.attendance"
-          control={control}
-          render={({ field }) => (
-            <FormControl variant="filled" fullWidth error={Boolean(errors.registration?.attendance)}>
-              <InputLabel htmlFor="select-attendance">Påmeldingstype</InputLabel>
-              <Select {...field} id="select-attendance">
-                <MenuItem value="closed">Ingen påmelding</MenuItem>
-                <MenuItem value="open">Påmelding</MenuItem>
-                <MenuItem value="binding">Bindende påmelding</MenuItem>
-              </Select>
-              <FormHelperText error={Boolean(errors.registration?.attendance)}>
-                {errors.registration?.attendance?.message}
-              </FormHelperText>
-            </FormControl>
-          )}
-        />
-      </Stack>
+      <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
+        <Grid xs={12} md={6}>
+          <Controller
+            name="registration.attendance"
+            control={control}
+            render={({ field }) => (
+              <FormControl variant="filled" fullWidth error={Boolean(errors.registration?.attendance)}>
+                <InputLabel id="select-registration-label">Påmeldingstype</InputLabel>
+                <Select {...field} labelId="select-registration-label" id="select-registration">
+                  <MenuItem value="closed">Ingen påmelding</MenuItem>
+                  <MenuItem value="open">Påmelding</MenuItem>
+                  <MenuItem value="binding">Bindende påmelding</MenuItem>
+                </Select>
+                <FormHelperText error={Boolean(errors.registration?.attendance)}>
+                  {errors.registration?.attendance?.message}
+                </FormHelperText>
+              </FormControl>
+            )}
+          />
+        </Grid>
+      </Grid>
       <Divider />
       <Typography variant="subtitle2">Tider for påmelding</Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
@@ -91,6 +96,21 @@ export const Registration: React.FC = () => {
             ),
           }}
         />
+        <FormControl fullWidth disabled={disabled}>
+          <Controller
+            name="registration.details.requiresExtraInformation"
+            control={control}
+            render={({ field }) => (
+              <>
+                <FormControlLabel label="Ekstra informasjon" control={<Checkbox {...field} checked={field.value} />} />
+                <FormHelperText error={Boolean(errors.registration?.details?.requiresExtraInformation)}>
+                  {errors.registration?.details?.requiresExtraInformation?.message ||
+                    "Be om utfylling av ekstra informasjon ved påmelding"}
+                </FormHelperText>
+              </>
+            )}
+          />
+        </FormControl>
       </Stack>
     </Stack>
   );
