@@ -61,7 +61,9 @@ export const BookingSemesterForm: React.FC<Props> = ({ defaultValues, values, on
         <Grid container direction={{ xs: "column", md: "row" }} justifyContent="space-between">
           <Grid container direction="column" xs={12} md={5}>
             <Grid>
-              <Typography variant="subtitle1">Høstsemester</Typography>
+              <Typography variant="subtitle1" component="h3">
+                Høstsemester
+              </Typography>
             </Grid>
             <Grid>
               <TextField
@@ -107,7 +109,9 @@ export const BookingSemesterForm: React.FC<Props> = ({ defaultValues, values, on
           </Grid>
           <Grid container direction="column" spacing={2} xs={12} md={5}>
             <Grid>
-              <Typography variant="subtitle1">Vårsemester</Typography>
+              <Typography variant="subtitle1" component="h3">
+                Vårsemester
+              </Typography>
             </Grid>
 
             <Grid>

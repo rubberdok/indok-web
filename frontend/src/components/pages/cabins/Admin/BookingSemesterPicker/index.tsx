@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
+import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import dayjs from "dayjs";
 import { useState } from "react";
 
@@ -78,9 +78,7 @@ export const BookingSemesterPicker: React.FC = () => {
           {alert?.message}
         </Alert>
       </Snackbar>
-      <Box>
-        <BookingSemesterForm onSubmit={handleSubmit} defaultValues={defaultBookingSemester} values={bookingSemester} />
-      </Box>
+      <BookingSemesterForm onSubmit={handleSubmit} defaultValues={defaultBookingSemester} values={bookingSemester} />
     </>
   );
 };

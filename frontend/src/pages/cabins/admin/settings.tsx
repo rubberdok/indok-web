@@ -37,13 +37,17 @@ const SettingsPage: NextPageWithLayout = () => {
         <PermissionRequired permission="cabins.change_bookingsemester">
           <Stack direction="column" spacing={4}>
             <Stack direction="column" spacing={2}>
-              <Typography variant="h4">Start- og sluttdato for høst- og vårsemester</Typography>
+              <Typography variant="h4" component="h2">
+                Start- og sluttdato for høst- og vårsemester
+              </Typography>
               <Typography>Det vil kun være mulig for brukere å søke om bookinger i disse periodene.</Typography>
               <BookingSemesterPicker />
             </Stack>
             <Divider />
             <Stack direction="column" spacing={2}>
-              <Typography variant="h4">Administrer hytteinformasjon</Typography>
+              <Typography variant="h4" component="h2">
+                Administrer hytteinformasjon
+              </Typography>
               <Typography>Her kan dere oppdatere informasjonen som skal vises om Oksen og Bjørnen.</Typography>
               <CabinInfoPicker />
             </Stack>
