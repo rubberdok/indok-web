@@ -16,13 +16,13 @@ export type CabinInfoForm = {
   };
 };
 
-const validationSchema = yup.object().shape({
-  oksen: yup.object().shape({
+const validationSchema: yup.ObjectSchema<CabinInfoForm> = yup.object({
+  oksen: yup.object({
     internalPrice: yup.number().positive().required().label("Internpris"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),
   }),
-  bjornen: yup.object().shape({
+  bjornen: yup.object({
     internalPrice: yup.number().positive().required().label("Internpris"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),

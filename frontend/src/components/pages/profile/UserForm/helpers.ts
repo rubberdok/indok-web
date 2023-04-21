@@ -17,24 +17,32 @@ export const suggestNames = (name: string | undefined): { firstName: string; las
   };
 };
 
-export const isVegetarian = (allergies: string): boolean => {
+export const isVegetarian = (allergies: string | null): boolean => {
   const options = ["veggis", "vegetar", "plantebasert", "vegan"];
-  return options.some((option) => allergies.toLowerCase().includes(option));
+  return options.some((option) => allergies?.toLowerCase().includes(option));
 };
 
-export const validationSchema = Yup.object().shape({
+export type IUserForm = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  allergies: string;
+  graduationYear: number;
+  phoneNumber: string;
+};
+
+export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
   firstName: Yup.string().required("Fornavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn 2 tegn."),
   lastName: Yup.string().required("Etternavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn to tegn."),
-  email: Yup.string().email("Oppgi en gyldig e-postadresse.").notRequired(),
-  allergies: Yup.string().notRequired(),
+  email: Yup.string().email("Oppgi en gyldig e-postadresse.").ensure(),
+  allergies: Yup.string().ensure(),
   graduationYear: Yup.number()
     .required()
     .min(minGraduationYear, `Kan ikke være før ${minGraduationYear}`)
     .max(maxGraduationYear, `Kan ikke være etter ${maxGraduationYear}`),
   phoneNumber: Yup.string()
-    .min(8, "Telefonnummeret må være 8 tegn eller lenger.")
-    .max(12, "Telefonnummeret kan ikke være mer enn 12 tegn.")
-    .matches(/^(0047|\+47|47)?[49]\d{7}$/, "Må være et gyldig telefonnummer."),
+    .matches(/^(0047|\+47|47)?[49]\d{7}$/, { message: "Må være et gyldig telefonnummer.", excludeEmptyString: true })
+    .ensure(),
 });
 
 export const suggestGraduationYear = () => {
