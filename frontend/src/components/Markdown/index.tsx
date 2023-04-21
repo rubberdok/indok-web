@@ -1,6 +1,6 @@
 import { Tab, Tabs, TextField } from "@mui/material";
 import { ChangeEventHandler, useState } from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { Options } from "react-markdown";
 
 import * as markdownComponents from "./components";
 
@@ -9,6 +9,14 @@ type Props = {
   markdown: string;
   /** Function to call when text changes */
   onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+};
+
+export const Markdown: React.FC<Options> = ({ children, ...props }) => {
+  return (
+    <ReactMarkdown components={markdownComponents} {...props}>
+      {children}
+    </ReactMarkdown>
+  );
 };
 
 /**
@@ -33,7 +41,7 @@ export const MarkdownForm: React.FC<Props> = ({ markdown, onTextChange }) => {
         <Tab label="Forhåndsvisning" value="preview" />
       </Tabs>
       {view === "edit" && <TextField fullWidth multiline rows={20} value={markdown} onChange={onTextChange} />}
-      {view === "preview" && <ReactMarkdown components={markdownComponents}>{markdown}</ReactMarkdown>}
+      {view === "preview" && <Markdown>{markdown}</Markdown>}
     </>
   );
 };

@@ -3,9 +3,8 @@ import { ResultOf } from "@graphql-typed-document-node/core";
 import { Container, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import ReactMarkdown from "react-markdown";
 
-import * as markdownComponents from "@/components/MarkdownForm/components";
+import { Markdown } from "@/components";
 import { TitleCard } from "@/components/pages/listings/detail/TitleCard";
 import { Title } from "@/components/Title";
 import { ListingDocument } from "@/generated/graphql";
@@ -71,9 +70,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
             <TitleCard listing={data?.listing ?? undefined} />
           </Grid>
           <Grid item xs={12} sm={6} md={7}>
-            <ReactMarkdown components={markdownComponents}>
-              {descriptionWithTitle(data?.listing?.description)}
-            </ReactMarkdown>
+            <Markdown>{descriptionWithTitle(data?.listing?.description)}</Markdown>
           </Grid>
         </Grid>
       </Container>

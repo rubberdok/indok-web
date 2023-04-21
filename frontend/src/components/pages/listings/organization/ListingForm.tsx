@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import React, { ChangeEvent } from "react";
 
-import { MarkdownForm } from "@/components/MarkdownForm";
+import { MarkdownForm } from "@/components/Markdown";
 import { ListingOrganizationFragment } from "@/generated/graphql";
 import { ListingInput } from "@/types/listings";
 
