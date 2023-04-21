@@ -14,7 +14,11 @@ export const OrganizationHero: React.FC<Props> = ({ organization, handleTabChang
     <Title
       title={organization.name}
       overline="Administrasjonsside"
-      breadcrumbs={[{ href: "/", name: "Hjem" }, { href: "/orgs", name: "Foreninger" }, { name: organization.name }]}
+      breadcrumbs={[
+        { href: "/", name: "Hjem" },
+        { href: "/orgs", name: "Foreninger" },
+        { name: organization.name, href: `/orgs/${organization.id}` },
+      ]}
       variant="dark"
     >
       <Tabs textColor="secondary" indicatorColor="secondary" onChange={handleTabChange} value={activeTab}>

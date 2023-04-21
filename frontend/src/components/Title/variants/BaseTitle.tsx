@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { ImageProps, StaticImageData } from "next/image";
 
 import { Breadcrumbs, Props as BreadcrumbProps } from "@/components/Breadcrumbs";
-import { TLink } from "@/components/Breadcrumbs/types";
+import { TLink } from "@/components/Breadcrumbs";
 
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
 
@@ -55,10 +55,10 @@ export const BaseTitle: React.FC<React.PropsWithChildren<Props>> = ({
       )}
       <Container>
         <Stack direction="column" sx={{ pt: 5, pb: children ? 0 : 6 }} justifyContent="space-between">
-          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={breadcrumbs} activeLast {...BreadcrumbProps} />
+          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={breadcrumbs} {...BreadcrumbProps} />
           <Box sx={{ position: "relative" }}>
             {overline && (
-              <Typography variant="overline" color="grey.500" sx={{ position: "absolute" }}>
+              <Typography variant="overline" color="text.secondary" sx={{ position: "absolute" }}>
                 {overline}
               </Typography>
             )}

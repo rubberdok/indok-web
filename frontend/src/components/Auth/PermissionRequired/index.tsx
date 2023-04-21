@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const PermissionRequired: React.FC<React.PropsWithChildren<Props>> = ({ permission, fallback, children }) => {
-  const { data } = useQuery(HasPermissionDocument, { variables: { permission }, ssr: false });
+  const { data } = useQuery(HasPermissionDocument, { variables: { permission } });
 
   if (data?.hasPermission) return <>{children}</>;
   return <>{fallback}</>;

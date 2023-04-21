@@ -6,7 +6,10 @@ import { Title } from "@/components/Title";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
-const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
+const links = [
+  { name: "Hjem", href: "/" },
+  { name: "Arrangementer", href: "/events" },
+];
 
 /** Component for showing the list page for event (for showing all events). */
 const Events: NextPageWithLayout = () => {

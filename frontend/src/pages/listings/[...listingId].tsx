@@ -51,7 +51,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
         breadcrumbs={[
           { href: "/", name: "Hjem" },
           { href: "/listings", name: "Verv" },
-          { href: `/listings/${data?.listing?.id}`, name: data?.listing?.title },
+          { href: `/listings/${data?.listing?.id}`, name: data?.listing?.title ?? "" },
         ]}
         bgImage={data?.listing?.heroImageUrl ?? undefined}
         ImageProps={{
