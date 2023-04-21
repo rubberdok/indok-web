@@ -152,7 +152,7 @@ export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: Bookin
   );
 };
 
-export const cabinInfoValidationSchema = Yup.object().shape({
+export const cabinInfoValidationSchema = Yup.object({
   oksenInternalPrice: Yup.number().typeError("Må være et tall.").min(1, "Prisen må være større enn 0."),
   bjornenInternalPrice: Yup.number().typeError("Må være et tall.").min(1, "Prisen må være større enn 0."),
   oksenExternalPrice: Yup.number().notRequired().typeError("Må være et tall.").min(1, "Prisen må være større enn 0."),

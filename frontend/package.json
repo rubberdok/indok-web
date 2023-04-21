@@ -28,7 +28,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.6",
-    "@hookform/resolvers": "^2.9.10",
+    "@hookform/resolvers": "^3.1.0",
     "@mui/icons-material": "^5.11.11",
     "@mui/lab": "^5.0.0-alpha.123",
     "@mui/material": "^5.11.12",
@@ -49,7 +49,7 @@
     "react-swipeable-views-utils": "^0.14.0",
     "swiper": "^9.1.0",
     "validator": "^13.9.0",
-    "yup": "^0.32.11"
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
@@ -58,6 +58,7 @@
     "@graphql-codegen/typescript": "3.0.2",
     "@graphql-codegen/typescript-operations": "3.0.2",
     "@graphql-typed-document-node/core": "^3.2.0",
+    "@types/lodash": "^4.14.194",
     "@types/node": "^16.18.18",
     "@types/react": "18",
     "@types/react-dom": "18",

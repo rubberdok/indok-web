@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, FormControlLabel, Unstable_Grid2 as Grid, Switch, TextField, Typography } from "@mui/material";
-import dayjs from "dayjs";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -17,18 +16,29 @@ export type BookingForm = {
   };
 };
 
-const validationSchema = yup.object().shape({
+type ValidationSchema = {
+  fall: {
+    start: Date;
+    end: Date;
+    active: boolean;
+  };
+  spring: {
+    start: Date;
+    end: Date;
+    active: boolean;
+  };
+};
+
+const validationSchema: yup.ObjectSchema<ValidationSchema> = yup.object({
   fall: yup
-    .object()
-    .shape({
+    .object({
       start: yup.date().required(),
       end: yup.date().required().min(yup.ref("start"), "Sluttdato må være etter startdato"),
       active: yup.boolean().required(),
     })
     .required(),
   spring: yup
-    .object()
-    .shape({
+    .object({
       start: yup.date().required(),
       end: yup.date().required().min(yup.ref("start"), "Sluttdato må være etter startdato"),
       active: yup.boolean().required(),
@@ -130,7 +140,7 @@ export const BookingSemesterForm: React.FC<Props> = ({ defaultValues, values, on
             </Grid>
             <Grid>
               <TextField
-                {...register("spring.end", { setValueAs: (date: Date) => dayjs(date).format("YYYY-MM-DD") })}
+                {...register("spring.end")}
                 required
                 helperText={errors.spring?.end?.message}
                 error={Boolean(errors.spring?.end)}
