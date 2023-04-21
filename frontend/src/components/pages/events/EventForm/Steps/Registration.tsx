@@ -26,25 +26,25 @@ export const Registration: React.FC = () => {
     formState: { errors },
   } = useFormContext<IEventForm>();
 
-  const disabled = watch("registration.attendance") === "closed";
+  const disabled = watch("registration.variant") === "closed";
 
   return (
     <Stack direction="column" spacing={2}>
       <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
         <Grid xs={12} md={6}>
           <Controller
-            name="registration.attendance"
+            name="registration.variant"
             control={control}
             render={({ field }) => (
-              <FormControl variant="filled" fullWidth error={Boolean(errors.registration?.attendance)}>
+              <FormControl variant="filled" fullWidth error={Boolean(errors.registration?.variant)} required>
                 <InputLabel id="select-registration-label">Påmeldingstype</InputLabel>
                 <Select {...field} labelId="select-registration-label" id="select-registration">
                   <MenuItem value="closed">Ingen påmelding</MenuItem>
                   <MenuItem value="open">Påmelding</MenuItem>
                   <MenuItem value="binding">Bindende påmelding</MenuItem>
                 </Select>
-                <FormHelperText error={Boolean(errors.registration?.attendance)}>
-                  {errors.registration?.attendance?.message}
+                <FormHelperText error={Boolean(errors.registration?.variant)}>
+                  {errors.registration?.variant?.message}
                 </FormHelperText>
               </FormControl>
             )}

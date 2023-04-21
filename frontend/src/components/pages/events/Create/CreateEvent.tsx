@@ -49,12 +49,12 @@ export const CreateEvent: React.FC<Props> = ({ organizations }) => {
           endTime: data.timeAndPlace.end.toISOString(),
           shortDescription: data.info.shortDescription,
           categoryId: data.info.category || null,
-          isAttendable: data.registration.attendance !== "closed",
+          isAttendable: data.registration.variant !== "closed",
           organizationId: data.info.organizer,
           allowedGradeYears: data.info.gradeYears?.length ? data.info.gradeYears : undefined,
-          ...(data.registration.attendance !== "closed"
+          ...(data.registration.variant !== "closed"
             ? {
-                bindingSignup: data.registration.attendance === "binding",
+                bindingSignup: data.registration.variant === "binding",
                 signupOpenDate: data.registration.details.signUpOpen?.toISOString(),
                 deadline: data.registration.details.deadline?.toISOString(),
                 availableSlots: data.registration.details.availableSeats,

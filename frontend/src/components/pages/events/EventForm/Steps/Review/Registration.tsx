@@ -11,16 +11,15 @@ import { ReviewItem } from "./ReviewItem";
 export const Registration: React.FC = () => {
   const { watch } = useFormContext<IEventForm>();
 
-  const registration = watch("registration.isAttendable");
-  const binding = watch("registration.details.binding");
+  const registrationType = watch("registration.variant");
   let title: string;
 
-  if (registration && binding) title = "Bindende påmelding";
-  else if (registration) title = "Påmelding";
+  if (registrationType === "binding") title = "Bindende påmelding";
+  else if (registrationType === "open") title = "Påmelding";
   else title = "Påmelding (deaktivert)";
 
   return (
-    <Accordion disabled={!registration}>
+    <Accordion disabled={registrationType === "closed"}>
       <AccordionSummary expandIcon={<ExpandMoreRounded />}>
         <Stack direction="column" spacing={1}>
           <Stack direction="row" justifyContent="space-between">

@@ -102,8 +102,9 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
           location: "",
         },
         registration: {
-          isAttendable: false,
+          variant: "closed",
           details: {
+            requiresExtraInformation: false,
             availableSeats: null,
             deadline: undefined,
             signUpOpen: undefined,

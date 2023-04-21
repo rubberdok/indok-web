@@ -97,9 +97,9 @@ const timeAndPlaceSchema: yup.ObjectSchema<TimeAndPlaceSchema> = yup
   .required();
 
 type RegistrationSchema = {
-  isAttendable: boolean;
+  variant: "open" | "closed" | "binding";
   details: {
-    binding: boolean;
+    requiresExtraInformation: boolean;
     signUpOpen: Date;
     deadline: Date;
     availableSeats: number | null;
@@ -111,7 +111,7 @@ type RegistrationSchema = {
  * of `details` will be validated. Otherwise, they're simply ignored.
  */
 const registrationSchema: yup.ObjectSchema<RegistrationSchema> = yup.object({
-  attendance: yup.string().oneOf(["open", "closed", "binding"]).required().label("Påmelding").default("closed"),
+  variant: yup.string().required().oneOf(["open", "closed", "binding"]).label("Påmelding"),
   details: yup
     .object({
       requiresExtraInformation: yup.boolean().default(false).label("Ekstra informasjon").required(),
