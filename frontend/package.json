@@ -36,7 +36,6 @@
     "@vercel/analytics": "^0.1.11",
     "dayjs": "^1.11.7",
     "deepmerge": "^4.2.2",
-    "formik": "^2.2.9",
     "graphql": "^16.3.0",
     "gray-matter": "^4.0.3",
     "lodash": "^4.17.21",
