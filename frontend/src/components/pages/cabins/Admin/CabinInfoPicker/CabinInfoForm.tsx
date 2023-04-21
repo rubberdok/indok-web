@@ -53,7 +53,9 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
         <Grid container direction={{ xs: "column", md: "row" }} justifyContent="space-between">
           <Grid container direction="column" xs={12} md={5}>
             <Grid>
-              <Typography variant="subtitle1">Bjørnen</Typography>
+              <Typography variant="subtitle1" component="h3">
+                Bjørnen
+              </Typography>
             </Grid>
             <Grid>
               <TextField
@@ -100,7 +102,9 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
           </Grid>
           <Grid container direction="column" xs={12} md={5}>
             <Grid>
-              <Typography variant="subtitle1">Oksen</Typography>
+              <Typography variant="subtitle1" component="h3">
+                Oksen
+              </Typography>
             </Grid>
             <Grid>
               <TextField
