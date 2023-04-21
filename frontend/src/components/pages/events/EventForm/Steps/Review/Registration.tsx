@@ -50,6 +50,12 @@ export const Registration: React.FC = () => {
 
           <Typography variant="subtitle1">Plasser</Typography>
           <ReviewItem label="Antall plasser" value={watch("registration.details.availableSeats")} />
+
+          <Typography variant="subtitle1">Ekstrainformasjon</Typography>
+          <ReviewItem
+            label="Krever utfylling av ekstra informasjon"
+            value={watch("registration.details.requiresExtraInformation") ? "Ja" : "Nei"}
+          />
         </Stack>
       </AccordionDetails>
     </Accordion>

@@ -115,8 +115,12 @@ const registrationSchema: yup.ObjectSchema<RegistrationSchema> = yup.object({
   details: yup
     .object({
       requiresExtraInformation: yup.boolean().default(false).label("Ekstra informasjon").required(),
-      signUpOpen: yup.date().min(new Date()).required().label("Starttid"),
-      deadline: yup.date().min(new Date()).required().label("Sluttid"),
+      signUpOpen: yup.date().required().label("Starttid"),
+      deadline: yup
+        .date()
+        .min(yup.ref("signUpOpen"), "Må være etter påmeldingen har åpnet.")
+        .required()
+        .label("Sluttid"),
       availableSeats: yup.number().min(0).default(null).nullable().label("Antall plasser"),
     })
     .when("variant", {

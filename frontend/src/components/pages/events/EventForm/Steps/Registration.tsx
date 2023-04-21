@@ -18,6 +18,8 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IEventForm } from "../schema";
 
+import { DateTimePicker } from "./DateTimePicker";
+
 export const Registration: React.FC = () => {
   const {
     register,
@@ -54,28 +56,17 @@ export const Registration: React.FC = () => {
       <Divider />
       <Typography variant="subtitle2">Tider for påmelding</Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <TextField
-          {...register("registration.details.signUpOpen")}
-          error={Boolean(errors.registration?.details?.signUpOpen)}
-          helperText={errors.registration?.details?.signUpOpen?.message}
-          fullWidth
-          required
-          disabled={disabled}
-          type="datetime-local"
+        <DateTimePicker
+          name="registration.details.signUpOpen"
+          control={control}
           label="Påmelding åpner"
-          InputLabelProps={{ shrink: true }}
-        />
-
-        <TextField
-          {...register("registration.details.deadline")}
-          error={Boolean(errors.registration?.details?.deadline)}
-          helperText={errors.registration?.details?.deadline?.message}
-          fullWidth
-          required
           disabled={disabled}
-          type="datetime-local"
+        />
+        <DateTimePicker
+          name="registration.details.deadline"
+          control={control}
           label="Påmelding stenger"
-          InputLabelProps={{ shrink: true }}
+          disabled={disabled}
         />
       </Stack>
       <Typography variant="subtitle2">Plasser</Typography>

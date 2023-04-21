@@ -32,11 +32,11 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
+import { NextLinkComposed, Link } from "@/components";
 import { PermissionRequired } from "@/components/Auth";
 import { LoginRequired } from "@/components/Auth/LoginRequired";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { LabeledIcon } from "@/components/LabeledIcon";
-import { NextLinkComposed } from "@/components/Link";
 import * as components from "@/components/MarkdownForm/components";
 import {
   EventDocument,
@@ -274,9 +274,8 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                 variant="contained"
                 color="contrast"
                 startIcon={<CreateRounded />}
-                onClick={() => {
-                  setOpenEditEvent(true);
-                }}
+                component={Link}
+                href={`/events/${eventId}/edit`}
               >
                 Rediger
               </Button>

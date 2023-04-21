@@ -78,7 +78,12 @@ export const CreateEvent: React.FC<Props> = ({ organizations }) => {
           <Alert severity="error">Noe gikk galt</Alert>
         </Snackbar>
       )}
-      <EventForm onSubmit={handleCreateEvent} organizations={organizations} />
+      <EventForm
+        title="Nytt arrangement"
+        submitText="Lag arrangement"
+        onSubmit={handleCreateEvent}
+        organizations={organizations}
+      />
     </>
   );
 };
