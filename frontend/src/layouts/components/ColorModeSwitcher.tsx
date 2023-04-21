@@ -27,6 +27,7 @@ export const ColorModeSwitcher: React.FC = () => {
         <IconButton
           size="small"
           onClick={handleOpen}
+          aria-label="Åpne dialog for å velge utseende"
           sx={(theme) => ({
             color: "text.primary",
             position: "absolute",
@@ -41,6 +42,7 @@ export const ColorModeSwitcher: React.FC = () => {
         <IconButton
           size="small"
           onClick={handleOpen}
+          aria-label="Åpne dialog for å velge utseende"
           sx={(theme) => ({
             color: "text.primary",
             position: "absolute",
@@ -118,7 +120,11 @@ function ColorModePreview() {
               position: "relative",
             }}
           >
-            <CardActionArea sx={{ width: "100%", height: "100%" }} onClick={() => setMode("light")}>
+            <CardActionArea
+              sx={{ width: "100%", height: "100%" }}
+              onClick={() => setMode("light")}
+              aria-labelledby="light-mode-label"
+            >
               <Grow in={mode === "light"} appear={false}>
                 <CheckCircle sx={{ position: "absolute", bottom: 0, right: 0, color: "text.primary" }} />
               </Grow>
@@ -127,7 +133,9 @@ function ColorModePreview() {
           </Card>
         </Grid>
         <Grid>
-          <Typography variant="body2">Lys</Typography>
+          <Typography id="light-mode-label" variant="body2">
+            Lys
+          </Typography>
         </Grid>
       </Grid>
       <Grid container direction="column" spacing={1} data-color-scheme="dark" xs={4}>
@@ -140,7 +148,11 @@ function ColorModePreview() {
               position: "relative",
             }}
           >
-            <CardActionArea sx={{ width: "100%", height: "100%" }} onClick={() => setMode("dark")}>
+            <CardActionArea
+              sx={{ width: "100%", height: "100%" }}
+              onClick={() => setMode("dark")}
+              aria-labelledby="dark-mode-label"
+            >
               <Grow in={mode === "dark"} appear={false}>
                 <CheckCircle sx={{ position: "absolute", bottom: 0, right: 0, color: "text.primary" }} />
               </Grow>
@@ -149,13 +161,19 @@ function ColorModePreview() {
           </Card>
         </Grid>
         <Grid>
-          <Typography variant="body2">Mørk</Typography>
+          <Typography variant="body2" id="dark-mode-label">
+            Mørk
+          </Typography>
         </Grid>
       </Grid>
       <Grid container direction="column" spacing={1} xs={4}>
         <Grid container xs spacing={0}>
           <Card variant="outlined" sx={{ height: "100%", width: "100%", padding: "none", position: "relative" }}>
-            <CardActionArea sx={{ height: "100%", width: "100%" }} onClick={() => setMode("system")}>
+            <CardActionArea
+              sx={{ height: "100%", width: "100%" }}
+              onClick={() => setMode("system")}
+              aria-labelledby="system-mode-label"
+            >
               <Grid container sx={{ height: "100%" }} xs>
                 <Grid xs={6} data-color-scheme="dark">
                   <CardContentPreview />
@@ -171,7 +189,9 @@ function ColorModePreview() {
           </Card>
         </Grid>
         <Grid>
-          <Typography variant="body2">Automatisk</Typography>
+          <Typography variant="body2" id="system-mode-label">
+            Automatisk
+          </Typography>
         </Grid>
       </Grid>
     </Grid>
