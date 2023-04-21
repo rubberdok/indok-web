@@ -25,7 +25,7 @@ mutation sendEmail($emailInput: EmailInput!) {
 mutation updateCabin($cabinData: UpdateCabinInput!) {
   updateCabin(cabinData: $cabinData) {
     cabin {
-      id
+      ...Cabin
     }
   }
 }
@@ -33,7 +33,7 @@ mutation updateCabin($cabinData: UpdateCabinInput!) {
 mutation updateBookingSemester($semesterData: UpdateBookingSemesterInput!) {
   updateBookingSemester(semesterData: $semesterData) {
     bookingSemester {
-      id
+      ...BookingSemester
     }
   }
 }

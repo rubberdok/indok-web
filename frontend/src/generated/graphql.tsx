@@ -1527,7 +1527,17 @@ export type UpdateCabinMutationVariables = Exact<{
 
 export type UpdateCabinMutation = {
   __typename?: "Mutations";
-  updateCabin?: { __typename?: "UpdateCabin"; cabin?: { __typename?: "CabinType"; id: string } | null } | null;
+  updateCabin?: {
+    __typename?: "UpdateCabin";
+    cabin?: {
+      __typename?: "CabinType";
+      id: string;
+      name: string;
+      maxGuests: number;
+      internalPrice: number;
+      externalPrice: number;
+    } | null;
+  } | null;
 };
 
 export type UpdateBookingSemesterMutationVariables = Exact<{
@@ -1538,7 +1548,15 @@ export type UpdateBookingSemesterMutation = {
   __typename?: "Mutations";
   updateBookingSemester?: {
     __typename?: "UpdateBookingSemester";
-    bookingSemester?: { __typename?: "UpdateBookingSemesterType"; id: string } | null;
+    bookingSemester?: {
+      __typename?: "UpdateBookingSemesterType";
+      fallStartDate: string;
+      fallEndDate: string;
+      springStartDate: string;
+      springEndDate: string;
+      fallSemesterActive: boolean;
+      springSemesterActive: boolean;
+    } | null;
   } | null;
 };
 
@@ -4718,7 +4736,7 @@ export const UpdateCabinDocument = {
                   name: { kind: "Name", value: "cabin" },
                   selectionSet: {
                     kind: "SelectionSet",
-                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Cabin" } }],
                   },
                 },
               ],
@@ -4727,6 +4745,7 @@ export const UpdateCabinDocument = {
         ],
       },
     },
+    ...CabinFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<UpdateCabinMutation, UpdateCabinMutationVariables>;
 export const UpdateBookingSemesterDocument = {
@@ -4767,7 +4786,7 @@ export const UpdateBookingSemesterDocument = {
                   name: { kind: "Name", value: "bookingSemester" },
                   selectionSet: {
                     kind: "SelectionSet",
-                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BookingSemester" } }],
                   },
                 },
               ],
@@ -4776,6 +4795,7 @@ export const UpdateBookingSemesterDocument = {
         ],
       },
     },
+    ...BookingSemesterFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<UpdateBookingSemesterMutation, UpdateBookingSemesterMutationVariables>;
 export const CabinsDocument = {
