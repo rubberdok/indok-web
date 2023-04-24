@@ -38,29 +38,27 @@ const EventSkeleton: React.FC = () => {
   );
 
   return (
-    <Grid container xs={12} md={9} direction="column" spacing={2}>
-      <Grid xs>
+    <>
+      <Grid>
         <EventListItemSkeleton />
       </Grid>
-      <Grid xs>
+      <Grid>
         <EventListItemSkeleton />
       </Grid>
-      <Grid xs>
+      <Grid>
         <EventListItemSkeleton />
       </Grid>
-      <Grid xs>
+      <Grid>
         <EventListItemSkeleton />
       </Grid>
-    </Grid>
+    </>
   );
 };
 
 const Error: React.FC = () => (
-  <Grid justifyContent="center" xs={12} md={9}>
-    <Typography color="error" textAlign="center">
-      Noe gikk galt, prøv igjen senere.
-    </Typography>
-  </Grid>
+  <Typography color="error" textAlign="center">
+    Noe gikk galt, prøv igjen senere.
+  </Typography>
 );
 
 function filterEvents(
@@ -135,9 +133,9 @@ export const AllEvents: React.FC = () => {
           onShowDefaultChange={setShowDefaultEvents}
         />
       </Grid>
-      {loading && <EventSkeleton />}
-      {error && <Error />}
       <Grid container xs={12} md={9} direction="column">
+        {loading && <EventSkeleton />}
+        {error && <Error />}
         {displayedEvents.map((event) => (
           <Grid key={event.id}>
             <EventListItem event={event} user={data?.user} />
