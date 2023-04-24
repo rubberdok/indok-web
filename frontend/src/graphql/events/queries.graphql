@@ -4,6 +4,37 @@ query event($id: ID!) {
   }
 }
 
+fragment EventFields on EventType {
+  id
+  title
+  startTime
+  shortDescription
+  allowedGradeYears
+  isFull
+  isAttendable
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+  }
+  organization {
+    id
+    color
+  }
+}
+
+query events($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+  allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
+    ...EventFields
+  }
+  defaultEvents {
+    ...EventFields
+  }
+  user {
+    id
+    gradeYear
+  }
+}
+
 query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
   allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
     ...EventInList
@@ -60,4 +91,13 @@ query attendeeReportOrg($orgId: ID!, $fields: [String!], $filetype: String) {
 
 query attendeeReports($eventIds: [ID!]!, $fields: [String!], $filetype: String) {
   attendeeReports(eventIds: $eventIds, fields: $fields, filetype: $filetype)
+}
+
+query eventUserOrganizations {
+  user {
+    id
+    organizations {
+      id
+    }
+  }
 }
