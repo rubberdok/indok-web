@@ -33,7 +33,7 @@ const App = (props: CustomAppProps): JSX.Element => {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <AppProvider pageProps={pageProps} emotionCache={emotionCache}>
-        {getLayout(<Component pageProps={pageProps} err={err} />)}
+        {getLayout(<Component {...pageProps} err={err} />)}
       </AppProvider>
       <Analytics />
     </>
