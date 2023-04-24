@@ -1,5 +1,5 @@
 import type {} from "@mui/material/Button";
-import type { Theme, CssVarsTheme, PaletteColorOptions } from "@mui/material/styles";
+import type { Theme, CssVarsTheme } from "@mui/material/styles";
 import type {} from "@mui/material/Typography";
 import type {} from "@mui/material/themeCssVarsAugmentation";
 

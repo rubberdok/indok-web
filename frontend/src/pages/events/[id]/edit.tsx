@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { EditEvent } from "@/components/pages/events/EditEvent";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const EditEventPage: NextPageWithLayout = () => {
   const { id } = useRouter().query;

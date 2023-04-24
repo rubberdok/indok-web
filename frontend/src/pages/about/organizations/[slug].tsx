@@ -2,13 +2,11 @@ import { MailOutline, Phone } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, Chip, Container, Divider, Grid, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
-import ReactMarkdown from "react-markdown";
 
-import { Link } from "@/components";
-import * as markdownComponents from "@/components/MarkdownForm/components";
+import { Link, Markdown } from "@/components";
 import { Title } from "@/components/Title";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import { Article, getPostBySlug, getPostsSlugs } from "@/utils/posts";
 
 const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticProps>> = ({ post, frontmatter }) => {
@@ -34,7 +32,7 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
       <Container sx={{ mb: 4 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>
-            <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
+            <Markdown>{post.content}</Markdown>
           </Grid>
           <Grid item xs={12} md={4}>
             {frontmatter.board && (

@@ -30,14 +30,12 @@ import {
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
 
-import { Link, NextLinkComposed } from "@/components";
+import { Link, Markdown, NextLinkComposed } from "@/components";
 import { PermissionRequired } from "@/components/Auth";
 import { LoginRequired } from "@/components/Auth/LoginRequired";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { LabeledIcon } from "@/components/LabeledIcon";
-import * as components from "@/components/MarkdownForm/components";
 import {
   EventDocument,
   EventSignOffDocument,
@@ -293,7 +291,7 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
             <Typography variant="h3" mb={3}>
               Beskrivelse
             </Typography>
-            <ReactMarkdown components={components}>{event.description}</ReactMarkdown>
+            <Markdown>{event.description}</Markdown>
           </Grid>
 
           {/* Information card */}

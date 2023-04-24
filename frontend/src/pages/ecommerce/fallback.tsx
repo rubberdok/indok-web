@@ -27,7 +27,7 @@ import { Link } from "@/components";
 import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
 import { AttemptCapturePaymentDocument, PaymentStatus, UserDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import savings from "~/public/illustrations/Savings.svg";
 
 const FallbackPage: NextPageWithLayout = () => {

@@ -32,7 +32,7 @@ export const BookNow: React.FC = () => {
             to="/cabins/book"
             variant="contained"
             size="large"
-            color="success"
+            color="primary"
             endIcon={<ArrowForward />}
           >
             Book nå

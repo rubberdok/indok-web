@@ -4,9 +4,8 @@ import Image from "next/image";
 
 import { Link } from "@/components";
 import { Layout } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/lib/next";
 import _404 from "~/public/illustrations/404.svg";
-
-import { NextPageWithLayout } from "./_app";
 
 const Custom404: NextPageWithLayout = () => {
   return (
