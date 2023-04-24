@@ -137,9 +137,9 @@ export const AllEvents: React.FC = () => {
       </Grid>
       {loading && <EventSkeleton />}
       {error && <Error />}
-      <Grid container xs={12} md={9}>
+      <Grid container xs={12} md={9} direction="column">
         {displayedEvents.map((event) => (
-          <Grid key={event.id} xs>
+          <Grid key={event.id}>
             <EventListItem event={event} user={data?.user} />
           </Grid>
         ))}
