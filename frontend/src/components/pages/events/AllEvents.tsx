@@ -38,7 +38,7 @@ const EventSkeleton: React.FC = () => {
   );
 
   return (
-    <Grid container xs={12} md={9} direction="column" spacing={3}>
+    <Grid container xs={12} md={9} direction="column" spacing={2}>
       <Grid xs>
         <EventListItemSkeleton />
       </Grid>
