@@ -18,7 +18,7 @@ export type FilterQuery = {
   endTime?: string;
 };
 
-const EventSkeleton: React.FC = () => {
+const EventListItemSkeleton = () => {
   const dummyEvent: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>[number] = {
     id: "loading",
     title: "Loading",
@@ -31,47 +31,29 @@ const EventSkeleton: React.FC = () => {
     },
   };
 
-  const EventListItemSkeleton = () => (
+  return (
     <Skeleton variant="rounded" width="100%">
       <EventListItem event={dummyEvent} user={null} />
     </Skeleton>
   );
-
-  return (
-    <>
-      <Grid>
-        <EventListItemSkeleton />
-      </Grid>
-      <Grid>
-        <EventListItemSkeleton />
-      </Grid>
-      <Grid>
-        <EventListItemSkeleton />
-      </Grid>
-      <Grid>
-        <EventListItemSkeleton />
-      </Grid>
-    </>
-  );
 };
 
-const Error: React.FC = () => (
-  <Typography color="error" textAlign="center">
-    Noe gikk galt, prøv igjen senere.
-  </Typography>
+const EventSkeleton: React.FC = () => (
+  <>
+    <Grid>
+      <EventListItemSkeleton />
+    </Grid>
+    <Grid>
+      <EventListItemSkeleton />
+    </Grid>
+    <Grid>
+      <EventListItemSkeleton />
+    </Grid>
+    <Grid>
+      <EventListItemSkeleton />
+    </Grid>
+  </>
 );
-
-function filterEvents(
-  events: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>,
-  user: ResultOf<typeof EventsDocument>["user"]
-): NonNullable<ResultOf<typeof EventsDocument>["allEvents"]> {
-  const gradeYear = user?.gradeYear;
-  if (gradeYear) {
-    return events.filter((event) => event.allowedGradeYears?.includes(gradeYear));
-  }
-
-  return events;
-}
 
 export const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState<FilterQuery>({});
@@ -135,7 +117,11 @@ export const AllEvents: React.FC = () => {
       </Grid>
       <Grid container xs={12} md={9} direction="column">
         {loading && <EventSkeleton />}
-        {error && <Error />}
+        {error && (
+          <Typography color="error" textAlign="center">
+            Noe gikk galt, prøv igjen senere.
+          </Typography>
+        )}
         {displayedEvents.map((event) => (
           <Grid key={event.id}>
             <EventListItem event={event} user={data?.user} />
@@ -145,3 +131,15 @@ export const AllEvents: React.FC = () => {
     </Grid>
   );
 };
+
+function filterEvents(
+  events: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>,
+  user: ResultOf<typeof EventsDocument>["user"]
+): NonNullable<ResultOf<typeof EventsDocument>["allEvents"]> {
+  const gradeYear = user?.gradeYear;
+  if (gradeYear) {
+    return events.filter((event) => event.allowedGradeYears?.includes(gradeYear));
+  }
+
+  return events;
+}
