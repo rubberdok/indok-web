@@ -17,7 +17,7 @@ export const CountdownStatusText: React.FC<CountdownStatusTextProps> = ({ signup
 
   if (dayjs.duration(timeLeft).asDays() > 1) {
     return <Typography variant="overline">Påmelding åpner {dayjs(signupOpenDate).format("LLL")}</Typography>;
-  } else if (timeLeft > 0) {
+  } else if (timeLeft >= 0) {
     return (
       /**
        * The countdown text is susceptible to hydration errors as the content genereted on the server
@@ -30,7 +30,7 @@ export const CountdownStatusText: React.FC<CountdownStatusTextProps> = ({ signup
         Påmelding åpner {countdownText}, {dayjs(signupOpenDate).format("[kl.] HH:mm")}
       </Typography>
     );
-  } else if (timeLeft < 0) {
+  } else if (dayjs().isBefore(deadline)) {
     return <Typography variant="overline">Påmelding stenger {dayjs(deadline).format("LLL")}</Typography>;
   } else {
     return <Typography variant="overline">Påmeldingen er stengt</Typography>;
