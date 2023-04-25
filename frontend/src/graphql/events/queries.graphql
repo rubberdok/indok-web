@@ -35,6 +35,44 @@ query events($organization: String, $category: String, $startTime: DateTime, $en
   }
 }
 
+fragment EventDetailFields on EventType {
+  id
+  title
+  description
+  shortDescription
+  startTime
+  endTime
+  location
+  contactEmail
+  allowedGradeYears
+  hasExtraInformation
+  isFull
+  signupOpenDate
+  deadline
+  isAttendable
+  bindingSignup
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+    positionOnWaitingList
+  }
+  category {
+    id
+    name
+  }
+  organization {
+    id
+    name
+    logoUrl
+  }
+}
+
+query eventDetails($id: ID!) {
+  event(id: $id) {
+    ...EventDetailFields
+  }
+}
+
 query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
   allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
     ...EventInList

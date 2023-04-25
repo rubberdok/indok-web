@@ -19,12 +19,28 @@ mutation updateEvent($id: ID!, $eventData: UpdateEventInput!) {
 mutation eventSignUp($eventId: ID!, $extraInformation: String) {
   eventSignUp(eventId: $eventId, data: { extraInformation: $extraInformation }) {
     isFull
+    event {
+      id
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+        positionOnWaitingList
+      }
+    }
   }
 }
 
 mutation eventSignOff($eventId: ID!) {
   eventSignOff(eventId: $eventId) {
     isFull
+    event {
+      id
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+        positionOnWaitingList
+      }
+    }
   }
 }
 
