@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Chip,
   Container,
   Divider,
   Unstable_Grid2 as Grid,
@@ -14,7 +13,6 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
-  Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
 import React from "react";
@@ -71,7 +69,7 @@ export const Event: React.FC<Props> = ({ event }) => {
             </Grid>
           )}
           <Grid xs={12} md={8}>
-            <Stack spacing={2} divider={<Divider />}>
+            <Stack spacing={2} divider={<Divider light />}>
               {isAttendable(event) && <SignUp event={event} />}
               <Markdown>{event.description}</Markdown>
             </Stack>
