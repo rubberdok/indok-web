@@ -1,7 +1,7 @@
 mutation createEvent($eventData: CreateEventInput!) {
   createEvent(eventData: $eventData) {
     event {
-      ...EventInList
+      ...EventFields
     }
     ok
   }
@@ -10,7 +10,7 @@ mutation createEvent($eventData: CreateEventInput!) {
 mutation updateEvent($id: ID!, $eventData: UpdateEventInput!) {
   updateEvent(id: $id, eventData: $eventData) {
     event {
-      ...Event
+      ...EventDetailFields
     }
     ok
   }
