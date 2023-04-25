@@ -24,6 +24,7 @@ import { Markdown } from "@/components/Markdown";
 import { Title } from "@/components/Title";
 import { EventDetailFieldsFragment, UserOrganizationsDocument } from "@/generated/graphql";
 
+import { AddToCalendar } from "./AddToCalendar";
 import { ManageEvent } from "./ManageEvent";
 import { SignUp } from "./SignUp";
 
@@ -132,12 +133,13 @@ export const Event: React.FC<Props> = ({ event }) => {
                       </ListItemIcon>
                       <ListItemText
                         primary={<Typography>Klassetrinn</Typography>}
-                        secondary={<Chip label={event.allowedGradeYears.join(", ")} color="primary" />}
+                        secondary={
+                          <Chip label={event.allowedGradeYears.join(", ")} color="primary" variant="outlined" />
+                        }
                         disableTypography
                       />
                     </ListItem>
                   )}
-                  <Divider variant="middle" light />
                   {event.contactEmail && (
                     <ListItem>
                       <ListItemIcon>
@@ -149,6 +151,14 @@ export const Event: React.FC<Props> = ({ event }) => {
                       />
                     </ListItem>
                   )}
+                  <ListItem>
+                    <AddToCalendar
+                      title={event.title}
+                      start={event.startTime}
+                      end={event.endTime}
+                      location={event.location}
+                    />
+                  </ListItem>
                 </List>
               </CardContent>
             </Card>
