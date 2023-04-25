@@ -42,7 +42,7 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
               {routes.map((route) => {
                 if (route.permission) {
                   return (
-                    <PermissionRequired permission={route.permission} key={route.title}>
+                    <PermissionRequired permission={route.permission} key={route.title} optimistic>
                       <NavigationLink route={route} active={pathname.includes(route.path)} />
                     </PermissionRequired>
                   );
