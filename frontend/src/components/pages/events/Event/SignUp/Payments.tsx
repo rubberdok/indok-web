@@ -4,10 +4,11 @@ import { NextLinkComposed } from "@/components/Link";
 
 type Props = {
   hasBoughtTicket?: boolean | null;
+  productId: string;
   eventId: string;
 };
 
-export const PaymentStatus: React.FC<Props> = ({ hasBoughtTicket, eventId }) => {
+export const PaymentStatus: React.FC<Props> = ({ hasBoughtTicket, productId, eventId }) => {
   if (hasBoughtTicket)
     return (
       <Alert color="success" variant="outlined">
@@ -23,7 +24,7 @@ export const PaymentStatus: React.FC<Props> = ({ hasBoughtTicket, eventId }) => 
           component={NextLinkComposed}
           to={{
             pathname: "/ecommerce/checkout",
-            query: { productId: eventId, quantity: 1, redirect: `/events/${eventId}` },
+            query: { productId, quantity: 1, redirect: `/events/${eventId}` },
           }}
           color="inherit"
           size="small"

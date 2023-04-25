@@ -52,6 +52,9 @@ fragment EventDetailFields on EventType {
   isAttendable
   bindingSignup
   price
+  product {
+    id
+  }
   userAttendance {
     isSignedUp
     isOnWaitingList

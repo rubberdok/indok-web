@@ -2213,6 +2213,7 @@ export type EventDetailFieldsFragment = {
   isAttendable: boolean;
   bindingSignup: boolean;
   price?: number | null;
+  product?: { __typename?: "ProductType"; id: string } | null;
   userAttendance?: {
     __typename?: "UserAttendingType";
     isSignedUp?: boolean | null;
@@ -2248,6 +2249,7 @@ export type EventDetailsQuery = {
     isAttendable: boolean;
     bindingSignup: boolean;
     price?: number | null;
+    product?: { __typename?: "ProductType"; id: string } | null;
     userAttendance?: {
       __typename?: "UserAttendingType";
       isSignedUp?: boolean | null;
@@ -4011,6 +4013,14 @@ export const EventDetailFieldsFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
           { kind: "Field", name: { kind: "Name", value: "bindingSignup" } },
           { kind: "Field", name: { kind: "Name", value: "price" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
           {
             kind: "Field",
             name: { kind: "Name", value: "userAttendance" },

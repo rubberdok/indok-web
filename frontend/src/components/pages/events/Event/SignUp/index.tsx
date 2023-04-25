@@ -8,12 +8,9 @@ import { PaymentStatus } from "./Payments";
 
 type Props = {
   event: {
-    price?: number | null;
     signupOpenDate: string;
     deadline: string;
-    id: string;
-    hasExtraInformation?: boolean | null;
-  } & Pick<EventDetailFieldsFragment, "userAttendance">;
+  } & EventDetailFieldsFragment;
 };
 
 export const SignUp: React.FC<Props> = ({ event }) => {
@@ -37,9 +34,13 @@ export const SignUp: React.FC<Props> = ({ event }) => {
               .
             </Alert>
           </Grid>
-          {event.price && (
+          {event.product && (
             <Grid xs={12} sm={8} md={6}>
-              <PaymentStatus eventId={event.id} hasBoughtTicket={event.userAttendance?.hasBoughtTicket} />
+              <PaymentStatus
+                eventId={event.id}
+                hasBoughtTicket={event.userAttendance?.hasBoughtTicket}
+                productId={event.product.id}
+              />
             </Grid>
           )}
         </>
