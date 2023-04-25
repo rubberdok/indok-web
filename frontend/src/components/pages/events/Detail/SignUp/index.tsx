@@ -18,7 +18,7 @@ export const SignUp: React.FC<Props> = ({ event }) => {
   const isOnWaitingList = Boolean(event.userAttendance?.isOnWaitingList);
 
   return (
-    <Grid container direction="column" alignItems="center">
+    <Grid container direction="column" alignItems="center" spacing={2}>
       <Grid container alignItems="center" direction="column" xs={12} sm={8} md={6}>
         <Actions event={event} />
       </Grid>

@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
-import { Event } from "@/components/pages/events/Event";
+import { Event } from "@/components/pages/events/Detail";
 import { EventDetailFieldsFragment, EventDetailsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
