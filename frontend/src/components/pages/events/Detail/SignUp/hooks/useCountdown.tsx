@@ -1,22 +1,15 @@
 import { useQuery } from "@apollo/client";
-import { LoadingButton } from "@mui/lab";
-import { Box } from "@mui/material";
 import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
+import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
 import updateLocale from "dayjs/plugin/updateLocale";
-import utc from "dayjs/plugin/utc";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ServerTimeDocument } from "@/generated/graphql";
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
-dayjs.locale(nb);
-dayjs.tz.setDefault("Europe/Oslo");
+dayjs.extend(duration);
 
 dayjs.updateLocale("nb", {
   relativeTime: {
@@ -36,120 +29,6 @@ dayjs.updateLocale("nb", {
   },
 });
 
-type ButtonTextProps = {
-  isSignedUp: boolean;
-  isOnWaitingList: boolean;
-  countdownText: string;
-  isOpen: boolean;
-  isFull: boolean;
-  positionOnWaitingList: number;
-};
-
-const ButtonText: React.FC<ButtonTextProps> = ({
-  isSignedUp,
-  isOnWaitingList,
-  isOpen,
-  countdownText,
-  isFull,
-  positionOnWaitingList,
-}) => {
-  if (isSignedUp) return <>Meld av</>;
-  if (!isOpen) return <>Åpner {countdownText}</>;
-
-  if (isOnWaitingList) {
-    if (positionOnWaitingList === 2)
-      return (
-        <>
-          Det er én person foran deg i ventelisten
-          <br /> Trykk her for å melde av
-        </>
-      );
-    if (positionOnWaitingList === 1)
-      return (
-        <>
-          Du er på første plass i ventelisten
-          <br /> Trykk her for å melde av
-        </>
-      );
-    return (
-      <>
-        Det er {positionOnWaitingList - 1} personer foran deg i ventelisten
-        <br /> Trykk her for å melde av
-      </>
-    );
-  }
-
-  if (isFull) return <>Meld på venteliste</>;
-  return <>Meld På</>;
-};
-
-type Props = {
-  /** The date that is counted down to */
-  countdownDate: string;
-  /** Whether the user viewing the page is signed up to the event */
-  isSignedUp: boolean;
-  /** Whether the user viewing the page is on the waiting list for the event */
-  isOnWaitingList: boolean;
-  positionOnWaitingList: number;
-  /** Whether the event is full (all available slots are taken) */
-  isFull: boolean;
-  /** Whether the button should show a loading symbol */
-  loading: boolean;
-  /** Whether the button should be disabled */
-  disabled?: boolean;
-  /** Method called when the count down button is clicked */
-  onClick: () => void;
-};
-
-/**
- * Component for the count down button on the detail page of an attendable event
- *
- * Props:
- * - countDownDate: the date that is counted down to
- * - isSignedUp: whether the user viewing the page is signed up to the event
- * - isOnWaitingList: whether the user viewing the page is on the waiting list for the event
- * - isFull: whether the event is full (all available slots are taken)
- * - loading: whether the button should show a loading symbol
- * - disabled: whether the button should be disabled
- * - onClick: metod called when the count down button is clicked
- */
-export const CountdownButton: React.FC<Props> = ({
-  countdownDate,
-  isSignedUp,
-  isOnWaitingList,
-  positionOnWaitingList,
-  isFull,
-  loading,
-  disabled,
-  onClick,
-}) => {
-  const { timeLeft, countdownText } = useCountdown(countdownDate);
-
-  return (
-    <Box sx={{ float: "left" }}>
-      <LoadingButton
-        fullWidth
-        sx={{ minWidth: (theme) => theme.spacing(30) }}
-        size="large"
-        variant={timeLeft > 0 ? "text" : "contained"}
-        color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
-        onClick={onClick}
-        disabled={timeLeft > 0 || disabled}
-        loading={loading}
-      >
-        <ButtonText
-          countdownText={countdownText}
-          isOpen={timeLeft <= 0}
-          isSignedUp={isSignedUp}
-          isOnWaitingList={isOnWaitingList}
-          positionOnWaitingList={positionOnWaitingList}
-          isFull={isFull}
-        />
-      </LoadingButton>
-    </Box>
-  );
-};
-
 /**
  * Creates a countdown based on the server time until the given `date`.
  * The countdown is updated approximately every 500 milliseconds, and should be resistant to drift.
@@ -157,7 +36,7 @@ export const CountdownButton: React.FC<Props> = ({
  * @returns The time left until the event starts, in milliseconds
  * @returns A formatted countdown string, for more details, see [relative time](https://day.js.org/docs/en/customization/relative-time)
  */
-function useCountdown(date: string) {
+export function useCountdown(date: string) {
   /**
    * Difference between the client time and the server time at the time of the last server time query.
    */

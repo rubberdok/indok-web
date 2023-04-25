@@ -3,7 +3,7 @@ import { Alert, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { AllEventsDocument, CreateEventDocument } from "@/generated/graphql";
+import { CreateEventDocument, EventsDocument } from "@/generated/graphql";
 
 import { EventForm, IEventForm, Organization } from "../EventForm";
 
@@ -19,7 +19,7 @@ export const CreateEvent: React.FC<Props> = ({ organizations }) => {
     update(cache, { data }) {
       const event = data?.createEvent?.event;
       if (event) {
-        cache.updateQuery({ query: AllEventsDocument }, (prev) => {
+        cache.updateQuery({ query: EventsDocument }, (prev) => {
           return {
             ...prev,
             allEvents: [...(prev?.allEvents ?? []), event],

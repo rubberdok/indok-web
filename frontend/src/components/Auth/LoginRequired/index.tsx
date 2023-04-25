@@ -35,7 +35,7 @@ export const LoginRequired: React.FC<
 
   if (loading) {
     return (
-      <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
+      <Skeleton variant="rounded" {...(fullWidth && { width: "100%" })}>
         <Button
           size="medium"
           variant="contained"

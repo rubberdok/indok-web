@@ -1,27 +1,3 @@
-query event($id: ID!) {
-  event(id: $id) {
-    ...Event
-  }
-}
-
-fragment EventFields on EventType {
-  id
-  title
-  startTime
-  shortDescription
-  allowedGradeYears
-  isFull
-  isAttendable
-  userAttendance {
-    isSignedUp
-    isOnWaitingList
-  }
-  organization {
-    id
-    color
-  }
-}
-
 query events($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
   allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
     ...EventFields
@@ -35,15 +11,9 @@ query events($organization: String, $category: String, $startTime: DateTime, $en
   }
 }
 
-query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
-  allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
-    ...EventInList
-  }
-}
-
-query defaultEvents {
-  defaultEvents {
-    ...EventInList
+query eventDetails($id: ID!) {
+  event(id: $id) {
+    ...EventDetailFields
   }
 }
 
