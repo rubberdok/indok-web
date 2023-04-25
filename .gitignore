@@ -263,3 +263,6 @@ web.code-workspace
 
 # Sentry
 .sentryclirc
+
+# Apollo VS Code extension
+apollo.config.js
