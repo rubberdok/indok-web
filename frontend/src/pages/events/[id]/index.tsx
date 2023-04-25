@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
-import { EventDetails } from "@/components/pages/events/EventDetails";
+import { Event } from "@/components/pages/events/Event";
 import { EventDetailsDocument, EventFieldsFragment } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
@@ -21,7 +21,7 @@ const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServer
         <meta name="description" content={event.shortDescription ?? event.description} />
         {event.organization.logoUrl && <meta name="og:image" content={event.organization.logoUrl} />}
       </Head>
-      <EventDetails event={data?.event ?? event} />
+      <Event event={data?.event ?? event} />
     </>
   );
 };

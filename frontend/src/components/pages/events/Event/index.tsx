@@ -1,5 +1,6 @@
 import { CalendarToday, Class, Email, Label, Place } from "@mui/icons-material";
 import {
+  Alert,
   Card,
   CardContent,
   CardHeader,
@@ -11,6 +12,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Stack,
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
@@ -32,7 +34,7 @@ function isAttendable(
   return event.isAttendable && Boolean(event.signupOpenDate) && Boolean(event.deadline);
 }
 
-export const EventDetails: React.FC<Props> = ({ event }) => {
+export const Event: React.FC<Props> = ({ event }) => {
   return (
     <>
       <Title
@@ -50,22 +52,25 @@ export const EventDetails: React.FC<Props> = ({ event }) => {
         overline={`Arrangert av ${event.organization.name}`}
       />
       <Container>
-        <Grid container direction="row" justifyContent="space-between" spacing={2}>
-          <Grid container xs={12} md={8} direction="column">
-            {isAttendable(event) && (
-              <Grid xs>
-                <SignUp event={event} />
-              </Grid>
-            )}
-            <Grid>
+        <Grid container direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={2}>
+          <Grid xs={12} md={8}>
+            <Stack spacing={2} divider={<Divider />}>
+              {isAttendable(event) && <SignUp event={event} />}
               <Markdown>{event.description}</Markdown>
-            </Grid>
+            </Stack>
           </Grid>
           <Grid md xs={12}>
             <Card>
               <CardHeader title="Informasjon" />
               <CardContent>
                 <List>
+                  {event.bindingSignup && (
+                    <ListItem>
+                      <Alert severity="warning" variant="outlined">
+                        Arrangementet har bindende påmelding
+                      </Alert>
+                    </ListItem>
+                  )}
                   <ListItem>
                     <ListItemIcon>
                       <CalendarToday />
