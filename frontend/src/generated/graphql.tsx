@@ -2108,6 +2108,67 @@ export type EventQuery = {
   } | null;
 };
 
+export type EventFieldsFragment = {
+  __typename?: "EventType";
+  id: string;
+  title: string;
+  startTime: string;
+  shortDescription?: string | null;
+  allowedGradeYears?: Array<number> | null;
+  isFull?: boolean | null;
+  isAttendable: boolean;
+  userAttendance?: {
+    __typename?: "UserAttendingType";
+    isSignedUp?: boolean | null;
+    isOnWaitingList?: boolean | null;
+  } | null;
+  organization: { __typename?: "OrganizationType"; id: string; color?: string | null };
+};
+
+export type EventsQueryVariables = Exact<{
+  organization?: InputMaybe<Scalars["String"]>;
+  category?: InputMaybe<Scalars["String"]>;
+  startTime?: InputMaybe<Scalars["DateTime"]>;
+  endTime?: InputMaybe<Scalars["DateTime"]>;
+}>;
+
+export type EventsQuery = {
+  __typename?: "Queries";
+  allEvents?: Array<{
+    __typename?: "EventType";
+    id: string;
+    title: string;
+    startTime: string;
+    shortDescription?: string | null;
+    allowedGradeYears?: Array<number> | null;
+    isFull?: boolean | null;
+    isAttendable: boolean;
+    userAttendance?: {
+      __typename?: "UserAttendingType";
+      isSignedUp?: boolean | null;
+      isOnWaitingList?: boolean | null;
+    } | null;
+    organization: { __typename?: "OrganizationType"; id: string; color?: string | null };
+  }> | null;
+  defaultEvents?: Array<{
+    __typename?: "EventType";
+    id: string;
+    title: string;
+    startTime: string;
+    shortDescription?: string | null;
+    allowedGradeYears?: Array<number> | null;
+    isFull?: boolean | null;
+    isAttendable: boolean;
+    userAttendance?: {
+      __typename?: "UserAttendingType";
+      isSignedUp?: boolean | null;
+      isOnWaitingList?: boolean | null;
+    } | null;
+    organization: { __typename?: "OrganizationType"; id: string; color?: string | null };
+  }> | null;
+  user?: { __typename?: "UserType"; id: string; gradeYear?: number | null } | null;
+};
+
 export type AllEventsQueryVariables = Exact<{
   organization?: InputMaybe<Scalars["String"]>;
   category?: InputMaybe<Scalars["String"]>;
@@ -2314,6 +2375,17 @@ export type AttendeeReportsQueryVariables = Exact<{
 }>;
 
 export type AttendeeReportsQuery = { __typename?: "Queries"; attendeeReports?: string | null };
+
+export type EventUserOrganizationsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EventUserOrganizationsQuery = {
+  __typename?: "Queries";
+  user?: {
+    __typename?: "UserType";
+    id: string;
+    organizations: Array<{ __typename?: "OrganizationType"; id: string }>;
+  } | null;
+};
 
 export type FormFragment = {
   __typename?: "FormType";
@@ -3778,6 +3850,50 @@ export const AdminEventFragmentDoc = {
     ...SignUpFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AdminEventFragment, unknown>;
+export const EventFieldsFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventFieldsFragment, unknown>;
 export const OptionFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -5500,6 +5616,93 @@ export const EventDocument = {
     ...EventFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<EventQuery, EventQueryVariables>;
+export const EventsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "events" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "organization" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "category" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allEvents" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "organization" },
+                value: { kind: "Variable", name: { kind: "Name", value: "organization" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "category" },
+                value: { kind: "Variable", name: { kind: "Name", value: "category" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "startTime" },
+                value: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "endTime" },
+                value: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFields" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "defaultEvents" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFields" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...EventFieldsFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<EventsQuery, EventsQueryVariables>;
 export const AllEventsDocument = {
   kind: "Document",
   definitions: [
@@ -5915,6 +6118,39 @@ export const AttendeeReportsDocument = {
     },
   ],
 } as unknown as DocumentNode<AttendeeReportsQuery, AttendeeReportsQueryVariables>;
+export const EventUserOrganizationsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "eventUserOrganizations" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "organizations" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventUserOrganizationsQuery, EventUserOrganizationsQueryVariables>;
 export const CreateFormDocument = {
   kind: "Document",
   definitions: [
