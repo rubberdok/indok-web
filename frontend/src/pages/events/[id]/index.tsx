@@ -12,6 +12,7 @@ import { NextPageWithLayout } from "@/lib/next";
 const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ event }) => {
   const { data } = useQuery(EventDetailsDocument, {
     variables: { id: event.id },
+    pollInterval: 60 * 1000,
   });
 
   return (

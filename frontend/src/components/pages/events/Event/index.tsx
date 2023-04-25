@@ -1,4 +1,5 @@
-import { CalendarToday, Class, Email, Label, Place } from "@mui/icons-material";
+import { useQuery } from "@apollo/client";
+import { CalendarToday, Class, CreditCard, Email, Label, Place } from "@mui/icons-material";
 import {
   Alert,
   Card,
@@ -16,12 +17,14 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
+import React from "react";
 
 import Link from "@/components/Link";
 import { Markdown } from "@/components/Markdown";
 import { Title } from "@/components/Title";
-import { EventDetailFieldsFragment } from "@/generated/graphql";
+import { EventDetailFieldsFragment, UserOrganizationsDocument } from "@/generated/graphql";
 
+import { ManageEvent } from "./ManageEvent";
 import { SignUp } from "./SignUp";
 
 type Props = {
@@ -34,7 +37,15 @@ function isAttendable(
   return event.isAttendable && Boolean(event.signupOpenDate) && Boolean(event.deadline);
 }
 
+function useOrganizationRequired(organizationId: string): { isInOrganization: boolean; loading: boolean } {
+  const { data, loading } = useQuery(UserOrganizationsDocument);
+  const isInOrganization = Boolean(data?.user?.organizations?.find((org) => org.id === organizationId));
+  return { isInOrganization, loading };
+}
+
 export const Event: React.FC<Props> = ({ event }) => {
+  const { isInOrganization } = useOrganizationRequired(event.organization.id);
+
   return (
     <>
       <Title
@@ -53,6 +64,11 @@ export const Event: React.FC<Props> = ({ event }) => {
       />
       <Container>
         <Grid container direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={2}>
+          {isInOrganization && (
+            <Grid xs={12}>
+              <ManageEvent eventId={event.id} organizationId={event.organization.id} />
+            </Grid>
+          )}
           <Grid xs={12} md={8}>
             <Stack spacing={2} divider={<Divider />}>
               {isAttendable(event) && <SignUp event={event} />}
@@ -91,6 +107,14 @@ export const Event: React.FC<Props> = ({ event }) => {
                         <Place />
                       </ListItemIcon>
                       <ListItemText primary="Sted" secondary={event.location} />
+                    </ListItem>
+                  )}
+                  {event.price && (
+                    <ListItem>
+                      <ListItemIcon>
+                        <CreditCard />
+                      </ListItemIcon>
+                      <ListItemText primary="Pris" secondary={event.price} />
                     </ListItem>
                   )}
                   {event.category && (

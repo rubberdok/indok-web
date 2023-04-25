@@ -4,9 +4,11 @@ import Link from "@/components/Link";
 import { EventDetailFieldsFragment } from "@/generated/graphql";
 
 import { Actions } from "./Actions";
+import { PaymentStatus } from "./Payments";
 
 type Props = {
   event: {
+    price?: number | null;
     signupOpenDate: string;
     deadline: string;
     id: string;
@@ -24,16 +26,23 @@ export const SignUp: React.FC<Props> = ({ event }) => {
         <Actions event={event} />
       </Grid>
       {isSignedUp && (
-        <Grid xs={12} sm={8} md={6}>
-          <Alert color="success" variant="outlined">
-            <AlertTitle>Du er påmeldt arrangementet.</AlertTitle>
-            Dersom du ønsker å endre allergier eller kontaktinfo kan du gjøre dette på{" "}
-            <Link href="/profile" underline="always" color="text.primary">
-              profilsiden
-            </Link>
-            .
-          </Alert>
-        </Grid>
+        <>
+          <Grid xs={12} sm={8} md={6}>
+            <Alert color="success" variant="outlined">
+              <AlertTitle>Du er påmeldt arrangementet.</AlertTitle>
+              Dersom du ønsker å endre allergier eller kontaktinfo kan du gjøre dette på{" "}
+              <Link href="/profile" underline="always" color="text.primary">
+                profilsiden
+              </Link>
+              .
+            </Alert>
+          </Grid>
+          {event.price && (
+            <Grid xs={12} sm={8} md={6}>
+              <PaymentStatus eventId={event.id} hasBoughtTicket={event.userAttendance?.hasBoughtTicket} />
+            </Grid>
+          )}
+        </>
       )}
       {isOnWaitingList && (
         <Grid xs={12} sm={8} md={6}>

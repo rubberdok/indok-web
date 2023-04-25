@@ -100,7 +100,6 @@ export const Actions: React.FC<Props> = ({ event }) => {
       <Grid>
         <CountdownStatusText countdown={countdown} signupOpenDate={event.signupOpenDate} deadline={event.deadline} />
       </Grid>
-
       <Grid xs={12}>
         <LoginRequired fullWidth redirect>
           <PermissionRequired

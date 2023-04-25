@@ -2212,11 +2212,13 @@ export type EventDetailFieldsFragment = {
   deadline?: string | null;
   isAttendable: boolean;
   bindingSignup: boolean;
+  price?: number | null;
   userAttendance?: {
     __typename?: "UserAttendingType";
     isSignedUp?: boolean | null;
     isOnWaitingList?: boolean | null;
     positionOnWaitingList?: number | null;
+    hasBoughtTicket?: boolean | null;
   } | null;
   category?: { __typename?: "CategoryType"; id: string; name: string } | null;
   organization: { __typename?: "OrganizationType"; id: string; name: string; logoUrl?: string | null };
@@ -2245,11 +2247,13 @@ export type EventDetailsQuery = {
     deadline?: string | null;
     isAttendable: boolean;
     bindingSignup: boolean;
+    price?: number | null;
     userAttendance?: {
       __typename?: "UserAttendingType";
       isSignedUp?: boolean | null;
       isOnWaitingList?: boolean | null;
       positionOnWaitingList?: number | null;
+      hasBoughtTicket?: boolean | null;
     } | null;
     category?: { __typename?: "CategoryType"; id: string; name: string } | null;
     organization: { __typename?: "OrganizationType"; id: string; name: string; logoUrl?: string | null };
@@ -4006,6 +4010,7 @@ export const EventDetailFieldsFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "deadline" } },
           { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
           { kind: "Field", name: { kind: "Name", value: "bindingSignup" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "userAttendance" },
@@ -4015,6 +4020,7 @@ export const EventDetailFieldsFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
                 { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
                 { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
+                { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
               ],
             },
           },

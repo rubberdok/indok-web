@@ -51,10 +51,12 @@ fragment EventDetailFields on EventType {
   deadline
   isAttendable
   bindingSignup
+  price
   userAttendance {
     isSignedUp
     isOnWaitingList
     positionOnWaitingList
+    hasBoughtTicket
   }
   category {
     id
