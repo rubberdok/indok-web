@@ -131,13 +131,7 @@ export const Event: React.FC<Props> = ({ event }) => {
                       <ListItemIcon>
                         <Class />
                       </ListItemIcon>
-                      <ListItemText
-                        primary={<Typography>Klassetrinn</Typography>}
-                        secondary={
-                          <Chip label={event.allowedGradeYears.join(", ")} color="primary" variant="outlined" />
-                        }
-                        disableTypography
-                      />
+                      <ListItemText primary="Klassetrinn" secondary={event.allowedGradeYears.join(", ")} />
                     </ListItem>
                   )}
                   {event.contactEmail && (
