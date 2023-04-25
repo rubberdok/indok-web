@@ -3,7 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
 import { Event } from "@/components/pages/events/Event";
-import { EventDetailsDocument, EventFieldsFragment } from "@/generated/graphql";
+import { EventDetailFieldsFragment, EventDetailsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
@@ -28,7 +28,7 @@ const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServer
 
 EventInfo.getLayout = (page) => <Layout>{page}</Layout>;
 
-export const getServerSideProps: GetServerSideProps<{ event: EventFieldsFragment }> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<{ event: EventDetailFieldsFragment }> = async (ctx) => {
   const client = await initializeApollo({}, ctx);
 
   const id = ctx.params?.id;
