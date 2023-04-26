@@ -15,10 +15,49 @@ import { Components } from "react-markdown";
 
 import Link from "../Link";
 
-const Heading: Components["h1"] = ({ children, id, level }) => {
-  const variant = `h${Math.max(level, 3)}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+const H1: Components["h1"] = ({ children, id }) => {
   return (
-    <Typography id={id} variant={variant} component={variant} gutterBottom>
+    <Typography id={id} variant="h3" component="h2" gutterBottom>
+      {children}
+    </Typography>
+  );
+};
+
+const H2: Components["h2"] = ({ children, id }) => {
+  return (
+    <Typography id={id} variant="h4" component="h3" gutterBottom>
+      {children}
+    </Typography>
+  );
+};
+
+const H3: Components["h2"] = ({ children, id }) => {
+  return (
+    <Typography id={id} variant="h5" component="h4" gutterBottom>
+      {children}
+    </Typography>
+  );
+};
+
+const H4: Components["h2"] = ({ children, id }) => {
+  return (
+    <Typography id={id} variant="h6" component="h5" gutterBottom>
+      {children}
+    </Typography>
+  );
+};
+
+const H5: Components["h2"] = ({ children, id }) => {
+  return (
+    <Typography id={id} variant="subtitle1" component="h6" gutterBottom>
+      {children}
+    </Typography>
+  );
+};
+
+const H6: Components["h2"] = ({ children, id }) => {
+  return (
+    <Typography id={id} variant="subtitle2" component="span" gutterBottom>
       {children}
     </Typography>
   );
@@ -122,12 +161,12 @@ const BlockquoteComponent: Components["blockquote"] = ({ children }) => {
 
 const Hr: Components["hr"] = () => <Divider variant="fullWidth" />;
 
-export const h1 = Heading;
-export const h2 = Heading;
-export const h3 = Heading;
-export const h4 = Heading;
-export const h5 = Heading;
-export const h6 = Heading;
+export const h1 = H1;
+export const h2 = H2;
+export const h3 = H3;
+export const h4 = H4;
+export const h5 = H5;
+export const h6 = H6;
 export const img = Image;
 export const ul = UnorderedList;
 export const li = ListItem;
