@@ -1,6 +1,7 @@
 import { MailOutline, Phone } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, Chip, Container, Divider, Grid, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { Link, Markdown } from "@/components";
@@ -15,6 +16,9 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
 
   return (
     <>
+      <Head>
+        <title>{`${frontmatter.title} | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse`}</title>
+      </Head>
       <Title
         title={frontmatter.title}
         bgImage={frontmatter.image}
