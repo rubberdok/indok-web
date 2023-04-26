@@ -2,8 +2,9 @@ import { useMutation, useQuery } from "@apollo/client";
 import { LinearProgress } from "@mui/material";
 import dayjs from "dayjs";
 
-import { EventForm, IEventForm } from "@/components/pages/events/EventForm";
 import { AdminEventDocument, UpdateEventDocument } from "@/generated/graphql";
+
+import { EventForm, IEventForm } from "./EventForm";
 
 type Props = {
   id: string;

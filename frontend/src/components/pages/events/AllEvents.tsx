@@ -4,11 +4,11 @@ import { Tune } from "@mui/icons-material";
 import { Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Typography } from "@mui/material";
 import React, { useState } from "react";
 
-import { PermissionRequired } from "@/components/Auth";
+import { PermissionRequired } from "@/components";
 import { EventsDocument } from "@/generated/graphql";
 
 import { EventListItem } from "./EventListItem";
-import { FilterMenu } from "./filterMenu/FilterMenu";
+import { FilterMenu } from "./FilterMenu";
 import { ManageEvents } from "./ManageEvents";
 
 export type FilterQuery = {

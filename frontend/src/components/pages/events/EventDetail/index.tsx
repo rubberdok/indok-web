@@ -17,9 +17,7 @@ import {
 import dayjs from "dayjs";
 import React from "react";
 
-import Link from "@/components/Link";
-import { Markdown } from "@/components/Markdown";
-import { Title } from "@/components/Title";
+import { Link, Markdown, Title } from "@/components";
 import { EventDetailFieldsFragment, UserOrganizationsDocument } from "@/generated/graphql";
 
 import { AddToCalendar } from "./AddToCalendar";
@@ -42,7 +40,7 @@ function useOrganizationRequired(organizationId: string): { isInOrganization: bo
   return { isInOrganization, loading };
 }
 
-export const Event: React.FC<Props> = ({ event }) => {
+export const EventDetail: React.FC<Props> = ({ event }) => {
   const { isInOrganization } = useOrganizationRequired(event.organization.id);
 
   return (

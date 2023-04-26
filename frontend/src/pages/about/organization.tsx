@@ -5,7 +5,7 @@ import Image from "next/image";
 import Router, { useRouter } from "next/router";
 import React from "react";
 
-import { NextLinkComposed } from "@/components";
+import { NextLinkComposed } from "@/components/Link";
 import { TabPanel } from "@/components/pages/about/TabPanel";
 import { Template } from "@/components/pages/about/Template";
 import { NextPageWithLayout } from "@/lib/next";

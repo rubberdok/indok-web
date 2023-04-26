@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { Button, Container } from "@mui/material";
 
 import { Link } from "@/components";
-import { CreateEvent } from "@/components/pages/events/Create";
+import { CreateEvent } from "@/components/pages/events";
 import { UserOrganizationsDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";

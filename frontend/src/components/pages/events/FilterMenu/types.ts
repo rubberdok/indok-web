@@ -1,4 +1,4 @@
-import { FilterQuery } from "@/components/pages/events/AllEvents";
+import { FilterQuery } from "../AllEvents";
 
 export type HandleChecked = (
   e: React.ChangeEvent<HTMLInputElement>,
