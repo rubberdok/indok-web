@@ -9,7 +9,6 @@ import { Button } from "./Button";
 import { ButtonGroup } from "./ButtonGroup";
 import { Card } from "./Card";
 import { Checkbox } from "./Checkbox";
-import { Chip } from "./Chip";
 import { Container } from "./Container";
 import { ControlLabel } from "./ControlLabel";
 import { CssBaseline } from "./CssBaseline";
@@ -44,7 +43,6 @@ export const components: ThemeOptions["components"] = {
   ...ButtonGroup,
   ...Card,
   ...Checkbox,
-  ...Chip,
   ...Container,
   ...ControlLabel,
   ...CssBaseline,
