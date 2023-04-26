@@ -1,6 +1,5 @@
 import { Box, List, ListItem, ListItemText, Paper, Typography } from "@mui/material";
 import { listItemClasses } from "@mui/material/ListItem";
-import Head from "next/head";
 
 import { Template } from "@/components/pages/about/Template";
 import { Layout } from "@/layouts/Layout";
@@ -9,13 +8,6 @@ import { NextPageWithLayout } from "@/lib/next";
 const AboutPage: NextPageWithLayout = () => {
   return (
     <>
-      <Head>
-        <title>Om oss | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
-        <meta
-          name="description"
-          content="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen for all studentfrivillighet på masterstudiet Indøk ved NTNU."
-        />
-      </Head>
       <Template
         title="Om oss"
         description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
