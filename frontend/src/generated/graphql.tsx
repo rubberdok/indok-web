@@ -1771,6 +1771,7 @@ export type EventFieldsFragment = {
   allowedGradeYears?: Array<number> | null;
   isFull?: boolean | null;
   isAttendable: boolean;
+  signupOpenDate?: string | null;
   userAttendance?: {
     __typename?: "UserAttendingType";
     isSignedUp?: boolean | null;
@@ -1906,6 +1907,7 @@ export type CreateEventMutation = {
       allowedGradeYears?: Array<number> | null;
       isFull?: boolean | null;
       isAttendable: boolean;
+      signupOpenDate?: string | null;
       userAttendance?: {
         __typename?: "UserAttendingType";
         isSignedUp?: boolean | null;
@@ -2046,6 +2048,7 @@ export type EventsQuery = {
     allowedGradeYears?: Array<number> | null;
     isFull?: boolean | null;
     isAttendable: boolean;
+    signupOpenDate?: string | null;
     userAttendance?: {
       __typename?: "UserAttendingType";
       isSignedUp?: boolean | null;
@@ -2062,6 +2065,7 @@ export type EventsQuery = {
     allowedGradeYears?: Array<number> | null;
     isFull?: boolean | null;
     isAttendable: boolean;
+    signupOpenDate?: string | null;
     userAttendance?: {
       __typename?: "UserAttendingType";
       isSignedUp?: boolean | null;
@@ -3384,6 +3388,7 @@ export const EventFieldsFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
           { kind: "Field", name: { kind: "Name", value: "isFull" } },
           { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "userAttendance" },

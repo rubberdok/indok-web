@@ -6,6 +6,7 @@ fragment EventFields on EventType {
   allowedGradeYears
   isFull
   isAttendable
+  signupOpenDate
   userAttendance {
     isSignedUp
     isOnWaitingList
