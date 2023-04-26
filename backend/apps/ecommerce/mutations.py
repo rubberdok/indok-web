@@ -4,6 +4,7 @@ from urllib.error import HTTPError
 import graphene
 from django.db import transaction
 from decorators import login_required, staff_member_required
+import uuid
 
 from apps.ecommerce.exceptions import PurchaseNotAllowedError
 from apps.organizations.models import Organization
@@ -32,14 +33,8 @@ class InitiateOrder(graphene.Mutation):
         if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
             raise PurchaseNotAllowedError("Du kan ikke kjøpe dette produktet.")
 
-        # If any of the below fails, do not commit any DB transactions
-        with transaction.atomic():
-            # Reserve quantity for the user if available
-            product = Product.check_and_reserve_quantity(product_id, user, quantity)
-
-            # If the user has attempted this order before, retry it
-            try:
-                # TODO: handle multiple hits (shouldn't happen as we retry)
+        try:
+            with transaction.atomic():
                 order = Order.objects.select_for_update().get(
                     product__id=product_id,
                     user=user,
@@ -51,45 +46,45 @@ class InitiateOrder(graphene.Mutation):
                         Order.PaymentStatus.INITIATED,
                     ],
                 )
-                # Check order status at Vipps
+
                 status, status_success = InitiateOrder.vipps_api.get_payment_status(
                     f"{order.id}-{order.payment_attempt}"
                 )
-                # If order canceled: retry, if reserved: stop attempt and restore quantity
+
                 if status_success and status == "RESERVE":
-                    """
-                    NOTE: This logic enforces that if we have a order with status "reserved" in the DB,
-                    we redirect the user in order to capture the order.
-                    If the user wants to perform multiple orders, they currently have to sucessfully complete
-                    one order before starting another. Should be changed when async worker is implemented.
-                    """
+                    order = Order.objects.select_for_update().get(pk=order.id)
                     order.payment_status = Order.PaymentStatus.RESERVED
                     order.save()
-                    order.product.restore_quantity(order)
                     # Return order_id so frontend can redirect to fallback page
                     return InitiateOrder(order_id=order.id)
-                # Cancel previous attempt to avoid simultaneous payments
-                elif status_success and status == "INITIATE":
+
+                if status_success and status == "INITIATE":
                     try:
                         InitiateOrder.vipps_api.cancel_transaction(f"{order.id}-{order.payment_attempt}")
                     except HTTPError:
                         raise ValueError("Fullfør den pågående betalingen først.")
-                    finally:
-                        order.product.restore_quantity(order)
 
-                # Retry
-                order.payment_attempt = order.payment_attempt + 1
-                order.payment_status = Order.PaymentStatus.INITIATED
+                    with transaction.atomic():
+                        order.payment_attempt += 1
+                        order.payment_status = Order.PaymentStatus.INITIATED
+                        order.save()
+
+                    payment_url = InitiateOrder.vipps_api.initiate_payment(order, fallback_redirect)
+                    return InitiateOrder(redirect=payment_url)
+
+        except Order.DoesNotExist:
+            order_id = uuid.uuid4()
+            order = Order(
+                id=order_id, product=product, user=user, quantity=quantity, total_price=product.price * quantity
+            )
+
+            payment_url = InitiateOrder.vipps_api.initiate_payment(order, fallback_redirect)
+
+            with transaction.atomic():
+                product = Product.check_and_reserve_quantity(product_id, user, quantity)
                 order.save()
 
-            except Order.DoesNotExist:
-                order = Order(product=product, user=user, quantity=quantity, total_price=product.price * quantity)
-
-                order.save()
-
-            redirect = InitiateOrder.vipps_api.initiate_payment(order, fallback_redirect)
-
-        return InitiateOrder(redirect=redirect)
+            return InitiateOrder(redirect=payment_url)
 
 
 class AttemptCapturePayment(graphene.Mutation):
@@ -110,6 +105,9 @@ class AttemptCapturePayment(graphene.Mutation):
                 order = Order.objects.select_for_update().get(pk=order_id)
             except Order.DoesNotExist:
                 raise ValueError("Ugyldig ordre")
+
+            if order.payment_status == Order.PaymentStatus.CAPTURED:
+                return AttemptCapturePayment(status=order.payment_status, order=order)
 
             if order.payment_status == Order.PaymentStatus.INITIATED:
                 # Update status according to Vipps payment details
