@@ -18,6 +18,7 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
     <>
       <Head>
         <title>{`${frontmatter.title} | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse`}</title>
+        {frontmatter.image && <meta name="og:image" content={frontmatter.image} />}
       </Head>
       <Title
         title={frontmatter.title}
