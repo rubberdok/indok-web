@@ -4,7 +4,6 @@ import { PermissionRequired } from "@/components/Auth";
 import { BookingSemesterPicker } from "@/components/pages/cabins/Admin/BookingSemesterPicker";
 import { CabinInfoPicker } from "@/components/pages/cabins/Admin/CabinInfoPicker";
 import { Title } from "@/components/Title";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const SettingsPage: NextPageWithLayout = () => {
@@ -57,7 +56,5 @@ const SettingsPage: NextPageWithLayout = () => {
     </>
   );
 };
-
-SettingsPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default SettingsPage;

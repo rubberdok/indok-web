@@ -1,4 +1,4 @@
-import { AppBarProps, Box, Container, useScrollTrigger } from "@mui/material";
+import { Box, Container, useScrollTrigger } from "@mui/material";
 import { PropsFor } from "@mui/system";
 import React from "react";
 
@@ -22,10 +22,10 @@ const ElevationScroll: React.FC<React.PropsWithChildren<ScrollProps>> = ({ child
   });
 };
 
-export const Basic: React.FC<AppBarProps> = (props) => {
+export const Basic: React.FC = () => {
   return (
     <ElevationScroll>
-      <AppBar {...props}>
+      <AppBar>
         <Container
           sx={{
             display: "flex",

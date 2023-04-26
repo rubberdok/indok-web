@@ -13,34 +13,20 @@ export { RootStyle } from "../styles";
 
 type Props = {
   children: ReactNode;
-  disableGutter?: boolean;
-  disabledHeader?: boolean;
-  disabledFooter?: boolean;
   simpleHeader?: boolean;
   simpleFooter?: boolean;
 };
 
-export const Layout: React.FC<React.PropsWithChildren<Props>> = ({
-  children,
-  disabledHeader,
-  disabledFooter,
-  simpleHeader,
-  simpleFooter,
-  disableGutter,
-}) => {
+export const Layout: React.FC<React.PropsWithChildren<Props>> = ({ children, simpleHeader, simpleFooter }) => {
   const theme = useTheme();
   return (
     <>
       <Head>
         <meta name="theme-color" content={theme.palette.background.default} key="theme-color" />
       </Head>
-      {!disabledHeader && simpleHeader ? <HeaderSimple /> : <Header />}
-      <div className="content">{children}</div>
-      {!disabledFooter && (
-        <footer className="footer">
-          {simpleFooter ? <FooterSimple disableGutter={disableGutter} /> : <Footer disableGutter={disableGutter} />}
-        </footer>
-      )}
+      {simpleHeader ? <HeaderSimple /> : <Header />}
+      <main className="content">{children}</main>
+      <footer className="footer">{simpleFooter ? <FooterSimple /> : <Footer />}</footer>
     </>
   );
 };

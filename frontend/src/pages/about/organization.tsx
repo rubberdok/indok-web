@@ -8,7 +8,6 @@ import React from "react";
 import { NextLinkComposed } from "@/components";
 import { TabPanel } from "@/components/pages/about/TabPanel";
 import { Template } from "@/components/pages/about/Template";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 import { Article, getSortedPosts } from "@/utils/posts";
 
@@ -172,8 +171,6 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
     </Template>
   );
 };
-
-OrganizationPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getStaticProps: GetStaticProps<{ posts: Article[] }> = async () => {
   const posts = getSortedPosts("organizations");

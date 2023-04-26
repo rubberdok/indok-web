@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import Social from "~/public/img/gang.jpg";
 
-import { NextLinkComposed } from "../Link";
+import { NextLinkComposed } from "../../Link";
 
 export const LandingListings: React.FC = () => {
   const theme = useTheme();

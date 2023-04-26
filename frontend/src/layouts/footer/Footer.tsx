@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Link, LinkProps } from "@/components";
 import { Logo } from "@/components/Logo";
 import { Vercel } from "@/components/Vercel";
-import { useResponsive } from "@/hooks/useResponsive";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
@@ -35,17 +34,12 @@ const Watermark = styled("div")(({ theme }) => ({
   },
 }));
 
-type Props = {
-  disableGutter?: boolean;
-};
-
-export const Footer: React.FC<Props> = ({ disableGutter }) => {
-  const isDesktop = useResponsive({ query: "up", key: "md" });
+export const Footer: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Divider sx={{ mt: disableGutter ? 0 : 4 }} />
+      <Divider sx={{ mt: 4 }} />
       <Paper sx={{ bgcolor: "background.elevated" }}>
         <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
           <Grid container spacing={3} justifyContent={{ md: "space-between" }}>
@@ -79,7 +73,7 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
                 </Box>
               </Stack>
             </Grid>
-            {isDesktop && <Watermark />}
+            <Watermark sx={{ display: { xs: "none", md: "block" } }} />
           </Grid>
         </Container>
       </Paper>

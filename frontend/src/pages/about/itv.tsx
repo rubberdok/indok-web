@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import { ItvCard } from "@/components/pages/about/ItvCard";
 import { ItvMember } from "@/components/pages/about/ItvCard/types";
 import { Template } from "@/components/pages/about/Template";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const ItvPage: NextPageWithLayout = () => {
@@ -58,7 +57,5 @@ const ItvPage: NextPageWithLayout = () => {
     </Template>
   );
 };
-
-ItvPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default ItvPage;

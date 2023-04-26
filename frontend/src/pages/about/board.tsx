@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import { MemberCard } from "@/components/pages/about/MemberCard";
 import { BoardMember } from "@/components/pages/about/MemberCard/types";
 import { Template } from "@/components/pages/about/Template";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const BoardPage: NextPageWithLayout = () => {
@@ -95,7 +94,5 @@ const BoardPage: NextPageWithLayout = () => {
     </Template>
   );
 };
-
-BoardPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default BoardPage;

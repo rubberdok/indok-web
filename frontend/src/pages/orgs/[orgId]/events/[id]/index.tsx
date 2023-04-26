@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { Attendees, EventInformation, Waitlist } from "@/components/pages/orgs/events";
 import { Title } from "@/components/Title";
 import { AdminEventDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const AdminEventPage: NextPageWithLayout = () => {
@@ -71,7 +70,5 @@ const AdminEventPage: NextPageWithLayout = () => {
 
   return null;
 };
-
-AdminEventPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default AdminEventPage;

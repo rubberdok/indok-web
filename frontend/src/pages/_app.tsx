@@ -1,6 +1,7 @@
 import { EmotionCache } from "@emotion/react";
 import { Analytics } from "@vercel/analytics/react";
 import { AppProps } from "next/app";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 
 import { PageProps } from "@/lib/apolloClient";
@@ -10,6 +11,8 @@ import { AppProvider } from "@/providers";
 
 initializeDayjs();
 
+const Layout = dynamic(() => import("@/layouts/Layout").then((mod) => mod.Layout));
+
 export interface CustomAppProps extends AppProps<PageProps> {
   err: Error;
   Component: NextPageWithLayout;
@@ -18,7 +21,7 @@ export interface CustomAppProps extends AppProps<PageProps> {
 
 const App = (props: CustomAppProps): JSX.Element => {
   const { pageProps, err, Component, emotionCache } = props;
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
 
   return (
     <>

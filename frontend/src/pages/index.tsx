@@ -1,8 +1,7 @@
 import { NoSsr } from "@mui/material";
 
-import { LandingHero, LandingListings, LandingPromo } from "@/components/landing";
-import { LandingSection } from "@/components/landing/LandingSection";
-import { Layout } from "@/layouts/Layout";
+import { LandingHero, LandingListings, LandingPromo } from "@/components/pages/landing";
+import { LandingSection } from "@/components/pages/landing/LandingSection";
 import { NextPageWithLayout } from "@/lib/next";
 
 const IndexPage: NextPageWithLayout = () => {
@@ -17,7 +16,5 @@ const IndexPage: NextPageWithLayout = () => {
     </>
   );
 };
-
-IndexPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default IndexPage;

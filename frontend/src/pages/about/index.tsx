@@ -2,7 +2,6 @@ import { Box, List, ListItem, ListItemText, Paper, Typography } from "@mui/mater
 import { listItemClasses } from "@mui/material/ListItem";
 
 import { Template } from "@/components/pages/about/Template";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const AboutPage: NextPageWithLayout = () => {
@@ -140,7 +139,5 @@ const AboutPage: NextPageWithLayout = () => {
     </>
   );
 };
-
-AboutPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default AboutPage;

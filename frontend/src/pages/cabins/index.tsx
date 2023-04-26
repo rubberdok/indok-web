@@ -10,7 +10,6 @@ import { ContactCabinBoard } from "@/components/pages/cabins/ContactCabinBoard";
 import { FAQ } from "@/components/pages/cabins/Documents/FAQ";
 import { outsideImages } from "@/components/pages/cabins/ImageSlider/imageData";
 import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 /** Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book). */
@@ -152,7 +151,5 @@ const CabinsPage: NextPageWithLayout = () => {
     </>
   );
 };
-
-CabinsPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default CabinsPage;

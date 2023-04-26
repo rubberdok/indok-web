@@ -11,7 +11,6 @@ import { SearchBar } from "@/components/pages/archive/SearchBar";
 import { YearSelector } from "@/components/pages/archive/YearSelector";
 import { Title } from "@/components/Title";
 import { HasPermissionDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -133,7 +132,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
   return addApolloState(client, { props: { data } });
 };
-
-Archive.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default Archive;
