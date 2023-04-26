@@ -17,9 +17,7 @@ import {
 import dayjs from "dayjs";
 import React from "react";
 
-import Link from "@/components/Link";
-import { Markdown } from "@/components/Markdown";
-import { Title } from "@/components/Title";
+import { Link, Markdown, Title } from "@/components";
 import { EventDetailFieldsFragment, UserOrganizationsDocument } from "@/generated/graphql";
 
 import { AddToCalendar } from "./AddToCalendar";

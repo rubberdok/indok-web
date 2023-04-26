@@ -2,8 +2,9 @@ import { useQuery } from "@apollo/client";
 import { Checkbox, Grid } from "@mui/material";
 import React from "react";
 
-import { FilterQuery } from "@/components/pages/events/AllEvents";
 import { AllCategoriesDocument } from "@/generated/graphql";
+
+import { FilterQuery } from "../AllEvents";
 
 import { HandleChecked } from "./types";
 
