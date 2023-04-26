@@ -35,7 +35,7 @@ export const EventListItem: React.FC<Props> = ({ event, user }) => {
 
               <Typography variant="body2">Dato: {dayjs(event.startTime).format("LLL")}</Typography>
 
-              <Typography variant="body2">{event.shortDescription ?? "Trykk for å lese mer"}</Typography>
+              <Typography variant="body2">{event.shortDescription || "Trykk for å lese mer"}</Typography>
             </Stack>
             <StatusChip event={event} user={{ ...event.userAttendance, gradeYear: user?.gradeYear }} />
           </Stack>
