@@ -2,7 +2,7 @@ import { Container, Tab, Tabs } from "@mui/material";
 import Head from "next/head";
 import { useState } from "react";
 
-import { AllEvents } from "@/components/pages/events/AllEvents";
+import { AllEvents } from "@/components/pages/events";
 import { Title } from "@/components/Title";
 import { NextPageWithLayout } from "@/lib/next";
 

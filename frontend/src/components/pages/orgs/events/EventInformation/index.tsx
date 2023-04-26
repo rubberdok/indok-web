@@ -4,8 +4,8 @@ import { Alert, Button, Card, CardContent, CardHeader, Snackbar, Stack, Typograp
 import dayjs from "dayjs";
 import { useState } from "react";
 
-import { NextLinkComposed } from "@/components";
-import { AttendeeExport } from "@/components/pages/events/AttendeeExport";
+import { NextLinkComposed } from "@/components/Link";
+import { AttendeeExport } from "@/components/pages/events";
 import { AdminEventDocument } from "@/generated/graphql";
 
 import { EmailDialog } from "./EmailDialog";

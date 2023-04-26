@@ -1,7 +1,7 @@
 import { Container } from "@mui/material";
 import { useRouter } from "next/router";
 
-import { EditEvent } from "@/components/pages/events/EditEvent";
+import { EditEvent } from "@/components/pages/events";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
