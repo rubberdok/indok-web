@@ -3,9 +3,10 @@ import { Button, ButtonProps, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
-import { Link } from "@/components";
 import { UserDocument } from "@/generated/graphql";
 import { generateFeideLoginUrl } from "@/utils/auth";
+
+import Link from "../../Link";
 
 type Props = {
   redirect?: boolean;
