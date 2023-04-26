@@ -36,10 +36,7 @@ export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
               <TableCell>{event.availableSlots}</TableCell>
               <TableCell>{event.usersAttending?.length}</TableCell>
               <TableCell>
-                <Chip
-                  label={event.isFull ? "Fullt" : "Ledige Plasser"}
-                  color={event.isFull ? "default" : "secondary"}
-                />
+                <Chip label={event.isFull ? "Fullt" : "Ledige Plasser"} color={event.isFull ? "default" : "warning"} />
               </TableCell>
             </TableRow>
           ))}
