@@ -27,7 +27,7 @@ const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServer
 };
 
 export const getServerSideProps: GetServerSideProps<{ event: EventDetailFieldsFragment }> = async (ctx) => {
-  const client = await initializeApollo({}, ctx);
+  const client = initializeApollo({}, ctx);
 
   const id = ctx.params?.id;
   if (typeof id !== "string") {
