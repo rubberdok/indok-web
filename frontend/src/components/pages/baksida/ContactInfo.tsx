@@ -10,8 +10,7 @@ type Props = {
   image?: StaticImageData;
 };
 
-export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
-  const nameAndPosition = `${name}${position ? ` - ${position}` : ""}`;
+export const ContactInfo: React.FC<Props> = ({ name, position, email, image }) => {
   return (
     <Grid item container direction="column" justifyContent="space-between" alignItems="center">
       <Grid
@@ -33,7 +32,10 @@ export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) 
         )}
       </Grid>
       <Grid item md>
-        <Typography variant="subtitle2">{nameAndPosition}</Typography>
+        <Typography variant="subtitle2">
+          {name}
+          {position && ` - ${position}`}
+        </Typography>
       </Grid>
       {email && (
         <Grid item md>

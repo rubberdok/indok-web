@@ -109,8 +109,8 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
       </Typography>
 
       <Tabs indicatorColor="primary" value={value} onChange={pushQuery} sx={{ mb: 2 }}>
-        {Object.keys(routes).map((keyName, i) => (
-          <Tab key={i} label={routes[keyName].title} />
+        {Object.entries(routes).map(([, { id, title }]) => (
+          <Tab key={id} label={title} />
         ))}
       </Tabs>
 

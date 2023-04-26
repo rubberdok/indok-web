@@ -82,14 +82,15 @@ const FallbackPage: NextPageWithLayout = () => {
           <CardHeader title="Ordrebekreftelse"></CardHeader>
           <CardContent>
             <Grid container alignItems="center" direction="column">
-              {error ? (
+              {error && (
                 <>
                   <Typography variant="h4">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : paymentStatus === "RESERVED" || loading ? (
+              )}
+              {(paymentStatus === "RESERVED" || loading) && (
                 <>
                   <Grid container item direction="column" spacing={4} alignItems="center">
                     <Grid item>
@@ -103,7 +104,8 @@ const FallbackPage: NextPageWithLayout = () => {
                     </Grid>
                   </Grid>
                 </>
-              ) : paymentStatus === "CAPTURED" && order ? (
+              )}
+              {paymentStatus === "CAPTURED" && order && (
                 <>
                   <Typography variant="h3">Betaling fullført!</Typography>
                   <Typography variant="body1">Betalingen var vellykket og du har nå kjøpt produktet. </Typography>
@@ -142,11 +144,8 @@ const FallbackPage: NextPageWithLayout = () => {
                   </Button>
                   <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                 </>
-              ) : paymentStatus === "CANCELLED" ? (
-                <Typography>Betalingen ble avbrutt</Typography>
-              ) : (
-                <Typography>Noe gikk galt</Typography>
               )}
+              {paymentStatus === "CANCELLED" && <Typography>Betalingen ble avbrutt</Typography>}
             </Grid>
           </CardContent>
           {userData?.user && (
