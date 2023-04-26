@@ -10,11 +10,11 @@ import { AppProvider } from "@/providers";
 
 initializeDayjs();
 
-export type CustomAppProps = AppProps<PageProps> & {
+export interface CustomAppProps extends AppProps<PageProps> {
   err: Error;
   Component: NextPageWithLayout;
   emotionCache?: EmotionCache;
-};
+}
 
 const App = (props: CustomAppProps): JSX.Element => {
   const { pageProps, err, Component, emotionCache } = props;
