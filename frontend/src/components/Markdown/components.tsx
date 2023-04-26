@@ -1,4 +1,5 @@
 import { Box, List, ListItemText, ListItem as MuiListItem, Typography } from "@mui/material";
+import { listItemClasses } from "@mui/material/ListItem";
 import { Components } from "react-markdown";
 
 const Heading: Components["h1"] = ({ children, id, level }) => {
@@ -19,20 +20,41 @@ const Image: Components["img"] = (props) => {
 };
 
 const UnorderedList: Components["ul"] = ({ children }) => {
-  return <List>{children}</List>;
+  return (
+    <List
+      sx={{
+        listStyleType: "disc",
+        listStylePosition: "inside",
+        [`& .${listItemClasses.root}`]: {
+          display: "list-item",
+        },
+      }}
+    >
+      {children}
+    </List>
+  );
 };
 
-const ListItem: Components["li"] = ({ ordered, children }) => {
-  if (ordered) {
-    return (
-      <MuiListItem sx={{ listStyleType: "decimal" }}>
-        <ListItemText sx={{ display: "list-item" }} primary={children} />
-      </MuiListItem>
-    );
-  }
+const OrderedList: Components["ol"] = ({ children }) => {
   return (
-    <MuiListItem sx={{ listStyleType: "disc" }}>
-      <ListItemText sx={{ display: "list-item" }} primary={children} />
+    <List
+      sx={{
+        listStyleType: "decimal",
+        listStylePosition: "inside",
+        [`& .${listItemClasses.root}`]: {
+          display: "list-item",
+        },
+      }}
+    >
+      {children}
+    </List>
+  );
+};
+
+const ListItem: Components["li"] = ({ children }) => {
+  return (
+    <MuiListItem>
+      <ListItemText primary={children} />
     </MuiListItem>
   );
 };
@@ -46,6 +68,7 @@ export const h6 = Heading;
 export const img = Image;
 export const ul = UnorderedList;
 export const li = ListItem;
+export const ol = OrderedList;
 
 export const p: Components["p"] = ({ children }) => (
   <Typography variant="body1" paragraph>

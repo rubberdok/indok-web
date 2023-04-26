@@ -90,7 +90,7 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
       <Stack direction="column" height={460} position="relative">
         <Image src="/img/organisasjonskart2023.svg" alt="Foreningskart" fill />
       </Stack>
-      <Typography id="orgList" variant="h3" gutterBottom>
+      <Typography id="orgList" variant="h3" component="h2" gutterBottom>
         Se foreningene våre under
       </Typography>
       <Tabs indicatorColor="primary" value={value} onChange={pushQuery}>

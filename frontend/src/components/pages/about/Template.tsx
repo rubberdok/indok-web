@@ -1,5 +1,5 @@
-import { Container, Divider, Hidden, Stack, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import { Container, Divider, Unstable_Grid2 as Grid, Stack, Typography } from "@mui/material";
+import Head from "next/head";
 import React from "react";
 
 import { RootStyle } from "@/layouts/Layout";
@@ -23,41 +23,46 @@ export const Template: React.FC<React.PropsWithChildren<Props>> = ({
   nextPost,
 }) => {
   return (
-    <RootStyle>
-      <Container>
-        <Grid container spacing={8}>
-          <Hidden smDown>
-            <Grid item md={3}>
+    <>
+      <Head>
+        <title>{`${title} | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse`}</title>
+        <meta name="description" content={description} />
+      </Head>
+      <RootStyle>
+        <Container>
+          <Grid container spacing={8}>
+            <Grid md={3} display={{ xs: "none", md: "block" }}>
               <AboutSidebar />
             </Grid>
-          </Hidden>
 
-          <Grid item xs={12} md={8}>
-            <Stack
-              spacing={3}
-              sx={{
-                pb: 6,
-                textAlign: "center",
-                pt: { xs: 3, md: 5 },
-              }}
-            >
-              <Typography variant="body2" sx={{ color: "text.disabled" }}>
-                Om foreningen
-              </Typography>
-              <Typography variant="h2" component="h1">
-                {title}
-              </Typography>
-              <Typography variant="h5">{description}</Typography>
-            </Stack>
+            <Grid xs={12} md={8}>
+              <Stack spacing={6} direction="column" divider={<Divider />}>
+                <Stack
+                  spacing={3}
+                  sx={{
+                    textAlign: "center",
+                    pt: { xs: 3, md: 5 },
+                  }}
+                >
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    Om foreningen
+                  </Typography>
+                  <Typography variant="h2" component="h1">
+                    {title}
+                  </Typography>
+                  <Typography variant="h5" component="p">
+                    {description}
+                  </Typography>
+                </Stack>
 
-            <Divider sx={{ mb: 6 }} />
-            <>{children}</>
-            <Divider sx={{ mt: 8 }} />
+                <div>{children}</div>
 
-            {(prevPost || nextPost) && <AboutPageArrow prevPost={prevPost} nextPost={nextPost} />}
+                {(prevPost || nextPost) && <AboutPageArrow prevPost={prevPost} nextPost={nextPost} />}
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-    </RootStyle>
+        </Container>
+      </RootStyle>
+    </>
   );
 };

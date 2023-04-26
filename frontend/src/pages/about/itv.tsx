@@ -45,7 +45,7 @@ const ItvPage: NextPageWithLayout = () => {
         rettighetene dine som student eller andre ting, er det bare å ta kontakt på itv@iot.ntnu.no. ITVene har
         taushetsplikt.
       </Typography>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h3" component="h2" gutterBottom>
         Medlemmer
       </Typography>
       <Grid container spacing={2} alignItems="stretch" justifyContent="center">
