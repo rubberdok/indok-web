@@ -33,7 +33,7 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
                 component={Link}
                 noLinkStyle
                 href={actionLink}
-                color="contrast"
+                color="secondary"
                 variant="text"
                 data-test-id={`${dataTestId}link`}
               >

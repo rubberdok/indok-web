@@ -125,7 +125,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                         <Link
                           component="button"
                           variant="body2"
-                          color="secondary"
+                          color="warning"
                           onClick={() => {
                             setOpenSalesTerms(true);
                           }}

@@ -62,7 +62,7 @@ export const AddToCalendar: React.FC<Props> = ({ title, start, end, location }) 
   return (
     <Button
       variant="outlined"
-      color="contrast"
+      color="secondary"
       fullWidth
       href={fileUrl}
       download

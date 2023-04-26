@@ -3,7 +3,7 @@ import { Card, CardContent, Stack, Typography } from "@mui/material";
 export const AdminActions: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   return (
     <>
-      <Card elevation={0} sx={{ display: { xs: "none", sm: "block" }, bgcolor: "secondary.main" }}>
+      <Card elevation={0} sx={{ display: { xs: "none", sm: "block" }, bgcolor: "warning.main" }}>
         <CardContent>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography variant="subtitle1">Administrer</Typography>

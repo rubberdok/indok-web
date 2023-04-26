@@ -14,7 +14,6 @@ declare module "@mui/material/styles" {
   ): Omit<Theme, "palette"> & CssVarsTheme;
 
   interface CustomPalette {
-    contrast: PaletteColor;
     shadowChannel: string;
   }
   interface Palette extends CustomPalette {}

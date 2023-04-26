@@ -77,13 +77,13 @@ export const ImageSlider: React.VFC<Props> = ({ imageData, displayLabelText }) =
         variant="text"
         sx={{ ...theme.typography.subtitle2, bgcolor: "transparent" }}
         nextButton={
-          <Button color="contrast" size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+          <Button color="secondary" size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Neste
             {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
           </Button>
         }
         backButton={
-          <Button color="contrast" size="small" onClick={handleBack} disabled={activeStep === 0}>
+          <Button color="secondary" size="small" onClick={handleBack} disabled={activeStep === 0}>
             {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             Forrige
           </Button>

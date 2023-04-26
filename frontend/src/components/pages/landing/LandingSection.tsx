@@ -9,8 +9,9 @@ export const LandingSection: React.FC = () => {
   const theme = useTheme();
   return (
     <Box
+      data-color-scheme="dark"
+      bgcolor="background.elevated"
       sx={{
-        bgcolor: "grey.900",
         display: { xs: "block", md: "grid" },
         gridTemplateColumns: "repeat(2, 1fr)",
         position: "relative",

@@ -18,7 +18,7 @@ const ManageEventActions: React.FC = () => {
   }
   return (
     <>
-      <Button startIcon={<Add />} component={NextLinkComposed} to="/events/new" variant="contained" color="contrast">
+      <Button startIcon={<Add />} component={NextLinkComposed} to="/events/new" variant="contained" color="secondary">
         Opprett
       </Button>
       <Button
@@ -26,7 +26,7 @@ const ManageEventActions: React.FC = () => {
         component={NextLinkComposed}
         to={url}
         variant="contained"
-        color="contrast"
+        color="secondary"
       >
         Mine arrangementer
       </Button>

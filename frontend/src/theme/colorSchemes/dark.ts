@@ -16,16 +16,16 @@ const grey: Partial<Color> = {
 
 export const dark: PaletteOptions = {
   background: {
-    elevated: grey[900],
+    elevated: "#181D25",
     default: "#0f1217",
-    paper: grey[800],
+    paper: "#202731",
   },
   error: {
     main: "#FF4530",
     contrastText: "#fff",
   },
   warning: {
-    main: "#FF9F0A",
+    main: "#F37F31",
     contrastText: "#fff",
   },
   grey,
@@ -37,17 +37,7 @@ export const dark: PaletteOptions = {
     main: "#3E878A",
   },
   secondary: {
-    main: "#F37F31",
-  },
-  contrast: {
-    dark: "#E5E5EA",
-    main: "#F2F2F7",
-    light: "#fff",
-    contrastText: "#000",
-    mainChannel: colorChannel("#F2F2F7"),
-    darkChannel: colorChannel("#E5E5EA"),
-    lightChannel: colorChannel("#fff"),
-    contrastTextChannel: colorChannel("#000"),
+    main: "#f5f5f5f5",
   },
   shadowChannel: colorChannel("#000"),
 };

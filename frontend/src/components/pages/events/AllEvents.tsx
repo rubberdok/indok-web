@@ -91,7 +91,7 @@ export const AllEvents: React.FC = () => {
       <Grid xs display={{ xs: "block", md: "none" }}>
         <Button
           variant="outlined"
-          color="contrast"
+          color="secondary"
           fullWidth
           startIcon={<Tune />}
           onClick={() => setOpenFilterDrawer(true)}

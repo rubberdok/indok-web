@@ -54,7 +54,7 @@ export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefa
             </Grid>
             <Grid item>
               <IconButton onClick={() => onShowDefaultChange(!showDefaultEvents)} aria-label="delete">
-                {showDefaultEvents ? <StarRounded color="secondary" /> : <StarOutlineRounded />}
+                {showDefaultEvents ? <StarRounded color="warning" /> : <StarOutlineRounded />}
               </IconButton>
             </Grid>
           </Grid>

@@ -57,7 +57,7 @@ export const OrganizationsSlider: React.FC = () => {
                   component={Link}
                   noLinkStyle
                   href="/about/organization"
-                  color="contrast"
+                  color="secondary"
                   variant="contained"
                   size="large"
                   endIcon={<ArrowForward />}
