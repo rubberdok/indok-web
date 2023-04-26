@@ -35,10 +35,12 @@ export const PostItem: React.FC<Props> = ({ coverImg, title, icon, href, isNext 
             }),
           }}
         >
-          <Typography variant="overline" sx={{ color: "text.disabled" }}>
+          <Typography variant="overline" sx={{ color: "text.secondary" }}>
             Les mer
           </Typography>
-          <Typography variant="subtitle1">{title}</Typography>
+          <Typography variant="subtitle1" component="span">
+            {title}
+          </Typography>
         </Stack>
       </Stack>
     </CardActionArea>

@@ -82,7 +82,7 @@ const BoardPage: NextPageWithLayout = () => {
         avholde generalforsamling for studentene ved Indøk. Generalforsamlingen er Foreningens øverste organ og er
         studentenes mulighet til å direkte påvirke budsjetter og avgjørelser som blir fattet på linjen.
       </Typography>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h3" component="h2" gutterBottom>
         Medlemmer
       </Typography>
       <Grid container spacing={2} alignItems="stretch" justifyContent="center">
