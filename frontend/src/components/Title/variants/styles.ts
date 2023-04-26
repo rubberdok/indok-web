@@ -4,20 +4,14 @@ import { styled } from "@mui/material/styles";
 
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 
-type RootProps = {
-  disableGutters?: boolean;
-};
-
-export const RootStyle = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "disableGutters",
-})<RootProps>(({ theme, disableGutters }) => ({
+export const RootStyle = styled(Box)(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
   backgroundColor: theme.vars.palette.background.elevated,
   color: theme.vars.palette.text.primary,
   [theme.breakpoints.up("md")]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
   },
-  marginBottom: disableGutters ? 0 : theme.spacing(4),
+  marginBottom: theme.spacing(4),
 }));
 
 export const ImageContainer = styled(Box)(({ theme }) => ({

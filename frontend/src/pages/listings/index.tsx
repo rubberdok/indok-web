@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 
 import { Listings } from "@/components/pages/listings/index/Listings";
 import { Title } from "@/components/Title/";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 // page to show all listings open to users
@@ -30,5 +29,4 @@ const ListingsPage: NextPageWithLayout = () => {
   );
 };
 
-ListingsPage.getLayout = (page) => <Layout>{page}</Layout>;
 export default ListingsPage;

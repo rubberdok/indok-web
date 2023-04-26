@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 
 import { Link, Markdown } from "@/components";
 import { Title } from "@/components/Title";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 import { Article, getPostBySlug, getPostsSlugs } from "@/utils/posts";
 
@@ -76,8 +75,6 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
     </>
   );
 };
-
-ArticlePage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getPostsSlugs("organizations");

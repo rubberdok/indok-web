@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { AllEvents } from "@/components/pages/events/AllEvents";
 import { Title } from "@/components/Title";
-import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const links = [
@@ -52,7 +51,5 @@ const Events: NextPageWithLayout = () => {
     </>
   );
 };
-
-Events.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default Events;

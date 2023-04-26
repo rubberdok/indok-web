@@ -8,7 +8,6 @@ import { Markdown } from "@/components";
 import { TitleCard } from "@/components/pages/listings/detail/TitleCard";
 import { Title } from "@/components/Title";
 import { ListingDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -77,8 +76,6 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
     </>
   );
 };
-
-ListingPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getServerSideProps: GetServerSideProps<{
   listing: NonNullable<ResultOf<typeof ListingDocument>["listing"]>;
