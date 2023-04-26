@@ -1,7 +1,22 @@
 import { ThemeOptions } from "@mui/material";
+import { Poppins, Merriweather } from "next/font/google";
 
-const PRIMARY = "Poppins, sans-serif";
-const SECONDARY = "Merriweather, sans-serif";
+export const poppins = Poppins({
+  display: "swap",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  fallback: ["ui-sans-serif"],
+});
+
+export const merriweather = Merriweather({
+  display: "swap",
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  fallback: ["ui-serif"],
+});
+
+const PRIMARY = poppins.style.fontFamily;
+const SECONDARY = merriweather.style.fontFamily;
 
 export const typography: ThemeOptions["typography"] = {
   fontFamily: PRIMARY,

@@ -24,6 +24,8 @@ const getPresets = () => {
  * @type {import('next').NextConfig}
  */
 const moduleExports = {
+  reactStrictMode: true,
+
   /** @todo internationalized routing */
   async rewrites() {
     return [
