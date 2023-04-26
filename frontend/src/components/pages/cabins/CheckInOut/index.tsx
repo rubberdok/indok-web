@@ -1,8 +1,7 @@
-import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Checkbox, Divider, FormControlLabel, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 
 import { Calendar } from "@/components/Calendar";
-import { LabeledIcon } from "@/components/LabeledIcon";
 import { CabinFragment } from "@/generated/graphql";
 import { useDisabledDates } from "@/hooks/cabins/useDisabledDates";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -53,14 +52,20 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
         <Typography variant="h5">Velg hytte</Typography>
 
         {allCabins.map((cabin) => (
-          <LabeledIcon
-            icon={
+          <FormControlLabel
+            key={cabin.id}
+            label={
+              <Typography variant="subtitle2" component="p">
+                {cabin.name}
+              </Typography>
+            }
+            control={
               <Checkbox
                 color="primary"
                 disableRipple
                 checked={chosenCabins.some((chosenCabin) => chosenCabin.id === cabin.id)}
-                onChange={(e) => {
-                  if (e.target.checked) {
+                onChange={(_, checked) => {
+                  if (checked) {
                     setChosenCabins([...chosenCabins, cabin]);
                   } else {
                     setChosenCabins(chosenCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
@@ -68,8 +73,6 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
                 }}
               />
             }
-            value={<Typography variant="subtitle2">{cabin.name}</Typography>}
-            key={cabin.id}
           />
         ))}
       </Stack>
