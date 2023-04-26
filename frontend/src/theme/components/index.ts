@@ -33,7 +33,6 @@ import { Tabs } from "./Tabs";
 import { ToggleButton } from "./ToggleButton";
 import { ToggleButtonGroup } from "./ToggleButtonGroup";
 import { Tooltip } from "./Tooltip";
-import { Typography } from "./Typography";
 
 export const components: ThemeOptions["components"] = {
   ...Accordion,
@@ -69,5 +68,4 @@ export const components: ThemeOptions["components"] = {
   ...ToggleButton,
   ...ToggleButtonGroup,
   ...Tooltip,
-  ...Typography,
 };

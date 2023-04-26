@@ -46,11 +46,11 @@ export const Footer: React.FC = () => {
             <Grid item xs={12} md={3}>
               <Stack alignItems="flex-start" spacing={3}>
                 <Logo />
-                <Typography variant="body3">
+                <Typography variant="caption">
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
-                <Typography variant="body3">
+                <Typography variant="caption">
                   {`Foreningen for Studentene ved Indøk © ${dayjs().format("YYYY")}`}
                 </Typography>
               </Stack>
@@ -121,7 +121,7 @@ export const Footer: React.FC = () => {
 const LinkItem: React.FC<LinkProps> = ({ sx, ...props }) => {
   return (
     <Link
-      variant="body3"
+      variant="caption"
       sx={{
         mt: 1,
         color: "text.secondary",
