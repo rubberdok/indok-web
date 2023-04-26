@@ -54,6 +54,10 @@ export const Event: React.FC<Props> = ({ event }) => {
             href: "/",
           },
           {
+            name: "Arrangementer",
+            href: "/events",
+          },
+          {
             name: event.title,
             href: `/events/${event.id}`,
           },
