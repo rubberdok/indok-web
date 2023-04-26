@@ -1,4 +1,5 @@
 import { Avatar, CardActionArea, Stack, Typography } from "@mui/material";
+import Image from "next/image";
 
 import { NextLinkComposed } from "@/components/Link";
 
@@ -26,7 +27,9 @@ export const PostItem: React.FC<Props> = ({ coverImg, title, icon, href, isNext 
         }}
       >
         {icon}
-        <Avatar src={coverImg} sx={{ width: 64, height: 64 }} />
+        <Avatar sx={{ width: 64, height: 64 }}>
+          {coverImg && <Image src={coverImg} alt="" fill style={{ objectFit: "cover" }} />}
+        </Avatar>
         <Stack
           spacing={0.5}
           sx={{

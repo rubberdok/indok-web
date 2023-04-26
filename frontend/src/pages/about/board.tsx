@@ -69,8 +69,8 @@ const BoardPage: NextPageWithLayout = () => {
     <Template
       title="Hovedstyret"
       description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU."
-      prevPost={{ title: "Våre foreninger", slug: "/about/organizations", cover: "/img/hero.jpg" }}
-      nextPost={{ title: "Instituttillitsvalgte", slug: "/about/itv", cover: "/img/hero.jpg" }}
+      prevPost={{ title: "Våre foreninger", slug: "/about/organization", cover: "/img/hero.jpg" }}
+      nextPost={{ title: "Instituttillitsvalgte", slug: "/about/itv", cover: "/img/itv.png" }}
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
