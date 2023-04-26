@@ -1,10 +1,12 @@
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Card, CardActionArea, CardContent, Chip, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import React from "react";
 
 import { NextLinkComposed } from "@/components/Link";
 import { EventsDocument } from "@/generated/graphql";
+dayjs.extend(isSameOrAfter);
 
 type Props = {
   event: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>[number];
@@ -50,6 +52,7 @@ type StatusChipProps = {
     isAttendable?: boolean | null;
     isFull?: boolean | null;
     allowedGradeYears?: number[] | null;
+    signupOpenDate?: string | null;
   };
   user: {
     isOnWaitingList?: boolean | null;
@@ -57,16 +60,24 @@ type StatusChipProps = {
     gradeYear?: number | null;
   };
 };
+
 function StatusChip({ event, user }: StatusChipProps): React.ReactElement | null {
   if (user.isSignedUp) return <Chip label="Påmeldt" variant="outlined" color="primary" />;
   if (user.isOnWaitingList) return <Chip label="På venteliste" />;
 
-  let canAttend = event.isAttendable;
+  const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate) : undefined;
+  const isSignUpOpen = signUpOpenDate && dayjs().isSameOrAfter(signUpOpenDate);
+
+  let canAttend = event.isAttendable && isSignUpOpen;
   if (user.gradeYear && event.allowedGradeYears) {
     canAttend = canAttend && event.allowedGradeYears.includes(user.gradeYear);
   }
 
   if (event.isFull && canAttend) return <Chip label="Venteliste tilgjengelig" />;
   if (canAttend) return <Chip label="Påmelding tilgjengelig" color="primary" />;
+
+  if (signUpOpenDate && dayjs().isBefore(signUpOpenDate)) {
+    return <Chip label={`Påmelding åpner ${signUpOpenDate?.format("DD. MMMM [kl.] HH:mm")}`} />;
+  }
   return null;
 }
