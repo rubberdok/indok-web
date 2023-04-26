@@ -70,7 +70,7 @@ export const EditEvent: React.FC<Props> = ({ id, onCompleted }) => {
       },
       timeAndPlace: {
         start: dayjs(event.startTime).toDate(),
-        end: dayjs(event.endTime).toDate(),
+        end: dayjs(event.endTime ?? new Date()).toDate(),
         location: event.location ?? "",
       },
       registration: {
@@ -78,8 +78,8 @@ export const EditEvent: React.FC<Props> = ({ id, onCompleted }) => {
         details: {
           availableSeats: event.availableSlots ?? 0,
           requiresExtraInformation: event.hasExtraInformation ?? false,
-          signUpOpen: dayjs(event.signupOpenDate).toDate(),
-          deadline: dayjs(event.deadline).toDate(),
+          signUpOpen: dayjs(event.signupOpenDate ?? new Date()).toDate(),
+          deadline: dayjs(event.deadline ?? new Date()).toDate(),
         },
       },
       review: {},
