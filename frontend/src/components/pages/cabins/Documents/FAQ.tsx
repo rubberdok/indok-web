@@ -119,7 +119,7 @@ export const FAQ: React.FC = () => {
   return (
     <Grid item container xs={12} spacing={5}>
       {faqs.map((faq, index) => (
-        <Grid item xs={12} md={6} key={index}>
+        <Grid item xs={12} md={6} key={faq.question}>
           <Box>
             <Accordion expanded={expandedPanel === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<ExpandMore />}>

@@ -62,20 +62,20 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
                   <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
-              {error ? (
+              {error && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : loading ? (
-                <CircularProgress />
-              ) : (
+              )}
+              {loading && <CircularProgress />}
+              {data && (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="h3">Mine betalinger</Typography>
-                    {orders && orders.length !== 0 ? (
+                    {orders && orders.length !== 0 && (
                       <TableContainer style={{ maxHeight: 600 }}>
                         <Table>
                           <TableHead>
@@ -98,7 +98,8 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
                           </TableBody>
                         </Table>
                       </TableContainer>
-                    ) : (
+                    )}
+                    {orders?.length === 0 && (
                       <Typography align="center" variant="body1">
                         Ingen ordrer funnet
                       </Typography>

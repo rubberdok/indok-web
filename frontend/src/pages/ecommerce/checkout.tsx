@@ -62,23 +62,24 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                   <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
-              {!(productId && quantity) ? (
+              {!(productId && quantity) && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     ProduktID og antall mangler
                   </Alert>
                 </>
-              ) : error ? (
+              )}
+              {error && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : loading ? (
-                <CircularProgress />
-              ) : (
+              )}
+              {loading && <CircularProgress />}
+              {product && (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="h3">Bekreft ordredetaljer</Typography>
