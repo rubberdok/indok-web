@@ -1,5 +1,4 @@
-import { Container, Divider, Hidden, Stack, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import { Container, Divider, Unstable_Grid2 as Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 
 import { RootStyle } from "@/layouts/Layout";
@@ -26,35 +25,34 @@ export const Template: React.FC<React.PropsWithChildren<Props>> = ({
     <RootStyle>
       <Container>
         <Grid container spacing={8}>
-          <Hidden smDown>
-            <Grid item md={3}>
-              <AboutSidebar />
-            </Grid>
-          </Hidden>
+          <Grid md={3} display={{ xs: "none", md: "block" }}>
+            <AboutSidebar />
+          </Grid>
 
-          <Grid item xs={12} md={8}>
-            <Stack
-              spacing={3}
-              sx={{
-                pb: 6,
-                textAlign: "center",
-                pt: { xs: 3, md: 5 },
-              }}
-            >
-              <Typography variant="body2" sx={{ color: "text.disabled" }}>
-                Om foreningen
-              </Typography>
-              <Typography variant="h2" component="h1">
-                {title}
-              </Typography>
-              <Typography variant="h5">{description}</Typography>
+          <Grid xs={12} md={8}>
+            <Stack spacing={6} direction="column" divider={<Divider />}>
+              <Stack
+                spacing={3}
+                sx={{
+                  textAlign: "center",
+                  pt: { xs: 3, md: 5 },
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  Om foreningen
+                </Typography>
+                <Typography variant="h2" component="h1">
+                  {title}
+                </Typography>
+                <Typography variant="h5" component="p">
+                  {description}
+                </Typography>
+              </Stack>
+
+              <div>{children}</div>
+
+              {(prevPost || nextPost) && <AboutPageArrow prevPost={prevPost} nextPost={nextPost} />}
             </Stack>
-
-            <Divider sx={{ mb: 6 }} />
-            <>{children}</>
-            <Divider sx={{ mt: 8 }} />
-
-            {(prevPost || nextPost) && <AboutPageArrow prevPost={prevPost} nextPost={nextPost} />}
           </Grid>
         </Grid>
       </Container>
