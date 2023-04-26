@@ -10,7 +10,7 @@ export const FooterSimple: React.FC = () => {
     <Container sx={{ textAlign: "center", py: 8 }}>
       <Logo sx={{ mb: 3 }} />
       <Stack direction="column" gap={2} alignContent="center" justifyContent="center">
-        <Typography variant="body3" sx={{ color: "text.secondary" }}>
+        <Typography variant="caption" sx={{ color: "text.secondary" }}>
           Foreningen for Studentene ved Indøk © ${dayjs().format("YYYY")}
         </Typography>
         <Vercel />

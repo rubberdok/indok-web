@@ -18,7 +18,7 @@ export const OrderCellContent: React.FC<Props> = ({ order, field }) => {
         <Link
           href={`/ecommerce/fallback?orderId=${order.id}&redirect=${router.asPath}`}
           variant="caption"
-          color="secondary"
+          color="warning"
         >
           {order.id}
         </Link>

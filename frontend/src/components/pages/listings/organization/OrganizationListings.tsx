@@ -52,7 +52,7 @@ export const OrganizationListings: React.FC<Props> = ({ organization }) => {
                           noLinkStyle
                           href={`${organization.id}/listings/${listing.id}`}
                           variant="contained"
-                          color="secondary"
+                          color="warning"
                           startIcon={<Create />}
                         >
                           Administrer
@@ -82,7 +82,7 @@ export const OrganizationListings: React.FC<Props> = ({ organization }) => {
             noLinkStyle
             href={`${organization.id}/listings/new`}
             variant="outlined"
-            color="contrast"
+            color="secondary"
             startIcon={<Add />}
           >
             Opprett nytt verv

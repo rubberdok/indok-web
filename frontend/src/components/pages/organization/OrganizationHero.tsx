@@ -21,7 +21,7 @@ export const OrganizationHero: React.FC<Props> = ({ organization, handleTabChang
       ]}
       variant="dark"
     >
-      <Tabs textColor="secondary" indicatorColor="secondary" onChange={handleTabChange} value={activeTab}>
+      <Tabs textColor="primary" indicatorColor="primary" onChange={handleTabChange} value={activeTab}>
         <Tab label="Arrangementer" />
         <Tab label="Verv" />
         <Tab label="Medlemmer" />

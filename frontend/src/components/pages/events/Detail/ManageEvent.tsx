@@ -17,7 +17,7 @@ const ManageEventActions: React.FC<Props> = ({ eventId, organizationId }) => {
         component={NextLinkComposed}
         to={`/events/${eventId}/edit`}
         variant="contained"
-        color="contrast"
+        color="secondary"
         startIcon={<Edit />}
       >
         Rediger
@@ -26,7 +26,7 @@ const ManageEventActions: React.FC<Props> = ({ eventId, organizationId }) => {
         component={NextLinkComposed}
         to={`/orgs/${organizationId}/events/${eventId}`}
         variant="contained"
-        color="contrast"
+        color="secondary"
         startIcon={<Settings />}
       >
         Administrer

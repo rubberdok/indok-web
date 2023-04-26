@@ -66,11 +66,6 @@ export const typography: ThemeOptions["typography"] = {
     lineHeight: 26 / 14,
     fontSize: "0.875rem",
   },
-  subtitle3: {
-    fontWeight: 600,
-    lineHeight: 24 / 13,
-    fontSize: "0.75rem",
-  },
   body1: {
     lineHeight: 28 / 16,
     fontSize: "1rem",
@@ -78,10 +73,6 @@ export const typography: ThemeOptions["typography"] = {
   body2: {
     lineHeight: 26 / 14,
     fontSize: "0.875rem",
-  },
-  body3: {
-    lineHeight: 24 / 13,
-    fontSize: "0.75rem",
   },
   caption: {
     lineHeight: 20 / 12,

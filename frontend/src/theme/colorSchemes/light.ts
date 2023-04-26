@@ -20,7 +20,7 @@ export const light: PaletteOptions = {
     contrastText: "#fff",
   },
   secondary: {
-    main: "#F37F31",
+    main: "#2C2C2E",
     contrastText: "#fff",
   },
   info: {
@@ -32,23 +32,13 @@ export const light: PaletteOptions = {
     contrastText: "#fff",
   },
   warning: {
-    main: "#FF9500",
+    main: "#F37F31",
     contrastText: "#fff",
   },
   grey,
   success: {
     main: "#34C759",
     contrastText: "#fff",
-  },
-  contrast: {
-    light: "#3A3A3C",
-    dark: "#1C1C1E",
-    main: "#2C2C2E",
-    contrastText: "#fff",
-    lightChannel: colorChannel("#3A3A3C"),
-    darkChannel: colorChannel("#1C1C1E"),
-    mainChannel: colorChannel("#2C2C2E"),
-    contrastTextChannel: colorChannel("#fff"),
   },
   background: {
     elevated: "#f0f0f0",

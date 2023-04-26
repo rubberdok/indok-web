@@ -9,7 +9,6 @@ import { Button } from "./Button";
 import { ButtonGroup } from "./ButtonGroup";
 import { Card } from "./Card";
 import { Checkbox } from "./Checkbox";
-import { Chip } from "./Chip";
 import { Container } from "./Container";
 import { ControlLabel } from "./ControlLabel";
 import { CssBaseline } from "./CssBaseline";
@@ -33,7 +32,6 @@ import { Tabs } from "./Tabs";
 import { ToggleButton } from "./ToggleButton";
 import { ToggleButtonGroup } from "./ToggleButtonGroup";
 import { Tooltip } from "./Tooltip";
-import { Typography } from "./Typography";
 
 export const components: ThemeOptions["components"] = {
   ...Accordion,
@@ -45,7 +43,6 @@ export const components: ThemeOptions["components"] = {
   ...ButtonGroup,
   ...Card,
   ...Checkbox,
-  ...Chip,
   ...Container,
   ...ControlLabel,
   ...CssBaseline,
@@ -69,5 +66,4 @@ export const components: ThemeOptions["components"] = {
   ...ToggleButton,
   ...ToggleButtonGroup,
   ...Tooltip,
-  ...Typography,
 };

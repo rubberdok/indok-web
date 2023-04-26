@@ -16,7 +16,7 @@ type LinkItemProps = {
 const LinkItem: React.FC<LinkItemProps> = ({ link, active }) => {
   const { href, name } = link;
   return (
-    <Link href={href} variant="body3" color={active ? "text.primary" : "text.secondary"}>
+    <Link href={href} variant="caption" color={active ? "text.primary" : "text.secondary"}>
       {name}
     </Link>
   );

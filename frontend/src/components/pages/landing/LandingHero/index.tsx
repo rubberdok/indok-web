@@ -72,7 +72,7 @@ export const LandingHero: React.FC = () => {
                     noLinkStyle
                     href="/events"
                     variant="contained"
-                    color="contrast"
+                    color="secondary"
                     size="large"
                   >
                     Se arrangementer
