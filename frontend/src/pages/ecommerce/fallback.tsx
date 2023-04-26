@@ -144,7 +144,7 @@ const FallbackPage: NextPageWithLayout = () => {
                   </Button>
                   <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                 </>
-              )}{" "}
+              )}
               {paymentStatus === "CANCELLED" && <Typography>Betalingen ble avbrutt</Typography>}
             </Grid>
           </CardContent>
