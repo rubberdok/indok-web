@@ -1,7 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Tune } from "@mui/icons-material";
-import { Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Typography } from "@mui/material";
+import { Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Stack, Typography } from "@mui/material";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components";
@@ -10,6 +13,9 @@ import { EventsDocument } from "@/generated/graphql";
 import { EventListItem } from "./EventListItem";
 import { FilterMenu } from "./FilterMenu";
 import { ManageEvents } from "./ManageEvents";
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isBetween);
 
 export type FilterQuery = {
   organization?: string;
@@ -39,20 +45,22 @@ const EventListItemSkeleton = () => {
 };
 
 const EventSkeleton: React.FC = () => (
-  <>
-    <Grid>
+  <Stack spacing={4} direction="column">
+    <Stack spacing={2} direction="column">
+      <Typography variant="h4" component="span">
+        <Skeleton width="100%" />
+      </Typography>
       <EventListItemSkeleton />
-    </Grid>
-    <Grid>
       <EventListItemSkeleton />
-    </Grid>
-    <Grid>
+    </Stack>
+    <Stack spacing={2} direction="column">
+      <Typography variant="h4" component="span">
+        <Skeleton width="100%" />
+      </Typography>
       <EventListItemSkeleton />
-    </Grid>
-    <Grid>
       <EventListItemSkeleton />
-    </Grid>
-  </>
+    </Stack>
+  </Stack>
 );
 
 export const AllEvents: React.FC = () => {
@@ -74,12 +82,31 @@ export const AllEvents: React.FC = () => {
     setFilters(newFilters);
   }
 
-  let displayedEvents: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]> = data?.allEvents ?? [];
+  let userRelevantEvents: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]> = data?.allEvents ?? [];
   if (showDefaultEvents) {
-    displayedEvents = data?.defaultEvents ?? [];
+    userRelevantEvents = data?.defaultEvents ?? [];
   }
 
-  displayedEvents = filterEvents(displayedEvents, data?.user);
+  userRelevantEvents = filterEvents(userRelevantEvents, data?.user);
+
+  const thisWeeksEvents = userRelevantEvents.filter((event) => {
+    const eventDate = dayjs(event.startTime);
+    const nextWeek = dayjs().add(1, "week");
+    return eventDate.isBefore(nextWeek, "week");
+  });
+
+  const nextWeeksEvents = userRelevantEvents.filter((event) => {
+    const eventDate = dayjs(event.startTime);
+    const nextWeek = dayjs().add(1, "week");
+    const twoWeeks = dayjs().add(2, "week");
+    return eventDate.isBetween(nextWeek, twoWeeks, "week", "[]");
+  });
+
+  const futureEvents = userRelevantEvents.filter((event) => {
+    const eventDate = dayjs(event.startTime);
+    const twoWeeks = dayjs().add(2, "week");
+    return eventDate.isAfter(twoWeeks, "week");
+  });
 
   return (
     <Grid container direction="row" spacing={2}>
@@ -115,18 +142,45 @@ export const AllEvents: React.FC = () => {
           onShowDefaultChange={setShowDefaultEvents}
         />
       </Grid>
-      <Grid container xs={12} md={9} direction="column">
-        {loading && <EventSkeleton />}
-        {error && (
-          <Typography color="error" textAlign="center">
-            Noe gikk galt, prøv igjen senere.
-          </Typography>
-        )}
-        {displayedEvents.map((event) => (
-          <Grid key={event.id}>
-            <EventListItem event={event} user={data?.user} />
-          </Grid>
-        ))}
+      <Grid xs={12} md={9}>
+        <Stack direction="column" spacing={4}>
+          {loading && <EventSkeleton />}
+          {error && (
+            <Typography color="error" textAlign="center">
+              Noe gikk galt, prøv igjen senere.
+            </Typography>
+          )}
+          {thisWeeksEvents.length > 0 && (
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Denne uken
+              </Typography>
+              {thisWeeksEvents.map((event) => (
+                <EventListItem key={event.id} event={event} user={data?.user} />
+              ))}
+            </Stack>
+          )}
+          {nextWeeksEvents.length > 0 && (
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Neste uke
+              </Typography>
+              {nextWeeksEvents.map((event) => (
+                <EventListItem key={event.id} event={event} user={data?.user} />
+              ))}
+            </Stack>
+          )}
+          {futureEvents.length > 0 && (
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Fremtidige arrangementer
+              </Typography>
+              {futureEvents.map((event) => (
+                <EventListItem key={event.id} event={event} user={data?.user} />
+              ))}
+            </Stack>
+          )}
+        </Stack>
       </Grid>
     </Grid>
   );

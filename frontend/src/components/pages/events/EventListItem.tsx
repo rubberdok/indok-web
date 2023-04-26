@@ -68,6 +68,10 @@ function StatusChip({ event, user }: StatusChipProps): React.ReactElement | null
   const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate) : undefined;
   const isSignUpOpen = signUpOpenDate && dayjs().isSameOrAfter(signUpOpenDate);
 
+  if (signUpOpenDate && dayjs().isBefore(signUpOpenDate)) {
+    return <Chip label={`Påmelding åpner ${signUpOpenDate?.format("DD. MMMM [kl.] HH:mm")}`} />;
+  }
+
   let canAttend = event.isAttendable && isSignUpOpen;
   if (user.gradeYear && event.allowedGradeYears) {
     canAttend = canAttend && event.allowedGradeYears.includes(user.gradeYear);
@@ -76,8 +80,5 @@ function StatusChip({ event, user }: StatusChipProps): React.ReactElement | null
   if (event.isFull && canAttend) return <Chip label="Venteliste tilgjengelig" />;
   if (canAttend) return <Chip label="Påmelding tilgjengelig" color="primary" />;
 
-  if (signUpOpenDate && dayjs().isBefore(signUpOpenDate)) {
-    return <Chip label={`Påmelding åpner ${signUpOpenDate?.format("DD. MMMM [kl.] HH:mm")}`} />;
-  }
   return null;
 }
