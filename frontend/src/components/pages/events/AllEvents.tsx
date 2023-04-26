@@ -23,7 +23,7 @@ const EventListItemSkeleton = () => {
     id: "loading",
     title: "Loading",
     shortDescription: "Loading",
-    startTime: new Date().toISOString(),
+    startTime: new Date("2020-08-07T21:17:46").toISOString(),
     isFull: true,
     isAttendable: true,
     organization: {
