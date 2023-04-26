@@ -28,7 +28,7 @@ export const EventListItem: React.FC<Props> = ({ event, user }) => {
             spacing={1}
           >
             <Stack>
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h4" component="h2" gutterBottom>
                 {event.title}
               </Typography>
 
