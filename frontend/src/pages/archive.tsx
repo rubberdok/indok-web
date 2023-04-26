@@ -1,5 +1,6 @@
 import { Box, Container, FormGroup, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Head from "next/head";
 import React, { useState } from "react";
 
 import { Documents } from "@/components/pages/archive/Documents";
@@ -34,6 +35,10 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
 
   return (
     <>
+      <Head>
+        <title>Dokumenter | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="description" content="Januscript, budsjetter, og andre dokumenter fra Indøk." />
+      </Head>
       <Title
         title="Dokumenter"
         breadcrumbs={[
