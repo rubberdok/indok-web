@@ -1,4 +1,5 @@
 import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
+import Head from "next/head";
 import Image from "next/image";
 
 import { Link } from "@/components";
@@ -52,6 +53,10 @@ const CabinsPage: NextPageWithLayout = () => {
 
   return (
     <>
+      <Head>
+        <title>Hyttebooking | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="og:image" content="/img/hytte.jpg" />
+      </Head>
       <CabinsHero />
       <CabinsInfoSection />
       <CabinsDetailsSection />
