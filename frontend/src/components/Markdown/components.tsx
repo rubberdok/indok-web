@@ -1,6 +1,16 @@
-import { Box, Card, CardContent, List, ListItemText, ListItem as MuiListItem, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  List,
+  ListItemText,
+  ListItem as MuiListItem,
+  Typography,
+} from "@mui/material";
 import { listItemClasses } from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
+import { typographyClasses } from "@mui/material/Typography";
 import { Components } from "react-markdown";
 
 import Link from "../Link";
@@ -89,6 +99,29 @@ const CodeBlock: Components["code"] = ({ children, inline }) => {
   );
 };
 
+const Blockquote = styled("blockquote")({});
+
+const BlockquoteComponent: Components["blockquote"] = ({ children }) => {
+  return (
+    <div>
+      <Typography component="span" color="text.secondary">
+        <Blockquote
+          sx={(theme) => ({
+            borderLeft: `4px solid ${theme.vars.palette.divider}`,
+            pl: 2,
+            ml: 2,
+            [`& .${typographyClasses.root}`]: { marginBottom: 0 },
+          })}
+        >
+          {children}
+        </Blockquote>
+      </Typography>
+    </div>
+  );
+};
+
+const Hr: Components["hr"] = () => <Divider variant="fullWidth" />;
+
 export const h1 = Heading;
 export const h2 = Heading;
 export const h3 = Heading;
@@ -101,6 +134,8 @@ export const li = ListItem;
 export const ol = OrderedList;
 export const a = Anchor;
 export const code = CodeBlock;
+export const blockquote = BlockquoteComponent;
+export const hr = Hr;
 
 export const p: Components["p"] = ({ children }) => (
   <Typography variant="body1" paragraph>
