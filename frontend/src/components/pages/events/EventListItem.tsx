@@ -15,8 +15,9 @@ export const EventListItem: React.FC<Props> = ({ event, user }) => {
   return (
     <Card
       sx={{
-        borderColor: event.organization?.color ?? "primary.main",
-        borderLeft: "16px solid",
+        borderLeftWidth: "16px",
+        borderLeftStyle: "solid",
+        borderLeftColor: event.organization?.color ?? "primary.main",
       }}
     >
       <CardActionArea component={NextLinkComposed} key={event.id} to={`/events/${event.id}`}>
