@@ -1,4 +1,5 @@
 import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -10,6 +11,8 @@ import { ContactCabinBoard } from "@/components/pages/cabins/ContactCabinBoard";
 import { FAQ } from "@/components/pages/cabins/Documents/FAQ";
 import { outsideImages } from "@/components/pages/cabins/ImageSlider/imageData";
 import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
+import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 /** Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book). */
@@ -150,6 +153,17 @@ const CabinsPage: NextPageWithLayout = () => {
       </Container>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data } = await client.query({ query: CabinsAndResponsiblesDocument });
+
+  return addApolloState(client, {
+    props: {
+      ...data,
+    },
+  });
 };
 
 export default CabinsPage;

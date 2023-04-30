@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Typography from "@mui/material/Typography";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { ArchiveByTypesDocument } from "@/generated/graphql";
 
@@ -13,14 +13,9 @@ type Props = {
 };
 
 export const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
-  const { refetch, loading, data, error } = useQuery(ArchiveByTypesDocument, {
+  const { loading, data, error } = useQuery(ArchiveByTypesDocument, {
     variables: { documentTypes, year, names },
-    ssr: false,
   });
-
-  useEffect(() => {
-    refetch({ documentTypes, year });
-  }, [documentTypes, year, refetch]);
 
   if (loading) return <p style={{ textAlign: "center" }}></p>;
 
