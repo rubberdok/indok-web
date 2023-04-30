@@ -1416,7 +1416,6 @@ export type FeaturedArchiveQuery = {
     id: string;
     title: string;
     thumbnail?: string | null;
-    featured: boolean;
     typeDoc: ArchiveDocumentTypeDoc;
     year?: number | null;
     webLink?: string | null;
@@ -1426,6 +1425,46 @@ export type FeaturedArchiveQuery = {
 export type AvailableYearsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AvailableYearsQuery = { __typename?: "Queries"; availableYears: Array<string> };
+
+export type DocumentFragment = {
+  __typename?: "ArchiveDocumentType";
+  id: string;
+  title: string;
+  thumbnail?: string | null;
+  typeDoc: ArchiveDocumentTypeDoc;
+  year?: number | null;
+  webLink?: string | null;
+};
+
+export type DocumentsQueryVariables = Exact<{
+  documentTypes: Array<Scalars["String"]> | Scalars["String"];
+  year?: InputMaybe<Scalars["Int"]>;
+  names?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type DocumentsQuery = {
+  __typename?: "Queries";
+  availableYears: Array<string>;
+  hasPermission?: boolean | null;
+  archiveByTypes: Array<{
+    __typename?: "ArchiveDocumentType";
+    id: string;
+    title: string;
+    thumbnail?: string | null;
+    typeDoc: ArchiveDocumentTypeDoc;
+    year?: number | null;
+    webLink?: string | null;
+  }>;
+  featuredArchive: Array<{
+    __typename?: "ArchiveDocumentType";
+    id: string;
+    title: string;
+    thumbnail?: string | null;
+    typeDoc: ArchiveDocumentTypeDoc;
+    year?: number | null;
+    webLink?: string | null;
+  }>;
+};
 
 export type CabinFragment = {
   __typename?: "CabinType";
@@ -3190,6 +3229,27 @@ export type ServerTimeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ServerTimeQuery = { __typename?: "Queries"; serverTime?: string | null };
 
+export const DocumentFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Document" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ArchiveDocumentType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
+          { kind: "Field", name: { kind: "Name", value: "typeDoc" } },
+          { kind: "Field", name: { kind: "Name", value: "year" } },
+          { kind: "Field", name: { kind: "Name", value: "webLink" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DocumentFragment, unknown>;
 export const CabinFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -4335,19 +4395,13 @@ export const ArchiveByTypesDocument = {
             ],
             selectionSet: {
               kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "title" } },
-                { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
-                { kind: "Field", name: { kind: "Name", value: "typeDoc" } },
-                { kind: "Field", name: { kind: "Name", value: "year" } },
-                { kind: "Field", name: { kind: "Name", value: "webLink" } },
-              ],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
             },
           },
         ],
       },
     },
+    ...DocumentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ArchiveByTypesQuery, ArchiveByTypesQueryVariables>;
 export const FeaturedArchiveDocument = {
@@ -4365,20 +4419,13 @@ export const FeaturedArchiveDocument = {
             name: { kind: "Name", value: "featuredArchive" },
             selectionSet: {
               kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "title" } },
-                { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
-                { kind: "Field", name: { kind: "Name", value: "featured" } },
-                { kind: "Field", name: { kind: "Name", value: "typeDoc" } },
-                { kind: "Field", name: { kind: "Name", value: "year" } },
-                { kind: "Field", name: { kind: "Name", value: "webLink" } },
-              ],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
             },
           },
         ],
       },
     },
+    ...DocumentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FeaturedArchiveQuery, FeaturedArchiveQueryVariables>;
 export const AvailableYearsDocument = {
@@ -4395,6 +4442,90 @@ export const AvailableYearsDocument = {
     },
   ],
 } as unknown as DocumentNode<AvailableYearsQuery, AvailableYearsQueryVariables>;
+export const DocumentsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "documents" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "year" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "names" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "archiveByTypes" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "typeDoc" },
+                value: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "year" },
+                value: { kind: "Variable", name: { kind: "Name", value: "year" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "names" },
+                value: { kind: "Variable", name: { kind: "Name", value: "names" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "featuredArchive" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "availableYears" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "StringValue", value: "archive.view_archivedocument", block: false },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    ...DocumentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<DocumentsQuery, DocumentsQueryVariables>;
 export const CreateBookingDocument = {
   kind: "Document",
   definitions: [

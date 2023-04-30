@@ -10,7 +10,7 @@ import { RemoveFiltersButton } from "@/components/pages/archive/RemoveFiltersBut
 import { SearchBar } from "@/components/pages/archive/SearchBar";
 import { YearSelector } from "@/components/pages/archive/YearSelector";
 import { Title } from "@/components/Title";
-import { HasPermissionDocument } from "@/generated/graphql";
+import { DocumentsDocument, HasPermissionDocument } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -119,17 +119,27 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
+
+  const { data: permissionData } = await client.query({
     query: HasPermissionDocument,
     variables: {
       permission: "archive.view_archivedocument",
     },
   });
 
-  if (error) return { notFound: true };
-  if (!data.hasPermission) {
-    return { notFound: true };
-  }
+  if (!permissionData.hasPermission) return { notFound: true };
+
+  const { data, error } = await client.query({
+    query: DocumentsDocument,
+    variables: {
+      documentTypes: [],
+      names: "",
+      year: null,
+    },
+  });
+
+  if (error) throw new Error(error.message);
+
   return addApolloState(client, { props: { data } });
 };
 

@@ -6,7 +6,7 @@ import { FeaturedArchiveDocument } from "@/generated/graphql";
 import { DocumentList } from "./DocumentList";
 
 export const FeaturedDocumentsList: React.FC = () => {
-  const { loading, data, error } = useQuery(FeaturedArchiveDocument, { ssr: false });
+  const { loading, data, error } = useQuery(FeaturedArchiveDocument);
 
   if (loading) return <p style={{ textAlign: "center" }}></p>;
 
