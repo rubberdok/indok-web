@@ -35,7 +35,7 @@
     "@sentry/nextjs": "^7.44.1",
     "@vercel/analytics": "^1.0.0",
     "dayjs": "^1.11.7",
-    "deepmerge": "^4.2.2",
+    "deepmerge": "^4.3.1",
     "graphql": "^16.3.0",
     "gray-matter": "^4.0.3",
     "lodash": "^4.17.21",
