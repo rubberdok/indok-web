@@ -9,11 +9,18 @@ query events($organization: String, $category: String, $startTime: DateTime, $en
     id
     gradeYear
   }
+  hasPermission(permission: "events.add_event")
 }
 
 query eventDetails($id: ID!) {
   event(id: $id) {
     ...EventDetailFields
+  }
+  user {
+    id
+    organizations {
+      id
+    }
   }
 }
 

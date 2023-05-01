@@ -31,8 +31,14 @@ export const LoginRequired: React.FC<
     path ||= router.asPath;
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
-  const { data, loading } = useQuery(UserDocument);
+  const { data, loading } = useQuery(UserDocument, {
+    returnPartialData: true,
+  });
   const { fullWidth } = buttonProps;
+
+  if (data?.user) {
+    return <>{children}</>;
+  }
 
   if (loading) {
     return (
@@ -50,10 +56,6 @@ export const LoginRequired: React.FC<
         </Button>
       </Skeleton>
     );
-  }
-
-  if (data?.user) {
-    return <>{children}</>;
   }
 
   if (fallback) {

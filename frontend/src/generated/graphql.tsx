@@ -2078,6 +2078,7 @@ export type EventsQueryVariables = Exact<{
 
 export type EventsQuery = {
   __typename?: "Queries";
+  hasPermission?: boolean | null;
   allEvents?: Array<{
     __typename?: "EventType";
     id: string;
@@ -2149,6 +2150,11 @@ export type EventDetailsQuery = {
     } | null;
     category?: { __typename?: "CategoryType"; id: string; name: string } | null;
     organization: { __typename?: "OrganizationType"; id: string; name: string; logoUrl?: string | null };
+  } | null;
+  user?: {
+    __typename?: "UserType";
+    id: string;
+    organizations: Array<{ __typename?: "OrganizationType"; id: string }>;
   } | null;
 };
 
@@ -5607,6 +5613,17 @@ export const EventsDocument = {
               ],
             },
           },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "StringValue", value: "events.add_event", block: false },
+              },
+            ],
+          },
         ],
       },
     },
@@ -5643,6 +5660,24 @@ export const EventDetailsDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventDetailFields" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "organizations" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
             },
           },
         ],
