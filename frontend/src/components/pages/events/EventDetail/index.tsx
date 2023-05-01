@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 import React from "react";
 
 import { Link, Markdown, Title } from "@/components";
-import { EventDetailFieldsFragment, UserOrganizationsDocument } from "@/generated/graphql";
+import { EventDetailFieldsFragment, EventUserOrganizationsDocument } from "@/generated/graphql";
 
 import { AddToCalendar } from "./AddToCalendar";
 import { ManageEvent } from "./ManageEvent";
@@ -35,7 +35,7 @@ function isAttendable(
 }
 
 function useOrganizationRequired(organizationId: string): { isInOrganization: boolean; loading: boolean } {
-  const { data, loading } = useQuery(UserOrganizationsDocument);
+  const { data, loading } = useQuery(EventUserOrganizationsDocument);
   const isInOrganization = Boolean(data?.user?.organizations?.find((org) => org.id === organizationId));
   return { isInOrganization, loading };
 }
