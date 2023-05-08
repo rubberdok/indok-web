@@ -5,6 +5,10 @@
 
 // eslint-disable-next-line
 const { withSentryConfig } = require("@sentry/nextjs");
+// eslint-disable-next-line
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const getPresets = () => {
   if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
@@ -96,4 +100,4 @@ const moduleExports = {
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withSentryConfig(moduleExports);
+module.exports = withSentryConfig(withBundleAnalyzer(moduleExports));
