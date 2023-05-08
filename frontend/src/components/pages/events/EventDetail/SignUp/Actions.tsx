@@ -5,13 +5,34 @@ import isBetween from "dayjs/plugin/isBetween";
 import { useState } from "react";
 
 import { LoginRequired, PermissionRequired } from "@/components/Auth";
-import { EventDetailFieldsFragment, EventSignOffDocument, EventSignUpDocument } from "@/generated/graphql";
+import { graphql } from "@/gql";
+import { EventDetailFieldsFragment } from "@/gql/graphql";
 
 import { CountdownStatusText } from "./Countdown";
 import { useCountdown } from "./hooks/useCountdown";
 import { SignUpButton } from "./SignUpButton";
 
 dayjs.extend(isBetween);
+
+const SignUpDocument = graphql(/* GraphQL */ `
+  mutation SignUp($eventId: ID!, $extraInformation: String) {
+    eventSignUp(eventId: $eventId, data: { extraInformation: $extraInformation }) {
+      event {
+        ...EventDetailFields
+      }
+    }
+  }
+`);
+
+const SignOffDocument = graphql(/* GraphQL */ `
+  mutation SignOff($eventId: ID!) {
+    eventSignOff(eventId: $eventId) {
+      event {
+        ...EventDetailFields
+      }
+    }
+  }
+`);
 
 type Event = {
   id: string;
@@ -34,7 +55,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
     | undefined
   >(undefined);
 
-  const [signUp] = useMutation(EventSignUpDocument, {
+  const [signUp] = useMutation(SignUpDocument, {
     onCompleted() {
       setAlert({
         severity: "success",
@@ -48,7 +69,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
       });
     },
   });
-  const [signOff] = useMutation(EventSignOffDocument, {
+  const [signOff] = useMutation(SignOffDocument, {
     onCompleted() {
       setAlert({
         severity: "info",

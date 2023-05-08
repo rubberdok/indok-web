@@ -1,2 +1,2 @@
-schema: "https://api.indokntnu.no/graphql"
+schema: "../backend/**/schema.json"
 documents: "src/**/*.{graphql,js,ts,jsx,tsx}"

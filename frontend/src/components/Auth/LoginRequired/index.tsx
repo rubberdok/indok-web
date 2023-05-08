@@ -16,7 +16,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const LoginRequiredDocument = graphql(`
+const LoginRequiredDocument = graphql(/* GraphQL */ `
   query LoginRequired {
     user {
       id

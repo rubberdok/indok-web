@@ -5,7 +5,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { useEffect, useState } from "react";
 
-import { ServerTimeDocument } from "@/generated/graphql";
+import { graphql } from "@/gql";
+
+const ServerTimeDocument = graphql(/* GraphQL */ `
+  query ServerTime {
+    serverTime
+  }
+`);
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
