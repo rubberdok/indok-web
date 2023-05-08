@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { LoginRequired, PermissionRequired } from "@/components/Auth";
 import { graphql } from "@/gql";
-import { EventDetailFieldsFragment } from "@/gql/graphql";
+import { type EventDetailFieldsFragment } from "@/gql/graphql";
 
 import { CountdownStatusText } from "./Countdown";
 import { useCountdown } from "./hooks/useCountdown";

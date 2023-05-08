@@ -39,6 +39,13 @@ const moduleExports = {
       },
     ];
   },
+
+  experimental: {
+    swcPlugins: [
+      ["@graphql-codegen/client-preset-swc-plugin", { artifactDirectory: "./src/gql", gqlTagName: "graphql" }],
+    ],
+  },
+
   compiler: {
     ...getPresets(),
     /* https://nextjs.org/docs/advanced-features/compiler#emotion */

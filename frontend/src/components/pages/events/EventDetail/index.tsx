@@ -19,7 +19,7 @@ import React from "react";
 
 import { Link, Markdown, Title } from "@/components";
 import { graphql } from "@/gql";
-import { EventDetailFieldsFragment } from "@/gql/graphql";
+import { type EventDetailFieldsFragment } from "@/gql/graphql";
 
 import { AddToCalendar } from "./AddToCalendar";
 import { ManageEvent } from "./ManageEvent";

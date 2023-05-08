@@ -3,7 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
 import { EventDetail } from "@/components/pages/events";
-import { EventDetailFieldsFragment } from "@/gql/graphql";
+import { type EventDetailFieldsFragment } from "@/gql/graphql";
 import { EventDocument } from "@/graphql/events/queries";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
