@@ -2,9 +2,17 @@ import { useQuery } from "@apollo/client";
 import { PersonOutlineRounded } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
-import { Link } from "@/components";
-import { LoginRequired } from "@/components/Auth/LoginRequired";
-import { UserDocument } from "@/generated/graphql";
+import { Link, LoginRequired } from "@/components";
+import { graphql } from "@/gql";
+
+const UserDocument = graphql(/* GraphQL */ `
+  query User {
+    user {
+      id
+      firstName
+    }
+  }
+`);
 
 type Props = {
   fullWidth?: boolean;

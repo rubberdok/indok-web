@@ -27,6 +27,7 @@ const documents = {
     types.EventUserOrganizationsDocument,
   "\n  query event($id: ID!) {\n    event(id: $id) {\n      ...EventDetailFields\n    }\n    user {\n      id\n      organizations {\n        id\n      }\n    }\n  }\n":
     types.EventDocument,
+  "\n  query User {\n    user {\n      id\n      firstName\n    }\n  }\n": types.UserDocument,
 };
 
 /**
@@ -91,6 +92,12 @@ export function graphql(
 export function graphql(
   source: "\n  query event($id: ID!) {\n    event(id: $id) {\n      ...EventDetailFields\n    }\n    user {\n      id\n      organizations {\n        id\n      }\n    }\n  }\n"
 ): (typeof documents)["\n  query event($id: ID!) {\n    event(id: $id) {\n      ...EventDetailFields\n    }\n    user {\n      id\n      organizations {\n        id\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n  query User {\n    user {\n      id\n      firstName\n    }\n  }\n"
+): (typeof documents)["\n  query User {\n    user {\n      id\n      firstName\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

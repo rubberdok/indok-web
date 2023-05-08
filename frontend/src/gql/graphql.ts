@@ -1582,6 +1582,13 @@ export type EventQuery = {
   } | null;
 };
 
+export type UserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserQuery = {
+  __typename: "Queries";
+  user?: { __typename: "UserType"; id: string; firstName: string } | null;
+};
+
 export const EventDetailFieldsFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -2136,3 +2143,29 @@ export const EventDocument = {
     },
   ],
 } as unknown as DocumentNode<EventQuery, EventQueryVariables>;
+export const UserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "User" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
