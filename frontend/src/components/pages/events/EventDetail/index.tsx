@@ -18,11 +18,62 @@ import dayjs from "dayjs";
 import React from "react";
 
 import { Link, Markdown, Title } from "@/components";
-import { EventDetailFieldsFragment, EventUserOrganizationsDocument } from "@/generated/graphql";
+import { graphql } from "@/gql";
+import { EventDetailFieldsFragment } from "@/gql/graphql";
 
 import { AddToCalendar } from "./AddToCalendar";
 import { ManageEvent } from "./ManageEvent";
 import { SignUp } from "./SignUp";
+
+graphql(`
+  fragment EventDetailFields on EventType {
+    id
+    title
+    description
+    shortDescription
+    startTime
+    endTime
+    location
+    contactEmail
+    allowedGradeYears
+    hasExtraInformation
+    isFull
+    signupOpenDate
+    deadline
+    isAttendable
+    bindingSignup
+    price
+    product {
+      id
+    }
+    userAttendance {
+      isSignedUp
+      isOnWaitingList
+      positionOnWaitingList
+      hasBoughtTicket
+    }
+    category {
+      id
+      name
+    }
+    organization {
+      id
+      name
+      logoUrl
+    }
+  }
+`);
+
+const EventUserOrganizationsDocument = graphql(`
+  query eventUserOrganizations {
+    user {
+      id
+      organizations {
+        id
+      }
+    }
+  }
+`);
 
 type Props = {
   event: EventDetailFieldsFragment;

@@ -3,13 +3,14 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
 import { EventDetail } from "@/components/pages/events";
-import { EventDetailFieldsFragment, EventDetailsDocument } from "@/generated/graphql";
+import { EventDetailFieldsFragment } from "@/gql/graphql";
+import { EventDocument } from "@/graphql/events/queries";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 /** Component for showing the detail page of an event. */
 const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ event }) => {
-  const { data } = useQuery(EventDetailsDocument, {
+  const { data } = useQuery(EventDocument, {
     variables: { id: event.id },
     pollInterval: 60 * 1000,
   });
@@ -37,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<{ event: EventDetailFieldsFr
   }
 
   const { data, error } = await client.query({
-    query: EventDetailsDocument,
+    query: EventDocument,
     variables: {
       id,
     },

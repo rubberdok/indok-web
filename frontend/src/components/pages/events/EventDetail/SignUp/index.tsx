@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Unstable_Grid2 as Grid, Typography } from "@mui/material";
 
 import Link from "@/components/Link";
-import { EventDetailFieldsFragment } from "@/generated/graphql";
+import { EventDetailFieldsFragment } from "@/gql/graphql";
 
 import { Actions } from "./Actions";
 import { PaymentStatus } from "./Payments";

@@ -13,7 +13,7 @@
     "lint": "eslint",
     "lint:fix": "yarn run lint --fix",
     "postinstall": "cd .. && husky install frontend/.husky",
-    "generate": "graphql-codegen --config codegen.yml",
+    "generate": "graphql-codegen --config codegen.ts",
     "test": "cypress open",
     "test:headless": "cypress run",
     "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test",
@@ -54,6 +54,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@graphql-codegen/cli": "3.3.1",
+    "@graphql-codegen/client-preset": "^3.0.1",
     "@graphql-codegen/typed-document-node": "^2.3.5",
     "@graphql-codegen/typescript": "3.0.4",
     "@graphql-codegen/typescript-operations": "3.0.4",
