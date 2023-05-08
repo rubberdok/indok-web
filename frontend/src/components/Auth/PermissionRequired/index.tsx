@@ -1,12 +1,18 @@
 import { useQuery } from "@apollo/client";
 
-import { HasPermissionDocument } from "@/generated/graphql";
+import { graphql } from "@/gql";
 
 type Props = {
   permission: string;
   fallback?: React.ReactElement;
   optimistic?: boolean;
 };
+
+const HasPermissionDocument = graphql(/* GraphQL */ `
+  query hasPermission($permission: String!) {
+    hasPermission(permission: $permission)
+  }
+`);
 
 export const PermissionRequired: React.FC<React.PropsWithChildren<Props>> = ({
   permission,

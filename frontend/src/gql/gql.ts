@@ -13,6 +13,9 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+  "\n  query LoginRequired {\n    user {\n      id\n    }\n  }\n": types.LoginRequiredDocument,
+  "\n  query hasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n":
+    types.HasPermissionDocument,
   "\n  fragment EventDetailFields on EventType {\n    id\n    title\n    description\n    shortDescription\n    startTime\n    endTime\n    location\n    contactEmail\n    allowedGradeYears\n    hasExtraInformation\n    isFull\n    signupOpenDate\n    deadline\n    isAttendable\n    bindingSignup\n    price\n    product {\n      id\n    }\n    userAttendance {\n      isSignedUp\n      isOnWaitingList\n      positionOnWaitingList\n      hasBoughtTicket\n    }\n    category {\n      id\n      name\n    }\n    organization {\n      id\n      name\n      logoUrl\n    }\n  }\n":
     types.EventDetailFieldsFragmentDoc,
   "\n  query eventUserOrganizations {\n    user {\n      id\n      organizations {\n        id\n      }\n    }\n  }\n":
@@ -35,6 +38,18 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n  query LoginRequired {\n    user {\n      id\n    }\n  }\n"
+): (typeof documents)["\n  query LoginRequired {\n    user {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n  query hasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n"
+): (typeof documents)["\n  query hasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

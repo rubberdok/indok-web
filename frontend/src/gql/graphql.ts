@@ -1404,6 +1404,16 @@ export type UserType = {
   yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
 };
 
+export type LoginRequiredQueryVariables = Exact<{ [key: string]: never }>;
+
+export type LoginRequiredQuery = { __typename: "Queries"; user?: { __typename: "UserType"; id: string } | null };
+
+export type HasPermissionQueryVariables = Exact<{
+  permission: Scalars["String"];
+}>;
+
+export type HasPermissionQuery = { __typename: "Queries"; hasPermission?: boolean | null };
+
 export type EventDetailFieldsFragment = {
   __typename: "EventType";
   id: string;
@@ -1562,6 +1572,62 @@ export const EventDetailFieldsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<EventDetailFieldsFragment, unknown>;
+export const LoginRequiredDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "LoginRequired" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LoginRequiredQuery, LoginRequiredQueryVariables>;
+export const HasPermissionDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "hasPermission" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
 export const EventUserOrganizationsDocument = {
   kind: "Document",
   definitions: [

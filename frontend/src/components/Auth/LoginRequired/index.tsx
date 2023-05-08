@@ -3,7 +3,7 @@ import { Button, ButtonProps, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
-import { UserDocument } from "@/generated/graphql";
+import { graphql } from "@/gql";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 import Link from "../../Link";
@@ -15,6 +15,14 @@ type Props = {
   fallback?: React.ReactNode;
   "data-test-id"?: string;
 };
+
+const LoginRequiredDocument = graphql(`
+  query LoginRequired {
+    user {
+      id
+    }
+  }
+`);
 
 /**
  * Wrapper for stuff that requires a user to be logged in to view.
@@ -31,7 +39,7 @@ export const LoginRequired: React.FC<
     path ||= router.asPath;
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
-  const { data, loading } = useQuery(UserDocument, {
+  const { data, loading } = useQuery(LoginRequiredDocument, {
     returnPartialData: true,
   });
   const { fullWidth } = buttonProps;

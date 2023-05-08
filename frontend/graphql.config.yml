@@ -1,0 +1,2 @@
+schema: "https://api.indokntnu.no/graphql"
+documents: "src/**/*.{graphql,js,ts,jsx,tsx}"
