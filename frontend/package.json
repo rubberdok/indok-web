@@ -47,7 +47,7 @@
     "react-markdown": "^8.0.7",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
-    "swiper": "^9.1.0",
+    "swiper": "^9.3.0",
     "validator": "^13.9.0",
     "yup": "^1.1.1"
   },
