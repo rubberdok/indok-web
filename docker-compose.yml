@@ -30,6 +30,8 @@ services:
       - postgres
 
   frontend:
+    environment:
+      - NEXT_PUBLIC_INTERNAL_API_URL=http://backend:8000
     build:
       context: ./frontend
       dockerfile: Dockerfile

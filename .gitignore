@@ -245,9 +245,6 @@ dist
 .vscode-test
 
 # vscode
-**/.vscode/
-.vscode/settings.json
-.vscode/launch.json
 web.code-workspace
 # End of https://www.toptal.com/developers/gitignore/api/node
 
