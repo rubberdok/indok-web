@@ -321,8 +321,8 @@ If you want to close the backend, press `Ctrl + C` in the terminal where it runs
      - Use `cd` to navigate to where you downloaded the `.exe` file (e.g. `cd downloads`)
      - Type `.\nvm-setup.exe`, and go through the installer
    - Type `nvm version` in a new terminal to check that it was installed correctly
-2. Type `nvm install 16` in the terminal to install Node.js version 16
-3. Type `nvm use 16.X.Y`, where `16.X.Y` is the version shown in the terminal after running the previous command
+2. Type `nvm install --lts` in the terminal to install the current long-term support (LTS) version of Node.
+3. Type `nvm use --lts`
    - If on Windows, you may have to run the terminal as administrator
 4. Open the `indok-web` folder in VSCode, and create a file called `.env.local`
 5. Ask the project maintainers for dev environment variables
