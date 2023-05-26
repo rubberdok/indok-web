@@ -5,7 +5,7 @@ logo: /static/cabins/logo.svg
 image: /img/hy1.jpg
 board:
   leder:
-    name: Mats Torsvik
+    name: Mats Tviberg Torsvik
     phoneNumber: 941 04 242
     title: Leder
   øko_nestleder:
