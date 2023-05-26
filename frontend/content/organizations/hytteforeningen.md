@@ -17,17 +17,17 @@ board:
     phoneNumber: 907 94 116
     title: PR- og sosialansvarlig
   # drift:
-    name: 
-    phoneNumber: 
-    title: Driftsansvarlig
+  #  name: 
+  #  phoneNumber: 
+  #  title: Driftsansvarlig
   # book:
-    name: 
-    phoneNumber: 
-    title: Bookingansvarlig
+  #  name: 
+  #  phoneNumber: 
+  #  title: Bookingansvarlig
   # log:
-    name: 
-    phoneNumber: 
-    title: Logistikkansvarlig
+  #  name: 
+  #  phoneNumber: 
+  #  title: Logistikkansvarlig
 
 
 tag: annet
