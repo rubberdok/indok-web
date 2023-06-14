@@ -33,7 +33,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.128",
     "@mui/material": "^5.12.2",
-    "@sentry/nextjs": "^7.44.1",
+    "@sentry/nextjs": "^7.55.0",
     "@vercel/analytics": "^1.0.0",
     "dayjs": "^1.11.7",
     "deepmerge": "^4.3.1",
