@@ -15,7 +15,7 @@ graphene-django==2.15.0
 graphene==2.1.8
 gunicorn==20.1.0
 oauth2client==4.1.3
-pandas==2.0.1
+pandas==2.0.2
 phonenumbers==8.13.14
 pillow>=8.1.1
 promise==2.3
