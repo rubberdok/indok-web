@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.15",
-    "@emotion/cache": "^11.10.5",
+    "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.8",
