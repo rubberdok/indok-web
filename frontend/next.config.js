@@ -69,6 +69,9 @@ const moduleExports = {
       transform: "lodash/{{member}}",
     },
   },
+  experimental: {
+    typedRoutes: true,
+  },
   images: {
     domains: ["indokweb-assets.s3.eu-north-1.amazonaws.com"],
   },

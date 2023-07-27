@@ -2,7 +2,7 @@ import { CSSProperties } from "@emotion/serialize";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 
 export const RootStyle = styled(Box)(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,

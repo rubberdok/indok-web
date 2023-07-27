@@ -1,7 +1,7 @@
 import { AppBar as MuiAppBar, AppBarProps as MuiAppBarProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "../../theme/constants";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 
 interface AppBarProps extends MuiAppBarProps {
   scrolling?: boolean;
