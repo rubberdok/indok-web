@@ -21,7 +21,7 @@ pillow>=8.1.1
 promise==2.3
 psycopg2-binary==2.9.6
 PyJWT==2.7.0
-PyYAML==6.0
+PyYAML==6.0.1
 typing-extensions==4.5.0
 WeasyPrint==58.1
 whitenoise==6.5.0
