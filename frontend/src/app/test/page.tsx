@@ -1,11 +1,8 @@
-import { Metadata } from "next";
+"use client";
+
 import { graphql } from "@/gql";
 import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { notFound } from "next/navigation";
-
-export const metadata: Metadata = {
-  title: "Profile",
-};
 
 const profileDocument = graphql(/* GraphQL */ `
   query Profile {
