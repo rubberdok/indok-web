@@ -1,1 +1,1 @@
-export { ApolloWrapper } from "./ApolloWrapper";
+export { ApolloServerComponentWrapper as ApolloWrapper } from "./ApolloServerComponentWrapper";
