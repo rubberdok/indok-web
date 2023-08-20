@@ -27,6 +27,7 @@ import { OrderFragment, UserDocument, UserOrdersDocument } from "@/generated/gra
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
+
 import { HeaderValuePair } from "@/types/utils";
 
 const orderFields: HeaderValuePair<OrderFragment>[] = [

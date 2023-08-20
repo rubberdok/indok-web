@@ -21,7 +21,6 @@ import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument
 import { useResponsive } from "@/hooks/useResponsive";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -29,6 +28,8 @@ import {
   isFormValid,
   validateInputForm,
 } from "@/utils/cabins";
+
+import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
