@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 
 import { Link } from "@/components";
 import { OrderFragment, PaymentStatus } from "@/generated/graphql";
-
 import { HeaderValuePair } from "@/types/utils";
 
 type Props = { order: OrderFragment; field: HeaderValuePair<OrderFragment> };

@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { ListingForm } from "@/components/pages/listings/organization/ListingForm";
 import { CreateListingDocument, UserOrganizationsDocument } from "@/generated/graphql";
-
 import { ListingInput } from "@/types/listings";
 
 const emptyListing: ListingInput = {
