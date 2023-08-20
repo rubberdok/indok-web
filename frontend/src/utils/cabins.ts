@@ -11,7 +11,6 @@ import {
   EmailInput,
   SendEmailMutationVariables,
 } from "@/generated/graphql";
-
 import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
 dayjs.extend(isBetween);

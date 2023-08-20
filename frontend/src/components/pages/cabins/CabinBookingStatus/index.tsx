@@ -3,9 +3,8 @@ import { TypographyProps } from "@mui/material/Typography";
 
 import { CabinFragment } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
-import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
-
 import { ContactInfo, DatePick } from "@/types/cabins";
+import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
 const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>

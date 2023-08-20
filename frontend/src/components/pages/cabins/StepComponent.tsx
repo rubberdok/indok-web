@@ -2,14 +2,13 @@ import { Typography } from "@mui/material";
 import React from "react";
 
 import { CabinFragment } from "@/generated/graphql";
+import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
 import { CabinContactInfo } from "./CabinContactInfo";
 import { CheckInOut } from "./CheckInOut";
 import { ExtraInfoSite } from "./ExtraInfoSite";
 import { PaymentSite } from "./PaymentSite";
 import { ReceiptSite } from "./ReceiptSite";
-
-import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
 type Props = {
   activeStep: number;
