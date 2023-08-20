@@ -39,12 +39,14 @@ const ListingAdminPage: NextPageWithLayout = () => {
         cache.modify({
           id: `ListingType:${listingId}`,
           fields: {
-            form() {
-              return cache.writeFragment({
+            form(_, { INVALIDATE }) {
+              const newRef = cache.writeFragment({
                 data: newForm,
                 fragment: FormWithAllResponsesFragmentDoc,
                 fragmentName: "FormWithAllResponses",
               });
+              if (newRef) return newRef;
+              return INVALIDATE;
             },
           },
         });
