@@ -23,7 +23,7 @@
     "url": "github.com/rubberdok/indok-web"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.0-rc.1",
+    "@apollo/client": "^3.8.1",
     "@apollo/experimental-nextjs-app-support": "^0.4.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
@@ -55,7 +55,7 @@
     "@babel/core": "^7.21.8",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
-    "@graphql-codegen/typed-document-node": "^2.3.5",
+    "@graphql-codegen/typed-document-node": "^5.0.1",
     "@graphql-codegen/typescript": "3.0.4",
     "@graphql-codegen/typescript-operations": "3.0.4",
     "@graphql-typed-document-node/core": "^3.2.0",
