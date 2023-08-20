@@ -13,7 +13,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query LoggedInUser {\n    user {\n      id\n      firstName\n    }\n  }\n": types.LoggedInUserDocument,
+    "\n  query UserWithId {\n    user {\n      id\n    }\n  }\n": types.UserWithIdDocument,
+    "\n  query HasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n": types.HasPermissionDocument,
+    "\n  mutation Logout {\n    logout {\n      idToken\n    }\n  }\n": types.LogoutDocument,
     "\n  query Profile {\n    user {\n      id\n      feideEmail\n      email\n      username\n      firstName\n      lastName\n      dateJoined\n      graduationYear\n      gradeYear\n      allergies\n      phoneNumber\n      firstLogin\n    }\n  }\n": types.ProfileDocument,
+    "\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n": types.CabinPermissionDocument,
 };
 
 /**
@@ -33,7 +38,27 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  query LoggedInUser {\n    user {\n      id\n      firstName\n    }\n  }\n"): (typeof documents)["\n  query LoggedInUser {\n    user {\n      id\n      firstName\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query UserWithId {\n    user {\n      id\n    }\n  }\n"): (typeof documents)["\n  query UserWithId {\n    user {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query HasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n"): (typeof documents)["\n  query HasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation Logout {\n    logout {\n      idToken\n    }\n  }\n"): (typeof documents)["\n  mutation Logout {\n    logout {\n      idToken\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query Profile {\n    user {\n      id\n      feideEmail\n      email\n      username\n      firstName\n      lastName\n      dateJoined\n      graduationYear\n      gradeYear\n      allergies\n      phoneNumber\n      firstLogin\n    }\n  }\n"): (typeof documents)["\n  query Profile {\n    user {\n      id\n      feideEmail\n      email\n      username\n      firstName\n      lastName\n      dateJoined\n      graduationYear\n      gradeYear\n      allergies\n      phoneNumber\n      firstLogin\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n"): (typeof documents)["\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
