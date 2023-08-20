@@ -5,6 +5,7 @@ import { Calendar } from "@/components/Calendar";
 import { CabinFragment } from "@/generated/graphql";
 import { useDisabledDates } from "@/hooks/cabins/useDisabledDates";
 import { useResponsive } from "@/hooks/useResponsive";
+
 import { DatePick } from "@/types/cabins";
 
 type Props = {

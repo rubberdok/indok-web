@@ -1,9 +1,10 @@
 import { Divider, Grid, Hidden, Typography } from "@mui/material";
 
 import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, DatePick } from "@/types/cabins";
 
 import { CabinBookingStatus } from "../CabinBookingStatus";
+
+import { ContactInfo, DatePick } from "@/types/cabins";
 
 type Props = {
   chosenCabins: CabinFragment[];

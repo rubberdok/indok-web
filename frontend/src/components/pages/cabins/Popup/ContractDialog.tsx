@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 
 import { Contract } from "@/components/pages/cabins/Documents/Contract";
 import { CabinFragment } from "@/generated/graphql";
+
 import { ContactInfo, DatePick, ModalData } from "@/types/cabins";
 
 type Props = {

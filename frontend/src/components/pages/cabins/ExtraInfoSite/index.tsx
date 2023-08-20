@@ -1,8 +1,9 @@
 import { Box, Divider, Hidden, Stack, TextField, Typography } from "@mui/material";
 
 import { CabinFragment } from "@/generated/graphql";
-import { DatePick } from "@/types/cabins";
 import { convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
+
+import { DatePick } from "@/types/cabins";
 
 type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;

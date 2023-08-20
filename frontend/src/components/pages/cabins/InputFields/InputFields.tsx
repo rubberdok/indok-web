@@ -2,8 +2,9 @@ import { FormControl, Grid, Hidden, InputLabel, MenuItem, Select, TextField, Typ
 import React from "react";
 
 import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 import { range } from "@/utils/helpers";
+
+import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 
 type Props = {
   contactInfo: ContactInfo;

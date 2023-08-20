@@ -3,9 +3,10 @@ import { Grid } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
 import { CabinFragment, UserDocument } from "@/generated/graphql";
-import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 
 import { InputFields } from "../InputFields/InputFields";
+
+import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 
 type Props = {
   contactInfo: ContactInfo;
