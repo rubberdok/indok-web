@@ -72,6 +72,7 @@ export default function ProfilePage() {
    */
   const [queryRef] = useBackgroundQuery(cabinPermissionDocument);
 
+  // If the user is not logged in, redirect to the login page
   if (data.user === null) return redirect(generateFeideLoginUrl());
 
   const initials = getUserInitials(data.user.firstName, data.user.lastName);
