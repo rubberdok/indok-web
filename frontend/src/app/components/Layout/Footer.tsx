@@ -119,7 +119,7 @@ export const Footer: React.FC = () => {
   );
 };
 
-function LinkItem<T extends string> ({ sx, ...props }: LinkProps<T>) {
+function LinkItem<T extends string>({ sx, ...props }: LinkProps<T>) {
   return (
     <Link
       variant="caption"
@@ -134,4 +134,4 @@ function LinkItem<T extends string> ({ sx, ...props }: LinkProps<T>) {
       {...props}
     />
   );
-};
+}
