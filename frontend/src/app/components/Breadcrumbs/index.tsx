@@ -1,33 +1,34 @@
 import { NavigateNext } from "@mui/icons-material";
 import { BreadcrumbsProps, Breadcrumbs as MUIBreadcrumbs, SxProps } from "@mui/material";
 
+import { Route } from "next";
 import { Link } from "../Link";
 
-export type TLink = {
+export type TLink<T extends string> = {
   name: string;
-  href: string;
+  href: Route<T> | URL;
 };
 
-type LinkItemProps = {
-  link: TLink;
+type LinkItemProps<T extends string> = {
+  link: TLink<T>;
   active?: boolean;
 };
 
-const LinkItem: React.FC<LinkItemProps> = ({ link, active }) => {
+function LinkItem<T extends string>({ link, active }: LinkItemProps<T>) {
   const { href, name } = link;
   return (
     <Link href={href} variant="caption" color={active ? "text.primary" : "text.secondary"}>
       {name}
     </Link>
   );
-};
+}
 
-export interface Props extends BreadcrumbsProps {
-  links: TLink[];
+export interface Props<T extends string> extends BreadcrumbsProps {
+  links: TLink<T>[];
   sx?: SxProps;
 }
 
-export const Breadcrumbs: React.FC<React.PropsWithChildren<Props>> = ({ links, sx, ...props }) => {
+export function Breadcrumbs<T extends string>({ links, sx, ...props }: React.PropsWithChildren<Props<T>>) {
   if (links.length === 0) return null;
 
   return (
@@ -51,4 +52,4 @@ export const Breadcrumbs: React.FC<React.PropsWithChildren<Props>> = ({ links, s
       })}
     </MUIBreadcrumbs>
   );
-};
+}
