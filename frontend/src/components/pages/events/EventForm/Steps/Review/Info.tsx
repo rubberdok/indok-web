@@ -35,7 +35,7 @@ export const Info: React.FC = () => {
             label="Klassetrinn"
             value={() => {
               const gradeYears = watch("info.gradeYears");
-              if (gradeYears.length === 0 ?? gradeYears.length === 5) return "Alle";
+              if (gradeYears.length === 0 || gradeYears.length === 5) return "Alle";
               return gradeYears.map((val) => `${val}. klasse`).join(", ");
             }}
           />
