@@ -13,6 +13,9 @@ import { PermissionRequired } from "../components/PermissionRequired";
 import { LogoutButton } from "./components/LogoutButton";
 import { Event, Form, Orders, Organization, Personal, Report, CabinsAdmin } from "./components/ProfileCard";
 
+// Opt out of caching for all data requests in the route segment
+export const dynamic = "force-dynamic";
+
 const profileDocument = graphql(/* GraphQL */ `
   query Profile {
     user {
