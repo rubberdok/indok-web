@@ -38,5 +38,9 @@
     { "rule": "prettier/*", "severity": "off" },
     { "rule": "import/order", "severity": "off" },
     { "rule": "react/jsx-curly-brace-presence", "severity": "off" }
-  ]
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "rubberdok",
+    "projectKey": "hovedstyret_indok-web"
+  }
 }
