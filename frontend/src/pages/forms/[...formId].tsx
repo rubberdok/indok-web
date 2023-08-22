@@ -1,5 +1,7 @@
 import { ApolloError, useQuery } from "@apollo/client";
+import { ResultOf } from "@graphql-typed-document-node/core";
 import { Container } from "@mui/material";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { AnswerForm } from "@/components/pages/forms/AnswerForm";
 import { FormWithAnswersDocument } from "@/generated/graphql";
@@ -7,8 +9,6 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 import { generateFeideLoginUrl } from "@/utils/auth";
-import { ResultOf } from "@graphql-typed-document-node/core";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const FormPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ form }) => {
   const { loading, error, data } = useQuery(FormWithAnswersDocument, { variables: { formId: form.id } });
