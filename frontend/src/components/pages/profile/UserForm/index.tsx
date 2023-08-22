@@ -197,7 +197,10 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                 {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
                 {!data?.user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("L")}
+                    Kan ikke endres før:{" "}
+                    {dayjs(data?.user?.yearUpdatedAt)
+                      .add(1, "year")
+                      .format("L")}
                   </FormHelperText>
                 )}
               </FormControl>

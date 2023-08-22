@@ -66,6 +66,7 @@ function LinkInner<T extends string>(props: LinkProps<T>, ref: React.ForwardedRe
     noLinkStyle,
     prefetch,
     replace,
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     role, // Link don't have roles.
     scroll,
     shallow,
