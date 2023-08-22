@@ -1,7 +1,7 @@
 import { NavigateNext } from "@mui/icons-material";
 import { BreadcrumbsProps, Breadcrumbs as MUIBreadcrumbs, SxProps } from "@mui/material";
-
 import { Route } from "next";
+
 import { Link } from "../Link";
 
 export type TLink<T extends string> = {
