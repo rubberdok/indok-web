@@ -1,4 +1,4 @@
-import { Reference, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Add } from "@mui/icons-material";
 import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
 import { orderBy } from "lodash";
@@ -43,7 +43,7 @@ export const EditForm: React.FC<Props> = ({ form }) => {
         cache.modify({
           id: cache.identify(form),
           fields: {
-            questions(existingQuestions: Reference[] = []) {
+            questions(existingQuestions = []) {
               const newQuestionRef = cache.writeFragment({
                 data: question,
                 fragment: QuestionWithAnswerIdsFragmentDoc,

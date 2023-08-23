@@ -6,7 +6,7 @@ import {
 } from "@mui/material/styles";
 import React, { useMemo } from "react";
 
-import { getCssVarsDesignTokens } from "@/theme";
+import { getCssVarsDesignTokens } from "@/lib/mui/theme";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const themeOptions = useMemo(() => getCssVarsDesignTokens(), []);

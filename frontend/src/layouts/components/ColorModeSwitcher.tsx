@@ -1,3 +1,5 @@
+"use client";
+
 import { CheckCircle, DarkMode, LightMode } from "@mui/icons-material";
 import {
   Card,
