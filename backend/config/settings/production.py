@@ -12,7 +12,7 @@ from .base import env
 # GENERAL
 SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.indokntnu.no"])
-CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace", "baggage"]
+CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
 CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS",
