@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Container, NoSsr, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -7,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 
-import { Link } from "@/components";
+import { Link } from "@/app/components/Link";
 
 import { Organization, OrganizationLink } from "./OrganizationLink";
 

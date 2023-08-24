@@ -1,8 +1,10 @@
+"use client";
+
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 
-import { Link } from "@/components";
+import { Link } from "@/app/components/Link";
 import Hovedbygget from "~/public/static/landing/hovedbygget.webp";
 
 export const LandingSection: React.FC = () => {
