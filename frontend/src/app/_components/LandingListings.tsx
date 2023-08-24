@@ -4,9 +4,8 @@ import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 
-import Social from "~/public/img/gang.jpg";
-
 import { NextLinkComposed } from "@/app/components/Link";
+import Social from "~/public/img/gang.jpg";
 
 export const LandingListings: React.FC = () => {
   const theme = useTheme();
