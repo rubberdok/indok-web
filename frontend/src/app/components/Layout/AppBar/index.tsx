@@ -4,8 +4,6 @@ import { Box, Container, useScrollTrigger } from "@mui/material";
 import { PropsFor } from "@mui/system";
 import React from "react";
 
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
-
 import { Logo } from "../Logo";
 
 import { Navigation } from "./navigation";
@@ -31,7 +29,7 @@ export const AppBar: React.FC = () => {
   return (
     <>
       <ElevationScroll>
-        <StyledAppBar>
+        <StyledAppBar position="sticky">
           <Container
             sx={{
               display: "flex",
@@ -48,14 +46,6 @@ export const AppBar: React.FC = () => {
           </Container>
         </StyledAppBar>
       </ElevationScroll>
-      <Box
-        sx={(theme) => ({
-          height: HEADER_MOBILE_HEIGHT,
-          [theme.breakpoints.up("md")]: {
-            height: HEADER_DESKTOP_HEIGHT,
-          },
-        })}
-      />
     </>
   );
 };

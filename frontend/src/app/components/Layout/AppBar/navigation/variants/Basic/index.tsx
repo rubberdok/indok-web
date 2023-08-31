@@ -28,7 +28,7 @@ export const Basic: React.FC<NavigationProps> = ({ routes }) => {
         </Stack>
         <Stack direction="row" gap={2}>
           <ColorModeSwitcher />
-          <LoginButton />
+          <LoginButton data-test-id="app-bar-login" />
         </Stack>
       </Stack>
     </Box>

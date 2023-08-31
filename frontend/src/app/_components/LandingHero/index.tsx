@@ -1,14 +1,14 @@
-import { Box, Button, Container, Typography, Unstable_Grid2 as Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+"use client";
+
+import { Box, Button, Container, Unstable_Grid2 as Grid, Typography } from "@mui/material";
 import Image from "next/image";
 
-import { Link } from "@/components";
+import { Link } from "@/app/components/Link";
 import Hero from "~/public/static/landing/hero.webp";
 
 import { OrganizationsSlider } from "./OrganizationsSlider";
 
 export const LandingHero: React.FC = () => {
-  const theme = useTheme();
   return (
     <>
       <Box
@@ -16,9 +16,9 @@ export const LandingHero: React.FC = () => {
         position="relative"
         columnGap={4}
         gridTemplateColumns="repeat(12, 1fr)"
-        height={{ md: "80vh" }}
+        minHeight="32rem"
+        height="70vh"
         maxHeight={{ md: "1250px", xs: "900px" }}
-        minHeight="565px"
       >
         <Container
           sx={{
@@ -28,7 +28,7 @@ export const LandingHero: React.FC = () => {
             gridTemplateColumns: "repeat(12, 1fr)",
           }}
         >
-          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} mt={14} mb={8} display="flex" justifyContent="center">
+          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} display="flex" justifyContent="center">
             <Grid
               container
               direction="column"
@@ -92,7 +92,6 @@ export const LandingHero: React.FC = () => {
             alt=""
             priority
             sizes={`
-              ${theme.breakpoints.down("sm")} 0vw,
               40vw,
             `}
           />

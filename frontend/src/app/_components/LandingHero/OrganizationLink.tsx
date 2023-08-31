@@ -1,7 +1,9 @@
+/** @jsxImportSource react */
+
 import { OpenInNew } from "@mui/icons-material";
 import { Box, Card, CardActionArea, Stack, Typography } from "@mui/material";
 
-import { NextLinkComposed } from "@/components/Link";
+import { NextLinkComposed } from "@/app/components/Link";
 
 type External = {
   externalUrl: string;
