@@ -16,9 +16,9 @@ export const LandingHero: React.FC = () => {
         position="relative"
         columnGap={4}
         gridTemplateColumns="repeat(12, 1fr)"
-        height={{ md: "80vh" }}
+        minHeight="32rem"
+        height="70vh"
         maxHeight={{ md: "1250px", xs: "900px" }}
-        minHeight="565px"
       >
         <Container
           sx={{
@@ -28,7 +28,7 @@ export const LandingHero: React.FC = () => {
             gridTemplateColumns: "repeat(12, 1fr)",
           }}
         >
-          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} mt={14} mb={8} display="flex" justifyContent="center">
+          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} display="flex" justifyContent="center">
             <Grid
               container
               direction="column"
