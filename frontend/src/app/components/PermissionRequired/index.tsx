@@ -29,10 +29,8 @@ function BackgroundQueryPermissionRequired<T extends HasPermissionQuery>(
   const { queryRef, children } = props;
   const { data } = useReadQuery(queryRef);
 
-  if (data.hasPermission === null) {
-    return null;
-  }
-  return <>{children}</>;
+  if (data.hasPermission) return <>{children}</>;
+  return null;
 }
 
 const hasPermissionDocument = graphql(/* GraphQL */ `
@@ -53,8 +51,6 @@ function QueryPermissionRequired(props: PropsWithChildren<PermissionRequiredProp
     },
   });
 
-  if (data?.hasPermission === null) {
-    return null;
-  }
-  return <>{children}</>;
+  if (data?.hasPermission) return <>{children}</>;
+  return null;
 }
