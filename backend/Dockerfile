@@ -30,4 +30,4 @@ RUN dos2unix ./entrypoints/*.sh wait-for-it.sh
 
 
 # run entrypoint.sh
-ENTRYPOINT ["entrypoints/local.sh"]
+ENTRYPOINT ["/usr/src/app/entrypoints/local.sh"]

@@ -24,6 +24,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend:/usr/src/app
+      - /usr/src/app/entrypoints
     ports:
       - "8000:8000"
     depends_on:
