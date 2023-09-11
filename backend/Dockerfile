@@ -23,10 +23,10 @@ RUN pip install -r ./requirements/local.txt
 # copy entrypoint.sh
 COPY entrypoints ./entrypoints
 RUN chmod +x ./entrypoints/*.sh
-RUN dos2unix ./entrypoints/*.sh wait-for-it.sh
 
 # copy project
 COPY . .
+RUN dos2unix ./entrypoints/*.sh wait-for-it.sh
 
 
 # run entrypoint.sh
