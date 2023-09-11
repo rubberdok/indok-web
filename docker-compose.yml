@@ -24,6 +24,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend:/usr/src/app
+      # We have to exclude entrypoints from being mounted as volumes so that
+      # Windows users don't bring in their own entrypoints with the incorrect line endings.
       - /usr/src/app/entrypoints
     ports:
       - "8000:8000"

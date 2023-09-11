@@ -26,6 +26,8 @@ RUN chmod +x ./entrypoints/*.sh
 
 # copy project
 COPY . .
+
+# Convert Windows line endings to Unix line endings
 RUN dos2unix ./entrypoints/*.sh
 
 
