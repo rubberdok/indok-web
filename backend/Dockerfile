@@ -26,7 +26,7 @@ RUN chmod +x ./entrypoints/*.sh
 
 # copy project
 COPY . .
-RUN dos2unix ./entrypoints/*.sh wait-for-it.sh
+RUN dos2unix ./entrypoints/*.sh
 
 
 # run entrypoint.sh
