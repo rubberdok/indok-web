@@ -20,7 +20,7 @@ phonenumbers==8.13.20
 pillow>=8.1.1
 promise==2.3
 psycopg2-binary==2.9.6
-PyJWT==2.7.0
+PyJWT==2.8.0
 PyYAML==6.0.1
 typing-extensions==4.8.0
 WeasyPrint==59.0
