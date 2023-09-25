@@ -8,7 +8,7 @@ describe("SSO login", () => {
         cy.log("Logging in");
         cy.get(".login-providers li:nth-child(2)").click();
       });
-      cy.origin("https://idp.feide.no", () => {
+      cy.origin("https://testusers.feide.no", () => {
         cy.get("[id=username]").type("asbjorn_elevg");
         cy.get("[id=password]").type("098asd");
         cy.get("button").get("[type=submit]").click();
@@ -27,7 +27,7 @@ describe("SSO login", () => {
         cy.log("Logging in");
         cy.get(".login-providers li:nth-child(2)").click();
       });
-      cy.origin("https://idp.feide.no", () => {
+      cy.origin("https://testusers.feide.no", () => {
         cy.get("[id=username]").type("cecilie_elevvgs");
         cy.get("[id=password]").type("098asd");
         cy.get("button").get("[type=submit]").click();
