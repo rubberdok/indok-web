@@ -18,7 +18,7 @@ tag: annet
 
 ##### Hvem er vi?
 
-Rubberdøk er Hovedstyrets webkomité, og består av 10 ildsjeler (pluss lederparet i Hovedstyret) som har tatt på seg ansvaret for å bygge nettsiden du er inne på akkurat nå - en custom made hyttebooking, arrangementsmodul og generell landingsside for alle nåværende og fremtidige Indøkere!
+Rubberdøk er Hovedstyrets webkomité, og består av 7 ildsjeler (pluss lederparet i Hovedstyret) som har tatt på seg ansvaret for å bygge nettsiden du er inne på akkurat nå - en custom made hyttebooking, arrangementsmodul og generell landingsside for alle nåværende og fremtidige Indøkere!
 
 Hvorfor "Rubberdøk"?
 Navnet Rubberdøk stammer fra konseptet "rubberduck debugging", en vanlig praksis innen programeringsverdenen hvor man forteller en badeand (eller en medprogger) om problemene man har i koden sin. Som regel pleier dette på magisk vis å få utvikleren til å innse hva problemet var.
