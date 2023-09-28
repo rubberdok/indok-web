@@ -1,15 +1,14 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Tabs, Typography } from "@mui/material";
 import { SxProps, Theme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
-import { ImageProps, StaticImageData } from "next/future/image";
+import { ImageProps, StaticImageData } from "next/image";
 
-import { Breadcrumbs, Props as BreadcrumbProps } from "@/components/Breadcrumbs";
-import { TLink } from "@/components/Breadcrumbs/types";
+import { Props as BreadcrumbProps, Breadcrumbs, TLink } from "@/components/Breadcrumbs";
 
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
-const Image = dynamic(() => import("next/future/image"));
+const Image = dynamic(() => import("next/image"));
 
 export type Props = {
   title?: string;
@@ -18,7 +17,6 @@ export type Props = {
   sx?: SxProps<Theme>;
   BreadcrumbProps?: Partial<BreadcrumbProps>;
   bgImage?: StaticImageData | string;
-  disableGutters?: boolean;
   ImageProps?: Partial<ImageProps>;
   OverlayProps?: OverlayProps & { sx?: SxProps<Theme> };
 };
@@ -30,14 +28,12 @@ export const BaseTitle: React.FC<React.PropsWithChildren<Props>> = ({
   overline,
   sx,
   bgImage,
-  disableGutters,
   BreadcrumbProps,
   ImageProps,
   OverlayProps,
 }) => {
   return (
     <RootStyle
-      disableGutters={disableGutters}
       sx={{ ...sx, ...(bgImage && { backgroundColor: "transparent", overflow: "hidden" }), position: "relative" }}
     >
       {bgImage && (
@@ -54,19 +50,17 @@ export const BaseTitle: React.FC<React.PropsWithChildren<Props>> = ({
         </ImageContainer>
       )}
       <Container>
-        <Stack direction="column" sx={{ pt: 5, pb: children ? 0 : 6 }} justifyContent="space-between">
-          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={breadcrumbs} activeLast {...BreadcrumbProps} />
-          <Box sx={{ position: "relative" }}>
-            {overline && (
-              <Typography variant="overline" color="grey.500" sx={{ position: "absolute" }}>
-                {overline}
-              </Typography>
-            )}
-            <Typography variant="h1" mb={4} mt={2}>
+        <Stack direction="column" sx={{ pt: 3 }} justifyContent="space-between">
+          <Breadcrumbs sx={{ mb: 5 }} links={breadcrumbs} {...BreadcrumbProps} />
+          <Box>
+            <Typography variant="overline" color="text.secondary">
+              {overline ? overline : <>&nbsp;</>}
+            </Typography>
+            <Typography variant="h2" component="h1" mb={4}>
               {title}
             </Typography>
           </Box>
-          {children}
+          {children ? <>{children}</> : <Tabs />}
         </Stack>
       </Container>
     </RootStyle>

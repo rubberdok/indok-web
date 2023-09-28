@@ -3,22 +3,16 @@ import { EmailRounded } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import * as yup from "yup";
 
 import { SendEventMailsDocument } from "@/generated/graphql";
+
+import { EmailForm } from "./EmailDialog";
 
 export type SendEmailProps = {
   receiverEmails: string[];
   content: string;
   subject: string;
 };
-
-const schema = yup.object({
-  subject: yup.string().required("Feltet må fylles ut").min(2),
-  content: yup.string().required("Feltet må fylles ut").max(10000, "Maks 10 000 tegn"),
-});
-
-type EmailForm = yup.InferType<typeof schema>;
 
 type Props = {
   eventId: string;

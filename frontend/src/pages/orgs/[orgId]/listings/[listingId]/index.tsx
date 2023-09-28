@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { Link } from "@/components";
 import { EditForm } from "@/components/pages/forms/formAdmin/EditForm";
 import { FormResponse } from "@/components/pages/forms/formAdmin/FormResponse";
 import { OrganizationListing } from "@/components/pages/listings/organization/OrganizationListing";
@@ -15,7 +15,7 @@ import {
   ResponseFragment,
 } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 /** Page for organization admins to administer a listing, edit its application form, and review applicants. */
 const ListingAdminPage: NextPageWithLayout = () => {
@@ -25,7 +25,10 @@ const ListingAdminPage: NextPageWithLayout = () => {
   const [selectedView, selectView] = useState<ResponseFragment | "listing">("listing");
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
-  const { loading, error, data } = useQuery(ListingWithResponsesDocument, { variables: { id: listingId as string } });
+  const { loading, error, data } = useQuery(ListingWithResponsesDocument, {
+    variables: { id: listingId as string },
+    skip: !listingId,
+  });
 
   // mutation to create a new form
   const [createForm] = useMutation(CreateFormDocument, {
@@ -36,12 +39,14 @@ const ListingAdminPage: NextPageWithLayout = () => {
         cache.modify({
           id: `ListingType:${listingId}`,
           fields: {
-            form() {
-              return cache.writeFragment({
+            form(_, { INVALIDATE }) {
+              const newRef = cache.writeFragment({
                 data: newForm,
                 fragment: FormWithAllResponsesFragmentDoc,
                 fragmentName: "FormWithAllResponses",
               });
+              if (newRef) return newRef;
+              return INVALIDATE;
             },
           },
         });
@@ -72,11 +77,16 @@ const ListingAdminPage: NextPageWithLayout = () => {
         <Grid item>
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <Link href={`/orgs/${orgId}`} passHref>
-                <Button fullWidth variant="contained" startIcon={<ArrowBack />}>
-                  Tilbake
-                </Button>
-              </Link>
+              <Button
+                component={Link}
+                href={`/orgs/${orgId}`}
+                noLinkStyle
+                fullWidth
+                variant="contained"
+                startIcon={<ArrowBack />}
+              >
+                Tilbake
+              </Button>
             </Grid>
             {data?.listing?.form?.responses && (
               <Grid item>

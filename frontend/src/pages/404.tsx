@@ -1,12 +1,11 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
-import Image from "next/future/image";
 import Head from "next/head";
-import Link from "next/link";
+import Image from "next/image";
 
+import { Link } from "@/components";
 import { Layout } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/lib/next";
 import _404 from "~/public/illustrations/404.svg";
-
-import { NextPageWithLayout } from "./_app";
 
 const Custom404: NextPageWithLayout = () => {
   return (
@@ -29,9 +28,9 @@ const Custom404: NextPageWithLayout = () => {
             </Typography>
           </Grid>
           <Grid item md={6} xs={10}>
-            <Link href="/" passHref>
-              <Button>Tilbake til hjemmesiden</Button>
-            </Link>
+            <Button component={Link} href="/" noLinkStyle>
+              Tilbake til hjemmesiden
+            </Button>
           </Grid>
           <Grid container item direction="row" justifyContent="center" alignItems="center">
             <Grid item xs={8} sm={5}>

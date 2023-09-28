@@ -1,5 +1,7 @@
 import { Grid, Typography } from "@mui/material";
-import Image, { StaticImageData } from "next/future/image";
+import Image, { StaticImageData } from "next/image";
+
+import { Link } from "@/components";
 
 type Props = {
   name: string;
@@ -8,8 +10,7 @@ type Props = {
   image?: StaticImageData;
 };
 
-export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
-  const nameAndPosition = `${name}${position ? ` - ${position}` : ""}`;
+export const ContactInfo: React.FC<Props> = ({ name, position, email, image }) => {
   return (
     <Grid item container direction="column" justifyContent="space-between" alignItems="center">
       <Grid
@@ -22,7 +23,7 @@ export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) 
           aspectRatio: "1 / 1",
           overflow: "hidden",
           marginBottom: (theme) => theme.spacing(2),
-          backgroundColor: (theme) => theme.palette.primary.light,
+          backgroundColor: (theme) => theme.vars.palette.primary.light,
           position: "relative" /* If you want text inside of it */,
         }}
       >
@@ -31,13 +32,16 @@ export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) 
         )}
       </Grid>
       <Grid item md>
-        <Typography variant="subtitle2">{nameAndPosition}</Typography>
+        <Typography variant="subtitle2">
+          {name}
+          {position && ` - ${position}`}
+        </Typography>
       </Grid>
       {email && (
         <Grid item md>
-          <a href={`mailto:${email}`}>
-            <Typography variant="overline">{email}</Typography>
-          </a>
+          <Link variant="overline" href={`mailto:${email}`}>
+            {email}
+          </Link>
         </Grid>
       )}
     </Grid>

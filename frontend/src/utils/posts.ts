@@ -14,6 +14,7 @@ type Frontmatter = {
   title: string;
   logo?: string;
   alt?: string;
+  tag?: string;
   image?: string;
   board: Record<string, BoardMember>;
 };

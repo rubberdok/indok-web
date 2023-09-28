@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
 import { Logo } from "@/components/Logo";
+import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 import { LoginButton } from "@/layouts/components/LoginButton";
 
 import { NavigationProps } from "../../types";
@@ -15,7 +16,6 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
 
-  const closeDrawer = () => setOpen(false);
   return (
     <Box sx={{ display: { xs: "block", md: "none" }, width: "100%" }}>
       <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%" }}>
@@ -35,23 +35,19 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
         >
           <Box px={3} pt={2}>
             <Stack direction="column" spacing={2}>
-              <Logo />
+              <Stack direction="row" justifyContent="space-between">
+                <Logo />
+                <ColorModeSwitcher />
+              </Stack>
               {routes.map((route) => {
                 if (route.permission) {
                   return (
-                    <PermissionRequired permission={route.permission} key={route.title}>
-                      <NavigationLink route={route} active={pathname.includes(route.path)} onClick={closeDrawer} />
+                    <PermissionRequired permission={route.permission} key={route.title} optimistic>
+                      <NavigationLink route={route} active={pathname.includes(route.path)} />
                     </PermissionRequired>
                   );
                 }
-                return (
-                  <NavigationLink
-                    key={route.title}
-                    route={route}
-                    active={pathname.includes(route.path)}
-                    onClick={closeDrawer}
-                  />
-                );
+                return <NavigationLink key={route.title} route={route} active={pathname.includes(route.path)} />;
               })}
               <Divider />
 

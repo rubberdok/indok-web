@@ -1,9 +1,7 @@
 import { Create } from "@mui/icons-material";
-import { Typography, Card, CardContent, Grid, CardActions, Button } from "@mui/material";
-import Link from "next/link";
-import ReactMarkdown from "react-markdown";
+import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 
-import * as components from "@/components/MarkdownForm/components";
+import { Link, Markdown } from "@/components";
 import { ListingFragment } from "@/generated/graphql";
 
 type Props = { listing: ListingFragment };
@@ -17,14 +15,19 @@ export const OrganizationListing: React.FC<Props> = ({ listing }) => (
           <Typography variant="h3" gutterBottom>
             {listing.title}
           </Typography>
-          <ReactMarkdown components={components}>{listing.description}</ReactMarkdown>
+          <Markdown>{listing.description}</Markdown>
         </CardContent>
         <CardActions>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link passHref href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}>
-                <Button startIcon={<Create />}>Rediger</Button>
-              </Link>
+              <Button
+                component={Link}
+                noLinkStyle
+                href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}
+                startIcon={<Create />}
+              >
+                Rediger
+              </Button>
             </Grid>
           </Grid>
         </CardActions>

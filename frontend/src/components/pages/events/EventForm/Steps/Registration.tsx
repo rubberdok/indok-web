@@ -1,8 +1,24 @@
 import { PeopleOutlineRounded } from "@mui/icons-material";
-import { Divider, FormControlLabel, InputAdornment, Stack, Switch, TextField, Typography } from "@mui/material";
+import {
+  Checkbox,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Unstable_Grid2 as Grid,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IEventForm } from "../schema";
+
+import { DateTimePicker } from "./DateTimePicker";
 
 export const Registration: React.FC = () => {
   const {
@@ -12,62 +28,45 @@ export const Registration: React.FC = () => {
     formState: { errors },
   } = useFormContext<IEventForm>();
 
-  const disabled = !watch("registration.isAttendable");
+  const disabled = watch("registration.variant") === "closed";
 
   return (
     <Stack direction="column" spacing={2}>
-      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start">
-        <Controller
-          name="registration.isAttendable"
-          control={control}
-          render={({ field }) => (
-            <FormControlLabel
-              control={<Switch {...field} checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />}
-              label={<Typography variant="subtitle2">Påmelding</Typography>}
-              labelPlacement="start"
-              sx={{ ml: 0 }}
-            />
-          )}
-        />
-        <Controller
-          name="registration.details.binding"
-          control={control}
-          render={({ field }) => (
-            <FormControlLabel
-              disabled={disabled}
-              control={<Switch {...field} checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />}
-              label="Bindende påmelding"
-              labelPlacement="start"
-              sx={{ ml: 0 }}
-            />
-          )}
-        />
-      </Stack>
+      <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
+        <Grid xs={12} md={6}>
+          <Controller
+            name="registration.variant"
+            control={control}
+            render={({ field }) => (
+              <FormControl variant="filled" fullWidth error={Boolean(errors.registration?.variant)} required>
+                <InputLabel id="select-registration-label">Påmeldingstype</InputLabel>
+                <Select {...field} labelId="select-registration-label" id="select-registration">
+                  <MenuItem value="closed">Ingen påmelding</MenuItem>
+                  <MenuItem value="open">Påmelding</MenuItem>
+                  <MenuItem value="binding">Bindende påmelding</MenuItem>
+                </Select>
+                <FormHelperText error={Boolean(errors.registration?.variant)}>
+                  {errors.registration?.variant?.message}
+                </FormHelperText>
+              </FormControl>
+            )}
+          />
+        </Grid>
+      </Grid>
       <Divider />
       <Typography variant="subtitle2">Tider for påmelding</Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <TextField
-          {...register("registration.details.signUpOpen")}
-          error={Boolean(errors.registration?.details?.signUpOpen)}
-          helperText={errors.registration?.details?.signUpOpen?.message}
-          fullWidth
-          required
-          disabled={disabled}
-          type="datetime-local"
+        <DateTimePicker
+          name="registration.details.signUpOpen"
+          control={control}
           label="Påmelding åpner"
-          InputLabelProps={{ shrink: true }}
-        />
-
-        <TextField
-          {...register("registration.details.deadline")}
-          error={Boolean(errors.registration?.details?.deadline)}
-          helperText={errors.registration?.details?.deadline?.message}
-          fullWidth
-          required
           disabled={disabled}
-          type="datetime-local"
+        />
+        <DateTimePicker
+          name="registration.details.deadline"
+          control={control}
           label="Påmelding stenger"
-          InputLabelProps={{ shrink: true }}
+          disabled={disabled}
         />
       </Stack>
       <Typography variant="subtitle2">Plasser</Typography>
@@ -88,6 +87,21 @@ export const Registration: React.FC = () => {
             ),
           }}
         />
+        <FormControl fullWidth disabled={disabled}>
+          <Controller
+            name="registration.details.requiresExtraInformation"
+            control={control}
+            render={({ field }) => (
+              <>
+                <FormControlLabel label="Ekstra informasjon" control={<Checkbox {...field} checked={field.value} />} />
+                <FormHelperText error={Boolean(errors.registration?.details?.requiresExtraInformation)}>
+                  {errors.registration?.details?.requiresExtraInformation?.message ||
+                    "Be om utfylling av ekstra informasjon ved påmelding"}
+                </FormHelperText>
+              </>
+            )}
+          />
+        </FormControl>
       </Stack>
     </Stack>
   );

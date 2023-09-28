@@ -1,8 +1,8 @@
-import { Link as MuiLink, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { Link } from "@/components";
 import { OrderFragment, PaymentStatus } from "@/generated/graphql";
 import { HeaderValuePair } from "@/types/utils";
 
@@ -15,10 +15,12 @@ export const OrderCellContent: React.FC<Props> = ({ order, field }) => {
   switch (field.header) {
     case "Ordre-ID":
       return (
-        <Link href={`/ecommerce/fallback?orderId=${order.id}&redirect=${router.asPath}`} passHref>
-          <MuiLink variant="caption" component="button" color="secondary">
-            {order.id}
-          </MuiLink>
+        <Link
+          href={`/ecommerce/fallback?orderId=${order.id}&redirect=${router.asPath}`}
+          variant="caption"
+          color="warning"
+        >
+          {order.id}
         </Link>
       );
     case "Produkt":

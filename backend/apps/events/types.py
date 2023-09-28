@@ -1,4 +1,4 @@
-from typing import List, TypedDict, Union
+from typing import List, Optional, TypedDict, Union
 
 import graphene
 from graphene import NonNull
@@ -12,7 +12,8 @@ from apps.users.models import User
 from .models import Category, Event, SignUp
 
 UserAttendance = TypedDict(
-    "UserAttendance", {"is_signed_up": bool, "is_on_waiting_list": bool, "has_bought_ticket": bool}
+    "UserAttendance",
+    {"is_signed_up": bool, "is_on_waiting_list": bool, "has_bought_ticket": bool, "position_on_waiting_list": int},
 )
 
 
@@ -34,6 +35,7 @@ class UserAttendingType(graphene.ObjectType):
     is_signed_up = graphene.Boolean()
     is_on_waiting_list = graphene.Boolean()
     has_bought_ticket = graphene.Boolean()
+    position_on_waiting_list = graphene.Int()
 
 
 class SignUpType(DjangoObjectType):
@@ -61,6 +63,15 @@ class SignUpType(DjangoObjectType):
     @staticmethod
     def resolve_has_bought_ticket(sign_up: SignUp, info) -> bool:
         return has_bought_ticket(sign_up.event, sign_up.user)
+
+
+def resolve_position_on_waiting_list(event: Event, user: User) -> Optional[int]:
+    if event.is_attendable:
+        wait_list = event.users_on_waiting_list
+        for i in range(len(wait_list)):
+            if wait_list[i] == user:
+                return i + 1
+    return None
 
 
 class EventType(DjangoObjectType):
@@ -116,6 +127,7 @@ class EventType(DjangoObjectType):
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
             "has_bought_ticket": has_bought_ticket(event, user),
+            "position_on_waiting_list": resolve_position_on_waiting_list(event, user),
         }
 
     @staticmethod

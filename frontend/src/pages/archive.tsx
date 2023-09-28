@@ -1,5 +1,6 @@
 import { Box, Container, FormGroup, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Head from "next/head";
 import React, { useState } from "react";
 
 import { Documents } from "@/components/pages/archive/Documents";
@@ -9,11 +10,9 @@ import { RemoveFiltersButton } from "@/components/pages/archive/RemoveFiltersBut
 import { SearchBar } from "@/components/pages/archive/SearchBar";
 import { YearSelector } from "@/components/pages/archive/YearSelector";
 import { Title } from "@/components/Title";
-import { HasPermissionDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
+import { DocumentsDocument, HasPermissionDocument } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-
-import { NextPageWithLayout } from "./_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const [yearFilter, setYearFilter] = useState("");
@@ -35,11 +34,15 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
 
   return (
     <>
+      <Head>
+        <title>Dokumenter | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="description" content="Januscript, budsjetter, og andre dokumenter fra Indøk." />
+      </Head>
       <Title
-        title="Arkiv"
+        title="Dokumenter"
         breadcrumbs={[
           { name: "Hjem", href: "/" },
-          { name: "Arkiv", href: "/archive" },
+          { name: "Dokumenter", href: "/archive" },
         ]}
       />
 
@@ -116,20 +119,28 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
+
+  const { data: permissionData } = await client.query({
     query: HasPermissionDocument,
     variables: {
       permission: "archive.view_archivedocument",
     },
   });
 
-  if (error) return { notFound: true };
-  if (!data.hasPermission) {
-    return { notFound: true };
-  }
+  if (!permissionData.hasPermission) return { notFound: true };
+
+  const { data, error } = await client.query({
+    query: DocumentsDocument,
+    variables: {
+      documentTypes: [],
+      names: "",
+      year: null,
+    },
+  });
+
+  if (error) throw new Error(error.message);
+
   return addApolloState(client, { props: { data } });
 };
-
-Archive.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default Archive;

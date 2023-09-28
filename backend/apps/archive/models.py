@@ -33,6 +33,7 @@ class ArchiveDocument(models.Model):
         null=True,
         blank=True,
     )
+    thumbnail = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -48,4 +49,6 @@ def notify_doc(sender, instance, created, **kwargs):
             raise FieldError(
                 "This document does not seem to exist in Drive. Are you sure you gave the right file location?"
             )
+        url = drive.get_thumbnail(instance.file_location)
+        instance.thumbnail = url
         instance.save()

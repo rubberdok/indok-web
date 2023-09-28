@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "GraphQL.vscode-graphql-syntax",
+    "GraphQL.vscode-graphql",
+    "esbenp.prettier-vscode",
+    "ms-python.vscode-pylance",
+    "redhat.vscode-yaml",
+    "dbaeumer.vscode-eslint"
+  ]
+}

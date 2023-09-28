@@ -1,15 +1,21 @@
 import { useQuery } from "@apollo/client";
-import { Add, List, Tune } from "@mui/icons-material";
-import { Button, CircularProgress, Drawer, Grid, Hidden, Paper, Stack, Typography } from "@mui/material";
-import Link from "next/link";
+import { ResultOf } from "@graphql-typed-document-node/core";
+import { Tune } from "@mui/icons-material";
+import { Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Stack, Typography } from "@mui/material";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import React, { useState } from "react";
 
-import { PermissionRequired } from "@/components/Auth";
-import { AllEventsDocument, DefaultEventsDocument, UserWithEventsAndOrgsDocument } from "@/generated/graphql";
-import { useResponsive } from "@/hooks/useResponsive";
+import { PermissionRequired } from "@/components";
+import { EventsDocument } from "@/generated/graphql";
 
 import { EventListItem } from "./EventListItem";
-import { FilterMenu } from "./filterMenu/FilterMenu";
+import { FilterMenu } from "./FilterMenu";
+import { ManageEvents } from "./ManageEvents";
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isBetween);
 
 export type FilterQuery = {
   organization?: string;
@@ -18,138 +24,176 @@ export type FilterQuery = {
   endTime?: string;
 };
 
-export const AllEvents: React.FC = () => {
-  const [filters, setFilters] = useState({});
-  const [showDefaultEvents, setShowDefaultEvents] = useState(false);
-  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const isMobile = useResponsive({ query: "down", key: "sm" });
-
-  const { loading: userLoading, data: userData } = useQuery(UserWithEventsAndOrgsDocument);
-
-  const {
-    loading: eventsLoading,
-    error: eventsError,
-    data: eventsData,
-    refetch,
-  } = useQuery(AllEventsDocument, {
-    variables: filters,
-  });
-
-  const {
-    loading: defaultEventsLoading,
-    error: defaultEventsError,
-    data: defaultEventsData,
-  } = useQuery(DefaultEventsDocument);
-
-  const error = showDefaultEvents ? defaultEventsError : eventsError;
-  const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) => {
-    if (userData?.user?.gradeYear && event?.allowedGradeYears) {
-      return event.allowedGradeYears.includes(userData.user.gradeYear);
-    } else {
-      return true;
-    }
-  });
-
-  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
-
-  const onChange = (newFilters: FilterQuery) => {
-    if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
-    setFilters(newFilters);
-    refetch(newFilters);
+const EventListItemSkeleton = () => {
+  const dummyEvent: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>[number] = {
+    id: "loading",
+    title: "Loading",
+    shortDescription: "Loading",
+    startTime: new Date("2020-08-07T21:17:46").toISOString(),
+    isFull: true,
+    isAttendable: true,
+    organization: {
+      id: "loading",
+    },
   };
 
   return (
-    <>
-      <PermissionRequired permission="events.add_event">
-        <Paper
-          sx={{
-            py: 2,
-            px: { xs: 0, md: 3 },
-            bgcolor: { md: "secondary.main" },
-            mb: { md: 5 },
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Hidden smDown>
-            <Typography variant="h5" color="secondary.darker">
-              Administrer
-            </Typography>
-          </Hidden>
-          <Stack direction="row" spacing={1}>
-            {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-              <Link href="/events/new" passHref>
-                <Button variant="contained" color="contrast" startIcon={<Add />}>
-                  Opprett
-                </Button>
-              </Link>
-            )}
-            {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-              <Link
-                href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
-                passHref
-              >
-                <Button variant="contained" color="contrast" startIcon={<List />}>
-                  Mine arrangementer
-                </Button>
-              </Link>
-            )}
-          </Stack>
-        </Paper>
-      </PermissionRequired>
-      {isMobile && (
-        <>
-          <Button
-            fullWidth
-            onClick={() => setOpenFilterDrawer(true)}
-            variant="outlined"
-            color="contrast"
-            startIcon={<Tune />}
-            sx={{ mb: 3 }}
-          >
-            Filtre
-          </Button>
-          <Drawer anchor="left" open={openFilterDrawer} onClose={() => setOpenFilterDrawer(false)}>
-            <FilterMenu
-              filters={filters}
-              onFiltersChange={onChange}
-              showDefaultEvents={showDefaultEvents}
-              onShowDefaultChange={setShowDefaultEvents}
-            />
-          </Drawer>
-        </>
-      )}
-      <Grid container spacing={3}>
-        {!isMobile && (
-          <Grid item md={3}>
-            <FilterMenu
-              filters={filters}
-              onFiltersChange={onChange}
-              showDefaultEvents={showDefaultEvents}
-              onShowDefaultChange={setShowDefaultEvents}
-            />
-          </Grid>
-        )}
-        <Grid item xs={12} md={9}>
-          {!(loading || userLoading) && (
-            <>
-              {loading ? (
-                <CircularProgress />
-              ) : data === undefined || data.length === 0 ? (
-                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
-              ) : (
-                <Stack spacing={3}>
-                  {data.map((event) => (
-                    <EventListItem key={event.id} event={event} user={userData?.user ?? undefined} />
-                  ))}
-                </Stack>
-              )}
-            </>
-          )}
-        </Grid>
-      </Grid>
-    </>
+    <Skeleton variant="rounded" width="100%">
+      <EventListItem event={dummyEvent} user={null} />
+    </Skeleton>
   );
 };
+
+const EventSkeleton: React.FC = () => (
+  <Stack spacing={4} direction="column">
+    <Stack spacing={2} direction="column">
+      <Typography variant="h4" component="span">
+        <Skeleton width="100%" />
+      </Typography>
+      <EventListItemSkeleton />
+      <EventListItemSkeleton />
+    </Stack>
+    <Stack spacing={2} direction="column">
+      <Typography variant="h4" component="span">
+        <Skeleton width="100%" />
+      </Typography>
+      <EventListItemSkeleton />
+      <EventListItemSkeleton />
+    </Stack>
+  </Stack>
+);
+
+export const AllEvents: React.FC = () => {
+  const [filters, setFilters] = useState<FilterQuery>({});
+  const [showDefaultEvents, setShowDefaultEvents] = useState(false);
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
+
+  const { loading, error, data } = useQuery(EventsDocument, {
+    variables: {
+      organization: filters.organization,
+      category: filters.category,
+      startTime: filters.startTime,
+      endTime: filters.endTime,
+    },
+  });
+
+  function handleFilterChange(newFilters: FilterQuery) {
+    if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
+    setFilters(newFilters);
+  }
+
+  let userRelevantEvents: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]> = data?.allEvents ?? [];
+  if (showDefaultEvents) {
+    userRelevantEvents = data?.defaultEvents ?? [];
+  }
+
+  userRelevantEvents = filterEvents(userRelevantEvents, data?.user);
+
+  const thisWeeksEvents = userRelevantEvents.filter((event) => {
+    const eventDate = dayjs(event.startTime);
+    const nextWeek = dayjs().add(1, "week");
+    return eventDate.isBefore(nextWeek, "week");
+  });
+
+  const nextWeeksEvents = userRelevantEvents.filter((event) => {
+    const eventDate = dayjs(event.startTime);
+    const nextWeek = dayjs().add(1, "week");
+    const twoWeeks = dayjs().add(2, "week");
+    return eventDate.isBetween(nextWeek, twoWeeks, "week", "[]");
+  });
+
+  const futureEvents = userRelevantEvents.filter((event) => {
+    const eventDate = dayjs(event.startTime);
+    const twoWeeks = dayjs().add(2, "week");
+    return eventDate.isAfter(twoWeeks, "week");
+  });
+
+  return (
+    <Grid container direction="row" spacing={2}>
+      <PermissionRequired permission="events.add_event">
+        <Grid xs={12}>
+          <ManageEvents />
+        </Grid>
+      </PermissionRequired>
+      <Grid xs display={{ xs: "block", md: "none" }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          startIcon={<Tune />}
+          onClick={() => setOpenFilterDrawer(true)}
+        >
+          Filter
+        </Button>
+        <Drawer anchor="left" open={openFilterDrawer} onClose={() => setOpenFilterDrawer(false)}>
+          <FilterMenu
+            filters={filters}
+            onFiltersChange={handleFilterChange}
+            showDefaultEvents={showDefaultEvents}
+            onShowDefaultChange={setShowDefaultEvents}
+          />
+        </Drawer>
+      </Grid>
+      <Grid display={{ xs: "none", md: "block" }} md={3}>
+        <FilterMenu
+          filters={filters}
+          onFiltersChange={handleFilterChange}
+          showDefaultEvents={showDefaultEvents}
+          onShowDefaultChange={setShowDefaultEvents}
+        />
+      </Grid>
+      <Grid xs={12} md={9}>
+        <Stack direction="column" spacing={4}>
+          {loading && <EventSkeleton />}
+          {error && (
+            <Typography color="error" textAlign="center">
+              Noe gikk galt, prøv igjen senere.
+            </Typography>
+          )}
+          {thisWeeksEvents.length > 0 && (
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Denne uken
+              </Typography>
+              {thisWeeksEvents.map((event) => (
+                <EventListItem key={event.id} event={event} user={data?.user} />
+              ))}
+            </Stack>
+          )}
+          {nextWeeksEvents.length > 0 && (
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Neste uke
+              </Typography>
+              {nextWeeksEvents.map((event) => (
+                <EventListItem key={event.id} event={event} user={data?.user} />
+              ))}
+            </Stack>
+          )}
+          {futureEvents.length > 0 && (
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Fremtidige arrangementer
+              </Typography>
+              {futureEvents.map((event) => (
+                <EventListItem key={event.id} event={event} user={data?.user} />
+              ))}
+            </Stack>
+          )}
+        </Stack>
+      </Grid>
+    </Grid>
+  );
+};
+
+function filterEvents(
+  events: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>,
+  user: ResultOf<typeof EventsDocument>["user"]
+): NonNullable<ResultOf<typeof EventsDocument>["allEvents"]> {
+  const gradeYear = user?.gradeYear;
+  if (gradeYear) {
+    return events.filter((event) => event.allowedGradeYears?.includes(gradeYear));
+  }
+
+  return events;
+}

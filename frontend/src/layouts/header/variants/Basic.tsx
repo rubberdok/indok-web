@@ -1,14 +1,10 @@
-import { AppBarProps, Box, Container, useScrollTrigger } from "@mui/material";
+import { Box, Container, useScrollTrigger } from "@mui/material";
 import { PropsFor } from "@mui/system";
 import React from "react";
 
 import { Logo } from "../../../components";
 import { Navigation } from "../../navigation";
 import { AppBar } from "../styles";
-
-type Props = {
-  transparent?: boolean;
-};
 
 type ScrollProps = {
   children: React.ReactElement;
@@ -26,10 +22,10 @@ const ElevationScroll: React.FC<React.PropsWithChildren<ScrollProps>> = ({ child
   });
 };
 
-export const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
+export const Basic: React.FC = () => {
   return (
     <ElevationScroll>
-      <AppBar transparent={transparent} {...props}>
+      <AppBar>
         <Container
           sx={{
             display: "flex",

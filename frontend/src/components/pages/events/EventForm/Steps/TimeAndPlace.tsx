@@ -4,9 +4,12 @@ import { useFormContext } from "react-hook-form";
 
 import { IEventForm } from "../schema";
 
+import { DateTimePicker } from "./DateTimePicker";
+
 export const TimeAndPlace: React.FC = () => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext<IEventForm>();
 
@@ -14,26 +17,8 @@ export const TimeAndPlace: React.FC = () => {
     <Stack direction="column" spacing={2}>
       <Typography variant="subtitle2">Tid</Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <TextField
-          {...register("timeAndPlace.start")}
-          error={Boolean(errors.timeAndPlace?.start)}
-          helperText={errors.timeAndPlace?.start?.message}
-          fullWidth
-          required
-          type="datetime-local"
-          label="Starttid"
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          {...register("timeAndPlace.end")}
-          error={Boolean(errors.timeAndPlace?.end)}
-          helperText={errors.timeAndPlace?.end?.message}
-          fullWidth
-          required
-          type="datetime-local"
-          label="Sluttid"
-          InputLabelProps={{ shrink: true }}
-        />
+        <DateTimePicker name="timeAndPlace.start" control={control} label="Starttid" />
+        <DateTimePicker name="timeAndPlace.end" control={control} label="Sluttid" />
       </Stack>
       <Typography variant="subtitle2">Sted</Typography>
       <TextField

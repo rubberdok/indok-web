@@ -1,12 +1,13 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Link from "next/link";
+
+import { NextLinkComposed } from "@/components/Link";
 
 import { cabinImages } from "./ImageSlider/imageData";
 import { ImageSlider } from "./ImageSlider/ImageSlider";
 
 const RootStyle = styled("div")(({ theme }) => ({
-  background: theme.palette.background.elevated,
+  background: theme.vars.palette.background.elevated,
   position: "relative",
   display: "flex",
   [theme.breakpoints.down("md")]: {
@@ -42,11 +43,15 @@ export const CabinsDetailsSection: React.FC = () => {
               organisering av utleie.
             </Typography>
             <Grid item>
-              <Link href="/about/organizations/hytteforeningen" passHref>
-                <Button variant="outlined" size="small" fullWidth={false}>
-                  Om Hytteforeningen
-                </Button>
-              </Link>
+              <Button
+                component={NextLinkComposed}
+                to="/about/organizations/hytteforeningen"
+                variant="outlined"
+                size="small"
+                fullWidth={false}
+              >
+                Om Hytteforeningen
+              </Button>
             </Grid>
           </Grid>
           <Grid item xs={12} md={6}>

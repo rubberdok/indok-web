@@ -1,7 +1,8 @@
+from typing import Optional
+
 import graphene
 from graphene_django import DjangoObjectType
 
-from .google_drive_api import GoogleDriveAPI
 from .models import ArchiveDocument
 
 
@@ -12,6 +13,5 @@ class ArchiveDocumentType(DjangoObjectType):
         model = ArchiveDocument
 
     @staticmethod
-    def resolve_thumbnail(root: ArchiveDocument, info):
-        drive = GoogleDriveAPI()
-        return drive.get_thumbnail(root.file_location)
+    def resolve_thumbnail(instance: ArchiveDocument, info) -> Optional[str]:
+        return f"https://drive.google.com/thumbnail?authuser=0&sz=w320&id={instance.file_location}"

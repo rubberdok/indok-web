@@ -1,25 +1,5 @@
 import { Search } from "@mui/icons-material";
-import { InputAdornment, OutlinedInput, Toolbar } from "@mui/material";
-import { styled } from "@mui/material/styles";
-
-const RootStyle = styled(Toolbar)(() => ({
-  height: 56,
-  display: "flex",
-  justifyContent: "space-between",
-  padding: 0,
-}));
-
-const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
-  width: "100%",
-  transition: theme.transitions.create(["box-shadow", "width"], {
-    easing: theme.transitions.easing.easeInOut,
-    duration: theme.transitions.duration.shorter,
-  }),
-  "&.Mui-focused": { boxShadow: theme.shadows[8] },
-  "& fieldset": {
-    borderWidth: `1px !important`,
-  },
-}));
+import { InputAdornment, TextField } from "@mui/material";
 
 type Props = {
   searchFilter: string;
@@ -29,17 +9,18 @@ type Props = {
 
 export const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged }) => {
   return (
-    <RootStyle>
-      <SearchStyle
-        value={searchFilter}
-        onChange={handleSearchFilterChanged}
-        placeholder="Søk etter dokumenter..."
-        startAdornment={
+    <TextField
+      value={searchFilter}
+      onChange={handleSearchFilterChanged}
+      placeholder="Søk etter dokumenter..."
+      variant="outlined"
+      InputProps={{
+        startAdornment: (
           <InputAdornment position="start">
             <Search />
           </InputAdornment>
-        }
-      />
-    </RootStyle>
+        ),
+      }}
+    />
   );
 };

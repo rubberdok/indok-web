@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { PersonOutlineRounded } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import NextLink from "next/link";
 
+import { Link } from "@/components";
 import { LoginRequired } from "@/components/Auth/LoginRequired";
 import { UserDocument } from "@/generated/graphql";
 
@@ -15,12 +15,18 @@ export const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTe
   const { data } = useQuery(UserDocument);
 
   return (
-    <LoginRequired size="medium" color="contrast" data-test-id={dataTestId} fullWidth={fullWidth}>
-      <NextLink href="/profile" passHref>
-        <Button endIcon={<PersonOutlineRounded fontSize="small" />} variant="text" color="contrast" size="medium">
-          {data?.user?.firstName}
-        </Button>
-      </NextLink>
+    <LoginRequired size="medium" color="secondary" data-test-id={dataTestId} fullWidth={fullWidth} variant="text">
+      <Button
+        component={Link}
+        href="/profile"
+        noLinkStyle
+        endIcon={<PersonOutlineRounded fontSize="small" />}
+        variant="text"
+        color="secondary"
+        size="medium"
+      >
+        {data?.user?.firstName}
+      </Button>
     </LoginRequired>
   );
 };

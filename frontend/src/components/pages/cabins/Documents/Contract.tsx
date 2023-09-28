@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Box, Divider, Grid, Typography } from "@mui/material";
-import Image from "next/future/image";
+import Image from "next/image";
 
 import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
 import { ContactInfo, DatePick } from "@/types/cabins";

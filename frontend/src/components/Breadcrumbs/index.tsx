@@ -1,68 +1,54 @@
-import { ChevronRight } from "@mui/icons-material";
-import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
+import { NavigateNext } from "@mui/icons-material";
+import { BreadcrumbsProps, Breadcrumbs as MUIBreadcrumbs, SxProps } from "@mui/material";
 
-import { LinkItem } from "./LinkItem";
-import { TLink } from "./types";
+import Link from "@/components/Link";
+
+export type TLink = {
+  name: string;
+  href: string;
+};
+
+type LinkItemProps = {
+  link: TLink;
+  active?: boolean;
+};
+
+const LinkItem: React.FC<LinkItemProps> = ({ link, active }) => {
+  const { href, name } = link;
+  return (
+    <Link href={href} variant="caption" color={active ? "text.primary" : "text.secondary"}>
+      {name}
+    </Link>
+  );
+};
 
 export interface Props extends BreadcrumbsProps {
   links: TLink[];
-  activeLast?: boolean;
-  onDark?: boolean;
   sx?: SxProps;
 }
 
-export const Breadcrumbs: React.FC<React.PropsWithChildren<Props>> = ({
-  links,
-  sx,
-  activeLast = false,
-  onDark = false,
-  ...other
-}) => {
-  const currentLink = links[links.length - 1];
-
-  const currentPath = activeLast ? (
-    <LinkItem key={currentLink.name} link={currentLink} onDark={onDark} />
-  ) : (
-    <Typography
-      noWrap
-      variant="body3"
-      sx={(theme) => ({
-        color: theme.palette.text.primary,
-        ...(onDark && {
-          opacity: 0.48,
-          color: "common.white",
-        }),
-      })}
-    >
-      {currentLink.name || ""}
-    </Typography>
-  );
-  const path = links.slice(0, -1).map((link) => <LinkItem key={link.name} link={link} onDark={onDark} />);
+export const Breadcrumbs: React.FC<React.PropsWithChildren<Props>> = ({ links, sx, ...props }) => {
+  if (links.length === 0) return null;
 
   return (
     <MUIBreadcrumbs
-      sx={{
-        "& .MuiBreadcrumbs-li": { whiteSpace: "nowrap" },
-        "& .MuiBreadcrumbs-li:last-child": { flex: 1, overflow: "hidden", textOverflow: "ellipsis" },
-        ...sx,
-      }}
+      sx={sx}
       separator={
-        <Box
-          sx={{
-            ...(onDark && {
+        <NavigateNext
+          sx={(theme) => ({
+            fontSize: 12,
+            [theme.getColorSchemeSelector("dark")]: {
               opacity: 0.48,
-              color: "common.white",
-            }),
-            lineHeight: 0,
-          }}
-        >
-          <ChevronRight sx={{ fontSize: 12 }} />
-        </Box>
+            },
+          })}
+        />
       }
-      {...other}
+      {...props}
     >
-      {path}
-      {currentPath}
+      {links.map((link, index) => {
+        if (index === links.length - 1) return <LinkItem key={link.name} link={link} active />;
+        return <LinkItem key={link.name} link={link} />;
+      })}
     </MUIBreadcrumbs>
   );
 };

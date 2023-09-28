@@ -1,68 +1,84 @@
-import { Card, CardActionArea, Chip, Typography } from "@mui/material";
+import { ResultOf } from "@graphql-typed-document-node/core";
+import { Card, CardActionArea, CardContent, Chip, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
-import Link from "next/link";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import React from "react";
 
-import { EventInListFragment, UserWithEventsAndOrgsFragment } from "@/generated/graphql";
-import { useResponsive } from "@/hooks/useResponsive";
-
-const formatDate = (dateAndTime: string) => {
-  return dayjs(dateAndTime).locale(nb).format(`D. MMM`);
-};
+import { NextLinkComposed } from "@/components/Link";
+import { EventsDocument } from "@/generated/graphql";
+dayjs.extend(isSameOrAfter);
 
 type Props = {
-  event: EventInListFragment;
-  user?: UserWithEventsAndOrgsFragment;
+  event: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>[number];
+  user: ResultOf<typeof EventsDocument>["user"];
 };
 
 export const EventListItem: React.FC<Props> = ({ event, user }) => {
-  const isMobile = useResponsive({ query: "down", key: "md" });
-
   return (
-    <Card>
-      <Link passHref href={`/events/${event.id}`} key={event.id}>
-        <CardActionArea
-          sx={(theme) => ({
-            borderColor: event.organization?.color ?? "primary.main",
-            display: "flex",
-            borderLeft: "16px solid",
-            padding: 3,
-            alignItems: "flex-end",
-            justifyContent: "space-between",
+    <Card
+      sx={{
+        borderLeftWidth: "16px",
+        borderLeftStyle: "solid",
+        borderLeftColor: event.organization?.color ?? "primary.main",
+      }}
+    >
+      <CardActionArea component={NextLinkComposed} key={event.id} to={`/events/${event.id}`}>
+        <CardContent>
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            justifyContent="space-between"
+            alignItems={{ md: "flex-end", xs: "stretch" }}
+            spacing={1}
+          >
+            <Stack>
+              <Typography variant="h4" component="h2" gutterBottom>
+                {event.title}
+              </Typography>
 
-            [theme.breakpoints.down("md")]: {
-              alignItems: "stretch",
-              flexDirection: "column",
-            },
-          })}
-        >
-          <div>
-            <Typography variant="h4" gutterBottom>
-              {event.title}
-            </Typography>
+              <Typography variant="body2">Dato: {dayjs(event.startTime).format("LLL")}</Typography>
 
-            <Typography variant="body2">Dato: {formatDate(event.startTime)}</Typography>
-
-            <Typography variant="body2" gutterBottom={!isMobile}>
-              {event.shortDescription ?? "Trykk for å lese mer"}
-            </Typography>
-          </div>
-          {user &&
-          event.isAttendable &&
-          ((user.gradeYear && event.allowedGradeYears?.includes(user.gradeYear)) ?? true) ? (
-            event.isFull && event.userAttendance?.isOnWaitingList ? (
-              <Chip label="På venteliste" />
-            ) : event.isFull && !event.userAttendance?.isSignedUp ? (
-              <Chip label="Venteliste tilgjengelig" />
-            ) : event.userAttendance?.isSignedUp ? (
-              <Chip variant="outlined" color="primary" label="Påmeldt" />
-            ) : (
-              <Chip color="primary" label="Påmelding tilgjengelig" />
-            )
-          ) : null}
-        </CardActionArea>
-      </Link>
+              <Typography variant="body2">{event.shortDescription || "Trykk for å lese mer"}</Typography>
+            </Stack>
+            <StatusChip event={event} user={{ ...event.userAttendance, gradeYear: user?.gradeYear }} />
+          </Stack>
+        </CardContent>
+      </CardActionArea>
     </Card>
   );
 };
+
+type StatusChipProps = {
+  event: {
+    isAttendable?: boolean | null;
+    isFull?: boolean | null;
+    allowedGradeYears?: number[] | null;
+    signupOpenDate?: string | null;
+  };
+  user: {
+    isOnWaitingList?: boolean | null;
+    isSignedUp?: boolean | null;
+    gradeYear?: number | null;
+  };
+};
+
+function StatusChip({ event, user }: StatusChipProps): React.ReactElement | null {
+  if (user.isSignedUp) return <Chip label="Påmeldt" variant="outlined" color="primary" />;
+  if (user.isOnWaitingList) return <Chip label="På venteliste" />;
+
+  const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate) : undefined;
+  const isSignUpOpen = signUpOpenDate && dayjs().isSameOrAfter(signUpOpenDate);
+
+  if (signUpOpenDate && dayjs().isBefore(signUpOpenDate)) {
+    return <Chip label={`Påmelding åpner ${signUpOpenDate?.format("DD. MMMM [kl.] HH:mm")}`} />;
+  }
+
+  let canAttend = event.isAttendable && isSignUpOpen;
+  if (user.gradeYear && event.allowedGradeYears) {
+    canAttend = canAttend && event.allowedGradeYears.includes(user.gradeYear);
+  }
+
+  if (event.isFull && canAttend) return <Chip label="Venteliste tilgjengelig" />;
+  if (canAttend) return <Chip label="Påmelding tilgjengelig" color="primary" />;
+
+  return null;
+}

@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 
+import { Link } from "@/components";
+
 import { BoardMember } from "./types";
 
 type Props = {
@@ -15,7 +17,7 @@ export const MemberCard: React.VFC<Props> = ({ member }) => {
           {member.position}
         </Typography>
         <Typography variant="body1" component="p">
-          E-post: <a href={`mailto:${member.email}`}>{member.email}</a>
+          E-post: <Link href={`mailto:${member.email}`}>{member.email}</Link>
         </Typography>
         {member.phone && (
           <Typography variant="body1" component="p">
