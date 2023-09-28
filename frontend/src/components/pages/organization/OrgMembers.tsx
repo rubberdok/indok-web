@@ -14,6 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { orderBy } from "lodash";
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
@@ -32,7 +33,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   if (!data?.memberships || loading) return <CircularProgress />;
 
   //Sorterer medlemmer alfabetisk
-  [...data?.memberships].sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
+  const memberships = orderBy(data?.memberships, "user.firstName", "asc");
 
   const addUser = () => {
     //Legg til funksjonalitet for å legge til bruker ved brukernavn
@@ -71,7 +72,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.memberships.map((membership) => (
+            {memberships.map((membership) => (
               <TableRow key={membership.id}>
                 <TableCell>
                   {membership.user.firstName} {membership.user.lastName}

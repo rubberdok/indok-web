@@ -4,8 +4,7 @@ import Grid from "@mui/material/Grid";
 import { ItvCard } from "@/components/pages/about/ItvCard";
 import { ItvMember } from "@/components/pages/about/ItvCard/types";
 import { Template } from "@/components/pages/about/Template";
-import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const ItvPage: NextPageWithLayout = () => {
   const itvMembers: ItvMember[] = [
@@ -45,7 +44,7 @@ const ItvPage: NextPageWithLayout = () => {
         rettighetene dine som student eller andre ting, er det bare å ta kontakt på itv@iot.ntnu.no. ITVene har
         taushetsplikt.
       </Typography>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h3" component="h2" gutterBottom>
         Medlemmer
       </Typography>
       <Grid container spacing={2} alignItems="stretch" justifyContent="center">
@@ -58,7 +57,5 @@ const ItvPage: NextPageWithLayout = () => {
     </Template>
   );
 };
-
-ItvPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default ItvPage;

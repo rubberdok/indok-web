@@ -1,16 +1,15 @@
 import { useMutation } from "@apollo/client";
 import { Button, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Image from "next/future/image";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+import { Link } from "@/components";
 import { AuthUserDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/lib/next";
 import Bug from "~/public/illustrations/Bug.svg";
-
-import { NextPageWithLayout } from "./_app";
 
 const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   code,
@@ -63,9 +62,9 @@ const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof ge
             <Typography>Her var det noe som gikk galt...</Typography>
           </Grid>
           <Grid>
-            <Link passHref href="/">
-              <Button variant="text">Tilbake til hjemmesiden</Button>
-            </Link>
+            <Button component={Link} href="/" noLinkStyle variant="text">
+              Tilbake til hjemmesiden
+            </Button>
           </Grid>
           <Grid item md={6}>
             <Image src={Bug} alt="" />

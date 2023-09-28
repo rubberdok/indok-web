@@ -27,8 +27,13 @@
       "@/*": ["src/*"],
       "~/*": ["./*"]
     },
-    "incremental": false
+    "incremental": false,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "exclude": ["**/node_modules", "**/.next", "cypress", "cypress.config.ts"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
 }

@@ -1,18 +1,26 @@
-query event($id: ID!) {
-  event(id: $id) {
-    ...Event
-  }
-}
-
-query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+query events($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
   allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
-    ...EventInList
+    ...EventFields
   }
+  defaultEvents {
+    ...EventFields
+  }
+  user {
+    id
+    gradeYear
+  }
+  hasPermission(permission: "events.add_event")
 }
 
-query defaultEvents {
-  defaultEvents {
-    ...EventInList
+query eventDetails($id: ID!) {
+  event(id: $id) {
+    ...EventDetailFields
+  }
+  user {
+    id
+    organizations {
+      id
+    }
   }
 }
 
@@ -60,4 +68,13 @@ query attendeeReportOrg($orgId: ID!, $fields: [String!], $filetype: String) {
 
 query attendeeReports($eventIds: [ID!]!, $fields: [String!], $filetype: String) {
   attendeeReports(eventIds: $eventIds, fields: $fields, filetype: $filetype)
+}
+
+query eventUserOrganizations {
+  user {
+    id
+    organizations {
+      id
+    }
+  }
 }

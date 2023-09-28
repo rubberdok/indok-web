@@ -1,4 +1,6 @@
 export { Breadcrumbs } from "./Breadcrumbs";
-export { LabeledIcon } from "./LabeledIcon";
+export { Markdown } from "./Markdown";
 export { Logo } from "./Logo";
-export { NavigationSidebar } from "./NavigationSidebar";
+export { default as Link, type LinkProps } from "./Link";
+export { Title } from "./Title";
+export { PermissionRequired, LoginRequired } from "./Auth";

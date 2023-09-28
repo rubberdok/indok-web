@@ -19,15 +19,15 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import Image from "next/future/image";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
+import { Link } from "@/components";
 import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
 import { AttemptCapturePaymentDocument, PaymentStatus, UserDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import savings from "~/public/illustrations/Savings.svg";
 
 const FallbackPage: NextPageWithLayout = () => {
@@ -82,14 +82,15 @@ const FallbackPage: NextPageWithLayout = () => {
           <CardHeader title="Ordrebekreftelse"></CardHeader>
           <CardContent>
             <Grid container alignItems="center" direction="column">
-              {error ? (
+              {error && (
                 <>
                   <Typography variant="h4">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : paymentStatus === "RESERVED" || loading ? (
+              )}
+              {(paymentStatus === "RESERVED" || loading) && (
                 <>
                   <Grid container item direction="column" spacing={4} alignItems="center">
                     <Grid item>
@@ -103,14 +104,15 @@ const FallbackPage: NextPageWithLayout = () => {
                     </Grid>
                   </Grid>
                 </>
-              ) : paymentStatus === "CAPTURED" && order ? (
+              )}
+              {paymentStatus === "CAPTURED" && order && (
                 <>
                   <Typography variant="h3">Betaling fullført!</Typography>
                   <Typography variant="body1">Betalingen var vellykket og du har nå kjøpt produktet. </Typography>
                   <List
                     sx={{
                       width: "50%",
-                      backgroundColor: (theme) => theme.palette.background.paper,
+                      backgroundColor: (theme) => theme.vars.palette.background.paper,
                       textAlign: "center",
                       marginTop: "50px",
                     }}
@@ -142,18 +144,15 @@ const FallbackPage: NextPageWithLayout = () => {
                   </Button>
                   <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                 </>
-              ) : paymentStatus === "CANCELLED" ? (
-                <Typography>Betalingen ble avbrutt</Typography>
-              ) : (
-                <Typography>Noe gikk galt</Typography>
               )}
+              {paymentStatus === "CANCELLED" && <Typography>Betalingen ble avbrutt</Typography>}
             </Grid>
           </CardContent>
           {userData?.user && (
             <CardActions>
-              <Link href="/ecommerce" passHref>
-                <Button>Gå til mine betalinger</Button>
-              </Link>
+              <Button component={Link} noLinkStyle href="/ecommerce">
+                Gå til mine betalinger
+              </Button>
             </CardActions>
           )}
         </Card>

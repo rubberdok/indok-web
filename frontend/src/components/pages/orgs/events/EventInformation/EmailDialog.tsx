@@ -27,14 +27,17 @@ export type SendEmailProps = {
   subject: string;
 };
 
-const schema = yup
+export type EmailForm = {
+  subject: string;
+  content: string;
+};
+
+const schema: yup.ObjectSchema<EmailForm> = yup
   .object({
     subject: yup.string().required("Feltet må fylles ut").min(2),
     content: yup.string().required("Feltet må fylles ut").max(10000, "Maks 10 000 tegn"),
   })
   .required();
-
-export type EmailForm = yup.InferType<typeof schema>;
 
 type Props = {
   eventId: string;

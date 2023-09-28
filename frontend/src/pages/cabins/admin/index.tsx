@@ -11,7 +11,7 @@ import { AdminCabinTable } from "@/components/pages/cabins/Admin/AdminCabinTable
 import { AdminAllBookingsDocument } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 /** Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings. */
 const AdminPage: NextPageWithLayout = () => {

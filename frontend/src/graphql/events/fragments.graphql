@@ -1,83 +1,57 @@
-fragment Event on EventType {
+fragment EventFields on EventType {
   id
   title
   startTime
-  endTime
-  location
-  description
-  organization {
-    id
-    name
-  }
-  category {
-    id
-    name
-  }
-  image
-  isAttendable
-  deadline
-  publisher {
-    id
-    username
-    email
-    firstName
-    lastName
-    dateJoined
-  }
-  availableSlots
-  price
   shortDescription
+  allowedGradeYears
+  isFull
+  isAttendable
   signupOpenDate
   userAttendance {
     isSignedUp
     isOnWaitingList
-    hasBoughtTicket
   }
-  isFull
-  hasExtraInformation
-  bindingSignup
-  contactEmail
-  allowedGradeYears
-  product {
+  organization {
     id
+    color
   }
 }
 
-fragment EventInList on EventType {
+fragment EventDetailFields on EventType {
   id
   title
+  description
+  shortDescription
   startTime
   endTime
   location
-  description
-  organization {
-    name
-    color
-  }
-  category {
-    name
-  }
-  image
-  isAttendable
-  deadline
-  publisher {
-    id
-    username
-    email
-    firstName
-    lastName
-    dateJoined
-  }
-  price
-  shortDescription
+  contactEmail
+  allowedGradeYears
+  hasExtraInformation
+  isFull
   signupOpenDate
+  deadline
+  isAttendable
+  bindingSignup
+  price
+  product {
+    id
+  }
   userAttendance {
     isSignedUp
     isOnWaitingList
+    positionOnWaitingList
+    hasBoughtTicket
   }
-  isFull
-  hasExtraInformation
-  allowedGradeYears
+  category {
+    id
+    name
+  }
+  organization {
+    id
+    name
+    logoUrl
+  }
 }
 
 fragment AdminEvent on EventType {
@@ -140,6 +114,7 @@ fragment SignUp on SignUpType {
   userGradeYear
   userAllergies
   userPhoneNumber
+  extraInformation
 }
 
 fragment SignUpWithTicket on SignUpType {
@@ -152,5 +127,6 @@ fragment SignUpWithTicket on SignUpType {
   userGradeYear
   userAllergies
   userPhoneNumber
+  extraInformation
   hasBoughtTicket
 }

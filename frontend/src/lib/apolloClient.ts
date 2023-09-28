@@ -40,6 +40,7 @@ function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<Norma
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
+    connectToDevTools: config.APP_ENV === "development",
   });
 }
 

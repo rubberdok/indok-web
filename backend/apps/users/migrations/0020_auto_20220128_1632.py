@@ -6,6 +6,7 @@ from django.utils import timezone
 
 def set_updated_year_for_recent_registraions_to_none(apps, schema_editor):
     User = apps.get_model("users", "User")
+
     two_days_ago = timezone.now() - timezone.timedelta(days=2)
     User.objects.filter(date_joined__gte=two_days_ago).update(year_updated_at=None)
 

@@ -17,6 +17,7 @@ export const Info: React.FC<Props> = ({ organizations }) => {
   const {
     register,
     formState: { errors },
+    watch,
   } = useFormContext<IEventForm>();
 
   return (
@@ -69,7 +70,10 @@ export const Info: React.FC<Props> = ({ organizations }) => {
 
       <Typography variant="subtitle2">Arrangør og kontaktinformasjon</Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <Organizer organizations={organizations} />
+        <Organizer
+          organizations={organizations}
+          disabled={Boolean(watch("info.organizer")) && organizations.length === 1}
+        />
 
         <TextField
           {...register("info.contactEmail")}

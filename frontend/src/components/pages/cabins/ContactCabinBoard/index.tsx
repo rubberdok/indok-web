@@ -3,7 +3,6 @@ import { MailOutline } from "@mui/icons-material";
 import { Link, Stack, Typography } from "@mui/material";
 import React from "react";
 
-import { LabeledIcon } from "@/components/LabeledIcon";
 import { ActiveBookingResponsibleDocument } from "@/generated/graphql";
 
 export const ContactCabinBoard: React.FC = () => {
@@ -11,21 +10,14 @@ export const ContactCabinBoard: React.FC = () => {
 
   if (data?.activeBookingResponsible?.email) {
     return (
-      <Stack direction="column" spacing={2} mb={4}>
+      <Stack direction="column" spacing={2}>
         <Typography variant="subtitle1">Spørsmål?</Typography>
-        <LabeledIcon
-          icon={<MailOutline />}
-          value={
-            <Typography variant="body1" sx={{ ml: 1 }}>
-              <Link href={`mailto:${data?.activeBookingResponsible.email}`}>
-                {data?.activeBookingResponsible.email}
-              </Link>
-            </Typography>
-          }
-        />
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <MailOutline />
+          <Link href={`mailto:${data?.activeBookingResponsible.email}`}>{data?.activeBookingResponsible.email}</Link>
+        </Stack>
       </Stack>
     );
-  } else {
-    return <></>;
   }
+  return null;
 };

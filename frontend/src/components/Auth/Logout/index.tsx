@@ -4,6 +4,7 @@ import { Alert, AlertTitle, ButtonProps, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { Link } from "@/components";
 import { LogoutDocument } from "@/generated/graphql";
 import { config } from "@/utils/config";
 
@@ -31,7 +32,7 @@ export const Logout: React.FC<Omit<ButtonProps, "sx">> = ({ ...props }) => {
         <Snackbar open={open} color="error" anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
           <Alert onClose={() => setOpen(false)} severity="error">
             <AlertTitle>Utloggingen feilet</AlertTitle>
-            Kontakt <a href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</a> dersom problemet vedvarer.
+            Kontakt <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link> dersom problemet vedvarer.
           </Alert>
         </Snackbar>
       )}

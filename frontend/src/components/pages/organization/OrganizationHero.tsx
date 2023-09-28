@@ -1,4 +1,4 @@
-import { Tab, Tabs, Typography } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 
 import { Title } from "@/components/Title";
 import { AdminOrganizationFragment } from "@/generated/graphql";
@@ -14,34 +14,17 @@ export const OrganizationHero: React.FC<Props> = ({ organization, handleTabChang
     <Title
       title={organization.name}
       overline="Administrasjonsside"
-      breadcrumbs={[{ href: "/", name: "Hjem" }, { href: "/orgs", name: "Foreninger" }, { name: organization.name }]}
+      breadcrumbs={[
+        { href: "/", name: "Hjem" },
+        { href: "/orgs", name: "Foreninger" },
+        { name: organization.name, href: `/orgs/${organization.id}` },
+      ]}
       variant="dark"
     >
-      <Tabs textColor="secondary" indicatorColor="secondary" onChange={handleTabChange} value={activeTab}>
-        <Tab
-          sx={{ color: "grey.500", "&.Mui-selected": { color: "secondary.main" } }}
-          label={
-            <Typography variant="subtitle2" mb={2}>
-              Arrangementer
-            </Typography>
-          }
-        />
-        <Tab
-          sx={{ color: "grey.500", "&.Mui-selected": { color: "secondary.main" } }}
-          label={
-            <Typography variant="subtitle2" mb={2}>
-              Verv
-            </Typography>
-          }
-        />
-        <Tab
-          sx={{ color: "grey.500", "&.Mui-selected": { color: "secondary.main" } }}
-          label={
-            <Typography variant="subtitle2" mb={2}>
-              Medlemmer
-            </Typography>
-          }
-        />
+      <Tabs textColor="primary" indicatorColor="primary" onChange={handleTabChange} value={activeTab}>
+        <Tab label="Arrangementer" />
+        <Tab label="Verv" />
+        <Tab label="Medlemmer" />
       </Tabs>
     </Title>
   );

@@ -21,11 +21,12 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 
+import { Link } from "@/components";
 import { OrderCellContent } from "@/components/pages/ecommerce/OrderCellContent";
 import { OrderFragment, UserDocument, UserOrdersDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 import { HeaderValuePair } from "@/types/utils";
 
 const orderFields: HeaderValuePair<OrderFragment>[] = [
@@ -58,25 +59,23 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
               <Grid item xs={12}>
                 <Alert variant="filled" severity="info">
                   Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                    kontakt@rubberdok.no
-                  </a>
+                  <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
-              {error ? (
+              {error && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : loading ? (
-                <CircularProgress />
-              ) : (
+              )}
+              {loading && <CircularProgress />}
+              {data && (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="h3">Mine betalinger</Typography>
-                    {orders && orders.length !== 0 ? (
+                    {orders && orders.length !== 0 && (
                       <TableContainer style={{ maxHeight: 600 }}>
                         <Table>
                           <TableHead>
@@ -99,7 +98,8 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
                           </TableBody>
                         </Table>
                       </TableContainer>
-                    ) : (
+                    )}
+                    {orders?.length === 0 && (
                       <Typography align="center" variant="body1">
                         Ingen ordrer funnet
                       </Typography>

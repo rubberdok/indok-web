@@ -10,7 +10,7 @@ const s2ab = (s: string) => {
 
 export const promptDownloadFromPayload = (payload: { filename: string; data: string; contentType: string }): void => {
   let blob;
-  if (payload.contentType == XLSX_CONTENT_TYPE) {
+  if (payload.contentType === XLSX_CONTENT_TYPE) {
     blob = new Blob([s2ab(atob(payload.data))], { type: payload.contentType });
   } else {
     blob = new Blob([payload.data], { type: payload.contentType });

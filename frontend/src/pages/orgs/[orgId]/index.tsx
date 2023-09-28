@@ -3,13 +3,12 @@ import { CircularProgress, Container, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { OrgEvents } from "@/components/pages/events/org/OrgEvents";
+import { OrganizationEvents } from "@/components/pages/events";
 import { OrganizationListings } from "@/components/pages/listings/organization/OrganizationListings";
 import { OrganizationHero } from "@/components/pages/organization/OrganizationHero";
 import { OrgMembers } from "@/components/pages/organization/OrgMembers";
 import { AdminOrganizationDocument } from "@/generated/graphql";
-import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const OrganizationDetailPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -36,7 +35,7 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
       <Container>
         {data?.organization && (
           <Stack spacing={4}>
-            {activeTab == 0 && data.organization.events && <OrgEvents organization={data.organization} />}
+            {activeTab == 0 && data.organization.events && <OrganizationEvents organization={data.organization} />}
             {activeTab == 1 && data.organization.listings && <OrganizationListings organization={data.organization} />}
             {activeTab == 2 && data.organization && <OrgMembers organization={data.organization} />}
           </Stack>
@@ -45,11 +44,5 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
     </>
   );
 };
-
-OrganizationDetailPage.getLayout = (page) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
 
 export default OrganizationDetailPage;

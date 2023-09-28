@@ -1,26 +1,35 @@
 query archiveByTypes($documentTypes: [String]!, $year: Int, $names: String) {
   archiveByTypes(typeDoc: $documentTypes, year: $year, names: $names) {
-    id
-    title
-    thumbnail
-    typeDoc
-    year
-    webLink
+    ...Document
   }
 }
 
 query featuredArchive {
   featuredArchive {
-    id
-    title
-    thumbnail
-    featured
-    typeDoc
-    year
-    webLink
+    ...Document
   }
 }
 
 query availableYears {
   availableYears
+}
+
+fragment Document on ArchiveDocumentType {
+  id
+  title
+  thumbnail
+  typeDoc
+  year
+  webLink
+}
+
+query documents($documentTypes: [String!]!, $year: Int, $names: String) {
+  archiveByTypes(typeDoc: $documentTypes, year: $year, names: $names) {
+    ...Document
+  }
+  featuredArchive {
+    ...Document
+  }
+  availableYears
+  hasPermission(permission: "archive.view_archivedocument")
 }

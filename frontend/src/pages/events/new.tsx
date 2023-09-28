@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { Button, Container } from "@mui/material";
-import Link from "next/link";
 
-import { CreateEvent } from "@/components/pages/events/Create";
+import { Link } from "@/components";
+import { CreateEvent } from "@/components/pages/events";
 import { UserOrganizationsDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 /** Component for showing the create event page. */
 const NewEventPage: NextPageWithLayout = () => {
@@ -13,9 +13,9 @@ const NewEventPage: NextPageWithLayout = () => {
   const organizations = data?.user?.organizations ?? [];
   return (
     <Container>
-      <Link href="/events" passHref>
-        <Button color="primary">Tilbake til arrangementer</Button>
-      </Link>
+      <Button component={Link} href="/events" noLinkStyle color="primary">
+        Tilbake til arrangementer
+      </Button>
       <CreateEvent organizations={organizations} />
     </Container>
   );

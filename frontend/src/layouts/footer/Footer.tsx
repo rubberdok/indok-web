@@ -1,14 +1,13 @@
-import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
+import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
-import Image from "next/future/image";
-import NextLink, { LinkProps } from "next/link";
-import { ReactNode, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
 
+import { Link, LinkProps } from "@/components";
 import { Logo } from "@/components/Logo";
 import { Vercel } from "@/components/Vercel";
-import { useResponsive } from "@/hooks/useResponsive";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
@@ -19,7 +18,10 @@ const Watermark = styled("div")(({ theme }) => ({
   backgroundSize: 500,
   backgroundPosition: "right center",
   backgroundRepeat: "no-repeat",
-  opacity: theme.palette.mode === "light" ? 0.1 : 0.3,
+  opacity: 0.1,
+  [theme.getColorSchemeSelector("dark")]: {
+    opacity: 0.3,
+  },
   position: "absolute",
   width: "600px",
   height: "100%",
@@ -32,29 +34,23 @@ const Watermark = styled("div")(({ theme }) => ({
   },
 }));
 
-type Props = {
-  disableGutter?: boolean;
-};
-
-export const Footer: React.FC<Props> = ({ disableGutter }) => {
-  const isDesktop = useResponsive({ query: "up", key: "md" });
+export const Footer: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
 
   return (
     <>
-      <Divider sx={{ mt: disableGutter ? 0 : 4 }} />
+      <Divider sx={{ mt: 4 }} />
       <Paper sx={{ bgcolor: "background.elevated" }}>
         <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
           <Grid container spacing={3} justifyContent={{ md: "space-between" }}>
             <Grid item xs={12} md={3}>
               <Stack alignItems="flex-start" spacing={3}>
                 <Logo />
-                <Typography variant="body3">
+                <Typography variant="caption">
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
-                <Typography variant="body3">
+                <Typography variant="caption">
                   {`Foreningen for Studentene ved Indøk © ${dayjs().format("YYYY")}`}
                 </Typography>
               </Stack>
@@ -62,24 +58,22 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
 
             <Grid item xs={12} md={7}>
               <Stack alignItems="flex-start">
-                <Typography variant="h6" mb={1}>
+                <Typography variant="h6" component="p" mb={1}>
                   Lenker
                 </Typography>
-                <NextLinkItem href="/baksida">Baksida</NextLinkItem>
-                <NextLinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
+                <LinkItem href="/baksida">Baksida</LinkItem>
+                <LinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
                   IØT adferdskodeks
-                </NextLinkItem>
-                <NextLinkItem href="/about">Om oss</NextLinkItem>
-                <NextLinkItem href="https://www.indøk.no">Studieside</NextLinkItem>
-                <NextLinkItem href="https://github.com/rubberdok/indok-web/issues/new/choose">
-                  Oppdaget en feil?
-                </NextLinkItem>
+                </LinkItem>
+                <LinkItem href="/about">Om oss</LinkItem>
+                <LinkItem href="https://www.indøk.no">Studieside</LinkItem>
+                <LinkItem href="https://github.com/rubberdok/indok-web/issues/new/choose">Oppdaget en feil?</LinkItem>
                 <Box mt={2}>
                   <Vercel />
                 </Box>
               </Stack>
             </Grid>
-            {isDesktop && <Watermark />}
+            <Watermark sx={{ display: { xs: "none", md: "block" } }} />
           </Grid>
         </Container>
       </Paper>
@@ -94,17 +88,25 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
           width="100%"
         >
           <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
-            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
+            <LinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
               Hall of Fame
-            </NextLinkItem>
-            <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
+            </LinkItem>
+            <Link
+              href="https://github.com/rubberdok/indok-web"
+              rel="noreferrer noopener"
+              sx={(theme) => ({
+                [theme.getColorSchemeSelector("dark")]: {
+                  filter: "invert(1)",
+                  opacity: 0.8,
+                },
+              })}
+            >
               <Image
                 src={rubberdokLogo}
                 alt="Rubberdøk"
                 style={{
                   width: "48px",
                   height: "24px",
-                  ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }),
                 }}
               />
             </Link>
@@ -116,29 +118,19 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
   );
 };
 
-type NextLinkItemProps = LinkProps & {
-  children: ReactNode;
-  sx?: SxProps;
-  onClick?: () => void;
-};
-
-const NextLinkItem: React.FC<React.PropsWithChildren<NextLinkItemProps>> = ({ children, sx, onClick, ...other }) => {
+const LinkItem: React.FC<LinkProps> = ({ sx, ...props }) => {
   return (
-    <NextLink passHref {...other}>
-      <Link
-        variant="body3"
-        onClick={onClick}
-        sx={{
-          mt: 1,
-          color: "text.secondary",
-          "&:hover": {
-            color: "text.primary",
-          },
-          ...sx,
-        }}
-      >
-        {children}
-      </Link>
-    </NextLink>
+    <Link
+      variant="caption"
+      sx={{
+        mt: 1,
+        color: "text.secondary",
+        "&:hover": {
+          color: "text.primary",
+        },
+        ...sx,
+      }}
+      {...props}
+    />
   );
 };

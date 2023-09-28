@@ -28,7 +28,7 @@ import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog"
 import { ProductDocument, UserDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
@@ -59,28 +59,27 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
               <Grid item xs={12}>
                 <Alert variant="filled" severity="info">
                   Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                    kontakt@rubberdok.no
-                  </a>
+                  <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
-              {!(productId && quantity) ? (
+              {!(productId && quantity) && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     ProduktID og antall mangler
                   </Alert>
                 </>
-              ) : error ? (
+              )}
+              {error && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : loading ? (
-                <CircularProgress />
-              ) : (
+              )}
+              {loading && <CircularProgress />}
+              {product && (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="h3">Bekreft ordredetaljer</Typography>
@@ -126,7 +125,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                         <Link
                           component="button"
                           variant="body2"
-                          color="secondary"
+                          color="warning"
                           onClick={() => {
                             setOpenSalesTerms(true);
                           }}
