@@ -1,6 +1,8 @@
 import { Typography } from "@mui/material";
+import { red } from "@mui/material/colors";
 import Grid from "@mui/material/Grid";
 
+import { ContactInfo } from "@/components/pages/Janus/ContactInfo";
 import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
