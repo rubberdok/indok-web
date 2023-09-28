@@ -1,7 +1,7 @@
 describe("On the profile page", () => {
   before(() => {
     it("should not prompt registration as a registered user", () => {
-      cy.session("asbjørn_elevg", () => {
+      cy.session("eva_student", () => {
         cy.log("Accessing site");
         cy.visit("/");
         cy.getByTestId("app-bar-login").click();
