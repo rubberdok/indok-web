@@ -1,47 +1,31 @@
-import { Box } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
+import { useRouter } from "next/router";
 
-//Fix import ordering
-import { HEADER_DESKTOP_HEIGHT } from "@/theme/constants";
-
-import { NavigationSidebar } from "../../";
-
-const NAV_ITEMS = [
-  {
-    subheader: "Innhold",
-    items: [
-      {
-        title: "JanusStyre",
-        path: "/janus/info",
-      },
-      {
-        title: "Årlige Arrangementer",
-        path: "/janus/arrangementer",
-      },
-      {
-        title: "Indøk kalender",
-        path: "https://calendar.google.com/calendar/u/0/r?cid=c3AzcnJlNGhoamZvZmo4MTI0anA1azA5M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ",
-      },
-      {
-        title: "Kontakt oss",
-        path: "",
-      },
-    ],
-  },
-];
+import { Link } from "../../";
 
 export const JanusSidebar: React.FC = () => {
+  const { pathname } = useRouter();
+
   return (
     <Box position="relative" mt={13} height={1 / 2} sx={{ borderRight: "1px solid", borderColor: "divider" }}>
-      <NavigationSidebar
-        navConfig={NAV_ITEMS}
-        sx={{
-          borderRadius: 2,
-          maxWidth: "100%",
-          bgcolor: "background.default",
-          top: HEADER_DESKTOP_HEIGHT + 16,
-          position: "sticky",
-        }}
-      />
+      <Tabs orientation="vertical" value={pathname}>
+        <Tab component={Link} href="/janus" value="/janus" noLinkStyle label="Om JanusStyret" />
+        <Tab
+          component={Link}
+          href="/janus/arrangementer"
+          value="/janus/arrangementer"
+          noLinkStyle
+          label="Årlige Arrangementer"
+        />
+        <Tab
+          component={Link}
+          href="https://calendar.google.com/calendar/u/0/r?cid=c3AzcnJlNGhoamZvZmo4MTI0anA1azA5M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ"
+          value="https://calendar.google.com/calendar/u/0/r?cid=c3AzcnJlNGhoamZvZmo4MTI0anA1azA5M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ"
+          noLinkStyle
+          label="Indøk kalender"
+        />
+        <Tab component={Link} href="/janus" value="/janus" noLinkStyle label="Kontakt oss" />
+      </Tabs>
     </Box>
   );
 };

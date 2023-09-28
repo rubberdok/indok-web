@@ -10,7 +10,7 @@ import {
 } from "@/components/pages/Janus/EventImages/imageData";
 import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/pages/_app";
+import { NextPageWithLayout } from "@/lib/next";
 
 const ArrangementPage: NextPageWithLayout = () => {
   return (
