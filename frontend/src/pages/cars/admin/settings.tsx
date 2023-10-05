@@ -20,15 +20,15 @@ const SettingsPage: NextPageWithLayout = () => {
           },
           {
             name: "Hytter",
-            href: "/cabins",
+            href: "/cars",
           },
           {
             name: "Adminside",
-            href: "/cabins/admin",
+            href: "/cars/admin",
           },
           {
             name: "Innstillinger",
-            href: "/cabins/admin/settings",
+            href: "/cars/admin/settings",
           },
         ]}
       />

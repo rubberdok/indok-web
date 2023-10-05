@@ -26,7 +26,7 @@ export const BookNow: React.FC = () => {
           </Stack>
           <Button
             component={NextLinkComposed}
-            to="/cabins/book"
+            to="/cars/booking"
             variant="contained"
             size="large"
             color="primary"

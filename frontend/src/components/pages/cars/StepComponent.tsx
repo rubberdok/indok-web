@@ -4,8 +4,8 @@ import React from "react";
 import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
-import { CabinContactInfo } from "./CabinContactInfo";
-import { CheckInOut } from "./CheckInOut";
+import { CabinContactInfo } from "./CarContactInfo";
+import { CheckInOutCar } from "./CheckInOut";
 import { ExtraInfoSite } from "./ExtraInfoSite";
 import { PaymentSite } from "./PaymentSite";
 import { ReceiptSite } from "./ReceiptSite";
@@ -29,7 +29,7 @@ export const StepComponent: React.FC<Props> = (props) => {
     case 0:
       // Choose cabin
       return (
-        <CheckInOut
+        <CheckInOutCar
           allCabins={props.allCabins}
           chosenCabins={props.chosenCabins}
           setChosenCabins={props.setChosenCabins}

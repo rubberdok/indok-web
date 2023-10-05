@@ -30,9 +30,9 @@ export const CabinsDetailsSection: React.FC = () => {
             }}
           >
             <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
-              Foreningens hytter
+              Foreningens bil
             </Typography>
-            <Typography variant="h2">Indøkbilene</Typography>
+            <Typography variant="h2">Indøkbilen</Typography>
             <Typography sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
               VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM
               VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM

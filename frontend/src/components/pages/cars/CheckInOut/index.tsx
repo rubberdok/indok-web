@@ -15,9 +15,9 @@ type Props = {
 };
 
 /**
- * One of the steps in the cabins/book page. In this step the user chooses a cabin and the check-in and check-out dates.
+ * One of the steps in the cars/book page. In this step the user chooses a cabin and the check-in and check-out dates.
  */
-export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
+export const CheckInOutCar: React.FC<React.PropsWithChildren<Props>> = ({
   allCabins,
   chosenCabins,
   setChosenCabins,
@@ -49,7 +49,7 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
         p={3}
         elevation={0}
       >
-        <Typography variant="h5">Velg hytte</Typography>
+        <Typography variant="h5">Velg bil</Typography>
 
         {allCabins.map((cabin) => (
           <FormControlLabel

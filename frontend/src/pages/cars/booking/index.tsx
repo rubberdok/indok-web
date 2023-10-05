@@ -15,8 +15,8 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
-import { StepComponent } from "@/components/pages/cabins/StepComponent";
+import { ContractDialog } from "@/components/pages/cars/Popup/ContractDialog";
+import { StepComponent } from "@/components/pages/cars/StepComponent";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Layout } from "@/layouts/Layout";
@@ -32,7 +32,7 @@ import {
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
-const steps = ["Book hytte", "Kontaktinfo", "Ekstra info", "Send søknad", "Kvittering"];
+const steps = ["Book Bil", "Kontaktinfo", "Ekstra info", "Send søknad", "Kvittering"];
 
 const initalStepReady: StepReady = steps.reduce((initialObject, _step, index) => {
   initialObject[index] = {
@@ -60,7 +60,7 @@ const defaultModalData: ModalData = {
  * Main page for the booking of a cabin.
  * The page renders different components depending on the step variable chosen.
  */
-const CabinBookingPage: NextPageWithLayout = () => {
+const CabinsBookingPage: NextPageWithLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
@@ -252,6 +252,6 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 };
 
-CabinBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
+CabinsBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
 
-export default CabinBookingPage;
+export default CabinsBookingPage;

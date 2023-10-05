@@ -16,7 +16,7 @@ import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 /** Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book). */
-const CabinsPage: NextPageWithLayout = () => {
+const CarsPage: NextPageWithLayout = () => {
   const transportData = [
     {
       icon: <Image alt="" src="/img/undraw_bus_stop.svg" width={200} height={200} />,
@@ -66,4 +66,4 @@ const CabinsPage: NextPageWithLayout = () => {
   );
 };
 
-export default CabinsPage;
+export default CarsPage;

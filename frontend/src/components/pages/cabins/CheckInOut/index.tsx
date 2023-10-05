@@ -49,7 +49,7 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
         p={3}
         elevation={0}
       >
-        <Typography variant="h5">Velg hytte</Typography>
+        <Typography variant="h5">Velg Hytte</Typography>
 
         {allCabins.map((cabin) => (
           <FormControlLabel
