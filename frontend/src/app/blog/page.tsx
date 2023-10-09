@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonBase, Container, Stack } from "@mui/material";
+import { ButtonBase, Container, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import Grid from '@mui/material/Grid';
 export default function Blog() {
@@ -20,7 +20,7 @@ function Toolbar() {
     return (
         <div
             style={{width: "100%"}}
-            >
+        >
             <Stack
             direction="row"
             sx={{
@@ -36,6 +36,18 @@ function Toolbar() {
             <ToolbarButton
                 insert="/i{}"
                 body={<strong><i>I</i></strong>}
+            />
+            <ToolbarButton
+                insert="/28{}"
+                body={<Typography sx={{fontSize: "28px"}}>h1</Typography>}
+            />
+            <ToolbarButton
+                insert="/24{}"
+                body={<Typography sx={{fontSize: "24px"}}>h2</Typography>}
+            />
+            <ToolbarButton
+                insert="/20{}"
+                body={<Typography sx={{fontSize: "20px"}}>p</Typography>}
             />
         </Stack>
         </div>
@@ -56,8 +68,8 @@ function ToolbarButton({insert, body}: {insert: string, body: any}) {
                 let cursor = e.selectionStart
                 e.value = e.value.substring(0, cursor) + insert + e.value.substring(cursor)
                 e.focus()
-                e.selectionStart = cursor + 3
-                e.selectionEnd = cursor + 3
+                e.selectionStart = cursor + insert.length - 1
+                e.selectionEnd = cursor + insert.length - 1
             }}
         >
             {body}
@@ -71,11 +83,11 @@ function Editor() {
     function rendered() {
 
         const outputString = text
-            .replace(/\/b\{(.*?)\}/g, (match, p1) => `<strong>${p1}</strong>`)
-            .replaceAll(/\/i\{(.*?)\}/g, (match, p1) => `<i>${p1}</i>`)
-            .replaceAll("\n", (match) => `<br>`)
-            .replaceAll(" ", (match) => " ")
-            .replaceAll(/\/s([0-9]*)\{(.*?)\}/g, (match, p1, p2) => `<span style="font-size: ${p1}px">${p2}</span>`)
+            .replaceAll(/\/b\{(.*?)\}/g, (_, p1) => `<strong>${p1}</strong>`)
+            .replaceAll(/\/i\{(.*?)\}/g, (_, p1) => `<i>${p1}</i>`)
+            .replaceAll("\n", (_) => `<br>`)
+            .replaceAll(" ", (_) => " ")
+            .replaceAll(/\/([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<span style="font-size: ${p1}px">${p2}</span>`)
 
 
         return <div
