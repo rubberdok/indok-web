@@ -7,6 +7,8 @@ import {
   janusvalgetImages,
   winterGamesImages,
   borsfestImages,
+  fadderukeImages,
+  oktoberfestImages,
 } from "@/components/pages/Janus/EventImages/imageData";
 import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
@@ -19,7 +21,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         Fadderuker
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={immballImages} displayLabelText={true}></ImageSlider>
+        <ImageSlider imageData={fadderukeImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Hvert år arrangerer Janus to fantastiske fadderuker for de nyopptatte førsteklassingene. Fadderukene er en
@@ -92,7 +94,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         Oktoberfest
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={janusvalgetImages} displayLabelText={true}></ImageSlider>
+        <ImageSlider imageData={oktoberfestImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Hvert partallsår arrangerer Janus oktoberfest, for øltørste indøkere. UKA står for oktoberfest de andre årene,
