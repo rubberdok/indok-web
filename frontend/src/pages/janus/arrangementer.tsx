@@ -16,15 +16,30 @@ const ArrangementPage: NextPageWithLayout = () => {
   return (
     <Template title="Årlige Arrangementer" description="Informasjon om våre årlige arrangementer og tradisjoner">
       <Typography variant="h3" gutterBottom>
+        Fadderuker
+      </Typography>
+      <Box width="100%" marginBottom={2}>
+        <ImageSlider imageData={immballImages} displayLabelText={true}></ImageSlider>
+      </Box>
+      <Typography variant="body1" paragraph>
+        Hvert år arrangerer Janus to fantastiske fadderuker for de nyopptatte førsteklassingene. Fadderukene er en
+        glimrende måte å bli kjent med medstudenter, Trondheim og Indøk på! Det arrangeres alt fra kjellerfest til
+        togaparty til aktivitetsdag og beerlympics. Fadderukene er det største arrangementet Janus står for, og det
+        gøyeste som skjer hvert år, da vi får mulighet til å bli kjent med de nye førsteklassingene!
+      </Typography>
+      <Typography variant="h3" gutterBottom>
         Immatrikuleringsball
       </Typography>
       <Box width="100%" marginBottom={2}>
         <ImageSlider imageData={immballImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorum ipsa consectetur, illum pariatur id sed,
-        commodi repellendus eos, impedit debitis eligendi voluptas atque iure animi ea molestiae veritatis officiis
-        dolore?
+        Immatrikuleringsball arrangeres etter fadderukene for de å ta imot de nye førstklassingene. Tradisjonelt sett er
+        immball etter opptaket, slik at man kan feire nyopptatte janusere. Man kler seg opp i finstas og blir servert
+        flere retter, mens underholdning som taler, koropptredener og allsang foregår på scenen. Kvelden avsluttes med
+        opptreden fra vårt kjære Bandøk! Før immball avholodes det 1./5. og 2./4. vors, slik at man kan bli kjent med
+        studenter fra eldre og yngre kull. Mer enn noe annet arrangement, samler immball alle studentene på indøk,
+        uavhengig av kull.
       </Typography>
       <Typography variant="h3" gutterBottom>
         Winter Games
@@ -33,12 +48,9 @@ const ArrangementPage: NextPageWithLayout = () => {
         <ImageSlider imageData={winterGamesImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque, iusto. Mollitia assumenda in ipsa inventore
-        vitae nihil quidem fugit rerum doloribus beatae, quaerat modi ea quo. Doloremque quaerat aspernatur autem?
-      </Typography>
-      <Typography variant="body1" paragraph>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quae. Quisquam, quae. Quisquam, quae.
-        Quisquam,
+        Wintergames avholdes i marka og tilbyr masse gøye vinteraktiviteter. I tillegg er det Jägerløp, Folkeløp og
+        ekstremt prisgunstige shots. Vi er også heldige som får besøk av Bandøk, slik at man får danset fra seg etter
+        aktivitetene.
       </Typography>
       <Typography variant="h3" gutterBottom>
         Janusvalget
@@ -60,9 +72,10 @@ const ArrangementPage: NextPageWithLayout = () => {
         <ImageSlider imageData={aareturImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia delectus ea perspiciatis accusantium
-        necessitatibus fugit reprehenderit fugiat enim, reiciendis dolore. Est consectetur possimus dignissimos voluptas
-        facilis quis enim similique sit!
+        I likhet med mange andre linjeforeninger på Gløshaugen, drar Janus på tur til Åre i Sverige hvert år i januar.
+        Janus arrangerer hovedsakelig turen for førsteklassinger, men i tradisjon tro stiller også de andre kullene
+        klare for slalåmløyper i verdensklasse og tidenes beste afterski. Med Åretur kommer selvsagt også Indøks egne
+        årlige “Åresang” og eget Åremerch. Dette er ditt livs tur, og de fleste indøkeres favoritt janusarrangement!
       </Typography>
       <Typography variant="h3" gutterBottom>
         Børsfest
@@ -71,9 +84,31 @@ const ArrangementPage: NextPageWithLayout = () => {
         <ImageSlider imageData={borsfestImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia delectus ea perspiciatis accusantium
-        necessitatibus fugit reprehenderit fugiat enim, reiciendis dolore. Est consectetur possimus dignissimos voluptas
-        facilis quis enim similique sit!
+        Børsfest er Kjellerstyrets største arrangement gjennom året. Da samles hele indøk på BSK-hytta i marka, hvor man
+        får anledning til å bade i penger, hooke under “Hooke-hornet” og ikke minst, kjøpe øl i takt med børsens opp- og
+        nedturer gjennom historien. Dette er en fest du ikke vil gå glipp av!
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        Oktoberfest
+      </Typography>
+      <Box width="100%" marginBottom={2}>
+        <ImageSlider imageData={janusvalgetImages} displayLabelText={true}></ImageSlider>
+      </Box>
+      <Typography variant="body1" paragraph>
+        Hvert partallsår arrangerer Janus oktoberfest, for øltørste indøkere. UKA står for oktoberfest de andre årene,
+        men Janus skaper minst like stor fest. Oktoberfest byr på pølser, øl, tautrekking, traktekonkurranse og masse
+        andre gøye låveaktiviteter. Dette er et arrangement for alle som er glad i konkurranser og som liker å gå i
+        Dirndl eller Lederhosen.
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        17. mai
+      </Typography>
+      <Box width="100%" marginBottom={2}>
+        <ImageSlider imageData={janusvalgetImages} displayLabelText={true}></ImageSlider>
+      </Box>
+      <Typography variant="body1" paragraph>
+        Janus arrangerer hvert år 17.mai for alle studenter ved indøk. Man tar kullbilder og feirer nasjonaldagen med
+        kake og cava. I tillegg går vi sammen i folketoget gjennom Trondheim sentrum under janusfanen!
       </Typography>
     </Template>
   );
