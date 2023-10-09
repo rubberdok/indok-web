@@ -21,7 +21,7 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
 import Hilvi from "~/public/img/Hilvi Fjose.jpg";
-import Amund from "~/public/img/Amund Nordland.jpg";
+import Amund from "~/public/img/Amund Norland.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
@@ -46,7 +46,7 @@ const ReportsPage: NextPageWithLayout = () => {
     },
     {
       id: 3,
-      name: "Amund Nordland",
+      name: "Amund Norland",
       initials: "AN",
       color: green[500],
       image: Amund,
