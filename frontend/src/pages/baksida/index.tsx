@@ -19,9 +19,9 @@ import { useRef } from "react";
 import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
-import Hilvi from "~/public/img/Hilvi Fjose.jpg";
 import Amund from "~/public/img/Amund Norland.jpg";
+import Hilvi from "~/public/img/Hilvi Fjose.jpg";
+import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
