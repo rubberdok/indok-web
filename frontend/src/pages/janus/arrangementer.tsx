@@ -9,6 +9,7 @@ import {
   borsfestImages,
   fadderukeImages,
   oktoberfestImages,
+  maiImages,
 } from "@/components/pages/Janus/EventImages/imageData";
 import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
@@ -18,7 +19,7 @@ const ArrangementPage: NextPageWithLayout = () => {
   return (
     <Template title="Årlige Arrangementer" description="Informasjon om våre årlige arrangementer og tradisjoner">
       <Typography variant="h3" gutterBottom>
-        Fadderuker
+        Fadderukers
       </Typography>
       <Box width="100%" marginBottom={2}>
         <ImageSlider imageData={fadderukeImages} displayLabelText={true}></ImageSlider>
@@ -106,7 +107,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         17. mai
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={janusvalgetImages} displayLabelText={true}></ImageSlider>
+        <ImageSlider imageData={maiImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Janus arrangerer hvert år 17.mai for alle studenter ved indøk. Man tar kullbilder og feirer nasjonaldagen med
