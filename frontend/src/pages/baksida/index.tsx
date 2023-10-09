@@ -30,7 +30,7 @@ const ReportsPage: NextPageWithLayout = () => {
   const responsibles = [
     {
       id: 1,
-      name: "Solveig Lund Christinasen",
+      name: "Solveig Lund Christiansen",
       initials: "SLC",
       color: red[800],
       image: Solveig,
