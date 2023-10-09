@@ -9,6 +9,10 @@ board:
     name: Magnus Hafstad
     title: Prosjektleder
     mail: magnus.hafstad@rubberdok.no
+  ceo:
+    name: Hannah Köberle
+    title: Prosjektleder
+    mail: hannah.koeberle@rubberdok.no
 tag: annet
 ---
 
