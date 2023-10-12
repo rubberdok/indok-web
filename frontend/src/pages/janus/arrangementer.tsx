@@ -17,7 +17,7 @@ import { NextPageWithLayout } from "@/lib/next";
 
 const ArrangementPage: NextPageWithLayout = () => {
   return (
-    <Template title="Årlige Arrangementer" description="Informasjon om våre årlige arrangementer og tradisjoner">
+    <Template title="Årlige Arrangementer" description="Informasjon om våre årlige arrangementer og tradisjoner ">
       <Typography variant="h3" gutterBottom>
         Fadderukers
       </Typography>
