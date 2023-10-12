@@ -1,7 +1,7 @@
 import { StaticImageData } from "next/image";
 
-import mai1 from "~/public/static/janusarrangement/17mai/17mai1.JPG";
-import mai2 from "~/public/static/janusarrangement/17mai/17mai2.JPG";
+import mai1 from "~/public/static/janusarrangement/17mai/17mai1.jpg";
+import mai2 from "~/public/static/janusarrangement/17mai/17mai2.jpg";
 import mai3 from "~/public/static/janusarrangement/17mai/17mai3.jpg";
 import mai4 from "~/public/static/janusarrangement/17mai/17mai4.jpg";
 import mai5 from "~/public/static/janusarrangement/17mai/17mai5.jpg";
