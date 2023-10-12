@@ -34,7 +34,8 @@ function Toolbar() {
         <ToolbarButton insert="/28{}" body={<Typography sx={{ fontSize: "28px" }}>h1</Typography>} />
         <ToolbarButton insert="/24{}" body={<Typography sx={{ fontSize: "24px" }}>h2</Typography>} />
         <ToolbarButton insert="/20{}" body={<Typography sx={{ fontSize: "20px" }}>p</Typography>} />
-        <ToolbarButton insert="/img 50,50{}" body={<Typography sx={{ fontSize: "20px" }}>Img</Typography>} />
+        <ToolbarButton insert="/img 50{}" body={<Typography sx={{ fontSize: "20px" }}>Img</Typography>} />
+        <ToolbarButton insert="/c{}" body={<code>int</code>} />
       </Stack>
     </div>
   );
@@ -66,13 +67,17 @@ function Editor() {
   const [text, setText] = useState("");
 
   function rendered() {
+
     const outputString = text
       .replaceAll(/\/b\{(.*?)\}/g, (_, p1) => `<strong>${p1}</strong>`)
       .replaceAll(/\/i\{(.*?)\}/g, (_, p1) => `<i>${p1}</i>`)
       .replaceAll("\n", (_) => `<br>`)
       .replaceAll(" ", (_) => " ")
       .replaceAll(/\/([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<span style="font-size: ${p1}px">${p2}</span>`)
-      .replaceAll(/\/img([0-9]*)\{(.*?)\}/g, (_, p2, p1) => `<img src=${p1} width="${p2}" ></img>`);
+      .replaceAll(/\/img([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<img src=${p1} width="${p2}" ></img>`)
+      .replaceAll(/\/c\{(.*?)\}/g, (_, p1) => `<code>${p1}</code>`)
+
+
 
     return <div dangerouslySetInnerHTML={{ __html: outputString }} />;
   }
@@ -98,7 +103,6 @@ function Editor() {
           autoFocus={true}
           onChange={(e) => {
             setText(e.target.value);
-            console.log(e.target.value);
           }}
           placeholder="Skriv den jævla bloggen din her ..."
         />
