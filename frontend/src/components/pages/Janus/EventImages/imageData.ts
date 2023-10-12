@@ -1,6 +1,6 @@
 import { StaticImageData } from "next/image";
 
-import IMG_0004 from "~/public/static/janusarrangement/Immball/IMG_0004.jpg";
+import IMG_0004 from "~/public/static/janusArrangement/Immball/IMG_0004.jpg";
 
 export type ImageData = {
   label: string;
