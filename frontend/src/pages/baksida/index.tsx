@@ -251,12 +251,7 @@ const ReportsPage: NextPageWithLayout = () => {
                   >
                     {responsibles.map((responsible) => (
                       <Grid container item sm={3} xs={8} key={responsible.id}>
-                        <ContactInfo
-                          name={responsible.name}
-                          email={responsible.email}
-                          image={responsible.image}
-                          position={responsible.position}
-                        />
+                        <ContactInfo name={responsible.name} email={responsible.email} image={responsible.image} />
                       </Grid>
                     ))}
                   </Grid>
