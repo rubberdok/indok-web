@@ -37,8 +37,10 @@ const moduleExports = {
       },
     ];
   },
+  /* To make it easy to use the build output in containers, we use standalone output */
+  output: "standalone",
   compiler: {
-    // ...getPresets(),
+    ...getPresets(),
     /* https://nextjs.org/docs/advanced-features/compiler#emotion */
     emotion: true,
   },
