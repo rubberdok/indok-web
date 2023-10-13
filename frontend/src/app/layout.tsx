@@ -1,5 +1,5 @@
-import { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import { Metadata } from "next";
 
 import { ApolloWrapper } from "@/lib/apollo";
 import { ThemeRegistry } from "@/lib/mui";
