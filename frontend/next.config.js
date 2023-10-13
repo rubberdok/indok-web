@@ -37,12 +37,35 @@ const moduleExports = {
       },
     ];
   },
-  /* To make it easy to use the build output in containers, we use standalone output */
-  output: "standalone",
   compiler: {
     ...getPresets(),
     /* https://nextjs.org/docs/advanced-features/compiler#emotion */
     emotion: true,
+  },
+  /* https://nextjs.org/docs/advanced-features/compiler#minification */
+  swcMinify: true,
+  /* https://nextjs.org/docs/advanced-features/output-file-tracing */
+  output: "standalone",
+  /**
+   * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
+   * See https://mui.com/material-ui/guides/minimizing-bundle-size/#option-2 for reasoning.
+   * In short, top level imports from "@mui/icons-material" will load the entire
+   * "@mui/icons-material" package, which is a lot of code.
+   * Instead, we do some compiler magic to only load the modules we need.
+   */
+  modularizeImports: {
+    "@mui/icons-material": {
+      transform: "@mui/icons-material/{{member}}",
+    },
+    "@mui/material": {
+      transform: "@mui/material/{{member}}",
+    },
+    "@mui/lab": {
+      transform: "@mui/lab/{{member}}",
+    },
+    lodash: {
+      transform: "lodash/{{member}}",
+    },
   },
   experimental: {
     typedRoutes: true,
@@ -56,7 +79,7 @@ const moduleExports = {
 // ensure that your source maps include changes from all other Webpack plugins
 module.exports = withBundleAnalyzer(moduleExports);
 
-// // Injected content via Sentry wizard below
+// Injected content via Sentry wizard below
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
