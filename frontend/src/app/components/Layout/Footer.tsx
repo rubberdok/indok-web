@@ -12,6 +12,7 @@ import { Link, LinkProps } from "../Link";
 
 import { Logo } from "./Logo";
 import { Vercel } from "./Vercel";
+import { HallOfFame } from "@/layouts/footer/HallOfFame";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
 
@@ -41,6 +42,7 @@ export const Footer: React.FC = () => {
 
   return (
     <>
+      {open && <HallOfFame open={open} setOpen={setOpen} />}
       <Divider sx={{ mt: 4 }} />
       <Paper sx={{ bgcolor: "background.elevated" }}>
         <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
