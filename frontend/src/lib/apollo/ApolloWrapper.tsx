@@ -8,8 +8,6 @@ import {
   NextSSRInMemoryCache,
   SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import { setVerbosity } from "ts-invariant";
-setVerbosity("debug");
 
 import { config } from "@/utils/config";
 
