@@ -38,34 +38,9 @@ const moduleExports = {
     ];
   },
   compiler: {
-    ...getPresets(),
+    // ...getPresets(),
     /* https://nextjs.org/docs/advanced-features/compiler#emotion */
     emotion: true,
-  },
-  /* https://nextjs.org/docs/advanced-features/compiler#minification */
-  swcMinify: true,
-  /* https://nextjs.org/docs/advanced-features/output-file-tracing */
-  output: "standalone",
-  /**
-   * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
-   * See https://mui.com/material-ui/guides/minimizing-bundle-size/#option-2 for reasoning.
-   * In short, top level imports from "@mui/icons-material" will load the entire
-   * "@mui/icons-material" package, which is a lot of code.
-   * Instead, we do some compiler magic to only load the modules we need.
-   */
-  modularizeImports: {
-    "@mui/icons-material": {
-      transform: "@mui/icons-material/{{member}}",
-    },
-    "@mui/material": {
-      transform: "@mui/material/{{member}}",
-    },
-    "@mui/lab": {
-      transform: "@mui/lab/{{member}}",
-    },
-    lodash: {
-      transform: "lodash/{{member}}",
-    },
   },
   experimental: {
     typedRoutes: true,
@@ -79,33 +54,33 @@ const moduleExports = {
 // ensure that your source maps include changes from all other Webpack plugins
 module.exports = withBundleAnalyzer(moduleExports);
 
-// Injected content via Sentry wizard below
+// // Injected content via Sentry wizard below
 
-const { withSentryConfig } = require("@sentry/nextjs");
+// const { withSentryConfig } = require("@sentry/nextjs");
 
-module.exports = withSentryConfig(
-  module.exports,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
+// module.exports = withSentryConfig(
+//   module.exports,
+//   {
+//     // For all available options, see:
+//     // https://github.com/getsentry/sentry-webpack-plugin#options
 
-    // Suppresses source map uploading logs during build
-    silent: true,
+//     // Suppresses source map uploading logs during build
+//     silent: true,
 
-    org: "rbberdk",
-    project: "indokweb-frontend",
-  },
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+//     org: "rbberdk",
+//     project: "indokweb-frontend",
+//   },
+//   {
+//     // For all available options, see:
+//     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
+//     // Upload a larger set of source maps for prettier stack traces (increases build time)
+//     widenClientFileUpload: true,
 
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
+//     // Hides source maps from generated client bundles
+//     hideSourceMaps: true,
 
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-  }
-);
+//     // Automatically tree-shake Sentry logger statements to reduce bundle size
+//     disableLogger: true,
+//   }
+// );
