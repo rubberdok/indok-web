@@ -16,7 +16,6 @@ import {
   Typography,
 } from "@mui/material";
 
-
 import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
 import { StepComponent } from "@/components/pages/cabins/StepComponent";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
