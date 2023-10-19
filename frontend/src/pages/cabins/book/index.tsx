@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import {
   Box,
