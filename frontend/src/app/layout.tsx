@@ -1,5 +1,4 @@
-/** @jsxImportSource react */
-
+import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 
 import { ApolloWrapper } from "@/lib/apollo";
@@ -27,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </footer>
           </ApolloWrapper>
         </ThemeRegistry>
+        <Analytics mode={process.env.VERCEL_ENV === "production" ? "production" : "development"} />
       </body>
     </html>
   );

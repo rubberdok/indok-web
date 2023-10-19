@@ -1,5 +1,3 @@
-/** @jsxImportSource react */
-
 import { cookies } from "next/headers";
 
 import { ApolloWrapper } from "./ApolloWrapper";
