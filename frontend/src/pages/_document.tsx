@@ -3,10 +3,10 @@ import { getInitColorSchemeScript } from "@mui/material/styles";
 import { AppType } from "next/app";
 import Document, { DocumentContext, DocumentProps, Head, Html, Main, NextScript } from "next/document";
 
+import { CustomAppProps } from "./_app";
+
 import { createEmotionCache } from "@/lib/emotion";
 import { poppins, merriweather } from "@/lib/mui/theme/typography";
-
-import { CustomAppProps } from "./_app";
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: JSX.Element[];
