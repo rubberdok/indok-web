@@ -1,5 +1,3 @@
-/** @jsxImportSource react */
-
 import { OpenInNew } from "@mui/icons-material";
 import { Box, Card, CardActionArea, Stack, Typography } from "@mui/material";
 

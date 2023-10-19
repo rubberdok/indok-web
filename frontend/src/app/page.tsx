@@ -1,5 +1,3 @@
-/** @jsxImportSource react */
-
 import { Metadata } from "next";
 
 import { LandingListings, LandingPromo, LandingSection } from "./_components";
