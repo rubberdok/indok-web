@@ -90,7 +90,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
       ...stepReady,
       0: cabinOrderStepReady(chosenCabins, datePick),
     });
-  }, [chosenCabins, datePick]);
+  }, [chosenCabins, datePick, stepReady]);
 
   useEffect(() => {
     setValidations(validateInputForm(contactInfo));
@@ -103,7 +103,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
       2: { ready: true, errortext: "" },
       3: { ready: true, errortext: "" },
     });
-  }, [contactInfo]);
+  }, [contactInfo, stepReady]);
 
   const handleNextClick = () => {
     if (activeStep == 2 && !modalData.contractViewed) {
