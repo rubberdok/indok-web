@@ -11,6 +11,44 @@ export default function Blog() {
   );
 }
 
+function parseList(input: string, index: &number) {
+
+    let output = "<li>"
+
+    // skip forbi /li{
+    index += 4
+
+    let lastCharacters: string[] = []
+
+    let currentBulletPoint = ""
+
+    while (index < input.length) {
+
+        let next = input.charAt(index)
+
+        if (next === "}") {
+            return output + "</li>"
+        }
+
+        const shifted = lastCharacters.shift()
+        lastCharacters.push(next)
+
+        if (lastCharacters.join("") === "/li{") {
+            output += "<li>" + currentBulletPoint + "</li>"
+            currentBulletPoint = ""
+            output += parseList(input, index)
+            continue
+        }
+
+        currentBulletPoint += shifted
+        index += 1
+
+    }
+
+    return output
+
+}
+
 function Toolbar() {
   return (
     <div style={{ width: "100%" }}>
