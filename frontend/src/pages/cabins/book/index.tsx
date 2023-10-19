@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 
-import { useEffect, useState } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import {
   Box,
@@ -15,6 +14,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 
 import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
 import { StepComponent } from "@/components/pages/cabins/StepComponent";
