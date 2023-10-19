@@ -37,7 +37,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         <ImageSlider imageData={immballImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
-        Immatrikuleringsball arrangeres etter fadderukene for de å ta imot de nye førstklassingene. Tradisjonelt sett er
+        Immatrikuleringsball arrangeres etter fadderukene for å ta imot de nye førstklassingene. Tradisjonelt sett er
         immball etter opptaket, slik at man kan feire nyopptatte janusere. Man kler seg opp i finstas og blir servert
         flere retter, mens underholdning som taler, koropptredener og allsang foregår på scenen. Kvelden avsluttes med
         opptreden fra vårt kjære Bandøk! Før immball avholodes det 1./5. og 2./4. vors, slik at man kan bli kjent med
