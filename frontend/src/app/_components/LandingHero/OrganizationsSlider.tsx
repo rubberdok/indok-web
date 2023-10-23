@@ -14,7 +14,7 @@ import { Link } from "@/app/components/Link";
 import { Organization, OrganizationLink } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
-  { name: "Janus", externalUrl: "https://www.januslinjeforening.no" },
+  { name: "Janus", internalUrl: "/janus" },
   { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
   { name: "Indøk Kultur", internalUrl: "/about/organization?category=kultur" },
