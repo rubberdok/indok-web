@@ -10,7 +10,7 @@ export const BookNow: React.FC = () => {
   //const { data } = useQuery(CabinsAndResponsiblesDocument);
   const data = { cabins: [{ internalPrice: 70, externalPrice: 7000 }] };
   return (
-    <Card sx={{ height: "100%" }} elevation={0} data-color-scheme="dark">
+    <Card sx={{ height: "50%" }} elevation={0} data-color-scheme="dark">
       <CardContent sx={{ height: "100%" }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ height: "100%" }}>
           <Stack direction="column">

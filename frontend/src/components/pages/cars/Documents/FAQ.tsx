@@ -10,15 +10,8 @@ import { Link } from "@/components";
 
 const faqs = [
   {
-    question: "Hva er adressen til hyttene?",
-    answer: (
-      <Typography>
-        Hyttene ligger rett ved Stølen alpintanlegg, med adresse Gårdavegen 88 og 90, 7340 Oppdal.{" "}
-        <Link href="https://www.google.no/maps/place/Gard%C3%A5vegen+88,+7340+Oppdal/@62.6172879,9.7285127,17z/data=!3m1!4b1!4m5!3m4!1s0x461353ba1a632365:0x6a03f6b3ad43a6a8!8m2!3d62.6172879!4d9.7307014?hl=no">
-          Vis kart.
-        </Link>
-      </Typography>
-    ),
+    question: "Er bilen manuell eller automat?",
+    answer: <Typography>Bilen er manuell. </Typography>,
   },
   {
     question: "Hvor lang er avbestillingsfristen?",
@@ -37,25 +30,8 @@ const faqs = [
     ),
   },
   {
-    question: "Hvordan booker jeg sengeplasser?",
-    answer: (
-      <Typography>
-        Det gjøres ved å sende mail til{" "}
-        <Link href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</Link>.
-      </Typography>
-    ),
-  },
-  {
-    question: "Hva er forskjellen på de to hyttene?",
-    answer: <Typography>Hyttene er tilnærmet identiske. Bjørnen har TV med HDMI-kabel.</Typography>,
-  },
-  {
-    question: "Hva er den totale kapasiteten på hyttene?",
-    answer: (
-      <Typography>
-        Den totale kapasiteten er 18 personer på hver hytte, fordelt på 14 sengeplasser og 4 madrasser.
-      </Typography>
-    ),
+    question: "Hvor mange plasser er det i bilen?",
+    answer: <Typography>Det er X plasser i bilen.</Typography>,
   },
   {
     question: "Hva kan man finne på i Oppdal?",
@@ -76,7 +52,7 @@ const faqs = [
   },
 
   {
-    question: "Kan jeg ha med meg eksterne venner (ikke-indøkere) til hyttene?",
+    question: "Kan jeg ha med meg eksterne venner (ikke-indøkere) i bilen?",
     answer: (
       <Typography>
         Ja. Det er egne priser for eksterne gjester. Hvis det skal bookes sengeplasser må det være med en indøker på
@@ -103,8 +79,8 @@ const faqs = [
     ),
   },
   {
-    question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
-    answer: <Typography>Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 2700,- per natt.</Typography>,
+    question: "Kan jeg leie bil for min eksterne vennegjeng?",
+    answer: <Typography>Svar</Typography>,
   },
 ];
 

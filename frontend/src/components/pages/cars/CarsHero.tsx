@@ -3,7 +3,7 @@ import React from "react";
 import { Title } from "@/components/Title";
 import car from "~/public/img/ferrari.jpg";
 
-export const CabinsHero: React.VFC = () => {
+export const CarsHero: React.VFC = () => {
   return (
     <Title
       title="Bilbooking"

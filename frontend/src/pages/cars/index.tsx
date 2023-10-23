@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { Link } from "@/components";
 import { CabinsDetailsSection } from "@/components/pages/cars/CarsDetailsSection";
-import { CabinsHero } from "@/components/pages/cars/CarsHero";
+import { CarsHero } from "@/components/pages/cars/CarsHero";
 import { CabinsInfoSection } from "@/components/pages/cars/CarsInfoSection";
 import { ContactCabinBoard } from "@/components/pages/cars/ContactCarBoard";
 import { FAQ } from "@/components/pages/cars/Documents/FAQ";
@@ -59,9 +59,19 @@ const CarsPage: NextPageWithLayout = () => {
         <title>Bilbooking | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
         <meta name="og:image" content="/img/hytte.jpg" />
       </Head>
-      <CabinsHero />
+      <CarsHero />
       <CabinsInfoSection />
       <CabinsDetailsSection />
+      <Container sx={{ my: 8 }}>
+        <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center" mb={8}>
+          <Grid item>
+            <Typography variant="h3">FAQ</Typography>
+          </Grid>
+          <Grid item>
+            <FAQ />
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 };
