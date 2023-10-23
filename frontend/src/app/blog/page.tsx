@@ -65,6 +65,14 @@ function ToolbarButton({ insert, body }: { insert: string; body: any }) {
   );
 }
 
+function list(nesting: number, content: string) {
+    const max = 3
+    nesting = ((nesting > max) ? max : nesting) - 1;
+    const styles: string[] = ["disc", "circle", "square"];
+    const style = styles[nesting];
+    return `<li style="text-indent: ${nesting * 30}px; list-style-type: ${style};">${content}</li>`
+}
+
 function Editor() {
   const [text, setText] = useState("");
 
@@ -77,8 +85,7 @@ function Editor() {
       .replaceAll(/\/([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<span style="font-size: ${p1}px">${p2}</span>`)
       .replaceAll(/\/img([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<img src=${p1} width="${p2}" ></img>`)
       .replaceAll(/\/c\{(.*?)\}/g, (_, p1) => `<code>${p1}</code>`)
-      .replaceAll(/\/li\{(.*?)\}/g, (_, p1) => `<li>${p1}</li>`)
-      .replaceAll(/\/ili\{(.*?)\}/g, (_, p1) => `<li style="text-indent: 30px; list-style-type: square;">${p1}</ul>`)
+      .replaceAll(/\/l([1-9][0-9]*)\{(.*?)\}(<br>)?/g, (_, p1, p2, p3) => list(p1, p2))
 
     return <div dangerouslySetInnerHTML={{ __html: outputString }} />;
   }
