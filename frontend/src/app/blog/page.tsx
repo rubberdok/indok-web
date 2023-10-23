@@ -37,7 +37,7 @@ function Toolbar() {
         <ToolbarButton insert="/20{}" body={<Typography sx={{ fontSize: "20px" }}>p</Typography>} />
         <ToolbarButton insert="/img 50{}" body={<Typography sx={{ fontSize: "20px" }}>Img</Typography>} />
         <ToolbarButton insert="/c{}" body={<code>int</code>} />
-        <ToolbarButton insert="<li><li>" body={<FormatListBulletedIcon></FormatListBulletedIcon>} />
+        <ToolbarButton insert="/li{}" body={<FormatListBulletedIcon></FormatListBulletedIcon>} />
       </Stack>
     </div>
   );
@@ -76,7 +76,9 @@ function Editor() {
       .replaceAll(" ", (_) => " ")
       .replaceAll(/\/([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<span style="font-size: ${p1}px">${p2}</span>`)
       .replaceAll(/\/img([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<img src=${p1} width="${p2}" ></img>`)
-      .replaceAll(/\/c\{(.*?)\}/g, (_, p1) => `<code>${p1}</code>`);
+      .replaceAll(/\/c\{(.*?)\}/g, (_, p1) => `<code>${p1}</code>`)
+      .replaceAll(/\/li\{(.*?)\}/g, (_, p1) => `<li>${p1}</li>`)
+      .replaceAll(/\/ili\{(.*?)\}/g, (_, p1) => `<li style="text-indent: 30px; list-style-type: square;">${p1}</ul>`)
 
     return <div dangerouslySetInnerHTML={{ __html: outputString }} />;
   }
