@@ -9,9 +9,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 
-import { Organization, OrganizationLink } from "./OrganizationLink";
-
 import { Link } from "@/app/components/Link";
+
+import { Organization, OrganizationLink } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
   { name: "Janus", internalUrl: "/janus" },
