@@ -1,5 +1,6 @@
 "use client";
 
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { ButtonBase, Container, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useState } from "react";
@@ -9,44 +10,6 @@ export default function Blog() {
       <Editor />
     </Container>
   );
-}
-
-function parseList(input: string, index: &number) {
-
-    let output = "<li>"
-
-    // skip forbi /li{
-    index += 4
-
-    let lastCharacters: string[] = []
-
-    let currentBulletPoint = ""
-
-    while (index < input.length) {
-
-        let next = input.charAt(index)
-
-        if (next === "}") {
-            return output + "</li>"
-        }
-
-        const shifted = lastCharacters.shift()
-        lastCharacters.push(next)
-
-        if (lastCharacters.join("") === "/li{") {
-            output += "<li>" + currentBulletPoint + "</li>"
-            currentBulletPoint = ""
-            output += parseList(input, index)
-            continue
-        }
-
-        currentBulletPoint += shifted
-        index += 1
-
-    }
-
-    return output
-
 }
 
 function Toolbar() {
@@ -74,6 +37,7 @@ function Toolbar() {
         <ToolbarButton insert="/20{}" body={<Typography sx={{ fontSize: "20px" }}>p</Typography>} />
         <ToolbarButton insert="/img 50{}" body={<Typography sx={{ fontSize: "20px" }}>Img</Typography>} />
         <ToolbarButton insert="/c{}" body={<code>int</code>} />
+        <ToolbarButton insert="<li><li>" body={<FormatListBulletedIcon></FormatListBulletedIcon>} />
       </Stack>
     </div>
   );
@@ -105,7 +69,6 @@ function Editor() {
   const [text, setText] = useState("");
 
   function rendered() {
-
     const outputString = text
       .replaceAll(/\/b\{(.*?)\}/g, (_, p1) => `<strong>${p1}</strong>`)
       .replaceAll(/\/i\{(.*?)\}/g, (_, p1) => `<i>${p1}</i>`)
@@ -113,9 +76,7 @@ function Editor() {
       .replaceAll(" ", (_) => " ")
       .replaceAll(/\/([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<span style="font-size: ${p1}px">${p2}</span>`)
       .replaceAll(/\/img([0-9]*)\{(.*?)\}/g, (_, p1, p2) => `<img src=${p1} width="${p2}" ></img>`)
-      .replaceAll(/\/c\{(.*?)\}/g, (_, p1) => `<code>${p1}</code>`)
-
-
+      .replaceAll(/\/c\{(.*?)\}/g, (_, p1) => `<code>${p1}</code>`);
 
     return <div dangerouslySetInnerHTML={{ __html: outputString }} />;
   }
