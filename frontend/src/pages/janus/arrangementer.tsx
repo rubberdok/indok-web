@@ -19,7 +19,7 @@ const ArrangementPage: NextPageWithLayout = () => {
   return (
     <Template title="Årlige Arrangementer" description="Informasjon om våre årlige arrangementer og tradisjoner ">
       <Typography variant="h3" gutterBottom>
-        Fadderukers
+        Fadderuker
       </Typography>
       <Box width="100%" marginBottom={2}>
         <ImageSlider imageData={fadderukeImages} displayLabelText={true}></ImageSlider>
