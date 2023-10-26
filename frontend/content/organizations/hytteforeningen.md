@@ -1,33 +1,34 @@
 ---
 title: Hytteforeningen
 description: Gjengen som passer på hyttene våre
-logo: /img/hylogo.jpg
+logo: /static/cabins/logo.svg
 image: /img/hy1.jpg
 board:
   leder:
-    name: Einar Midthun
-    phoneNumber: 909 72 957
+    name: Mats Tviberg Torsvik
+    phoneNumber: 941 04 242
     title: Leder
   øko_nestleder:
-    name: Ingvild Vartdal Sund
-    phoneNumber: 960 46 506
-    title: Nestleder og økonomiansvarlig
-  drift:
-    name: Iver Kvaale Skibsrud
-    phoneNumber: 479 23 118
-    title: Driftsansvarlig
-  book:
-    name: Thale Simonsen
-    phoneNumber: 907 94 116
-    title: Bookingansvarlig
-  log:
-    name: Bendik Westerheim-Hjemås
-    phoneNumber: 457 75 516
-    title: Logistikkansvarlig
-  pr:
     name: Ingrid Bergan
     phoneNumber: 919 14 214
+    title: Nestleder og økonomiansvarlig
+  pr:
+    name: Hedda Raanes
+    phoneNumber: 971 84 326
     title: PR- og sosialansvarlig
+  drift:
+    name: Brage Sømoen
+    phoneNumber: 918 68 493
+    title: Driftsansvarlig
+  book:
+    name: Marit Hjerpseth Arvesen
+    phoneNumber: 481 49 233
+    title: Bookingansvarlig
+  log:
+    name: Frida Løken
+    phoneNumber: 465 43 556
+    title: Logistikkansvarlig
+
 
 tag: annet
 ---

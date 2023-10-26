@@ -4,8 +4,9 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
 import React from "react";
+
+import { Link } from "@/components";
 
 const faqs = [
   {
@@ -29,9 +30,7 @@ const faqs = [
             <Typography>Avbestilling innen to uker før bestilt ankomstdato er gebyrfritt.</Typography>
           </li>
           <li>
-            <Typography>
-              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av leien.
-            </Typography>
+            <Typography>Avbestilling etter dette medfører et gebyr på 30% av leien.</Typography>
           </li>
         </ul>
       </Box>
@@ -42,7 +41,7 @@ const faqs = [
     answer: (
       <Typography>
         Det gjøres ved å sende mail til{" "}
-        <a href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</a>.
+        <Link href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</Link>.
       </Typography>
     ),
   },
@@ -109,10 +108,8 @@ const faqs = [
   },
 ];
 
-/*
-Renders all frequently asked questions regarding the cabins.
-*/
-const FAQ: React.FC = () => {
+/** Renders all frequently asked questions regarding the cabins. */
+export const FAQ: React.FC = () => {
   const [expandedPanel, setExpandedPanel] = React.useState<number>();
 
   const handleChange = (panel: number) => (_: React.SyntheticEvent<Element, Event>, expanded: boolean) => {
@@ -122,7 +119,7 @@ const FAQ: React.FC = () => {
   return (
     <Grid item container xs={12} spacing={5}>
       {faqs.map((faq, index) => (
-        <Grid item xs={12} md={6} key={index}>
+        <Grid item xs={12} md={6} key={faq.question}>
           <Box>
             <Accordion expanded={expandedPanel === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<ExpandMore />}>
@@ -136,5 +133,3 @@ const FAQ: React.FC = () => {
     </Grid>
   );
 };
-
-export default FAQ;

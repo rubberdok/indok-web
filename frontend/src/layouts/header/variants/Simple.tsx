@@ -1,7 +1,8 @@
 import { Box, Divider, Stack } from "@mui/material";
+
 import { Logo } from "../../../components";
 
-const Simple: React.FC = () => {
+export const Simple: React.FC = () => {
   return (
     <Box display="flex" justifyContent="center" py={4}>
       <Stack
@@ -15,5 +16,3 @@ const Simple: React.FC = () => {
     </Box>
   );
 };
-
-export default Simple;

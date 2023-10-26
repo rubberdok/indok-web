@@ -1,25 +1,27 @@
-import useBookingSemester from "@hooks/cabins/useBookingSemester";
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { Hidden, IconButton, Stack, Typography } from "@mui/material";
-import { dateInBookingSemester } from "@utils/cabins";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import CalendarDay from "./CalendarDay";
-import CalendarRow from "./CalendarRow";
-import CalendarTable from "./CalendarTable";
+
+import { useBookingSemester } from "@/hooks/cabins/useBookingSemester";
+import { dateInBookingSemester } from "@/utils/cabins";
+
+import { CalendarDay } from "./CalendarDay";
+import { CalendarRow } from "./CalendarRow";
+import { CalendarTable } from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import { getDateRange } from "./helpers";
 
-interface CalendarProps {
+type Props = {
   disabledDates?: string[];
   disableAll?: boolean;
   disableBefore?: string;
   disableAfter?: string;
   title?: string;
   onRangeChange?: (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => void;
-}
+};
 
-const Calendar: React.FC<CalendarProps> = ({
+export const Calendar: React.FC<Props> = ({
   disabledDates,
   disableAll,
   disableBefore,
@@ -70,9 +72,7 @@ const Calendar: React.FC<CalendarProps> = ({
     }
   };
 
-  /*
-  Handles what happens to the calendar date range when the user selects (or deselects) from dates and to dates.
-  */
+  // Handles what happens to the calendar date range when the user selects (or deselects) from dates and to dates.
   useEffect(() => {
     const dateToString = (date: dayjs.Dayjs | undefined): string | undefined =>
       date ? date.format(DATE_FORMAT) : undefined;
@@ -238,5 +238,3 @@ const Calendar: React.FC<CalendarProps> = ({
     </Stack>
   );
 };
-
-export default Calendar;

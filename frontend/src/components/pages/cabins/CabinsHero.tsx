@@ -1,8 +1,9 @@
-import Title from "@components/Title";
-import cabin from "@public/img/hytte.jpg";
 import React from "react";
 
-const CabinsHero: React.VFC = () => {
+import { Title } from "@/components/Title";
+import cabin from "~/public/img/hytte.jpg";
+
+export const CabinsHero: React.VFC = () => {
   return (
     <Title
       title="Hyttebooking"
@@ -15,5 +16,3 @@ const CabinsHero: React.VFC = () => {
     />
   );
 };
-
-export default CabinsHero;

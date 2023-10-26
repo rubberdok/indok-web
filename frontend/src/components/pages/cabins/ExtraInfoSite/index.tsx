@@ -1,14 +1,16 @@
-import { Cabin, DatePick } from "@interfaces/cabins";
 import { Box, Divider, Hidden, Stack, TextField, Typography } from "@mui/material";
-import { convertDateFormat, toStringChosenCabins } from "@utils/cabins";
+
+import { CabinFragment } from "@/generated/graphql";
+import { DatePick } from "@/types/cabins";
+import { convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
 type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
-  chosenCabins: Cabin[];
+  chosenCabins: CabinFragment[];
   datePick: DatePick;
 };
 
-const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins }) => {
+export const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins }) => {
   const fromDate = datePick.checkInDate !== undefined && convertDateFormat(datePick.checkInDate);
   const toDate = datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate);
 
@@ -42,5 +44,3 @@ const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins 
     </Box>
   );
 };
-
-export default ExtraInfoSite;

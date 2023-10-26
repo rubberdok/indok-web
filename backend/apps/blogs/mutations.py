@@ -17,7 +17,6 @@ class CreateBlog(graphene.Mutation):
 
     @permission_required("blogs.add_blog")
     def mutate(self, info, name, description, organization_id):
-
         try:
             organization = OrganizationModel.objects.get(pk=organization_id)
 
@@ -73,7 +72,6 @@ class UpdateBlog(graphene.Mutation):
         info,
         blog_data,
     ):
-
         ok = True
 
         try:
@@ -112,7 +110,6 @@ class CreateBlogPost(graphene.Mutation):
         author_id,
         blog_id,
     ):
-
         try:
             blog = BlogModel.objects.get(pk=blog_id)
 

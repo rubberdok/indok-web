@@ -5,57 +5,53 @@ updates:
     directory: "/frontend"
     # Check the npm registry for updates at 2am UTC
     schedule:
-      interval: "daily"
-      time: "02:00"
-
-    commit-message:
-      prefix: "build(next): "
-
-    labels:
-      - "dependencies"
-      - "javascript"
-
-  - package-ecosystem: "pip"
-    directory: "/backend/requirements/"
-    schedule:
-      interval: "daily"
-      time: "02:00"
-
-    commit-message:
-      prefix: "build(python): "
-
-    labels:
-      - "dependencies"
-      - "python"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
-      time: "02:00"
-
-    commit-message:
-      prefix: "build(ci): "
-
-    labels:
-      - "dependencies"
-      - "CI/CD"
-
-  - package-ecosystem: npm
-    directory: "/api"
-
-    schedule:
       interval: daily
 
     commit-message:
-      prefix: "chore"
-      include: scope
-
-    versioning-strategy: increase
-    ignore:
-      - dependency-name: "@types/node"
-        update-types: ["version-update:semver-major"]
+      prefix: chore
+      include: "scope"
 
     labels:
       - dependencies
       - javascript
+      - next
+
+    versioning-strategy: increase
+    # Should only be bumped when a new LTS is released, see schedule on nodejs.org
+    # should also correspond to the node version in dockerfiles/vercel
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "pip"
+    directory: "/backend/requirements/"
+    schedule:
+      interval: daily
+
+    commit-message:
+      prefix: chore
+      include: scope
+
+    labels:
+      - dependencies
+      - python
+      - django
+
+    # Waiting for updates to other dependencies, such as graphene-django before we're compatible with
+    # django 4.0
+    ignore:
+      - dependency-name: django
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: daily
+
+    commit-message:
+      prefix: chore
+      include: scope
+
+    labels:
+      - dependencies
+      - "CI/CD"

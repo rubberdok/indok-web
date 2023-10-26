@@ -1,28 +1,24 @@
-import { ListingDocument } from "@generated/graphql";
-import { ResultOf } from "@graphql-typed-document-node/core";
 import { ArrowForward } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link as MuiLink } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import Image from "next/future/image";
-import Link from "next/link";
+import Image from "next/image";
 import React from "react";
+
+import { Link } from "@/components";
+import { ListingWithFormIdFragment } from "@/generated/graphql";
+
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");
 dayjs.locale(nb);
 
-/**
- * Component for title and organization info on the listing detail page.
- *
- * Props:
- * - the listing to render
- */
-const TitleCard: React.FC<{
-  listing: ResultOf<typeof ListingDocument>["listing"];
-}> = ({ listing }) => {
+type Props = { listing?: ListingWithFormIdFragment };
+
+/** Component for title and organization info on the listing detail page. */
+export const TitleCard: React.FC<Props> = ({ listing }) => {
   let link: string | undefined = undefined;
   if (listing?.form) {
     link = `/forms/${listing.form.id}/`;
@@ -51,12 +47,10 @@ const TitleCard: React.FC<{
           )}
           <Grid container xs sm={12} item direction="column">
             {listing?.readMoreUrl ? (
-              <Link href={listing.readMoreUrl} passHref>
-                <MuiLink target="_blank" color="text.primary">
-                  <Typography variant="h4" component="h4" align="center" gutterBottom>
-                    {listing?.organization.name}
-                  </Typography>
-                </MuiLink>
+              <Link href={listing.readMoreUrl} target="_blank" noLinkStyle>
+                <Typography variant="h4" component="h4" align="center" gutterBottom>
+                  {listing?.organization.name}
+                </Typography>
               </Link>
             ) : (
               <Typography variant="h4" component="h4" align="center" gutterBottom>
@@ -65,15 +59,20 @@ const TitleCard: React.FC<{
             )}
             <Divider sx={{ my: 2, display: { xs: "none", sm: "block" } }} />
             <Typography variant="caption" component="h3" align="center" gutterBottom>
-              {`Frist ${dayjs(listing?.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}`}
+              {`Frist ${dayjs(listing?.deadline).format("LLL")}`}
             </Typography>
             {link && (
               <Grid container item justifyContent="center">
-                <Link href={link} passHref>
-                  <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                    Søk her
-                  </Button>
-                </Link>
+                <Button
+                  component={Link}
+                  href={link}
+                  noLinkStyle
+                  variant="contained"
+                  color="primary"
+                  endIcon={<ArrowForward />}
+                >
+                  Søk her
+                </Button>
               </Grid>
             )}
           </Grid>
@@ -82,5 +81,3 @@ const TitleCard: React.FC<{
     </Card>
   );
 };
-
-export default TitleCard;

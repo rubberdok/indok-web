@@ -1,2 +1,2 @@
-export { default as Header } from "./variants/Basic";
-export { default as HeaderSimple } from "./variants/Simple";
+export { Basic as Header } from "./variants/Basic";
+export { Simple as HeaderSimple } from "./variants/Simple";

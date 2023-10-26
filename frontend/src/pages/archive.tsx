@@ -1,17 +1,18 @@
-import Documents from "@components/pages/archive/Documents";
-import FeaturedDocumentsList from "@components/pages/archive/FeaturedDocumentsList";
-import FilterButtons from "@components/pages/archive/FilterButtons";
-import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
-import SearchBar from "@components/pages/archive/SearchBar";
-import YearSelector from "@components/pages/archive/YearSelector";
-import Title from "@components/Title";
-import { HasPermissionDocument } from "@generated/graphql";
-import Layout from "@layouts/Layout";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Box, Container, FormGroup, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Head from "next/head";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "./_app";
+
+import { Documents } from "@/components/pages/archive/Documents";
+import { FeaturedDocumentsList } from "@/components/pages/archive/FeaturedDocumentsList";
+import { FilterButtons } from "@/components/pages/archive/FilterButtons";
+import { RemoveFiltersButton } from "@/components/pages/archive/RemoveFiltersButton";
+import { SearchBar } from "@/components/pages/archive/SearchBar";
+import { YearSelector } from "@/components/pages/archive/YearSelector";
+import { Title } from "@/components/Title";
+import { DocumentsDocument, HasPermissionDocument } from "@/generated/graphql";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
+import { NextPageWithLayout } from "@/lib/next";
 
 const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const [yearFilter, setYearFilter] = useState("");
@@ -27,16 +28,21 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
     Guidelines: { active: false, title: "Støtte fra HS" },
     Regulation: { active: false, title: "Foreningens lover" },
     Statues: { active: false, title: "Utveksling" },
+    Januscript: { active: false, title: "Januscript" },
     Others: { active: false, title: "Annet" },
   });
 
   return (
     <>
+      <Head>
+        <title>Dokumenter | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="description" content="Januscript, budsjetter, og andre dokumenter fra Indøk." />
+      </Head>
       <Title
-        title="Arkiv"
+        title="Dokumenter"
         breadcrumbs={[
           { name: "Hjem", href: "/" },
-          { name: "Arkiv", href: "/archive" },
+          { name: "Dokumenter", href: "/archive" },
         ]}
       />
 
@@ -90,6 +96,7 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
                 Guidelines: { active: false, title: "Støtte fra HS" },
                 Regulation: { active: false, title: "Foreningens lover" },
                 Statues: { active: false, title: "Utveksling" },
+                Januscript: { active: false, title: "Januscript" },
                 Others: { active: false, title: "Annet" },
               });
               setViewFeatured(true);
@@ -112,20 +119,28 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
+
+  const { data: permissionData } = await client.query({
     query: HasPermissionDocument,
     variables: {
       permission: "archive.view_archivedocument",
     },
   });
 
-  if (error) return { notFound: true };
-  if (!data.hasPermission) {
-    return { notFound: true };
-  }
+  if (!permissionData.hasPermission) return { notFound: true };
+
+  const { data, error } = await client.query({
+    query: DocumentsDocument,
+    variables: {
+      documentTypes: [],
+      names: "",
+      year: null,
+    },
+  });
+
+  if (error) throw new Error(error.message);
+
   return addApolloState(client, { props: { data } });
 };
-
-Archive.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default Archive;

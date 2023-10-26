@@ -1,27 +1,27 @@
-import Link from "next/link";
-import { MouseEventHandler } from "react";
+import { Link } from "@/components";
+
 import { Route } from "../../types";
-import { RouteLink } from "./styles";
 
 type Props = {
   active?: boolean;
   route: Route;
-  onClick?: MouseEventHandler<HTMLSpanElement>;
 };
 
-const NavigationLink: React.FC<Props> = ({ active, route, onClick }) => {
+export const NavigationLink: React.FC<Props> = ({ active, route }) => {
   return (
-    <Link href={route.path} passHref>
-      <RouteLink
-        onClick={onClick}
-        variant="body2"
-        fontWeight={(theme) => theme.typography.fontWeightMedium}
-        color={(theme) => (active ? theme.palette.text.primary : theme.palette.text.secondary)}
-      >
-        {route.title}
-      </RouteLink>
+    <Link
+      href={route.path}
+      variant="body2"
+      underline="none"
+      fontWeight={(theme) => theme.typography.fontWeightMedium}
+      color={active ? "text.primary" : "text.secondary"}
+      sx={{
+        ":hover": {
+          color: "text.primary",
+        },
+      }}
+    >
+      {route.title}
     </Link>
   );
 };
-
-export default NavigationLink;

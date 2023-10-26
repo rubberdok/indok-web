@@ -1,112 +1,84 @@
 import { useMutation } from "@apollo/client";
-import ConfirmFormChange from "@components/pages/forms/formAdmin/ConfirmFormChange";
-import EditQuestion from "@components/pages/forms/formAdmin/EditQuestion";
-import QuestionPreview from "@components/pages/forms/formAdmin/QuestionPreview";
-import { FORM_RESPONSES_FRAGMENT } from "@graphql/forms/fragments";
-import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/forms/mutations";
-import { Form, Question, QuestionVariables } from "@interfaces/forms";
 import { Add } from "@mui/icons-material";
 import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
+import { orderBy } from "lodash";
 import { useState } from "react";
 
-/**
- * Component for editing forms (for example: the applications to listings).
- *
- * Props:
- * - the form to edit
- */
-const EditForm: React.FC<{ form: Form }> = ({ form }) => {
+import { ConfirmFormChange } from "@/components/pages/forms/formAdmin/ConfirmFormChange";
+import { EditQuestion } from "@/components/pages/forms/formAdmin/EditQuestion";
+import { QuestionPreview } from "@/components/pages/forms/formAdmin/QuestionPreview";
+import {
+  CreateQuestionDocument,
+  DeleteQuestionDocument,
+  FormWithAllResponsesFragment,
+  QuestionTypeEnum,
+  QuestionWithAnswerIdsFragment,
+  QuestionWithAnswerIdsFragmentDoc,
+  UpdateQuestionDocument,
+} from "@/generated/graphql";
+
+type Props = { form: FormWithAllResponsesFragment };
+
+/** Component for editing forms (for example: the applications to listings). */
+export const EditForm: React.FC<Props> = ({ form }) => {
   // state to manage the question on the form currently being edited
   // undefined if no question is currently being edited
-  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
+  const [activeQuestion, setActiveQuestion] = useState<QuestionWithAnswerIdsFragment | undefined>();
 
   // state for whether to show a confirmation dialog after changing the form
   // "update" type also includes toSwitch for question to switch to after confirming
   const [confirmationDialog, setConfirmationDialog] = useState<
-    { type: "create" } | { type: "update"; toSwitch: Question | undefined } | { type: "delete" } | undefined
+    | { type: "create" }
+    | { type: "update"; toSwitch: QuestionWithAnswerIdsFragment | undefined }
+    | { type: "delete" }
+    | undefined
   >(undefined);
 
   // mutation to create a new question
-  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
+  const [createQuestion] = useMutation(CreateQuestionDocument, {
     // updates the cache upon creating the question, keeping the client consistent with the database
     update: (cache, { data }) => {
-      // gets the new question from the mutation's return
-      const newQuestion = data?.createQuestion.question;
-      // reads the cached form on which to update the question
-      const cachedForm = cache.readFragment<Form>({
-        id: `FormType:${form.id}`,
-        fragment: FORM_RESPONSES_FRAGMENT,
-        fragmentName: "FormResponsesFragment",
-      });
-      if (cachedForm && newQuestion) {
-        // adds the new question to the questions field of the cached form
-        cache.writeFragment({
-          id: `FormType:${form.id}`,
-          fragment: FORM_RESPONSES_FRAGMENT,
-          fragmentName: "FormResponsesFragment",
-          data: {
-            questions: [...cachedForm.questions, newQuestion],
+      const question = data?.createQuestion?.question;
+      if (question) {
+        cache.modify({
+          id: cache.identify(form),
+          fields: {
+            questions(existingQuestions = []) {
+              const newQuestionRef = cache.writeFragment({
+                data: question,
+                fragment: QuestionWithAnswerIdsFragmentDoc,
+                fragmentName: "QuestionWithAnswerIds",
+              });
+              return [...existingQuestions, newQuestionRef];
+            },
           },
         });
       }
     },
     onCompleted: ({ createQuestion }) => {
-      if (createQuestion) {
+      if (createQuestion?.question) {
         switchActiveQuestion(createQuestion.question);
       }
     },
   });
 
   // mutation to update a question (and its options)
-  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
-    // updates the cache upon updating the question
-    update: (cache, { data }) => {
-      const newQuestion = data?.updateQuestion.question;
-      const cachedForm = cache.readFragment<Form>({
-        id: `FormType:${form.id}`,
-        fragment: FORM_RESPONSES_FRAGMENT,
-        fragmentName: "FormResponsesFragment",
-      });
-      if (cachedForm && newQuestion) {
-        cache.writeFragment({
-          id: `FormType:${form.id}`,
-          fragment: FORM_RESPONSES_FRAGMENT,
-          fragmentName: "FormResponsesFragment",
-          data: {
-            questions: cachedForm.questions.map((question) =>
-              question.id === newQuestion.id ? newQuestion : question
-            ),
-          },
-        });
-      }
-    },
-  });
+  const [updateQuestion] = useMutation(UpdateQuestionDocument);
 
   // mutation to delete the question
-  const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
+  const [deleteQuestion] = useMutation(DeleteQuestionDocument, {
     // updates the cache upon deleting the question
     update: (cache, { data }) => {
-      const cachedForm = cache.readFragment<Form>({
-        id: `FormType:${form.id}`,
-        fragment: FORM_RESPONSES_FRAGMENT,
-        fragmentName: "FormResponsesFragment",
-      });
-      const deletedId = data?.deleteQuestion.deletedId;
-      if (cachedForm && deletedId) {
-        cache.writeFragment({
-          id: `FormType:${form.id}`,
-          fragment: FORM_RESPONSES_FRAGMENT,
-          fragmentName: "FormResponsesFragment",
-          data: {
-            questions: cachedForm.questions.filter((question) => question.id !== deletedId),
-          },
-        });
+      const deletedId = data?.deleteQuestion?.deletedId;
+      if (deletedId) {
+        cache.evict({ id: `QuestionType:${deletedId}` });
+        cache.gc();
       }
     },
   });
 
   // function to update the current active question to the database and then set a new one
-  const switchActiveQuestion = (question: Question | undefined) => {
+  const switchActiveQuestion = (question: QuestionWithAnswerIdsFragment | undefined) => {
     if (activeQuestion) {
       if (activeQuestion.answers && activeQuestion.answers.length > 0 && confirmationDialog?.type !== "update") {
         setConfirmationDialog({ type: "update", toSwitch: question });
@@ -115,17 +87,20 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
         updateQuestion({
           variables: {
             id: activeQuestion.id,
-            question: activeQuestion.question,
-            description: activeQuestion.description,
-            questionType: activeQuestion.questionType,
-            mandatory: activeQuestion.mandatory,
-            options:
+            questionData: {
+              question: activeQuestion.question,
+              description: activeQuestion.description,
+              questionType: activeQuestion.questionType,
+              mandatory: activeQuestion.mandatory,
+            },
+            optionData:
               activeQuestion.options &&
-              (activeQuestion.questionType === "CHECKBOXES" ||
-                activeQuestion.questionType === "MULTIPLE_CHOICE" ||
-                activeQuestion.questionType === "DROPDOWN")
+              (activeQuestion.questionType === QuestionTypeEnum.Checkboxes ||
+                activeQuestion.questionType === QuestionTypeEnum.MultipleChoice ||
+                activeQuestion.questionType === QuestionTypeEnum.Dropdown)
                 ? activeQuestion.options.map((option) => ({
-                    // replaces "|||" with empty string in options, as ||| is used to separate checkbox answers (see AnswerCheckboxes)
+                    // replaces "|||" with empty string in options, as ||| is used to separate checkbox answers
+                    // see AnswerCheckboxes for explanation
                     answer: option.answer.replace(/\|\|\|/g, ""),
                     ...(option.id ? { id: option.id } : {}),
                   }))
@@ -144,9 +119,8 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
     } else {
       createQuestion({
         variables: {
-          question: "",
-          description: "",
           formId: form.id,
+          questionData: { question: "", description: "" },
         },
       });
     }
@@ -198,27 +172,25 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
             </CardContent>
           </Card>
         </Grid>
-        {form.questions
+        {orderBy(form.questions, ["id"], ["asc"]).map((question) => (
           // sorts questions by ID (hacky solution to maintain question order until we implement order field)
-          .sort((q1, q2) => (parseInt(q1.id) || 0) - (parseInt(q2.id) || 0))
-          .map((question) => (
-            <Grid item key={question.id}>
-              <Card>
-                <CardContent>
-                  {question.id === activeQuestion?.id ? (
-                    <EditQuestion
-                      question={activeQuestion}
-                      setQuestion={(question) => setActiveQuestion(question)}
-                      saveQuestion={() => switchActiveQuestion(undefined)}
-                      deleteQuestion={deleteActiveQuestion}
-                    />
-                  ) : (
-                    <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+          <Grid item key={question.id}>
+            <Card>
+              <CardContent>
+                {question.id === activeQuestion?.id ? (
+                  <EditQuestion
+                    question={activeQuestion}
+                    setQuestion={(question) => setActiveQuestion(question)}
+                    saveQuestion={() => switchActiveQuestion(undefined)}
+                    deleteQuestion={deleteActiveQuestion}
+                  />
+                ) : (
+                  <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
         <Grid item>
           <Button
             fullWidth
@@ -236,5 +208,3 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
     </>
   );
 };
-
-export default EditForm;

@@ -1,11 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER_INFO } from "@graphql/users/queries";
-import { UserInfo } from "@interfaces/users";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
-import { generateFeideLoginUrl } from "@utils/auth";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+
+import { UserDocument } from "@/generated/graphql";
+import { generateFeideLoginUrl } from "@/utils/auth";
+
+import Link from "../../Link";
 
 type Props = {
   redirect?: boolean;
@@ -21,37 +22,40 @@ type Props = {
  * If a user is logged in, it renders the children.
  * While loading, will render as a rectangular skeleton.
  */
-export const LoginRequired: React.FC<Props & ButtonProps> = ({
-  redirect,
-  redirectPath,
-  children,
-  fallback,
-  "data-test-id": dataTestId,
-  ...buttonProps
-}) => {
+export const LoginRequired: React.FC<
+  React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size" | "variant">>
+> = ({ redirect, redirectPath, children, fallback, "data-test-id": dataTestId, ...buttonProps }) => {
   const router = useRouter();
   let path: string | undefined = redirectPath;
   if (redirect) {
     path ||= router.asPath;
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
-  const { data, loading } = useQuery<{ user?: UserInfo | null }>(GET_USER_INFO);
+  const { data, loading } = useQuery(UserDocument, {
+    returnPartialData: true,
+  });
   const { fullWidth } = buttonProps;
-
-  if (loading) {
-    return (
-      <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
-        <Link href={url} passHref>
-          <Button size="medium" variant="contained" color="primary" {...buttonProps}>
-            Logg inn
-          </Button>
-        </Link>
-      </Skeleton>
-    );
-  }
 
   if (data?.user) {
     return <>{children}</>;
+  }
+
+  if (loading) {
+    return (
+      <Skeleton variant="rounded" {...(fullWidth && { width: "100%" })}>
+        <Button
+          size="medium"
+          variant="contained"
+          color="primary"
+          component={Link}
+          noLinkStyle
+          href={url}
+          {...buttonProps}
+        >
+          Logg inn
+        </Button>
+      </Skeleton>
+    );
   }
 
   if (fallback) {
@@ -59,12 +63,17 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
   }
 
   return (
-    <Link href={url} passHref>
-      <Button size="medium" variant="contained" color="primary" data-test-id={dataTestId} {...buttonProps}>
-        Logg inn
-      </Button>
-    </Link>
+    <Button
+      component={Link}
+      noLinkStyle
+      href={url}
+      size="medium"
+      variant="contained"
+      color="primary"
+      data-test-id={dataTestId}
+      {...buttonProps}
+    >
+      Logg inn
+    </Button>
   );
 };
-
-export default LoginRequired;

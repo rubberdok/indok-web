@@ -1,23 +1,17 @@
-import { default as BaseTitle, Props as BaseProps } from "./variants/BaseTitle";
+import { BaseTitle, Props as BaseProps } from "./variants/BaseTitle";
 
 type Props = {
   variant?: "normal" | "dark";
   children?: React.ReactNode;
 } & BaseProps;
 
-const Title: React.FC<Props> = ({ variant = "normal", children, ...props }) => {
+export const Title: React.FC<React.PropsWithChildren<Props>> = ({ variant = "normal", children, ...props }) => {
   if (variant === "normal") return <BaseTitle {...props}>{children}</BaseTitle>;
   if (variant === "dark")
     return (
-      <BaseTitle
-        sx={{ backgroundColor: "grey.900", color: "common.white" }}
-        {...props}
-        BreadcrumbProps={{ onDark: true }}
-      >
-        {children}
-      </BaseTitle>
+      <div data-color-scheme="dark">
+        <BaseTitle {...props}>{children}</BaseTitle>
+      </div>
     );
   return null;
 };
-
-export default Title;

@@ -1,33 +1,23 @@
 import { useQuery } from "@apollo/client";
-import LabeledIcon from "@components/LabeledIcon";
-import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
-import { BookingResponsible } from "@interfaces/cabins";
 import { MailOutline } from "@mui/icons-material";
 import { Link, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const ContactCabinBoard: React.FC = () => {
-  const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
+import { ActiveBookingResponsibleDocument } from "@/generated/graphql";
+
+export const ContactCabinBoard: React.FC = () => {
+  const { data } = useQuery(ActiveBookingResponsibleDocument);
 
   if (data?.activeBookingResponsible?.email) {
     return (
-      <Stack direction="column" spacing={2} mb={4}>
+      <Stack direction="column" spacing={2}>
         <Typography variant="subtitle1">Spørsmål?</Typography>
-        <LabeledIcon
-          icon={<MailOutline />}
-          value={
-            <Typography variant="body1" sx={{ ml: 1 }}>
-              <Link href={`mailto:${data?.activeBookingResponsible.email}`}>
-                {data?.activeBookingResponsible.email}
-              </Link>
-            </Typography>
-          }
-        />
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <MailOutline />
+          <Link href={`mailto:${data?.activeBookingResponsible.email}`}>{data?.activeBookingResponsible.email}</Link>
+        </Stack>
       </Stack>
     );
-  } else {
-    return <></>;
   }
+  return null;
 };
-
-export default ContactCabinBoard;

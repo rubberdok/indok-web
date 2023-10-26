@@ -1,3 +1,3 @@
-export { default as LoginRequired } from "./LoginRequired";
-export { default as PermissionRequired } from "./PermissionRequired";
-export { default as Logout } from "./Logout";
+export { LoginRequired } from "./LoginRequired";
+export { PermissionRequired } from "./PermissionRequired";
+export { Logout } from "./Logout";

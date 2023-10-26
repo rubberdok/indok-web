@@ -1,17 +1,13 @@
-import { ListingFragment } from "@generated/graphql";
 import { OpenInNew } from "@mui/icons-material";
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
-import Link from "next/link";
 
-/**
- * Component for title and organization info on the listing detail page.
- *
- * Props:
- * - the listing to render
- */
-const InfoCard: React.FC<{
-  listing: ListingFragment;
-}> = ({ listing }) => {
+import { Link } from "@/components";
+import { ListingFragment } from "@/generated/graphql";
+
+type Props = { listing: ListingFragment };
+
+/** Component for title and organization info on the listing detail page. */
+export const InfoCard: React.FC<Props> = ({ listing }) => {
   return (
     <Card style={{ height: "100%" }}>
       <CardContent style={{ height: "100%" }}>
@@ -44,9 +40,9 @@ const InfoCard: React.FC<{
           </Grid>
           <Grid item>
             {listing.readMoreUrl && (
-              <Link passHref href={listing.readMoreUrl}>
-                <Button endIcon={<OpenInNew />}>Les mer</Button>
-              </Link>
+              <Button component={Link} href={listing.readMoreUrl} noLinkStyle endIcon={<OpenInNew />}>
+                Les mer
+              </Button>
             )}
           </Grid>
         </Grid>
@@ -54,5 +50,3 @@ const InfoCard: React.FC<{
     </Card>
   );
 };
-
-export default InfoCard;

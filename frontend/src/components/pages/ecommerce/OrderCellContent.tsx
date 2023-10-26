@@ -1,21 +1,26 @@
-import { Order } from "@interfaces/ecommerce";
-import { HeaderValuePair } from "@interfaces/utils";
-import { Link as MuiLink, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
-const OrderCellContent = ({ order, field }: { order: Order; field: HeaderValuePair<Order> }) => {
+import { Link } from "@/components";
+import { OrderFragment, PaymentStatus } from "@/generated/graphql";
+import { HeaderValuePair } from "@/types/utils";
+
+type Props = { order: OrderFragment; field: HeaderValuePair<OrderFragment> };
+
+export const OrderCellContent: React.FC<Props> = ({ order, field }) => {
   const router = useRouter();
 
   let content: string;
   switch (field.header) {
     case "Ordre-ID":
       return (
-        <Link href={`/ecommerce/fallback?orderId=${order.id}&redirect=${router.asPath}`} passHref>
-          <MuiLink variant="caption" component="button" color="secondary">
-            {order.id}
-          </MuiLink>
+        <Link
+          href={`/ecommerce/fallback?orderId=${order.id}&redirect=${router.asPath}`}
+          variant="caption"
+          color="warning"
+        >
+          {order.id}
         </Link>
       );
     case "Produkt":
@@ -28,21 +33,28 @@ const OrderCellContent = ({ order, field }: { order: Order; field: HeaderValuePa
       content = dayjs(order.timestamp).format("DD/MM/YYYY, HH:mm");
       break;
     case "Status":
-      content =
-        order.paymentStatus == "CAPTURED"
-          ? "Fullført"
-          : order.paymentStatus == "RESERVED"
-          ? "Betalt"
-          : order.paymentStatus == "INITIATED"
-          ? "Påbegynt"
-          : ["FAILED", "CANCELLED", "REJECTED"].includes(order.paymentStatus)
-          ? "Avbrutt"
-          : order.paymentStatus;
+      switch (order.paymentStatus) {
+        case PaymentStatus.Captured:
+          content = "Fullført";
+          break;
+        case PaymentStatus.Reserved:
+          content = "Betalt";
+          break;
+        case PaymentStatus.Initiated:
+          content = "Påbegynt";
+          break;
+        case PaymentStatus.Failed:
+        case PaymentStatus.Cancelled:
+        case PaymentStatus.Rejected:
+          content = "Avbrutt";
+          break;
+        case PaymentStatus.Refunded:
+          content = "Refundert";
+          break;
+      }
       break;
     default:
       content = `${order[field.field]}`;
   }
   return <Typography variant="body2">{content}</Typography>;
 };
-
-export default OrderCellContent;

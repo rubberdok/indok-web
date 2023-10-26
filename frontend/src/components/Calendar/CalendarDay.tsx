@@ -29,7 +29,15 @@ const bgcolor = (
   return "transparent";
 };
 
-const CalendarDay: React.VFC<Props> = ({ onClick, value, isHidden, isDisabled, isToDate, isInRange, isFromDate }) => {
+export const CalendarDay: React.VFC<Props> = ({
+  onClick,
+  value,
+  isHidden,
+  isDisabled,
+  isToDate,
+  isInRange,
+  isFromDate,
+}) => {
   return (
     <Grid item xs component="td" position="relative">
       <Box
@@ -45,5 +53,3 @@ const CalendarDay: React.VFC<Props> = ({ onClick, value, isHidden, isDisabled, i
     </Grid>
   );
 };
-
-export default CalendarDay;

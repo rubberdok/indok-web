@@ -1,35 +1,38 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Option, Question } from "@interfaces/forms";
+
+import { OptionFragment, QuestionFragment } from "@/generated/graphql";
+
+type Props = {
+  question: QuestionFragment;
+  /** Answer state passed down from AnswerForm */
+  answer: string;
+  onAnswerChange: (value: string) => void;
+};
 
 /**
  * Component to answer questions of the Checkboxes type.
  * Separated into its own component, since multiple possible answers requires its own logic.
- *
- * Props:
- * - the answer state, passed down from answerForm
- * - onValueChanged function to change answer state
  */
-const AnswerCheckboxes: React.FC<{
-  answer: string;
-  question: Question;
-  onValueChanged: (value: string) => void;
-}> = ({ answer, question, onValueChanged }) => {
+export const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // state to manage which options are selected
-  const [selectedOptions, selectOptions] = useState<Option[]>(
+  const [selectedOptions, setSelectedOptions] = useState<OptionFragment[]>(
     question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
   );
 
-  // every time options changes, set answer to the concatenation of selected options
-  useEffect(() => {
-    onValueChanged(selectedOptions.map((option) => option.answer).join("|||"));
-  }, [selectedOptions]);
   /*
+    Every time options changes, sets answer to the concatenation of selected options.
+    
     Why concatenate?
     Checkboxes is the only question type that allows multiple answers.
-    Rather than change the backend model to allow multiple answers to a question, we concatenate the answers to preserve the single-answer model.
-    This should not cause problems when choosing a rarely-typed concatenation separator, and not allowing that separator as part of an Option.
+    Rather than change the backend model to allow multiple answers to a question,
+    we concatenate the answers to preservethe single-answer model.
+    This should not cause problems when choosing a rarely-typed concatenation separator,
+    and not allowing that separator as part of an Option.
   */
+  useEffect(() => {
+    onAnswerChange(selectedOptions.map((option) => option.answer).join("|||"));
+  }, [selectedOptions]);
 
   return (
     <FormGroup>
@@ -44,11 +47,11 @@ const AnswerCheckboxes: React.FC<{
               onChange={(e) => {
                 if (e.target.checked) {
                   if (!selectedOptions.includes(option)) {
-                    selectOptions([...selectedOptions, option]);
+                    setSelectedOptions([...selectedOptions, option]);
                   }
                 } else {
                   if (selectedOptions.includes(option)) {
-                    selectOptions(selectedOptions.filter((selectedOption) => selectedOption !== option));
+                    setSelectedOptions(selectedOptions.filter((selectedOption) => selectedOption !== option));
                   }
                 }
               }}
@@ -59,5 +62,3 @@ const AnswerCheckboxes: React.FC<{
     </FormGroup>
   );
 };
-
-export default AnswerCheckboxes;

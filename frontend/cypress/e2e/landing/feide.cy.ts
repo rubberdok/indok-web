@@ -4,13 +4,13 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/");
       cy.getByTestId("app-bar-login").click();
-      cy.origin("https://dataporten.no", () => {
+      cy.origin("https://auth.dataporten.no", () => {
         cy.log("Logging in");
-        cy.get("[aria-label='Feide test users']").click();
+        cy.get(".login-providers li:nth-child(2)").click();
       });
-      cy.origin("https://feide.no", () => {
+      cy.origin("https://idp.feide.no", () => {
         cy.get("[id=username]").type("asbjorn_elevg");
-        cy.get("[id=password]").type("1qaz");
+        cy.get("[id=password]").type("098asd");
         cy.get("button").get("[type=submit]").click();
       });
       cy.contains("[data-test-id=profile-personal-name]", "Asbjørn ElevG Hansen");
@@ -23,13 +23,13 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/");
       cy.getByTestId("app-bar-login").click();
-      cy.origin("https://dataporten.no", () => {
+      cy.origin("https://auth.dataporten.no", () => {
         cy.log("Logging in");
-        cy.get("[aria-label='Feide test users']").click();
+        cy.get(".login-providers li:nth-child(2)").click();
       });
-      cy.origin("https://feide.no", () => {
+      cy.origin("https://idp.feide.no", () => {
         cy.get("[id=username]").type("cecilie_elevvgs");
-        cy.get("[id=password]").type("3edc");
+        cy.get("[id=password]").type("098asd");
         cy.get("button").get("[type=submit]").click();
       });
       cy.getByTestId("registerUser-title").should("contain.text", "Registrering");

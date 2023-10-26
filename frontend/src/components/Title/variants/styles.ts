@@ -1,22 +1,17 @@
 import { CSSProperties } from "@emotion/serialize";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
-type RootProps = {
-  disableGutters?: boolean;
-};
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 
-export const RootStyle = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "disableGutters",
-})<RootProps>(({ theme, disableGutters }) => ({
+export const RootStyle = styled(Box)(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
-  backgroundColor: theme.palette.background.elevated,
-  color: theme.palette.text.primary,
+  backgroundColor: theme.vars.palette.background.elevated,
+  color: theme.vars.palette.text.primary,
   [theme.breakpoints.up("md")]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
   },
-  marginBottom: disableGutters ? 0 : theme.spacing(4),
+  marginBottom: theme.spacing(4),
 }));
 
 export const ImageContainer = styled(Box)(({ theme }) => ({
@@ -25,7 +20,6 @@ export const ImageContainer = styled(Box)(({ theme }) => ({
   overflow: "hidden",
   height: "100%",
   width: "100%",
-  "& span": { height: "100% !important" },
   marginTop: `-${HEADER_MOBILE_HEIGHT}px`,
   [theme.breakpoints.up("md")]: {
     marginTop: `-${HEADER_DESKTOP_HEIGHT}px`,

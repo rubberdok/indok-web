@@ -1,63 +1,54 @@
-import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
-import { ChevronRight } from "@mui/icons-material";
-import Link from "./Link";
-import { TLink } from "./types";
+import { NavigateNext } from "@mui/icons-material";
+import { BreadcrumbsProps, Breadcrumbs as MUIBreadcrumbs, SxProps } from "@mui/material";
 
-export interface Props extends BreadcrumbsProps {
-  links: TLink[];
-  activeLast?: boolean;
-  onDark?: boolean;
-  sx?: SxProps;
-}
+import Link from "@/components/Link";
 
-const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = false, ...other }) => {
-  const currentLink = links[links.length - 1];
+export type TLink = {
+  name: string;
+  href: string;
+};
 
-  const currentPath = activeLast ? (
-    <Link key={currentLink.name} link={currentLink} onDark={onDark} />
-  ) : (
-    <Typography
-      noWrap
-      variant="body3"
-      sx={(theme) => ({
-        color: theme.palette.text.primary,
-        ...(onDark && {
-          opacity: 0.48,
-          color: "common.white",
-        }),
-      })}
-    >
-      {currentLink.name || ""}
-    </Typography>
-  );
-  const path = links.slice(0, -1).map((link) => <Link key={link.name} link={link} onDark={onDark} />);
+type LinkItemProps = {
+  link: TLink;
+  active?: boolean;
+};
 
+const LinkItem: React.FC<LinkItemProps> = ({ link, active }) => {
+  const { href, name } = link;
   return (
-    <MUIBreadcrumbs
-      sx={{
-        "& .MuiBreadcrumbs-li": { whiteSpace: "nowrap" },
-        "& .MuiBreadcrumbs-li:last-child": { flex: 1, overflow: "hidden", textOverflow: "ellipsis" },
-        ...sx,
-      }}
-      separator={
-        <Box
-          sx={{
-            ...(onDark && {
-              opacity: 0.48,
-              color: "common.white",
-            }),
-            lineHeight: 0,
-          }}
-        >
-          <ChevronRight sx={{ fontSize: 12 }} />
-        </Box>
-      }
-      {...other}
-    >
-      {path}
-      {currentPath}
-    </MUIBreadcrumbs>
+    <Link href={href} variant="caption" color={active ? "text.primary" : "text.secondary"}>
+      {name}
+    </Link>
   );
 };
 
-export default Breadcrumbs;
+export interface Props extends BreadcrumbsProps {
+  links: TLink[];
+  sx?: SxProps;
+}
+
+export const Breadcrumbs: React.FC<React.PropsWithChildren<Props>> = ({ links, sx, ...props }) => {
+  if (links.length === 0) return null;
+
+  return (
+    <MUIBreadcrumbs
+      sx={sx}
+      separator={
+        <NavigateNext
+          sx={(theme) => ({
+            fontSize: 12,
+            [theme.getColorSchemeSelector("dark")]: {
+              opacity: 0.48,
+            },
+          })}
+        />
+      }
+      {...props}
+    >
+      {links.map((link, index) => {
+        if (index === links.length - 1) return <LinkItem key={link.name} link={link} active />;
+        return <LinkItem key={link.name} link={link} />;
+      })}
+    </MUIBreadcrumbs>
+  );
+};

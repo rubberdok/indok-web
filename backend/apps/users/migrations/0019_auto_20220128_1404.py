@@ -11,7 +11,6 @@ def set_updated_year_for_recent_registraions_to_none(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0018_user_year_updated_at"),
     ]

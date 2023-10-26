@@ -1,14 +1,13 @@
-import * as markdownComponents from "@components/MarkdownForm/components";
-import Title from "@components/Title";
-import Layout from "@layouts/Layout";
 import { MailOutline, Phone } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, Chip, Container, Divider, Grid, Typography } from "@mui/material";
-import { Article, getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import Link from "next/link";
+import Head from "next/head";
 import { useRouter } from "next/router";
-import ReactMarkdown from "react-markdown";
-import { NextPageWithLayout } from "src/pages/_app";
+
+import { Link, Markdown } from "@/components";
+import { Title } from "@/components/Title";
+import { NextPageWithLayout } from "@/lib/next";
+import { Article, getPostBySlug, getPostsSlugs } from "@/utils/posts";
 
 const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticProps>> = ({ post, frontmatter }) => {
   const router = useRouter();
@@ -16,13 +15,16 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
 
   return (
     <>
+      <Head>
+        <title>{`${frontmatter.title} | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse`}</title>
+        {frontmatter.image && <meta name="og:image" content={frontmatter.image} />}
+      </Head>
       <Title
         title={frontmatter.title}
         bgImage={frontmatter.image}
         variant="dark"
         ImageProps={{
           placeholder: "empty",
-          layout: "fill",
         }}
         breadcrumbs={[
           { href: "/", name: "Hjem" },
@@ -34,7 +36,7 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
       <Container sx={{ mb: 4 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>
-            <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
+            <Markdown>{post.content}</Markdown>
           </Grid>
           <Grid item xs={12} md={4}>
             {frontmatter.board && (
@@ -50,9 +52,13 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
                         </Typography>
                         <br />
                         {member.mail && (
-                          <Link href={`mailto:${member.mail}`}>
-                            <Chip size="small" label={member.mail} icon={<MailOutline />} />
-                          </Link>
+                          <Chip
+                            component={Link}
+                            href={`mailto:${member.mail}`}
+                            size="small"
+                            label={member.mail}
+                            icon={<MailOutline />}
+                          />
                         )}
                         {member.mail && member.phoneNumber && <br />}
                         {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
@@ -68,10 +74,6 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
       </Container>
     </>
   );
-};
-
-ArticlePage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {

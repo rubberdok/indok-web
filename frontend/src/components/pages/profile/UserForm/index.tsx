@@ -1,13 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  currentGradeYear,
-  isVegetarian,
-  maxGraduationYear,
-  suggestGraduationYear,
-  validationSchema,
-} from "@components/pages/profile/UserForm/helpers";
-import { UPDATE_USER } from "@graphql/users/mutations";
-import { EDIT_USER_QUERY } from "@graphql/users/queries";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { ArrowBack } from "@mui/icons-material";
 import {
   Button,
@@ -23,12 +15,21 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { useFormik } from "formik";
 import range from "lodash/range";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
-import { EditUser } from "src/types/users";
+import { useForm } from "react-hook-form";
+
+import { Link } from "@/components";
+import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
+
+import {
+  IUserForm,
+  currentGradeYear,
+  isVegetarian,
+  maxGraduationYear,
+  suggestGraduationYear,
+  validationSchema,
+} from "./helpers";
 
 type Props = {
   kind: "register" | "update";
@@ -37,27 +38,27 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
-  const { data } = useQuery<{ user?: EditUser }>(EDIT_USER_QUERY);
-  const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
+export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
+  const { data } = useQuery(UserToEditDocument);
+  const [updateUser] = useMutation(UpdateUserDocument, {
     onCompleted: onCompleted,
-    refetchQueries: ["editUserInfo"],
+    refetchQueries: [{ query: UserToEditDocument }],
   });
   const router = useRouter();
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
 
-  const minimumGraduationYear = useMemo<number>(
-    () => Math.min(currentYear, data?.user?.graduationYear ?? currentYear),
-    [data?.user?.graduationYear, currentYear]
-  );
-  const graduationYears = useMemo<number[]>(
-    () => range(minimumGraduationYear, maxGraduationYear + 1, 1),
-    [minimumGraduationYear, currentYear]
-  );
+  const minimumGraduationYear = Math.min(currentYear, data?.user?.graduationYear ?? currentYear);
+  const graduationYears = range(minimumGraduationYear, maxGraduationYear + 1, 1);
 
-  const formik = useFormik({
-    initialValues: {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IUserForm>({
+    mode: "onTouched",
+    defaultValues: {
       firstName: data?.user?.firstName || "",
       lastName: data?.user?.lastName || "",
       email: data?.user?.email || data?.user?.feideEmail || "",
@@ -65,24 +66,38 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
     },
-    onSubmit: (values) =>
-      updateUser({
-        variables: { id: data?.user?.id, userData: values },
-      }),
-    validationSchema,
-    enableReinitialize: true,
+    values: {
+      firstName: data?.user?.firstName || "",
+      lastName: data?.user?.lastName || "",
+      email: data?.user?.email || data?.user?.feideEmail || "",
+      phoneNumber: data?.user?.phoneNumber || "",
+      graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
+      allergies: data?.user?.allergies || "",
+    },
+    resolver: yupResolver(validationSchema),
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <Card sx={{ mt: (theme) => theme.spacing(8), mb: (theme) => theme.spacing(8) }} elevation={6}>
-        <CardContent sx={{ pt: (theme) => theme.spacing(4) }}>
+    <form
+      onSubmit={handleSubmit((values) =>
+        updateUser({
+          variables: { userData: values },
+        })
+      )}
+    >
+      <Card sx={{ mt: 8, mb: 8 }} elevation={6}>
+        <CardContent>
           <Grid container>
             {kind === "update" && (
               <Grid item>
-                <Link href="/profile" passHref>
-                  <Button fullWidth variant="text" startIcon={<ArrowBack />} />
-                </Link>
+                <Button
+                  component={Link}
+                  href="/profile"
+                  noLinkStyle
+                  fullWidth
+                  variant="text"
+                  startIcon={<ArrowBack />}
+                />
               </Grid>
             )}
             <Grid item data-test-id={`${ID_PREFIX}title`}>
@@ -98,27 +113,27 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
             <Grid container item direction="row" spacing={2}>
               <Grid item>
                 <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  {...register("firstName")}
                   label="Fornavn"
-                  name="firstName"
                   required
-                  value={formik.values.firstName}
-                  onChange={formik.handleChange}
-                  onBlur={() => formik.setFieldTouched("firstName")}
-                  error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                  helperText={formik.touched.firstName && formik.errors.firstName}
+                  error={Boolean(errors.firstName)}
+                  helperText={errors.firstName?.message}
                   data-test-id={`${ID_PREFIX}firstNameTextField`}
                 />
               </Grid>
               <Grid item>
                 <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  {...register("lastName")}
                   label="Etternavn"
-                  name="lastName"
                   required
-                  value={formik.values.lastName}
-                  onChange={formik.handleChange}
-                  onBlur={() => formik.setFieldTouched("lastName")}
-                  error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                  helperText={formik.touched.lastName && formik.errors.lastName}
+                  error={Boolean(errors.lastName)}
+                  helperText={errors.lastName?.message}
                   data-test-id={`${ID_PREFIX}lastNameTextField`}
                 />
               </Grid>
@@ -129,26 +144,25 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
             <Grid container item direction="row" spacing={2}>
               <Grid item>
                 <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  {...register("email")}
                   label="E-post"
-                  name="email"
-                  id="email"
-                  onBlur={() => formik.setFieldTouched("email")}
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={formik.touched.email && formik.errors.email}
+                  error={Boolean(errors.email)}
+                  helperText={errors.email?.message}
                   data-test-id={`${ID_PREFIX}emailTextField`}
                 />
               </Grid>
               <Grid item>
                 <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  {...register("phoneNumber")}
                   label="Telefonnummer"
-                  name="phoneNumber"
-                  onBlur={() => formik.setFieldTouched("phoneNumber")}
-                  value={formik.values.phoneNumber}
-                  onChange={formik.handleChange}
-                  error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-                  helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+                  error={Boolean(errors.phoneNumber)}
+                  helperText={errors.phoneNumber?.message}
                   data-test-id={`${ID_PREFIX}phoneNumberTextField`}
                 />
               </Grid>
@@ -158,15 +172,14 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
             </Grid>
             <Grid item>
               <FormControl variant="standard">
-                <InputLabel htmlFor="graduationYear">Uteksamineringsår</InputLabel>
+                <InputLabel htmlFor="graduationYear" shrink={true}>
+                  Uteksamineringsår
+                </InputLabel>
                 <NativeSelect
-                  name="graduationYear"
+                  {...register("graduationYear")}
                   required
                   variant="filled"
-                  value={formik.values.graduationYear}
-                  onChange={formik.handleChange}
-                  onBlur={() => formik.setFieldTouched("graduationYear")}
-                  error={formik.touched.graduationYear && Boolean(formik.errors.graduationYear)}
+                  error={Boolean(errors.graduationYear)}
                   data-test-id={`${ID_PREFIX}graduationYearSelect`}
                   disabled={!data?.user?.canUpdateYear}
                 >
@@ -176,15 +189,18 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                     </option>
                   ))}
                 </NativeSelect>
-                {formik.touched.graduationYear && Boolean(formik.errors.graduationYear) && (
-                  <FormHelperText sx={{ color: (theme) => theme.palette.error.main }}>
-                    {formik.touched.graduationYear && formik.errors.graduationYear}
+                {Boolean(errors.graduationYear) && (
+                  <FormHelperText sx={{ color: (theme) => theme.vars.palette.error.main }}>
+                    errors.phoneNumber?.message
                   </FormHelperText>
                 )}
                 {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
                 {!data?.user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("DD.MM.YYYY")}
+                    Kan ikke endres før:{" "}
+                    {dayjs(data?.user?.yearUpdatedAt)
+                      .add(1, "year")
+                      .format("L")}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -195,18 +211,18 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
             <Grid container item direction="row" alignItems="center" spacing={2}>
               <Grid item>
                 <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  {...register("allergies")}
                   label="Allergier"
-                  name="allergies"
-                  value={formik.values.allergies}
-                  onChange={formik.handleChange}
-                  onBlur={() => formik.setFieldTouched("allergies")}
-                  error={formik.touched.allergies && Boolean(formik.errors.allergies)}
-                  helperText={formik.touched.allergies && formik.errors.allergies}
+                  error={Boolean(errors.allergies)}
+                  helperText={errors.allergies?.message}
                   data-test-id={`${ID_PREFIX}allergiesTextField`}
                 />
               </Grid>
               <Grid item>
-                <Typography variant="body1">{isVegetarian(formik.values.allergies) && "💚"}</Typography>
+                <Typography variant="body1">{isVegetarian(watch("allergies")) && "💚"}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -231,5 +247,3 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     </form>
   );
 };
-
-export default UserForm;

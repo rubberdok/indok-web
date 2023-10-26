@@ -5,7 +5,6 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0003_user_id_token"),
     ]

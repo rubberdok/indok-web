@@ -1,25 +1,40 @@
-import Link from "next/link";
+import { Link } from "@/components";
+
 import { Route } from "../../types";
-import { RouteLink } from "./styles";
 
 type Props = {
   route: Route;
   active?: boolean;
 };
 
-const NavigationLink: React.FC<Props> = ({ route, active }) => {
+export const NavigationLink: React.FC<Props> = ({ route, active }) => {
   return (
-    <Link href={route.path} passHref>
-      <RouteLink
-        active={active}
-        variant="body2"
-        fontWeight={(theme) => theme.typography.fontWeightMedium}
-        color={(theme) => (active ? theme.palette.text.primary : theme.palette.text.secondary)}
-      >
-        {route.title}
-      </RouteLink>
+    <Link
+      variant="body2"
+      href={route.path}
+      fontWeight={(theme) => theme.typography.fontWeightMedium}
+      color={active ? "text.primary" : "text.secondary"}
+      underline="none"
+      sx={{
+        ":hover": {
+          color: "text.primary",
+        },
+        ...(active && {
+          "&:before ": {
+            left: -6,
+            transform: "translateY(-25%)",
+            width: 6,
+            height: 6,
+            content: '""',
+            borderRadius: "50%",
+            display: "inline-block",
+            position: "relative",
+            backgroundColor: "primary.main",
+          },
+        }),
+      }}
+    >
+      {route.title}
     </Link>
   );
 };
-
-export default NavigationLink;

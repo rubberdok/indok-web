@@ -1,11 +1,4 @@
 import { useQuery } from "@apollo/client";
-import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
-import { UserInfoDocument } from "@generated/graphql";
-import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
-import { Order } from "@interfaces/ecommerce";
-import { HeaderValuePair } from "@interfaces/utils";
-import Layout, { RootStyle } from "@layouts/Layout";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
   Alert,
@@ -27,10 +20,16 @@ import {
 } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { NextPageWithLayout } from "../_app";
 
-const orderFields: HeaderValuePair<Order>[] = [
+import { Link } from "@/components";
+import { OrderCellContent } from "@/components/pages/ecommerce/OrderCellContent";
+import { OrderFragment, UserDocument, UserOrdersDocument } from "@/generated/graphql";
+import { Layout, RootStyle } from "@/layouts/Layout";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
+import { NextPageWithLayout } from "@/lib/next";
+import { HeaderValuePair } from "@/types/utils";
+
+const orderFields: HeaderValuePair<OrderFragment>[] = [
   { header: "Ordre-ID", field: "id" },
   { header: "Produkt", field: "product" },
   { header: "Totalpris", field: "totalPrice" },
@@ -42,11 +41,8 @@ const orderFields: HeaderValuePair<Order>[] = [
 const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
 
-  const [orders, setOrders] = useState<Order[]>();
-
-  const { loading, error } = useQuery<{ userOrders: Order[] }>(GET_USER_ORDERS, {
-    onCompleted: (data) => setOrders(data.userOrders),
-  });
+  const { loading, error, data } = useQuery(UserOrdersDocument);
+  const orders = data?.userOrders;
 
   return (
     <Container>
@@ -63,25 +59,23 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
               <Grid item xs={12}>
                 <Alert variant="filled" severity="info">
                   Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                    kontakt@rubberdok.no
-                  </a>
+                  <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
-              {error ? (
+              {error && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : loading ? (
-                <CircularProgress />
-              ) : (
+              )}
+              {loading && <CircularProgress />}
+              {data && (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="h3">Mine betalinger</Typography>
-                    {orders && orders.length !== 0 ? (
+                    {orders && orders.length !== 0 && (
                       <TableContainer style={{ maxHeight: 600 }}>
                         <Table>
                           <TableHead>
@@ -92,7 +86,7 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {orders.map((order: Order) => (
+                            {orders.map((order: OrderFragment) => (
                               <TableRow key={`user-row-${order.id}`}>
                                 {orderFields.map((field) => (
                                   <TableCell key={`user-${order.id}-cell--${field.field}`}>
@@ -104,7 +98,8 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
                           </TableBody>
                         </Table>
                       </TableContainer>
-                    ) : (
+                    )}
+                    {orders?.length === 0 && (
                       <Typography align="center" variant="body1">
                         Ingen ordrer funnet
                       </Typography>
@@ -130,9 +125,7 @@ OrdersPage.getLayout = (page) => (
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
-    query: UserInfoDocument,
-  });
+  const { data, error } = await client.query({ query: UserDocument });
 
   if (error) return { notFound: true };
   if (!data.user) {

@@ -8,7 +8,8 @@ WORKDIR /usr/src/app
 RUN apt-get update && \
     apt-get install -y \
     libpango-1.0-0 \
-    libpangoft2-1.0-0
+    libpangoft2-1.0-0 \
+    dos2unix
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -25,6 +26,10 @@ RUN chmod +x ./entrypoints/*.sh
 
 # copy project
 COPY . .
+
+# Convert Windows line endings to Unix line endings
+RUN dos2unix ./entrypoints/*.sh
+
 
 # run entrypoint.sh
 ENTRYPOINT ["/usr/src/app/entrypoints/local.sh"]

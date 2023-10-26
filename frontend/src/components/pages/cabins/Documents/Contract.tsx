@@ -1,38 +1,32 @@
 import { useQuery } from "@apollo/client";
-import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
-import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
 import { Box, Divider, Grid, Typography } from "@mui/material";
-import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
-interface ContractProps {
-  chosenCabins: Cabin[];
+import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
+import { ContactInfo, DatePick } from "@/types/cabins";
+import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
+import hytteforeningen from "~/public/static/cabins/logo.svg";
+
+type Props = {
+  chosenCabins: CabinFragment[];
   contactInfo: ContactInfo;
   datePick: DatePick;
-}
-/*
-Renders the contract of a booking.
-*/
-const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick }) => {
+};
+
+/** Renders the contract of a booking. */
+export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
-  const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
-  const [responsible, setResponsible] = useState<BookingResponsible>();
-
-  useEffect(() => {
-    if (data?.activeBookingResponsible) {
-      setResponsible(data.activeBookingResponsible);
-    }
-  }, [data]);
+  const { data } = useQuery(ActiveBookingResponsibleDocument);
+  const responsible = data?.activeBookingResponsible;
 
   //NB! there also exist a HTML template version of the contract backend, in case of changes both must be updated
   return (
     <Grid container>
       <Box m={2}>
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Image alt="" src="/img/hyttestyret_logo.png" width={300} height={165} />
+          <Image alt="Hytteforeningen" src={hytteforeningen} width={300} height={165} />
         </Box>
         <Typography variant="h2" align="center">
           Leiekontrakt
@@ -50,12 +44,12 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
 
       <Box m={2}>
         <Typography variant="body2">
-          Gjeldende Leieobjekt(er): <b>{toStringChosenCabins(chosenCabins)}</b>, Landsbygrenda, 7340 Oppdal
+          Gjeldende Leieobjekt(er): <b>{toStringChosenCabins(chosenCabins)}</b>, Gardåvegen 88/90, 7340 Oppdal
           <Divider component="br" />
           Leieperiode: <b>{datePick.checkInDate && convertDateFormat(datePick.checkInDate)}</b> -{" "}
           <b>{datePick.checkOutDate && convertDateFormat(datePick.checkOutDate)}</b>
           <Divider component="br" />
-          Leiesum: <b>{price}</b> NOK innbetalt til konto <b>9235.28.31311</b> i forkant av leieperioden.
+          Leiesum: <b>{price}</b> NOK faktureres i forkant av leieperioden.
         </Typography>
         <Divider component="br" />
         <Typography variant="body2">
@@ -97,8 +91,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
             <Typography variant="body2">
               straks melde fra om skader eller mangler som må utbedres uten opphold, til utleier ved bookingansvarlig{" "}
               {responsible?.firstName} {responsible?.lastName} på telefon {responsible?.phone} eller e-post{" "}
-              {responsible?.email}. Annen skade eller mangler meldes fra til utleier i sammenheng med tilbakelevering av
-              nøkler ved endt leieperiode.
+              {responsible?.email}. Annen skade eller mangler meldes fra til utleier..
             </Typography>
           </li>
           <li>
@@ -148,5 +141,3 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
     </Grid>
   );
 };
-
-export default Contract;

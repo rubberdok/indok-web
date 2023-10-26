@@ -1,10 +1,11 @@
-import Layout from "@layouts/Layout";
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Button, Container, Grid, Typography } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
-import _404 from "public/illustrations/404.svg";
-import { NextPageWithLayout } from "./_app";
+
+import { Link } from "@/components";
+import { Layout } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/lib/next";
+import _404 from "~/public/illustrations/404.svg";
 
 const Custom404: NextPageWithLayout = () => {
   return (
@@ -27,23 +28,17 @@ const Custom404: NextPageWithLayout = () => {
             </Typography>
           </Grid>
           <Grid item md={6} xs={10}>
-            <Link href="/" passHref>
-              <Button>Tilbake til hjemmesiden</Button>
-            </Link>
+            <Button component={Link} href="/" noLinkStyle>
+              Tilbake til hjemmesiden
+            </Button>
           </Grid>
           <Grid container item direction="row" justifyContent="center" alignItems="center">
             <Grid item xs={8} sm={5}>
-              <Box
-                sx={{ overflow: "hidden", borderRadius: "50%", width: "100%", aspectRatio: "1", position: "relative" }}
-              >
-                <Image
-                  src={_404}
-                  alt="404, fant ikke siden."
-                  layout="fill"
-                  objectFit="contain"
-                  objectPosition="center"
-                />
-              </Box>
+              <Image
+                src={_404}
+                alt="404, fant ikke siden."
+                style={{ objectFit: "contain", objectPosition: "center", width: "100%", height: "100%" }}
+              />
             </Grid>
           </Grid>
         </Grid>

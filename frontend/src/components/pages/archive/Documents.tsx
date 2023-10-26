@@ -1,8 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { ArchiveByTypesDocument } from "@generated/graphql";
 import Typography from "@mui/material/Typography";
-import React, { useEffect } from "react";
-import DocumentList from "./DocumentList";
+import React from "react";
+
+import { ArchiveByTypesDocument } from "@/generated/graphql";
+
+import { DocumentList } from "./DocumentList";
 
 type Props = {
   documentTypes: string[];
@@ -10,15 +12,10 @@ type Props = {
   names: string;
 };
 
-const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
-  const { refetch, loading, data, error } = useQuery(ArchiveByTypesDocument, {
+export const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
+  const { loading, data, error } = useQuery(ArchiveByTypesDocument, {
     variables: { documentTypes, year, names },
-    ssr: false,
   });
-
-  useEffect(() => {
-    refetch({ documentTypes, year });
-  }, [documentTypes, year, refetch]);
 
   if (loading) return <p style={{ textAlign: "center" }}></p>;
 
@@ -33,5 +30,3 @@ const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
     </>
   );
 };
-
-export default Documents;

@@ -1,22 +1,20 @@
 import { useQuery } from "@apollo/client";
-import { getDateRange } from "@components/Calendar/helpers";
-import { QUERY_ALL_BOOKINGS } from "@graphql/cabins/queries";
-import { Cabin, PublicBooking } from "@interfaces/cabins";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-interface Output {
+import { getDateRange } from "@/components/Calendar/helpers";
+import { AllBookingsDocument, CabinFragment } from "@/generated/graphql";
+
+type Output = {
   disabledDates: string[];
   setDisabledDates: Dispatch<SetStateAction<string[]>>;
-}
+};
 
-const useDisabledDates = (chosenCabins: Cabin[]): Output => {
-  const allBookingsQuery = useQuery<{
-    allBookings: PublicBooking[];
-  }>(QUERY_ALL_BOOKINGS);
+export const useDisabledDates = (chosenCabins: CabinFragment[]): Output => {
+  const allBookingsQuery = useQuery(AllBookingsDocument);
   const [disabledDates, setDisabledDates] = useState<string[]>([]);
 
   useEffect(() => {
-    if (allBookingsQuery.data) {
+    if (allBookingsQuery.data?.allBookings) {
       // Gets the bookings which should disable dates for the chosen cabins
       const chosenCabinsIDs = chosenCabins.map((cabin) => cabin.id);
       const selectedMonthBookings = allBookingsQuery.data.allBookings.filter((booking) =>
@@ -31,7 +29,6 @@ const useDisabledDates = (chosenCabins: Cabin[]): Output => {
       );
     }
   }, [allBookingsQuery.data, chosenCabins]);
+
   return { disabledDates, setDisabledDates };
 };
-
-export default useDisabledDates;

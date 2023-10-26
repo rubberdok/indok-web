@@ -16,7 +16,6 @@ def non_destructively_uniquify_organizations_and_parents(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("organizations", "0008_auto_20210201_1720"),
     ]

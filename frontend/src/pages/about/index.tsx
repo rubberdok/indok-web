@@ -1,16 +1,14 @@
-import Layout from "@layouts/Layout";
-import Template from "@components/pages/about/Template";
-import { Box, Paper, Typography } from "@mui/material";
-import React from "react";
-import { NextPageWithLayout } from "../_app";
+import { Box, List, ListItem, ListItemText, Paper, Typography } from "@mui/material";
+import { listItemClasses } from "@mui/material/ListItem";
+
+import { Template } from "@/components/pages/about/Template";
+import { NextPageWithLayout } from "@/lib/next";
 
 const AboutPage: NextPageWithLayout = () => {
   return (
     <>
       <Template
-        img="img/hero.jpg"
         title="Om oss"
-        page=""
         description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
         nextPost={{ title: "Våre foreninger", slug: "/about/organization" }}
@@ -27,7 +25,7 @@ const AboutPage: NextPageWithLayout = () => {
           på Indøk og instituttillitsvalgt på IØT. Generalforsamlingen er Foreningens øverste myndighet, hvor alle
           studentene på Indøk har stemmerett.
         </Typography>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" component="h2" gutterBottom>
           Historie
         </Typography>
         <Typography variant="body1" paragraph>
@@ -48,7 +46,7 @@ const AboutPage: NextPageWithLayout = () => {
           </Box>
         </Paper>
 
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" component="h2" gutterBottom>
           Foreningens formål
         </Typography>
         <Typography variant="body1">Fra vedtektene:</Typography>
@@ -65,7 +63,7 @@ const AboutPage: NextPageWithLayout = () => {
           </Typography>
         </blockquote>
 
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" component="h2" gutterBottom>
           Hovedstyret
         </Typography>
         <Typography variant="body1" paragraph>
@@ -81,32 +79,65 @@ const AboutPage: NextPageWithLayout = () => {
         <Typography variant="body1" paragraph>
           Opp gjennom historien har Foreningen hatt følgende lederpar:{" "}
         </Typography>
-        <Typography component="div" variant="body1" paragraph>
-          <ul>
-            <li>2008-2009: Ole Heliesen og Georg Øiesvold</li>
-            <li>2009-2010: Magnus Valmot og Ole-Christen Enger</li>
-            <li>2010-2011: Thomas Eide og Ole-Daniel Nitter</li>
-            <li>2011-2012: Michael Wiik og Iver Roen Velo</li>
-            <li>2012-2013: Anja Graff Nesse og Steinar H. Fretheim</li>
-            <li>2013-2014: Ove Mørch og Christian Fredrik Scheel</li>
-            <li>2014-2015: Lars Arild Wold og Marianne Engseth</li>
-            <li>2015-2016: Marius Lie Morken og Hanne Sandven</li>
-            <li>2016-2017: Simen Nygaard Hansen og Kristoffer Birkeland</li>
-            <li>2017-2018: Gard Rystad og Vemund Wøien</li>
-            <li>2018-2019: Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland</li>
-            <li>2019-2020: Peder Gjerstad og Mette Liset</li>
-            <li>2020-2021: Andreas Johannesen og Lars Lien Ankile</li>
-            <li>2021-2022: Christian August Brask Rustad og Olaf Alexander Styrmoe</li>
-            <li>2022-2023: Morten Vinje og Erlend Heir</li>
-          </ul>
-        </Typography>
+        <List
+          dense
+          sx={{
+            listStyleType: "disc",
+            listStylePosition: "inside",
+            [`& .${listItemClasses.root}`]: {
+              display: "list-item",
+            },
+          }}
+        >
+          <ListItem>
+            <ListItemText primary="Ole Heliesen og Georg Øiesvold" secondary="2008-2009" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2009-2010" primary="Magnus Valmot og Ole-Christen Enger" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2010-2011" primary="Thomas Eide og Ole-Daniel Nitter" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2011-2012" primary="Michael Wiik og Iver Roen Velo" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2012-2013" primary="Anja Graff Nesse og Steinar H. Fretheim" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2013-2014" primary="Ove Mørch og Christian Fredrik Scheel" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2014-2015" primary="Lars Arild Wold og Marianne Engseth" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2015-2016" primary="Marius Lie Morken og Hanne Sandven" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2016-2017" primary="Simen Nygaard Hansen og Kristoffer Birkeland" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2017-2018" primary="Gard Rystad og Vemund Wøien" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2018-2019" primary="Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2019-2020" primary="Peder Gjerstad og Mette Liset" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2020-2021" primary="Andreas Johannesen og Lars Lien Ankile" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2021-2022" primary="Christian August Brask Rustad og Olaf Alexander Styrmoe" />
+          </ListItem>
+          <ListItem>
+            <ListItemText secondary="2022-2023" primary="Morten Vinje og Erlend Heir" />
+          </ListItem>
+        </List>
       </Template>
     </>
   );
-};
-
-AboutPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
 };
 
 export default AboutPage;

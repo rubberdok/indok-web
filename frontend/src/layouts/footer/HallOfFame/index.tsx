@@ -1,13 +1,14 @@
-import { rubberdokMembers } from "@layouts/footer/HallOfFame/constants";
 import { Close } from "@mui/icons-material";
 import { Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+
+import { rubberdokMembers } from "@/layouts/footer/HallOfFame/constants";
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",
   right: theme.spacing(1),
   top: theme.spacing(1),
-  color: theme.palette.grey[500],
+  color: theme.vars.palette.grey[500],
 }));
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
+export const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
   return (
     <Dialog maxWidth="xl" fullWidth={false} onClose={() => setOpen(!open)} aria-labelledby="dialogTitle" open={open}>
       <DialogTitle>
@@ -53,5 +54,3 @@ const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
     </Dialog>
   );
 };
-
-export default HallOfFame;

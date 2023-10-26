@@ -1,8 +1,31 @@
 query listing($id: ID!) {
   listing(id: $id) {
+    ...ListingWithFormId
+  }
+}
+
+query listings {
+  listings {
     ...Listing
-    form {
-      id
+  }
+}
+
+query listingWithForm($id: ID!) {
+  listing(id: $id) {
+    ...ListingWithForm
+  }
+}
+
+query listingWithResponses($id: ID!) {
+  listing(id: $id) {
+    ...ListingWithResponses
+  }
+}
+
+query userOrganizations {
+  user {
+    organizations {
+      ...ListingOrganization
     }
   }
 }

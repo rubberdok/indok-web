@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 
 from .mutations import CreateListing, DeleteListing, UpdateListing
 from .resolvers import ListingResolvers
@@ -6,7 +7,7 @@ from .types import ListingType
 
 
 class ListingQueries(graphene.ObjectType, ListingResolvers):
-    listings = graphene.List(ListingType, search=graphene.String(required=False))
+    listings = graphene.List(NonNull(ListingType), search=graphene.String(required=False))
     listing = graphene.Field(ListingType, id=graphene.ID())
 
 

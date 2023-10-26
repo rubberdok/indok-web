@@ -1,0 +1,81 @@
+fragment Form on FormType {
+  id
+  name
+  questions {
+    ...Question
+  }
+}
+
+fragment FormWithAnswers on FormType {
+  id
+  name
+  description
+  questions {
+    ...QuestionWithAnswer
+  }
+}
+
+fragment FormWithAllResponses on FormType {
+  id
+  name
+  questions {
+    ...QuestionWithAnswerIds
+  }
+  responses {
+    ...Response
+  }
+}
+
+fragment Response on ResponseType {
+  id
+  respondent {
+    id
+    firstName
+    lastName
+  }
+  answers {
+    ...AnswerWithQuestionId
+  }
+}
+
+fragment Question on QuestionType {
+  id
+  question
+  description
+  questionType
+  mandatory
+  options {
+    ...Option
+  }
+}
+
+fragment QuestionWithAnswer on QuestionType {
+  ...Question
+  answer {
+    ...Answer
+  }
+}
+
+fragment QuestionWithAnswerIds on QuestionType {
+  ...Question
+  answers {
+    id
+  }
+}
+
+fragment Option on OptionType {
+  id
+  answer
+}
+
+fragment Answer on AnswerType {
+  id
+  answer
+}
+
+fragment AnswerWithQuestionId on AnswerType {
+  ...Answer
+  question {
+    id
+  }
+}

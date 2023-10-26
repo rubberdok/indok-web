@@ -3,3 +3,19 @@ mutation logout {
     idToken
   }
 }
+
+mutation authUser($code: String!) {
+  authUser(code: $code) {
+    user {
+      ...User
+    }
+  }
+}
+
+mutation updateUser($userData: UserInput) {
+  updateUser(userData: $userData) {
+    user {
+      ...User
+    }
+  }
+}

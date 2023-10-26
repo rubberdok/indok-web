@@ -1,11 +1,4 @@
 import { useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@layouts/Layout";
-import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
-import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
-import { UserInfoDocument } from "@generated/graphql";
-import { GET_PRODUCT } from "@graphql/ecommerce/queries";
-import { Product } from "@interfaces/ecommerce";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
   Alert,
@@ -28,23 +21,28 @@ import {
 } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { NextPageWithLayout } from "../_app";
+import { useState } from "react";
+
+import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
+import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
+import { ProductDocument, UserDocument } from "@/generated/graphql";
+import { Layout, RootStyle } from "@/layouts/Layout";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
+import { NextPageWithLayout } from "@/lib/next";
 
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
   const { productId, quantityStr, redirect } = router.query;
   const quantity = typeof quantityStr == "string" ? parseInt(quantityStr) : 1;
 
-  const [product, setProduct] = useState<Product>();
   const [orderError, setOrderError] = useState<string>("");
   const [isConsentingTerms, setIsConsentingTerms] = useState(false);
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
 
-  const { loading, error } = useQuery<{ product: Product }>(GET_PRODUCT, {
-    variables: { productId: productId },
-    onCompleted: (data) => setProduct(data.product),
+  const { loading, error, data } = useQuery(ProductDocument, {
+    variables: { productId: productId as string },
   });
+  const product = data?.product;
 
   return (
     <Container>
@@ -61,28 +59,27 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
               <Grid item xs={12}>
                 <Alert variant="filled" severity="info">
                   Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                    kontakt@rubberdok.no
-                  </a>
+                  <Link href="mailto:kontakt@rubberdok.no">kontakt@rubberdok.no</Link>
                 </Alert>
               </Grid>
-              {!(productId && quantity) ? (
+              {!(productId && quantity) && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     ProduktID og antall mangler
                   </Alert>
                 </>
-              ) : error ? (
+              )}
+              {error && (
                 <>
                   <Typography variant="h3">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : loading ? (
-                <CircularProgress />
-              ) : (
+              )}
+              {loading && <CircularProgress />}
+              {product && (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="h3">Bekreft ordredetaljer</Typography>
@@ -128,7 +125,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                         <Link
                           component="button"
                           variant="body2"
-                          color="secondary"
+                          color="warning"
                           onClick={() => {
                             setOpenSalesTerms(true);
                           }}
@@ -165,7 +162,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
 
 export default CheckoutPage;
 
-CheckoutPage.getLayout = (page: React.ReactElement) => (
+CheckoutPage.getLayout = (page) => (
   <Layout>
     <RootStyle>{page}</RootStyle>
   </Layout>
@@ -173,9 +170,7 @@ CheckoutPage.getLayout = (page: React.ReactElement) => (
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
-    query: UserInfoDocument,
-  });
+  const { data, error } = await client.query({ query: UserDocument });
 
   if (error) return { notFound: true };
   if (!data.user) {

@@ -1,41 +1,44 @@
 import createEmotionServer from "@emotion/server/create-instance";
-import { createEmotionCache } from "@lib/emotion";
-import Document, { Head, Html, Main, NextScript } from "next/document";
+import { getInitColorSchemeScript } from "@mui/material/styles";
+import { AppType } from "next/app";
+import Document, { DocumentContext, DocumentProps, Head, Html, Main, NextScript } from "next/document";
 
-export default class MyDocument extends Document {
-  render() {
-    return (
-      <Html lang="en">
-        <Head>
-          <meta charSet="utf-8" />
+import { createEmotionCache } from "@/lib/emotion";
+import { poppins, merriweather } from "@/lib/mui/theme/typography";
 
-          {/* Fonts */}
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+import { CustomAppProps } from "./_app";
 
-          <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap"
-            rel="stylesheet"
-          />
-          <meta name="emotion-insertion-point" content="" />
-          {(this.props as any).emotionStyleTags}
-        </Head>
-        <body>
-          <Main />
-          <NextScript />
-        </body>
-      </Html>
-    );
-  }
+interface MyDocumentProps extends DocumentProps {
+  emotionStyleTags: JSX.Element[];
+}
+
+export default function MyDocument({ emotionStyleTags }: MyDocumentProps) {
+  return (
+    <Html lang="en" className={`${poppins.className} ${merriweather.className}`}>
+      <Head>
+        <meta charSet="utf-8" />
+
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <meta name="emotion-insertion-point" content="" />
+        {emotionStyleTags}
+      </Head>
+      <body>
+        {getInitColorSchemeScript({
+          defaultMode: "system",
+          colorSchemeStorageKey: "color-scheme",
+          modeStorageKey: "mode",
+          attribute: "data-color-scheme",
+        })}
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }
 
 // `getInitialProps` belongs to `_document` (instead of `_app`),
 // it's compatible with static-site generation (SSG).
-MyDocument.getInitialProps = async (ctx) => {
+MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   // Resolution order
   //
   // On the server:
@@ -67,7 +70,7 @@ MyDocument.getInitialProps = async (ctx) => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App: any) =>
+      enhanceApp: (App: React.ComponentType<React.ComponentProps<AppType> & Pick<CustomAppProps, "emotionCache">>) =>
         function EnhanceApp(props) {
           return <App emotionCache={cache} {...props} />;
         },

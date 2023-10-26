@@ -1,13 +1,14 @@
-import { ArchiveByTypesQuery } from "@generated/graphql";
 import { Card, CardActionArea, CardContent, CardMedia, Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import React from "react";
+
+import { ArchiveByTypesQuery } from "@/generated/graphql";
 
 type Props = {
   documents?: ArchiveByTypesQuery["archiveByTypes"];
 };
 
-const DocumentList: React.FC<Props> = ({ documents }) => {
+export const DocumentList: React.FC<Props> = ({ documents }) => {
   if (!documents?.length) return <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>;
 
   return (
@@ -49,5 +50,3 @@ const DocumentList: React.FC<Props> = ({ documents }) => {
     </Grid>
   );
 };
-
-export default DocumentList;

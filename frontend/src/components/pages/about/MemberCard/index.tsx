@@ -1,11 +1,14 @@
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+
+import { Link } from "@/components";
+
 import { BoardMember } from "./types";
 
 type Props = {
   member: BoardMember;
 };
 
-const MemberCard: React.VFC<Props> = ({ member }) => {
+export const MemberCard: React.VFC<Props> = ({ member }) => {
   return (
     <Card style={{ height: "100%" }}>
       <CardHeader title={member.name} />
@@ -14,7 +17,7 @@ const MemberCard: React.VFC<Props> = ({ member }) => {
           {member.position}
         </Typography>
         <Typography variant="body1" component="p">
-          E-post: <a href={`mailto:${member.email}`}>{member.email}</a>
+          E-post: <Link href={`mailto:${member.email}`}>{member.email}</Link>
         </Typography>
         {member.phone && (
           <Typography variant="body1" component="p">
@@ -25,5 +28,3 @@ const MemberCard: React.VFC<Props> = ({ member }) => {
     </Card>
   );
 };
-
-export default MemberCard;

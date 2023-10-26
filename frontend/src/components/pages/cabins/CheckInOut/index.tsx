@@ -1,22 +1,28 @@
-import Calendar from "@components/Calendar";
-import LabeledIcon from "@components/LabeledIcon";
-import useDisabledDates from "@hooks/cabins/useDisabledDates";
-import useResponsive from "@hooks/useResponsive";
-import { Cabin, DatePick } from "@interfaces/cabins";
-import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
-import { NextPage } from "next";
+import { Checkbox, Divider, FormControlLabel, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 
-interface Props {
-  allCabins: Cabin[];
-  chosenCabins: Cabin[];
-  setChosenCabins: React.Dispatch<React.SetStateAction<Cabin[]>>;
+import { Calendar } from "@/components/Calendar";
+import { CabinFragment } from "@/generated/graphql";
+import { useDisabledDates } from "@/hooks/cabins/useDisabledDates";
+import { useResponsive } from "@/hooks/useResponsive";
+import { DatePick } from "@/types/cabins";
+
+type Props = {
+  allCabins: CabinFragment[];
+  chosenCabins: CabinFragment[];
+  setChosenCabins: React.Dispatch<React.SetStateAction<CabinFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
-}
-/*
-One of the steps in the cabins/book page. In this step the user chooses a cabin and the check-in and check-out dates.
-*/
-const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
+};
+
+/**
+ * One of the steps in the cabins/book page. In this step the user chooses a cabin and the check-in and check-out dates.
+ */
+export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
+  allCabins,
+  chosenCabins,
+  setChosenCabins,
+  setDatePick,
+}) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
   const isMobile = useResponsive({ query: "down", key: "md" });
 
@@ -46,14 +52,20 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
         <Typography variant="h5">Velg hytte</Typography>
 
         {allCabins.map((cabin) => (
-          <LabeledIcon
-            icon={
+          <FormControlLabel
+            key={cabin.id}
+            label={
+              <Typography variant="subtitle2" component="p">
+                {cabin.name}
+              </Typography>
+            }
+            control={
               <Checkbox
                 color="primary"
                 disableRipple
                 checked={chosenCabins.some((chosenCabin) => chosenCabin.id === cabin.id)}
-                onChange={(e) => {
-                  if (e.target.checked) {
+                onChange={(_, checked) => {
+                  if (checked) {
                     setChosenCabins([...chosenCabins, cabin]);
                   } else {
                     setChosenCabins(chosenCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
@@ -61,8 +73,6 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
                 }}
               />
             }
-            value={<Typography variant="subtitle2">{cabin.name}</Typography>}
-            key={cabin.id}
           />
         ))}
       </Stack>
@@ -78,5 +88,3 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
     </Stack>
   );
 };
-
-export default CheckInOut;

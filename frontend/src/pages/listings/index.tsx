@@ -1,9 +1,9 @@
-import Listings from "@components/pages/listings/index/Listings";
-import Title from "@components/Title/";
-import Layout from "@layouts/Layout";
 import { Container } from "@mui/material";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "../_app";
+
+import { Listings } from "@/components/pages/listings/index/Listings";
+import { Title } from "@/components/Title/";
+import { NextPageWithLayout } from "@/lib/next";
 
 // page to show all listings open to users
 const ListingsPage: NextPageWithLayout = () => {
@@ -29,5 +29,4 @@ const ListingsPage: NextPageWithLayout = () => {
   );
 };
 
-ListingsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 export default ListingsPage;

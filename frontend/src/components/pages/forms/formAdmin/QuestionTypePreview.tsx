@@ -1,26 +1,24 @@
-import { Question } from "@interfaces/forms";
 import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@mui/material";
-import questionTypeLabels from "@components/pages/forms/formAdmin/questionTypeLabels";
 
-/**
- * Component to show a preview of how a form question's input will look like to the end user.
- *
- * Props:
- * - the question with questionType to preview
- * - optional answer for showing selected answer in questions with options
- * - optional answers for showing selected answers in checkbox questions
- */
-const QuestionTypePreview: React.FC<{
-  question: Question;
+import { questionTypeLabels } from "@/components/pages/forms/formAdmin/questionTypeLabels";
+import { QuestionTypeEnum, QuestionWithAnswerIdsFragment } from "@/generated/graphql";
+
+type Props = {
+  question: QuestionWithAnswerIdsFragment;
+  /** Optional answer for showing selected answer in questions with options */
   answer?: string;
+  /** Optional answers for showing selected answers in checkbox questions */
   answers?: string[];
-}> = ({ question, answer, answers }) => {
+};
+
+/** Component to show a preview of how a form question's input will look like to the end user. */
+export const QuestionTypePreview: React.FC<Props> = ({ question, answer, answers }) => {
   switch (question.questionType) {
-    case "PARAGRAPH":
+    case QuestionTypeEnum.Paragraph:
       return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} multiline rows={4} />;
-    case "SHORT_ANSWER":
+    case QuestionTypeEnum.ShortAnswer:
       return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} />;
-    case "MULTIPLE_CHOICE":
+    case QuestionTypeEnum.MultipleChoice:
       return (
         <RadioGroup>
           {(question.options ?? []).map((option, index) => (
@@ -32,7 +30,7 @@ const QuestionTypePreview: React.FC<{
           ))}
         </RadioGroup>
       );
-    case "CHECKBOXES":
+    case QuestionTypeEnum.Checkboxes:
       return (
         <FormGroup>
           {(question.options ?? []).map((option, index) => (
@@ -46,7 +44,7 @@ const QuestionTypePreview: React.FC<{
           ))}
         </FormGroup>
       );
-    case "DROPDOWN":
+    case QuestionTypeEnum.Dropdown:
       return (
         <ol>
           {(question.options ?? []).map((option, index) => (
@@ -56,11 +54,11 @@ const QuestionTypePreview: React.FC<{
           ))}
         </ol>
       );
-    case "SLIDER":
+    case QuestionTypeEnum.Slider:
       return <p>To be implemented</p>;
-    case "FILE_UPLOAD":
+    case QuestionTypeEnum.FileUpload:
       return <p>To be implemented</p>;
+    default:
+      return <></>;
   }
 };
-
-export default QuestionTypePreview;

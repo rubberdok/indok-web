@@ -1,16 +1,15 @@
 import { useQuery } from "@apollo/client";
-import * as markdownComponents from "@components/MarkdownForm/components";
-import TitleCard from "@components/pages/listings/detail/TitleCard";
-import Title from "@components/Title";
-import { ListingDocument } from "@generated/graphql";
 import { ResultOf } from "@graphql-typed-document-node/core";
-import Layout from "@layouts/Layout";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Container, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import ReactMarkdown from "react-markdown";
-import { NextPageWithLayout } from "../_app";
+
+import { Markdown } from "@/components";
+import { TitleCard } from "@/components/pages/listings/detail/TitleCard";
+import { Title } from "@/components/Title";
+import { ListingDocument } from "@/generated/graphql";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
+import { NextPageWithLayout } from "@/lib/next";
 
 // page to show details about a listing and its organization
 const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
@@ -18,7 +17,6 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
     variables: {
       id: listing.id,
     },
-    ssr: false,
   });
 
   const descriptionWithTitle = (desc: string | undefined) => {
@@ -51,14 +49,12 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
         breadcrumbs={[
           { href: "/", name: "Hjem" },
           { href: "/listings", name: "Verv" },
-          { href: `/listings/${data?.listing?.id}`, name: data?.listing?.title },
+          { href: `/listings/${data?.listing?.id}`, name: data?.listing?.title ?? "" },
         ]}
         bgImage={data?.listing?.heroImageUrl ?? undefined}
         ImageProps={{
           placeholder: "empty",
           unoptimized: true,
-          layout: "fill",
-          objectPosition: "top",
         }}
       />
       <Container sx={{ mb: 4 }}>
@@ -69,21 +65,17 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           alignItems="flex-start"
           spacing={4}
         >
-          <Grid item xs={12} sm={6} md={5} direction="column">
-            <TitleCard listing={data?.listing} />
+          <Grid item xs={12} sm={6} md={5}>
+            <TitleCard listing={data?.listing ?? undefined} />
           </Grid>
           <Grid item xs={12} sm={6} md={7}>
-            <ReactMarkdown components={markdownComponents}>
-              {descriptionWithTitle(data?.listing?.description)}
-            </ReactMarkdown>
+            <Markdown>{descriptionWithTitle(data?.listing?.description)}</Markdown>
           </Grid>
         </Grid>
       </Container>
     </>
   );
 };
-
-ListingPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getServerSideProps: GetServerSideProps<{
   listing: NonNullable<ResultOf<typeof ListingDocument>["listing"]>;
@@ -106,10 +98,6 @@ export const getServerSideProps: GetServerSideProps<{
   if (!listing) return { notFound: true };
 
   return addApolloState(client, { props: { listing } });
-};
-
-ListingPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
 };
 
 export default ListingPage;

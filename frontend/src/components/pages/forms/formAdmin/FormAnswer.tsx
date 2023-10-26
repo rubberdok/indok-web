@@ -1,18 +1,17 @@
-import { Answer, Question } from "@interfaces/forms";
 import { Grid, Typography } from "@mui/material";
-import QuestionTypePreview from "./QuestionTypePreview";
 
-/**
- * Component to show an answer to a question on a form.
- *
- * Props:
- * - the question on the form
- * - the responder's answer (undefined if responder gave no answer)
- */
-const FormAnswer: React.FC<{
-  question: Question;
-  answer: Answer | undefined;
-}> = ({ question, answer }) => {
+import { AnswerWithQuestionIdFragment, QuestionTypeEnum, QuestionWithAnswerIdsFragment } from "@/generated/graphql";
+
+import { QuestionTypePreview } from "./QuestionTypePreview";
+
+type Props = {
+  question: QuestionWithAnswerIdsFragment;
+  /** Undefined if responder gave no answer */
+  answer: AnswerWithQuestionIdFragment | undefined;
+};
+
+/** Component to show an answer to a question on a form. */
+export const FormAnswer: React.FC<Props> = ({ question, answer }) => {
   return (
     <>
       <Grid container direction="row" spacing={1}>
@@ -25,9 +24,10 @@ const FormAnswer: React.FC<{
       </Grid>
       {answer?.answer ? (
         <>
-          {question.questionType === "MULTIPLE_CHOICE" || question.questionType === "DROPDOWN" ? (
+          {question.questionType === QuestionTypeEnum.MultipleChoice ||
+          question.questionType === QuestionTypeEnum.Dropdown ? (
             <QuestionTypePreview question={question} answer={answer.answer} />
-          ) : question.questionType === "CHECKBOXES" ? (
+          ) : question.questionType === QuestionTypeEnum.Checkboxes ? (
             <QuestionTypePreview question={question} answers={answer.answer.split("|||")} />
           ) : (
             <Typography>{answer.answer}</Typography>
@@ -39,5 +39,3 @@ const FormAnswer: React.FC<{
     </>
   );
 };
-
-export default FormAnswer;

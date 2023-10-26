@@ -1,62 +1,60 @@
-import { PermissionRequired } from "@components/Auth";
-import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
-import CabinInfoPicker from "@components/pages/cabins/Admin/CabinInfoPicker";
-import useResponsive from "@hooks/useResponsive";
-import Layout, { RootStyle } from "@layouts/Layout";
-import { ArrowBackIos } from "@mui/icons-material";
-import { Box, Button, Container, Divider, Grid, Paper, Typography } from "@mui/material";
-import router from "next/router";
-import { NextPageWithLayout } from "src/pages/_app";
+import { Container, Divider, Stack, Typography } from "@mui/material";
+
+import { PermissionRequired } from "@/components/Auth";
+import { BookingSemesterPicker } from "@/components/pages/cabins/Admin/BookingSemesterPicker";
+import { CabinInfoPicker } from "@/components/pages/cabins/Admin/CabinInfoPicker";
+import { Title } from "@/components/Title";
+import { NextPageWithLayout } from "@/lib/next";
 
 const SettingsPage: NextPageWithLayout = () => {
-  const isMobile = useResponsive({ query: "down", key: "md" });
-
   return (
-    <Container>
-      <PermissionRequired permission="cabins.change_bookingsemester">
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <Box p={3}>
-              <Typography variant={isMobile ? "h3" : "h1"} align="center">
-                Booking adminside
+    <>
+      <Title
+        title="Innstillinger"
+        overline="Bookinger"
+        variant="dark"
+        breadcrumbs={[
+          {
+            name: "Hjem",
+            href: "/",
+          },
+          {
+            name: "Hytter",
+            href: "/cabins",
+          },
+          {
+            name: "Adminside",
+            href: "/cabins/admin",
+          },
+          {
+            name: "Innstillinger",
+            href: "/cabins/admin/settings",
+          },
+        ]}
+      />
+      <Container>
+        <PermissionRequired permission="cabins.change_bookingsemester">
+          <Stack direction="column" spacing={4}>
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Start- og sluttdato for høst- og vårsemester
               </Typography>
-              <Button startIcon={<ArrowBackIos />} onClick={() => router.back()}>
-                Gå tilbake
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-
-        <Box marginBottom={5}>
-          <Paper>
-            <Box p={4}>
-              <Typography variant={isMobile ? "h4" : "h3"}>Instillinger</Typography>
-            </Box>
-            <Divider />
-            <Box p={4}>
-              <Typography variant="h5">Velg start og slutt-dato for booking for høst- og vårsemestrene</Typography>
               <Typography>Det vil kun være mulig for brukere å søke om bookinger i disse periodene.</Typography>
-            </Box>
-            <Box p={4}>
               <BookingSemesterPicker />
-            </Box>
+            </Stack>
             <Divider />
-            <Box p={4}>
-              <Typography variant="h5">Administrer hytteinformasjon</Typography>
+            <Stack direction="column" spacing={2}>
+              <Typography variant="h4" component="h2">
+                Administrer hytteinformasjon
+              </Typography>
               <Typography>Her kan dere oppdatere informasjonen som skal vises om Oksen og Bjørnen.</Typography>
               <CabinInfoPicker />
-            </Box>
-          </Paper>
-        </Box>
-      </PermissionRequired>
-    </Container>
+            </Stack>
+          </Stack>
+        </PermissionRequired>
+      </Container>
+    </>
   );
 };
-
-SettingsPage.getLayout = (page) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
 
 export default SettingsPage;

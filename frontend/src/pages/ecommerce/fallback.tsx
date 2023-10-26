@@ -1,10 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
-import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
-import { GET_USER } from "@graphql/users/queries";
-import { Order, PaymentStatus } from "@interfaces/ecommerce";
-import { User } from "@interfaces/users";
-import Layout, { RootStyle } from "@layouts/Layout";
 import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
   Alert,
@@ -24,44 +18,47 @@ import {
   ListSubheader,
   Typography,
 } from "@mui/material";
-import savings from "@public/illustrations/Savings.svg";
 import dayjs from "dayjs";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { NextPageWithLayout } from "../_app";
+
+import { Link } from "@/components";
+import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
+import { AttemptCapturePaymentDocument, PaymentStatus, UserDocument } from "@/generated/graphql";
+import { Layout, RootStyle } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/lib/next";
+import savings from "~/public/illustrations/Savings.svg";
 
 const FallbackPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { orderId, redirect } = router.query;
 
-  const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
+  const [attemptCapturePayment, { data, loading, error }] = useMutation(AttemptCapturePaymentDocument, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
   });
-  const { data: userData } = useQuery<{ user?: User }>(GET_USER);
+  const { data: userData } = useQuery(UserDocument);
 
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
-  const [order, setOrder] = useState<Order>();
+  const paymentStatus = data?.attemptCapturePayment?.status ?? PaymentStatus.Reserved;
+  const order = data?.attemptCapturePayment?.order;
+
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
   const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
 
   useEffect(() => {
-    if (orderId && paymentStatus == "RESERVED") {
+    if (orderId && paymentStatus === PaymentStatus.Reserved) {
       intervalRef.current = setInterval(() => {
-        attemptCapturePayment({ variables: { orderId } });
+        attemptCapturePayment({ variables: { orderId: orderId as string } });
       }, 2000);
     }
     return () => {
       intervalRef.current && clearInterval(intervalRef.current);
     };
-  }, [orderId]);
+  }, [orderId, paymentStatus, attemptCapturePayment]);
 
   useEffect(() => {
-    if (data) {
-      setPaymentStatus(data.attemptCapturePayment.status);
-      setOrder(data.attemptCapturePayment.order);
-      if (["CAPTURED", "CANCELLED"].includes(data.attemptCapturePayment.status) && intervalRef.current) {
+    if (paymentStatus) {
+      if ([PaymentStatus.Captured, PaymentStatus.Cancelled].includes(paymentStatus) && intervalRef.current) {
         // We either sucessfully captured payment or the payment was somehow cancelled
         clearInterval(intervalRef.current);
       }
@@ -69,7 +66,7 @@ const FallbackPage: NextPageWithLayout = () => {
     return () => {
       intervalRef.current && clearInterval(intervalRef.current);
     };
-  }, [data]);
+  }, [paymentStatus]);
 
   return (
     <Container>
@@ -85,14 +82,15 @@ const FallbackPage: NextPageWithLayout = () => {
           <CardHeader title="Ordrebekreftelse"></CardHeader>
           <CardContent>
             <Grid container alignItems="center" direction="column">
-              {error ? (
+              {error && (
                 <>
                   <Typography variant="h4">Feil</Typography>
                   <Alert severity="error" variant="filled">
                     {error.message}
                   </Alert>
                 </>
-              ) : paymentStatus === "RESERVED" || loading ? (
+              )}
+              {(paymentStatus === "RESERVED" || loading) && (
                 <>
                   <Grid container item direction="column" spacing={4} alignItems="center">
                     <Grid item>
@@ -102,18 +100,19 @@ const FallbackPage: NextPageWithLayout = () => {
                       <CircularProgress />
                     </Grid>
                     <Grid item xs={6}>
-                      <Image src={savings} />
+                      <Image src={savings} alt="" />
                     </Grid>
                   </Grid>
                 </>
-              ) : paymentStatus === "CAPTURED" && order ? (
+              )}
+              {paymentStatus === "CAPTURED" && order && (
                 <>
                   <Typography variant="h3">Betaling fullført!</Typography>
                   <Typography variant="body1">Betalingen var vellykket og du har nå kjøpt produktet. </Typography>
                   <List
                     sx={{
                       width: "50%",
-                      backgroundColor: (theme) => theme.palette.background.paper,
+                      backgroundColor: (theme) => theme.vars.palette.background.paper,
                       textAlign: "center",
                       marginTop: "50px",
                     }}
@@ -128,10 +127,7 @@ const FallbackPage: NextPageWithLayout = () => {
                       <ListItemText primary={`${order.quantity} stk`} secondary={"Antall"} />
                     </ListItem>
                     <ListItem sx={{ textAlign: "center" }}>
-                      <ListItemText
-                        primary={dayjs(order.timestamp).format("DD. MMM YYYY, kl. HH:mm")}
-                        secondary={"Dato"}
-                      />
+                      <ListItemText primary={dayjs(order.timestamp).format("L LT")} secondary={"Dato"} />
                     </ListItem>
                     <Divider variant="middle" component="li" />
                     <ListItem sx={{ textAlign: "center" }}>
@@ -148,18 +144,15 @@ const FallbackPage: NextPageWithLayout = () => {
                   </Button>
                   <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                 </>
-              ) : paymentStatus === "CANCELLED" ? (
-                <Typography>Betalingen ble avbrutt</Typography>
-              ) : (
-                <Typography>Noe gikk galt</Typography>
               )}
+              {paymentStatus === "CANCELLED" && <Typography>Betalingen ble avbrutt</Typography>}
             </Grid>
           </CardContent>
           {userData?.user && (
             <CardActions>
-              <Link href="/ecommerce" passHref>
-                <Button>Gå til mine betalinger</Button>
-              </Link>
+              <Button component={Link} noLinkStyle href="/ecommerce">
+                Gå til mine betalinger
+              </Button>
             </CardActions>
           )}
         </Card>

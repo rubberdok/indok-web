@@ -1,0 +1,132 @@
+fragment EventFields on EventType {
+  id
+  title
+  startTime
+  shortDescription
+  allowedGradeYears
+  isFull
+  isAttendable
+  signupOpenDate
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+  }
+  organization {
+    id
+    color
+  }
+}
+
+fragment EventDetailFields on EventType {
+  id
+  title
+  description
+  shortDescription
+  startTime
+  endTime
+  location
+  contactEmail
+  allowedGradeYears
+  hasExtraInformation
+  isFull
+  signupOpenDate
+  deadline
+  isAttendable
+  bindingSignup
+  price
+  product {
+    id
+  }
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+    positionOnWaitingList
+    hasBoughtTicket
+  }
+  category {
+    id
+    name
+  }
+  organization {
+    id
+    name
+    logoUrl
+  }
+}
+
+fragment AdminEvent on EventType {
+  id
+  title
+  startTime
+  endTime
+  location
+  description
+  organization {
+    id
+    name
+  }
+  category {
+    id
+    name
+  }
+  image
+  isAttendable
+  deadline
+  publisher {
+    id
+    username
+    email
+    firstName
+    lastName
+    dateJoined
+  }
+  availableSlots
+  price
+  shortDescription
+  signupOpenDate
+  usersAttending {
+    ...SignUpWithTicket
+  }
+  usersOnWaitingList {
+    ...SignUp
+  }
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+  }
+  isFull
+  hasExtraInformation
+  bindingSignup
+  contactEmail
+  allowedGradeYears
+  product {
+    id
+  }
+}
+
+fragment SignUp on SignUpType {
+  user {
+    id
+    firstName
+    lastName
+  }
+  userEmail
+  userGradeYear
+  userAllergies
+  userPhoneNumber
+  extraInformation
+}
+
+fragment SignUpWithTicket on SignUpType {
+  user {
+    id
+    firstName
+    lastName
+  }
+  userEmail
+  userGradeYear
+  userAllergies
+  userPhoneNumber
+  extraInformation
+  hasBoughtTicket
+}

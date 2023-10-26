@@ -1,11 +1,10 @@
-import Layout, { RootStyle } from "@layouts/Layout";
-import NewListing from "@components/pages/listings/organization/NewListing";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "src/pages/_app";
 
-/**
- * Page for creating new listings, navigates to the newly created listing upon completion.
- */
+import { NewListing } from "@/components/pages/listings/organization/NewListing";
+import { Layout, RootStyle } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/lib/next";
+
+/** Page for creating new listings, navigates to the newly created listing upon completion. */
 const NewListingPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { orgId } = router.query;

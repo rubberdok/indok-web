@@ -1,5 +1,6 @@
 from graphene_django import DjangoObjectType
 import graphene
+from graphene import NonNull
 
 from .models import Order, Product
 
@@ -16,7 +17,13 @@ class ProductType(DjangoObjectType):
         ]
 
 
+# Graphene enum type extracted from Order model to allow reuse and consistent types for codegen
+PaymentStatus = graphene.Enum.from_enum(Order.PaymentStatus)
+
+
 class OrderType(DjangoObjectType):
+    payment_status = NonNull(PaymentStatus)
+
     class Meta:
         model = Order
         fields = [
@@ -31,5 +38,5 @@ class OrderType(DjangoObjectType):
 
 
 class OrdersByStatusType(graphene.ObjectType):
-    orders = graphene.List(OrderType)
+    orders = graphene.List(NonNull(OrderType))
     length = graphene.Int()

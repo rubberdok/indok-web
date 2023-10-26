@@ -1,8 +1,9 @@
-import { DATE_FORMAT } from "./constants";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import weekday from "dayjs/plugin/weekday";
+
+import { DATE_FORMAT } from "./constants";
 import "dayjs/locale/nb";
 
 dayjs.locale("nb");

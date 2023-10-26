@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { FeaturedArchiveDocument } from "@generated/graphql";
 import Typography from "@mui/material/Typography";
-import DocumentList from "./DocumentList";
 
-const FeaturedDocumentsList: React.FC = () => {
-  const { loading, data, error } = useQuery(FeaturedArchiveDocument, {
-    ssr: false,
-  });
+import { FeaturedArchiveDocument } from "@/generated/graphql";
+
+import { DocumentList } from "./DocumentList";
+
+export const FeaturedDocumentsList: React.FC = () => {
+  const { loading, data, error } = useQuery(FeaturedArchiveDocument);
 
   if (loading) return <p style={{ textAlign: "center" }}></p>;
 
@@ -21,5 +21,3 @@ const FeaturedDocumentsList: React.FC = () => {
     </>
   );
 };
-
-export default FeaturedDocumentsList;

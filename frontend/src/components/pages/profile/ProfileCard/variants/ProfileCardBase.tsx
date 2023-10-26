@@ -1,6 +1,7 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Grid } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
-import Link from "next/link";
+
+import { Link } from "@/components";
 
 type Props = {
   title: string;
@@ -11,7 +12,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const ProfileCardBase: React.FC<Props> = ({
+export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
   title,
   children,
   actionText,
@@ -28,22 +29,25 @@ const ProfileCardBase: React.FC<Props> = ({
           <CardContent>{children}</CardContent>
           {actionText && actionLink && (
             <CardActions sx={{ ml: 1 }}>
-              <Link passHref href={actionLink}>
-                <Button color="contrast" variant="text" data-test-id={`${dataTestId}link`}>
-                  {actionText}
-                </Button>
-              </Link>
+              <Button
+                component={Link}
+                noLinkStyle
+                href={actionLink}
+                color="secondary"
+                variant="text"
+                data-test-id={`${dataTestId}link`}
+              >
+                {actionText}
+              </Button>
             </CardActions>
           )}
         </Grid>
         {image && (
           <Grid item xs={3} sx={{ mr: 4 }}>
-            <Image src={image} layout="responsive" objectFit="contain" alt={alt} />
+            <Image src={image} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={alt ?? ""} />
           </Grid>
         )}
       </Grid>
     </Card>
   );
 };
-
-export default ProfileCardBase;

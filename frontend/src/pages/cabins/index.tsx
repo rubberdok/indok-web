@@ -1,20 +1,21 @@
-import CabinsDetailsSection from "@components/pages/cabins/CabinsDetailsSection";
-import CabinsHero from "@components/pages/cabins/CabinsHero";
-import CabinsInfoSection from "@components/pages/cabins/CabinsInfoSection";
-import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
-import FAQ from "@components/pages/cabins/Documents/FAQ";
-import { outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
-import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
-import Layout from "@layouts/Layout";
 import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { NextPageWithLayout } from "../_app";
 
-/*
-Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
-*/
+import { Link } from "@/components";
+import { CabinsDetailsSection } from "@/components/pages/cabins/CabinsDetailsSection";
+import { CabinsHero } from "@/components/pages/cabins/CabinsHero";
+import { CabinsInfoSection } from "@/components/pages/cabins/CabinsInfoSection";
+import { ContactCabinBoard } from "@/components/pages/cabins/ContactCabinBoard";
+import { FAQ } from "@/components/pages/cabins/Documents/FAQ";
+import { outsideImages } from "@/components/pages/cabins/ImageSlider/imageData";
+import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
+import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
+import { NextPageWithLayout } from "@/lib/next";
+
+/** Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book). */
 const CabinsPage: NextPageWithLayout = () => {
   const transportData = [
     {
@@ -54,6 +55,10 @@ const CabinsPage: NextPageWithLayout = () => {
 
   return (
     <>
+      <Head>
+        <title>Hyttebooking | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="og:image" content="/img/hytte.jpg" />
+      </Head>
       <CabinsHero />
       <CabinsInfoSection />
       <CabinsDetailsSection />
@@ -84,6 +89,9 @@ const CabinsPage: NextPageWithLayout = () => {
               Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer, i tillegg til kaffetrakter, vannkoker og
               vaffeljern m.m. Basiskrydder og olje til steking skal også være tilgjengelig. På hyttene ligger det et
               bredt utvalg brettspill, samt kortstokker. I stua står det en høyttaler med AUX-kabel.
+            </Typography>
+            <Typography gutterBottom sx={{ opacity: 0.72 }}>
+              <strong>Vi minner om at stampen er ut av drift, og skal ikke tas i bruk!</strong>
             </Typography>
           </Grid>
           <Grid sm={6} container item direction="column" justifyContent="center" alignItems="center">
@@ -150,6 +158,15 @@ const CabinsPage: NextPageWithLayout = () => {
   );
 };
 
-CabinsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data } = await client.query({ query: CabinsAndResponsiblesDocument });
+
+  return addApolloState(client, {
+    props: {
+      ...data,
+    },
+  });
+};
 
 export default CabinsPage;

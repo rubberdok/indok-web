@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { Theme } from "@mui/system";
+import { styled, Theme } from "@mui/material/styles";
 
 type Props = {
   active?: boolean;
@@ -17,7 +16,7 @@ const activeDot = (theme: Theme) => ({
     borderRadius: "50%",
     display: "inline-block",
     position: "relative",
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.vars.palette.primary.main,
   },
 });
 
@@ -27,6 +26,6 @@ export const RouteLink = styled(Typography, {
   ...(active && activeDot(theme)),
   cursor: "pointer",
   "&:hover": {
-    color: theme.palette.text.primary,
+    color: theme.vars.palette.text.primary,
   },
 }));

@@ -12,7 +12,6 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
-    "jsxImportSource": "@emotion/react",
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -24,20 +23,16 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@styles/*": ["src/styles/*"],
-      "@utils/*": ["src/utils/*"],
-      "@content/*": ["src/content/*"],
-      "@public/*": ["public/*"],
-      "@interfaces/*": ["src/interfaces/*"],
-      "@graphql/*": ["src/graphql/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@lib/*": ["src/lib/*"],
-      "@generated/*": ["src/generated/*"],
-      "@layouts/*": ["src/layouts/*"]
+      "@/*": ["src/*"],
+      "~/*": ["./*"]
     },
-    "incremental": false
+    "incremental": false,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "exclude": ["**/node_modules", "**/.next", "cypress", "cypress.config.ts"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
 }
