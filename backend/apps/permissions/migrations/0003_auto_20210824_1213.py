@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Type
 
 from django.db import migrations
 from django.db.models.query_utils import Q
-from apps.permissions.constants import PRIMARY_GROUP_NAME, HR_GROUP_NAME
+from apps.permissions.constants import MEMBER_GROUP_NAME, ADMIN_GROUP_NAME
 
 if TYPE_CHECKING:
     from apps.organizations import models
@@ -19,14 +19,14 @@ def improve_group_legibility(apps, _):
         responsible_group: "ResponsibleGroup" = group.responsiblegroup
         try:
             organization: "models.Organization" = Organization.objects.get(
-                Q(primary_group=responsible_group) | Q(hr_group=responsible_group)
+                Q(member_group=responsible_group) | Q(admin_group=responsible_group)
             )
 
             responsible_group_name = responsible_group.name
-            if organization.primary_group == responsible_group:
-                responsible_group_name = PRIMARY_GROUP_NAME
-            elif organization.hr_group == responsible_group:
-                responsible_group_name = HR_GROUP_NAME
+            if organization.member_group == responsible_group:
+                responsible_group_name = MEMBER_GROUP_NAME
+            elif organization.admin_group == responsible_group:
+                responsible_group_name = ADMIN_GROUP_NAME
             if responsible_group.name != responsible_group_name:
                 responsible_group.name = responsible_group_name
                 responsible_group.save()
@@ -50,7 +50,7 @@ def reverse_legible_group_names(apps, _):
         responsible_group = group.responsiblegroup
         try:
             organization = responsible_group.organization
-            if organization.primary_group == responsible_group:
+            if organization.member_group == responsible_group:
                 responsible_group.name = organization.name
                 responsible_group.save()
         except Organization.DoesNotExist:

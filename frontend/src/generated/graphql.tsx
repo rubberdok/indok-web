@@ -901,17 +901,17 @@ export type OrganizationInput = {
 export type OrganizationType = {
   __typename?: "OrganizationType";
   absoluteSlug?: Maybe<Scalars["String"]>;
+  adminGroup?: Maybe<ResponsibleGroupType>;
   children: Array<OrganizationType>;
   color?: Maybe<Scalars["String"]>;
   description: Scalars["String"];
   events: Array<EventType>;
-  hrGroup?: Maybe<ResponsibleGroupType>;
   id: Scalars["ID"];
   listings?: Maybe<Array<ListingType>>;
   logoUrl?: Maybe<Scalars["String"]>;
+  memberGroup?: Maybe<ResponsibleGroupType>;
   name: Scalars["String"];
   parent?: Maybe<OrganizationType>;
-  primaryGroup?: Maybe<ResponsibleGroupType>;
   slug: Scalars["String"];
   users: Array<UserType>;
 };
@@ -2976,8 +2976,8 @@ export type AdminOrganizationFragment = {
   __typename?: "OrganizationType";
   id: string;
   name: string;
-  hrGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
-  primaryGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+  adminGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+  memberGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
   events: Array<{
     __typename?: "EventType";
     id: string;
@@ -3021,8 +3021,8 @@ export type AdminOrganizationQuery = {
     __typename?: "OrganizationType";
     id: string;
     name: string;
-    hrGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
-    primaryGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    adminGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    memberGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
     events: Array<{
       __typename?: "EventType";
       id: string;
@@ -4942,7 +4942,7 @@ export const AdminOrganizationFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "name" } },
           {
             kind: "Field",
-            name: { kind: "Name", value: "hrGroup" },
+            name: { kind: "Name", value: "adminGroup" },
             selectionSet: {
               kind: "SelectionSet",
               selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
@@ -4950,7 +4950,7 @@ export const AdminOrganizationFragmentDoc = {
           },
           {
             kind: "Field",
-            name: { kind: "Name", value: "primaryGroup" },
+            name: { kind: "Name", value: "memberGroup" },
             selectionSet: {
               kind: "SelectionSet",
               selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],

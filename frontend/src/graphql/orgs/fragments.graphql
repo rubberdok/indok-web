@@ -1,10 +1,10 @@
 fragment AdminOrganization on OrganizationType {
   id
   name
-  hrGroup {
+  adminGroup {
     uuid
   }
-  primaryGroup {
+  memberGroup {
     uuid
   }
   events {
