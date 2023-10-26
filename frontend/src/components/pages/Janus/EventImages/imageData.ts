@@ -47,6 +47,24 @@ import DSCF5274 from "~/public/static/janusArrangement/janusvalgetImages/DSCF527
 import DSCF5302 from "~/public/static/janusArrangement/janusvalgetImages/DSCF5302.jpg";
 import DSCF5360 from "~/public/static/janusArrangement/janusvalgetImages/DSCF5360.jpg";
 import DSCF5407 from "~/public/static/janusArrangement/janusvalgetImages/DSCF5407.jpg";
+import image16 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00008.jpg";
+import image11 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00035.jpg";
+import image8 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00038.jpg";
+import image12 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00058.jpg";
+import image17 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00059.jpg";
+import image18 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00100.jpg";
+import image13 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00129.jpg";
+import image1 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00130.jpg";
+import image14 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00137.jpg";
+import image2 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00174.jpg";
+import image3 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00489.jpg";
+import image4 from "~/public/static/janusArrangement/OktoberfestBilder/DSC00539.jpg";
+import image5 from "~/public/static/janusArrangement/OktoberfestBilder/DSC09911.jpg";
+import image6 from "~/public/static/janusArrangement/OktoberfestBilder/DSC09917.jpg";
+import image9 from "~/public/static/janusArrangement/OktoberfestBilder/DSC09975.jpg";
+import image7 from "~/public/static/janusArrangement/OktoberfestBilder/DSC09980.jpg";
+import image10 from "~/public/static/janusArrangement/OktoberfestBilder/DSC09989.jpg";
+import image15 from "~/public/static/janusArrangement/OktoberfestBilder/DSC09995.jpg";
 import DSC00823 from "~/public/static/janusArrangement/WinterGames/DSC00823.jpg";
 import DSC00928 from "~/public/static/janusArrangement/WinterGames/DSC00928.jpg";
 import DSC00964 from "~/public/static/janusArrangement/WinterGames/DSC00964.jpg";
@@ -195,10 +213,24 @@ export const winterGamesImages: ImageData[] = [
   },
 ];
 export const oktoberfestImages: ImageData[] = [
-  {
-    label: "Bilde ikke fra oktoberfest...",
-    img: IMG_0004,
-  },
+  { label: "", img: image3 },
+  { label: "", img: image1 },
+  { label: "", img: image2 },
+  { label: "", img: image4 },
+  { label: "", img: image5 },
+  { label: "", img: image6 },
+  { label: "", img: image7 },
+  { label: "", img: image8 },
+  { label: "", img: image9 },
+  { label: "", img: image10 },
+  { label: "", img: image11 },
+  { label: "", img: image12 },
+  { label: "", img: image13 },
+  { label: "", img: image14 },
+  { label: "", img: image15 },
+  { label: "", img: image16 },
+  { label: "", img: image17 },
+  { label: "", img: image18 },
 ];
 
 export const aareturImages: ImageData[] = [
