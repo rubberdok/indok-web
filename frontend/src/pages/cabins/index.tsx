@@ -90,6 +90,9 @@ const CabinsPage: NextPageWithLayout = () => {
               vaffeljern m.m. Basiskrydder og olje til steking skal også være tilgjengelig. På hyttene ligger det et
               bredt utvalg brettspill, samt kortstokker. I stua står det en høyttaler med AUX-kabel.
             </Typography>
+            <Typography gutterBottom sx={{ opacity: 0.72 }}>
+              <strong>Vi minner om at stampen er ut av drift, og skal ikke tas i bruk!</strong>
+            </Typography>
           </Grid>
           <Grid sm={6} container item direction="column" justifyContent="center" alignItems="center">
             <Grid item>
