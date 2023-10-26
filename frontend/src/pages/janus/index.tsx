@@ -25,7 +25,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[800],
       image: President,
       phonenumber: "tlf: 41388 670",
-      email: "jennywtemmrud@gmail.com",
+      email: "president@janus.org.ntnu.no",
     },
     {
       id: 2,
@@ -34,7 +34,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: Nestleder,
       phonenumber: "955 52 393",
-      email: "philipthomasjenkins@gmail.com",
+      email: "okonomi@janus.org.ntnu.no",
     },
     {
       id: 3,
@@ -43,7 +43,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: Websjef,
       phonenumber: "tlf: 477 17 089",
-      email: "myrmina@gmail.com",
+      email: "web@janus.org.ntnu.no",
     },
     {
       id: 4,
@@ -52,7 +52,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: JanusScriptRedaktør,
       phonenumber: "tlf: 477 09 820",
-      email: "hop.camilla@gmail.com",
+      email: "jsredaktor@janus.org.ntnu.no",
     },
     {
       id: 5,
@@ -61,7 +61,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: Hyttetursjef,
       phonenumber: "tlf: 413 40 153",
-      email: "elise.flovikholm@gmail.com",
+      email: "hyttetursjef@janus.org.ntnu.no",
     },
     {
       id: 6,
@@ -70,7 +70,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: Kjellersjef,
       phonenumber: "tlf: 974 27 813",
-      email: "siljehjohannesen@gmail.com",
+      email: "kjellersjef@janus.org.ntnu.no",
     },
     {
       id: 7,
@@ -79,7 +79,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: Festsjef,
       phonenumber: "tlf: 472 73 906",
-      email: "thomas.kallasten@gmail.com",
+      email: "fest@janus.org.ntnu.no",
     },
     {
       id: 8,
@@ -88,7 +88,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: Eventsjef,
       phonenumber: "tlf: 960 43 668",
-      email: "evamarie.melbo@gmail.com",
+      email: "event@janus.org.ntnu.no",
     },
     {
       id: 9,
@@ -97,7 +97,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: PRsjef,
       phonenumber: "tlf: 407 61 475",
-      email: "minda.harms@gmail.com",
+      email: "pr@janus.org.ntnu.no",
     },
     {
       id: 10,
@@ -106,7 +106,7 @@ const JanusPage: NextPageWithLayout = () => {
       color: red[500],
       image: Sekretær,
       phonenumber: "tlf: 928 17 970",
-      email: "magnusmoldekleivjohansen@gmail.com",
+      email: "sekretaer@janus.org.ntnu.no",
     },
   ];
 
