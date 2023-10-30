@@ -4,6 +4,12 @@ query product($productId: ID!) {
   }
 }
 
+query products {
+  products {
+    id
+  }
+}
+
 query userOrders {
   userOrders {
     ...Order

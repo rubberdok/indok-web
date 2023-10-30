@@ -10,9 +10,11 @@ import { ProductDocument } from "@/generated/graphql";
 
 
 const ShopPage: NextPageWithLayout = () => {
-const res = useQuery(//Products)
-console.log("Below")
-console.log(res)
+const res = useQuery(query{
+  products {
+    id
+  }
+  })
 
   return (
     <Template title="Janus Nettbutikk" description="">
