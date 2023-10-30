@@ -7,6 +7,14 @@ query product($productId: ID!) {
 query products {
   products {
     id
+    name
+    price
+    description
+    maxBuyableQuantity
+  }
+
+  allUsers {
+    id
   }
 }
 
