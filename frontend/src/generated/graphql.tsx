@@ -112,6 +112,12 @@ export type AssignMembership = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+export type AssignMembershipWithUsername = {
+  __typename?: "AssignMembershipWithUsername";
+  membership?: Maybe<MembershipType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
 export type AttemptCapturePayment = {
   __typename?: "AttemptCapturePayment";
   order?: Maybe<OrderType>;
@@ -210,6 +216,17 @@ export type CategoryType = {
   __typename?: "CategoryType";
   id: Scalars["ID"];
   name: Scalars["String"];
+};
+
+export type ChangeMembership = {
+  __typename?: "ChangeMembership";
+  membership?: Maybe<MembershipType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
+export type ChangeMembershipInput = {
+  groupId?: InputMaybe<Scalars["ID"]>;
+  membershipId?: InputMaybe<Scalars["ID"]>;
 };
 
 export type CreateArchiveDocument = {
@@ -407,6 +424,12 @@ export type DeleteListing = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+export type DeleteMembership = {
+  __typename?: "DeleteMembership";
+  membership?: Maybe<MembershipType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
 export type DeleteOrganization = {
   __typename?: "DeleteOrganization";
   ok?: Maybe<Scalars["Boolean"]>;
@@ -552,6 +575,12 @@ export type MembershipInput = {
   userId?: InputMaybe<Scalars["ID"]>;
 };
 
+export type MembershipInputWithUsername = {
+  groupId?: InputMaybe<Scalars["ID"]>;
+  organizationId?: InputMaybe<Scalars["ID"]>;
+  username?: InputMaybe<Scalars["String"]>;
+};
+
 export type MembershipType = {
   __typename?: "MembershipType";
   group?: Maybe<ResponsibleGroupType>;
@@ -570,8 +599,10 @@ export type Mutations = {
    */
   adminEventSignOff?: Maybe<AdminEventSignOff>;
   assignMembership?: Maybe<AssignMembership>;
+  assignMembershipWithUsername?: Maybe<AssignMembershipWithUsername>;
   attemptCapturePayment?: Maybe<AttemptCapturePayment>;
   authUser: AuthUser;
+  changeMembership?: Maybe<ChangeMembership>;
   createArchivedocument?: Maybe<CreateArchiveDocument>;
   createBlog?: Maybe<CreateBlog>;
   createBlogPost?: Maybe<CreateBlogPost>;
@@ -602,6 +633,7 @@ export type Mutations = {
   deleteForm?: Maybe<DeleteForm>;
   /** Deletes the listing with the given ID */
   deleteListing?: Maybe<DeleteListing>;
+  deleteMembership?: Maybe<DeleteMembership>;
   deleteOrganization?: Maybe<DeleteOrganization>;
   deleteQuestion?: Maybe<DeleteQuestion>;
   /**
@@ -652,12 +684,20 @@ export type MutationsAssignMembershipArgs = {
   membershipData: MembershipInput;
 };
 
+export type MutationsAssignMembershipWithUsernameArgs = {
+  membershipData: MembershipInputWithUsername;
+};
+
 export type MutationsAttemptCapturePaymentArgs = {
   orderId: Scalars["ID"];
 };
 
 export type MutationsAuthUserArgs = {
   code: Scalars["String"];
+};
+
+export type MutationsChangeMembershipArgs = {
+  membershipData: ChangeMembershipInput;
 };
 
 export type MutationsCreateArchivedocumentArgs = {
@@ -758,6 +798,10 @@ export type MutationsDeleteFormArgs = {
 
 export type MutationsDeleteListingArgs = {
   id?: InputMaybe<Scalars["ID"]>;
+};
+
+export type MutationsDeleteMembershipArgs = {
+  membershipId?: InputMaybe<Scalars["ID"]>;
 };
 
 export type MutationsDeleteOrganizationArgs = {
@@ -901,17 +945,17 @@ export type OrganizationInput = {
 export type OrganizationType = {
   __typename?: "OrganizationType";
   absoluteSlug?: Maybe<Scalars["String"]>;
+  adminGroup?: Maybe<ResponsibleGroupType>;
   children: Array<OrganizationType>;
   color?: Maybe<Scalars["String"]>;
   description: Scalars["String"];
   events: Array<EventType>;
-  hrGroup?: Maybe<ResponsibleGroupType>;
   id: Scalars["ID"];
   listings?: Maybe<Array<ListingType>>;
   logoUrl?: Maybe<Scalars["String"]>;
+  memberGroup?: Maybe<ResponsibleGroupType>;
   name: Scalars["String"];
   parent?: Maybe<OrganizationType>;
-  primaryGroup?: Maybe<ResponsibleGroupType>;
   slug: Scalars["String"];
   users: Array<UserType>;
 };
@@ -2976,8 +3020,8 @@ export type AdminOrganizationFragment = {
   __typename?: "OrganizationType";
   id: string;
   name: string;
-  hrGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
-  primaryGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+  adminGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+  memberGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
   events: Array<{
     __typename?: "EventType";
     id: string;
@@ -3007,8 +3051,70 @@ export type OrgAdminListingFragment = { __typename?: "ListingType"; id: string; 
 export type MembershipFragment = {
   __typename?: "MembershipType";
   id: string;
-  user: { __typename?: "UserType"; firstName: string; lastName: string };
+  user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
   group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+};
+
+export type AssignMembershipMutationVariables = Exact<{
+  membershipData: MembershipInput;
+}>;
+
+export type AssignMembershipMutation = {
+  __typename?: "Mutations";
+  assignMembership?: {
+    __typename?: "AssignMembership";
+    ok?: boolean | null;
+    membership?: {
+      __typename?: "MembershipType";
+      id: string;
+      organization: { __typename?: "OrganizationType"; id: string };
+      group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    } | null;
+  } | null;
+};
+
+export type AssignMembershipWithUsernameMutationVariables = Exact<{
+  membershipData: MembershipInputWithUsername;
+}>;
+
+export type AssignMembershipWithUsernameMutation = {
+  __typename?: "Mutations";
+  assignMembershipWithUsername?: {
+    __typename?: "AssignMembershipWithUsername";
+    ok?: boolean | null;
+    membership?: {
+      __typename?: "MembershipType";
+      id: string;
+      organization: { __typename?: "OrganizationType"; id: string };
+      group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    } | null;
+  } | null;
+};
+
+export type DeleteMembershipMutationVariables = Exact<{
+  membershipId: Scalars["ID"];
+}>;
+
+export type DeleteMembershipMutation = {
+  __typename?: "Mutations";
+  deleteMembership?: { __typename?: "DeleteMembership"; ok?: boolean | null } | null;
+};
+
+export type ChangeMembershipMutationVariables = Exact<{
+  membershipData: ChangeMembershipInput;
+}>;
+
+export type ChangeMembershipMutation = {
+  __typename?: "Mutations";
+  changeMembership?: {
+    __typename?: "ChangeMembership";
+    ok?: boolean | null;
+    membership?: {
+      __typename?: "MembershipType";
+      id: string;
+      group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    } | null;
+  } | null;
 };
 
 export type AdminOrganizationQueryVariables = Exact<{
@@ -3021,8 +3127,8 @@ export type AdminOrganizationQuery = {
     __typename?: "OrganizationType";
     id: string;
     name: string;
-    hrGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
-    primaryGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    adminGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    memberGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
     events: Array<{
       __typename?: "EventType";
       id: string;
@@ -3046,7 +3152,7 @@ export type MembershipsQuery = {
   memberships?: Array<{
     __typename?: "MembershipType";
     id: string;
-    user: { __typename?: "UserType"; firstName: string; lastName: string };
+    user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
     group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
   }> | null;
 };
@@ -4942,7 +5048,7 @@ export const AdminOrganizationFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "name" } },
           {
             kind: "Field",
-            name: { kind: "Name", value: "hrGroup" },
+            name: { kind: "Name", value: "adminGroup" },
             selectionSet: {
               kind: "SelectionSet",
               selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
@@ -4950,7 +5056,7 @@ export const AdminOrganizationFragmentDoc = {
           },
           {
             kind: "Field",
-            name: { kind: "Name", value: "primaryGroup" },
+            name: { kind: "Name", value: "memberGroup" },
             selectionSet: {
               kind: "SelectionSet",
               selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
@@ -5031,6 +5137,7 @@ export const MembershipFragmentDoc = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "firstName" } },
                 { kind: "Field", name: { kind: "Name", value: "lastName" } },
               ],
@@ -9328,6 +9435,236 @@ export const UserOrganizationsDocument = {
     },
   ],
 } as unknown as DocumentNode<UserOrganizationsQuery, UserOrganizationsQueryVariables>;
+export const AssignMembershipDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "assignMembership" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "MembershipInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "assignMembership" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "membershipData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "membership" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organization" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "group" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AssignMembershipMutation, AssignMembershipMutationVariables>;
+export const AssignMembershipWithUsernameDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "assignMembershipWithUsername" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "MembershipInputWithUsername" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "assignMembershipWithUsername" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "membershipData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "membership" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organization" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "group" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AssignMembershipWithUsernameMutation, AssignMembershipWithUsernameMutationVariables>;
+export const DeleteMembershipDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "deleteMembership" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "membershipId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteMembership" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "membershipId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "membershipId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteMembershipMutation, DeleteMembershipMutationVariables>;
+export const ChangeMembershipDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "changeMembership" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ChangeMembershipInput" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "changeMembership" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "membershipData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "membership" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "group" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ChangeMembershipMutation, ChangeMembershipMutationVariables>;
 export const AdminOrganizationDocument = {
   kind: "Document",
   definitions: [
@@ -9475,33 +9812,13 @@ export const MembershipsDocument = {
             ],
             selectionSet: {
               kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "user" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "firstName" } },
-                      { kind: "Field", name: { kind: "Name", value: "lastName" } },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "group" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
-                  },
-                },
-              ],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Membership" } }],
             },
           },
         ],
       },
     },
+    ...MembershipFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<MembershipsQuery, MembershipsQueryVariables>;
 export const HasPermissionDocument = {

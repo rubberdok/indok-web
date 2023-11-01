@@ -1,10 +1,10 @@
 fragment AdminOrganization on OrganizationType {
   id
   name
-  hrGroup {
+  adminGroup {
     uuid
   }
-  primaryGroup {
+  memberGroup {
     uuid
   }
   events {
@@ -36,6 +36,7 @@ fragment OrgAdminListing on ListingType {
 fragment Membership on MembershipType {
   id
   user {
+    id
     firstName
     lastName
   }

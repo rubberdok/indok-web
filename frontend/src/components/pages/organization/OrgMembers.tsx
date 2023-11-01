@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Delete, GroupAdd, AdminPanelSettings } from "@mui/icons-material";
 import {
   Button,
@@ -18,7 +18,14 @@ import { orderBy } from "lodash";
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { AdminOrganizationFragment, MembershipsDocument } from "@/generated/graphql";
+import {
+  AdminOrganizationFragment,
+  MembershipsDocument,
+  MembershipType,
+  AssignMembershipWithUsernameDocument,
+  DeleteMembershipDocument,
+  ChangeMembershipDocument,
+} from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
@@ -26,6 +33,9 @@ type Props = {
 
 export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
+  const [AssignMembershipWithUsername] = useMutation(AssignMembershipWithUsernameDocument);
+  const [DeleteMembership] = useMutation(DeleteMembershipDocument);
+  const [ChangeMembership] = useMutation(ChangeMembershipDocument);
 
   const [userInput, setUserInput] = useState<string>("");
 
@@ -35,9 +45,63 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   //Sorterer medlemmer alfabetisk
   const memberships = orderBy(data?.memberships, "user.firstName", "asc");
 
-  const addUser = () => {
+  const handleAddMembership = () => {
     //Legg til funksjonalitet for å legge til bruker ved brukernavn
-    setUserInput(""); //Funker men oppdaterer ikke siden?
+
+    AssignMembershipWithUsername({
+      variables: {
+        membershipData: {
+          organizationId: organization.id,
+          username: userInput.toLowerCase(), //Just to make sure
+          groupId: organization?.memberGroup?.uuid,
+        },
+      },
+    });
+    //Problem: Clientside cache doesnt get updated
+    setUserInput("");
+  };
+
+  const handleGroupChange = (membership: MembershipType | any) => {
+    if (!membership) return;
+
+    const currentRole = membership?.group?.uuid == organization.adminGroup?.uuid ? "ADMIN" : "MEMBER";
+    if (currentRole == "ADMIN") {
+      //Legg til funksjonalitet for å demotere bruker
+
+      ChangeMembership({
+        variables: {
+          membershipData: {
+            membershipId: membership?.id,
+            groupId: organization?.memberGroup?.uuid,
+          },
+        },
+      });
+    }
+
+    if (currentRole == "MEMBER") {
+      //Legg til funksjonalitet for å promote bruker
+
+      ChangeMembership({
+        variables: {
+          membershipData: {
+            membershipId: membership?.id,
+            groupId: organization?.adminGroup?.uuid,
+          },
+        },
+      });
+    }
+  };
+
+  const handleRemoveMembership = (membership: MembershipType | any) => {
+    if (!membership) return;
+
+    DeleteMembership({
+      variables: {
+        membershipId: membership.id,
+      },
+    });
+
+    //Problem: Clientside cache doesnt get updated
   };
 
   return (
@@ -54,7 +118,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             />
           </Grid>
           <Grid item xs={6} md={4} lg={2}>
-            <Button startIcon={<GroupAdd />} onClick={() => addUser()}>
+            <Button startIcon={<GroupAdd />} onClick={() => handleAddMembership()}>
               Legg til
             </Button>
           </Grid>
@@ -78,14 +142,25 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                   {membership.user.firstName} {membership.user.lastName}
                 </TableCell>
                 <TableCell>
-                  {membership?.group?.uuid == organization.hrGroup?.uuid ? "Administrator" : "Medlem"}
+                  {membership?.group?.uuid == organization.adminGroup?.uuid ? "Administrator" : "Medlem"}
                 </TableCell>
                 <PermissionRequired permission="organizations.change_organization">
                   <TableCell>
-                    <Button variant="contained" color="warning" startIcon={<AdminPanelSettings />} sx={{ mr: 1 }}>
-                      {membership?.group?.uuid == organization.hrGroup?.uuid ? "Demoter" : "Promoter"}
+                    <Button
+                      onClick={() => handleGroupChange(membership)}
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AdminPanelSettings />}
+                      sx={{ mr: 1 }}
+                    >
+                      {membership?.group?.uuid == organization.adminGroup?.uuid ? "Demoter" : "Promoter"}
                     </Button>
-                    <Button variant="contained" color="error" startIcon={<Delete />}>
+                    <Button
+                      onClick={() => handleRemoveMembership(membership)}
+                      variant="contained"
+                      color="error"
+                      startIcon={<Delete />}
+                    >
                       Fjern
                     </Button>
                   </TableCell>

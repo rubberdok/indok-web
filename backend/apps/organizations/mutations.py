@@ -2,12 +2,12 @@ import graphene
 from django.utils.text import slugify
 from decorators import permission_required
 
-from apps.users.types import UserType
 from apps.permissions.models import ResponsibleGroup
 
 from apps.organizations import permissions as perms
 from apps.organizations.models import Membership, Organization
 from apps.organizations.types import MembershipType, OrganizationType
+from apps.users.models import User
 
 
 def get_organization_from_data(*_, membership_data, **kwargs) -> Organization:
@@ -47,7 +47,7 @@ class UpdateOrganization(graphene.Mutation):
         id = graphene.ID(required=True)
         organization_data = OrganizationInput(required=False)
 
-    @permission_required("organizations.manage_organization")
+    @permission_required("organizations.change_organization")
     def mutate(self, info, id, organization_data=None):
         organization = Organization.objects.get(pk=id)
         user = info.context.user
@@ -111,12 +111,77 @@ class AssignMembership(graphene.Mutation):
         return AssignMembership(membership=membership, ok=True)
 
 
-class RemoveMembership(graphene.Mutation):
-    removed_member = graphene.Field(UserType)
+class MembershipInputWithUsername(graphene.InputObjectType):
+    username = graphene.String()
+    organization_id = graphene.ID()
+    group_id = graphene.ID()
+
+
+class AssignMembershipWithUsername(graphene.Mutation):
+    membership = graphene.Field(MembershipType)
     ok = graphene.Boolean()
 
     class Arguments:
-        member_id = graphene.ID()
+        membership_data = MembershipInputWithUsername(required=True)
 
-    def mutate(self, info, member_id):
-        raise NotImplementedError("Denne funksjonaliteten er ikke implementert.")
+    @permission_required("organizations.manage_organization", fn=get_organization_from_data)
+    def mutate(self, _, membership_data):
+        organization = Organization.objects.prefetch_related("permission_groups").get(
+            pk=membership_data["organization_id"]
+        )
+
+        try:
+            group = organization.permission_groups.get(pk=membership_data.get("group_id"))
+        except ResponsibleGroup.DoesNotExist:
+            return AssignMembershipWithUsername(membership=None, ok=False)
+
+        try:
+            user_id = User.objects.get(username=membership_data["username"]).id
+        except User.DoesNotExist:
+            return AssignMembershipWithUsername(membership=None, ok=False)
+
+        membership = Membership(
+            organization_id=membership_data["organization_id"],
+            user_id=user_id,
+            group=group,
+        )
+        membership.save()
+        return AssignMembershipWithUsername(membership=membership, ok=True)
+
+
+class DeleteMembership(graphene.Mutation):
+    membership = graphene.Field(MembershipType)
+    ok = graphene.Boolean()
+
+    class Arguments:
+        membership_id = graphene.ID()
+
+    @permission_required("organizations.manage_organization")
+    def mutate(self, info, membership_id):
+        membership = Membership.objects.get(pk=membership_id)
+        membership.delete()
+
+        ok = True
+        return DeleteMembership(ok=ok)
+
+
+class ChangeMembershipInput(graphene.InputObjectType):
+    membership_id = graphene.ID()
+    group_id = graphene.ID()
+
+
+class ChangeMembership(graphene.Mutation):
+    membership = graphene.Field(MembershipType)
+    ok = graphene.Boolean()
+
+    class Arguments:
+        membership_data = ChangeMembershipInput(required=True)
+
+    @permission_required("organizations.manage_organization")
+    def mutate(self, info, membership_data):
+        membership = Membership.objects.get(pk=membership_data["membership_id"])
+        membership.group_id = membership_data["group_id"]
+        membership.save()
+
+        ok = True
+        return ChangeMembership(membership=membership, ok=ok)
