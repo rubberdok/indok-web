@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, ButtonBase, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 import { ShopItem } from "@/components/pages/Janus/Shop/ShopItem";
 import { Template } from "@/components/pages/Janus/Template";
@@ -14,20 +14,16 @@ const ShopPage: NextPageWithLayout = () => {
     <Template title="Janus Nettbutikk" description="">
       <Typography variant="h3" gutterBottom>
         Butikk
-        <Stack spacing={2}>
+        <Grid container spacing={2}>
           {data?.products?.map((product) => {
             console.log(product);
-            return <ShopItem key={product.id} name={product.name} price={product.price}></ShopItem>;
+            return (
+              <Grid key={product.id} item xs={12} sm={6} md={6}>
+                <ShopItem key={product.id} name={product.name} price={product.price}></ShopItem>
+              </Grid>
+            );
           })}
-          <Stack direction={"row"} spacing={2}>
-            <ShopItem name="hytte" price={0}></ShopItem>
-            <ShopItem name="hytte" price={0}></ShopItem>
-          </Stack>
-          <Stack direction={"row"} spacing={2}>
-            <ShopItem name="hytte" price={0}></ShopItem>
-            <ShopItem name="hytte" price={0}></ShopItem>
-          </Stack>
-        </Stack>
+        </Grid>
       </Typography>
     </Template>
   );

@@ -12,10 +12,6 @@ query products {
     description
     maxBuyableQuantity
   }
-
-  allUsers {
-    id
-  }
 }
 
 query userOrders {
