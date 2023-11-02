@@ -48,7 +48,7 @@ const JanusPage: NextPageWithLayout = () => {
     {
       id: 4,
       name: "Camilla Toftum Hop",
-      position: "JanusScript-Redaktør",
+      position: "Janu;Script-Redaktør",
       color: red[500],
       image: JanusScriptRedaktør,
       phonenumber: "tlf: 477 09 820",
