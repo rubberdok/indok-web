@@ -57,12 +57,25 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   // Which cabins the user has chosen
   const [chosenCabins, setChosenCabins] = useState<CabinFragment[]>([]);
-  // Which range of dates the user has chosen
-  const [datePick, setDatePick] = useState<DatePick>({});
-  // The contact info the user has given
-  const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
 
   const { data } = useQuery(CabinsDocument);
+  const [modalData, setModalData] = useState<ModalData>(defaultModalData);
+
+  // Which range of dates the user has chosen
+  const [datePick, setDatePick] = useState<DatePick>({});
+
+  // The contact info the user has given
+  const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
+  // Validation of the contact info
+  const validations: ContactInfoValidations = validateInputForm(contactInfo);
+  const errorTrigger = allValuesFilled(contactInfo);
+
+  // Booking creation and email mutations
+  const [createBooking] = useMutation(CreateBookingDocument);
+  const [sendEmail] = useMutation(SendEmailDocument);
+
+  // Extra info from the user, sent to Hytteforeningen
+  const [extraInfo, setExtraInfo] = useState("");
 
   /**
    * Rudimentary validation of the form.
@@ -76,20 +89,6 @@ const CabinBookingPage: NextPageWithLayout = () => {
     2: { ready: true, errortext: "" },
     3: { ready: true, errortext: "" },
   };
-
-  // Validation of the contact info
-  const validations: ContactInfoValidations = validateInputForm(contactInfo);
-  const errorTrigger = allValuesFilled(contactInfo);
-
-  // Choose cabin
-  const [modalData, setModalData] = useState<ModalData>(defaultModalData);
-
-  // Booking creation and email mutations
-  const [createBooking] = useMutation(CreateBookingDocument);
-  const [sendEmail] = useMutation(SendEmailDocument);
-
-  // Extra info from the user, sent to Hytteforeningen
-  const [extraInfo, setExtraInfo] = useState("");
 
   const handleNextClick = () => {
     if (activeStep == 2 && !modalData.contractViewed) {
