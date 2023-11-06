@@ -27,6 +27,9 @@ class EcommerceResolvers:
 
         return order
 
+    def get_products(self, info):
+        return Product.objects.all()
+
     @login_required
     def resolve_user_orders(self, info):
         return Order.objects.filter(user=info.context.user)
