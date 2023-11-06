@@ -19,9 +19,9 @@ import { useRef } from "react";
 import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import adrian from "~/public/img/adrian.jpg";
-import Amund from "~/public/img/Amund.jpg";
-import Laila from "~/public/img/Laila.jpg";
+import Amund from "~/public/img/Amund Norland.jpg";
+import Hilvi from "~/public/img/Hilvi Fjose.jpg";
+import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
@@ -30,28 +30,27 @@ const ReportsPage: NextPageWithLayout = () => {
   const responsibles = [
     {
       id: 1,
-      name: "Amund Andreassen",
-      position: "Leder",
-      initials: "AA",
+      name: "Solveig Lund Christiansen",
+      initials: "SLC",
       color: red[800],
-      image: Amund,
-      email: "amunan@stud.ntnu.no",
+      image: Solveig,
+      email: "solveilc@stud.ntnu.no",
     },
     {
       id: 2,
-      name: "Laila Voll",
-      initials: "LV",
+      name: "Hilvi Fjose ",
+      initials: "HF",
       color: amber[500],
-      image: Laila,
-      email: "lailaov@stud.ntnu.no",
+      image: Hilvi,
+      email: "hilvif@stud.ntnu.no",
     },
     {
       id: 3,
-      name: "Adrian Fagerland",
-      initials: "AF",
+      name: "Amund Norland",
+      initials: "AN",
       color: green[500],
-      image: adrian,
-      email: "adriafag@stud.ntnu.no",
+      image: Amund,
+      email: "amundno@stud.ntnu.no",
     },
   ];
 
@@ -252,12 +251,7 @@ const ReportsPage: NextPageWithLayout = () => {
                   >
                     {responsibles.map((responsible) => (
                       <Grid container item sm={3} xs={8} key={responsible.id}>
-                        <ContactInfo
-                          name={responsible.name}
-                          email={responsible.email}
-                          image={responsible.image}
-                          position={responsible.position}
-                        />
+                        <ContactInfo name={responsible.name} email={responsible.email} image={responsible.image} />
                       </Grid>
                     ))}
                   </Grid>

@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
 import { StepComponent } from "@/components/pages/cabins/StepComponent";
@@ -34,14 +34,6 @@ type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
 const steps = ["Book hytte", "Kontaktinfo", "Ekstra info", "Send søknad", "Kvittering"];
 
-const initalStepReady: StepReady = steps.reduce((initialObject, _step, index) => {
-  initialObject[index] = {
-    ready: false,
-    errortext: "",
-  };
-  return initialObject;
-}, {} as StepReady);
-
 const defaultContactInfo: ContactInfo = {
   firstName: "",
   lastName: "",
@@ -61,21 +53,22 @@ const defaultModalData: ModalData = {
  * The page renders different components depending on the step variable chosen.
  */
 const CabinBookingPage: NextPageWithLayout = () => {
+  // Which step of the booking process we're on
   const [activeStep, setActiveStep] = useState(0);
-  const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
-
-  // Choose cabin
+  // Which cabins the user has chosen
   const [chosenCabins, setChosenCabins] = useState<CabinFragment[]>([]);
+
   const { data } = useQuery(CabinsDocument);
   const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
-  // Check in/Check out
+  // Which range of dates the user has chosen
   const [datePick, setDatePick] = useState<DatePick>({});
 
-  // Contact info state
+  // The contact info the user has given
   const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
-  const [validations, setValidations] = useState<ContactInfoValidations>();
-  const [errorTrigger, setErrorTrigger] = useState(false);
+  // Validation of the contact info
+  const validations: ContactInfoValidations = validateInputForm(contactInfo);
+  const errorTrigger = allValuesFilled(contactInfo);
 
   // Booking creation and email mutations
   const [createBooking] = useMutation(CreateBookingDocument);
@@ -84,25 +77,18 @@ const CabinBookingPage: NextPageWithLayout = () => {
   // Extra info from the user, sent to Hytteforeningen
   const [extraInfo, setExtraInfo] = useState("");
 
-  useEffect(() => {
-    setStepReady({
-      ...stepReady,
-      0: cabinOrderStepReady(chosenCabins, datePick),
-    });
-  }, [chosenCabins, datePick]);
-
-  useEffect(() => {
-    setValidations(validateInputForm(contactInfo));
-    if (allValuesFilled(contactInfo)) {
-      setErrorTrigger(true);
-    }
-    setStepReady({
-      ...stepReady,
-      1: { ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
-      2: { ready: true, errortext: "" },
-      3: { ready: true, errortext: "" },
-    });
-  }, [contactInfo]);
+  /**
+   * Rudimentary validation of the form.
+   * For step 0, we check that the user has chosen cabins and a valid date range
+   * For step 1, we check that the user has filled out all the fields
+   * For step 2 and 3, we don't need to check anything
+   */
+  const stepReady: StepReady = {
+    0: cabinOrderStepReady(chosenCabins, datePick),
+    1: { ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
+    2: { ready: true, errortext: "" },
+    3: { ready: true, errortext: "" },
+  };
 
   const handleNextClick = () => {
     if (activeStep == 2 && !modalData.contractViewed) {
@@ -122,8 +108,9 @@ const CabinBookingPage: NextPageWithLayout = () => {
             bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
           },
         });
+      } else {
+        setActiveStep((prev) => prev + 1);
       }
-      setActiveStep((prev) => prev + 1);
     }
   };
 
