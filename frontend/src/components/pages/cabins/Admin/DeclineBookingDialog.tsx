@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import dayjs from "dayjs";
 import { useState } from "react";
 
 import {
@@ -8,7 +9,8 @@ import {
   DeclineBookingDocument,
   SendEmailDocument,
 } from "@/generated/graphql";
-import { convertDateFormat, getDecisionEmailInput, toStringChosenCabins } from "@/utils/cabins";
+
+import { getDecisionEmailInput } from "./getDecisionEmailInput";
 
 type DialogProps = {
   bookingToBeDeclined?: AdminBookingFragment;
@@ -18,7 +20,7 @@ type DialogProps = {
   refetchBookings: () => void;
 };
 
-export const DeclineBookingDialog: React.VFC<DialogProps> = ({
+export const DeclineBookingDialog: React.FC<DialogProps> = ({
   bookingToBeDeclined: bookingToBeDeclined,
   setBookingToBeDeclined,
   setOpenSnackbar,
@@ -33,12 +35,14 @@ export const DeclineBookingDialog: React.VFC<DialogProps> = ({
   const [sendEmail] = useMutation(SendEmailDocument);
 
   return (
-    <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeclineBookingOnClose}>
-      <DialogTitle>
-        Underkjenning av booking fra {bookingToBeDeclined?.firstName} {bookingToBeDeclined?.lastName} fra{" "}
-        {convertDateFormat(bookingToBeDeclined?.checkIn)} til {convertDateFormat(bookingToBeDeclined?.checkOut)} av{" "}
-        {toStringChosenCabins(bookingToBeDeclined ? bookingToBeDeclined.cabins : [])}
-      </DialogTitle>
+    <Dialog open={bookingToBeDeclined !== undefined} onClose={handleDeclineBookingOnClose}>
+      {bookingToBeDeclined !== undefined && (
+        <DialogTitle>
+          Underkjenning av booking fra {bookingToBeDeclined?.firstName} {bookingToBeDeclined?.lastName} fra{" "}
+          {dayjs(bookingToBeDeclined.checkIn).format("L")} til {dayjs(bookingToBeDeclined.checkOut).format("L")} av{" "}
+          {bookingToBeDeclined.cabins.map((cabin) => cabin.name).join(" og ")}
+        </DialogTitle>
+      )}
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil underkjenne denne bookingen?</DialogContentText>
         <DialogContentText>
