@@ -145,17 +145,17 @@ const CabinBookingPage: NextPageWithLayout = () => {
 
   return (
     <Container>
-      <StepContext.Provider value={contextValue}>
-        <Stack spacing={{ xs: 3, md: 5 }}>
-          <Box display={{ xs: "none", md: "block" }}>
-            <Stepper activeStep={activeStep}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          </Box>
+      <Stack spacing={{ xs: 3, md: 5 }}>
+        <Box display={{ xs: "none", md: "block" }}>
+          <Stepper activeStep={activeStep}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </Box>
+        <StepContext.Provider value={contextValue}>
           <BookingSteps
             allCabins={data?.cabins ?? []}
             chosenCabins={chosenCabins}
@@ -168,8 +168,8 @@ const CabinBookingPage: NextPageWithLayout = () => {
             endDate={dateRange.end}
             onSubmitBooking={onSubmitBooking}
           />
-        </Stack>
-      </StepContext.Provider>
+        </StepContext.Provider>
+      </Stack>
     </Container>
   );
 };
