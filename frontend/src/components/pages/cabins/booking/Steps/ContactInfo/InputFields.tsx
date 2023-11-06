@@ -74,7 +74,7 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ContactInfo & { minParticipants?: undefined }>({
+  } = useForm<ContactInfo>({
     resolver: yupResolver(getContactInfoSchema(totalGuestsAllowed)),
     values: {
       firstName: firstName ?? "",
@@ -87,11 +87,7 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
   });
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit, (errors) => {
-        console.log(errors);
-      })}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="column" justifyContent="center">
         <Typography variant="h3" textAlign="center" gutterBottom>
           Kontaktinfo

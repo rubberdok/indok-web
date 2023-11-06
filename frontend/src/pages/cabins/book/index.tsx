@@ -67,7 +67,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
       /**
        * If start is set, and the user clicks the start day, we reset the range.
        */
-      if (start && start.isSame(date, "day")) {
+      if (start?.isSame(date, "day")) {
         return { start: undefined, end: undefined };
       }
 

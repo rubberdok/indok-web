@@ -20,7 +20,7 @@ export type ContactInfo = BasicBooking & Participants;
 
 type Props = {
   chosenCabins: CabinFragment[];
-  contactInfo?: ContactInfo | undefined;
+  contactInfo?: ContactInfo;
   onSubmit: (data: ContactInfo) => void;
   onPrevious: () => void;
 };
