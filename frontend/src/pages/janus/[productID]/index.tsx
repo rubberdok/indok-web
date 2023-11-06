@@ -1,6 +1,5 @@
 import { Image } from "@mui/icons-material";
-import { Box, Grid, Stack, Typography } from "@mui/material";
-import { useRouter } from "next/router";
+import { Box, Stack } from "@mui/material";
 
 import { ProductInfo } from "@/components/pages/Janus/Shop/ProductInfo";
 import { Template } from "@/components/pages/Janus/Template";
