@@ -65,7 +65,6 @@ class DataportenAuth:
                     settings.DATAPORTEN_SECRET,
                 ),
             )
-            print(response)
             # Raises exceptions upon HTTP errors
             response.raise_for_status()
         except requests.exceptions.RequestException:
