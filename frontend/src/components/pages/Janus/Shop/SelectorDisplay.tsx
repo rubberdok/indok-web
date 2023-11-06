@@ -5,8 +5,9 @@ type Props = {
 };
 
 export const SelectorDisplay: React.VFC<Props> = ({ selectables }) => {
-  const handleClick = (selectable) => {
+  const handleClick = (selectable: string) => {
     //TODO implement
+    console.log(selectable);
   };
 
   return (

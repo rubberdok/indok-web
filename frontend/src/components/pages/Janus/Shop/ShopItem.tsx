@@ -1,10 +1,10 @@
-import Image,{ StaticImageData } from "next/image";
-import {Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import Image, { StaticImageData } from "next/image";
 
 type Props = {
   name: string;
   image?: StaticImageData;
-  price: number
+  price: number;
 };
 import cabin from "~/public/static/cabins/00.jpg";
 
@@ -39,13 +39,13 @@ export const ShopItem: React.VFC<Props> = ({name, image}) => {
 
 */
 
-export const ShopItem: React.VFC<Props> = ({name, image, price}) => {
+export const ShopItem: React.VFC<Props> = ({ name, price }) => {
   return (
     <Card sx={{ width: "100%", maxWidth: 345 }}>
-      <CardActionArea href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley">
-          <CardMedia >
-              <Image src={cabin} style={{ objectFit: "contain", width: "100%", height: "100%", }} alt={""}/>
-          </CardMedia>
+      <CardActionArea href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley">
+        <CardMedia>
+          <Image src={cabin} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={""} />
+        </CardMedia>
         <CardContent>
           <Typography variant="h5" textAlign="left">
             {name}
