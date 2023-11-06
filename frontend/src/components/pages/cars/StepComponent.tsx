@@ -1,8 +1,8 @@
 import { Typography } from "@mui/material";
 import React from "react";
 
-import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
+import { CarFragment } from "@/generated/graphql";
+import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cars";
 
 import { CabinContactInfo } from "./CarContactInfo";
 import { CheckInOutCar } from "./CheckInOut";
@@ -12,14 +12,14 @@ import { ReceiptSite } from "./ReceiptSite";
 
 type Props = {
   activeStep: number;
-  allCabins: CabinFragment[];
-  chosenCabins: CabinFragment[];
+  allCars: CarFragment[];
+  chosenCars: CarFragment[];
   contactInfo: ContactInfo;
   datePick: DatePick;
   validations?: ContactInfoValidations;
   errorTrigger: boolean;
   setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>;
-  setChosenCabins: React.Dispatch<React.SetStateAction<CabinFragment[]>>;
+  setChosenCars: React.Dispatch<React.SetStateAction<CarFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -27,41 +27,39 @@ type Props = {
 export const StepComponent: React.FC<Props> = (props) => {
   switch (props.activeStep) {
     case 0:
-      // Choose cabin
+      // Choose car
       return (
         <CheckInOutCar
-          allCabins={props.allCabins}
-          chosenCabins={props.chosenCabins}
-          setChosenCabins={props.setChosenCabins}
+          allCars={props.allCars}
+          chosenCars={props.chosenCars}
+          setChosenCars={props.setChosenCars}
           setDatePick={props.setDatePick}
         />
       );
     case 1:
       // Choose contact info
       return (
-        <CabinContactInfo
+        <CarContactInfo
           contactInfo={props.contactInfo}
           setContactInfo={props.setContactInfo}
           validations={props.validations}
           errorTrigger={props.errorTrigger}
-          chosenCabins={props.chosenCabins}
+          chosenCars={props.chosenCars}
         />
       );
     case 2:
       // Extra info site
       return (
-        <ExtraInfoSite setExtraInfo={props.setExtraInfo} chosenCabins={props.chosenCabins} datePick={props.datePick} />
+        <ExtraInfoSite setExtraInfo={props.setExtraInfo} chosenCars={props.chosenCars} datePick={props.datePick} />
       );
     case 3:
       // Payment
-      return (
-        <PaymentSite chosenCabins={props.chosenCabins} datePick={props.datePick} contactInfo={props.contactInfo} />
-      );
+      return <PaymentSite chosenCabin={props.chosenCars} datePick={props.datePick} contactInfo={props.contactInfo} />;
     case 4:
       // Receipt
       return (
         <ReceiptSite
-          chosenCabins={props.chosenCabins}
+          chosenCabin={props.chosenCars}
           datePick={props.datePick}
           contactInfo={props.contactInfo}
           mailSent
