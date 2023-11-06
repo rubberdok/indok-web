@@ -1,7 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
-import relativeTime from "dayjs/plugin/isSameOrAfter";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
@@ -10,7 +9,6 @@ import { ListingFragment } from "@/generated/graphql";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
-dayjs.extend(relativeTime);
 dayjs.tz.setDefault("Europe/Oslo");
 dayjs.locale(nb);
 

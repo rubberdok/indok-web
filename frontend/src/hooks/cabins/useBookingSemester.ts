@@ -2,8 +2,9 @@ import { ApolloError, useQuery } from "@apollo/client";
 import dayjs from "dayjs";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import { DATE_FORMAT } from "@/components/Calendar/constants";
 import { BookingSemesterDocument, BookingSemesterFragment } from "@/generated/graphql";
+
+import { DATE_FORMAT } from "@/components/Calendar/constants";
 
 const defaultBookingSemester: BookingSemesterFragment = {
   fallStartDate: dayjs().format(DATE_FORMAT),

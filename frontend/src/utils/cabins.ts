@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
 import validator from "validator";
 import * as Yup from "yup";
 
@@ -11,9 +10,8 @@ import {
   EmailInput,
   SendEmailMutationVariables,
 } from "@/generated/graphql";
-import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
-dayjs.extend(isBetween);
+import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
 /* File containing helper functions for cabins. */
 
@@ -78,23 +76,6 @@ export const cabinOrderStepReady = (
 export const toStringChosenCabins = (chosenCabins: Pick<CabinFragment, "name">[]): string[] =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
 
-export const calculatePrice = (
-  chosenCabins: CabinFragment[],
-  contactInfo: ContactInfo,
-  datePick: DatePick
-): number | undefined => {
-  const internalPrice = contactInfo.internalParticipants >= contactInfo.externalParticipants;
-  const pricePerNight = chosenCabins
-    .map((cabin) => (internalPrice ? cabin.internalPrice : cabin.externalPrice))
-    .reduce((sum, currentPrice) => sum + currentPrice);
-
-  if (datePick.checkInDate && datePick.checkOutDate) {
-    const checkOutDate = dayjs(datePick.checkOutDate);
-    const rangeLength = checkOutDate.diff(datePick.checkInDate, "day");
-    return pricePerNight * rangeLength;
-  }
-};
-
 export const convertDateFormat = (date?: string): string => dayjs(date).format("DD-MM-YYYY");
 
 export const getDecisionEmailInput = (
@@ -140,7 +121,7 @@ export const generateEmailAndBookingInput = (
   };
 };
 
-/* 
+/*
   Checks if a date is within the fall or spring booking semester.
 */
 export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: BookingSemesterFragment): boolean => {

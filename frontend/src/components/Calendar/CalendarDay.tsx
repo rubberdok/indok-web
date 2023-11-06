@@ -1,32 +1,14 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
+import clsx from "clsx";
 
 type Props = {
   isDisabled?: boolean;
   isFromDate?: boolean;
   isToDate?: boolean;
   isHidden?: boolean;
-  value?: number;
+  value: number | string;
   onClick?: () => void;
   isInRange?: boolean;
-  isInvalidRange?: boolean;
-};
-
-const bgcolor = (
-  isFromDate: boolean | undefined,
-  isToDate: boolean | undefined,
-  isInRange: boolean | undefined,
-  isHidden: boolean | undefined
-) => {
-  if (isHidden) {
-    return "transparent";
-  }
-  if (isFromDate || isToDate) {
-    return "primary.darker";
-  }
-  if (isInRange) {
-    return "primary.dark";
-  }
-  return "transparent";
 };
 
 export const CalendarDay: React.VFC<Props> = ({
@@ -38,17 +20,36 @@ export const CalendarDay: React.VFC<Props> = ({
   isInRange,
   isFromDate,
 }) => {
+  const classes = clsx(
+    {
+      "booking-fromDate": !isHidden && isFromDate,
+      "booking-toDate": !isHidden && isToDate,
+      "booking-inSelectedRange": !isHidden && isInRange,
+      "booking-hidden": isHidden,
+    },
+    "booking-day"
+  );
+
   return (
-    <Grid item xs component="td" position="relative">
+    <Grid
+      item
+      xs
+      component="td"
+      position="relative"
+      paddingY={(theme) => theme.spacing(0.5)}
+      sx={{ visibility: isHidden ? "hidden" : "visible" }}
+    >
       <Box
+        className={classes}
+        size="small"
         component={Button}
         disabled={isDisabled || isHidden}
         variant={(isFromDate || isToDate || isInRange) && !isHidden ? "contained" : "text"}
-        bgcolor={bgcolor(isFromDate, isToDate, isInRange, isHidden)}
         onClick={onClick}
-        sx={{ width: 1, p: 0, minWidth: 0, aspectRatio: "1", borderRadius: 0 }}
+        width={1}
+        minWidth="3rem"
       >
-        <Typography variant="subtitle2">{!isHidden ? value : ""}</Typography>
+        <Typography variant="subtitle2">{value}</Typography>
       </Box>
     </Grid>
   );
