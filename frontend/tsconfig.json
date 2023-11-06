@@ -12,7 +12,6 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
-    "jsxImportSource": "@emotion/react",
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
