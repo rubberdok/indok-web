@@ -1,29 +1,28 @@
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
-import Image, { StaticImageData } from "next/image";
+
+import { SelectorDisplay } from "./SelectorDisplay";
 
 type Props = {
-  name: string;
-  image?: StaticImageData;
   price: number;
+  sizes?: Array<string>;
+  types?: Array<string>;
 };
-import cabin from "~/public/static/cabins/00.jpg";
 
-export const ProductInfo: React.VFC<Props> = ({ name, image, price }) => {
+export const ProductInfo: React.VFC<Props> = ({ price, sizes, types }) => {
   return (
     <Card sx={{ width: "100%", maxWidth: 345 }}>
-      <CardActionArea href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley">
-        <CardMedia>
-          <Image src={cabin} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={""} />
-        </CardMedia>
-        <CardContent>
-          <Typography variant="h5" textAlign="left">
-            {name}
-          </Typography>
-          <Typography variant="body2" textAlign="left" color="text.secondary">
-            -, {price}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+      <CardContent>
+        <Typography variant="h5" textAlign="left"></Typography>
+        <Typography variant="h6" textAlign="left" padding={1}>
+          Pris: {price}
+        </Typography>
+        <Typography variant="body2" textAlign="left">
+          {sizes && <SelectorDisplay selectables={sizes} />}
+        </Typography>
+        <Typography variant="body2" textAlign="left">
+          {types && <SelectorDisplay selectables={types} />}
+        </Typography>
+      </CardContent>
     </Card>
   );
 };
