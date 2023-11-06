@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 
 import { SelectorDisplay } from "./SelectorDisplay";
 
@@ -12,7 +12,6 @@ export const ProductInfo: React.VFC<Props> = ({ price, sizes, types }) => {
   return (
     <Card sx={{ width: "100%", maxWidth: 345 }}>
       <CardContent>
-        <Typography variant="h5" textAlign="left"></Typography>
         <Typography variant="h6" textAlign="left" padding={1}>
           Pris: {price}
         </Typography>
