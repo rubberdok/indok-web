@@ -19,7 +19,7 @@ const ProductPage: NextPageWithLayout = () => {
           nicht lange nach den Ziel gesucht; Wie immer 3, 4 Sterne an der Playa gebucht; Endlich angekommen da am
           geilsten Strand der Welt, wird ein Bier bestellt; Cerveza!
         </Box>
-        <ProductInfo name={""} price={0} />
+        <ProductInfo price={0} sizes={["S", "M", "L"]} types={["Blue", "Red", "Gray"]} />
       </Stack>
     </Template>
   );
