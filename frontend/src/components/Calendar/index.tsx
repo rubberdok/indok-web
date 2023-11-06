@@ -116,6 +116,10 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
         spacing={5}
         direction="row"
         alignItems="flex-start"
+        /**
+         * We add some custom styles for the calendar days to make it look more like a booking calendar.
+         * The class names below are utilized by `CalendarDay`.
+         */
         sx={{
           "& .booking-fromDate": {
             borderRadius: (theme) => `${theme.shape.borderRadius * 2}px 0px 0px ${theme.shape.borderRadius * 2}px`,
@@ -125,11 +129,12 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
             borderRadius: (theme) => `0px ${theme.shape.borderRadius * 2}px ${theme.shape.borderRadius * 2}px 0px`,
             bgcolor: (theme) => theme.vars.palette.primary.light,
           },
-          "& .booking-inSelectedRange.:not(.Mui-disabled)": {
-            bgcolor: (theme) => theme.vars.palette.primary.main,
-          },
           "& .booking-inSelectedRange": {
+            bgcolor: (theme) => theme.vars.palette.primary.dark,
             borderRadius: 0,
+          },
+          "& .booking-inSelectedRange.Mui-disabled": {
+            bgcolor: (theme) => theme.vars.palette.action.disabledBackground,
           },
         }}
       >

@@ -20,15 +20,11 @@ export const CalendarDay: React.VFC<Props> = ({
   isInRange,
   isFromDate,
 }) => {
-  const classes = clsx(
-    {
-      "booking-fromDate": !isHidden && isFromDate,
-      "booking-toDate": !isHidden && isToDate,
-      "booking-inSelectedRange": !isHidden && isInRange,
-      "booking-hidden": isHidden,
-    },
-    "booking-day"
-  );
+  const classes = clsx({
+    "booking-fromDate": !isHidden && isFromDate,
+    "booking-toDate": !isHidden && isToDate,
+    "booking-inSelectedRange": !isHidden && isInRange,
+  });
 
   return (
     <Grid
