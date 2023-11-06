@@ -1,10 +1,8 @@
-import { Image } from "@mui/icons-material";
 import { Box, Stack } from "@mui/material";
 
 import { ProductInfo } from "@/components/pages/Janus/Shop/ProductInfo";
 import { Template } from "@/components/pages/Janus/Template";
 import { NextPageWithLayout } from "@/lib/next";
-import cabin from "~/public/static/cabins/00.jpg";
 
 const ProductPage: NextPageWithLayout = () => {
   //console.log("Hello World");
@@ -20,7 +18,7 @@ const ProductPage: NextPageWithLayout = () => {
             bgcolor: "primary.main",
           }}
         >
-          <Image src={cabin} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={""} />
+          {/*<Image src={cabin} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={""} />*/}
         </Box>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={{ xs: 12, sm: 2, md: 8 }}>
           <Box style={{ width: "75%" }}>
