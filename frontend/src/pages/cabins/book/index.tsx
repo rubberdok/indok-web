@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { BookingSteps } from "@/components/pages/cabins/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
@@ -133,16 +133,19 @@ const CabinBookingPage: NextPageWithLayout = () => {
     });
   }
 
+  const contextValue = useMemo(
+    () => ({
+      activeStep,
+      steps: steps.length,
+      nextStep: () => setActiveStep((prev) => prev + 1),
+      previousStep: () => setActiveStep((prev) => prev - 1),
+    }),
+    [activeStep, setActiveStep]
+  );
+
   return (
     <Container>
-      <StepContext.Provider
-        value={{
-          activeStep,
-          steps: steps.length,
-          nextStep: () => setActiveStep((prev) => prev + 1),
-          previousStep: () => setActiveStep((prev) => prev - 1),
-        }}
-      >
+      <StepContext.Provider value={contextValue}>
         <Stack spacing={{ xs: 3, md: 5 }}>
           <Box display={{ xs: "none", md: "block" }}>
             <Stepper activeStep={activeStep}>
