@@ -2,20 +2,21 @@ from django.db import models
 
 from apps.cabins.helpers import number_of_nights, is_internal_price, price
 
+
 class Car(models.Model):
     name = models.CharField(max_length=100)
     max_passengers = models.PositiveIntegerField(default=5)
-    internal_price = models.PositiveIntegerField(default=70)  
+    internal_price = models.PositiveIntegerField(default=70)
     external_price = models.PositiveIntegerField(default=7000)
 
     def __str__(self):
         return self.name
-    
 
 
-class Booking(models.Model):
+class CarBooking(models.Model):
     class Meta:
-        permissions = [("send_email", "Can send email"), ("manage_booking", "Can manage bookings, used for admins")]
+        permissions = [("send_email", "Can send email"),
+                       ("manage_booking", "Can manage bookings, used for admins")]
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -54,7 +55,7 @@ class Booking(models.Model):
         return f"Booking {self.id}, {self.first_name} {self.last_name}"
 
 
-class BookingResponsible(models.Model):
+class CarBookingResponsible(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=8)
@@ -65,7 +66,7 @@ class BookingResponsible(models.Model):
         return f"{self.first_name} {self.last_name}, {'aktiv' if self.active else ''}"
 
 
-class BookingSemester(models.Model):
+class CarBookingSemester(models.Model):
     fall_start_date = models.DateField()
     fall_end_date = models.DateField()
     spring_start_date = models.DateField()

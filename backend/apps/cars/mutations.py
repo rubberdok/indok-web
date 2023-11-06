@@ -2,8 +2,8 @@ import graphene
 from graphene import NonNull
 from decorators import permission_required
 
-from apps.cars.models import Booking as BookingModel
-from apps.cars.models import BookingSemester
+from apps.cars.models import CarBooking as BookingModel
+from apps.cars.models import CarBookingSemester
 from apps.cars.models import Car as CarModel
 
 from apps.cabins.constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
@@ -76,7 +76,7 @@ class CreateCarBooking(graphene.Mutation):
     ):
         ok = True
         # Check that incoming fields are ok
-        semester = BookingSemester.objects.first()
+        semester = CarBookingSemester.objects.first()
         create_booking_validation(booking_data, booking_semester=semester)
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
@@ -111,14 +111,15 @@ class UpdateCarBooking(graphene.Mutation):
         try:
             booking = BookingModel.objects.get(pk=booking_data.id)
             # Check that incoming fields are ok
-            semester = BookingSemester.objects.first()
+            semester = CarBookingSemester.objects.first()
             create_booking_validation(booking_data, booking_semester=semester)
             for input_field, input_value in booking_data.items():
                 if input_field and input_field != "cars":
                     setattr(booking, input_field, input_value)
             booking.save()
             if booking_data.cars:
-                booking.cars.set(CarModel.objects.filter(id__in=booking_data.cars))
+                booking.cars.set(CarModel.objects.filter(
+                    id__in=booking_data.cars))
                 booking.save()
             return UpdateCarBooking(booking=booking, ok=ok)
         except BookingModel.DoesNotExist:
@@ -187,11 +188,13 @@ class SendEmail(graphene.Mutation):
         }
 
         # Sends an email to the user
-        send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=False)
+        send_mail(booking_info=booking_info,
+                  email_type=email_input["email_type"], admin=False)
 
         # Don't send mail to admin when approving or disapproving.
         if email_input["email_type"] not in [APPROVE_BOOKING, DISAPPROVE_BOOKING]:
-            send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=True)
+            send_mail(booking_info=booking_info,
+                      email_type=email_input["email_type"], admin=True)
 
         return SendEmail(ok=True)
 
@@ -216,11 +219,11 @@ class UpdateCarBookingSemester(graphene.Mutation):
         ok = True
 
         # Fetch first and only BookingSemester
-        semester = BookingSemester.objects.first()
+        semester = CarBookingSemester.objects.first()
 
         if not semester:
             # Create new booking semester if it doesn't exist
-            semester = BookingSemester()
+            semester = CarBookingSemester()
 
         for field, value in semester_data.items():
             setattr(semester, field, value)

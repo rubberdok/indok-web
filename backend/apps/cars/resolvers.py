@@ -1,4 +1,4 @@
-from apps.cars.models import Booking as BookingModel, Car, BookingResponsible, BookingSemester
+from apps.cars.models import CarBooking as BookingModel, Car, CarBookingResponsible, CarBookingSemester
 from decorators import permission_required
 
 

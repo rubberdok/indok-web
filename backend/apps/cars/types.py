@@ -5,7 +5,7 @@ from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 import graphene
 
-from .models import Booking as BookingModel, Car as CarModel, BookingResponsible, BookingSemester
+from .models import CarBooking as BookingModel, Car as CarModel, CarBookingResponsible, CarBookingSemester
 
 
 class AllCarBookingsType(DjangoObjectType):
@@ -39,7 +39,8 @@ class AdminCarBookingType(DjangoObjectType):
 class CarType(DjangoObjectType):
     class Meta:
         model = CarModel
-        fields = ["id", "name", "max_passengers", "internal_price", "external_price"]
+        fields = ["id", "name", "max_passengers",
+                  "internal_price", "external_price"]
 
 
 class CarBookingResponsibleType(DjangoObjectType):
@@ -50,15 +51,16 @@ class CarBookingResponsibleType(DjangoObjectType):
     active = graphene.Boolean()
 
     class Meta:
-        model = BookingResponsible
+        model = CarBookingResponsible
 
 
 class UpdateCarBookingSemesterType(DjangoObjectType):
     class Meta:
-        model = BookingSemester
+        model = CarBookingSemester
 
 
-EmailTypes = Literal["reserve_booking", "approve_booking", "disapprove_booking"]
+EmailTypes = Literal["reserve_booking",
+                     "approve_booking", "disapprove_booking"]
 
 
 class EmailInputType(TypedDict):

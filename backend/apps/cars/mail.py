@@ -4,7 +4,7 @@ from utils.mail.streams import TransactionalEmail
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
-from apps.cars.models import BookingResponsible
+from apps.cars.models import CarBookingResponsible
 from apps.cars.types import CarBookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
 
 from weasyprint import HTML
@@ -45,7 +45,8 @@ def send_mail(booking_info: CarBookingInfoType, email_type: EmailTypes, admin: b
     chosen_cars_names = booking_info["cars"].values_list("name", flat=True)
     chosen_cars_string = " og ".join(chosen_cars_names)
     subject = get_email_subject(chosen_cars_string, email_type, admin)
-    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(active=True).first()
+    booking_responsible: Optional[CarBookingResponsible] = CarBookingResponsible.objects.filter(
+        active=True).first()
 
     # Display dates with given format in the mail, get booking responsible contact info
     content = {

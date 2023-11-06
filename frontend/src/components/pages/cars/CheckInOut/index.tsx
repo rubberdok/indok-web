@@ -5,25 +5,25 @@ import { Calendar } from "@/components/Calendar";
 import { CarFragment } from "@/generated/graphql";
 import { useDisabledDates } from "@/hooks/cars/useDisabledDates";
 import { useResponsive } from "@/hooks/useResponsive";
-import { DatePick } from "@/types/cabins";
+import { DatePick } from "@/types/cars";
 
 type Props = {
-  allCabins: CarFragment[];
-  chosenCabins: CarFragment[];
-  setChosenCabins: React.Dispatch<React.SetStateAction<CarFragment[]>>;
+  allCars: CarFragment[];
+  chosenCars: CarFragment[];
+  setChosenCars: React.Dispatch<React.SetStateAction<CarFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 };
 
 /**
- * One of the steps in the cars/book page. In this step the user chooses a cabin and the check-in and check-out dates.
+ * One of the steps in the cars/book page. In this step the user chooses a Car and the check-in and check-out dates.
  */
 export const CheckInOutCar: React.FC<React.PropsWithChildren<Props>> = ({
-  allCabins,
-  chosenCabins,
-  setChosenCabins,
+  allCars,
+  chosenCars,
+  setChosenCars,
   setDatePick,
 }) => {
-  const { disabledDates } = useDisabledDates(chosenCabins);
+  const { disabledDates } = useDisabledDates(chosenCars);
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => {
@@ -51,24 +51,24 @@ export const CheckInOutCar: React.FC<React.PropsWithChildren<Props>> = ({
       >
         <Typography variant="h5">Velg bil</Typography>
 
-        {allCabins.map((cabin) => (
+        {allCars.map((car) => (
           <FormControlLabel
-            key={cabin.id}
+            key={car.id}
             label={
               <Typography variant="subtitle2" component="p">
-                {cabin.name}
+                {car.name}
               </Typography>
             }
             control={
               <Checkbox
                 color="primary"
                 disableRipple
-                checked={chosenCabins.some((chosenCabin) => chosenCabin.id === cabin.id)}
+                checked={chosenCars.some((chosenCar) => chosenCar.id === car.id)}
                 onChange={(_, checked) => {
                   if (checked) {
-                    setChosenCabins([...chosenCabins, cabin]);
+                    setChosenCars([...chosenCars, car]);
                   } else {
-                    setChosenCabins(chosenCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
+                    setChosenCars(chosenCars.filter((chosenCar) => car.id !== chosenCar.id));
                   }
                 }}
               />
@@ -81,7 +81,7 @@ export const CheckInOutCar: React.FC<React.PropsWithChildren<Props>> = ({
         <Calendar
           title="Velg innsjekk og utsjekk"
           disabledDates={disabledDates}
-          disableAll={chosenCabins.length === 0}
+          disableAll={chosenCars.length === 0}
           onRangeChange={handleRangeChange}
         />
       </Paper>

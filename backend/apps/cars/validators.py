@@ -2,21 +2,22 @@ import datetime
 from typing import List
 from graphql import GraphQLError
 from django.utils import timezone
-from apps.cars.models import Booking as BookingModel
+from apps.cars.models import CarBooking as BookingModel
 from apps.cars.models import Car as CarModel
 from django.db.models import Sum
 
-from apps.cars.models import BookingSemester
+from apps.cars.models import CarBookingSemester
 
 
-def create_booking_validation(booking_data: BookingModel, booking_semester: BookingSemester):
+def create_booking_validation(booking_data: BookingModel, booking_semester: CarBookingSemester):
     if booking_data.check_out and booking_data.check_in and booking_data.cars:
         checkin_validation(
             booking_data.check_in,
             booking_data.check_out,
             booking_data.cabins,
         )
-        booking_semester_validation(booking_data.check_in, booking_data.check_out, booking_semester)
+        booking_semester_validation(
+            booking_data.check_in, booking_data.check_out, booking_semester)
     if booking_data.receiver_email:
         email_validation(booking_data.receiver_email)
     if booking_data.first_name or booking_data.last_name:
@@ -33,7 +34,7 @@ def create_booking_validation(booking_data: BookingModel, booking_semester: Book
 
 
 def booking_semester_validation(
-    check_in: datetime.date, check_out: datetime.date, booking_semester: BookingSemester
+    check_in: datetime.date, check_out: datetime.date, booking_semester: CarBookingSemester
 ) -> None:
     dates_in_fall_semester = check_dates_in_range(
         [check_in, check_out], booking_semester.fall_start_date, booking_semester.fall_end_date
@@ -71,7 +72,8 @@ def checkin_validation(check_in, check_out, car_ids):
     ).exists():
         raise GraphQLError("Input dates overlaps existing booking")
     if (check_out - check_in).days == 0:
-        raise GraphQLError("Invalid input: check-in and check-out cannot occur on the same day")
+        raise GraphQLError(
+            "Invalid input: check-in and check-out cannot occur on the same day")
 
 
 def email_validation(email: str):
@@ -81,7 +83,8 @@ def email_validation(email: str):
 
 def name_validation(first_name, last_name):
     if first_name == "" or last_name == "":
-        raise GraphQLError("Both first and last name must be non-empty strings")
+        raise GraphQLError(
+            "Both first and last name must be non-empty strings")
 
 
 def norwegian_phone_number_validation(stripped_phone_number: str):
@@ -97,7 +100,8 @@ def strip_phone_number(phone_number):
     # Remove spacing
     cleaned_phone_number = phone_number.replace(" ", "")
     # Remove country code
-    cleaned_phone_number = cleaned_phone_number[3:] if cleaned_phone_number.startswith("+47") else cleaned_phone_number
+    cleaned_phone_number = cleaned_phone_number[3:] if cleaned_phone_number.startswith(
+        "+47") else cleaned_phone_number
     # Remove country code
     return cleaned_phone_number[4:] if cleaned_phone_number.startswith("0047") else cleaned_phone_number
 
@@ -106,4 +110,5 @@ def participants_validation(number_of_internals: int, number_of_externals: int, 
     if (number_of_internals + number_of_externals) > CarModel.objects.filter(id__in=cars).aggregate(
         Sum("max_guests")
     )["max_guests__sum"]:
-        raise GraphQLError("There are more participants than there is capacity in the chosen cars")
+        raise GraphQLError(
+            "There are more participants than there is capacity in the chosen cars")

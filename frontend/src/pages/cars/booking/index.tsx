@@ -17,18 +17,18 @@ import { useEffect, useState } from "react";
 
 import { ContractDialog } from "@/components/pages/cars/Popup/ContractDialog";
 import { StepComponent } from "@/components/pages/cars/StepComponent";
-import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
+import { CarFragment, CarsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
+import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cars";
 import {
   allValuesFilled,
-  cabinOrderStepReady,
+  carOrderStepReady,
   generateEmailAndBookingInput,
   isFormValid,
   validateInputForm,
-} from "@/utils/cabins";
+} from "@/utils/cars";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
@@ -57,16 +57,16 @@ const defaultModalData: ModalData = {
 };
 
 /**
- * Main page for the booking of a cabin.
+ * Main page for the booking of a car.
  * The page renders different components depending on the step variable chosen.
  */
-const CabinsBookingPage: NextPageWithLayout = () => {
+const CarsBookingPage: NextPageWithLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
-  // Choose cabin
-  const [chosenCabins, setChosenCabins] = useState<CabinFragment[]>([]);
-  const { data } = useQuery(CabinsDocument);
+  // Choose car
+  const [chosenCars, setChosenCars] = useState<CarFragment[]>([]);
+  const { data } = useQuery(CarsDocument);
   const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
   // Check in/Check out
@@ -87,9 +87,9 @@ const CabinsBookingPage: NextPageWithLayout = () => {
   useEffect(() => {
     setStepReady({
       ...stepReady,
-      0: cabinOrderStepReady(chosenCabins, datePick),
+      0: carOrderStepReady(chosenCars, datePick),
     });
-  }, [chosenCabins, datePick]);
+  }, [chosenCars, datePick]);
 
   useEffect(() => {
     setValidations(validateInputForm(contactInfo));
@@ -112,14 +112,14 @@ const CabinsBookingPage: NextPageWithLayout = () => {
         sendEmail({
           variables: {
             emailInput: {
-              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
+              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCars, extraInfo),
               emailType: "reserve_booking",
             },
           },
         });
         createBooking({
           variables: {
-            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
+            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCars, extraInfo),
           },
         });
       }
@@ -168,7 +168,7 @@ const CabinsBookingPage: NextPageWithLayout = () => {
       <ContractDialog
         modalData={modalData}
         setModalData={setModalData}
-        chosenCabins={chosenCabins}
+        chosenCars={chosenCars}
         datePick={datePick}
         contactInfo={contactInfo}
         activeStep={activeStep}
@@ -190,18 +190,18 @@ const CabinsBookingPage: NextPageWithLayout = () => {
             </Stepper>
           )}
         </div>
-        {data?.cabins &&
+        {data?.cars &&
           (isMobile ? (
             <StepComponent
-              allCabins={data.cabins}
+              allCars={data.cars}
               activeStep={activeStep}
-              chosenCabins={chosenCabins}
+              chosenCars={chosenCars}
               contactInfo={contactInfo}
               datePick={datePick}
               errorTrigger={errorTrigger}
               validations={validations}
               setContactInfo={setContactInfo}
-              setChosenCabins={setChosenCabins}
+              setChosenCars={setChosenCars}
               setDatePick={setDatePick}
               setExtraInfo={setExtraInfo}
             />
@@ -209,15 +209,15 @@ const CabinsBookingPage: NextPageWithLayout = () => {
             <Card>
               <Box sx={{ px: 4, py: 4 }}>
                 <StepComponent
-                  allCabins={data.cabins}
+                  allCars={data.cars}
                   activeStep={activeStep}
-                  chosenCabins={chosenCabins}
+                  chosenCars={chosenCars}
                   contactInfo={contactInfo}
                   datePick={datePick}
                   errorTrigger={errorTrigger}
                   validations={validations}
                   setContactInfo={setContactInfo}
-                  setChosenCabins={setChosenCabins}
+                  setChosenCars={setChosenCars}
                   setDatePick={setDatePick}
                   setExtraInfo={setExtraInfo}
                 />
@@ -252,6 +252,6 @@ const CabinsBookingPage: NextPageWithLayout = () => {
   );
 };
 
-CabinsBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
+CarsBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
 
-export default CabinsBookingPage;
+export default CarsBookingPage;
