@@ -1,0 +1,39 @@
+query cars {
+  cars {
+    ...Car
+  }
+}
+
+query allCarBookings {
+  allCarBookings {
+    ...Booking
+  }
+}
+
+query adminAllCarBookings($after: String) {
+  adminAllBookings(after: $after) {
+    ...AdminBooking
+  }
+}
+
+query activeCarBookingResponsible {
+  activeBookingResponsible {
+    ...BookingResponsible
+  }
+}
+
+query carsAndResponsibles {
+  cars {
+    ...Car
+  }
+  activeBookingResponsible {
+    id
+    email
+  }
+}
+
+query carBookingSemester {
+  bookingSemester {
+    ...BookingSemester
+  }
+}

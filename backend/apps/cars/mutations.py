@@ -9,11 +9,11 @@ from apps.cars.models import Car as CarModel
 from apps.cabins.constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from apps.cabins.helpers import price
 from .mail import send_mail
-from .types import AllBookingsType, BookingInfoType, CarType, EmailInputType, UpdateBookingSemesterType
+from .types import AllCarBookingsType, CarBookingInfoType, CarType, EmailInputType, UpdateCarBookingSemesterType
 from .validators import create_booking_validation
 
 
-class BookingInput(graphene.InputObjectType):
+class CarBookingInput(graphene.InputObjectType):
     """
     Basic booking object type used as a base for other types and as a standalone
     """
@@ -30,18 +30,18 @@ class BookingInput(graphene.InputObjectType):
     extra_info = graphene.String(required=False)
 
 
-class EmailInput(BookingInput):
+class EmailCarInput(CarBookingInput):
     email_type = graphene.String()
 
 
-class UpdateBookingInput(BookingInput):
+class UpdateCarBookingInput(CarBookingInput):
     id = graphene.ID(required=True)
     is_tentative = graphene.Boolean()
     is_declined = graphene.Boolean()
     decline_reason = graphene.String(required=False)
 
 
-class UpdateBookingSemesterInput(graphene.InputObjectType):
+class UpdateCarBookingSemesterInput(graphene.InputObjectType):
     fall_start_date = graphene.Date()
     fall_end_date = graphene.Date()
     spring_start_date = graphene.Date()
@@ -58,16 +58,16 @@ class UpdateCarInput(graphene.InputObjectType):
     external_price = graphene.Int()
 
 
-class CreateBooking(graphene.Mutation):
+class CreateCarBooking(graphene.Mutation):
     """
     Add a new booking to the database
     """
 
     class Arguments:
-        booking_data = BookingInput()
+        booking_data = CarBookingInput()
 
     ok = graphene.Boolean()
-    booking = graphene.Field(AllBookingsType)
+    booking = graphene.Field(AllCarBookingsType)
 
     def mutate(
         self,
@@ -86,19 +86,19 @@ class CreateBooking(graphene.Mutation):
         booking.save()
         booking.cars.set(CarModel.objects.filter(id__in=booking_data.cars))
 
-        return CreateBooking(booking=booking, ok=ok)
+        return CreateCarBooking(booking=booking, ok=ok)
 
 
-class UpdateBooking(graphene.Mutation):
+class UpdateCarBooking(graphene.Mutation):
     """
     Change the given booking
     """
 
     class Arguments:
-        booking_data = UpdateBookingInput()
+        booking_data = UpdateCarBookingInput()
 
     ok = graphene.Boolean()
-    booking = graphene.Field(AllBookingsType)
+    booking = graphene.Field(AllCarBookingsType)
 
     @permission_required("cars.manage_booking")
     def mutate(
@@ -120,15 +120,15 @@ class UpdateBooking(graphene.Mutation):
             if booking_data.cars:
                 booking.cars.set(CarModel.objects.filter(id__in=booking_data.cars))
                 booking.save()
-            return UpdateBooking(booking=booking, ok=ok)
+            return UpdateCarBooking(booking=booking, ok=ok)
         except BookingModel.DoesNotExist:
-            return UpdateBooking(
+            return UpdateCarBooking(
                 booking=None,
                 ok=False,
             )
 
 
-class DeleteBooking(graphene.Mutation):
+class DeleteCarBooking(graphene.Mutation):
     """
     Deletes the booking with the given ID
     """
@@ -144,10 +144,10 @@ class DeleteBooking(graphene.Mutation):
         try:
             booking = BookingModel.objects.get(pk=id)
         except BookingModel.DoesNotExist:
-            return DeleteBooking(ok=False, booking_id=id)
+            return DeleteCarBooking(ok=False, booking_id=id)
         booking_id = id
         booking.delete()
-        return DeleteBooking(ok=True, booking_id=booking_id)
+        return DeleteCarBooking(ok=True, booking_id=booking_id)
 
 
 class SendEmail(graphene.Mutation):
@@ -156,7 +156,7 @@ class SendEmail(graphene.Mutation):
     """
 
     class Arguments:
-        email_input = EmailInput()
+        email_input = EmailCarInput()
 
     ok = graphene.Boolean()
 
@@ -171,7 +171,7 @@ class SendEmail(graphene.Mutation):
             email_input["external_participants"],
         )
 
-        booking_info: BookingInfoType = {
+        booking_info: CarBookingInfoType = {
             "first_name": email_input["first_name"],
             "last_name": email_input["last_name"],
             "receiver_email": email_input["receiver_email"],
@@ -196,16 +196,16 @@ class SendEmail(graphene.Mutation):
         return SendEmail(ok=True)
 
 
-class UpdateBookingSemester(graphene.Mutation):
+class UpdateCarBookingSemester(graphene.Mutation):
     """
     Update the booking semester
     """
 
     class Arguments:
-        semester_data = UpdateBookingSemesterInput()
+        semester_data = UpdateCarBookingSemesterInput()
 
     ok = graphene.Boolean()
-    booking_semester = graphene.Field(UpdateBookingSemesterType)
+    booking_semester = graphene.Field(UpdateCarBookingSemesterType)
 
     @permission_required("cars.change_bookingsemester")
     def mutate(
@@ -226,7 +226,7 @@ class UpdateBookingSemester(graphene.Mutation):
             setattr(semester, field, value)
 
         semester.save()
-        return UpdateBookingSemester(ok=ok, booking_semester=semester)
+        return UpdateCarBookingSemester(ok=ok, booking_semester=semester)
 
 
 class UpdateCar(graphene.Mutation):
@@ -252,7 +252,7 @@ class UpdateCar(graphene.Mutation):
                 setattr(car, input_field, input_value)
             car.save()
 
-            return UpdateCar(car = car, ok=ok)
+            return UpdateCar(car=car, ok=ok)
         except CarModel.DoesNotExist:
             return UpdateCar(
                 car=None,

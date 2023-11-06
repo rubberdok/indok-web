@@ -2,39 +2,39 @@ import graphene
 from graphene import NonNull
 
 from apps.cars.types import (
-    AllBookingsType,
-    CabinType,
-    AdminBookingType,
-    BookingResponsibleType,
-    UpdateBookingSemesterType,
+    AllCarBookingsType,
+    CarType,
+    AdminCarBookingType,
+    CarBookingResponsibleType,
+    UpdateCarBookingSemesterType,
 )
 from apps.cars.mutations import (
-    CreateBooking,
-    UpdateBooking,
-    DeleteBooking,
+    CreateCarBooking,
+    UpdateCarBooking,
+    DeleteCarBooking,
     SendEmail,
-    UpdateBookingSemester,
-    UpdateCabin,
+    UpdateCarBookingSemester,
+    UpdateCar,
 )
 from apps.cars.resolvers import CarResolvers
 
 
 class CarMutations(graphene.ObjectType):
-    create_booking = CreateBooking.Field()
-    update_booking = UpdateBooking.Field()
-    delete_booking = DeleteBooking.Field()
+    create_car_booking = CreateCarBooking.Field()
+    update_car_booking = UpdateCarBooking.Field()
+    delete_car_booking = DeleteCarBooking.Field()
     send_email = SendEmail.Field()
-    update_booking_semester = UpdateBookingSemester.Field()
+    update_car_booking_semester = UpdateCarBookingSemester.Field()
     update_car = UpdateCar.Field()
 
 
 class CarQueries(graphene.ObjectType, CarResolvers):
-    all_bookings = graphene.List(NonNull(AllBookingsType))
-    admin_all_bookings = graphene.List(
-        NonNull(AdminBookingType),
+    all_car_bookings = graphene.List(NonNull(AllCarBookingsType))
+    admin_all_car_bookings = graphene.List(
+        NonNull(AdminCarBookingType),
         before=graphene.String(required=False),
         after=graphene.String(required=False),
     )
     cars = graphene.List(NonNull(CarType))
-    active_booking_responsible = graphene.Field(BookingResponsibleType)
-    booking_semester = graphene.Field(UpdateBookingSemesterType)
+    active_car_booking_responsible = graphene.Field(CarBookingResponsibleType)
+    car_booking_semester = graphene.Field(UpdateCarBookingSemesterType)

@@ -2,15 +2,15 @@ import { Checkbox, Divider, FormControlLabel, Paper, Stack, Typography } from "@
 import React from "react";
 
 import { Calendar } from "@/components/Calendar";
-import { CabinFragment } from "@/generated/graphql";
-import { useDisabledDates } from "@/hooks/cabins/useDisabledDates";
+import { CarFragment } from "@/generated/graphql";
+import { useDisabledDates } from "@/hooks/cars/useDisabledDates";
 import { useResponsive } from "@/hooks/useResponsive";
 import { DatePick } from "@/types/cabins";
 
 type Props = {
-  allCabins: CabinFragment[];
-  chosenCabins: CabinFragment[];
-  setChosenCabins: React.Dispatch<React.SetStateAction<CabinFragment[]>>;
+  allCabins: CarFragment[];
+  chosenCabins: CarFragment[];
+  setChosenCabins: React.Dispatch<React.SetStateAction<CarFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 };
 

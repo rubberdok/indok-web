@@ -1,0 +1,57 @@
+fragment Car on CarType {
+  id
+  name
+  maxPassengers
+  internalPrice
+  externalPrice
+}
+
+fragment CarBooking on AllCarBookingsType {
+  id
+  checkIn
+  checkOut
+  cars {
+    id
+    name
+  }
+}
+
+fragment AdminCarBooking on AdminCarBookingType {
+  id
+  checkIn
+  checkOut
+  cars {
+    id
+    name
+  }
+  firstName
+  lastName
+  phone
+  receiverEmail
+  externalParticipants
+  internalParticipants
+  price
+  isTentative
+  isDeclined
+  timestamp
+  extraInfo
+  declineReason
+}
+
+fragment CarBookingResponsible on CarBookingResponsibleType {
+  id
+  active
+  firstName
+  lastName
+  email
+  phone
+}
+
+fragment CarBookingSemester on UpdateCarBookingSemesterType {
+  fallStartDate
+  fallEndDate
+  springStartDate
+  springEndDate
+  fallSemesterActive
+  springSemesterActive
+}

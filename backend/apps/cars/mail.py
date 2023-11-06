@@ -5,7 +5,7 @@ from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
 from apps.cars.models import BookingResponsible
-from apps.cars.types import BookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
+from apps.cars.types import CarBookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
 
 from weasyprint import HTML
 from datetime import datetime
@@ -36,7 +36,7 @@ def get_email_subject(chosen_cars_string: str, email_type: str, admin: bool) -> 
     return subject + chosen_cars_string
 
 
-def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool) -> None:
+def send_mail(booking_info: CarBookingInfoType, email_type: EmailTypes, admin: bool) -> None:
     if admin:
         template = admin_templates["reserve_booking"]
     else:
@@ -73,10 +73,10 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
 
     # Don't send attachments to admin nor when a booking is disapproved
     if email_type != "disapprove_booking" and not admin:
-        #pdf files below are for cabins, not cars. Replace if needed
-        #email.attach_file("static/cars/Sjekkliste.pdf")
-        #email.attach_file("static/cars/Reglement.pdf")
-        #email.attach_file("static/cars/Stamp_brukerveiledning.pdf")
+        # pdf files below are for cabins, not cars. Replace if needed
+        # email.attach_file("static/cars/Sjekkliste.pdf")
+        # email.attach_file("static/cars/Reglement.pdf")
+        # email.attach_file("static/cars/Stamp_brukerveiledning.pdf")
         contract_pdf = html_to_pdf("contract_template.html", content)
         email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
     email.send()

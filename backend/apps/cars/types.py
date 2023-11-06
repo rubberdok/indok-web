@@ -8,7 +8,7 @@ import graphene
 from .models import Booking as BookingModel, Car as CarModel, BookingResponsible, BookingSemester
 
 
-class AllBookingsType(DjangoObjectType):
+class AllCarBookingsType(DjangoObjectType):
     """
     Booking type for fields available for not logged in users
     """
@@ -23,7 +23,7 @@ class AllBookingsType(DjangoObjectType):
         ]
 
 
-class AdminBookingType(DjangoObjectType):
+class AdminCarBookingType(DjangoObjectType):
     """
     Booking type for admin users
     """
@@ -39,10 +39,10 @@ class AdminBookingType(DjangoObjectType):
 class CarType(DjangoObjectType):
     class Meta:
         model = CarModel
-        fields = ["id", "name", "max_guests", "internal_price", "external_price"]
+        fields = ["id", "name", "max_passengers", "internal_price", "external_price"]
 
 
-class BookingResponsibleType(DjangoObjectType):
+class CarBookingResponsibleType(DjangoObjectType):
     first_name = graphene.String()
     last_name = graphene.String()
     phone = graphene.Int()
@@ -53,7 +53,7 @@ class BookingResponsibleType(DjangoObjectType):
         model = BookingResponsible
 
 
-class UpdateBookingSemesterType(DjangoObjectType):
+class UpdateCarBookingSemesterType(DjangoObjectType):
     class Meta:
         model = BookingSemester
 
@@ -75,7 +75,7 @@ class EmailInputType(TypedDict):
     extra_info: str
 
 
-class BookingInfoType(EmailInputType):
+class CarBookingInfoType(EmailInputType):
     price: int
 
 

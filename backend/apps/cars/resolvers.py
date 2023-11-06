@@ -1,4 +1,4 @@
-from apps.cars.models import Booking as BookingModel, car, BookingResponsible, BookingSemester
+from apps.cars.models import Booking as BookingModel, Car, BookingResponsible, BookingSemester
 from decorators import permission_required
 
 
@@ -26,7 +26,7 @@ class CarResolvers:
         """
         Returns all cars in the database
         """
-        return car.objects.all()
+        return Car.objects.all()
 
     def resolve_active_booking_responsible(self, info):
         """
