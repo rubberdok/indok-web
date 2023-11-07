@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
 import { BookingSteps } from "@/components/pages/cabins/booking/BookingSteps";
@@ -8,6 +7,7 @@ import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cabins/booking/Steps/ContactInfo";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
 const steps = ["Book hytte", "Kontaktinfo", "Ekstra info", "Kontrakt", "Send søknad", "Kvittering"] as const;

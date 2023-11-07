@@ -1,8 +1,8 @@
 import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import dayjs from "dayjs";
 
 import { Link } from "@/components";
 import { AdminOrganizationFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 type Props = { organization: AdminOrganizationFragment };
 

@@ -5,13 +5,8 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 
 import { PageProps } from "@/lib/apolloClient";
-import { initializeDayjs } from "@/lib/dayjs";
 import { NextPageWithLayout } from "@/lib/next";
-import { initializeYup } from "@/lib/yup";
 import { AppProvider } from "@/providers";
-
-initializeDayjs();
-initializeYup();
 
 const Layout = dynamic(() => import("@/layouts/Layout").then((mod) => mod.Layout));
 

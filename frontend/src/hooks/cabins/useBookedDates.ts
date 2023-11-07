@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
-import dayjs from "dayjs";
 
 import { AllBookingsDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 interface BookedDatesByCabin {
   [cabinId: string]: {

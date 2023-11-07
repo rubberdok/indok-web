@@ -1,8 +1,8 @@
 import { Typography } from "@mui/material";
-import dayjs from "dayjs";
 import React from "react";
 
 import { CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { useStepContext } from "./StepContext";
 import { CheckInOut } from "./Steps/CabinSelection";

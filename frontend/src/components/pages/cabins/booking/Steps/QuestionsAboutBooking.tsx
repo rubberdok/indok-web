@@ -1,7 +1,7 @@
 import { Stack, TextField, Typography } from "@mui/material";
-import dayjs from "dayjs";
 
 import { CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { Stepper } from "./Stepper";
 

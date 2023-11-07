@@ -1,7 +1,8 @@
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
 import React, { useState } from "react";
+
+import dayjs from "@/lib/date";
 
 import { CalendarDay } from "./CalendarDay";
 import { CalendarRow } from "./CalendarRow";

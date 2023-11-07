@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from "@/lib/date";
 
 export function calculatePrice(
   chosenCabins: { internalPrice: number; externalPrice: number }[],

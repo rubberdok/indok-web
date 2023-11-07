@@ -13,12 +13,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 
 import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+import * as yup from "@/lib/validation";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
 
 import { useStepContext } from "../StepContext";

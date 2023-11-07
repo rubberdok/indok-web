@@ -1,9 +1,9 @@
 import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
-import dayjs from "dayjs";
 
 import { CabinFragment } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
+import dayjs from "@/lib/date";
 
 import { calculatePrice } from "./calculatePrice";
 import { ContactInfo } from "./ContactInfo";

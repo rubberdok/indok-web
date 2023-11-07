@@ -14,11 +14,11 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import dayjs from "dayjs";
 import React from "react";
 
 import { Link, Markdown, Title } from "@/components";
 import { EventDetailFieldsFragment, EventUserOrganizationsDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { AddToCalendar } from "./AddToCalendar";
 import { ManageEvent } from "./ManageEvent";

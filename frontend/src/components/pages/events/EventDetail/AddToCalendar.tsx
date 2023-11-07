@@ -1,8 +1,9 @@
 import { Button } from "@mui/material";
 import { track } from "@vercel/analytics";
-import dayjs from "dayjs";
 import { uniqueId } from "lodash";
 import { useEffect, useState } from "react";
+
+import dayjs from "@/lib/date";
 
 function createCalendarFile(
   title: string,

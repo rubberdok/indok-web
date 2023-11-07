@@ -14,9 +14,9 @@ import {
 import { range } from "lodash";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
 
 import { CabinFragment } from "@/generated/graphql";
+import * as yup from "@/lib/validation";
 
 import { Stepper } from "../Stepper";
 

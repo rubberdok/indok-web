@@ -1,16 +1,8 @@
 import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Grid, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 
 import { Link } from "@/components";
 import { ListingFragment } from "@/generated/graphql";
-
-dayjs.extend(timezone);
-dayjs.extend(utc);
-dayjs.tz.setDefault("Europe/Oslo");
-dayjs.locale(nb);
+import dayjs from "@/lib/date";
 
 const timestamp = (datetime: string) => {
   // returns monday 23:59 if < 2 days remaining, 02. february 1999 otherwise

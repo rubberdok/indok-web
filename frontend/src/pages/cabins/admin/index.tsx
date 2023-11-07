@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Settings } from "@mui/icons-material";
 import { Box, Button, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
-import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -11,6 +10,7 @@ import { AdminCabinTable } from "@/components/pages/cabins/Admin/AdminCabinTable
 import { AdminAllBookingsDocument } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Layout, RootStyle } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
 /** Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings. */

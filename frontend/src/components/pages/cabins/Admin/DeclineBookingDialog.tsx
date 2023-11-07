@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
-import dayjs from "dayjs";
 import { useState } from "react";
 
 import {
@@ -9,6 +8,7 @@ import {
   DeclineBookingDocument,
   SendEmailDocument,
 } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { getDecisionEmailInput } from "./getDecisionEmailInput";
 

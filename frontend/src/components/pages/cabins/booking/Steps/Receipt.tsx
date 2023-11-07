@@ -1,7 +1,7 @@
 import { Divider, Grid, Typography } from "@mui/material";
-import dayjs from "dayjs";
 
 import { CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { CabinBookingStatus } from "./CabinStatus";
 import { ContactInfo } from "./ContactInfo";

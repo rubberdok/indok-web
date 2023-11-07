@@ -1,13 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Checkbox, Divider, FormControlLabel, Paper, Stack, Tooltip, Typography } from "@mui/material";
-import dayjs from "dayjs";
 import React from "react";
 
 import { Calendar } from "@/components/Calendar";
 import { BookingSemesterDocument, CabinFragment } from "@/generated/graphql";
 import { useOverlappingBookings } from "@/hooks/cabins/useBookedDates";
 import { useResponsive } from "@/hooks/useResponsive";
+import dayjs from "@/lib/date";
 
 import { Stepper } from "./Stepper";
 

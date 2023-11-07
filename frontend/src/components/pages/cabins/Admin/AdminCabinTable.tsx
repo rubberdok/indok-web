@@ -14,7 +14,6 @@ import {
   TableRow,
   Tooltip,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { useState } from "react";
 
 import {
@@ -23,6 +22,7 @@ import {
   ConfirmBookingDocument,
   SendEmailDocument,
 } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { DeclineBookingDialog } from "./DeclineBookingDialog";
 import { getDecisionEmailInput } from "./getDecisionEmailInput";
