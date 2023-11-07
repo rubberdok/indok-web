@@ -6,7 +6,7 @@ django-cors-headers==4.3.0
 django-environ==0.10.0
 django-guardian==2.4.0
 django-multiselectfield==0.1.12
-django-phonenumber-field==7.1.0
+django-phonenumber-field==7.2.0
 Django==3.2.22
 djangorestframework==3.14.0
 factory-boy==3.3.0
