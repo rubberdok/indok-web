@@ -1,33 +1,8 @@
 import { useQuery } from "@apollo/client";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-import relativeTime from "dayjs/plugin/relativeTime";
-import updateLocale from "dayjs/plugin/updateLocale";
 import { useEffect, useState } from "react";
 
 import { ServerTimeDocument } from "@/generated/graphql";
-
-dayjs.extend(relativeTime);
-dayjs.extend(updateLocale);
-dayjs.extend(duration);
-
-dayjs.updateLocale("nb", {
-  relativeTime: {
-    future: "om %s",
-    past: "%s siden",
-    s: "%d sekund(er)",
-    m: "1 minutt",
-    mm: "%d minutter",
-    h: "1 time",
-    hh: "%d timer",
-    d: "1 dag",
-    dd: "%d dager",
-    M: "1 måned",
-    MM: "%d måneder",
-    y: "1 år",
-    yy: "%d år",
-  },
-});
+import dayjs from "@/lib/date";
 
 /**
  * Creates a countdown based on the server time until the given `date`.

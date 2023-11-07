@@ -15,9 +15,9 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import * as yup from "yup";
 
 import { EventSignUpsDocument } from "@/generated/graphql";
+import * as yup from "@/lib/validation";
 
 import { ConfirmationDialog } from "./ConfirmationDialog";
 

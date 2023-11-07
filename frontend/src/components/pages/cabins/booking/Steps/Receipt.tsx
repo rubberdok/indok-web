@@ -1,27 +1,27 @@
-import { Divider, Grid, Hidden, Typography } from "@mui/material";
+import { Divider, Grid, Typography } from "@mui/material";
 
 import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, DatePick } from "@/types/cabins";
+import dayjs from "@/lib/date";
 
-import { CabinBookingStatus } from "../CabinBookingStatus";
+import { CabinBookingStatus } from "./CabinStatus";
+import { ContactInfo } from "./ContactInfo";
 
 type Props = {
   chosenCabins: CabinFragment[];
-  datePick: DatePick;
-  contactInfo: ContactInfo;
+  contactInfo: ContactInfo | undefined;
   mailSent?: boolean;
+  startDate: dayjs.Dayjs | undefined;
+  endDate: dayjs.Dayjs | undefined;
 };
 
 /** Step in the cabins/book site. Shows a confirmation of the booking made after the payment site. */
 export const ReceiptSite: React.FC<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">
-      <Hidden lgDown>
-        <Grid item>
-          <Typography variant="h4">Takk for din bestilling</Typography>
-          <Divider />
-        </Grid>
-      </Hidden>
+      <Grid item>
+        <Typography variant="h3">Takk for din bestilling</Typography>
+        <Divider />
+      </Grid>
 
       <Grid item container justifyContent="space-evenly" alignItems="stretch">
         <Grid item>

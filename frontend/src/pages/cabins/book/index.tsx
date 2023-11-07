@@ -1,52 +1,16 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  MobileStepper,
-  Stack,
-  Step,
-  StepLabel,
-  Stepper,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { useState } from "react";
+import { Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
+import { useMemo, useState } from "react";
 
-import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
-import { StepComponent } from "@/components/pages/cabins/StepComponent";
+import { BookingSteps } from "@/components/pages/cabins/booking/BookingSteps";
+import { StepContext } from "@/components/pages/cabins/booking/StepContext";
+import { ContactInfo } from "@/components/pages/cabins/booking/Steps/ContactInfo";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
-import { useResponsive } from "@/hooks/useResponsive";
 import { Layout } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
-import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
-import {
-  allValuesFilled,
-  cabinOrderStepReady,
-  generateEmailAndBookingInput,
-  isFormValid,
-  validateInputForm,
-} from "@/utils/cabins";
 
-type StepReady = Record<number, { ready: boolean; errortext: string }>;
-
-const steps = ["Book hytte", "Kontaktinfo", "Ekstra info", "Send søknad", "Kvittering"];
-
-const defaultContactInfo: ContactInfo = {
-  firstName: "",
-  lastName: "",
-  receiverEmail: "",
-  phone: "",
-  internalParticipants: 0,
-  externalParticipants: 0,
-};
-
-const defaultModalData: ModalData = {
-  contractViewed: false,
-  displayPopUp: false,
-};
+const steps = ["Book hytte", "Kontaktinfo", "Ekstra info", "Kontrakt", "Send søknad", "Kvittering"] as const;
 
 /**
  * Main page for the booking of a cabin.
@@ -54,21 +18,20 @@ const defaultModalData: ModalData = {
  */
 const CabinBookingPage: NextPageWithLayout = () => {
   // Which step of the booking process we're on
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState<number>(0);
   // Which cabins the user has chosen
   const [chosenCabins, setChosenCabins] = useState<CabinFragment[]>([]);
 
   const { data } = useQuery(CabinsDocument);
-  const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
   // Which range of dates the user has chosen
-  const [datePick, setDatePick] = useState<DatePick>({});
+  const [dateRange, setDateRange] = useState<{ start: dayjs.Dayjs | undefined; end: dayjs.Dayjs | undefined }>({
+    start: undefined,
+    end: undefined,
+  });
 
   // The contact info the user has given
-  const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
-  // Validation of the contact info
-  const validations: ContactInfoValidations = validateInputForm(contactInfo);
-  const errorTrigger = allValuesFilled(contactInfo);
+  const [contactInfo, setContactInfo] = useState<ContactInfo | undefined>();
 
   // Booking creation and email mutations
   const [createBooking] = useMutation(CreateBookingDocument);
@@ -78,163 +41,135 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [extraInfo, setExtraInfo] = useState("");
 
   /**
-   * Rudimentary validation of the form.
-   * For step 0, we check that the user has chosen cabins and a valid date range
-   * For step 1, we check that the user has filled out all the fields
-   * For step 2 and 3, we don't need to check anything
+   * Update the booking dates when the user selects a new date in the calendar.
+   * The dates are updated accordingly:
+   * 1. If the user has not yet selected a start date, then we set the start date to the date the user has chosen.
+   * 2. If the user has selected a start date, and the new date is the same as the start date, then we reset the range.
+   * 3. If the user has selected a start date, and the new date is after the start date, then we set that as the
+   *   current end date
+   * 4. If the user has selected a start date, and the new date is before the start date, then we set that as the
+   *  current start date
+   * 5. If none of the above conditions are met, we make no changes.
+   *
+   * @param date The date the user has chosen
    */
-  const stepReady: StepReady = {
-    0: cabinOrderStepReady(chosenCabins, datePick),
-    1: { ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
-    2: { ready: true, errortext: "" },
-    3: { ready: true, errortext: "" },
-  };
+  function handleDateChange(date: dayjs.Dayjs) {
+    setDateRange((prev) => {
+      const { start, end } = prev;
 
-  const handleNextClick = () => {
-    if (activeStep == 2 && !modalData.contractViewed) {
-      setModalData({ ...modalData, displayPopUp: true });
-    } else {
-      if (activeStep == 3) {
-        sendEmail({
-          variables: {
-            emailInput: {
-              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
-              emailType: "reserve_booking",
-            },
-          },
-        });
-        createBooking({
-          variables: {
-            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
-          },
-        });
-      } else {
-        setActiveStep((prev) => prev + 1);
+      /**
+       * If start is not set, then we set the start date to the date the user has chosen.
+       */
+      if (!start) {
+        return { start: date, end: undefined };
       }
-    }
-  };
 
-  const isMobile = useResponsive({ query: "down", key: "md" });
+      /**
+       * If start is set, and the user clicks the start day, we reset the range.
+       */
+      if (start?.isSame(date, "day")) {
+        return { start: undefined, end: undefined };
+      }
 
-  const NextButton = () => (
-    <Tooltip
-      title={stepReady[activeStep].errortext}
-      placement="left"
-      disableHoverListener={stepReady[activeStep].ready}
-    >
-      <Box display={activeStep == 4 ? "none" : "block"}>
-        <Button
-          onClick={handleNextClick}
-          disabled={!stepReady[activeStep].ready}
-          size={isMobile ? "small" : "large"}
-          variant="contained"
-        >
-          {activeStep == 3 ? "Send" : "Neste"}
-          <KeyboardArrowRight />
-        </Button>
-      </Box>
-    </Tooltip>
-  );
+      /**
+       * If the user has already selected a date range, then we reset the range and start a new one.
+       */
+      if (start && end) {
+        return { start: date, end: undefined };
+      }
 
-  const BackButton = () => (
-    <Box display={activeStep == 4 ? "none" : "block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
-      <Button
-        size={isMobile ? "small" : "large"}
-        onClick={() => setActiveStep((prev) => prev - 1)}
-        disabled={activeStep === 0}
-        variant="contained"
-      >
-        <KeyboardArrowLeft />
-        Tilbake
-      </Button>
-    </Box>
+      /**
+       * If the user has selected a start date, and the new date is after the start date, then we set that as the
+       * current end date
+       */
+      if (start && date.isAfter(start, "day")) {
+        return { start: start, end: date };
+      }
+
+      /**
+       * If the user has selected a start date, and the new date is before the start date, then we set that as the
+       * current start date
+       */
+      if (start && date.isBefore(start, "day")) {
+        return { start: date, end: undefined };
+      }
+
+      /**
+       * If none of the above conditions are met, we make no changes.
+       */
+      return { start, end };
+    });
+  }
+
+  /**
+   * Send the booking to Hytteforeningen and create a booking in the database.
+   * The booking is sent to Hytteforeningen and the user by email.
+   *
+   * @todo move the email sendout to the backend. It should absolutely not be done on the client like this :)
+   */
+  function onSubmitBooking() {
+    sendEmail({
+      variables: {
+        emailInput: {
+          ...contactInfo,
+          cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
+          checkIn: dateRange.start?.format("YYYY-MM-DD"),
+          checkOut: dateRange.end?.format("YYYY-MM-DD"),
+          extraInfo: extraInfo,
+          emailType: "reserve_booking",
+        },
+      },
+    });
+    createBooking({
+      variables: {
+        bookingData: {
+          ...contactInfo,
+          cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
+          checkIn: dateRange.start?.format("YYYY-MM-DD"),
+          checkOut: dateRange.end?.format("YYYY-MM-DD"),
+          extraInfo: extraInfo,
+        },
+      },
+    });
+  }
+
+  const contextValue = useMemo(
+    () => ({
+      activeStep,
+      steps: steps.length,
+      nextStep: () => setActiveStep((prev) => prev + 1),
+      previousStep: () => setActiveStep((prev) => prev - 1),
+    }),
+    [activeStep, setActiveStep]
   );
 
   return (
     <Container>
-      <ContractDialog
-        modalData={modalData}
-        setModalData={setModalData}
-        chosenCabins={chosenCabins}
-        datePick={datePick}
-        contactInfo={contactInfo}
-        activeStep={activeStep}
-        setActiveStep={setActiveStep}
-      />
       <Stack spacing={{ xs: 3, md: 5 }}>
-        <div>
-          {isMobile ? (
-            <Typography variant="h4" align="center">
-              {steps[activeStep]}
-            </Typography>
-          ) : (
-            <Stepper activeStep={activeStep}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          )}
-        </div>
-        {data?.cabins &&
-          (isMobile ? (
-            <StepComponent
-              allCabins={data.cabins}
-              activeStep={activeStep}
-              chosenCabins={chosenCabins}
-              contactInfo={contactInfo}
-              datePick={datePick}
-              errorTrigger={errorTrigger}
-              validations={validations}
-              setContactInfo={setContactInfo}
-              setChosenCabins={setChosenCabins}
-              setDatePick={setDatePick}
-              setExtraInfo={setExtraInfo}
-            />
-          ) : (
-            <Card>
-              <Box sx={{ px: 4, py: 4 }}>
-                <StepComponent
-                  allCabins={data.cabins}
-                  activeStep={activeStep}
-                  chosenCabins={chosenCabins}
-                  contactInfo={contactInfo}
-                  datePick={datePick}
-                  errorTrigger={errorTrigger}
-                  validations={validations}
-                  setContactInfo={setContactInfo}
-                  setChosenCabins={setChosenCabins}
-                  setDatePick={setDatePick}
-                  setExtraInfo={setExtraInfo}
-                />
-              </Box>
-              <Stack
-                width={1}
-                direction="row"
-                justifyContent="space-between"
-                borderTop="1px solid"
-                borderColor="divider"
-              >
-                <BackButton />
-                <NextButton />
-              </Stack>
-            </Card>
-          ))}
+        <Box display={{ xs: "none", md: "block" }}>
+          <Stepper activeStep={activeStep}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </Box>
+        <StepContext.Provider value={contextValue}>
+          <BookingSteps
+            allCabins={data?.cabins ?? []}
+            chosenCabins={chosenCabins}
+            contactInfo={contactInfo}
+            onContactInfoChange={setContactInfo}
+            onCabinsChange={setChosenCabins}
+            setExtraInfo={setExtraInfo}
+            onDateChange={handleDateChange}
+            startDate={dateRange.start}
+            endDate={dateRange.end}
+            onSubmitBooking={onSubmitBooking}
+          />
+        </StepContext.Provider>
       </Stack>
-      {isMobile ? (
-        <MobileStepper
-          steps={4}
-          position="bottom"
-          variant="progress"
-          activeStep={activeStep}
-          nextButton={<NextButton />}
-          backButton={<BackButton />}
-          sx={{ boxShadow: (theme) => theme.shadows[24] }}
-        />
-      ) : (
-        <></>
-      )}
     </Container>
   );
 };

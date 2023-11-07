@@ -2,20 +2,15 @@ import { useQuery } from "@apollo/client";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Tune } from "@mui/icons-material";
 import { Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components";
 import { EventsDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { EventListItem } from "./EventListItem";
 import { FilterMenu } from "./FilterMenu";
 import { ManageEvents } from "./ManageEvents";
-
-dayjs.extend(isSameOrBefore);
-dayjs.extend(isBetween);
 
 export type FilterQuery = {
   organization?: string;

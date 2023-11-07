@@ -1,19 +1,11 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 import React from "react";
 
 import { Link } from "@/components";
 import { ListingWithFormIdFragment } from "@/generated/graphql";
-
-dayjs.extend(timezone);
-dayjs.extend(utc);
-dayjs.tz.setDefault("Europe/Oslo");
-dayjs.locale(nb);
+import dayjs from "@/lib/date";
 
 type Props = { listing?: ListingWithFormIdFragment };
 

@@ -8,7 +8,7 @@ import { CabinsDetailsSection } from "@/components/pages/cabins/CabinsDetailsSec
 import { CabinsHero } from "@/components/pages/cabins/CabinsHero";
 import { CabinsInfoSection } from "@/components/pages/cabins/CabinsInfoSection";
 import { ContactCabinBoard } from "@/components/pages/cabins/ContactCabinBoard";
-import { FAQ } from "@/components/pages/cabins/Documents/FAQ";
+import { FAQ } from "@/components/pages/cabins/FAQ";
 import { outsideImages } from "@/components/pages/cabins/ImageSlider/imageData";
 import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
 import { CabinsAndResponsiblesDocument } from "@/generated/graphql";

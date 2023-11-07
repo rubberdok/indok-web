@@ -2,9 +2,10 @@ import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 
 import { CabinFragment } from "@/generated/graphql";
-import { useResponsive } from "@/hooks/useResponsive";
-import { ContactInfo, DatePick } from "@/types/cabins";
-import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
+import dayjs from "@/lib/date";
+
+import { calculatePrice } from "./calculatePrice";
+import { ContactInfo } from "./ContactInfo";
 
 const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
@@ -14,54 +15,52 @@ const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => 
 
 type Props = {
   chosenCabins: CabinFragment[];
-  datePick: DatePick;
-  contactInfo: ContactInfo;
+  contactInfo: ContactInfo | undefined;
   cabinText?: string;
   mailSent?: boolean;
+  startDate: dayjs.Dayjs | undefined;
+  endDate: dayjs.Dayjs | undefined;
 };
 
 /**
  * Statusbox with information about the current cabin booking.
  * Renders fields based on the props given.
  */
-export const CabinBookingStatus: React.FC<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
-  const isMobile = useResponsive({ query: "down", key: "md" });
-
+export const CabinBookingStatus: React.FC<Props> = ({
+  chosenCabins,
+  startDate,
+  endDate,
+  contactInfo,
+  cabinText,
+  mailSent,
+}) => {
   return (
-    <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">
-      {chosenCabins ? (
+    <Box p={{ xs: 0, md: 3 }} border={3} borderColor="primary.main">
+      {chosenCabins && (
         <Box m={3}>
           <InfoText>
             {cabinText ?? "Du søker nå om å booke"}{" "}
             <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              {toStringChosenCabins(chosenCabins)}
+              {chosenCabins.map((cabin) => cabin.name).join(", ")}
             </Typography>
           </InfoText>
         </Box>
-      ) : null}
+      )}
 
       <Divider />
 
-      {datePick ? (
-        <Box m={3}>
-          <InfoText>
-            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              Innsjekk:{" "}
-            </Typography>
-            {datePick.checkInDate !== undefined && convertDateFormat(datePick.checkInDate)}
-          </InfoText>
-          <InfoText>
-            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              Utsjekk:{" "}
-            </Typography>
-            {datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate)}
-          </InfoText>
-        </Box>
-      ) : null}
+      <Box m={3}>
+        <InfoText>
+          <strong>Innsjekk:</strong> {startDate?.format("LL") ?? "Ikke valgt"}
+        </InfoText>
+        <InfoText>
+          <strong>Utsjekk:</strong> {endDate?.format("LL") ?? "Ikke valgt"}
+        </InfoText>
+      </Box>
 
       <Divider />
 
-      {contactInfo ? (
+      {contactInfo && (
         <Box m={3}>
           <InfoText>
             <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
@@ -83,23 +82,23 @@ export const CabinBookingStatus: React.FC<Props> = ({ chosenCabins, datePick, co
               }
               placement="right"
             >
-              <Box display="inline">{calculatePrice(chosenCabins, contactInfo, datePick)} kr</Box>
+              <Box display="inline">{calculatePrice(chosenCabins, contactInfo, startDate, endDate)} kr</Box>
             </Tooltip>
           </InfoText>
         </Box>
-      ) : null}
+      )}
 
       <Divider />
 
-      {mailSent ? (
+      {mailSent && (
         <InfoText>
           <Box>
-            <Typography variant={isMobile ? "body2" : "body1"}>
-              Vi har sendt en mail til {contactInfo.receiverEmail} med informasjon om søknaden.
+            <Typography variant="body1">
+              Vi har sendt en mail til {contactInfo?.receiverEmail} med informasjon om søknaden.
             </Typography>
           </Box>
         </InfoText>
-      ) : null}
+      )}
     </Box>
   );
 };
