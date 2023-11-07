@@ -8,7 +8,6 @@ import { PermissionRequired } from "@/components/Auth";
 import { TabPanel } from "@/components/pages/about/TabPanel";
 import { AdminCabinTable } from "@/components/pages/cabins/Admin/AdminCabinTable";
 import { AdminAllBookingsDocument } from "@/generated/graphql";
-import { useResponsive } from "@/hooks/useResponsive";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
@@ -24,7 +23,6 @@ const AdminPage: NextPageWithLayout = () => {
 
   const handleTabChange = (newTabValue: number) => setTabValue(newTabValue);
 
-  const isMobile = useResponsive({ query: "down", key: "md" });
   const accepted = data?.adminAllBookings?.filter((booking) => !booking.isTentative && !booking.isDeclined);
   const declined = data?.adminAllBookings?.filter((booking) => !booking.isTentative && booking.isDeclined);
   const tentative = data?.adminAllBookings?.filter((booking) => booking.isTentative);
@@ -35,7 +33,7 @@ const AdminPage: NextPageWithLayout = () => {
         <Grid container direction="column" spacing={3}>
           <Grid item>
             <Box p={3}>
-              <Typography variant={isMobile ? "h3" : "h1"} align="center">
+              <Typography variant="h3" align="center">
                 Booking adminside
               </Typography>
               <Button startIcon={<Settings />} onClick={() => router.push("admin/settings")}>

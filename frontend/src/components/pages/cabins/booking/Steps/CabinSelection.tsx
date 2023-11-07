@@ -5,9 +5,8 @@ import React from "react";
 
 import { Calendar } from "@/components/Calendar";
 import { BookingSemesterDocument, CabinFragment } from "@/generated/graphql";
-import { useOverlappingBookings } from "@/hooks/cabins/useBookedDates";
-import { useResponsive } from "@/hooks/useResponsive";
 import dayjs from "@/lib/date";
+import { useOverlappingBookings } from "./useOverlappingBookings";
 
 import { Stepper } from "./Stepper";
 
@@ -42,7 +41,6 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const { isInActiveBookingSemester } = useIsInActiveBookingSemester();
   const { hasOverlapWithOtherBookings, isDateWithOverlappingBooking } = useOverlappingBookings();
-  const isMobile = useResponsive({ query: "down", key: "md" });
 
   /**
    * Validate that at least one cabin has been chosen, and that the
@@ -136,7 +134,7 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
             />
           ))}
         </Stack>
-        {isMobile && <Divider sx={{ my: 2 }} />}
+        <Divider sx={{ my: 2, display: { xs: "block", md: "none" } }} />
         <Paper sx={{ p: 3, bgcolor: "background.elevated", width: 1 }} elevation={0}>
           <Calendar
             onDateClick={onDateChange}

@@ -2,7 +2,6 @@ import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 
 import { CabinFragment } from "@/generated/graphql";
-import { useResponsive } from "@/hooks/useResponsive";
 import dayjs from "@/lib/date";
 
 import { calculatePrice } from "./calculatePrice";
@@ -35,10 +34,8 @@ export const CabinBookingStatus: React.FC<Props> = ({
   cabinText,
   mailSent,
 }) => {
-  const isMobile = useResponsive({ query: "down", key: "md" });
-
   return (
-    <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">
+    <Box p={{ xs: 0, md: 3 }} border={3} borderColor="primary.main">
       {chosenCabins && (
         <Box m={3}>
           <InfoText>
@@ -96,7 +93,7 @@ export const CabinBookingStatus: React.FC<Props> = ({
       {mailSent && (
         <InfoText>
           <Box>
-            <Typography variant={isMobile ? "body2" : "body1"}>
+            <Typography variant="body1">
               Vi har sendt en mail til {contactInfo?.receiverEmail} med informasjon om søknaden.
             </Typography>
           </Box>
