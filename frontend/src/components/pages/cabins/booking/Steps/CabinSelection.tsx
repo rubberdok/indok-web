@@ -6,9 +6,9 @@ import React from "react";
 import { Calendar } from "@/components/Calendar";
 import { BookingSemesterDocument, CabinFragment } from "@/generated/graphql";
 import dayjs from "@/lib/date";
-import { useOverlappingBookings } from "./useOverlappingBookings";
 
 import { Stepper } from "./Stepper";
+import { useOverlappingBookings } from "./useOverlappingBookings";
 
 type Props = {
   allCabins: CabinFragment[];
