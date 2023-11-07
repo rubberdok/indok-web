@@ -36,6 +36,8 @@ export function getContactInfoSchema(totalGuestsAllowed: number): yup.ObjectSche
     receiverEmail: yup.string().email().required().label("E-post"),
     phone: yup
       .string()
+      /* Remove white space from the phone number */
+      .transform((value: string) => (value ? value.replace(/\s/g, "") : value))
       .matches(/^(0047|\+47|47)?[49]\d{7}$/, { message: "Må være et gyldig telefonnummer.", excludeEmptyString: true })
       .ensure()
       .required()
@@ -96,6 +98,7 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
           <TextField
             type="text"
             label="Fornavn"
+            autoComplete="given-name"
             required
             fullWidth
             InputLabelProps={{ shrink: true }}
@@ -106,6 +109,7 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
           <TextField
             type="text"
             label="Etternavn"
+            autoComplete="family-name"
             required
             fullWidth
             InputLabelProps={{ shrink: true }}
@@ -118,6 +122,7 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
           <TextField
             type="email"
             label="E-postadresse"
+            autoComplete="email"
             fullWidth
             required
             InputLabelProps={{ shrink: true }}
@@ -126,8 +131,9 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
             helperText={errors.receiverEmail?.message ?? " "}
           />
           <TextField
-            type="number"
+            type="tel"
             label="Mobilnummer"
+            autoComplete="tel"
             fullWidth
             required
             InputLabelProps={{ shrink: true }}
