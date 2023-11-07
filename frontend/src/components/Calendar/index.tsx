@@ -155,7 +155,7 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
           }
         >
           {getRows(selectedMonth).map((row, index) => (
-            <CalendarRow key={index}>
+            <CalendarRow key={`${selectedMonth}${index}`}>
               {row.map((date) => (
                 <>
                   {date && (
@@ -197,7 +197,7 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
             }
           >
             {getRows(selectedMonth.add(1, "month")).map((row, index) => (
-              <CalendarRow key={index}>
+              <CalendarRow key={`${selectedMonth}${index}2`}>
                 {row.map((date) => (
                   <>
                     {date && (
