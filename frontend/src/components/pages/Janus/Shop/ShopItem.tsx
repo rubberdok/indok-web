@@ -1,13 +1,14 @@
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
+
 import { NextLinkComposed } from "@/components/Link";
+import { ProductType } from "@/generated/graphql";
+import cabin from "~/public/static/cabins/00.jpg";
 
 type Props = {
   product: ProductType;
   image?: StaticImageData;
 };
-import { ProductType } from "@/generated/graphql";
-import cabin from "~/public/static/cabins/00.jpg";
 
 export const ShopItem: React.VFC<Props> = ({ product }) => {
   return (
