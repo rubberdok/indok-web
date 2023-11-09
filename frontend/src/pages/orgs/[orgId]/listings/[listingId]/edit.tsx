@@ -1,20 +1,14 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Container, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { ListingForm } from "@/components/pages/listings/organization/ListingForm";
 import { ListingDocument, UpdateListingDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 import { ListingInput } from "@/types/listings";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Europe/Oslo");
 
 const EditListingPage: NextPageWithLayout = () => {
   const router = useRouter();

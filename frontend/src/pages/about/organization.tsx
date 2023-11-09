@@ -162,7 +162,7 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
             <Grid item xs={12} sm={6} md={4}>
               <OrganizationCard
                 organization={{ title: "Janus", logo: "/img/januslogo.png" }}
-                href="https://januslinjeforening.no/"
+                href="https://www.indokntnu.no/janus"
               />
             </Grid>
           </>

@@ -10,12 +10,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { useState } from "react";
 
 import { Link } from "@/components";
 import { DeleteListing } from "@/components/pages/listings/organization/DeleteListing";
 import { AdminOrganizationFragment, OrgAdminListingFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 type Props = { organization: AdminOrganizationFragment };
 

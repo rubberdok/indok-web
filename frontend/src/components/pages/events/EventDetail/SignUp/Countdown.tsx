@@ -1,10 +1,8 @@
 import { Typography } from "@mui/material";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
+
+import dayjs from "@/lib/date";
 
 import { useCountdown } from "./hooks/useCountdown";
-
-dayjs.extend(duration);
 
 type CountdownStatusTextProps = {
   signupOpenDate: string;

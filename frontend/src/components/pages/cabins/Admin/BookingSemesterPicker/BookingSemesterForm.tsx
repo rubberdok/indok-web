@@ -1,7 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, FormControlLabel, Unstable_Grid2 as Grid, Switch, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
+
+import * as yup from "@/lib/validation";
 
 export type BookingForm = {
   fall: {

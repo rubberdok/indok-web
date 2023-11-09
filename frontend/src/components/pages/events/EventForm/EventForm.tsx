@@ -1,10 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Card, CardActions, CardContent, CardHeader, Step, StepLabel, Stepper } from "@mui/material";
-import dayjs from "dayjs";
 import deepmerge from "deepmerge";
 import { isEmpty } from "lodash";
 import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
+
+import dayjs from "@/lib/date";
 
 import { IEventForm, schema } from "./schema";
 import { Info, Registration, Review, TimeAndPlace } from "./Steps";

@@ -19,9 +19,9 @@ import { useRef } from "react";
 import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
+import Amund from "~/public/img/Amund Norland.jpg";
 import Hilvi from "~/public/img/Hilvi Fjose.jpg";
-import Amund from "~/public/img/Amund Nordland.jpg";
+import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
@@ -30,7 +30,7 @@ const ReportsPage: NextPageWithLayout = () => {
   const responsibles = [
     {
       id: 1,
-      name: "Solveig Lund Christinasen",
+      name: "Solveig Lund Christiansen",
       initials: "SLC",
       color: red[800],
       image: Solveig,
@@ -46,7 +46,7 @@ const ReportsPage: NextPageWithLayout = () => {
     },
     {
       id: 3,
-      name: "Amund Nordland",
+      name: "Amund Norland",
       initials: "AN",
       color: green[500],
       image: Amund,
@@ -251,12 +251,7 @@ const ReportsPage: NextPageWithLayout = () => {
                   >
                     {responsibles.map((responsible) => (
                       <Grid container item sm={3} xs={8} key={responsible.id}>
-                        <ContactInfo
-                          name={responsible.name}
-                          email={responsible.email}
-                          image={responsible.image}
-                          position={responsible.position}
-                        />
+                        <ContactInfo name={responsible.name} email={responsible.email} image={responsible.image} />
                       </Grid>
                     ))}
                   </Grid>

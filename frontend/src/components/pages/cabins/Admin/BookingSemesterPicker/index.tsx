@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
-import dayjs from "dayjs";
 import { useState } from "react";
 
 import { Link } from "@/components";
 import { BookingSemesterDocument, UpdateBookingSemesterDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { BookingForm, BookingSemesterForm } from "./BookingSemesterForm";
 

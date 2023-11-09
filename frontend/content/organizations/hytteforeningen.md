@@ -13,21 +13,21 @@ board:
     phoneNumber: 919 14 214
     title: Nestleder og økonomiansvarlig
   pr:
-    name: Thale Simonsen
-    phoneNumber: 907 94 116
+    name: Hedda Raanes
+    phoneNumber: 971 84 326
     title: PR- og sosialansvarlig
-  # drift:
-  #  name: 
-  #  phoneNumber: 
-  #  title: Driftsansvarlig
-  # book:
-  #  name: 
-  #  phoneNumber: 
-  #  title: Bookingansvarlig
-  # log:
-  #  name: 
-  #  phoneNumber: 
-  #  title: Logistikkansvarlig
+  drift:
+    name: Brage Sømoen
+    phoneNumber: 918 68 493
+    title: Driftsansvarlig
+  book:
+    name: Marit Hjerpseth Arvesen
+    phoneNumber: 481 49 233
+    title: Bookingansvarlig
+  log:
+    name: Frida Løken
+    phoneNumber: 465 43 556
+    title: Logistikkansvarlig
 
 
 tag: annet
