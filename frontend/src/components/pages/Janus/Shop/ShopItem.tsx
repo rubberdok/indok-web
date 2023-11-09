@@ -1,57 +1,28 @@
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
 
-type Props = {
-  name: string;
-  image?: StaticImageData;
-  price: number;
-};
+import { NextLinkComposed } from "@/components/Link";
+import { ProductType } from "@/generated/graphql";
 import cabin from "~/public/static/cabins/00.jpg";
 
-/*
-export const ShopItem: React.VFC<Props> = ({name, image}) => {
-  return (
-    <Box sx={{
-        border: "1.5px solid black",
-        width: "30vw",
-        height: "35vw",
-        boxShadow: 24,
-        borderRadius: 1,
-    }}>
-      <ButtonBase sx={{
-        objectFit: "contain",
-        height: "100%",
-        width: "100%"
-        }}>
-          <Stack sx={{ alignItems: 'start'}}>
-            <Box>
-              {cabin && (
-              <Image src={cabin} style={{ objectFit: "contain", width: "100%", height: "100%", }} alt={""}/>
-              )}
-            </Box>
-            <Box>{name}</Box>
-          </Stack>
-        </ButtonBase>
-    </Box>
-  );
+type Props = {
+  product: ProductType;
+  image?: StaticImageData;
 };
 
-
-*/
-
-export const ShopItem: React.VFC<Props> = ({ name, price }) => {
+export const ShopItem: React.VFC<Props> = ({ product }) => {
   return (
     <Card sx={{ width: "100%", maxWidth: 345 }}>
-      <CardActionArea href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley">
+      <CardActionArea component={NextLinkComposed} key={product.id} to={`/janus/${product.id}`}>
         <CardMedia>
           <Image src={cabin} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={""} />
         </CardMedia>
         <CardContent>
           <Typography variant="h5" textAlign="left">
-            {name}
+            {product.name}
           </Typography>
           <Typography variant="body2" textAlign="left" color="text.secondary">
-            -, {price}
+            -, {product.price}
           </Typography>
         </CardContent>
       </CardActionArea>
