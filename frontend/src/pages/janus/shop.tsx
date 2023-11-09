@@ -19,7 +19,7 @@ const ShopPage: NextPageWithLayout = () => {
             console.log(product);
             return (
               <Grid key={product.id} item xs={12} sm={6} md={6}>
-                <ShopItem key={product.id} name={product.name} price={product.price}></ShopItem>
+                <ShopItem key={product.id} product={product}></ShopItem>
               </Grid>
             );
           })}
