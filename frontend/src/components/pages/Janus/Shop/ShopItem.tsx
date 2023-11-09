@@ -1,6 +1,5 @@
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
-
 import { NextLinkComposed } from "@/components/Link";
 
 type Props = {
