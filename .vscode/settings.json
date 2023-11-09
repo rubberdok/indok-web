@@ -42,5 +42,8 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "rubberdok",
     "projectKey": "hovedstyret_indok-web"
-  }
+},
+"[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+}
 }

@@ -1,64 +1,55 @@
 "use client";
-import { Container, Grid, List, Box, Card, Avatar, Typography } from "@mui/material";
 
-function Post({ image, author, title, date, intro } : { image: string; author: string; title: string; date: string, intro: string }) {
-  return (
+import { Container, Grid, List, Box, Card, Typography } from "@mui/material";
 
-    <Card sx={{margin: "5px", padding: "10px", boxShadow: 1}}>
+function Post({ image, author, title, date, intro }: { image: string; author: string; title: string; date: string, intro: string }) {
 
-        <Grid container direction={"column"}>
+    function redirectToArticle() {
+        window.location.href = "https://indokntnu.no/pizza"
+    }
 
-            <Grid container item direction={"row"}>
+    return (
 
-                <Grid item md={8}>
-                    <Typography sx={{fontSize: "20px", marginTop: "10px"}}>{title}</Typography>
+        <div onClick={redirectToArticle}>
+
+            <Card sx={{ margin: "5px", padding: "10px", boxShadow: 1 }}>
+
+                <Grid container direction={"column"}>
+
+                    <Grid container item direction={"row"}>
+
+                        <Grid item md={8}>
+                            <Typography sx={{ fontSize: "20px", marginTop: "10px" }}>{title}</Typography>
+                        </Grid>
+
+                        <Grid item md={4}>
+                            <Typography sx={{ fontStyle: "italic", fontSize: "14px", textAlign: "right", marginRight: "20px", marginTop: "10px" }}>Skrevet av {author}</Typography>
+                        </Grid>
+
+                    </Grid>
+
+                    <Grid item md={1}>
+                        <Typography sx={{ fontSize: "12px", marginBottom: "15px" }}>{date}</Typography>
+                    </Grid>
+
+                    <Grid container item direction={"row"}>
+
+                        <Grid item md={5}>
+                            <Box component={"img"} alt={"T"} src={image} sx={{ width: "100%", borderRadius: "8px" }} />
+                        </Grid>
+
+                        <Grid item md={6} sx={{ marginLeft: "20px" }}>
+                            <Typography>{intro}</Typography>
+                        </Grid>
+
+                    </Grid>
+
                 </Grid>
 
-                <Grid item md={4}>
-                    <Typography sx={{fontStyle: "italic", fontSize: "14px", textAlign: "right", marginRight: "20px", marginTop: "10px"}}>Skrevet av {author}</Typography>
-                </Grid>
+            </Card>
+        </div>
 
-            </Grid>
-
-            <Grid item md={1}>
-                <Typography sx={{fontSize: "12px", marginBottom: "15px"}}>{date}</Typography>
-            </Grid>
-
-            <Grid container item direction={"row"}>
-
-                <Grid item md={5}>
-                    <Box component={"img"} alt={"T"} src={image} sx={{width: "100%", borderRadius: "8px"}}/>
-                </Grid>
-
-                <Grid item md={6} sx={{marginLeft: "20px"}}>
-                    <Typography>{intro}</Typography>
-                </Grid>
-
-            </Grid>
-
-        </Grid>
-
-    </Card>
-
-    /*
-    <Card sx={{margin: "5px", padding: "10px", boxShadow: 1}}>
-        <Grid container direction={"row"}>
-            <Grid item md={2}>
-                <Avatar alt="Fint bilde" src={image}/>
-            </Grid>
-            <Grid item md={3}>
-                {author}
-            </Grid>
-            <Grid item md={3}>
-                {title}
-            </Grid>
-            <Grid item md={3}>
-                {date}
-            </Grid>
-        </Grid>
-    </Card>
-    */
-  );
+    );
 }
 
 function posts() {
@@ -71,14 +62,14 @@ function posts() {
 }
 
 function Blog() {
-  return (
-    <Container sx={{width: "900px", maxWidth: "90vw"}}>
-        <List>
-            {posts()}
-        </List>
-    </Container>
+    return (
+        <Container sx={{ width: "900px", maxWidth: "90vw" }}>
+            <List>
+                {posts()}
+            </List>
+        </Container>
 
-  );
+    );
 }
 
 export default Blog;
