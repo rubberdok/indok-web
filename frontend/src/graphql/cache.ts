@@ -6,7 +6,7 @@ export const cache = new InMemoryCache({
     Query: {
       fields: {
         hasPermission: {
-          /* 
+          /*
             hasPermission is a field on Query, and only returns a boolean.
             To identify the various permissions in cache, we cache the argument
             e.g. query { hasPermission(permission: "events.add_event") }

@@ -14,7 +14,6 @@ import {
   TableRow,
   Tooltip,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { useState } from "react";
 
 import {
@@ -23,9 +22,10 @@ import {
   ConfirmBookingDocument,
   SendEmailDocument,
 } from "@/generated/graphql";
-import { getDecisionEmailInput, toStringChosenCabins } from "@/utils/cabins";
+import dayjs from "@/lib/date";
 
 import { DeclineBookingDialog } from "./DeclineBookingDialog";
+import { getDecisionEmailInput } from "./getDecisionEmailInput";
 import { InlineTableCell } from "./InlineTableCell";
 
 type Props = {
@@ -83,7 +83,7 @@ export const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, cu
               <InlineTableCell>{booking.phone}</InlineTableCell>
               <InlineTableCell>{booking.checkIn}</InlineTableCell>
               <InlineTableCell>{booking.checkOut}</InlineTableCell>
-              <InlineTableCell>{toStringChosenCabins(booking.cabins)}</InlineTableCell>
+              <InlineTableCell>{booking.cabins.map((cabin) => cabin.name).join(" og ")}</InlineTableCell>
               <InlineTableCell>
                 <Tooltip title="Godkjenn">
                   <Box display="inline" component="span">

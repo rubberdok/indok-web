@@ -18,7 +18,6 @@ import {
   ListSubheader,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -27,6 +26,7 @@ import { Link } from "@/components";
 import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
 import { AttemptCapturePaymentDocument, PaymentStatus, UserDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 import savings from "~/public/illustrations/Savings.svg";
 

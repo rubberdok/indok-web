@@ -2,13 +2,12 @@ import { Grid } from "@mui/material";
 import React, { ReactElement } from "react";
 
 type Props = {
-  index: number;
   children?: ReactElement | ReactElement[];
 };
 
-export const CalendarRow: React.FC<React.PropsWithChildren<Props>> = ({ index, children }) => {
+export const CalendarRow: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
   return (
-    <Grid item container xs component="tr" key={`row-${index}`} wrap="nowrap">
+    <Grid item container xs component="tr" wrap="nowrap">
       {children}
     </Grid>
   );

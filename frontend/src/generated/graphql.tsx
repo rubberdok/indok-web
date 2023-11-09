@@ -4,40 +4,42 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Date: string;
-  DateTime: string;
-  Decimal: number;
-  UUID: string;
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  Date: { input: string; output: string };
+  DateTime: { input: string; output: string };
+  Decimal: { input: number; output: number };
+  UUID: { input: string; output: string };
 };
 
 /** Booking type for admin users */
 export type AdminBookingType = {
   __typename?: "AdminBookingType";
   cabins: Array<CabinType>;
-  checkIn: Scalars["Date"];
-  checkOut: Scalars["Date"];
-  declineReason: Scalars["String"];
-  externalParticipants: Scalars["Int"];
-  extraInfo: Scalars["String"];
-  firstName: Scalars["String"];
-  id: Scalars["ID"];
-  internalParticipants: Scalars["Int"];
-  isDeclined: Scalars["Boolean"];
-  isInternalPrice?: Maybe<Scalars["Int"]>;
-  isTentative: Scalars["Boolean"];
-  lastName: Scalars["String"];
-  numberOfNights?: Maybe<Scalars["Int"]>;
-  phone: Scalars["String"];
-  price?: Maybe<Scalars["Int"]>;
-  receiverEmail: Scalars["String"];
-  timestamp: Scalars["DateTime"];
+  checkIn: Scalars["Date"]["output"];
+  checkOut: Scalars["Date"]["output"];
+  declineReason: Scalars["String"]["output"];
+  externalParticipants: Scalars["Int"]["output"];
+  extraInfo: Scalars["String"]["output"];
+  firstName: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  internalParticipants: Scalars["Int"]["output"];
+  isDeclined: Scalars["Boolean"]["output"];
+  isInternalPrice?: Maybe<Scalars["Int"]["output"]>;
+  isTentative: Scalars["Boolean"]["output"];
+  lastName: Scalars["String"]["output"];
+  numberOfNights?: Maybe<Scalars["Int"]["output"]>;
+  phone: Scalars["String"]["output"];
+  price?: Maybe<Scalars["Int"]["output"]>;
+  receiverEmail: Scalars["String"]["output"];
+  timestamp: Scalars["DateTime"]["output"];
 };
 
 /**
@@ -55,35 +57,35 @@ export type AdminEventSignOff = {
 export type AllBookingsType = {
   __typename?: "AllBookingsType";
   cabins: Array<CabinType>;
-  checkIn: Scalars["Date"];
-  checkOut: Scalars["Date"];
-  id: Scalars["ID"];
+  checkIn: Scalars["Date"]["output"];
+  checkOut: Scalars["Date"]["output"];
+  id: Scalars["ID"]["output"];
 };
 
 export type AnswerInput = {
-  answer: Scalars["String"];
-  questionId: Scalars["ID"];
+  answer: Scalars["String"]["input"];
+  questionId: Scalars["ID"]["input"];
 };
 
 /** A user's answer to a question. */
 export type AnswerType = {
   __typename?: "AnswerType";
-  answer: Scalars["String"];
-  id?: Maybe<Scalars["UUID"]>;
+  answer: Scalars["String"]["output"];
+  id?: Maybe<Scalars["UUID"]["output"]>;
   question: QuestionType;
-  uuid: Scalars["UUID"];
+  uuid: Scalars["UUID"]["output"];
 };
 
 export type ArchiveDocumentType = {
   __typename?: "ArchiveDocumentType";
-  featured: Scalars["Boolean"];
-  fileLocation: Scalars["String"];
-  id: Scalars["ID"];
-  thumbnail?: Maybe<Scalars["String"]>;
-  title: Scalars["String"];
+  featured: Scalars["Boolean"]["output"];
+  fileLocation: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  thumbnail?: Maybe<Scalars["String"]["output"]>;
+  title: Scalars["String"]["output"];
   typeDoc: ArchiveDocumentTypeDoc;
-  webLink?: Maybe<Scalars["String"]>;
-  year?: Maybe<Scalars["Int"]>;
+  webLink?: Maybe<Scalars["String"]["output"]>;
+  year?: Maybe<Scalars["Int"]["output"]>;
 };
 
 /** An enumeration. */
@@ -109,7 +111,7 @@ export enum ArchiveDocumentTypeDoc {
 export type AssignMembership = {
   __typename?: "AssignMembership";
   membership?: Maybe<MembershipType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type AttemptCapturePayment = {
@@ -124,29 +126,29 @@ export type AuthUser = {
 };
 
 export type BaseFormInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  organizationId?: InputMaybe<Scalars["ID"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  organizationId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type BaseListingInput = {
-  application?: InputMaybe<Scalars["Boolean"]>;
-  applicationUrl?: InputMaybe<Scalars["String"]>;
-  case?: InputMaybe<Scalars["Boolean"]>;
-  deadline?: InputMaybe<Scalars["DateTime"]>;
-  description?: InputMaybe<Scalars["String"]>;
-  endDatetime?: InputMaybe<Scalars["DateTime"]>;
-  formId?: InputMaybe<Scalars["ID"]>;
-  interview?: InputMaybe<Scalars["Boolean"]>;
-  readMoreUrl?: InputMaybe<Scalars["String"]>;
-  startDatetime?: InputMaybe<Scalars["DateTime"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  application?: InputMaybe<Scalars["Boolean"]["input"]>;
+  applicationUrl?: InputMaybe<Scalars["String"]["input"]>;
+  case?: InputMaybe<Scalars["Boolean"]["input"]>;
+  deadline?: InputMaybe<Scalars["DateTime"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  endDatetime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  formId?: InputMaybe<Scalars["ID"]["input"]>;
+  interview?: InputMaybe<Scalars["Boolean"]["input"]>;
+  readMoreUrl?: InputMaybe<Scalars["String"]["input"]>;
+  startDatetime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BaseQuestionInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  mandatory?: InputMaybe<Scalars["Boolean"]>;
-  question?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  mandatory?: InputMaybe<Scalars["Boolean"]["input"]>;
+  question?: InputMaybe<Scalars["String"]["input"]>;
   questionType?: InputMaybe<QuestionTypeEnum>;
 };
 
@@ -154,283 +156,283 @@ export type BlogPostType = {
   __typename?: "BlogPostType";
   author?: Maybe<UserType>;
   blog?: Maybe<BlogType>;
-  id: Scalars["ID"];
-  publishDate: Scalars["DateTime"];
-  text: Scalars["String"];
-  title: Scalars["String"];
+  id: Scalars["ID"]["output"];
+  publishDate: Scalars["DateTime"]["output"];
+  text: Scalars["String"]["output"];
+  title: Scalars["String"]["output"];
 };
 
 export type BlogType = {
   __typename?: "BlogType";
   blogPosts: Array<BlogPostType>;
-  description: Scalars["String"];
-  id: Scalars["ID"];
-  name: Scalars["String"];
+  description: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
   organization?: Maybe<OrganizationType>;
 };
 
 /** Basic booking object type used as a base for other types and as a standalone */
 export type BookingInput = {
-  cabins?: InputMaybe<Array<Scalars["Int"]>>;
-  checkIn?: InputMaybe<Scalars["Date"]>;
-  checkOut?: InputMaybe<Scalars["Date"]>;
-  externalParticipants?: InputMaybe<Scalars["Int"]>;
-  extraInfo?: InputMaybe<Scalars["String"]>;
-  firstName?: InputMaybe<Scalars["String"]>;
-  internalParticipants?: InputMaybe<Scalars["Int"]>;
-  lastName?: InputMaybe<Scalars["String"]>;
-  phone?: InputMaybe<Scalars["String"]>;
-  receiverEmail?: InputMaybe<Scalars["String"]>;
+  cabins?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+  checkIn?: InputMaybe<Scalars["Date"]["input"]>;
+  checkOut?: InputMaybe<Scalars["Date"]["input"]>;
+  externalParticipants?: InputMaybe<Scalars["Int"]["input"]>;
+  extraInfo?: InputMaybe<Scalars["String"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  internalParticipants?: InputMaybe<Scalars["Int"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  receiverEmail?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BookingResponsibleType = {
   __typename?: "BookingResponsibleType";
-  active?: Maybe<Scalars["Boolean"]>;
-  email?: Maybe<Scalars["String"]>;
-  firstName?: Maybe<Scalars["String"]>;
-  id: Scalars["ID"];
-  lastName?: Maybe<Scalars["String"]>;
-  phone?: Maybe<Scalars["Int"]>;
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  email?: Maybe<Scalars["String"]["output"]>;
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["ID"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  phone?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type CabinType = {
   __typename?: "CabinType";
-  externalPrice: Scalars["Int"];
-  id: Scalars["ID"];
-  internalPrice: Scalars["Int"];
-  maxGuests: Scalars["Int"];
-  name: Scalars["String"];
+  externalPrice: Scalars["Int"]["output"];
+  id: Scalars["ID"]["output"];
+  internalPrice: Scalars["Int"]["output"];
+  maxGuests: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
 };
 
 export type CategoryInput = {
-  name?: InputMaybe<Scalars["String"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CategoryType = {
   __typename?: "CategoryType";
-  id: Scalars["ID"];
-  name: Scalars["String"];
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
 };
 
 export type CreateArchiveDocument = {
   __typename?: "CreateArchiveDocument";
   arhiveDocument?: Maybe<ArchiveDocumentType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type CreateBlog = {
   __typename?: "CreateBlog";
   blog?: Maybe<BlogType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type CreateBlogPost = {
   __typename?: "CreateBlogPost";
   blogPost?: Maybe<BlogPostType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Add a new booking to the database */
 export type CreateBooking = {
   __typename?: "CreateBooking";
   booking?: Maybe<AllBookingsType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Create a new event category */
 export type CreateCategory = {
   __typename?: "CreateCategory";
   category?: Maybe<CategoryType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Create a new event */
 export type CreateEvent = {
   __typename?: "CreateEvent";
   event?: Maybe<EventType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type CreateEventInput = {
-  allowedGradeYears?: InputMaybe<Array<Scalars["Int"]>>;
-  availableSlots?: InputMaybe<Scalars["Int"]>;
-  bindingSignup?: InputMaybe<Scalars["Boolean"]>;
-  categoryId?: InputMaybe<Scalars["ID"]>;
-  contactEmail?: InputMaybe<Scalars["String"]>;
-  deadline?: InputMaybe<Scalars["DateTime"]>;
-  description: Scalars["String"];
-  endTime?: InputMaybe<Scalars["DateTime"]>;
-  hasExtraInformation?: InputMaybe<Scalars["Boolean"]>;
-  image?: InputMaybe<Scalars["String"]>;
-  isAttendable: Scalars["Boolean"];
-  location?: InputMaybe<Scalars["String"]>;
-  organizationId: Scalars["ID"];
-  price?: InputMaybe<Scalars["Float"]>;
-  shortDescription?: InputMaybe<Scalars["String"]>;
-  signupOpenDate?: InputMaybe<Scalars["DateTime"]>;
-  startTime: Scalars["DateTime"];
-  title: Scalars["String"];
+  allowedGradeYears?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+  availableSlots?: InputMaybe<Scalars["Int"]["input"]>;
+  bindingSignup?: InputMaybe<Scalars["Boolean"]["input"]>;
+  categoryId?: InputMaybe<Scalars["ID"]["input"]>;
+  contactEmail?: InputMaybe<Scalars["String"]["input"]>;
+  deadline?: InputMaybe<Scalars["DateTime"]["input"]>;
+  description: Scalars["String"]["input"];
+  endTime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  hasExtraInformation?: InputMaybe<Scalars["Boolean"]["input"]>;
+  image?: InputMaybe<Scalars["String"]["input"]>;
+  isAttendable: Scalars["Boolean"]["input"];
+  location?: InputMaybe<Scalars["String"]["input"]>;
+  organizationId: Scalars["ID"]["input"];
+  price?: InputMaybe<Scalars["Float"]["input"]>;
+  shortDescription?: InputMaybe<Scalars["String"]["input"]>;
+  signupOpenDate?: InputMaybe<Scalars["DateTime"]["input"]>;
+  startTime: Scalars["DateTime"]["input"];
+  title: Scalars["String"]["input"];
 };
 
 export type CreateForm = {
   __typename?: "CreateForm";
   form?: Maybe<FormType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type CreateFormInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  name: Scalars["String"];
-  organizationId: Scalars["ID"];
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  organizationId: Scalars["ID"]["input"];
 };
 
 /** Creates a new listing */
 export type CreateListing = {
   __typename?: "CreateListing";
   listing?: Maybe<ListingType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type CreateListingInput = {
-  application?: InputMaybe<Scalars["Boolean"]>;
-  applicationUrl?: InputMaybe<Scalars["String"]>;
-  case?: InputMaybe<Scalars["Boolean"]>;
-  deadline: Scalars["DateTime"];
-  description?: InputMaybe<Scalars["String"]>;
-  endDatetime?: InputMaybe<Scalars["DateTime"]>;
-  formId?: InputMaybe<Scalars["ID"]>;
-  interview?: InputMaybe<Scalars["Boolean"]>;
-  organizationId: Scalars["ID"];
-  readMoreUrl?: InputMaybe<Scalars["String"]>;
-  startDatetime?: InputMaybe<Scalars["DateTime"]>;
-  title: Scalars["String"];
+  application?: InputMaybe<Scalars["Boolean"]["input"]>;
+  applicationUrl?: InputMaybe<Scalars["String"]["input"]>;
+  case?: InputMaybe<Scalars["Boolean"]["input"]>;
+  deadline: Scalars["DateTime"]["input"];
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  endDatetime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  formId?: InputMaybe<Scalars["ID"]["input"]>;
+  interview?: InputMaybe<Scalars["Boolean"]["input"]>;
+  organizationId: Scalars["ID"]["input"];
+  readMoreUrl?: InputMaybe<Scalars["String"]["input"]>;
+  startDatetime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  title: Scalars["String"]["input"];
 };
 
 export type CreateOrganization = {
   __typename?: "CreateOrganization";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
   organization?: Maybe<OrganizationType>;
 };
 
 export type CreateProduct = {
   __typename?: "CreateProduct";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
   product?: Maybe<ProductType>;
 };
 
 export type CreateProductInput = {
-  description: Scalars["String"];
-  maxBuyableQuantity: Scalars["Int"];
-  name: Scalars["String"];
-  organizationId: Scalars["ID"];
-  price: Scalars["Decimal"];
-  totalQuantity: Scalars["Int"];
+  description: Scalars["String"]["input"];
+  maxBuyableQuantity: Scalars["Int"]["input"];
+  name: Scalars["String"]["input"];
+  organizationId: Scalars["ID"]["input"];
+  price: Scalars["Decimal"]["input"];
+  totalQuantity: Scalars["Int"]["input"];
 };
 
 export type CreateQuestion = {
   __typename?: "CreateQuestion";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
   question?: Maybe<QuestionType>;
 };
 
 export type CreateQuestionInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  mandatory?: InputMaybe<Scalars["Boolean"]>;
-  question: Scalars["String"];
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  mandatory?: InputMaybe<Scalars["Boolean"]["input"]>;
+  question: Scalars["String"]["input"];
   questionType?: InputMaybe<QuestionTypeEnum>;
 };
 
 export type CreateUpdateAndDeleteOptions = {
   __typename?: "CreateUpdateAndDeleteOptions";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
   options?: Maybe<Array<OptionType>>;
 };
 
 export type DeleteAnswer = {
   __typename?: "DeleteAnswer";
-  deletedUuid?: Maybe<Scalars["ID"]>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  deletedUuid?: Maybe<Scalars["ID"]["output"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type DeleteAnswersToForm = {
   __typename?: "DeleteAnswersToForm";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type DeleteArchiveDocument = {
   __typename?: "DeleteArchiveDocument";
   archiveDocument?: Maybe<ArchiveDocumentType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type DeleteBlog = {
   __typename?: "DeleteBlog";
-  ok?: Maybe<Scalars["ID"]>;
+  ok?: Maybe<Scalars["ID"]["output"]>;
 };
 
 export type DeleteBlogPost = {
   __typename?: "DeleteBlogPost";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Deletes the booking with the given ID */
 export type DeleteBooking = {
   __typename?: "DeleteBooking";
-  bookingId?: Maybe<Scalars["ID"]>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  bookingId?: Maybe<Scalars["ID"]["output"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Deletes the category with a given ID */
 export type DeleteCategory = {
   __typename?: "DeleteCategory";
   category?: Maybe<CategoryType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Deletes the event with the given ID */
 export type DeleteEvent = {
   __typename?: "DeleteEvent";
   event?: Maybe<EventType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type DeleteForm = {
   __typename?: "DeleteForm";
-  deletedId?: Maybe<Scalars["ID"]>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  deletedId?: Maybe<Scalars["ID"]["output"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Deletes the listing with the given ID */
 export type DeleteListing = {
   __typename?: "DeleteListing";
-  listingId?: Maybe<Scalars["ID"]>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  listingId?: Maybe<Scalars["ID"]["output"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type DeleteOrganization = {
   __typename?: "DeleteOrganization";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
   organization?: Maybe<OrganizationType>;
 };
 
 export type DeleteQuestion = {
   __typename?: "DeleteQuestion";
-  deletedId?: Maybe<Scalars["ID"]>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  deletedId?: Maybe<Scalars["ID"]["output"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type EmailInput = {
-  cabins?: InputMaybe<Array<Scalars["Int"]>>;
-  checkIn?: InputMaybe<Scalars["Date"]>;
-  checkOut?: InputMaybe<Scalars["Date"]>;
-  emailType?: InputMaybe<Scalars["String"]>;
-  externalParticipants?: InputMaybe<Scalars["Int"]>;
-  extraInfo?: InputMaybe<Scalars["String"]>;
-  firstName?: InputMaybe<Scalars["String"]>;
-  internalParticipants?: InputMaybe<Scalars["Int"]>;
-  lastName?: InputMaybe<Scalars["String"]>;
-  phone?: InputMaybe<Scalars["String"]>;
-  receiverEmail?: InputMaybe<Scalars["String"]>;
+  cabins?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+  checkIn?: InputMaybe<Scalars["Date"]["input"]>;
+  checkOut?: InputMaybe<Scalars["Date"]["input"]>;
+  emailType?: InputMaybe<Scalars["String"]["input"]>;
+  externalParticipants?: InputMaybe<Scalars["Int"]["input"]>;
+  extraInfo?: InputMaybe<Scalars["String"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  internalParticipants?: InputMaybe<Scalars["Int"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  receiverEmail?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /**
@@ -442,7 +444,7 @@ export type EmailInput = {
 export type EventSignOff = {
   __typename?: "EventSignOff";
   event?: Maybe<EventType>;
-  isFull?: Maybe<Scalars["Boolean"]>;
+  isFull?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /**
@@ -452,37 +454,37 @@ export type EventSignOff = {
 export type EventSignUp = {
   __typename?: "EventSignUp";
   event?: Maybe<EventType>;
-  isFull?: Maybe<Scalars["Boolean"]>;
+  isFull?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type EventSignUpInput = {
-  extraInformation?: InputMaybe<Scalars["String"]>;
+  extraInformation?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type EventType = {
   __typename?: "EventType";
-  allowedGradeYears?: Maybe<Array<Scalars["Int"]>>;
-  availableSlots?: Maybe<Scalars["Int"]>;
-  bindingSignup: Scalars["Boolean"];
+  allowedGradeYears?: Maybe<Array<Scalars["Int"]["output"]>>;
+  availableSlots?: Maybe<Scalars["Int"]["output"]>;
+  bindingSignup: Scalars["Boolean"]["output"];
   category?: Maybe<CategoryType>;
-  contactEmail: Scalars["String"];
-  deadline?: Maybe<Scalars["DateTime"]>;
-  description: Scalars["String"];
-  endTime?: Maybe<Scalars["DateTime"]>;
-  hasExtraInformation: Scalars["Boolean"];
-  id: Scalars["ID"];
-  image?: Maybe<Scalars["String"]>;
-  isAttendable: Scalars["Boolean"];
-  isFull?: Maybe<Scalars["Boolean"]>;
-  location?: Maybe<Scalars["String"]>;
+  contactEmail: Scalars["String"]["output"];
+  deadline?: Maybe<Scalars["DateTime"]["output"]>;
+  description: Scalars["String"]["output"];
+  endTime?: Maybe<Scalars["DateTime"]["output"]>;
+  hasExtraInformation: Scalars["Boolean"]["output"];
+  id: Scalars["ID"]["output"];
+  image?: Maybe<Scalars["String"]["output"]>;
+  isAttendable: Scalars["Boolean"]["output"];
+  isFull?: Maybe<Scalars["Boolean"]["output"]>;
+  location?: Maybe<Scalars["String"]["output"]>;
   organization: OrganizationType;
-  price?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]["output"]>;
   product?: Maybe<ProductType>;
   publisher?: Maybe<UserType>;
-  shortDescription?: Maybe<Scalars["String"]>;
-  signupOpenDate?: Maybe<Scalars["DateTime"]>;
-  startTime: Scalars["DateTime"];
-  title: Scalars["String"];
+  shortDescription?: Maybe<Scalars["String"]["output"]>;
+  signupOpenDate?: Maybe<Scalars["DateTime"]["output"]>;
+  startTime: Scalars["DateTime"]["output"];
+  title: Scalars["String"]["output"];
   userAttendance?: Maybe<UserAttendingType>;
   usersAttending?: Maybe<Array<SignUpType>>;
   usersOnWaitingList?: Maybe<Array<SignUpType>>;
@@ -491,9 +493,9 @@ export type EventType = {
 /** A form containing questions, optionally linked to a listing. */
 export type FormType = {
   __typename?: "FormType";
-  description: Scalars["String"];
-  id: Scalars["ID"];
-  name: Scalars["String"];
+  description: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
   organization?: Maybe<OrganizationType>;
   questions: Array<QuestionType>;
   responder?: Maybe<UserType>;
@@ -504,58 +506,58 @@ export type FormType = {
 
 /** A form containing questions, optionally linked to a listing. */
 export type FormTypeResponderArgs = {
-  userId: Scalars["ID"];
+  userId: Scalars["ID"]["input"];
 };
 
 /** A form containing questions, optionally linked to a listing. */
 export type FormTypeRespondersArgs = {
-  userId?: InputMaybe<Scalars["ID"]>;
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 /** A form containing questions, optionally linked to a listing. */
 export type FormTypeResponseArgs = {
-  responsePk?: InputMaybe<Scalars["UUID"]>;
+  responsePk?: InputMaybe<Scalars["UUID"]["input"]>;
 };
 
 export type InitiateOrder = {
   __typename?: "InitiateOrder";
-  orderId?: Maybe<Scalars["UUID"]>;
-  redirect?: Maybe<Scalars["String"]>;
+  orderId?: Maybe<Scalars["UUID"]["output"]>;
+  redirect?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type ListingType = {
   __typename?: "ListingType";
-  applicationUrl?: Maybe<Scalars["String"]>;
-  chips: Array<Scalars["String"]>;
-  deadline: Scalars["DateTime"];
-  description: Scalars["String"];
-  endDatetime: Scalars["DateTime"];
+  applicationUrl?: Maybe<Scalars["String"]["output"]>;
+  chips: Array<Scalars["String"]["output"]>;
+  deadline: Scalars["DateTime"]["output"];
+  description: Scalars["String"]["output"];
+  endDatetime: Scalars["DateTime"]["output"];
   form?: Maybe<FormType>;
-  heroImageUrl?: Maybe<Scalars["String"]>;
-  id: Scalars["ID"];
+  heroImageUrl?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["ID"]["output"];
   organization: OrganizationType;
-  readMoreUrl?: Maybe<Scalars["String"]>;
-  slug: Scalars["String"];
-  startDatetime: Scalars["DateTime"];
-  title: Scalars["String"];
-  viewCount: Scalars["Int"];
+  readMoreUrl?: Maybe<Scalars["String"]["output"]>;
+  slug: Scalars["String"]["output"];
+  startDatetime: Scalars["DateTime"]["output"];
+  title: Scalars["String"]["output"];
+  viewCount: Scalars["Int"]["output"];
 };
 
 export type Logout = {
   __typename?: "Logout";
-  idToken?: Maybe<Scalars["String"]>;
+  idToken?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type MembershipInput = {
-  groupId?: InputMaybe<Scalars["ID"]>;
-  organizationId?: InputMaybe<Scalars["ID"]>;
-  userId?: InputMaybe<Scalars["ID"]>;
+  groupId?: InputMaybe<Scalars["ID"]["input"]>;
+  organizationId?: InputMaybe<Scalars["ID"]["input"]>;
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MembershipType = {
   __typename?: "MembershipType";
   group?: Maybe<ResponsibleGroupType>;
-  id: Scalars["ID"];
+  id: Scalars["ID"]["output"];
   organization: OrganizationType;
   user: UserType;
 };
@@ -644,8 +646,8 @@ export type Mutations = {
 };
 
 export type MutationsAdminEventSignOffArgs = {
-  eventId: Scalars["ID"];
-  userId: Scalars["ID"];
+  eventId: Scalars["ID"]["input"];
+  userId: Scalars["ID"]["input"];
 };
 
 export type MutationsAssignMembershipArgs = {
@@ -653,32 +655,32 @@ export type MutationsAssignMembershipArgs = {
 };
 
 export type MutationsAttemptCapturePaymentArgs = {
-  orderId: Scalars["ID"];
+  orderId: Scalars["ID"]["input"];
 };
 
 export type MutationsAuthUserArgs = {
-  code: Scalars["String"];
+  code: Scalars["String"]["input"];
 };
 
 export type MutationsCreateArchivedocumentArgs = {
-  date?: InputMaybe<Scalars["DateTime"]>;
-  fileLocation?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  typeDoc?: InputMaybe<Scalars["String"]>;
-  webLink?: InputMaybe<Scalars["String"]>;
+  date?: InputMaybe<Scalars["DateTime"]["input"]>;
+  fileLocation?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  typeDoc?: InputMaybe<Scalars["String"]["input"]>;
+  webLink?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationsCreateBlogArgs = {
-  description?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  organizationId?: InputMaybe<Scalars["ID"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  organizationId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsCreateBlogPostArgs = {
-  authorId?: InputMaybe<Scalars["ID"]>;
-  blogId?: InputMaybe<Scalars["ID"]>;
-  text?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  authorId?: InputMaybe<Scalars["ID"]["input"]>;
+  blogId?: InputMaybe<Scalars["ID"]["input"]>;
+  text?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationsCreateBookingArgs = {
@@ -695,7 +697,7 @@ export type MutationsCreateEventArgs = {
 
 export type MutationsCreateFormArgs = {
   formData: CreateFormInput;
-  listingId?: InputMaybe<Scalars["ID"]>;
+  listingId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsCreateListingArgs = {
@@ -711,76 +713,76 @@ export type MutationsCreateProductArgs = {
 };
 
 export type MutationsCreateQuestionArgs = {
-  formId?: InputMaybe<Scalars["ID"]>;
+  formId?: InputMaybe<Scalars["ID"]["input"]>;
   questionData: CreateQuestionInput;
 };
 
 export type MutationsCreateUpdateAndDeleteOptionsArgs = {
   optionData?: InputMaybe<Array<OptionInput>>;
-  questionId: Scalars["ID"];
+  questionId: Scalars["ID"]["input"];
 };
 
 export type MutationsDeleteAnswerArgs = {
-  uuid: Scalars["ID"];
+  uuid: Scalars["ID"]["input"];
 };
 
 export type MutationsDeleteAnswersArgs = {
-  formId?: InputMaybe<Scalars["ID"]>;
+  formId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteArchivedocumentArgs = {
-  id?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteBlogArgs = {
-  blogId?: InputMaybe<Scalars["ID"]>;
+  blogId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteBlogPostArgs = {
-  blogPostId?: InputMaybe<Scalars["ID"]>;
+  blogPostId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteBookingArgs = {
-  id?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteCategoryArgs = {
-  id?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteEventArgs = {
-  id?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteFormArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 };
 
 export type MutationsDeleteListingArgs = {
-  id?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsDeleteOrganizationArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 };
 
 export type MutationsDeleteQuestionArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 };
 
 export type MutationsEventSignOffArgs = {
-  eventId: Scalars["ID"];
+  eventId: Scalars["ID"]["input"];
 };
 
 export type MutationsEventSignUpArgs = {
   data?: InputMaybe<EventSignUpInput>;
-  eventId: Scalars["ID"];
+  eventId: Scalars["ID"]["input"];
 };
 
 export type MutationsInitiateOrderArgs = {
-  fallbackRedirect?: InputMaybe<Scalars["String"]>;
-  productId: Scalars["ID"];
-  quantity?: InputMaybe<Scalars["Int"]>;
+  fallbackRedirect?: InputMaybe<Scalars["String"]["input"]>;
+  productId: Scalars["ID"]["input"];
+  quantity?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationsSendEmailArgs = {
@@ -788,24 +790,24 @@ export type MutationsSendEmailArgs = {
 };
 
 export type MutationsSendEventMailsArgs = {
-  content?: InputMaybe<Scalars["String"]>;
-  eventId: Scalars["ID"];
-  receiverEmails?: InputMaybe<Array<Scalars["String"]>>;
-  subject: Scalars["String"];
+  content?: InputMaybe<Scalars["String"]["input"]>;
+  eventId: Scalars["ID"]["input"];
+  receiverEmails?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  subject: Scalars["String"]["input"];
 };
 
 export type MutationsSubmitAnswersArgs = {
   answersData?: InputMaybe<Array<AnswerInput>>;
-  formId: Scalars["ID"];
+  formId: Scalars["ID"]["input"];
 };
 
 export type MutationsUpdateArchivedocumentArgs = {
-  date?: InputMaybe<Scalars["DateTime"]>;
-  fileLocation?: InputMaybe<Scalars["String"]>;
-  id?: InputMaybe<Scalars["ID"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  typeDoc?: InputMaybe<Scalars["String"]>;
-  webLink?: InputMaybe<Scalars["String"]>;
+  date?: InputMaybe<Scalars["DateTime"]["input"]>;
+  fileLocation?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  typeDoc?: InputMaybe<Scalars["String"]["input"]>;
+  webLink?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationsUpdateBlogArgs = {
@@ -830,31 +832,31 @@ export type MutationsUpdateCabinArgs = {
 
 export type MutationsUpdateCategoryArgs = {
   categoryData?: InputMaybe<CategoryInput>;
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 };
 
 export type MutationsUpdateEventArgs = {
   eventData?: InputMaybe<UpdateEventInput>;
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 };
 
 export type MutationsUpdateFormArgs = {
   formData: BaseFormInput;
-  id?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationsUpdateListingArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
   listingData?: InputMaybe<BaseListingInput>;
 };
 
 export type MutationsUpdateOrganizationArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
   organizationData?: InputMaybe<OrganizationInput>;
 };
 
 export type MutationsUpdateQuestionArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
   questionData: BaseQuestionInput;
 };
 
@@ -863,56 +865,56 @@ export type MutationsUpdateUserArgs = {
 };
 
 export type OptionInput = {
-  answer: Scalars["String"];
-  id?: InputMaybe<Scalars["ID"]>;
+  answer: Scalars["String"]["input"];
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 /** Option for multiple choice questions */
 export type OptionType = {
   __typename?: "OptionType";
-  answer: Scalars["String"];
-  id: Scalars["ID"];
+  answer: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
   question: QuestionType;
 };
 
 export type OrderType = {
   __typename?: "OrderType";
-  id: Scalars["UUID"];
+  id: Scalars["UUID"]["output"];
   paymentStatus: PaymentStatus;
   product: ProductType;
-  quantity: Scalars["Int"];
-  timestamp: Scalars["DateTime"];
-  totalPrice: Scalars["Decimal"];
+  quantity: Scalars["Int"]["output"];
+  timestamp: Scalars["DateTime"]["output"];
+  totalPrice: Scalars["Decimal"]["output"];
   user: UserType;
 };
 
 export type OrdersByStatusType = {
   __typename?: "OrdersByStatusType";
-  length?: Maybe<Scalars["Int"]>;
+  length?: Maybe<Scalars["Int"]["output"]>;
   orders?: Maybe<Array<OrderType>>;
 };
 
 export type OrganizationInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  parentId?: InputMaybe<Scalars["ID"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  parentId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type OrganizationType = {
   __typename?: "OrganizationType";
-  absoluteSlug?: Maybe<Scalars["String"]>;
+  absoluteSlug?: Maybe<Scalars["String"]["output"]>;
   children: Array<OrganizationType>;
-  color?: Maybe<Scalars["String"]>;
-  description: Scalars["String"];
+  color?: Maybe<Scalars["String"]["output"]>;
+  description: Scalars["String"]["output"];
   events: Array<EventType>;
   hrGroup?: Maybe<ResponsibleGroupType>;
-  id: Scalars["ID"];
+  id: Scalars["ID"]["output"];
   listings?: Maybe<Array<ListingType>>;
-  logoUrl?: Maybe<Scalars["String"]>;
-  name: Scalars["String"];
+  logoUrl?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
   parent?: Maybe<OrganizationType>;
   primaryGroup?: Maybe<ResponsibleGroupType>;
-  slug: Scalars["String"];
+  slug: Scalars["String"]["output"];
   users: Array<UserType>;
 };
 
@@ -929,11 +931,11 @@ export enum PaymentStatus {
 
 export type ProductType = {
   __typename?: "ProductType";
-  description: Scalars["String"];
-  id: Scalars["ID"];
-  maxBuyableQuantity: Scalars["Int"];
-  name: Scalars["String"];
-  price: Scalars["Decimal"];
+  description: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  maxBuyableQuantity: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+  price: Scalars["Decimal"]["output"];
 };
 
 export type Queries = {
@@ -948,10 +950,10 @@ export type Queries = {
   allOrganizations?: Maybe<Array<OrganizationType>>;
   allUsers?: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
-  attendeeReport?: Maybe<Scalars["String"]>;
-  attendeeReportOrg?: Maybe<Scalars["String"]>;
-  attendeeReports?: Maybe<Scalars["String"]>;
-  availableYears: Array<Scalars["String"]>;
+  attendeeReport?: Maybe<Scalars["String"]["output"]>;
+  attendeeReportOrg?: Maybe<Scalars["String"]["output"]>;
+  attendeeReports?: Maybe<Scalars["String"]["output"]>;
+  availableYears: Array<Scalars["String"]["output"]>;
   blog?: Maybe<BlogType>;
   blogPost?: Maybe<BlogPostType>;
   bookingSemester?: Maybe<UpdateBookingSemesterType>;
@@ -963,10 +965,10 @@ export type Queries = {
   featuredArchive: Array<ArchiveDocumentType>;
   form?: Maybe<FormType>;
   forms?: Maybe<Array<FormType>>;
-  hasPermission?: Maybe<Scalars["Boolean"]>;
+  hasPermission?: Maybe<Scalars["Boolean"]["output"]>;
   listing?: Maybe<ListingType>;
   listings?: Maybe<Array<ListingType>>;
-  logout: Scalars["String"];
+  logout: Scalars["String"]["output"];
   memberships?: Maybe<Array<MembershipType>>;
   order?: Maybe<OrderType>;
   ordersByStatus?: Maybe<OrdersByStatusType>;
@@ -975,117 +977,117 @@ export type Queries = {
   products?: Maybe<Array<ProductType>>;
   response?: Maybe<ResponseType>;
   responses?: Maybe<Array<ResponseType>>;
-  serverTime?: Maybe<Scalars["DateTime"]>;
+  serverTime?: Maybe<Scalars["DateTime"]["output"]>;
   signUps?: Maybe<SignUpType>;
   user?: Maybe<UserType>;
   userOrders?: Maybe<Array<OrderType>>;
 };
 
 export type QueriesAdminAllBookingsArgs = {
-  after?: InputMaybe<Scalars["String"]>;
-  before?: InputMaybe<Scalars["String"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueriesAllEventsArgs = {
-  category?: InputMaybe<Scalars["String"]>;
-  endTime?: InputMaybe<Scalars["DateTime"]>;
-  organization?: InputMaybe<Scalars["String"]>;
-  startTime?: InputMaybe<Scalars["DateTime"]>;
+  category?: InputMaybe<Scalars["String"]["input"]>;
+  endTime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  organization?: InputMaybe<Scalars["String"]["input"]>;
+  startTime?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
 export type QueriesAllOrganizationsArgs = {
-  search?: InputMaybe<Scalars["String"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueriesArchiveByTypesArgs = {
-  names?: InputMaybe<Scalars["String"]>;
-  typeDoc: Array<InputMaybe<Scalars["String"]>>;
-  year?: InputMaybe<Scalars["Int"]>;
+  names?: InputMaybe<Scalars["String"]["input"]>;
+  typeDoc: Array<InputMaybe<Scalars["String"]["input"]>>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type QueriesAttendeeReportArgs = {
-  eventId: Scalars["ID"];
-  fields?: InputMaybe<Array<Scalars["String"]>>;
-  filetype?: InputMaybe<Scalars["String"]>;
+  eventId: Scalars["ID"]["input"];
+  fields?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  filetype?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueriesAttendeeReportOrgArgs = {
-  fields?: InputMaybe<Array<Scalars["String"]>>;
-  filetype?: InputMaybe<Scalars["String"]>;
-  orgId: Scalars["ID"];
+  fields?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  filetype?: InputMaybe<Scalars["String"]["input"]>;
+  orgId: Scalars["ID"]["input"];
 };
 
 export type QueriesAttendeeReportsArgs = {
-  eventIds: Array<Scalars["ID"]>;
-  fields?: InputMaybe<Array<Scalars["String"]>>;
-  filetype?: InputMaybe<Scalars["String"]>;
+  eventIds: Array<Scalars["ID"]["input"]>;
+  fields?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  filetype?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueriesBlogArgs = {
-  blogId: Scalars["ID"];
+  blogId: Scalars["ID"]["input"];
 };
 
 export type QueriesBlogPostArgs = {
-  blogPostId: Scalars["ID"];
+  blogPostId: Scalars["ID"]["input"];
 };
 
 export type QueriesCategoryArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 };
 
 export type QueriesEventArgs = {
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 };
 
 export type QueriesFormArgs = {
-  formId?: InputMaybe<Scalars["ID"]>;
+  formId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type QueriesHasPermissionArgs = {
-  permission: Scalars["String"];
+  permission: Scalars["String"]["input"];
 };
 
 export type QueriesListingArgs = {
-  id?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type QueriesListingsArgs = {
-  search?: InputMaybe<Scalars["String"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueriesMembershipsArgs = {
-  organizationId?: InputMaybe<Scalars["ID"]>;
+  organizationId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type QueriesOrderArgs = {
-  orderId: Scalars["ID"];
+  orderId: Scalars["ID"]["input"];
 };
 
 export type QueriesOrdersByStatusArgs = {
-  productId: Scalars["ID"];
-  status: Scalars["String"];
+  productId: Scalars["ID"]["input"];
+  status: Scalars["String"]["input"];
 };
 
 export type QueriesOrganizationArgs = {
-  id?: InputMaybe<Scalars["ID"]>;
-  slug?: InputMaybe<Scalars["String"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueriesProductArgs = {
-  productId: Scalars["ID"];
+  productId: Scalars["ID"]["input"];
 };
 
 export type QueriesResponseArgs = {
-  formId: Scalars["ID"];
-  responseId?: InputMaybe<Scalars["ID"]>;
+  formId: Scalars["ID"]["input"];
+  responseId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type QueriesResponsesArgs = {
-  formId: Scalars["ID"];
+  formId: Scalars["ID"]["input"];
 };
 
 export type QueriesSignUpsArgs = {
-  eventId: Scalars["ID"];
+  eventId: Scalars["ID"]["input"];
 };
 
 /** A question on a form. */
@@ -1093,17 +1095,17 @@ export type QuestionType = {
   __typename?: "QuestionType";
   answer?: Maybe<AnswerType>;
   answers?: Maybe<Array<AnswerType>>;
-  description: Scalars["String"];
-  id: Scalars["ID"];
-  mandatory: Scalars["Boolean"];
+  description: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  mandatory: Scalars["Boolean"]["output"];
   options?: Maybe<Array<OptionType>>;
-  question: Scalars["String"];
+  question: Scalars["String"]["output"];
   questionType?: Maybe<QuestionTypeEnum>;
 };
 
 /** A question on a form. */
 export type QuestionTypeAnswersArgs = {
-  userId?: InputMaybe<Scalars["ID"]>;
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export enum QuestionTypeEnum {
@@ -1133,210 +1135,210 @@ export type ResponseType = {
   __typename?: "ResponseType";
   answers: Array<AnswerType>;
   form: FormType;
-  id?: Maybe<Scalars["UUID"]>;
+  id?: Maybe<Scalars["UUID"]["output"]>;
   questions?: Maybe<Array<QuestionType>>;
   respondent: UserType;
   status?: Maybe<ResponseStatus>;
-  uuid: Scalars["UUID"];
+  uuid: Scalars["UUID"]["output"];
 };
 
 export type ResponsibleGroupType = {
   __typename?: "ResponsibleGroupType";
-  description?: Maybe<Scalars["String"]>;
-  groupType: Scalars["String"];
-  id: Scalars["ID"];
-  name: Scalars["String"];
+  description?: Maybe<Scalars["String"]["output"]>;
+  groupType: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
   organization: OrganizationType;
-  uuid: Scalars["UUID"];
+  uuid: Scalars["UUID"]["output"];
 };
 
 /** Sends email to the user or an admin (or both) */
 export type SendEmail = {
   __typename?: "SendEmail";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Send an email to all users signed up to an event */
 export type SendEventEmails = {
   __typename?: "SendEventEmails";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type SignUpType = {
   __typename?: "SignUpType";
   event: EventType;
-  extraInformation: Scalars["String"];
-  hasBoughtTicket?: Maybe<Scalars["Boolean"]>;
-  id: Scalars["ID"];
-  isAttending: Scalars["Boolean"];
-  timestamp: Scalars["DateTime"];
+  extraInformation: Scalars["String"]["output"];
+  hasBoughtTicket?: Maybe<Scalars["Boolean"]["output"]>;
+  id: Scalars["ID"]["output"];
+  isAttending: Scalars["Boolean"]["output"];
+  timestamp: Scalars["DateTime"]["output"];
   user: UserType;
-  userAllergies?: Maybe<Scalars["String"]>;
-  userEmail: Scalars["String"];
-  userGradeYear: Scalars["Int"];
-  userPhoneNumber: Scalars["String"];
+  userAllergies?: Maybe<Scalars["String"]["output"]>;
+  userEmail: Scalars["String"]["output"];
+  userGradeYear: Scalars["Int"]["output"];
+  userPhoneNumber: Scalars["String"]["output"];
 };
 
 export type SubmitOrUpdateAnswers = {
   __typename?: "SubmitOrUpdateAnswers";
-  message?: Maybe<Scalars["String"]>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateArchiveDocument = {
   __typename?: "UpdateArchiveDocument";
   event?: Maybe<ArchiveDocumentType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateBlog = {
   __typename?: "UpdateBlog";
   blog?: Maybe<BlogType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateBlogInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  id: Scalars["ID"];
-  name?: InputMaybe<Scalars["String"]>;
-  organizationId?: InputMaybe<Scalars["ID"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  organizationId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type UpdateBlogPost = {
   __typename?: "UpdateBlogPost";
   blogPost?: Maybe<BlogPostType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateBlogPostInput = {
-  blogId?: InputMaybe<Scalars["ID"]>;
-  id: Scalars["ID"];
-  text?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  blogId?: InputMaybe<Scalars["ID"]["input"]>;
+  id: Scalars["ID"]["input"];
+  text?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** Change the given booking */
 export type UpdateBooking = {
   __typename?: "UpdateBooking";
   booking?: Maybe<AllBookingsType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateBookingInput = {
-  cabins?: InputMaybe<Array<Scalars["Int"]>>;
-  checkIn?: InputMaybe<Scalars["Date"]>;
-  checkOut?: InputMaybe<Scalars["Date"]>;
-  declineReason?: InputMaybe<Scalars["String"]>;
-  externalParticipants?: InputMaybe<Scalars["Int"]>;
-  extraInfo?: InputMaybe<Scalars["String"]>;
-  firstName?: InputMaybe<Scalars["String"]>;
-  id: Scalars["ID"];
-  internalParticipants?: InputMaybe<Scalars["Int"]>;
-  isDeclined?: InputMaybe<Scalars["Boolean"]>;
-  isTentative?: InputMaybe<Scalars["Boolean"]>;
-  lastName?: InputMaybe<Scalars["String"]>;
-  phone?: InputMaybe<Scalars["String"]>;
-  receiverEmail?: InputMaybe<Scalars["String"]>;
+  cabins?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+  checkIn?: InputMaybe<Scalars["Date"]["input"]>;
+  checkOut?: InputMaybe<Scalars["Date"]["input"]>;
+  declineReason?: InputMaybe<Scalars["String"]["input"]>;
+  externalParticipants?: InputMaybe<Scalars["Int"]["input"]>;
+  extraInfo?: InputMaybe<Scalars["String"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  internalParticipants?: InputMaybe<Scalars["Int"]["input"]>;
+  isDeclined?: InputMaybe<Scalars["Boolean"]["input"]>;
+  isTentative?: InputMaybe<Scalars["Boolean"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  phone?: InputMaybe<Scalars["String"]["input"]>;
+  receiverEmail?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** Update the booking semester */
 export type UpdateBookingSemester = {
   __typename?: "UpdateBookingSemester";
   bookingSemester?: Maybe<UpdateBookingSemesterType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateBookingSemesterInput = {
-  fallEndDate?: InputMaybe<Scalars["Date"]>;
-  fallSemesterActive?: InputMaybe<Scalars["Boolean"]>;
-  fallStartDate?: InputMaybe<Scalars["Date"]>;
-  springEndDate?: InputMaybe<Scalars["Date"]>;
-  springSemesterActive?: InputMaybe<Scalars["Boolean"]>;
-  springStartDate?: InputMaybe<Scalars["Date"]>;
+  fallEndDate?: InputMaybe<Scalars["Date"]["input"]>;
+  fallSemesterActive?: InputMaybe<Scalars["Boolean"]["input"]>;
+  fallStartDate?: InputMaybe<Scalars["Date"]["input"]>;
+  springEndDate?: InputMaybe<Scalars["Date"]["input"]>;
+  springSemesterActive?: InputMaybe<Scalars["Boolean"]["input"]>;
+  springStartDate?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
 export type UpdateBookingSemesterType = {
   __typename?: "UpdateBookingSemesterType";
-  fallEndDate: Scalars["Date"];
-  fallSemesterActive: Scalars["Boolean"];
-  fallStartDate: Scalars["Date"];
-  id: Scalars["ID"];
-  springEndDate: Scalars["Date"];
-  springSemesterActive: Scalars["Boolean"];
-  springStartDate: Scalars["Date"];
+  fallEndDate: Scalars["Date"]["output"];
+  fallSemesterActive: Scalars["Boolean"]["output"];
+  fallStartDate: Scalars["Date"]["output"];
+  id: Scalars["ID"]["output"];
+  springEndDate: Scalars["Date"]["output"];
+  springSemesterActive: Scalars["Boolean"]["output"];
+  springStartDate: Scalars["Date"]["output"];
 };
 
 /** Change the given cabin */
 export type UpdateCabin = {
   __typename?: "UpdateCabin";
   cabin?: Maybe<CabinType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateCabinInput = {
-  externalPrice?: InputMaybe<Scalars["Int"]>;
-  id?: InputMaybe<Scalars["ID"]>;
-  internalPrice?: InputMaybe<Scalars["Int"]>;
-  maxGuests?: InputMaybe<Scalars["Int"]>;
-  name?: InputMaybe<Scalars["String"]>;
+  externalPrice?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["ID"]["input"]>;
+  internalPrice?: InputMaybe<Scalars["Int"]["input"]>;
+  maxGuests?: InputMaybe<Scalars["Int"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** Updates the category with a given ID with the data in category_data */
 export type UpdateCategory = {
   __typename?: "UpdateCategory";
   category?: Maybe<CategoryType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 /** Updates the event with a given ID with the data in event_data */
 export type UpdateEvent = {
   __typename?: "UpdateEvent";
   event?: Maybe<EventType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateEventInput = {
-  allowedGradeYears?: InputMaybe<Array<Scalars["Int"]>>;
-  availableSlots?: InputMaybe<Scalars["Int"]>;
-  bindingSignup?: InputMaybe<Scalars["Boolean"]>;
-  categoryId?: InputMaybe<Scalars["ID"]>;
-  contactEmail?: InputMaybe<Scalars["String"]>;
-  deadline?: InputMaybe<Scalars["DateTime"]>;
-  description?: InputMaybe<Scalars["String"]>;
-  endTime?: InputMaybe<Scalars["DateTime"]>;
-  hasExtraInformation?: InputMaybe<Scalars["Boolean"]>;
-  image?: InputMaybe<Scalars["String"]>;
-  isAttendable?: InputMaybe<Scalars["Boolean"]>;
-  location?: InputMaybe<Scalars["String"]>;
-  organizationId?: InputMaybe<Scalars["ID"]>;
-  price?: InputMaybe<Scalars["Float"]>;
-  shortDescription?: InputMaybe<Scalars["String"]>;
-  signupOpenDate?: InputMaybe<Scalars["DateTime"]>;
-  startTime?: InputMaybe<Scalars["DateTime"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  allowedGradeYears?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+  availableSlots?: InputMaybe<Scalars["Int"]["input"]>;
+  bindingSignup?: InputMaybe<Scalars["Boolean"]["input"]>;
+  categoryId?: InputMaybe<Scalars["ID"]["input"]>;
+  contactEmail?: InputMaybe<Scalars["String"]["input"]>;
+  deadline?: InputMaybe<Scalars["DateTime"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  endTime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  hasExtraInformation?: InputMaybe<Scalars["Boolean"]["input"]>;
+  image?: InputMaybe<Scalars["String"]["input"]>;
+  isAttendable?: InputMaybe<Scalars["Boolean"]["input"]>;
+  location?: InputMaybe<Scalars["String"]["input"]>;
+  organizationId?: InputMaybe<Scalars["ID"]["input"]>;
+  price?: InputMaybe<Scalars["Float"]["input"]>;
+  shortDescription?: InputMaybe<Scalars["String"]["input"]>;
+  signupOpenDate?: InputMaybe<Scalars["DateTime"]["input"]>;
+  startTime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UpdateForm = {
   __typename?: "UpdateForm";
   form?: Maybe<FormType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateListing = {
   __typename?: "UpdateListing";
   listing?: Maybe<ListingType>;
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type UpdateOrganization = {
   __typename?: "UpdateOrganization";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
   organization?: Maybe<OrganizationType>;
 };
 
 export type UpdateQuestion = {
   __typename?: "UpdateQuestion";
-  ok?: Maybe<Scalars["Boolean"]>;
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
   question?: Maybe<QuestionType>;
 };
 
@@ -1347,51 +1349,51 @@ export type UpdateUser = {
 
 export type UserAttendingType = {
   __typename?: "UserAttendingType";
-  hasBoughtTicket?: Maybe<Scalars["Boolean"]>;
-  isOnWaitingList?: Maybe<Scalars["Boolean"]>;
-  isSignedUp?: Maybe<Scalars["Boolean"]>;
-  positionOnWaitingList?: Maybe<Scalars["Int"]>;
+  hasBoughtTicket?: Maybe<Scalars["Boolean"]["output"]>;
+  isOnWaitingList?: Maybe<Scalars["Boolean"]["output"]>;
+  isSignedUp?: Maybe<Scalars["Boolean"]["output"]>;
+  positionOnWaitingList?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type UserInput = {
-  allergies?: InputMaybe<Scalars["String"]>;
-  email?: InputMaybe<Scalars["String"]>;
-  firstName?: InputMaybe<Scalars["String"]>;
-  graduationYear?: InputMaybe<Scalars["Int"]>;
-  lastName?: InputMaybe<Scalars["String"]>;
-  phoneNumber?: InputMaybe<Scalars["String"]>;
+  allergies?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  graduationYear?: InputMaybe<Scalars["Int"]["input"]>;
+  lastName?: InputMaybe<Scalars["String"]["input"]>;
+  phoneNumber?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UserType = {
   __typename?: "UserType";
-  allergies?: Maybe<Scalars["String"]>;
-  canUpdateYear?: Maybe<Scalars["Boolean"]>;
-  dateJoined: Scalars["DateTime"];
-  email: Scalars["String"];
+  allergies?: Maybe<Scalars["String"]["output"]>;
+  canUpdateYear?: Maybe<Scalars["Boolean"]["output"]>;
+  dateJoined: Scalars["DateTime"]["output"];
+  email: Scalars["String"]["output"];
   events?: Maybe<Array<EventType>>;
-  feideEmail: Scalars["String"];
-  feideUserid: Scalars["String"];
-  firstLogin: Scalars["Boolean"];
-  firstName: Scalars["String"];
-  gradeYear?: Maybe<Scalars["Int"]>;
-  graduationYear?: Maybe<Scalars["Int"]>;
-  id: Scalars["ID"];
-  idToken: Scalars["String"];
-  lastLogin?: Maybe<Scalars["DateTime"]>;
-  lastName: Scalars["String"];
+  feideEmail: Scalars["String"]["output"];
+  feideUserid: Scalars["String"]["output"];
+  firstLogin: Scalars["Boolean"]["output"];
+  firstName: Scalars["String"]["output"];
+  gradeYear?: Maybe<Scalars["Int"]["output"]>;
+  graduationYear?: Maybe<Scalars["Int"]["output"]>;
+  id: Scalars["ID"]["output"];
+  idToken: Scalars["String"]["output"];
+  lastLogin?: Maybe<Scalars["DateTime"]["output"]>;
+  lastName: Scalars["String"]["output"];
   memberships: Array<MembershipType>;
   organizations: Array<OrganizationType>;
-  phoneNumber: Scalars["String"];
+  phoneNumber: Scalars["String"]["output"];
   responses: Array<ResponseType>;
   /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
-  username: Scalars["String"];
-  yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
+  username: Scalars["String"]["output"];
+  yearUpdatedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type ArchiveByTypesQueryVariables = Exact<{
-  documentTypes: Array<InputMaybe<Scalars["String"]>> | InputMaybe<Scalars["String"]>;
-  year?: InputMaybe<Scalars["Int"]>;
-  names?: InputMaybe<Scalars["String"]>;
+  documentTypes: Array<InputMaybe<Scalars["String"]["input"]>> | InputMaybe<Scalars["String"]["input"]>;
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+  names?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type ArchiveByTypesQuery = {
@@ -1437,9 +1439,9 @@ export type DocumentFragment = {
 };
 
 export type DocumentsQueryVariables = Exact<{
-  documentTypes: Array<Scalars["String"]> | Scalars["String"];
-  year?: InputMaybe<Scalars["Int"]>;
-  names?: InputMaybe<Scalars["String"]>;
+  documentTypes: Array<Scalars["String"]["input"]> | Scalars["String"]["input"];
+  year?: InputMaybe<Scalars["Int"]["input"]>;
+  names?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type DocumentsQuery = {
@@ -1533,7 +1535,7 @@ export type CreateBookingMutation = {
 };
 
 export type ConfirmBookingMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type ConfirmBookingMutation = {
@@ -1542,8 +1544,8 @@ export type ConfirmBookingMutation = {
 };
 
 export type DeclineBookingMutationVariables = Exact<{
-  id: Scalars["ID"];
-  declineReason?: InputMaybe<Scalars["String"]>;
+  id: Scalars["ID"]["input"];
+  declineReason?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type DeclineBookingMutation = {
@@ -1627,7 +1629,7 @@ export type AllBookingsQuery = {
 };
 
 export type AdminAllBookingsQueryVariables = Exact<{
-  after?: InputMaybe<Scalars["String"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type AdminAllBookingsQuery = {
@@ -1725,9 +1727,9 @@ export type OrderFragment = {
 };
 
 export type InitiateOrderMutationVariables = Exact<{
-  productId: Scalars["ID"];
-  quantity?: InputMaybe<Scalars["Int"]>;
-  fallbackRedirect?: InputMaybe<Scalars["String"]>;
+  productId: Scalars["ID"]["input"];
+  quantity?: InputMaybe<Scalars["Int"]["input"]>;
+  fallbackRedirect?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type InitiateOrderMutation = {
@@ -1736,7 +1738,7 @@ export type InitiateOrderMutation = {
 };
 
 export type AttemptCapturePaymentMutationVariables = Exact<{
-  orderId: Scalars["ID"];
+  orderId: Scalars["ID"]["input"];
 }>;
 
 export type AttemptCapturePaymentMutation = {
@@ -1764,7 +1766,7 @@ export type AttemptCapturePaymentMutation = {
 };
 
 export type ProductQueryVariables = Exact<{
-  productId: Scalars["ID"];
+  productId: Scalars["ID"]["input"];
 }>;
 
 export type ProductQuery = {
@@ -1777,6 +1779,20 @@ export type ProductQuery = {
     price: number;
     maxBuyableQuantity: number;
   } | null;
+};
+
+export type ProductsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type ProductsQuery = {
+  __typename?: "Queries";
+  products?: Array<{
+    __typename?: "ProductType";
+    id: string;
+    name: string;
+    price: number;
+    description: string;
+    maxBuyableQuantity: number;
+  }> | null;
 };
 
 export type UserOrdersQueryVariables = Exact<{ [key: string]: never }>;
@@ -1958,7 +1974,7 @@ export type CreateEventMutation = {
 };
 
 export type UpdateEventMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
   eventData: UpdateEventInput;
 }>;
 
@@ -2000,8 +2016,8 @@ export type UpdateEventMutation = {
 };
 
 export type EventSignUpMutationVariables = Exact<{
-  eventId: Scalars["ID"];
-  extraInformation?: InputMaybe<Scalars["String"]>;
+  eventId: Scalars["ID"]["input"];
+  extraInformation?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type EventSignUpMutation = {
@@ -2023,7 +2039,7 @@ export type EventSignUpMutation = {
 };
 
 export type EventSignOffMutationVariables = Exact<{
-  eventId: Scalars["ID"];
+  eventId: Scalars["ID"]["input"];
 }>;
 
 export type EventSignOffMutation = {
@@ -2045,8 +2061,8 @@ export type EventSignOffMutation = {
 };
 
 export type AdminEventSignOffMutationVariables = Exact<{
-  eventId: Scalars["ID"];
-  userId: Scalars["ID"];
+  eventId: Scalars["ID"]["input"];
+  userId: Scalars["ID"]["input"];
 }>;
 
 export type AdminEventSignOffMutation = {
@@ -2058,10 +2074,10 @@ export type AdminEventSignOffMutation = {
 };
 
 export type SendEventMailsMutationVariables = Exact<{
-  eventId: Scalars["ID"];
-  receiverEmails?: InputMaybe<Array<Scalars["String"]> | Scalars["String"]>;
-  content?: InputMaybe<Scalars["String"]>;
-  subject: Scalars["String"];
+  eventId: Scalars["ID"]["input"];
+  receiverEmails?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  content?: InputMaybe<Scalars["String"]["input"]>;
+  subject: Scalars["String"]["input"];
 }>;
 
 export type SendEventMailsMutation = {
@@ -2070,10 +2086,10 @@ export type SendEventMailsMutation = {
 };
 
 export type EventsQueryVariables = Exact<{
-  organization?: InputMaybe<Scalars["String"]>;
-  category?: InputMaybe<Scalars["String"]>;
-  startTime?: InputMaybe<Scalars["DateTime"]>;
-  endTime?: InputMaybe<Scalars["DateTime"]>;
+  organization?: InputMaybe<Scalars["String"]["input"]>;
+  category?: InputMaybe<Scalars["String"]["input"]>;
+  startTime?: InputMaybe<Scalars["DateTime"]["input"]>;
+  endTime?: InputMaybe<Scalars["DateTime"]["input"]>;
 }>;
 
 export type EventsQuery = {
@@ -2117,7 +2133,7 @@ export type EventsQuery = {
 };
 
 export type EventDetailsQueryVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type EventDetailsQuery = {
@@ -2179,7 +2195,7 @@ export type EventFilteredOrganizationsQuery = {
 };
 
 export type AdminEventQueryVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type AdminEventQuery = {
@@ -2244,7 +2260,7 @@ export type AdminEventQuery = {
 };
 
 export type EventSignUpsQueryVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type EventSignUpsQuery = {
@@ -2257,25 +2273,25 @@ export type EventSignUpsQuery = {
 };
 
 export type AttendeeReportQueryVariables = Exact<{
-  eventId: Scalars["ID"];
-  fields?: InputMaybe<Array<Scalars["String"]> | Scalars["String"]>;
-  filetype?: InputMaybe<Scalars["String"]>;
+  eventId: Scalars["ID"]["input"];
+  fields?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  filetype?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type AttendeeReportQuery = { __typename?: "Queries"; attendeeReport?: string | null };
 
 export type AttendeeReportOrgQueryVariables = Exact<{
-  orgId: Scalars["ID"];
-  fields?: InputMaybe<Array<Scalars["String"]> | Scalars["String"]>;
-  filetype?: InputMaybe<Scalars["String"]>;
+  orgId: Scalars["ID"]["input"];
+  fields?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  filetype?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type AttendeeReportOrgQuery = { __typename?: "Queries"; attendeeReportOrg?: string | null };
 
 export type AttendeeReportsQueryVariables = Exact<{
-  eventIds: Array<Scalars["ID"]> | Scalars["ID"];
-  fields?: InputMaybe<Array<Scalars["String"]> | Scalars["String"]>;
-  filetype?: InputMaybe<Scalars["String"]>;
+  eventIds: Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"];
+  fields?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  filetype?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type AttendeeReportsQuery = { __typename?: "Queries"; attendeeReports?: string | null };
@@ -2407,7 +2423,7 @@ export type AnswerWithQuestionIdFragment = {
 
 export type CreateFormMutationVariables = Exact<{
   formData: CreateFormInput;
-  listingId?: InputMaybe<Scalars["ID"]>;
+  listingId?: InputMaybe<Scalars["ID"]["input"]>;
 }>;
 
 export type CreateFormMutation = {
@@ -2445,7 +2461,7 @@ export type CreateFormMutation = {
 };
 
 export type UpdateFormMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
   formData: BaseFormInput;
 }>;
 
@@ -2484,7 +2500,7 @@ export type UpdateFormMutation = {
 };
 
 export type CreateQuestionMutationVariables = Exact<{
-  formId: Scalars["ID"];
+  formId: Scalars["ID"]["input"];
   questionData: CreateQuestionInput;
 }>;
 
@@ -2507,7 +2523,7 @@ export type CreateQuestionMutation = {
 };
 
 export type UpdateQuestionMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
   questionData: BaseQuestionInput;
   optionData?: InputMaybe<Array<OptionInput> | OptionInput>;
 }>;
@@ -2532,7 +2548,7 @@ export type UpdateQuestionMutation = {
 };
 
 export type DeleteQuestionMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type DeleteQuestionMutation = {
@@ -2541,7 +2557,7 @@ export type DeleteQuestionMutation = {
 };
 
 export type SubmitAnswersMutationVariables = Exact<{
-  formId: Scalars["ID"];
+  formId: Scalars["ID"]["input"];
   answersData?: InputMaybe<Array<AnswerInput> | AnswerInput>;
 }>;
 
@@ -2551,7 +2567,7 @@ export type SubmitAnswersMutation = {
 };
 
 export type FormWithAllResponsesQueryVariables = Exact<{
-  formId: Scalars["ID"];
+  formId: Scalars["ID"]["input"];
 }>;
 
 export type FormWithAllResponsesQuery = {
@@ -2585,7 +2601,7 @@ export type FormWithAllResponsesQuery = {
 };
 
 export type FormWithAnswersQueryVariables = Exact<{
-  formId: Scalars["ID"];
+  formId: Scalars["ID"]["input"];
 }>;
 
 export type FormWithAnswersQuery = {
@@ -2769,7 +2785,7 @@ export type CreateListingMutation = {
 };
 
 export type UpdateListingMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
   input?: InputMaybe<BaseListingInput>;
 }>;
 
@@ -2783,7 +2799,7 @@ export type UpdateListingMutation = {
 };
 
 export type DeleteListingMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type DeleteListingMutation = {
@@ -2792,7 +2808,7 @@ export type DeleteListingMutation = {
 };
 
 export type ListingQueryVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type ListingQuery = {
@@ -2853,7 +2869,7 @@ export type ListingsQuery = {
 };
 
 export type ListingWithFormQueryVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type ListingWithFormQuery = {
@@ -2898,7 +2914,7 @@ export type ListingWithFormQuery = {
 };
 
 export type ListingWithResponsesQueryVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["ID"]["input"];
 }>;
 
 export type ListingWithResponsesQuery = {
@@ -3012,7 +3028,7 @@ export type MembershipFragment = {
 };
 
 export type AdminOrganizationQueryVariables = Exact<{
-  orgId: Scalars["ID"];
+  orgId: Scalars["ID"]["input"];
 }>;
 
 export type AdminOrganizationQuery = {
@@ -3038,7 +3054,7 @@ export type AdminOrganizationQuery = {
 };
 
 export type MembershipsQueryVariables = Exact<{
-  organizationId: Scalars["ID"];
+  organizationId: Scalars["ID"]["input"];
 }>;
 
 export type MembershipsQuery = {
@@ -3052,7 +3068,7 @@ export type MembershipsQuery = {
 };
 
 export type HasPermissionQueryVariables = Exact<{
-  permission: Scalars["String"];
+  permission: Scalars["String"]["input"];
 }>;
 
 export type HasPermissionQuery = { __typename?: "Queries"; hasPermission?: boolean | null };
@@ -3115,7 +3131,7 @@ export type LogoutMutation = {
 };
 
 export type AuthUserMutationVariables = Exact<{
-  code: Scalars["String"];
+  code: Scalars["String"]["input"];
 }>;
 
 export type AuthUserMutation = {
@@ -6187,6 +6203,35 @@ export const ProductDocument = {
     },
   ],
 } as unknown as DocumentNode<ProductQuery, ProductQueryVariables>;
+export const ProductsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "products" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "products" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "price" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductsQuery, ProductsQueryVariables>;
 export const UserOrdersDocument = {
   kind: "Document",
   definitions: [

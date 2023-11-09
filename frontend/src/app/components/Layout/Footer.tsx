@@ -2,11 +2,11 @@
 
 import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import dayjs from "dayjs";
 import Image from "next/image";
 import { useState } from "react";
 
 import { HallOfFame } from "@/layouts/footer/HallOfFame";
+import dayjs from "@/lib/date";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
 import { Link, LinkProps } from "../Link";

@@ -1,6 +1,7 @@
 import { BaseTextFieldProps, TextField } from "@mui/material";
-import dayjs from "dayjs";
 import { Control, Controller, FieldPathByValue } from "react-hook-form";
+
+import dayjs from "@/lib/date";
 
 import { IEventForm } from "../schema";
 
