@@ -71,7 +71,7 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
   const router = useRouter();
   const value = typeof router.query.category == "string" ? routes[router.query.category].id : 0;
 
-  const pushQuery = (_: React.ChangeEvent<any>, value: number) => {
+  const pushQuery = (_: React.SyntheticEvent<Element, Event>, value: number) => {
     if (value != 0) {
       Router.push(
         {
