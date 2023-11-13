@@ -11,6 +11,8 @@ query products {
     price
     description
     maxBuyableQuantity
+    types
+    sizes
   }
 }
 

@@ -19,6 +19,8 @@ class Product(models.Model):
     total_quantity = models.PositiveIntegerField()
     current_quantity = models.PositiveIntegerField(null=True)  # Set to total_quantity upon initialization
     max_buyable_quantity = models.PositiveIntegerField(default=1)
+    types = models.JSONField(default=list, blank=True)
+    sizes = models.JSONField(default=list, blank=True)
 
     # Generic foreign key to related product model instance (e.g event model)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
