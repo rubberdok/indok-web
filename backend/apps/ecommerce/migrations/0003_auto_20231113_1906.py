@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('ecommerce', '0002_auto_20220120_1911'),
+        ("ecommerce", "0002_auto_20220120_1911"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='sizes',
+            model_name="product",
+            name="sizes",
             field=models.JSONField(blank=True, default=list),
         ),
         migrations.AddField(
-            model_name='product',
-            name='types',
+            model_name="product",
+            name="types",
             field=models.JSONField(blank=True, default=list),
         ),
     ]
