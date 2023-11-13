@@ -2,9 +2,9 @@ import json
 
 from django.core import mail
 
-from apps.cabins.models import Booking, BookingResponsible
+from apps.cabins.models import Booking, BookingResponsible, Cabin
 from apps.cabins.models import BookingSemester
-from apps.cabins.helpers import snake_case_to_camel_case
+from apps.cabins.helpers import snake_case_to_camel_case, price
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
@@ -100,6 +100,97 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
                     }}
                 """
         return self.query(query, user=user)
+
+
+class PricingTestCase(ExtendedGraphQLTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.bjornen_cabin = CabinFactory(
+            name="Bjørnen",
+            internal_price=100,
+            internal_price_weekend=150,
+            external_price=200,
+            external_price_weekend=400,
+        )
+        self.fancy_cabin = CabinFactory(
+            name="Fancy",
+            internal_price=1000,
+            internal_price_weekend=1500,
+            external_price=2000,
+            external_price_weekend=4000,
+        )
+
+    def test_internal_price_one_night(self):
+        check_in = datetime.date(2023, 11, 13)  # Monday
+        check_out = datetime.date(2023, 11, 14)  # Tuesday
+        cabin_queryset = Cabin.objects.filter(name="Bjørnen")
+        people = 12
+        self.assertEqual(price(cabin_queryset, check_in, check_out, people, 0), self.bjornen_cabin.internal_price)
+
+    def test_internal_price_one_weekend(self):
+        check_in = datetime.date(2023, 11, 17)  # Friday
+        check_out = datetime.date(2023, 11, 19)  # Sunday
+        people = 8  # Number of people should not matter in this case
+        nights = (check_out - check_in).days
+        cabin_queryset = Cabin.objects.filter(name="Bjørnen")
+        calculated = price(cabin_queryset, check_in, check_out, people, 0)
+        expected = self.bjornen_cabin.internal_price_weekend * nights
+        self.assertEqual(calculated, expected, f"Expected {expected}, got {calculated}")
+
+    def test_uses_internal_price_when_internal_participants_are_more_than_external(self):
+        check_in = datetime.date(2023, 11, 13)  # Monday
+        check_out = datetime.date(2023, 11, 14)  # Tuesday
+        cabin_queryset = Cabin.objects.filter(name="Bjørnen")
+        internal_participants = 8
+        external_participants = 5
+        calculated = price(cabin_queryset, check_in, check_out, internal_participants, external_participants)
+        expected = self.bjornen_cabin.internal_price
+        self.assertEqual(calculated, expected, f"Expected {expected}, got {calculated}")
+
+    def test_uses_external_price_when_external_participants_are_more_than_internal(self):
+        check_in = datetime.date(2023, 11, 13)
+        check_out = datetime.date(2023, 11, 14)
+        cabin_queryset = Cabin.objects.filter(name="Bjørnen")
+        internal_participants = 5
+        external_participants = 8
+        self.assertEqual(
+            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
+            (self.bjornen_cabin.external_price),
+        )
+
+    def test_uses_internal_price_when_internal_participants_are_equal_to_external(self):
+        check_in = datetime.date(2023, 11, 13)
+        check_out = datetime.date(2023, 11, 14)
+        cabin_queryset = Cabin.objects.filter(name="Bjørnen")
+        internal_participants = 5
+        external_participants = 5
+        self.assertEqual(
+            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
+            (self.bjornen_cabin.internal_price),
+        )
+
+    def test_uses_price_mix_for_thursday_to_saturday(self):
+        check_in = datetime.date(2023, 11, 16)  # Thursday
+        check_out = datetime.date(2023, 11, 18)  # Saturday
+        cabin_queryset = Cabin.objects.filter(name="Bjørnen")
+        internal_participants = 0
+        external_participants = 9
+        self.assertEqual(
+            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
+            (+self.bjornen_cabin.external_price + self.bjornen_cabin.external_price_weekend),
+        )
+
+    def test_multiple_cabins(self):
+        check_in = datetime.date(2023, 11, 17)  # Friday
+        check_out = datetime.date(2023, 11, 19)  # Sunday
+        internal_participants = 0
+        external_participants = 30
+        nights = (check_out - check_in).days
+        cabin_queryset = Cabin.objects.filter(name__in=["Bjørnen", "Fancy"])
+        self.assertEqual(
+            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
+            (self.bjornen_cabin.external_price_weekend + self.fancy_cabin.external_price_weekend) * nights,
+        )
 
 
 class CabinsResolversTestCase(CabinsBaseTestCase):
