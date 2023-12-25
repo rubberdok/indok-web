@@ -39,7 +39,15 @@ class AdminBookingType(DjangoObjectType):
 class CabinType(DjangoObjectType):
     class Meta:
         model = CabinModel
-        fields = ["id", "name", "max_guests", "internal_price", "external_price"]
+        fields = [
+            "id",
+            "name",
+            "max_guests",
+            "internal_price",
+            "external_price",
+            "internal_price_weekend",
+            "external_price_weekend",
+        ]
 
 
 class BookingResponsibleType(DjangoObjectType):
