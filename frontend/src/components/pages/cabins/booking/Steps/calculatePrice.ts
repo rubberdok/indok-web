@@ -1,7 +1,12 @@
 import dayjs from "@/lib/date";
 
 export function calculatePrice(
-  chosenCabins: { internalPrice: number; externalPrice: number }[],
+  chosenCabins: {
+    internalPrice: number;
+    externalPrice: number;
+    internalPriceWeekend: number;
+    externalPriceWeekend: number;
+  }[],
   contactInfo: { internalParticipants: number; externalParticipants: number } | undefined,
   startDate: dayjs.Dayjs | undefined,
   endDate: dayjs.Dayjs | undefined
@@ -12,6 +17,7 @@ export function calculatePrice(
   const finalDate = dayjs(endDate);
   let weekdayNights = 0;
   let weekendNights = 0;
+  let totalPrice = 0;
   while (currentDate.isBefore(finalDate, "day")) {
     // Last day has no night.
     if (currentDate.day() === 5 || currentDate.day() === 6) {
@@ -24,16 +30,15 @@ export function calculatePrice(
   }
   console.log("Weekday nights", weekdayNights);
   console.log("Weekend nights", weekendNights);
+  console.log("Chosen cabins", chosenCabins);
 
-  /*
-  if internalPrice {
-    return weekdayNights*pricePerWeekdayNight + weekendNights*pricePerWeekendNight;
-  }
-  else {
-    // TODO: calculate price for external participants
-    return weekdayNights*pricePerWeekdayNight + weekendNights*pricePerWeekendNight;
-  }
-  */
+  chosenCabins.forEach((cabin) => {
+    if (internalPrice) {
+      totalPrice += weekdayNights * cabin.internalPrice + weekendNights * cabin.internalPriceWeekend;
+    } else {
+      totalPrice += weekdayNights * cabin.externalPrice + weekendNights * cabin.externalPriceWeekend;
+    }
+  }); // Add closing parenthesis here
 
-  return NaN;
+  return totalPrice;
 }
