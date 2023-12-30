@@ -5,11 +5,8 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 
 import { PageProps } from "@/lib/apolloClient";
-import { initializeDayjs } from "@/lib/dayjs";
 import { NextPageWithLayout } from "@/lib/next";
 import { AppProvider } from "@/providers";
-
-initializeDayjs();
 
 const Layout = dynamic(() => import("@/layouts/Layout").then((mod) => mod.Layout));
 
@@ -30,7 +27,7 @@ const App = (props: CustomAppProps): JSX.Element => {
         <meta
           name="description"
           content="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-             for all studentfrivillighet på masterstudiet Indøk ved NTNU. Arrangementer, verv, 
+             for all studentfrivillighet på masterstudiet Indøk ved NTNU. Arrangementer, verv,
              og oversikt over det sosiale på Indøk."
         />
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />

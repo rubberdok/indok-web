@@ -5,6 +5,14 @@ type Member = {
 };
 
 export const rubberdokMembers: Record<string, Member[]> = {
+  "2023/2024": [
+    { name: "Magnus Hafstad", class: 3, position: "Prosjektleder" },
+    { name: "Thomas Falkeid Hagland", class: 2 },
+    { name: "Torgeir Keun Lysen", class: 2 },
+    { name: "Frederik Egelund Edvardsen", class: 2 },
+    { name: "Hannah Köberle", class: 1 },
+    { name: "Andreas Tauge", class: 1 },
+  ],
   "2022/2023": [
     { name: "Simen Sandhaug", class: 1, position: "Prosjektleder" },
     { name: "Magnus Hafstad", class: 2, position: "Prosjektleder" },

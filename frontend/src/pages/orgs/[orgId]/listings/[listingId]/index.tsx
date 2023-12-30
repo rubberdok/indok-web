@@ -25,7 +25,10 @@ const ListingAdminPage: NextPageWithLayout = () => {
   const [selectedView, selectView] = useState<ResponseFragment | "listing">("listing");
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
-  const { loading, error, data } = useQuery(ListingWithResponsesDocument, { variables: { id: listingId as string } });
+  const { loading, error, data } = useQuery(ListingWithResponsesDocument, {
+    variables: { id: listingId as string },
+    skip: !listingId,
+  });
 
   // mutation to create a new form
   const [createForm] = useMutation(CreateFormDocument, {
@@ -36,12 +39,14 @@ const ListingAdminPage: NextPageWithLayout = () => {
         cache.modify({
           id: `ListingType:${listingId}`,
           fields: {
-            form() {
-              return cache.writeFragment({
+            form(_, { INVALIDATE }) {
+              const newRef = cache.writeFragment({
                 data: newForm,
                 fragment: FormWithAllResponsesFragmentDoc,
                 fragmentName: "FormWithAllResponses",
               });
+              if (newRef) return newRef;
+              return INVALIDATE;
             },
           },
         });

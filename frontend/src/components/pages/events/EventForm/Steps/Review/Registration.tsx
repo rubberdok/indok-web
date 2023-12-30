@@ -1,7 +1,8 @@
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
+
+import dayjs from "@/lib/date";
 
 import { IEventForm } from "../../schema";
 

@@ -1,12 +1,10 @@
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Card, CardActionArea, CardContent, Chip, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import React from "react";
 
 import { NextLinkComposed } from "@/components/Link";
 import { EventsDocument } from "@/generated/graphql";
-dayjs.extend(isSameOrAfter);
+import dayjs from "@/lib/date";
 
 type Props = {
   event: NonNullable<ResultOf<typeof EventsDocument>["allEvents"]>[number];

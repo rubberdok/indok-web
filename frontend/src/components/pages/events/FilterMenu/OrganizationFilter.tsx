@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Checkbox, Grid, Skeleton, Typography } from "@mui/material";
+import { range } from "lodash";
 import React from "react";
 
 import { EventFilteredOrganizationsDocument } from "@/generated/graphql";
-import { range } from "@/utils/helpers";
 
 import { FilterQuery } from "../AllEvents";
 
@@ -23,7 +23,7 @@ export const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) 
   if (loading) {
     return (
       <Grid container item justifyContent="space-between" spacing={2}>
-        {range(0, 2).map((val) => (
+        {range(0, 3).map((val) => (
           <Grid item xs={12} key={val}>
             <Skeleton variant="rectangular" width="100%">
               <Typography>Laster...</Typography>

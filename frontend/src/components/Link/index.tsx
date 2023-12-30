@@ -15,28 +15,27 @@ interface NextLinkComposedProps
   linkAs?: NextLinkProps["as"];
 }
 
-export const NextLinkComposed = React.forwardRef<HTMLAnchorElement, NextLinkComposedProps>(function NextLinkComposed(
-  props,
-  ref
-) {
-  const { to, linkAs, replace, scroll, shallow, prefetch, legacyBehavior = true, locale, ...other } = props;
+export const NextLinkComposed = React.forwardRef<HTMLAnchorElement, NextLinkComposedProps>(
+  function NextLinkComposed(props, ref) {
+    const { to, linkAs, replace, scroll, shallow, prefetch, legacyBehavior = true, locale, ...other } = props;
 
-  return (
-    <NextLink
-      href={to}
-      prefetch={prefetch}
-      as={linkAs}
-      replace={replace}
-      scroll={scroll}
-      shallow={shallow}
-      passHref
-      locale={locale}
-      legacyBehavior={legacyBehavior}
-    >
-      <Anchor ref={ref} {...other} />
-    </NextLink>
-  );
-});
+    return (
+      <NextLink
+        href={to}
+        prefetch={prefetch}
+        as={linkAs}
+        replace={replace}
+        scroll={scroll}
+        shallow={shallow}
+        passHref
+        locale={locale}
+        legacyBehavior={legacyBehavior}
+      >
+        <Anchor ref={ref} {...other} />
+      </NextLink>
+    );
+  }
+);
 
 export type LinkProps = {
   activeClassName?: string;
@@ -61,6 +60,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props,
     noLinkStyle,
     prefetch,
     replace,
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     role, // Link don't have roles.
     scroll,
     shallow,

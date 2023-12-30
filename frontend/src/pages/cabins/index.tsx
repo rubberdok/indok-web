@@ -8,7 +8,7 @@ import { CabinsDetailsSection } from "@/components/pages/cabins/CabinsDetailsSec
 import { CabinsHero } from "@/components/pages/cabins/CabinsHero";
 import { CabinsInfoSection } from "@/components/pages/cabins/CabinsInfoSection";
 import { ContactCabinBoard } from "@/components/pages/cabins/ContactCabinBoard";
-import { FAQ } from "@/components/pages/cabins/Documents/FAQ";
+import { FAQ } from "@/components/pages/cabins/FAQ";
 import { outsideImages } from "@/components/pages/cabins/ImageSlider/imageData";
 import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
 import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
@@ -89,6 +89,9 @@ const CabinsPage: NextPageWithLayout = () => {
               Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer, i tillegg til kaffetrakter, vannkoker og
               vaffeljern m.m. Basiskrydder og olje til steking skal også være tilgjengelig. På hyttene ligger det et
               bredt utvalg brettspill, samt kortstokker. I stua står det en høyttaler med AUX-kabel.
+            </Typography>
+            <Typography gutterBottom sx={{ opacity: 0.72 }}>
+              <strong>Vi minner om at stampen er ut av drift, og skal ikke tas i bruk!</strong>
             </Typography>
           </Grid>
           <Grid sm={6} container item direction="column" justifyContent="center" alignItems="center">

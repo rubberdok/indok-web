@@ -1,7 +1,7 @@
 import { Container, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
 
 import { Vercel } from "@/components/Vercel";
+import dayjs from "@/lib/date";
 
 import { Logo } from "../../components";
 

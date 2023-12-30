@@ -1,5 +1,4 @@
 import { Box, SxProps, Typography } from "@mui/material";
-import { memo } from "react";
 
 import Link from "./Link";
 
@@ -11,7 +10,7 @@ type Props = { sx?: SxProps };
  * The display name cannot be resolved if we wrap an arrow function in memo() directly,
  * hence this is wrapping a named function.
  */
-export const Logo: React.FC<Props> = memo(function Logo({ sx }) {
+export const Logo: React.FC<Props> = ({ sx }) => {
   return (
     <Link href="/" underline="none" color="text.primary">
       <Box
@@ -29,4 +28,4 @@ export const Logo: React.FC<Props> = memo(function Logo({ sx }) {
       </Box>
     </Link>
   );
-});
+};

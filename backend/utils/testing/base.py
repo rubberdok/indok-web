@@ -73,7 +73,7 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         for k, v in data.items():
             if hasattr(obj, to_snake_case(k)):
                 value = getattr(obj, to_snake_case(k))
-                if type(value) == datetime:
+                if isinstance(value, datetime):
                     # Datetimes must be formatted for the comparision
                     self.assertEqual(
                         v,

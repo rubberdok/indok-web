@@ -4,9 +4,15 @@ description: Gjør verden til et bedre sted
 image: /img/ivibilde.jpg
 logo: /img/ivilogo.png
 board:
-  ceo:
-    name: Emma Kjerstine Martinsen Walle
+  leder:
+    name: Athina Thayananthan
     title: Leder
+
+  leder2:
+    name: Kristian Rabben Bautz-Holter
+    title: Leder
+
+
 
 tag: kultur
 ---
@@ -16,10 +22,10 @@ tag: kultur
 IVI koordinerer det veldige arbeidet på INDØK. Hvert år samler vi inn penger til en ny veldedig organisasjon. Hovedarrangementet vårt er Auksjonskvelden, en festfylt aften der Indøkere fra alle trinn samles og byr på både det ene og det andre til lommebøkene sier stopp.
 Vi ønsker også å spre så mye kunnskap og engasjement om veldedighet som mulig blant indøkere. Dette gjøres gjennom foredrag og andre arrangement. Her er det kun IVI-medlemmenes kreativitet som setter grenser! Hvis du har en idé, vil vi mer enn gjerne høre om den! I tillegg til dette driver vi mye intern skolering om nettopp veldedighet, veldedige organisasjoner og globale spørsmål.
 
-##### Mottakerorganisasjon 20/21 – Cool Earth
+##### Mottakerorganisasjon 22/23 – Malaria Consortium
 
-Fjorårets vinner, Cool Earth, ble også i år valgt som mottakerorganisasjon. På Auksjonskvelden 2020 samlet indøk inn hele 182 399kr til denne organisasjonen.
+Mottakerorganisasjon 22/23 -  Malaria Consortium. I år ble Malaria Consortium valgt som mottakerorganisasjon. På Auksjonskvelden 2023 samlet vi inn hele 255 200 kr som gikk til denne organisasjonen! Malaria Consortium jobber med både forebyggende og med kontroll og behandling av malaria – samt andre sykdommer, blant sårbare befolkninger i verden.
 
-Cool Earth er en organisasjon som sysselsetter arbeidere i regnskogen. Deres filosofi er å sysselsette mennesker som selv er avhengig av og kjent med regnskogen, da disse menneskene vil ta best vare på den. Dette gjør Cool Earth ved å fokusere på landområder eid av lokale mennesker, som innen 18 måneder ellers ville blitt solgt til avskogingsselskaper. I tillegg til å bevare regnskogen, vil denne fremgangsmåten også forbedre levestandarden til menneskene som bor i disse områdene. Cool Earth har tidligere bidratt med støtte til lokale skoler, industrier og helsetjeneste i områdene som opereres i.
+Følg med på IVI på både vår Facebook (Indøks Veldedige Initiativ) og Instagram (veldedig.indok) for å holde deg oppdatert på det vi driver med gjennom skoleåret! Send oss gjerne en melding hvis du lurer på noe eller har en ide, vil slår gjerne av en prat.
 
-Hvis du vil holde deg oppdatert på det vi driver med i løpet av skoleåret, anbefaler vi å like oss på [Facebook](https://www.facebook.com/IndokAid/). Du kan kontakte oss via Facebook-siden vår eller en av oss i lederparet direkte om du lurer på noe - vi slår gjerne av en liten prat!
+

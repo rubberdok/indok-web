@@ -14,13 +14,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import range from "lodash/range";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import { Link } from "@/components";
 import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import {
   IUserForm,
@@ -197,7 +197,10 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                 {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
                 {!data?.user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("L")}
+                    Kan ikke endres før:{" "}
+                    {dayjs(data?.user?.yearUpdatedAt)
+                      .add(1, "year")
+                      .format("L")}
                   </FormHelperText>
                 )}
               </FormControl>

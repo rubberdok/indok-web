@@ -164,7 +164,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         # TODO: Should look into better ways of doing this assertion
         for k, v in content["data"]["user"].items():
             value = getattr(self.indok_user, to_snake_case(k))
-            if type(value) == datetime:
+            if isinstance(value, datetime):
                 self.assertEqual(v, str(value.isoformat()))
                 continue
             self.assertEqual(str(v), str(value))

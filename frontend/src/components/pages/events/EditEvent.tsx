@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { LinearProgress } from "@mui/material";
-import dayjs from "dayjs";
 
 import { AdminEventDocument, UpdateEventDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 import { EventForm, IEventForm } from "./EventForm";
 

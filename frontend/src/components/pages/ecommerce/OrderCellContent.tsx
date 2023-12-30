@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
-import dayjs from "dayjs";
 import { useRouter } from "next/router";
 
 import { Link } from "@/components";
 import { OrderFragment, PaymentStatus } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 import { HeaderValuePair } from "@/types/utils";
 
 type Props = { order: OrderFragment; field: HeaderValuePair<OrderFragment> };

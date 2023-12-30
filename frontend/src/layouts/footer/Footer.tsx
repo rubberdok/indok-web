@@ -1,6 +1,5 @@
 import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import { useState } from "react";
 import { Link, LinkProps } from "@/components";
 import { Logo } from "@/components/Logo";
 import { Vercel } from "@/components/Vercel";
+import dayjs from "@/lib/date";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
