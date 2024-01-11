@@ -31,7 +31,7 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": [
-      "error",
+      "warn",
       {},
       {
         usePrettierrc: true,
@@ -39,13 +39,12 @@ module.exports = {
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
-    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "import/default": "off",
     "import/no-named-as-default-member": "off",
     "import/no-named-as-default": "off",
     "import/order": [
-      "error",
+      "warn",
       {
         groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object"],
         "newlines-between": "always",

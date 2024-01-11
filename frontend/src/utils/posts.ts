@@ -32,7 +32,7 @@ export type Article = {
   prev?: Article | null;
 };
 
-const isFrontMatter = (obj: Record<string, any>): obj is Frontmatter => {
+const isFrontMatter = (obj: Record<string, unknown>): obj is Frontmatter => {
   return obj.description !== undefined && obj.title !== undefined;
 };
 
