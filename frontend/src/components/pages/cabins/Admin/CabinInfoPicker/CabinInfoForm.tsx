@@ -74,6 +74,20 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
             </Grid>
             <Grid>
               <TextField
+                {...register("bjornen.internalPriceWeekend")}
+                required
+                helperText={errors.bjornen?.internalPriceWeekend?.message}
+                error={Boolean(errors.bjornen?.internalPriceWeekend)}
+                type="number"
+                fullWidth
+                label="Internpris i helg"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
                 {...register("bjornen.externalPrice")}
                 required
                 helperText={errors.bjornen?.externalPrice?.message}
@@ -81,6 +95,20 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
                 type="number"
                 fullWidth
                 label="Eksternpris"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                {...register("bjornen.externalPriceWeekend")}
+                required
+                helperText={errors.bjornen?.externalPriceWeekend?.message}
+                error={Boolean(errors.bjornen?.externalPriceWeekend)}
+                type="number"
+                fullWidth
+                label="Eksternpris i helg"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -123,6 +151,20 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
             </Grid>
             <Grid>
               <TextField
+                {...register("oksen.internalPriceWeekend")}
+                required
+                helperText={errors.oksen?.internalPriceWeekend?.message}
+                error={Boolean(errors.oksen?.internalPriceWeekend)}
+                type="number"
+                fullWidth
+                label="Internpris i helg"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
                 {...register("oksen.externalPrice")}
                 required
                 helperText={errors.oksen?.externalPrice?.message}
@@ -130,6 +172,20 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
                 type="number"
                 fullWidth
                 label="Eksternpris"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                {...register("oksen.externalPriceWeekend")}
+                required
+                helperText={errors.oksen?.externalPriceWeekend?.message}
+                error={Boolean(errors.oksen?.externalPriceWeekend)}
+                type="number"
+                fullWidth
+                label="Eksternpris i helg"
                 InputLabelProps={{
                   shrink: true,
                 }}
