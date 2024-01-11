@@ -28,9 +28,6 @@ export function calculatePrice(
     }
     currentDate = currentDate.add(1, "day");
   }
-  console.log("Weekday nights", weekdayNights);
-  console.log("Weekend nights", weekendNights);
-  console.log("Chosen cabins", chosenCabins);
 
   chosenCabins.forEach((cabin) => {
     if (internalPrice) {
