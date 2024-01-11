@@ -23,7 +23,7 @@
     "url": "github.com/rubberdok/indok-web"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.1",
+    "@apollo/client": "^3.8.8",
     "@apollo/experimental-nextjs-app-support": "^0.4.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
@@ -63,8 +63,8 @@
     "@repeaterjs/repeater": "^3.0.4",
     "@types/lodash": "^4.14.197",
     "@types/node": "18",
-    "@types/react": "18.2.21",
-    "@types/react-dom": "18.2.15",
+    "@types/react": "18.2.46",
+    "@types/react-dom": "18.2.18",
     "@types/react-swipeable-views": "^0.13.0",
     "@types/react-swipeable-views-utils": "^0.13.2",
     "@types/styled-components": "^5.1.30",
