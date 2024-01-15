@@ -24,12 +24,16 @@ export type CabinInfoForm = {
 const validationSchema: yup.ObjectSchema<CabinInfoForm> = yup.object({
   oksen: yup.object({
     internalPrice: yup.number().positive().required().label("Internpris"),
+    internalPriceWeekend: yup.number().positive().required().label("Internpris i helg"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
+    externalPriceWeekend: yup.number().positive().required().label("Eksternpris i helg"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),
   }),
   bjornen: yup.object({
     internalPrice: yup.number().positive().required().label("Internpris"),
+    internalPriceWeekend: yup.number().positive().required().label("Internpris i helg"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
+    externalPriceWeekend: yup.number().positive().required().label("Eksternpris i helg"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),
   }),
 });
