@@ -2,21 +2,21 @@ import { useQuery } from "@apollo/client";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 
-import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
+import { ActiveBookingResponsibleDocument, CarFragment } from "@/generated/graphql";
 import { ContactInfo, DatePick } from "@/types/cabins";
-import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
+import { calculatePrice, convertDateFormat, toStringChosenCars } from "@/utils/cars";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
 
 type Props = {
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
   contactInfo: ContactInfo;
   datePick: DatePick;
 };
 
 /** Renders the contract of a booking. */
-export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, datePick }) => {
+export const Contract: React.FC<Props> = ({ chosenCars, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
-  const price = calculatePrice(chosenCabins, contactInfo, datePick);
+  const price = calculatePrice(chosenCars, contactInfo, datePick);
 
   const { data } = useQuery(ActiveBookingResponsibleDocument);
   const responsible = data?.activeBookingResponsible;
@@ -44,7 +44,7 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, datePick 
 
       <Box m={2}>
         <Typography variant="body2">
-          Gjeldende Leieobjekt(er): <b>{toStringChosenCabins(chosenCabins)}</b>, Gardåvegen 88/90, 7340 Oppdal
+          Gjeldende Leieobjekt(er): <b>{toStringChosenCars(chosenCars)}</b>, Gardåvegen 88/90, 7340 Oppdal
           <Divider component="br" />
           Leieperiode: <b>{datePick.checkInDate && convertDateFormat(datePick.checkInDate)}</b> -{" "}
           <b>{datePick.checkOutDate && convertDateFormat(datePick.checkOutDate)}</b>

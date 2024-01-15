@@ -1,10 +1,10 @@
 import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 
-import { CabinFragment } from "@/generated/graphql";
+import { CarFragment } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
-import { ContactInfo, DatePick } from "@/types/cabins";
-import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
+import { ContactInfo, DatePick } from "@/types/cars";
+import { calculatePrice, convertDateFormat, toStringChosenCars } from "@/utils/cars";
 
 const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
@@ -13,28 +13,28 @@ const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => 
 );
 
 type Props = {
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
   datePick: DatePick;
   contactInfo: ContactInfo;
-  cabinText?: string;
+  carText?: string;
   mailSent?: boolean;
 };
 
 /**
- * Statusbox with information about the current cabin booking.
+ * Statusbox with information about the current car booking.
  * Renders fields based on the props given.
  */
-export const CabinBookingStatus: React.FC<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
+export const CarBookingStatus: React.FC<Props> = ({ chosenCars, datePick, contactInfo, carText, mailSent }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
     <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">
-      {chosenCabins ? (
+      {chosenCars ? (
         <Box m={3}>
           <InfoText>
-            {cabinText ?? "Du søker nå om å booke"}{" "}
+            {carText ?? "Du søker nå om å booke"}{" "}
             <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              {toStringChosenCabins(chosenCabins)}
+              {toStringChosenCars(chosenCars)}
             </Typography>
           </InfoText>
         </Box>
@@ -83,7 +83,7 @@ export const CabinBookingStatus: React.FC<Props> = ({ chosenCabins, datePick, co
               }
               placement="right"
             >
-              <Box display="inline">{calculatePrice(chosenCabins, contactInfo, datePick)} kr</Box>
+              <Box display="inline">{calculatePrice(chosenCars, contactInfo, datePick)} kr</Box>
             </Tooltip>
           </InfoText>
         </Box>

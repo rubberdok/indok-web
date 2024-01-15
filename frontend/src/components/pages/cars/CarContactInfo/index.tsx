@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client/react";
 import { Grid } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
-import { CabinFragment, UserDocument } from "@/generated/graphql";
-import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
+import { CarFragment, UserDocument } from "@/generated/graphql";
+import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cars";
 
 import { InputFields } from "../InputFields/InputFields";
 
@@ -12,18 +12,18 @@ type Props = {
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
   errorTrigger: boolean;
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
 };
 
 /**
- * One of the steps in the cabins/book page.
+ * One of the steps in the cars/book page.
  * Fetches the current user and tries to input its values to the InputFields.
  */
-export const CabinContactInfo: React.FC<Props> = ({
+export const CarContactInfo: React.FC<Props> = ({
   contactInfo,
   setContactInfo,
   validations,
-  chosenCabins,
+  chosenCars,
   errorTrigger,
 }) => {
   useQuery(UserDocument, {
@@ -50,7 +50,7 @@ export const CabinContactInfo: React.FC<Props> = ({
         contactInfo={contactInfo}
         validations={validations}
         errorTrigger={errorTrigger}
-        chosenCabins={chosenCabins}
+        chosenCars={chosenCars}
       />
     </Grid>
   );

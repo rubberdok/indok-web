@@ -1,18 +1,18 @@
 import { Divider, Grid, Hidden, Typography } from "@mui/material";
 
-import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, DatePick } from "@/types/cabins";
+import { CarFragment } from "@/generated/graphql";
+import { ContactInfo, DatePick } from "@/types/cars";
 
-import { CabinBookingStatus } from "../CarBookingStatus";
+import { CarBookingStatus } from "../CarBookingStatus";
 
 type Props = {
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
   datePick: DatePick;
   contactInfo: ContactInfo;
   mailSent?: boolean;
 };
 
-/** Step in the cabins/book site. Shows a confirmation of the booking made after the payment site. */
+/** Step in the cars/book site. Shows a confirmation of the booking made after the payment site. */
 export const ReceiptSite: React.FC<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">
@@ -25,7 +25,7 @@ export const ReceiptSite: React.FC<Props> = (props) => {
 
       <Grid item container justifyContent="space-evenly" alignItems="stretch">
         <Grid item>
-          <CabinBookingStatus cabinText="Du har nå søkt om å booke" {...props} />
+          <CarBookingStatus carText="Du har nå søkt om å booke" {...props} />
         </Grid>
       </Grid>
     </Grid>

@@ -4,7 +4,7 @@ import React from "react";
 import { CarFragment } from "@/generated/graphql";
 import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cars";
 
-import { CabinContactInfo } from "./CarContactInfo";
+import { CarContactInfo } from "./CarContactInfo";
 import { CheckInOutCar } from "./CheckInOut";
 import { ExtraInfoSite } from "./ExtraInfoSite";
 import { PaymentSite } from "./PaymentSite";
@@ -54,16 +54,11 @@ export const StepComponent: React.FC<Props> = (props) => {
       );
     case 3:
       // Payment
-      return <PaymentSite chosenCabin={props.chosenCars} datePick={props.datePick} contactInfo={props.contactInfo} />;
+      return <PaymentSite chosenCars={props.chosenCars} datePick={props.datePick} contactInfo={props.contactInfo} />;
     case 4:
       // Receipt
       return (
-        <ReceiptSite
-          chosenCabin={props.chosenCars}
-          datePick={props.datePick}
-          contactInfo={props.contactInfo}
-          mailSent
-        />
+        <ReceiptSite chosenCars={props.chosenCars} datePick={props.datePick} contactInfo={props.contactInfo} mailSent />
       );
 
     default:

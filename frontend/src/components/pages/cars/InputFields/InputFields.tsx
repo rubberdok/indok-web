@@ -1,7 +1,7 @@
 import { FormControl, Grid, Hidden, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import React from "react";
 
-import { CabinFragment } from "@/generated/graphql";
+import { CarFragment } from "@/generated/graphql";
 import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 import { range } from "@/utils/helpers";
 
@@ -10,13 +10,13 @@ type Props = {
   validations: ContactInfoValidations | undefined;
   onChange: (name: string, event: InputFieldsEvent) => void;
   errorTrigger: boolean;
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
   header?: string;
 };
 
 /** Component for rendering all input fields for the contact info of a booking. */
-export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCabins }) => {
-  const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
+export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCars }) => {
+  const totalGuestsAllowed = chosenCars.reduce((sum, currentCar) => sum + (currentCar.maxPassengers || 0), 0);
 
   return (
     <Grid container item spacing={3} lg={8} md={12} justifyContent="center">

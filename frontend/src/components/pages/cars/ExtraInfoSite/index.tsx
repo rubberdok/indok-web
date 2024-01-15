@@ -1,16 +1,16 @@
 import { Box, Divider, Hidden, Stack, TextField, Typography } from "@mui/material";
 
-import { CabinFragment } from "@/generated/graphql";
+import { CarFragment } from "@/generated/graphql";
 import { DatePick } from "@/types/cabins";
 import { convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
 type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
   datePick: DatePick;
 };
 
-export const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins }) => {
+export const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCars }) => {
   const fromDate = datePick.checkInDate !== undefined && convertDateFormat(datePick.checkInDate);
   const toDate = datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate);
 
@@ -24,7 +24,7 @@ export const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosen
 
         <div>
           <Typography variant="body1">
-            På neste side sender du søknad om å booke {toStringChosenCabins(chosenCabins)} fra {fromDate} til {toDate}.
+            På neste side sender du søknad om å booke {toStringChosenCabins(chosenCars)} fra {fromDate} til {toDate}.
           </Typography>
           <Typography variant="body1">
             Hytteforeningen får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.

@@ -2,15 +2,15 @@ import { Check, Clear } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, Grid, IconButton } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
-import { Contract } from "@/components/pages/cabins/Documents/Contract";
-import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, DatePick, ModalData } from "@/types/cabins";
+import { Contract } from "@/components/pages/cars/Documents/Contract";
+import { CarFragment } from "@/generated/graphql";
+import { ContactInfo, DatePick, ModalData } from "@/types/cars";
 
 type Props = {
   modalData: ModalData;
   setModalData: Dispatch<SetStateAction<ModalData>>;
   datePick: DatePick;
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
   contactInfo: ContactInfo;
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
@@ -21,7 +21,7 @@ export const ContractDialog: React.FC<Props> = ({
   modalData,
   setModalData,
   datePick,
-  chosenCabins,
+  chosenCars,
   contactInfo,
   activeStep,
   setActiveStep,
@@ -46,7 +46,7 @@ export const ContractDialog: React.FC<Props> = ({
               </IconButton>
             </Grid>
             <Grid item>
-              <Contract chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />
+              <Contract chosenCars={chosenCars} datePick={datePick} contactInfo={contactInfo} />
             </Grid>
           </Grid>
         </DialogContent>

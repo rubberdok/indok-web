@@ -1,18 +1,18 @@
 import { Divider, Grid, Hidden, Typography } from "@mui/material";
 
-import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, DatePick } from "@/types/cabins";
+import { CarFragment } from "@/generated/graphql";
+import { ContactInfo, DatePick } from "@/types/cars";
 
-import { CabinBookingStatus } from "../CarBookingStatus";
+import { CarBookingStatus } from "../CarBookingStatus";
 
 type Props = {
-  chosenCabins: CabinFragment[];
+  chosenCars: CarFragment[];
   datePick: DatePick;
   contactInfo: ContactInfo;
 };
 
 /**
- * One of the steps in the cabins/book page.
+ * One of the steps in the cars/book page.
  * The page shows the a description of the current booking and a button to confirm the booking.
  */
 export const PaymentSite: React.FC<Props> = (props) => {
@@ -27,7 +27,7 @@ export const PaymentSite: React.FC<Props> = (props) => {
 
       <Grid item container justifyContent="space-evenly" alignItems="stretch">
         <Grid item>
-          <CabinBookingStatus {...props} />
+          <CarBookingStatus {...props} />
         </Grid>
       </Grid>
     </Grid>
