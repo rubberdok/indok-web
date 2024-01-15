@@ -2,10 +2,10 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useState } from "react";
 
-import { CabinInfoForm } from "./CabinInfoForm";
-
 import { Link } from "@/components";
 import { CabinsDocument, UpdateCabinDocument, UpdateCabinInput } from "@/generated/graphql";
+
+import { CabinInfoForm } from "./CabinInfoForm";
 
 function useCabins(): CabinInfoForm | undefined {
   const { data } = useQuery(CabinsDocument);
