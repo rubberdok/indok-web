@@ -7,12 +7,16 @@ import * as yup from "@/lib/validation";
 export type CabinInfoForm = {
   oksen?: {
     internalPrice: number;
+    internalPriceWeekend: number;
     externalPrice: number;
+    externalPriceWeekend: number;
     maxGuests: number;
   };
   bjornen?: {
     internalPrice: number;
+    internalPriceWeekend: number;
     externalPrice: number;
+    externalPriceWeekend: number;
     maxGuests: number;
   };
 };
