@@ -24,7 +24,7 @@
 
   // Runs eslint --fix on save
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "editor.formatOnSave": true,
 

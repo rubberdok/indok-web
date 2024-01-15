@@ -19,7 +19,7 @@ const EditEventPage: NextPageWithLayout = () => {
       <Container>
         <EditEvent id={id} onCompleted={onCompleted} />
       </Container>
-    );
+    )
   }
   return null;
 };

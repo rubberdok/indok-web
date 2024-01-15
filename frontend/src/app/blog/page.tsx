@@ -82,7 +82,7 @@ function posts() {
             title="Utforskning av Dyreliv i Amazonas"
             date="2023-11-06"
             intro="Lorem ipsum dolor sit amet consectetur adipisicing elit. A sed cupiditate accusamus ab ipsam, consequuntur natus non facere magnam modi eos unde quos in impedit iste recusandae quasi. Pariatur, natus?"
-            id="blog1"
+            id="1"
         ></Post>,
         <Post
             image="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x4.jpg"
