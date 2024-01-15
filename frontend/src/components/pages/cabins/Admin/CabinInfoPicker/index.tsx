@@ -2,10 +2,10 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useState } from "react";
 
+import { CabinInfoForm } from "./CabinInfoForm";
+
 import { Link } from "@/components";
 import { CabinsDocument, UpdateCabinDocument, UpdateCabinInput } from "@/generated/graphql";
-
-import { CabinInfoForm } from "./CabinInfoForm";
 
 function useCabins(): CabinInfoForm | undefined {
   const { data } = useQuery(CabinsDocument);
@@ -20,7 +20,7 @@ function useCabins(): CabinInfoForm | undefined {
         internalPrice: bjornen.internalPrice,
         internalPriceWeekend: bjornen.internalPriceWeekend,
         externalPrice: bjornen.externalPrice,
-        externalPriceWeekned: bjornen.externalPriceWeekend,
+        externalPriceWeekend: bjornen.externalPriceWeekend,
         maxGuests: bjornen.maxGuests,
       },
     };
@@ -33,7 +33,7 @@ function useCabins(): CabinInfoForm | undefined {
         internalPrice: oksen.internalPrice,
         internalPriceWeekend: oksen.internalPriceWeekend,
         externalPrice: oksen.externalPrice,
-        externalPriceWeekned: oksen.externalPriceWeekend,
+        externalPriceWeekend: oksen.externalPriceWeekend,
         maxGuests: oksen.maxGuests,
       },
     };
@@ -80,7 +80,7 @@ export const CabinInfoPicker: React.FC = () => {
         internalPrice: data.oksen.internalPrice,
         internalPriceWeekend: data.oksen.internalPriceWeekend,
         externalPrice: data.oksen.externalPrice,
-        externalPriceWeekend: data.oksen.externalPriceWeekned,
+        externalPriceWeekend: data.oksen.externalPriceWeekend,
         maxGuests: data.oksen.maxGuests,
       };
       console.log(oksenData);
@@ -93,7 +93,7 @@ export const CabinInfoPicker: React.FC = () => {
         internalPrice: data.bjornen.internalPrice,
         internalPriceWeekend: data.bjornen.internalPriceWeekend,
         externalPrice: data.bjornen.externalPrice,
-        externalPriceWeekend: data.bjornen.externalPriceWeekned,
+        externalPriceWeekend: data.bjornen.externalPriceWeekend,
         maxGuests: data.bjornen.maxGuests,
       };
 
