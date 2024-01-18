@@ -32,7 +32,7 @@ class CarResolvers:
         """
         Returns the first found active booking responsible.
         """
-        return BookingResponsible.objects.filter(active=True).first()
+        return CarBookingResponsible.objects.filter(active=True).first()
 
     def resolve_booking_semester(self, info):
-        return BookingSemester.objects.first()
+        return CarBookingSemester.objects.first()

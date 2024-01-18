@@ -89,7 +89,7 @@ const CarsBookingPage: NextPageWithLayout = () => {
       ...stepReady,
       0: carOrderStepReady(chosenCars, datePick),
     });
-  }, [chosenCars, datePick]);
+  }, [chosenCars, datePick, stepReady]);
 
   useEffect(() => {
     setValidations(validateInputForm(contactInfo));
@@ -102,7 +102,7 @@ const CarsBookingPage: NextPageWithLayout = () => {
       2: { ready: true, errortext: "" },
       3: { ready: true, errortext: "" },
     });
-  }, [contactInfo]);
+  }, [contactInfo, stepReady]);
 
   const handleNextClick = () => {
     if (activeStep == 2 && !modalData.contractViewed) {
@@ -190,6 +190,7 @@ const CarsBookingPage: NextPageWithLayout = () => {
             </Stepper>
           )}
         </div>
+
         {data?.cars &&
           (isMobile ? (
             <StepComponent
