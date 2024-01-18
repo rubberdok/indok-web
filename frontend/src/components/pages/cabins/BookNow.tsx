@@ -20,12 +20,16 @@ export const BookNow: React.FC = () => {
             <Divider />
             <Typography variant="subtitle2">Intern: {data?.cabins?.[0]?.internalPrice} kr</Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Ekstern: {data?.cabins?.[0]?.externalPrice} kr
+              Ekstern Ukedag: {data?.cabins?.[0]?.externalPrice} kr
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Ekstern Helg: {data?.cabins?.[0]?.externalPriceWeekend} kr
             </Typography>
             <Typography variant="subtitle1">Sengeplass</Typography>
             <Divider />
             <Typography variant="subtitle2">Intern: 110 kr</Typography>
-            <Typography variant="subtitle2">Ekstern: 270 kr</Typography>
+            <Typography variant="subtitle2">Ekstern Ukedag: 395 kr</Typography>
+            <Typography variant="subtitle2">Ekstern Helg: 540 kr</Typography>
           </Stack>
           <Button
             component={NextLinkComposed}

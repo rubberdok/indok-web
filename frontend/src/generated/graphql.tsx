@@ -198,8 +198,10 @@ export type BookingResponsibleType = {
 export type CabinType = {
   __typename?: "CabinType";
   externalPrice: Scalars["Int"]["output"];
+  externalPriceWeekend: Scalars["Int"]["output"];
   id: Scalars["ID"]["output"];
   internalPrice: Scalars["Int"]["output"];
+  internalPriceWeekend: Scalars["Int"]["output"];
   maxGuests: Scalars["Int"]["output"];
   name: Scalars["String"]["output"];
 };
@@ -1277,8 +1279,10 @@ export type UpdateCabin = {
 
 export type UpdateCabinInput = {
   externalPrice?: InputMaybe<Scalars["Int"]["input"]>;
+  externalPriceWeekend?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["ID"]["input"]>;
   internalPrice?: InputMaybe<Scalars["Int"]["input"]>;
+  internalPriceWeekend?: InputMaybe<Scalars["Int"]["input"]>;
   maxGuests?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -1475,6 +1479,8 @@ export type CabinFragment = {
   maxGuests: number;
   internalPrice: number;
   externalPrice: number;
+  internalPriceWeekend: number;
+  externalPriceWeekend: number;
 };
 
 export type BookingFragment = {
@@ -1577,6 +1583,8 @@ export type UpdateCabinMutation = {
       maxGuests: number;
       internalPrice: number;
       externalPrice: number;
+      internalPriceWeekend: number;
+      externalPriceWeekend: number;
     } | null;
   } | null;
 };
@@ -1612,6 +1620,8 @@ export type CabinsQuery = {
     maxGuests: number;
     internalPrice: number;
     externalPrice: number;
+    internalPriceWeekend: number;
+    externalPriceWeekend: number;
   }> | null;
 };
 
@@ -1681,6 +1691,8 @@ export type CabinsAndResponsiblesQuery = {
     maxGuests: number;
     internalPrice: number;
     externalPrice: number;
+    internalPriceWeekend: number;
+    externalPriceWeekend: number;
   }> | null;
   activeBookingResponsible?: { __typename?: "BookingResponsibleType"; id: string; email?: string | null } | null;
 };
@@ -3287,6 +3299,8 @@ export const CabinFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
           { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
           { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
         ],
       },
     },
@@ -5651,6 +5665,8 @@ export const UpdateCabinDocument = {
           { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
           { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
           { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
         ],
       },
     },
@@ -5754,6 +5770,8 @@ export const CabinsDocument = {
           { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
           { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
           { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
         ],
       },
     },
@@ -5962,6 +5980,8 @@ export const CabinsAndResponsiblesDocument = {
           { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
           { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
           { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
         ],
       },
     },
