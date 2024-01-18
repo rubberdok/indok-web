@@ -1,5 +1,5 @@
 {
-  "files.trimTrailingWhitespace": true,
+  "files.trimTrailingWhitespace": false,
   "search.exclude": {
     "**/node_modules": true,
     "**/.next": true,
