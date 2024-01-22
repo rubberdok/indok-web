@@ -6,12 +6,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.db.models import F, Sum
 from django.db.models.fields import DateTimeField, UUIDField
+from apps.ecommerce.mixins import Sellable
+from django.contrib.contenttypes.fields import GenericRelation
 
 from apps.organizations.models import Organization
 from apps.users.models import User
 
 
-class Product(models.Model):
+class Product(models.Model, Sellable):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     description = models.TextField()
@@ -21,6 +23,7 @@ class Product(models.Model):
     max_buyable_quantity = models.PositiveIntegerField(default=1)
     types = models.JSONField(default=list, blank=True)
     sizes = models.JSONField(default=list, blank=True)
+    products = GenericRelation("ecommerce.Product")
 
     # Generic foreign key to related product model instance (e.g event model)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
