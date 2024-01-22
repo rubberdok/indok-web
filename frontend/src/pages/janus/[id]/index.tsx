@@ -1,10 +1,10 @@
-import { useQuery } from "@apollo/client";
-import { Box, Stack } from "@mui/material";
+import { useMutation, useQuery } from "@apollo/client";
+import { Box, Button, Stack } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { ProductInfo } from "@/components/pages/Janus/Shop/ProductInfo";
 import { Template } from "@/components/pages/Janus/Template";
-import { ProductDocument, ProductFragment } from "@/generated/graphql";
+import { InitiateOrderDocument, ProductDocument, ProductFragment } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -13,8 +13,11 @@ const ProductPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
   const { data } = useQuery(ProductDocument, {
     variables: { productId: product.id },
   });
+  const [initiateOrder] = useMutation(InitiateOrderDocument, {
+    variables: { productId: product.id, quantity: 1 },
+  });
   return (
-    <Template title="Genser" description="">
+    <Template title={data?.product?.name?.toString() ?? ""} description="">
       <Stack spacing={2}>
         <Box
           sx={{
@@ -31,6 +34,21 @@ const ProductPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           <ProductInfo price={0} sizes={["S", "M", "L"]} types={["Blue", "Red", "Gray"]} />
         </Stack>
       </Stack>
+      <Button
+        variant="contained"
+        onClick={() => {
+          console.log("initiating order");
+          initiateOrder({
+            variables: {
+              productId: product.id,
+              quantity: 1,
+            },
+          });
+        }}
+      >
+        {" "}
+        Kjøp nå!{" "}
+      </Button>
     </Template>
   );
 };
