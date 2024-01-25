@@ -55,7 +55,8 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
         "check_in": booking_info["check_in"].strftime("%d-%m-%Y"),
         "check_out": booking_info["check_out"].strftime("%d-%m-%Y"),
         "chosen_cabins_string": chosen_cabins_string,
-        "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",  # If you get an error here, it's likely because you haven't created a booking responsible in the admin panel
+        # If you get an error here, it's likely because you haven't created a booking responsible in the admin panel
+        "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",
         "booking_responsible_phone": booking_responsible.phone,
         "booking_responsible_email": booking_responsible.email,
         "now_time": datetime.now().strftime("%d.%m.%Y, %H:%M:%S"),
