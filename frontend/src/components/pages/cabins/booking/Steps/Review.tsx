@@ -2,14 +2,14 @@ import { KeyboardArrowLeft, Send } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, Divider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 
+import { CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+
 import { useStepContext } from "../StepContext";
 
 import { CabinBookingStatus } from "./CabinStatus";
 import { ContactInfo } from "./ContactInfo";
 import { Stepper } from "./Stepper";
-
-import { CabinFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
 
 type Props = {
   chosenCabins: CabinFragment[];

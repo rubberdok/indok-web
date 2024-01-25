@@ -22,7 +22,7 @@ class Booking(models.Model):
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=8)
+    phone = models.CharField(max_length=15)
     receiver_email = models.EmailField(max_length=100)
     check_in = models.DateField()
     check_out = models.DateField()
