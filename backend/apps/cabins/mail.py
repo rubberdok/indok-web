@@ -45,7 +45,9 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     chosen_cabins_names = booking_info["cabins"].values_list("name", flat=True)
     chosen_cabins_string = " og ".join(chosen_cabins_names)
     subject = get_email_subject(chosen_cabins_string, email_type, admin)
-    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(active=True).first()
+    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(
+        active=True
+    ).first()  # From testing this is not at all optional...
 
     # Display dates with given format in the mail, get booking responsible contact info
     content = {
@@ -53,6 +55,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
         "check_in": booking_info["check_in"].strftime("%d-%m-%Y"),
         "check_out": booking_info["check_out"].strftime("%d-%m-%Y"),
         "chosen_cabins_string": chosen_cabins_string,
+        # If you get an error here, it's likely because you haven't created a booking responsible in the admin panel
         "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",
         "booking_responsible_phone": booking_responsible.phone,
         "booking_responsible_email": booking_responsible.email,
