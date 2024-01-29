@@ -1,0 +1,39 @@
+mutation createCarBooking($carBookingData: CarBookingInput!) {
+  createCarBooking(carBookingData: $carBookingData) {
+    ok
+  }
+}
+
+mutation confirmCarBooking($id: ID!) {
+  updateCarBooking(carBookingData: { id: $id, isTentative: false }) {
+    ok
+  }
+}
+
+mutation declineCarBooking($id: ID!, $declineReason: String) {
+  updateCarBooking(carBookingData: { id: $id, isTentative: false, isDeclined: true, declineReason: $declineReason }) {
+    ok
+  }
+}
+
+mutation sendEmail($emailInput: EmailInput!) {
+  sendEmail(emailInput: $emailInput) {
+    ok
+  }
+}
+
+mutation updateCabin($cabinData: UpdateCabinInput!) {
+  updateCabin(cabinData: $cabinData) {
+    cabin {
+      ...Cabin
+    }
+  }
+}
+
+mutation updateCarBookingSemester($semesterData: UpdateCarBookingSemesterInput!) {
+  updateCarBookingSemester(semesterData: $semesterData) {
+    carBookingSemester {
+      ...CarBookingSemester
+    }
+  }
+}

@@ -1,0 +1,8 @@
+- model: cars.car
+  pk: 1
+  fields:
+    name: Oksen
+- model: cars.car
+  pk: 2
+  fields:
+    name: Bjørnen

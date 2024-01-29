@@ -13,13 +13,15 @@ env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
-    DOT_ENV_FILES = env.list("DJANGO_DOT_ENV_FILES", default=[".env", ".env.development"])
+    DOT_ENV_FILES = env.list("DJANGO_DOT_ENV_FILES", default=[
+                             ".env", ".env.development"])
     # OS environment variables take precedence over variables from .env
     for file in DOT_ENV_FILES:
         env.read_env(str(ROOT_DIR / file))
 
 # GENERAL
-ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONMENT")
+ENVIRONMENT: Literal["development", "production",
+                     "test"] = env("DJANGO_ENVIRONMENT")
 DEBUG: bool = ENVIRONMENT != "production"
 
 TIME_ZONE = "Europe/Oslo"
@@ -68,6 +70,7 @@ LOCAL_APPS = [
     "apps.archive",
     "apps.blogs",
     "apps.cabins",
+    "apps.cars",
     "apps.events",
     "apps.organizations",
     "apps.users",
@@ -89,10 +92,12 @@ AUTH_USER_MODEL = "users.User"
 SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default="localhost")
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["http://localhost:3000", "http://frontend:3000"])
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[
+                                "http://localhost:3000", "http://frontend:3000"])
 CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN", default="localhost")
 CSRF_COOKIE_NAME = env("CSRF_COOKIE_NAME", default="csrf")
-CSRF_FAILURE_VIEW = env("CSRF_FAILURE_VIEW", default="config.views.csrf.csrf_failure")
+CSRF_FAILURE_VIEW = env("CSRF_FAILURE_VIEW",
+                        default="config.views.csrf.csrf_failure")
 
 
 # DATAPORTEN
@@ -150,17 +155,22 @@ TEMPLATES = [
 
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default="http://localhost:3000")
-CORS_ALLOWED_ORIGIN_REGEXES = env.list("CORS_ALLOWED_ORIGIN_REGEXES", default=["http://localhost:3000"])
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS", default="http://localhost:3000")
+CORS_ALLOWED_ORIGIN_REGEXES = env.list(
+    "CORS_ALLOWED_ORIGIN_REGEXES", default=["http://localhost:3000"])
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 # URLS
-FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="https://www.indokntnu.no")
+FRONTEND_BASE_URL = env("FRONTEND_BASE_URL",
+                        default="https://www.indokntnu.no")
 
 
 # EMAIL
-EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
-DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="Indøk <no-reply@indokntnu.no>")
+EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND",
+                    default="django.core.mail.backends.console.EmailBackend")
+DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL",
+                         default="Indøk <no-reply@indokntnu.no>")
 CONTACT_EMAIL = env("CONTACT_EMAIL", default="kontakt@rubberdok.no")
 EMAIL_MAX_RECIPIENTS = env.int("EMAIL_MAX_RECIPIENTS", 50)
 
@@ -221,5 +231,6 @@ VIPPS_SUBSCRIPTION_KEY = env("VIPPS_SUBSCRIPTION_KEY")
 VIPPS_CALLBACK_PREFIX = env(
     "VIPPS_CALLBACK_PREFIX", default="https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback"
 )
-VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
+VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX",
+                            default="http://127.0.0.1:3000/ecommerce/fallback")
 VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")
