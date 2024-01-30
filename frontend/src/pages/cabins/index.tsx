@@ -11,7 +11,7 @@ import { ContactCabinBoard } from "@/components/pages/cabins/ContactCabinBoard";
 import { FAQ } from "@/components/pages/cabins/FAQ";
 import { outsideImages } from "@/components/pages/cabins/ImageSlider/imageData";
 import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
-import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
+import { CabinsBookNowDocument } from "@/gql/pages/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -160,7 +160,7 @@ const CabinsPage: NextPageWithLayout = () => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data } = await client.query({ query: CabinsAndResponsiblesDocument });
+  const { data } = await client.query({ query: CabinsBookNowDocument });
 
   return addApolloState(client, {
     props: {

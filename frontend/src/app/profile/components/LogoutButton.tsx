@@ -1,9 +1,9 @@
 "use client";
 
-import { NextLinkComposed } from "@/app/components/Link";
-import { config } from "@/utils/config";
 import { Button } from "@mui/material";
 
+import { NextLinkComposed } from "@/app/components/Link";
+import { config } from "@/utils/config";
 
 export function LogoutButton() {
   return (

@@ -37,18 +37,20 @@ function getUserInitials(firstName: string, lastName: string): string {
 const ID_PREFIX = "profile-";
 
 export default function ProfilePage() {
-  const { data } = useSuspenseQuery(graphql(`
-    query AppProfileUser {
-      user {
+  const { data } = useSuspenseQuery(
+    graphql(`
+      query AppProfileUser {
         user {
-          id
-          firstName
-          lastName
-          gradeYear
+          user {
+            id
+            firstName
+            lastName
+            gradeYear
+          }
         }
       }
-    }
-  `));
+    `)
+  );
 
   /**
    * Running this as a background query prevents a waterfall of queries, where
@@ -56,18 +58,20 @@ export default function ProfilePage() {
    * has finished fetching. Instead, we run the query in the background, and read it
    * in the PermissionRequired component.
    */
-  const [queryRef] = useBackgroundQuery(graphql(`
-    query AppProfileCabinPermission {
-      hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {
-        id
-        hasFeaturePermission
+  const [queryRef] = useBackgroundQuery(
+    graphql(`
+      query AppProfileCabinPermission {
+        hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {
+          id
+          hasFeaturePermission
+        }
       }
-    }
-  `));
+    `)
+  );
 
   // If the user is not logged in, redirect to the login page
   if (data.user.user === null) return redirect(generateFeideLoginUrl());
-    const {user} = data.user;
+  const { user } = data.user;
   const initials = getUserInitials(user.firstName, user.lastName);
 
   return (

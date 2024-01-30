@@ -13,6 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n      query CabinsBookNow {\n        cabins {\n          cabins {\n            id\n            name\n            internalPrice\n            externalPrice\n          }\n        }\n      }\n    ": types.CabinsBookNowDocument,
+    "\n      query BookingContact {\n        bookingContact {\n          bookingContact {\n            id\n            name\n            email\n          }\n        }\n      }\n    ": types.BookingContactDocument,
     "\n      query Listings {\n        listings {\n          listings {\n            id\n            name\n            description\n            closesAt\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    ": types.ListingsDocument,
     "\n      query UserFormUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            graduationYearUpdatedAt\n            canUpdateYear\n            gradeYear\n            graduationYear\n            allergies\n            phoneNumber\n            email\n            isSuperUser\n          }\n        }\n      }\n    ": types.UserFormUserDocument,
     "\n      mutation UserFormUpdateUser($data: UpdateUserInput!) {\n        updateUser(data: $data) {\n          user {\n            id\n            firstName\n            lastName\n            graduationYearUpdatedAt\n            canUpdateYear\n            gradeYear\n            graduationYear\n            allergies\n            phoneNumber\n            email\n            isSuperUser\n          }\n        }\n      }\n    ": types.UserFormUpdateUserDocument,
@@ -35,6 +37,14 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query CabinsBookNow {\n        cabins {\n          cabins {\n            id\n            name\n            internalPrice\n            externalPrice\n          }\n        }\n      }\n    "): (typeof documents)["\n      query CabinsBookNow {\n        cabins {\n          cabins {\n            id\n            name\n            internalPrice\n            externalPrice\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query BookingContact {\n        bookingContact {\n          bookingContact {\n            id\n            name\n            email\n          }\n        }\n      }\n    "): (typeof documents)["\n      query BookingContact {\n        bookingContact {\n          bookingContact {\n            id\n            name\n            email\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
