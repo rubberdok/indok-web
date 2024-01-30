@@ -17,42 +17,6 @@ fragment EventFields on EventType {
   }
 }
 
-fragment EventDetailFields on EventType {
-  id
-  title
-  description
-  shortDescription
-  startTime
-  endTime
-  location
-  contactEmail
-  allowedGradeYears
-  hasExtraInformation
-  isFull
-  signupOpenDate
-  deadline
-  isAttendable
-  bindingSignup
-  price
-  product {
-    id
-  }
-  userAttendance {
-    isSignedUp
-    isOnWaitingList
-    positionOnWaitingList
-    hasBoughtTicket
-  }
-  category {
-    id
-    name
-  }
-  organization {
-    id
-    name
-    logoUrl
-  }
-}
 
 fragment AdminEvent on EventType {
   id

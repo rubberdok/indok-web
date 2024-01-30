@@ -11,7 +11,7 @@ const config: CodegenConfig = {
         avoidOptionals: true,
       },
       presetConfig: {
-        fragmentMasking: false,
+        fragmentMasking: { unmaskFunctionName: 'getFragmentData' }
       },
     },
     "./src/gql/app/": {
@@ -22,8 +22,8 @@ const config: CodegenConfig = {
         avoidOptionals: true,
       },
       presetConfig: {
-        fragmentMasking: false,
-      },
+        fragmentMasking: { unmaskFunctionName: 'getFragmentData' }
+      }
     },
   },
   config: {

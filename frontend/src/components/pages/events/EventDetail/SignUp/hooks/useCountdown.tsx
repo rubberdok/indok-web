@@ -11,7 +11,7 @@ import dayjs from "@/lib/date";
  * @returns The time left until the event starts, in milliseconds
  * @returns A formatted countdown string, for more details, see [relative time](https://day.js.org/docs/en/customization/relative-time)
  */
-export function useCountdown(date: string) {
+export function useCountdown(date?: string) {
   /**
    * Difference between the client time and the server time at the time of the last server time query.
    */

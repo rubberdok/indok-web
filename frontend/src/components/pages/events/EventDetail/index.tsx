@@ -1,7 +1,5 @@
-import { useQuery } from "@apollo/client";
-import { CalendarToday, Class, CreditCard, Email, Label, Place } from "@mui/icons-material";
+import { CalendarToday, Email, Label, Place } from "@mui/icons-material";
 import {
-  Alert,
   Card,
   CardContent,
   CardHeader,
@@ -17,31 +15,66 @@ import {
 import React from "react";
 
 import { Link, Markdown, Title } from "@/components";
-import { EventDetailFieldsFragment, EventUserOrganizationsDocument } from "@/generated/graphql";
+import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
 import dayjs from "@/lib/date";
 
 import { AddToCalendar } from "./AddToCalendar";
 import { ManageEvent } from "./ManageEvent";
 import { SignUp } from "./SignUp";
 
+const EventDetailFragment = graphql(`
+  fragment EventDetailFields on Event {
+    id
+    name
+    description
+    organization {
+      id
+      name
+    }
+    location
+    startAt
+    endAt
+    signUpsEnabled
+    contactEmail
+    categories {
+      id
+      name
+    }
+    ...EventSignUp_EventFragment
+  }
+`);
+
+const UserOrganizationFragment = graphql(`
+  fragment UserOrganizationQuery on Query {
+    user {
+      user {
+        id
+        organizations {
+          id
+        }
+      }
+    }
+  }
+`);
+
 type Props = {
-  event: EventDetailFieldsFragment;
+  event: FragmentType<typeof EventDetailFragment>;
+  organizations: FragmentType<typeof UserOrganizationFragment>;
 };
 
-function isAttendable(
-  event: EventDetailFieldsFragment
-): event is EventDetailFieldsFragment & { signupOpenDate: string; deadline: string } {
-  return event.isAttendable && Boolean(event.signupOpenDate) && Boolean(event.deadline);
+function useOrganizationRequired(
+  organizationId: string | undefined,
+  user: FragmentType<typeof UserOrganizationFragment>
+): { isInOrganization: boolean } {
+  if (!organizationId) return { isInOrganization: false };
+  const data = getFragmentData(UserOrganizationFragment, user);
+  const isInOrganization = Boolean(data.user.user?.organizations?.find((org) => org.id === organizationId));
+  return { isInOrganization };
 }
 
-function useOrganizationRequired(organizationId: string): { isInOrganization: boolean; loading: boolean } {
-  const { data, loading } = useQuery(EventUserOrganizationsDocument);
-  const isInOrganization = Boolean(data?.user?.organizations?.find((org) => org.id === organizationId));
-  return { isInOrganization, loading };
-}
-
-export const EventDetail: React.FC<Props> = ({ event }) => {
-  const { isInOrganization } = useOrganizationRequired(event.organization.id);
+export const EventDetail: React.FC<Props> = (props) => {
+  const event = getFragmentData(EventDetailFragment, props.event);
+  const { isInOrganization } = useOrganizationRequired(event.organization?.id, props.organizations);
 
   return (
     <>
@@ -56,23 +89,23 @@ export const EventDetail: React.FC<Props> = ({ event }) => {
             href: "/events",
           },
           {
-            name: event.title,
+            name: event.name,
             href: `/events/${event.id}`,
           },
         ]}
-        title={event.title}
-        overline={`Arrangert av ${event.organization.name}`}
+        title={event.name}
+        overline={`Arrangert av ${event.organization?.name}`}
       />
       <Container>
         <Grid container direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={2}>
-          {isInOrganization && (
+          {isInOrganization && event.organization && (
             <Grid xs={12}>
               <ManageEvent eventId={event.id} organizationId={event.organization.id} />
             </Grid>
           )}
           <Grid xs={12} md={8}>
             <Stack spacing={2} divider={<Divider light />}>
-              {isAttendable(event) && <SignUp event={event} />}
+              {event.signUpsEnabled && <SignUp event={event} />}
               <Markdown>{event.description}</Markdown>
             </Stack>
           </Grid>
@@ -81,25 +114,25 @@ export const EventDetail: React.FC<Props> = ({ event }) => {
               <CardHeader title="Informasjon" />
               <CardContent>
                 <List>
-                  {event.bindingSignup && (
+                  {/* {event.bindingSignup && (
                     <ListItem>
                       <Alert severity="warning" variant="outlined">
                         Arrangementet har bindende påmelding
                       </Alert>
                     </ListItem>
-                  )}
+                  )} */}
                   <ListItem>
                     <ListItemIcon>
                       <CalendarToday />
                     </ListItemIcon>
-                    <ListItemText primary="Starter" secondary={formatDate(event.startTime)} />
+                    <ListItemText primary="Starter" secondary={formatDate(event.startAt)} />
                   </ListItem>
-                  {event.endTime && (
+                  {event.endAt && (
                     <ListItem>
                       <ListItemIcon>
                         <CalendarToday />
                       </ListItemIcon>
-                      <ListItemText primary="Slutter" secondary={formatDate(event.endTime)} />
+                      <ListItemText primary="Slutter" secondary={formatDate(event.endAt)} />
                     </ListItem>
                   )}
                   {event.location && (
@@ -110,30 +143,14 @@ export const EventDetail: React.FC<Props> = ({ event }) => {
                       <ListItemText primary="Sted" secondary={event.location} />
                     </ListItem>
                   )}
-                  {event.price && (
-                    <ListItem>
-                      <ListItemIcon>
-                        <CreditCard />
-                      </ListItemIcon>
-                      <ListItemText primary="Pris" secondary={event.price} />
-                    </ListItem>
-                  )}
-                  {event.category && (
-                    <ListItem>
+                  {event.categories?.map((category) => (
+                    <ListItem key={category.id}>
                       <ListItemIcon>
                         <Label />
                       </ListItemIcon>
-                      <ListItemText primary="Kategori" secondary={event.category.name} />
+                      <ListItemText primary="Kategori" secondary={category.name} />
                     </ListItem>
-                  )}
-                  {event.allowedGradeYears && (
-                    <ListItem>
-                      <ListItemIcon>
-                        <Class />
-                      </ListItemIcon>
-                      <ListItemText primary="Klassetrinn" secondary={event.allowedGradeYears.join(", ")} />
-                    </ListItem>
-                  )}
+                  ))}
                   {event.contactEmail && (
                     <ListItem>
                       <ListItemIcon>
@@ -147,9 +164,9 @@ export const EventDetail: React.FC<Props> = ({ event }) => {
                   )}
                   <ListItem>
                     <AddToCalendar
-                      title={event.title}
-                      start={event.startTime}
-                      end={event.endTime}
+                      title={event.name}
+                      start={event.startAt}
+                      end={event.endAt}
                       location={event.location}
                     />
                   </ListItem>

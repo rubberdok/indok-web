@@ -1,28 +1,34 @@
 import { useMutation } from "@apollo/client";
-import { Alert, Unstable_Grid2 as Grid, Snackbar, TextField, Tooltip, Typography } from "@mui/material";
+import { Alert, Unstable_Grid2 as Grid, Snackbar, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 
 import { LoginRequired, PermissionRequired } from "@/components/Auth";
-import { EventDetailFieldsFragment, EventSignOffDocument, EventSignUpDocument } from "@/generated/graphql";
+import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
+import { SignUpAvailability } from "@/gql/pages/graphql";
 import dayjs from "@/lib/date";
 
 import { CountdownStatusText } from "./Countdown";
 import { useCountdown } from "./hooks/useCountdown";
 import { SignUpButton } from "./SignUpButton";
 
-type Event = {
-  id: string;
-  hasExtraInformation?: boolean | null;
-  signupOpenDate: string;
-  deadline: string;
-  bindingSignup?: boolean | null;
-} & Pick<EventDetailFieldsFragment, "userAttendance">;
+const ActionEventFragment = graphql(`
+  fragment Action_EventFragment on Event {
+    id
+    signUpDetails {
+      signUpsStartAt
+      signUpsEndAt
+    }
+    signUpAvailability
+  }
+`);
 
 type Props = {
-  event: Event;
+  event: FragmentType<typeof ActionEventFragment>;
 };
 
-export const Actions: React.FC<Props> = ({ event }) => {
+export const Actions: React.FC<Props> = (props) => {
+  const event = getFragmentData(ActionEventFragment, props.event);
+
   const [alert, setAlert] = useState<
     | {
         severity: "success" | "error" | "info";
@@ -31,50 +37,83 @@ export const Actions: React.FC<Props> = ({ event }) => {
     | undefined
   >(undefined);
 
-  const [signUp] = useMutation(EventSignUpDocument, {
-    onCompleted() {
-      setAlert({
-        severity: "success",
-        message: "Du er nå påmeldt arrangementet.",
-      });
-    },
-    onError() {
-      setAlert({
-        severity: "error",
-        message: "Noe gikk galt, prøv igjen senere.",
-      });
-    },
-  });
-  const [signOff] = useMutation(EventSignOffDocument, {
-    onCompleted() {
-      setAlert({
-        severity: "info",
-        message: "Du er nå meldt av arrangementet",
-      });
-    },
-    onError() {
-      setAlert({
-        severity: "error",
-        message: "Noe gikk galt, prøv igjen senere.",
-      });
-    },
-  });
+  const [signUp] = useMutation(
+    graphql(`
+      mutation EventSignUp($data: SignUpInput!) {
+        signUp(data: $data) {
+          signUp {
+            id
+            participationStatus
+            event {
+              id
+              signUpAvailability
+            }
+          }
+        }
+      }
+    `),
+    {
+      onCompleted() {
+        setAlert({
+          severity: "success",
+          message: "Du er nå påmeldt arrangementet.",
+        });
+      },
+      onError() {
+        setAlert({
+          severity: "error",
+          message: "Noe gikk galt, prøv igjen senere.",
+        });
+      },
+    }
+  );
+  const [signOff] = useMutation(
+    graphql(`
+      mutation EventRetractSignUp($data: RetractSignUpInput!) {
+        retractSignUp(data: $data) {
+          signUp {
+            id
+            participationStatus
+            event {
+              id
+              signUpAvailability
+            }
+          }
+        }
+      }
+    `),
+    {
+      onCompleted() {
+        setAlert({
+          severity: "info",
+          message: "Du er nå meldt av arrangementet",
+        });
+      },
+      onError() {
+        setAlert({
+          severity: "error",
+          message: "Noe gikk galt, prøv igjen senere.",
+        });
+      },
+    }
+  );
 
-  const [extraInformation, setExtraInformation] = useState("");
-  const countdown = useCountdown(event.signupOpenDate);
+  const countdown = useCountdown(event.signUpDetails?.signUpsStartAt);
 
-  const isSignedUp = Boolean(event.userAttendance?.isSignedUp || event.userAttendance?.isOnWaitingList);
-  const isAttending = Boolean(event.userAttendance?.isSignedUp);
-  const needsExtraInformation = !isSignedUp && Boolean(event.hasExtraInformation && !extraInformation);
-  const isBindingSignup = isAttending && Boolean(event.bindingSignup);
-  const signUpOpen = dayjs().isBetween(event.signupOpenDate, event.deadline);
-  const disabled = needsExtraInformation || isBindingSignup || !signUpOpen;
+  const isSignedUp =
+    event.signUpAvailability === SignUpAvailability.Confirmed ||
+    event.signUpAvailability === SignUpAvailability.OnWaitlist;
+  const isAttending = event.signUpAvailability === SignUpAvailability.Confirmed;
+  const isBindingSignup = isAttending && false;
+  const signUpOpen = dayjs().isBetween(event.signUpDetails?.signUpsStartAt, event.signUpDetails?.signUpsEndAt);
+  const disabled = isBindingSignup || !signUpOpen;
 
   function handleSignUp() {
     signUp({
       variables: {
-        eventId: event.id,
-        extraInformation,
+        data: {
+          eventId: event.id,
+        },
       },
     });
   }
@@ -82,7 +121,9 @@ export const Actions: React.FC<Props> = ({ event }) => {
   function handleSignOff() {
     signOff({
       variables: {
-        eventId: event.id,
+        data: {
+          eventId: event.id,
+        },
       },
     });
   }
@@ -95,7 +136,13 @@ export const Actions: React.FC<Props> = ({ event }) => {
         </Alert>
       </Snackbar>
       <Grid>
-        <CountdownStatusText countdown={countdown} signupOpenDate={event.signupOpenDate} deadline={event.deadline} />
+        {event.signUpDetails && (
+          <CountdownStatusText
+            countdown={countdown}
+            signupOpenDate={event.signUpDetails?.signUpsStartAt}
+            deadline={event.signUpDetails?.signUpsEndAt}
+          />
+        )}
       </Grid>
       <Grid xs={12}>
         <LoginRequired fullWidth redirect>
@@ -104,11 +151,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
             permission="events.add_signup"
             fallback={<Typography>Arrangementet er kun åpent for Indøk</Typography>}
           >
-            <Tooltip
-              title={needsExtraInformation && "Fyll in ekstra informasjon før påmelding"}
-              placement="bottom"
-              arrow
-            >
+            <Tooltip title={false && "Fyll in ekstra informasjon før påmelding"} placement="bottom" arrow>
               <span>
                 <SignUpButton
                   disabled={disabled}
@@ -121,7 +164,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
           </PermissionRequired>
         </LoginRequired>
       </Grid>
-      {!isSignedUp && event.hasExtraInformation && (
+      {/* {!isSignedUp && event.hasExtraInformation && (
         <Grid xs={12}>
           <TextField
             variant="filled"
@@ -135,7 +178,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
             rows={6}
           />
         </Grid>
-      )}
+      )} */}
     </>
   );
 };

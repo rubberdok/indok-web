@@ -2,20 +2,26 @@ import { Card, CardActionArea, CardContent, Chip, Stack, Typography } from "@mui
 import React from "react";
 
 import { NextLinkComposed } from "@/components/Link";
+import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
 import { SignUpAvailability } from "@/gql/pages/graphql";
 import dayjs from "@/lib/date";
 
+const EventListItemFragment = graphql(`
+  fragment EventListItem on Event {
+    id
+    name
+    description
+    startAt
+    signUpAvailability
+  }
+`);
+
 type Props = {
-  event: {
-    id: string;
-    name: string;
-    description: string;
-    startAt: string;
-    signUpAvailability: SignUpAvailability;
-  };
+  event: FragmentType<typeof EventListItemFragment>;
 };
 
-export const EventListItem: React.FC<Props> = ({ event }) => {
+export const EventListItem: React.FC<Props> = (props) => {
+  const event = getFragmentData(EventListItemFragment, props.event);
   return (
     <Card
       sx={{
