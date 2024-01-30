@@ -7,6 +7,8 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
+    "dev:next": "concurrently -n next,graphql 'next dev' 'yarn generate:next --watch' ",
+    "generate:next": "graphql-codegen --config codegen.next.ts",
     "dev": "next",
     "build": "next build",
     "start": "next start",
@@ -71,6 +73,7 @@
     "@types/validator": "^13.11.9",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
+    "concurrently": "^8.2.2",
     "cypress": "^13.2.0",
     "eslint": "^8.47.0",
     "eslint-config-next": "^14.1.0",
