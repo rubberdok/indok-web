@@ -8,7 +8,7 @@ import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { graphql } from "@/gql";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
-import { PermissionRequired } from "../components/PermissionRequired";
+import { PermissionRequired } from "../v2/components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
 import { Event, Form, Orders, Organization, Personal, Report, CabinsAdmin } from "./components/ProfileCard";

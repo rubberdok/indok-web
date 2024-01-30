@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { LoginButton } from "@/app/v2/components/LoginButton";
 import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 
-import { PermissionRequired } from "../../../../../../../components/PermissionRequired";
+import { PermissionRequired } from "../../../../../PermissionRequired";
 import { NavigationProps } from "../../types";
 
 import { NavigationLink } from "./NavigationLink";
