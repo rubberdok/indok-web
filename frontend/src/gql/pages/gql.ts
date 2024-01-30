@@ -17,6 +17,7 @@ const documents = {
     "\n      query PagesPermissionRequired($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.PagesPermissionRequiredDocument,
     "\n      query CabinsBookNow {\n        cabins {\n          cabins {\n            id\n            name\n            internalPrice\n            externalPrice\n          }\n        }\n      }\n    ": types.CabinsBookNowDocument,
     "\n      query BookingContact {\n        bookingContact {\n          bookingContact {\n            id\n            name\n            email\n          }\n        }\n      }\n    ": types.BookingContactDocument,
+    "\n      mutation PayWithVippsInitiatePaymentAttempt($data: InitiatePaymentAttemptInput!) {\n        initiatePaymentAttempt(data: $data) {\n          redirectUrl\n        }\n      }\n    ": types.PayWithVippsInitiatePaymentAttemptDocument,
     "\n      query EventsPage($data: EventsInput!) {\n        events(data: $data) {\n          nextWeek {\n            id\n            ...EventListItem\n          }\n          thisWeek {\n            id\n            ...EventListItem\n          }\n          twoWeeksOrLater {\n            id\n            ...EventListItem\n          }\n        }\n        user {\n          user {\n            id\n            gradeYear\n          }\n        }\n      }\n    ": types.EventsPageDocument,
     "\n  fragment Action_EventFragment on Event {\n    id\n    signUpDetails {\n      signUpsStartAt\n      signUpsEndAt\n    }\n    signUpAvailability\n  }\n": types.Action_EventFragmentFragmentDoc,
     "\n      mutation EventSignUp($data: SignUpInput!) {\n        signUp(data: $data) {\n          signUp {\n            id\n            participationStatus\n            event {\n              id\n              signUpAvailability\n            }\n          }\n        }\n      }\n    ": types.EventSignUpDocument,
@@ -66,6 +67,10 @@ export function graphql(source: "\n      query CabinsBookNow {\n        cabins {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query BookingContact {\n        bookingContact {\n          bookingContact {\n            id\n            name\n            email\n          }\n        }\n      }\n    "): (typeof documents)["\n      query BookingContact {\n        bookingContact {\n          bookingContact {\n            id\n            name\n            email\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation PayWithVippsInitiatePaymentAttempt($data: InitiatePaymentAttemptInput!) {\n        initiatePaymentAttempt(data: $data) {\n          redirectUrl\n        }\n      }\n    "): (typeof documents)["\n      mutation PayWithVippsInitiatePaymentAttempt($data: InitiatePaymentAttemptInput!) {\n        initiatePaymentAttempt(data: $data) {\n          redirectUrl\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

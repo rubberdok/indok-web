@@ -32,7 +32,7 @@ import { NextPageWithLayout } from "@/lib/next";
 
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
-  const { productId, quantityStr, redirect } = router.query;
+  const { productId, quantityStr } = router.query;
   const quantity = typeof quantityStr == "string" ? parseInt(quantityStr) : 1;
 
   const [orderError, setOrderError] = useState<string>("");
@@ -134,11 +134,9 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                         </Link>
                       </Box>
                       <PayWithVipps
-                        productId={productId}
-                        quantity={Number(quantity)}
+                        orderId={productId}
                         onError={(e) => e && setOrderError(e.message)}
                         disabled={!isConsentingTerms}
-                        fallbackRedirect={typeof redirect === "string" ? redirect : undefined}
                       />
                       <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                     </Grid>

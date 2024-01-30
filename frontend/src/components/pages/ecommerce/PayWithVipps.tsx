@@ -3,25 +3,32 @@ import { Card, CardActionArea, CardMedia } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
 
-import { InitiateOrderDocument } from "@/generated/graphql";
+import { graphql } from "@/gql/pages";
 
 type Props = {
-  productId: string;
-  quantity: number;
+  orderId: string;
   onError?: (e?: ApolloError) => void;
   disabled: boolean;
-  fallbackRedirect: string | undefined;
 };
 
-export const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled, fallbackRedirect }) => {
-  const [initiateOrder, { error }] = useMutation(InitiateOrderDocument, {
-    onCompleted: (data) => {
-      if (data.initiateOrder) {
-        router.push(data.initiateOrder?.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`);
+export const PayWithVipps: React.FC<Props> = ({ orderId, onError, disabled }) => {
+  const [initiateOrder, { error }] = useMutation(
+    graphql(`
+      mutation PayWithVippsInitiatePaymentAttempt($data: InitiatePaymentAttemptInput!) {
+        initiatePaymentAttempt(data: $data) {
+          redirectUrl
+        }
       }
-    },
-    onError: onError,
-  });
+    `),
+    {
+      onCompleted: (data) => {
+        if (data.initiatePaymentAttempt.redirectUrl) {
+          router.push(data.initiatePaymentAttempt.redirectUrl);
+        }
+      },
+      onError: onError,
+    }
+  );
 
   const router = useRouter();
 
@@ -33,9 +40,9 @@ export const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, di
         onClick={() =>
           initiateOrder({
             variables: {
-              productId,
-              quantity,
-              ...(fallbackRedirect && { fallbackRedirect }),
+              data: {
+                orderId,
+              },
             },
           })
         }
