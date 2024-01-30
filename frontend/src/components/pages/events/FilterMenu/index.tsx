@@ -1,34 +1,29 @@
-import { Refresh, StarOutlineRounded, StarRounded } from "@mui/icons-material";
+import { Refresh } from "@mui/icons-material";
 import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import React from "react";
-
-import { FilterQuery } from "../AllEvents";
 
 import { CategoryFilter } from "./CategoryFilter";
 import { DateTimeFilter } from "./DateTimeFilter";
 import { OrganizationFilter } from "./OrganizationFilter";
-import { HandleChecked } from "./types";
+
+export type Filters = {
+  organizations: Record<string, boolean>;
+  categories: Record<string, boolean>;
+  dateTime: {
+    startAt?: string;
+    endAt?: string;
+  };
+};
 
 type Props = {
   /** The currently applied filters */
-  filters: FilterQuery;
+  filters: Filters;
   /** Function called when filters are updated */
-  onFiltersChange: (query: FilterQuery) => void;
-  /** Whether to show the default event or all (possibly filtered) events */
-  showDefaultEvents: boolean;
-  /** Called when whether to show default events or not changes */
-  onShowDefaultChange: (show: boolean) => void;
+  onFiltersChange: (query: Filters) => void;
 };
 
 /** Component for the filter menu on the event list page. */
-export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
-  const handleChecked: HandleChecked = (e, field, filter) => {
-    if (e.target.checked) {
-      onFiltersChange({ ...filters, [field]: filter });
-    } else {
-      onFiltersChange({ ...filters, [field]: undefined });
-    }
-  };
+export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange }) => {
   return (
     <Card>
       <CardContent>
@@ -39,7 +34,10 @@ export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefa
             </Grid>
             <Grid item>
               <Tooltip title="Nullstill filter" arrow>
-                <IconButton onClick={() => onFiltersChange({})} aria-label="delete">
+                <IconButton
+                  onClick={() => onFiltersChange({ organizations: {}, categories: {}, dateTime: {} })}
+                  aria-label="delete"
+                >
                   <Refresh />
                 </IconButton>
               </Tooltip>
@@ -48,23 +46,13 @@ export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefa
           <Grid item>
             <Divider />
           </Grid>
-          <Grid container item direction="row" justifyContent="space-between" alignItems="center">
-            <Grid item>
-              <Typography variant="body1">Fremhevet</Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => onShowDefaultChange(!showDefaultEvents)} aria-label="delete">
-                {showDefaultEvents ? <StarRounded color="warning" /> : <StarOutlineRounded />}
-              </IconButton>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Divider />
-          </Grid>
           <Grid item>
             <Typography variant="subtitle2">Arrangør</Typography>
           </Grid>
-          <OrganizationFilter filters={filters} handleChecked={handleChecked} />
+          <OrganizationFilter
+            organizationsFilter={filters.organizations}
+            onOrganizationsFilterChange={(organizations) => onFiltersChange({ ...filters, organizations })}
+          />
 
           <Grid item>
             <Divider />
@@ -72,12 +60,18 @@ export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefa
           <Grid item>
             <Typography variant="subtitle2">Kategori</Typography>
           </Grid>
-          <CategoryFilter filters={filters} handleChecked={handleChecked} />
+          <CategoryFilter
+            categoryFilters={filters.categories}
+            onCategoryFiltersChange={(categories) => onFiltersChange({ ...filters, categories })}
+          />
 
           <Grid item>
             <Divider />
           </Grid>
-          <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
+          <DateTimeFilter
+            dateTimeFilter={filters.dateTime}
+            onDateTimeFilterChange={(dateTime) => onFiltersChange({ ...filters, dateTime })}
+          />
         </Grid>
       </CardContent>
     </Card>

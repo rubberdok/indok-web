@@ -2,34 +2,43 @@ import { useQuery } from "@apollo/client";
 import { Checkbox, Grid } from "@mui/material";
 import React from "react";
 
-import { AllCategoriesDocument } from "@/generated/graphql";
-
-import { FilterQuery } from "../AllEvents";
-
-import { HandleChecked } from "./types";
+import { graphql } from "@/gql/pages";
 
 type Props = {
   /** The currently applied filters */
-  filters: FilterQuery;
+  categoryFilters: Record<string, boolean>;
   /** Method called when filters are updated */
-  handleChecked: HandleChecked;
+  onCategoryFiltersChange: (categoryFilters: Record<string, boolean>) => void;
 };
 
 /** Component for the category filter in the filter menu. */
-export const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
-  const { data } = useQuery(AllCategoriesDocument);
+export const CategoryFilter: React.FC<Props> = ({ categoryFilters, onCategoryFiltersChange }) => {
+  const { data } = useQuery(
+    graphql(`
+      query CategoryFilterCategories {
+        categories {
+          categories {
+            id
+            name
+          }
+        }
+      }
+    `)
+  );
 
   return (
     <Grid container item direction="column">
-      {data?.allCategories?.map(
+      {data?.categories.categories.map(
         (category) =>
           category && (
             <Grid key={category.id} container item direction="row" justifyContent="space-between" alignItems="center">
               <Grid item>{category.name}</Grid>
               <Grid item>
                 <Checkbox
-                  checked={filters.category === category.name}
-                  onChange={(e) => handleChecked(e, "category", category.name)}
+                  checked={categoryFilters[category.name]}
+                  onChange={(e) => {
+                    onCategoryFiltersChange({ ...categoryFilters, [category.name]: e.target.checked });
+                  }}
                 />
               </Grid>
             </Grid>

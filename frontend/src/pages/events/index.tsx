@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { AllEvents } from "@/components/pages/events";
 import { Title } from "@/components/Title";
-import { EventsDocument } from "@/generated/graphql";
+import { EventsPageDocument } from "@/gql/pages/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -54,11 +54,16 @@ const Events: NextPageWithLayout = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<ResultOf<typeof EventsDocument>> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<ResultOf<typeof EventsPageDocument>> = async (ctx) => {
   const client = initializeApollo({}, ctx);
 
   const { error, data } = await client.query({
-    query: EventsDocument,
+    query: EventsPageDocument,
+    variables: {
+      data: {
+        futureEventsOnly: true,
+      },
+    },
   });
 
   if (error) throw new Error(error.message);

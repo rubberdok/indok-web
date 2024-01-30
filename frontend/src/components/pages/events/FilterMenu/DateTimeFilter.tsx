@@ -1,17 +1,18 @@
 import { Grid, TextField } from "@mui/material";
 import React from "react";
 
-import { FilterQuery } from "../AllEvents";
-
 type Props = {
   /** The currently applied filters */
-  filters: FilterQuery;
+  dateTimeFilter: {
+    startAt?: string;
+    endAt?: string;
+  };
   /** Function called when filters are updated */
-  onFiltersChange: (query: FilterQuery) => void;
+  onDateTimeFilterChange: (dateTimeFilter: { startAt?: string; endAt?: string }) => void;
 };
 
 /** Component for the date filter in the filter menu. */
-export const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
+export const DateTimeFilter: React.FC<Props> = ({ dateTimeFilter, onDateTimeFilterChange }) => {
   return (
     <>
       <Grid container item direction="column">
@@ -22,9 +23,9 @@ export const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) =>
             type="date"
             fullWidth
             margin="normal"
-            value={filters?.startTime?.split("T")[0] ?? ""}
+            value={dateTimeFilter.startAt}
             InputLabelProps={{ shrink: true }}
-            onChange={(e) => onFiltersChange({ ...filters, startTime: `${e.currentTarget.value}T00:00` })}
+            onChange={(e) => onDateTimeFilterChange({ startAt: e.currentTarget.value, endAt: dateTimeFilter.endAt })}
           />
         </Grid>
         <Grid item>
@@ -33,9 +34,9 @@ export const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) =>
             label="Sluttid"
             type="date"
             fullWidth
-            value={filters?.endTime?.split("T")[0] ?? ""}
+            value={dateTimeFilter.endAt}
             InputLabelProps={{ shrink: true }}
-            onChange={(e) => onFiltersChange({ ...filters, endTime: `${e.currentTarget.value}T00:00` })}
+            onChange={(e) => onDateTimeFilterChange({ endAt: e.currentTarget.value, startAt: dateTimeFilter.endAt })}
           />
         </Grid>
       </Grid>
