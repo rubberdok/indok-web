@@ -5,41 +5,16 @@ import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
 
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { graphql } from "@/gql";
+import { graphql } from "@/gql/app";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
-import { PermissionRequired } from "../v2/components/PermissionRequired";
+import { PermissionRequired } from "../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
-import { Event, Form, Orders, Organization, Personal, Report, CabinsAdmin } from "./components/ProfileCard";
+import { CabinsAdmin, Event, Form, Orders, Organization, Personal, Report } from "./components/ProfileCard";
 
 // Opt out of caching for all data requests in the route segment
 export const dynamic = "force-dynamic";
-
-const profileDocument = graphql(/* GraphQL */ `
-  query Profile {
-    user {
-      id
-      feideEmail
-      email
-      username
-      firstName
-      lastName
-      dateJoined
-      graduationYear
-      gradeYear
-      allergies
-      phoneNumber
-      firstLogin
-    }
-  }
-`);
-
-const cabinPermissionDocument = graphql(/* GraphQL */ `
-  query CabinPermission {
-    hasPermission(permission: "cabins.manage_booking")
-  }
-`);
 
 // Returns a string with the first letter of the given first name,
 // and the first letter of the last space-separated part of lastName.
@@ -62,7 +37,18 @@ function getUserInitials(firstName: string, lastName: string): string {
 const ID_PREFIX = "profile-";
 
 export default function ProfilePage() {
-  const { data } = useSuspenseQuery(profileDocument);
+  const { data } = useSuspenseQuery(graphql(`
+    query AppProfileUser {
+      user {
+        user {
+          id
+          firstName
+          lastName
+          gradeYear
+        }
+      }
+    }
+  `));
 
   /**
    * Running this as a background query prevents a waterfall of queries, where
@@ -70,12 +56,19 @@ export default function ProfilePage() {
    * has finished fetching. Instead, we run the query in the background, and read it
    * in the PermissionRequired component.
    */
-  const [queryRef] = useBackgroundQuery(cabinPermissionDocument);
+  const [queryRef] = useBackgroundQuery(graphql(`
+    query AppProfileCabinPermission {
+      hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {
+        id
+        hasFeaturePermission
+      }
+    }
+  `));
 
   // If the user is not logged in, redirect to the login page
-  if (data.user === null) return redirect(generateFeideLoginUrl());
-
-  const initials = getUserInitials(data.user.firstName, data.user.lastName);
+  if (data.user.user === null) return redirect(generateFeideLoginUrl());
+    const {user} = data.user;
+  const initials = getUserInitials(user.firstName, user.lastName);
 
   return (
     <Container>
@@ -103,7 +96,7 @@ export default function ProfilePage() {
           </Avatar>
         </Grid>
         <Grid item>
-          {data?.user && <Typography variant="h4" component="h1">{`Hei, ${data.user.firstName}`}</Typography>}
+          {data?.user && <Typography variant="h4" component="h1">{`Hei, ${user.firstName}`}</Typography>}
         </Grid>
         <Grid item xs={10}>
           <Typography variant="body1" align="center">
@@ -113,7 +106,7 @@ export default function ProfilePage() {
 
         <Grid container item justifyContent="center" alignItems="stretch" spacing={4}>
           <Grid item xs={12} md={6} lg={5}>
-            <Personal user={data?.user ?? undefined} data-test-id={`${ID_PREFIX}personal-`} />
+            <Personal user={user ?? undefined} data-test-id={`${ID_PREFIX}personal-`} />
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
             <Event data-test-id={`${ID_PREFIX}event-`} />

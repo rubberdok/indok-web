@@ -1,4 +1,4 @@
-import { Link } from "../../../../../../../components/Link";
+import { Link } from "../../../../../Link";
 import { Route } from "../../types";
 
 type Props = {

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import poweredByVercel from "~/public/powered-vercel.svg";
 
-import { Link } from "../../../components/Link";
+import { Link } from "../Link";
 
 export const Vercel: React.FC = () => {
   return (

@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
 import { graphql } from "@/gql/app";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
-import { Link } from "../../../components/Link";
+import { Link } from "../Link";
 
 type Props = {
   redirect?: boolean;

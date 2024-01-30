@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import { usePathname } from "next/navigation";
 
-import { LoginButton } from "@/app/v2/components/LoginButton";
+import { LoginButton } from "@/app/components/LoginButton";
 import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 
 import { PermissionRequired } from "../../../../../PermissionRequired";

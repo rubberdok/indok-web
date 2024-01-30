@@ -6,7 +6,7 @@ import { Button, Skeleton } from "@mui/material";
 import { Suspense } from "react";
 
 import { Link } from "@/app/components/Link";
-import { LoginRequired } from "@/app/v2/components/LoginRequired";
+import { LoginRequired } from "@/app/components/LoginRequired";
 import { graphql } from "@/gql/app";
 
 type Props = {

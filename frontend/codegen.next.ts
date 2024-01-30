@@ -16,7 +16,7 @@ const config: CodegenConfig = {
     },
     "./src/gql/app/": {
       schema: "http://localhost:4000/graphql",
-      documents: ["src/app/v2/**/*.{ts,tsx}"],
+      documents: ["src/app/**/*.{ts,tsx}"],
       preset: "client-preset",
       config: {
         avoidOptionals: true,

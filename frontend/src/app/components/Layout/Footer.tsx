@@ -9,7 +9,7 @@ import { HallOfFame } from "@/layouts/footer/HallOfFame";
 import dayjs from "@/lib/date";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
-import { Link, LinkProps } from "../../../components/Link";
+import { Link, LinkProps } from "../Link";
 
 import { Logo } from "./Logo";
 import { Vercel } from "./Vercel";

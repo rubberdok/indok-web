@@ -1,16 +1,19 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
 
-import { UserFragment } from "@/generated/graphql";
 import Profile from "~/public/illustrations/Profile.svg";
 
 import { ProfileCardBase } from "./ProfileCardBase";
 
 type Props = {
-  user?: UserFragment;
+  user?: {
+    firstName: string;
+    lastName: string;
+    gradeYear: number | null;
+  };
   "data-test-id"?: string;
 };
 
-export const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...props }) => {
+export const PersonalCard: React.FC<Props> = ({ user, "data-test-id": dataTestId, ...props }) => {
   return (
     <ProfileCardBase
       title="Personlig informasjon"
