@@ -1,4 +1,7 @@
 projects:
   next:
-    schema: "http://localhost:4000/graphql"
+    schema:
+      - "http://127.0.0.1:4000/graphql":
+          headers:
+            Apollo-Require-Preflight: "true"
     documents: frontend/src/**/*.{graphql,js,ts,jsx,tsx}

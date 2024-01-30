@@ -5,27 +5,29 @@ import { PersonOutlineRounded } from "@mui/icons-material";
 import { Button, Skeleton } from "@mui/material";
 import { Suspense } from "react";
 
-import { graphql } from "@/gql";
+import { graphql } from "@/gql/app";
+import { LoginRequired } from "@/app/v2/components/LoginRequired";
+import { Link } from "@/app/components/Link";
 
-import { Link } from "../Link";
-import { LoginRequired } from "../LoginRequired";
 
 type Props = {
   fullWidth?: boolean;
   "data-test-id"?: string;
 };
 
-const loggedInUserDocument = graphql(/* GraphQL */ `
-  query LoggedInUser {
-    user {
-      id
-      firstName
-    }
-  }
-`);
+
 
 export const InnerLoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
-  const { data } = useSuspenseQuery(loggedInUserDocument);
+  const { data } = useSuspenseQuery(graphql(`
+    query AppLoginButtonUser {
+      user {
+        user {
+          id
+          firstName
+        }
+      }
+    }
+  `));
 
   return (
     <LoginRequired size="medium" color="secondary" data-test-id={dataTestId} fullWidth={fullWidth} variant="text">
@@ -38,7 +40,7 @@ export const InnerLoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": d
         color="secondary"
         size="medium"
       >
-        {data?.user?.firstName}
+        {data?.user?.user?.firstName}
       </Button>
     </LoginRequired>
   );

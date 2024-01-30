@@ -1,6 +1,6 @@
 import { Box, SxProps, Typography } from "@mui/material";
 
-import { Link } from "../Link";
+import { Link } from "../../../components/Link";
 
 type Props = { sx?: SxProps };
 

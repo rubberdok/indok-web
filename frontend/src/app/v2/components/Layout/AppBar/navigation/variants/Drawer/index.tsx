@@ -3,7 +3,7 @@ import { Box, Divider, IconButton, Drawer as MuiDrawer, Stack } from "@mui/mater
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import { LoginButton } from "@/app/components/LoginButton";
+import { LoginButton } from "@/app/v2/components/LoginButton";
 import { PermissionRequired } from "@/app/components/PermissionRequired";
 import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 

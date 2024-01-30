@@ -14,1512 +14,943 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /**
-   * The `Date` scalar type represents a Date
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
-  Date: { input: string; output: string; }
-  /**
-   * The `DateTime` scalar type represents a DateTime
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: { input: string; output: string; }
-  /** The `Decimal` scalar type represents a python Decimal. */
-  Decimal: { input: number; output: number; }
-  /**
-   * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
-   * in fields, resolvers and input.
-   */
-  UUID: { input: string; output: string; }
 };
 
-/** Booking type for admin users */
-export type AdminBookingType = {
-  __typename?: 'AdminBookingType';
-  cabins: Array<CabinType>;
-  checkIn: Scalars['Date']['output'];
-  checkOut: Scalars['Date']['output'];
-  declineReason: Scalars['String']['output'];
-  externalParticipants: Scalars['Int']['output'];
-  extraInfo: Scalars['String']['output'];
+export type AddMemberInput = {
+  /** The ID of the organization to add the user to */
+  organizationId: Scalars['ID']['input'];
+  /** The role of the user in the organization, defaults to Role.MEMBER */
+  role: InputMaybe<Role>;
+  /** The ID of the user to add to the organization */
+  userId: Scalars['ID']['input'];
+};
+
+export type AddMemberResponse = {
+  __typename?: 'AddMemberResponse';
+  member: Member;
+};
+
+export type Booking = {
+  __typename?: 'Booking';
+  cabin: Cabin;
+  email: Scalars['String']['output'];
+  endDate: Scalars['DateTime']['output'];
   firstName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  internalParticipants: Scalars['Int']['output'];
-  isDeclined: Scalars['Boolean']['output'];
-  isInternalPrice: Maybe<Scalars['Int']['output']>;
-  isTentative: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
-  numberOfNights: Maybe<Scalars['Int']['output']>;
-  phone: Scalars['String']['output'];
-  price: Maybe<Scalars['Int']['output']>;
-  receiverEmail: Scalars['String']['output'];
-  timestamp: Scalars['DateTime']['output'];
+  phoneNumber: Scalars['String']['output'];
+  startDate: Scalars['DateTime']['output'];
+  status: Status;
 };
 
-/**
- * Sets the field is_attending to False in the Sign Up for the user with the
- * given ID, for the event with the given ID
- * NOTE: The sign up still exists, it is not deleted from the database
- *       when a user signs off an event
- */
-export type AdminEventSignOff = {
-  __typename?: 'AdminEventSignOff';
-  event: Maybe<EventType>;
-};
-
-/** Booking type for fields available for not logged in users */
-export type AllBookingsType = {
-  __typename?: 'AllBookingsType';
-  cabins: Array<CabinType>;
-  checkIn: Scalars['Date']['output'];
-  checkOut: Scalars['Date']['output'];
-  id: Scalars['ID']['output'];
-};
-
-export type AnswerInput = {
-  answer: Scalars['String']['input'];
-  questionId: Scalars['ID']['input'];
-};
-
-/** A user's answer to a question. */
-export type AnswerType = {
-  __typename?: 'AnswerType';
-  answer: Scalars['String']['output'];
-  id: Maybe<Scalars['UUID']['output']>;
-  question: QuestionType;
-  uuid: Scalars['UUID']['output'];
-};
-
-export type ArchiveDocumentType = {
-  __typename?: 'ArchiveDocumentType';
-  featured: Scalars['Boolean']['output'];
-  fileLocation: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  thumbnail: Maybe<Scalars['String']['output']>;
-  title: Scalars['String']['output'];
-  typeDoc: ArchiveDocumentTypeDoc;
-  webLink: Maybe<Scalars['String']['output']>;
-  year: Maybe<Scalars['Int']['output']>;
-};
-
-/** An enumeration. */
-export enum ArchiveDocumentTypeDoc {
-  /** Annet */
-  Annet = 'ANNET',
-  /** Årbøker */
-  Arboker = 'ARBOKER',
-  /** Budsjett og Regnskap */
-  BudsjettOgRegnskap = 'BUDSJETT_OG_REGNSKAP',
-  /** Foreningens lover */
-  ForeningensLover = 'FORENINGENS_LOVER',
-  /** Generalforsamling */
-  Generalforsamling = 'GENERALFORSAMLING',
-  /** Januscript */
-  Januscript = 'JANUSCRIPT',
-  /** Støtte fra HS */
-  StotteFraHs = 'STOTTE_FRA_HS',
-  /** Utveksling */
-  Utveksling = 'UTVEKSLING'
-}
-
-export type AssignMembership = {
-  __typename?: 'AssignMembership';
-  membership: Maybe<MembershipType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type AttemptCapturePayment = {
-  __typename?: 'AttemptCapturePayment';
-  order: Maybe<OrderType>;
-  status: Maybe<PaymentStatus>;
-};
-
-export type AuthUser = {
-  __typename?: 'AuthUser';
-  user: UserType;
-};
-
-export type BaseFormInput = {
-  description: InputMaybe<Scalars['String']['input']>;
-  name: InputMaybe<Scalars['String']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type BaseListingInput = {
-  application: InputMaybe<Scalars['Boolean']['input']>;
-  applicationUrl: InputMaybe<Scalars['String']['input']>;
-  case: InputMaybe<Scalars['Boolean']['input']>;
-  deadline: InputMaybe<Scalars['DateTime']['input']>;
-  description: InputMaybe<Scalars['String']['input']>;
-  endDatetime: InputMaybe<Scalars['DateTime']['input']>;
-  formId: InputMaybe<Scalars['ID']['input']>;
-  interview: InputMaybe<Scalars['Boolean']['input']>;
-  readMoreUrl: InputMaybe<Scalars['String']['input']>;
-  startDatetime: InputMaybe<Scalars['DateTime']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
-};
-
-export type BaseQuestionInput = {
-  description: InputMaybe<Scalars['String']['input']>;
-  mandatory: InputMaybe<Scalars['Boolean']['input']>;
-  question: InputMaybe<Scalars['String']['input']>;
-  questionType: InputMaybe<QuestionTypeEnum>;
-};
-
-export type BlogPostType = {
-  __typename?: 'BlogPostType';
-  author: Maybe<UserType>;
-  blog: Maybe<BlogType>;
-  id: Scalars['ID']['output'];
-  publishDate: Scalars['DateTime']['output'];
-  text: Scalars['String']['output'];
-  title: Scalars['String']['output'];
-};
-
-export type BlogType = {
-  __typename?: 'BlogType';
-  blogPosts: Array<BlogPostType>;
-  description: Scalars['String']['output'];
+export type BookingContact = {
+  __typename?: 'BookingContact';
+  email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  organization: Maybe<OrganizationType>;
+  phoneNumber: Scalars['String']['output'];
 };
 
-/** Basic booking object type used as a base for other types and as a standalone */
-export type BookingInput = {
-  cabins: InputMaybe<Array<Scalars['Int']['input']>>;
-  checkIn: InputMaybe<Scalars['Date']['input']>;
-  checkOut: InputMaybe<Scalars['Date']['input']>;
-  externalParticipants: InputMaybe<Scalars['Int']['input']>;
-  extraInfo: InputMaybe<Scalars['String']['input']>;
-  firstName: InputMaybe<Scalars['String']['input']>;
-  internalParticipants: InputMaybe<Scalars['Int']['input']>;
-  lastName: InputMaybe<Scalars['String']['input']>;
-  phone: InputMaybe<Scalars['String']['input']>;
-  receiverEmail: InputMaybe<Scalars['String']['input']>;
+export type BookingContactResponse = {
+  __typename?: 'BookingContactResponse';
+  bookingContact: BookingContact;
 };
 
-export type BookingResponsibleType = {
-  __typename?: 'BookingResponsibleType';
-  active: Maybe<Scalars['Boolean']['output']>;
-  email: Maybe<Scalars['String']['output']>;
-  firstName: Maybe<Scalars['String']['output']>;
+export type BookingSemester = {
+  __typename?: 'BookingSemester';
+  bookingsEnabled: Scalars['Boolean']['output'];
+  endAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
-  lastName: Maybe<Scalars['String']['output']>;
-  phone: Maybe<Scalars['Int']['output']>;
+  semester: Semester;
+  startAt: Scalars['DateTime']['output'];
 };
 
-export type CabinType = {
-  __typename?: 'CabinType';
+export type BookingSemestersResponse = {
+  __typename?: 'BookingSemestersResponse';
+  fall: Maybe<BookingSemester>;
+  spring: Maybe<BookingSemester>;
+};
+
+export type Cabin = {
+  __typename?: 'Cabin';
+  capacity: Scalars['Int']['output'];
   externalPrice: Scalars['Int']['output'];
-  externalPriceWeekend: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   internalPrice: Scalars['Int']['output'];
-  internalPriceWeekend: Scalars['Int']['output'];
-  maxGuests: Scalars['Int']['output'];
   name: Scalars['String']['output'];
 };
 
-export type CategoryInput = {
-  name: InputMaybe<Scalars['String']['input']>;
+export type CabinsResponse = {
+  __typename?: 'CabinsResponse';
+  cabins: Array<Cabin>;
 };
 
-export type CategoryType = {
-  __typename?: 'CategoryType';
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
+export type CreateEventCategoryInput = {
+  name: Scalars['String']['input'];
 };
 
-export type CreateArchiveDocument = {
-  __typename?: 'CreateArchiveDocument';
-  arhiveDocument: Maybe<ArchiveDocumentType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type CreateBlog = {
-  __typename?: 'CreateBlog';
-  blog: Maybe<BlogType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type CreateBlogPost = {
-  __typename?: 'CreateBlogPost';
-  blogPost: Maybe<BlogPostType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Add a new booking to the database */
-export type CreateBooking = {
-  __typename?: 'CreateBooking';
-  booking: Maybe<AllBookingsType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Create a new event category */
-export type CreateCategory = {
-  __typename?: 'CreateCategory';
-  category: Maybe<CategoryType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Create a new event */
-export type CreateEvent = {
-  __typename?: 'CreateEvent';
-  event: Maybe<EventType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type CreateEventCategoryResponse = {
+  __typename?: 'CreateEventCategoryResponse';
+  category: EventCategory;
 };
 
 export type CreateEventInput = {
-  allowedGradeYears: InputMaybe<Array<Scalars['Int']['input']>>;
-  availableSlots: InputMaybe<Scalars['Int']['input']>;
-  bindingSignup: InputMaybe<Scalars['Boolean']['input']>;
-  categoryId: InputMaybe<Scalars['ID']['input']>;
-  contactEmail: InputMaybe<Scalars['String']['input']>;
-  deadline: InputMaybe<Scalars['DateTime']['input']>;
-  description: Scalars['String']['input'];
-  endTime: InputMaybe<Scalars['DateTime']['input']>;
-  hasExtraInformation: InputMaybe<Scalars['Boolean']['input']>;
-  image: InputMaybe<Scalars['String']['input']>;
-  isAttendable: Scalars['Boolean']['input'];
-  location: InputMaybe<Scalars['String']['input']>;
+  event: EventData;
+  /**
+   * The organization that is hosting the event. Events must be hosted by an organization, and the user
+   * creating the event must be a member of the organization.
+   */
   organizationId: Scalars['ID']['input'];
-  price: InputMaybe<Scalars['Float']['input']>;
-  shortDescription: InputMaybe<Scalars['String']['input']>;
-  signupOpenDate: InputMaybe<Scalars['DateTime']['input']>;
-  startTime: Scalars['DateTime']['input'];
-  title: Scalars['String']['input'];
+  signUpDetails: InputMaybe<SignUpData>;
 };
 
-export type CreateForm = {
-  __typename?: 'CreateForm';
-  form: Maybe<FormType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type CreateEventResponse = {
+  __typename?: 'CreateEventResponse';
+  event: Event;
 };
 
-export type CreateFormInput = {
-  description: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  organizationId: Scalars['ID']['input'];
-};
-
-/** Creates a new listing */
-export type CreateListing = {
-  __typename?: 'CreateListing';
-  listing: Maybe<ListingType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type CreateEventSlot = {
+  capacity: Scalars['Int']['input'];
+  gradeYears: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 export type CreateListingInput = {
-  application: InputMaybe<Scalars['Boolean']['input']>;
+  /** An optional URL to the application form for the listing. */
   applicationUrl: InputMaybe<Scalars['String']['input']>;
-  case: InputMaybe<Scalars['Boolean']['input']>;
-  deadline: Scalars['DateTime']['input'];
+  /** At what time the listing will close, will show as a deadline to users, and the listing will be hidden afterwards */
+  closesAt: Scalars['DateTime']['input'];
+  /** The description of the listing, can be markdown. */
   description: InputMaybe<Scalars['String']['input']>;
-  endDatetime: InputMaybe<Scalars['DateTime']['input']>;
-  formId: InputMaybe<Scalars['ID']['input']>;
-  interview: InputMaybe<Scalars['Boolean']['input']>;
-  organizationId: Scalars['ID']['input'];
-  readMoreUrl: InputMaybe<Scalars['String']['input']>;
-  startDatetime: InputMaybe<Scalars['DateTime']['input']>;
-  title: Scalars['String']['input'];
-};
-
-export type CreateOrganization = {
-  __typename?: 'CreateOrganization';
-  ok: Maybe<Scalars['Boolean']['output']>;
-  organization: Maybe<OrganizationType>;
-};
-
-export type CreateProduct = {
-  __typename?: 'CreateProduct';
-  ok: Maybe<Scalars['Boolean']['output']>;
-  product: Maybe<ProductType>;
-};
-
-export type CreateProductInput = {
-  description: Scalars['String']['input'];
-  maxBuyableQuantity: Scalars['Int']['input'];
+  /** The name of the listing, will be visible to users. */
   name: Scalars['String']['input'];
+  /** The ID of the organization that the listing belongs to. */
   organizationId: Scalars['ID']['input'];
-  price: Scalars['Decimal']['input'];
-  totalQuantity: Scalars['Int']['input'];
 };
 
-export type CreateQuestion = {
-  __typename?: 'CreateQuestion';
-  ok: Maybe<Scalars['Boolean']['output']>;
-  question: Maybe<QuestionType>;
+export type CreateListingResponse = {
+  __typename?: 'CreateListingResponse';
+  listing: Listing;
 };
 
-export type CreateQuestionInput = {
+export type CreateOrderInput = {
+  /** The ID of the product to create an order for. */
+  productId: Scalars['ID']['input'];
+};
+
+export type CreateOrderResponse = {
+  __typename?: 'CreateOrderResponse';
+  order: Order;
+};
+
+export type CreateOrganizationInput = {
+  /** The description of the organization, cannot exceed 10 000 characters */
   description: InputMaybe<Scalars['String']['input']>;
-  mandatory: InputMaybe<Scalars['Boolean']['input']>;
-  question: Scalars['String']['input'];
-  questionType: InputMaybe<QuestionTypeEnum>;
+  /**
+   * Features to enable for the organization. Defaults to an empty list.
+   * Requires that the current user is a super user, otherwise, this field is ignored.
+   */
+  featurePermissions: InputMaybe<Array<FeaturePermission>>;
+  /** The name of the organization, must be unique and between 1 and 100 characters */
+  name: Scalars['String']['input'];
 };
 
-export type CreateUpdateAndDeleteOptions = {
-  __typename?: 'CreateUpdateAndDeleteOptions';
-  ok: Maybe<Scalars['Boolean']['output']>;
-  options: Maybe<Array<OptionType>>;
+export type CreateOrganizationResponse = {
+  __typename?: 'CreateOrganizationResponse';
+  organization: Organization;
 };
 
-export type DeleteAnswer = {
-  __typename?: 'DeleteAnswer';
-  deletedUuid: Maybe<Scalars['ID']['output']>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type DeleteEventCategoryInput = {
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteAnswersToForm = {
-  __typename?: 'DeleteAnswersToForm';
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type DeleteEventCategoryResponse = {
+  __typename?: 'DeleteEventCategoryResponse';
+  category: EventCategory;
 };
 
-export type DeleteArchiveDocument = {
-  __typename?: 'DeleteArchiveDocument';
-  archiveDocument: Maybe<ArchiveDocumentType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type DeleteListingInput = {
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteBlog = {
-  __typename?: 'DeleteBlog';
-  ok: Maybe<Scalars['ID']['output']>;
+export type DeleteListingResponse = {
+  __typename?: 'DeleteListingResponse';
+  listing: Listing;
 };
 
-export type DeleteBlogPost = {
-  __typename?: 'DeleteBlogPost';
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Deletes the booking with the given ID */
-export type DeleteBooking = {
-  __typename?: 'DeleteBooking';
-  bookingId: Maybe<Scalars['ID']['output']>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Deletes the category with a given ID */
-export type DeleteCategory = {
-  __typename?: 'DeleteCategory';
-  category: Maybe<CategoryType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Deletes the event with the given ID */
-export type DeleteEvent = {
-  __typename?: 'DeleteEvent';
-  event: Maybe<EventType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type DeleteForm = {
-  __typename?: 'DeleteForm';
-  deletedId: Maybe<Scalars['ID']['output']>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Deletes the listing with the given ID */
-export type DeleteListing = {
-  __typename?: 'DeleteListing';
-  listingId: Maybe<Scalars['ID']['output']>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type DeleteOrganization = {
-  __typename?: 'DeleteOrganization';
-  ok: Maybe<Scalars['Boolean']['output']>;
-  organization: Maybe<OrganizationType>;
-};
-
-export type DeleteQuestion = {
-  __typename?: 'DeleteQuestion';
-  deletedId: Maybe<Scalars['ID']['output']>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type EmailInput = {
-  cabins: InputMaybe<Array<Scalars['Int']['input']>>;
-  checkIn: InputMaybe<Scalars['Date']['input']>;
-  checkOut: InputMaybe<Scalars['Date']['input']>;
-  emailType: InputMaybe<Scalars['String']['input']>;
-  externalParticipants: InputMaybe<Scalars['Int']['input']>;
-  extraInfo: InputMaybe<Scalars['String']['input']>;
-  firstName: InputMaybe<Scalars['String']['input']>;
-  internalParticipants: InputMaybe<Scalars['Int']['input']>;
-  lastName: InputMaybe<Scalars['String']['input']>;
-  phone: InputMaybe<Scalars['String']['input']>;
-  receiverEmail: InputMaybe<Scalars['String']['input']>;
-};
-
-/**
- * Sets the field is_attending to False in the Sign Up for the user that
- * sent the request, for the event with the given ID
- * NOTE: The sign up still exists, it is not deleted from the database
- *       when a user signs off an event
- */
-export type EventSignOff = {
-  __typename?: 'EventSignOff';
-  event: Maybe<EventType>;
-  isFull: Maybe<Scalars['Boolean']['output']>;
-};
-
-/**
- * Creates a new Sign Up for the user that sent the request, for the event
- * with the given ID
- */
-export type EventSignUp = {
-  __typename?: 'EventSignUp';
-  event: Maybe<EventType>;
-  isFull: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type EventSignUpInput = {
-  extraInformation: InputMaybe<Scalars['String']['input']>;
-};
-
-export type EventType = {
-  __typename?: 'EventType';
-  allowedGradeYears: Maybe<Array<Scalars['Int']['output']>>;
-  availableSlots: Maybe<Scalars['Int']['output']>;
-  bindingSignup: Scalars['Boolean']['output'];
-  category: Maybe<CategoryType>;
+export type Event = {
+  __typename?: 'Event';
+  /**
+   * canSignUp is true if the current user can sign up for the event, false otherwise.
+   * If the user is not logged in, this will be always be false.
+   */
+  canSignUp: Scalars['Boolean']['output'];
+  /** categories describes the categories that the event belongs to. */
+  categories: Maybe<Array<EventCategory>>;
+  /** The contact email for the event organizer. */
   contactEmail: Scalars['String']['output'];
-  deadline: Maybe<Scalars['DateTime']['output']>;
+  /** The description of the event. We support markdown on the client, so this can be markdown. */
   description: Scalars['String']['output'];
-  endTime: Maybe<Scalars['DateTime']['output']>;
-  hasExtraInformation: Scalars['Boolean']['output'];
+  /** The end time of the event. */
+  endAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
-  image: Maybe<Scalars['String']['output']>;
-  isAttendable: Scalars['Boolean']['output'];
-  isFull: Maybe<Scalars['Boolean']['output']>;
-  location: Maybe<Scalars['String']['output']>;
-  organization: OrganizationType;
-  price: Maybe<Scalars['Float']['output']>;
-  product: Maybe<ProductType>;
-  publisher: Maybe<UserType>;
-  shortDescription: Maybe<Scalars['String']['output']>;
-  signupOpenDate: Maybe<Scalars['DateTime']['output']>;
-  startTime: Scalars['DateTime']['output'];
-  title: Scalars['String']['output'];
-  userAttendance: Maybe<UserAttendingType>;
-  usersAttending: Maybe<Array<SignUpType>>;
-  usersOnWaitingList: Maybe<Array<SignUpType>>;
+  /** The location of the event */
+  location: Scalars['String']['output'];
+  /** The name of the event. */
+  name: Scalars['String']['output'];
+  /** The organization that is hosting the event. */
+  organization: Maybe<Organization>;
+  /** signUpAvailability describes the availability of sign ups for the event for the current user. */
+  signUpAvailability: SignUpAvailability;
+  signUpDetails: Maybe<EventSignUpDetails>;
+  signUpsEnabled: Scalars['Boolean']['output'];
+  /** The start time of the event. */
+  startAt: Scalars['DateTime']['output'];
 };
 
-/** A form containing questions, optionally linked to a listing. */
-export type FormType = {
-  __typename?: 'FormType';
-  description: Scalars['String']['output'];
+export type EventCategoriesResponse = {
+  __typename?: 'EventCategoriesResponse';
+  categories: Array<EventCategory>;
+};
+
+export type EventCategory = {
+  __typename?: 'EventCategory';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  organization: Maybe<OrganizationType>;
-  questions: Array<QuestionType>;
-  responder: Maybe<UserType>;
-  responders: Maybe<Array<UserType>>;
-  response: Maybe<ResponseType>;
-  responses: Maybe<Array<ResponseType>>;
 };
 
-
-/** A form containing questions, optionally linked to a listing. */
-export type FormTypeResponderArgs = {
-  userId: Scalars['ID']['input'];
-};
-
-
-/** A form containing questions, optionally linked to a listing. */
-export type FormTypeRespondersArgs = {
-  userId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-/** A form containing questions, optionally linked to a listing. */
-export type FormTypeResponseArgs = {
-  responsePk: InputMaybe<Scalars['UUID']['input']>;
-};
-
-export type InitiateOrder = {
-  __typename?: 'InitiateOrder';
-  orderId: Maybe<Scalars['UUID']['output']>;
-  redirect: Maybe<Scalars['String']['output']>;
-};
-
-export type ListingType = {
-  __typename?: 'ListingType';
-  applicationUrl: Maybe<Scalars['String']['output']>;
-  chips: Array<Scalars['String']['output']>;
-  deadline: Scalars['DateTime']['output'];
-  description: Scalars['String']['output'];
-  endDatetime: Scalars['DateTime']['output'];
-  form: Maybe<FormType>;
-  heroImageUrl: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  organization: OrganizationType;
-  readMoreUrl: Maybe<Scalars['String']['output']>;
-  slug: Scalars['String']['output'];
-  startDatetime: Scalars['DateTime']['output'];
-  title: Scalars['String']['output'];
-  viewCount: Scalars['Int']['output'];
-};
-
-export type Logout = {
-  __typename?: 'Logout';
-  idToken: Maybe<Scalars['String']['output']>;
-};
-
-export type MembershipInput = {
-  groupId: InputMaybe<Scalars['ID']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-  userId: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type MembershipType = {
-  __typename?: 'MembershipType';
-  group: Maybe<ResponsibleGroupType>;
-  id: Scalars['ID']['output'];
-  organization: OrganizationType;
-  user: UserType;
-};
-
-export type Mutations = {
-  __typename?: 'Mutations';
+export type EventData = {
+  /** categories is a list of cateogry IDs to which the event belongs */
+  categories: InputMaybe<Array<Scalars['ID']['input']>>;
   /**
-   * Sets the field is_attending to False in the Sign Up for the user with the
-   * given ID, for the event with the given ID
-   * NOTE: The sign up still exists, it is not deleted from the database
-   *       when a user signs off an event
+   * The description of the event, defaults to "". We support markdown on the client, so this can be markdown.
+   * This will be displayed to users.
    */
-  adminEventSignOff: Maybe<AdminEventSignOff>;
-  assignMembership: Maybe<AssignMembership>;
-  attemptCapturePayment: Maybe<AttemptCapturePayment>;
-  authUser: AuthUser;
-  createArchivedocument: Maybe<CreateArchiveDocument>;
-  createBlog: Maybe<CreateBlog>;
-  createBlogPost: Maybe<CreateBlogPost>;
-  /** Add a new booking to the database */
-  createBooking: Maybe<CreateBooking>;
-  /** Create a new event category */
-  createCategory: Maybe<CreateCategory>;
-  /** Create a new event */
-  createEvent: Maybe<CreateEvent>;
-  createForm: Maybe<CreateForm>;
-  /** Creates a new listing */
-  createListing: Maybe<CreateListing>;
-  createOrganization: Maybe<CreateOrganization>;
-  createProduct: Maybe<CreateProduct>;
-  createQuestion: Maybe<CreateQuestion>;
-  createUpdateAndDeleteOptions: Maybe<CreateUpdateAndDeleteOptions>;
-  deleteAnswer: Maybe<DeleteAnswer>;
-  deleteAnswers: Maybe<DeleteAnswersToForm>;
-  deleteArchivedocument: Maybe<DeleteArchiveDocument>;
-  deleteBlog: Maybe<DeleteBlog>;
-  deleteBlogPost: Maybe<DeleteBlogPost>;
-  /** Deletes the booking with the given ID */
-  deleteBooking: Maybe<DeleteBooking>;
-  /** Deletes the category with a given ID */
-  deleteCategory: Maybe<DeleteCategory>;
-  /** Deletes the event with the given ID */
-  deleteEvent: Maybe<DeleteEvent>;
-  deleteForm: Maybe<DeleteForm>;
-  /** Deletes the listing with the given ID */
-  deleteListing: Maybe<DeleteListing>;
-  deleteOrganization: Maybe<DeleteOrganization>;
-  deleteQuestion: Maybe<DeleteQuestion>;
+  description: InputMaybe<Scalars['String']['input']>;
   /**
-   * Sets the field is_attending to False in the Sign Up for the user that
-   * sent the request, for the event with the given ID
-   * NOTE: The sign up still exists, it is not deleted from the database
-   *       when a user signs off an event
+   * The end time of the event. If this is not provided, the event will be assumed to be two hours long.
+   * This will be displayed to users.
    */
-  eventSignOff: Maybe<EventSignOff>;
+  endAt: InputMaybe<Scalars['DateTime']['input']>;
+  /** The name of the event, this will be displayed to users */
+  name: Scalars['String']['input'];
+  /** The start time of the event. Events must have a start time. */
+  startAt: Scalars['DateTime']['input'];
+};
+
+export type EventInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type EventResponse = {
+  __typename?: 'EventResponse';
+  event: Event;
+};
+
+export type EventSignUpDetails = {
+  __typename?: 'EventSignUpDetails';
+  capacity: Scalars['Int']['output'];
+  signUpsEndAt: Scalars['DateTime']['output'];
+  signUpsStartAt: Scalars['DateTime']['output'];
+};
+
+export type EventsInput = {
   /**
-   * Creates a new Sign Up for the user that sent the request, for the event
-   * with the given ID
+   * If true, only return events that are currently happening, or will happen in the future
+   * i.e. events where endAt is in the future.
    */
-  eventSignUp: Maybe<EventSignUp>;
-  initiateOrder: Maybe<InitiateOrder>;
-  logout: Maybe<Logout>;
-  /** Sends email to the user or an admin (or both) */
-  sendEmail: Maybe<SendEmail>;
-  /** Send an email to all users signed up to an event */
-  sendEventMails: Maybe<SendEventEmails>;
-  submitAnswers: Maybe<SubmitOrUpdateAnswers>;
-  updateArchivedocument: Maybe<UpdateArchiveDocument>;
-  updateBlog: Maybe<UpdateBlog>;
-  updateBlogPost: Maybe<UpdateBlogPost>;
-  /** Change the given booking */
-  updateBooking: Maybe<UpdateBooking>;
-  /** Update the booking semester */
-  updateBookingSemester: Maybe<UpdateBookingSemester>;
-  /** Change the given cabin */
-  updateCabin: Maybe<UpdateCabin>;
-  /** Updates the category with a given ID with the data in category_data */
-  updateCategory: Maybe<UpdateCategory>;
-  /** Updates the event with a given ID with the data in event_data */
-  updateEvent: Maybe<UpdateEvent>;
-  updateForm: Maybe<UpdateForm>;
-  updateListing: Maybe<UpdateListing>;
-  updateOrganization: Maybe<UpdateOrganization>;
-  updateQuestion: Maybe<UpdateQuestion>;
-  updateUser: Maybe<UpdateUser>;
+  futureEventsOnly: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-
-export type MutationsAdminEventSignOffArgs = {
-  eventId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
+export type EventsResponse = {
+  __typename?: 'EventsResponse';
+  /** All events, if futureEventsOnly is false, otherwise only future events */
+  events: Array<Event>;
+  /** The events that start next week, by week number */
+  nextWeek: Array<Event>;
+  /** The events that start this week, by week number */
+  thisWeek: Array<Event>;
+  /** The total number of events returned by this query (for now) */
+  total: Scalars['Int']['output'];
+  /** The events that start in two weeks or later, by week number */
+  twoWeeksOrLater: Array<Event>;
 };
 
+export enum FeaturePermission {
+  ArchiveViewDocuments = 'ARCHIVE_VIEW_DOCUMENTS',
+  ArchiveWriteDocuments = 'ARCHIVE_WRITE_DOCUMENTS',
+  CabinAdmin = 'CABIN_ADMIN',
+  EventWriteSignUps = 'EVENT_WRITE_SIGN_UPS'
+}
 
-export type MutationsAssignMembershipArgs = {
-  membershipData: MembershipInput;
+export type HasFeaturePermissionInput = {
+  featurePermission: FeaturePermission;
 };
 
+export type HasFeaturePermissionResponse = {
+  __typename?: 'HasFeaturePermissionResponse';
+  hasFeaturePermission: Scalars['Boolean']['output'];
+  id: FeaturePermission;
+};
 
-export type MutationsAttemptCapturePaymentArgs = {
+export type InitiatePaymentAttemptInput = {
+  /** The ID of the order to initiate a payment attempt for. */
   orderId: Scalars['ID']['input'];
 };
 
-
-export type MutationsAuthUserArgs = {
-  code: Scalars['String']['input'];
+export type InitiatePaymentAttemptResponse = {
+  __typename?: 'InitiatePaymentAttemptResponse';
+  /** The URL to redirect the user to in order to complete the payment. */
+  redirectUrl: Scalars['String']['output'];
 };
 
-
-export type MutationsCreateArchivedocumentArgs = {
-  date: InputMaybe<Scalars['DateTime']['input']>;
-  fileLocation: InputMaybe<Scalars['String']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
-  typeDoc: InputMaybe<Scalars['String']['input']>;
-  webLink: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationsCreateBlogArgs = {
-  description: InputMaybe<Scalars['String']['input']>;
-  name: InputMaybe<Scalars['String']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsCreateBlogPostArgs = {
-  authorId: InputMaybe<Scalars['ID']['input']>;
-  blogId: InputMaybe<Scalars['ID']['input']>;
-  text: InputMaybe<Scalars['String']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationsCreateBookingArgs = {
-  bookingData: InputMaybe<BookingInput>;
-};
-
-
-export type MutationsCreateCategoryArgs = {
-  categoryData: CategoryInput;
-};
-
-
-export type MutationsCreateEventArgs = {
-  eventData: CreateEventInput;
-};
-
-
-export type MutationsCreateFormArgs = {
-  formData: CreateFormInput;
-  listingId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsCreateListingArgs = {
-  listingData: CreateListingInput;
-};
-
-
-export type MutationsCreateOrganizationArgs = {
-  organizationData: OrganizationInput;
-};
-
-
-export type MutationsCreateProductArgs = {
-  productData: CreateProductInput;
-};
-
-
-export type MutationsCreateQuestionArgs = {
-  formId: InputMaybe<Scalars['ID']['input']>;
-  questionData: CreateQuestionInput;
-};
-
-
-export type MutationsCreateUpdateAndDeleteOptionsArgs = {
-  optionData: InputMaybe<Array<OptionInput>>;
-  questionId: Scalars['ID']['input'];
-};
-
-
-export type MutationsDeleteAnswerArgs = {
-  uuid: Scalars['ID']['input'];
-};
-
-
-export type MutationsDeleteAnswersArgs = {
-  formId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteArchivedocumentArgs = {
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteBlogArgs = {
-  blogId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteBlogPostArgs = {
-  blogPostId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteBookingArgs = {
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteCategoryArgs = {
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteEventArgs = {
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteFormArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationsDeleteListingArgs = {
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteOrganizationArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationsDeleteQuestionArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationsEventSignOffArgs = {
-  eventId: Scalars['ID']['input'];
-};
-
-
-export type MutationsEventSignUpArgs = {
-  data: InputMaybe<EventSignUpInput>;
-  eventId: Scalars['ID']['input'];
-};
-
-
-export type MutationsInitiateOrderArgs = {
-  fallbackRedirect: InputMaybe<Scalars['String']['input']>;
-  productId: Scalars['ID']['input'];
-  quantity: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type MutationsSendEmailArgs = {
-  emailInput: InputMaybe<EmailInput>;
-};
-
-
-export type MutationsSendEventMailsArgs = {
-  content: InputMaybe<Scalars['String']['input']>;
-  eventId: Scalars['ID']['input'];
-  receiverEmails: InputMaybe<Array<Scalars['String']['input']>>;
-  subject: Scalars['String']['input'];
-};
-
-
-export type MutationsSubmitAnswersArgs = {
-  answersData: InputMaybe<Array<AnswerInput>>;
-  formId: Scalars['ID']['input'];
-};
-
-
-export type MutationsUpdateArchivedocumentArgs = {
-  date: InputMaybe<Scalars['DateTime']['input']>;
-  fileLocation: InputMaybe<Scalars['String']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
-  typeDoc: InputMaybe<Scalars['String']['input']>;
-  webLink: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationsUpdateBlogArgs = {
-  blogData: InputMaybe<UpdateBlogInput>;
-};
-
-
-export type MutationsUpdateBlogPostArgs = {
-  blogPostData: InputMaybe<UpdateBlogPostInput>;
-};
-
-
-export type MutationsUpdateBookingArgs = {
-  bookingData: InputMaybe<UpdateBookingInput>;
-};
-
-
-export type MutationsUpdateBookingSemesterArgs = {
-  semesterData: InputMaybe<UpdateBookingSemesterInput>;
-};
-
-
-export type MutationsUpdateCabinArgs = {
-  cabinData: InputMaybe<UpdateCabinInput>;
-};
-
-
-export type MutationsUpdateCategoryArgs = {
-  categoryData: InputMaybe<CategoryInput>;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationsUpdateEventArgs = {
-  eventData: InputMaybe<UpdateEventInput>;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationsUpdateFormArgs = {
-  formData: BaseFormInput;
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsUpdateListingArgs = {
-  id: Scalars['ID']['input'];
-  listingData: InputMaybe<BaseListingInput>;
-};
-
-
-export type MutationsUpdateOrganizationArgs = {
-  id: Scalars['ID']['input'];
-  organizationData: InputMaybe<OrganizationInput>;
-};
-
-
-export type MutationsUpdateQuestionArgs = {
-  id: Scalars['ID']['input'];
-  questionData: BaseQuestionInput;
-};
-
-
-export type MutationsUpdateUserArgs = {
-  userData: InputMaybe<UserInput>;
-};
-
-export type OptionInput = {
-  answer: Scalars['String']['input'];
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-/** Option for multiple choice questions */
-export type OptionType = {
-  __typename?: 'OptionType';
-  answer: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  question: QuestionType;
-};
-
-export type OrderType = {
-  __typename?: 'OrderType';
-  id: Scalars['UUID']['output'];
-  paymentStatus: PaymentStatus;
-  product: ProductType;
-  quantity: Scalars['Int']['output'];
-  timestamp: Scalars['DateTime']['output'];
-  totalPrice: Scalars['Decimal']['output'];
-  user: UserType;
-};
-
-export type OrdersByStatusType = {
-  __typename?: 'OrdersByStatusType';
-  length: Maybe<Scalars['Int']['output']>;
-  orders: Maybe<Array<OrderType>>;
-};
-
-export type OrganizationInput = {
-  description: InputMaybe<Scalars['String']['input']>;
-  name: InputMaybe<Scalars['String']['input']>;
-  parentId: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type OrganizationType = {
-  __typename?: 'OrganizationType';
-  absoluteSlug: Maybe<Scalars['String']['output']>;
-  children: Array<OrganizationType>;
-  color: Maybe<Scalars['String']['output']>;
+export type Listing = {
+  __typename?: 'Listing';
+  /** An optional URL to the application form for the listing, defaults to "" */
+  applicationUrl: Scalars['String']['output'];
+  /** When the listing closes, i.e. deadline, or when the listing is hidden from view. */
+  closesAt: Scalars['DateTime']['output'];
+  /** The description of the listing, can be markdown. */
   description: Scalars['String']['output'];
-  events: Array<EventType>;
-  hrGroup: Maybe<ResponsibleGroupType>;
   id: Scalars['ID']['output'];
-  listings: Maybe<Array<ListingType>>;
-  logoUrl: Maybe<Scalars['String']['output']>;
+  /** The name/title of the listing, will be visible to users. */
   name: Scalars['String']['output'];
-  parent: Maybe<OrganizationType>;
-  primaryGroup: Maybe<ResponsibleGroupType>;
-  slug: Scalars['String']['output'];
-  users: Array<UserType>;
+  /** The organization that the listing belongs to. */
+  organization: Organization;
 };
 
-/** An enumeration. */
-export enum PaymentStatus {
+export type ListingInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type ListingResponse = {
+  __typename?: 'ListingResponse';
+  listing: Listing;
+};
+
+export type ListingsResponse = {
+  __typename?: 'ListingsResponse';
+  listings: Array<Listing>;
+};
+
+export type Member = {
+  __typename?: 'Member';
+  id: Scalars['ID']['output'];
+  /** The organization the member is a member of */
+  organization: Organization;
+  /** The role of the member in the organization */
+  role: Role;
+  /** The user that is a member of the organization */
+  user: PublicUser;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  /** Add a member to the organization */
+  addMember: AddMemberResponse;
+  /** Create an event, requires that the user is logged in, and is a member of the organization that is hosting the event */
+  createEvent: CreateEventResponse;
+  /** Create a new event category, requires super user status */
+  createEventCategory: CreateEventCategoryResponse;
+  createListing: CreateListingResponse;
+  /** Creates an order for the given product. */
+  createOrder: CreateOrderResponse;
+  /** Create a new organization, and add the current user as an admin of the organization. */
+  createOrganization: CreateOrganizationResponse;
+  /** Delete an event category, requires super user status */
+  deleteEventCategory: DeleteEventCategoryResponse;
+  deleteListing: DeleteListingResponse;
+  /** Initiates a payment attempt for the given order. */
+  initiatePaymentAttempt: InitiatePaymentAttemptResponse;
+  newBooking: NewBookingResponse;
+  /** Remove a member from the organization by the ID of the membership. */
+  removeMember: RemoveMemberResponse;
+  /** Retract an active sign up for an event, requires that the user is logged in */
+  retractSignUp: RetractSignUpResponse;
+  /** Sign up for an event, requires that the user is logged in */
+  signUp: SignUpResponse;
+  /**
+   * Update the user with the given ID with super user privileges, requires that
+   * the caller is an authenticated super user. Otherwise, use updateUser.
+   */
+  superUpdateUser: SuperUpdateUserResponse;
+  /** Updates the booking contact, requires that the user is in an organization with the CABIN_ADMIN permission. */
+  updateBookingContact: UpdateBookingContactResponse;
+  /**
+   * Updates the booking semester for the given semester, requires that the user is in an organization with
+   * the CABIN_ADMIN permission.
+   */
+  updateBookingSemester: UpdateBookingSemesterResponse;
+  updateBookingStatus: UpdateBookingResponse;
+  updateEvent: UpdateEventResponse;
+  /** Update an event category, requires super user status */
+  updateEventCategory: UpdateEventCategoryResponse;
+  updateListing: UpdateListingResponse;
+  /**
+   * Update an organization with the given name and description.
+   * Passing null or omitting a value will leave the value unchanged.
+   */
+  updateOrganization: UpdateOrganizationResponse;
+  updateUser: UpdateUserResponse;
+};
+
+
+export type MutationAddMemberArgs = {
+  data: AddMemberInput;
+};
+
+
+export type MutationCreateEventArgs = {
+  data: CreateEventInput;
+};
+
+
+export type MutationCreateEventCategoryArgs = {
+  data: CreateEventCategoryInput;
+};
+
+
+export type MutationCreateListingArgs = {
+  data: CreateListingInput;
+};
+
+
+export type MutationCreateOrderArgs = {
+  data: CreateOrderInput;
+};
+
+
+export type MutationCreateOrganizationArgs = {
+  data: CreateOrganizationInput;
+};
+
+
+export type MutationDeleteEventCategoryArgs = {
+  data: DeleteEventCategoryInput;
+};
+
+
+export type MutationDeleteListingArgs = {
+  data: DeleteListingInput;
+};
+
+
+export type MutationInitiatePaymentAttemptArgs = {
+  data: InitiatePaymentAttemptInput;
+};
+
+
+export type MutationNewBookingArgs = {
+  data: NewBookingInput;
+};
+
+
+export type MutationRemoveMemberArgs = {
+  data: RemoveMemberInput;
+};
+
+
+export type MutationRetractSignUpArgs = {
+  data: RetractSignUpInput;
+};
+
+
+export type MutationSignUpArgs = {
+  data: SignUpInput;
+};
+
+
+export type MutationSuperUpdateUserArgs = {
+  data: SuperUpdateUserInput;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateBookingContactArgs = {
+  data: UpdateBookingContactInput;
+};
+
+
+export type MutationUpdateBookingSemesterArgs = {
+  data: UpdateBookingSemesterInput;
+};
+
+
+export type MutationUpdateBookingStatusArgs = {
+  data: UpdateBookingStatusInput;
+};
+
+
+export type MutationUpdateEventArgs = {
+  data: UpdateEventInput;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateEventCategoryArgs = {
+  data: UpdateEventCategoryInput;
+};
+
+
+export type MutationUpdateListingArgs = {
+  data: UpdateListingInput;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateOrganizationArgs = {
+  data: UpdateOrganizationInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
+};
+
+export type NewBookingInput = {
+  cabinId: Scalars['ID']['input'];
+  email: Scalars['String']['input'];
+  endDate: Scalars['DateTime']['input'];
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  phoneNumber: Scalars['String']['input'];
+  startDate: Scalars['DateTime']['input'];
+};
+
+export type NewBookingResponse = {
+  __typename?: 'NewBookingResponse';
+  booking: Booking;
+};
+
+export type Order = {
+  __typename?: 'Order';
+  id: Scalars['ID']['output'];
+};
+
+export type Organization = {
+  __typename?: 'Organization';
+  description: Scalars['String']['output'];
+  /**
+   * The features that are enabled for the organization.
+   * Changing these fields requires super user permissions.
+   */
+  featurePermissions: Array<FeaturePermission>;
+  id: Scalars['ID']['output'];
+  /** The members of the organization */
+  members: Array<Member>;
+  name: Scalars['String']['output'];
+};
+
+export type OrganizationsResponse = {
+  __typename?: 'OrganizationsResponse';
+  organizations: Array<Organization>;
+};
+
+export enum ParticipationStatus {
+  /** The user is confirmed to be attending the event */
+  Confirmed = 'CONFIRMED',
+  /** The user is on the wait list for the event */
+  OnWaitlist = 'ON_WAITLIST',
+  /** The user has signed up for the event, and had their sign up removed by an admin */
+  Removed = 'REMOVED',
+  /** The user has signed up for the event, and then retracted their sign up */
+  Retracted = 'RETRACTED'
+}
+
+export type Price = {
+  __typename?: 'Price';
+  /** The unit of the price, e.g. NOK, USD, EUR, etc. */
+  unit: Scalars['String']['output'];
+  /** The value of the price, in the given unit. */
+  value: Scalars['Int']['output'];
+};
+
+/**
+ * PrivateUser should only be used when accessed by the authenticated user themselves
+ * as it contains sensitive information.
+ */
+export type PrivateUser = {
+  __typename?: 'PrivateUser';
+  allergies: Maybe<Scalars['String']['output']>;
+  /** If the user is permitted to update their graduation year */
+  canUpdateYear: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  /** Student email */
+  email: Scalars['String']['output'];
+  firstLogin: Scalars['Boolean']['output'];
+  firstName: Scalars['String']['output'];
+  /** The users grade year, from 1 - 6(+) */
+  gradeYear: Maybe<Scalars['Int']['output']>;
+  /** Expected graduation year for the user */
+  graduationYear: Maybe<Scalars['Int']['output']>;
+  /** The last time the users graduation year was updated */
+  graduationYearUpdatedAt: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  /** true if the user is a super user, false otherwise */
+  isSuperUser: Scalars['Boolean']['output'];
+  lastName: Scalars['String']['output'];
+  /** All organizations the user is a member of */
+  organizations: Array<Organization>;
+  phoneNumber: Maybe<Scalars['String']['output']>;
+  /** The users' study program */
+  studyProgram: Maybe<StudyProgram>;
+  username: Scalars['String']['output'];
+};
+
+export type Product = {
+  __typename?: 'Product';
+  id: Scalars['ID']['output'];
+  /** price in øre, i.e. 100 = 1 NOK */
+  price: Price;
+};
+
+export type ProductResponse = {
+  __typename?: 'ProductResponse';
+  products: Array<Product>;
+  total: Scalars['Int']['output'];
+};
+
+/**
+ * The public facing user type, with limited information.
+ * This type is is available to other users, and should therefore not contain sensitive information,
+ * unless the information is restricted by access control.
+ */
+export type PublicUser = {
+  __typename?: 'PublicUser';
+  /** The users' given/first name */
+  firstName: Scalars['String']['output'];
+  /** The users' grade year */
+  gradeYear: Maybe<Scalars['Int']['output']>;
+  id: Scalars['ID']['output'];
+  /** The users' family/last name */
+  lastName: Scalars['String']['output'];
+  /** The users' username */
+  username: Scalars['String']['output'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  bookingContact: BookingContactResponse;
+  bookingSemesters: BookingSemestersResponse;
+  cabins: CabinsResponse;
+  categories: EventCategoriesResponse;
+  event: EventResponse;
+  events: EventsResponse;
+  hasFeaturePermission: HasFeaturePermissionResponse;
+  listing: ListingResponse;
+  listings: ListingsResponse;
+  /** Get all organizations */
+  organizations: Maybe<OrganizationsResponse>;
+  products: ProductResponse;
+  serverTime: ServerTimeResponse;
+  user: UserResponse;
+  users: UsersResponse;
+};
+
+
+export type QueryEventArgs = {
+  data: EventInput;
+};
+
+
+export type QueryEventsArgs = {
+  data: InputMaybe<EventsInput>;
+};
+
+
+export type QueryHasFeaturePermissionArgs = {
+  data: HasFeaturePermissionInput;
+};
+
+
+export type QueryListingArgs = {
+  data: ListingInput;
+};
+
+export type RemoveMemberInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type RemoveMemberResponse = {
+  __typename?: 'RemoveMemberResponse';
+  member: Member;
+};
+
+export type RetractSignUpInput = {
+  /** The event to retract the sign up for */
+  eventId: Scalars['ID']['input'];
+};
+
+export type RetractSignUpResponse = {
+  __typename?: 'RetractSignUpResponse';
+  signUp: SignUp;
+};
+
+export enum Role {
+  /**
+   * An admin of the organization, can do everything a member can,
+   * # and can also manage members in the organization and delete the organization.
+   */
+  Admin = 'ADMIN',
+  /**
+   * A member of the organization, can do everything except
+   * manage members in the organization and delete the organization.
+   */
+  Member = 'MEMBER'
+}
+
+export enum Semester {
+  Fall = 'FALL',
+  Spring = 'SPRING'
+}
+
+export type ServerTimeResponse = {
+  __typename?: 'ServerTimeResponse';
+  serverTime: Scalars['DateTime']['output'];
+};
+
+export type SignUp = {
+  __typename?: 'SignUp';
+  /** The event the user signed up for */
+  event: Event;
+  id: Scalars['ID']['output'];
+  /** The status of the user's participation in the event */
+  participationStatus: ParticipationStatus;
+  /** The user that signed up for the event */
+  user: PublicUser;
+};
+
+export enum SignUpAvailability {
+  /** Sign ups are open, enabled, and there is at least one slot available for the user to sign up for. */
+  Available = 'AVAILABLE',
+  /** The user is not signed up for the event, and sign ups are closed */
+  Closed = 'CLOSED',
+  Confirmed = 'CONFIRMED',
+  /** Sign ups are not enabled for the event */
+  Disabled = 'DISABLED',
+  /** Sign ups have not opened yet */
+  NotOpen = 'NOT_OPEN',
+  OnWaitlist = 'ON_WAITLIST',
+  /**
+   * There are no slots for the event for the user to sign up for, regardless of their current capacity.
+   * If the user is not logged in, the status will always be UNAVAILABLE.
+   */
+  Unavailable = 'UNAVAILABLE',
+  /** All slots are full, and the user is not signed up for the event. The user can sign up for the wait list. */
+  WaitlistAvailable = 'WAITLIST_AVAILABLE'
+}
+
+export type SignUpData = {
+  /**
+   * Total capacity for the event, regardless of the capacity in each slot.
+   * This number takes precedence over the capacity in each slot, so if the remaining capacity on the event is 0
+   * no more users can be registered as attending.
+   */
+  capacity: Scalars['Int']['input'];
+  /** If true, users can sign up for the event. If false, users cannot sign up for the event. */
+  enabled: Scalars['Boolean']['input'];
+  /** The time that sign ups close for the event. This must be after signUpsOpenAt. */
+  signUpsEndAt: Scalars['DateTime']['input'];
+  /** The time that sign ups open for the event. This must be before the start time of the event. */
+  signUpsStartAt: Scalars['DateTime']['input'];
+  /** The slots for the event. If this is not provided, but capacity is, then all users can attend the event. */
+  slots: Array<CreateEventSlot>;
+};
+
+export type SignUpInput = {
+  /** The event to sign up for */
+  eventId: Scalars['ID']['input'];
+};
+
+export type SignUpResponse = {
+  __typename?: 'SignUpResponse';
+  signUp: SignUp;
+};
+
+export enum Status {
   Cancelled = 'CANCELLED',
-  Captured = 'CAPTURED',
-  Failed = 'FAILED',
-  Initiated = 'INITIATED',
-  Refunded = 'REFUNDED',
-  Rejected = 'REJECTED',
-  Reserved = 'RESERVED'
+  Confirmed = 'CONFIRMED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
 }
 
-export type ProductType = {
-  __typename?: 'ProductType';
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  maxBuyableQuantity: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  price: Scalars['Decimal']['output'];
-};
-
-export type Queries = {
-  __typename?: 'Queries';
-  activeBookingResponsible: Maybe<BookingResponsibleType>;
-  adminAllBookings: Maybe<Array<AdminBookingType>>;
-  allBlogPosts: Maybe<Array<BlogPostType>>;
-  allBlogs: Maybe<Array<BlogType>>;
-  allBookings: Maybe<Array<AllBookingsType>>;
-  allCategories: Maybe<Array<CategoryType>>;
-  allEvents: Maybe<Array<EventType>>;
-  allOrganizations: Maybe<Array<OrganizationType>>;
-  allUsers: Maybe<Array<UserType>>;
-  archiveByTypes: Array<ArchiveDocumentType>;
-  attendeeReport: Maybe<Scalars['String']['output']>;
-  attendeeReportOrg: Maybe<Scalars['String']['output']>;
-  attendeeReports: Maybe<Scalars['String']['output']>;
-  availableYears: Array<Scalars['String']['output']>;
-  blog: Maybe<BlogType>;
-  blogPost: Maybe<BlogPostType>;
-  bookingSemester: Maybe<UpdateBookingSemesterType>;
-  cabins: Maybe<Array<CabinType>>;
-  category: Maybe<CategoryType>;
-  defaultEvents: Maybe<Array<EventType>>;
-  event: Maybe<EventType>;
-  eventFilteredOrganizations: Maybe<Array<OrganizationType>>;
-  featuredArchive: Array<ArchiveDocumentType>;
-  form: Maybe<FormType>;
-  forms: Maybe<Array<FormType>>;
-  hasPermission: Maybe<Scalars['Boolean']['output']>;
-  listing: Maybe<ListingType>;
-  listings: Maybe<Array<ListingType>>;
-  logout: Scalars['String']['output'];
-  memberships: Maybe<Array<MembershipType>>;
-  order: Maybe<OrderType>;
-  ordersByStatus: Maybe<OrdersByStatusType>;
-  organization: Maybe<OrganizationType>;
-  product: Maybe<ProductType>;
-  products: Maybe<Array<ProductType>>;
-  response: Maybe<ResponseType>;
-  responses: Maybe<Array<ResponseType>>;
-  serverTime: Maybe<Scalars['DateTime']['output']>;
-  signUps: Maybe<SignUpType>;
-  user: Maybe<UserType>;
-  userOrders: Maybe<Array<OrderType>>;
-};
-
-
-export type QueriesAdminAllBookingsArgs = {
-  after: InputMaybe<Scalars['String']['input']>;
-  before: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueriesAllEventsArgs = {
-  category: InputMaybe<Scalars['String']['input']>;
-  endTime: InputMaybe<Scalars['DateTime']['input']>;
-  organization: InputMaybe<Scalars['String']['input']>;
-  startTime: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-
-export type QueriesAllOrganizationsArgs = {
-  search: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueriesArchiveByTypesArgs = {
-  names: InputMaybe<Scalars['String']['input']>;
-  typeDoc: Array<InputMaybe<Scalars['String']['input']>>;
-  year: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueriesAttendeeReportArgs = {
-  eventId: Scalars['ID']['input'];
-  fields: InputMaybe<Array<Scalars['String']['input']>>;
-  filetype: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueriesAttendeeReportOrgArgs = {
-  fields: InputMaybe<Array<Scalars['String']['input']>>;
-  filetype: InputMaybe<Scalars['String']['input']>;
-  orgId: Scalars['ID']['input'];
-};
-
-
-export type QueriesAttendeeReportsArgs = {
-  eventIds: Array<Scalars['ID']['input']>;
-  fields: InputMaybe<Array<Scalars['String']['input']>>;
-  filetype: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueriesBlogArgs = {
-  blogId: Scalars['ID']['input'];
-};
-
-
-export type QueriesBlogPostArgs = {
-  blogPostId: Scalars['ID']['input'];
-};
-
-
-export type QueriesCategoryArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QueriesEventArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QueriesFormArgs = {
-  formId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type QueriesHasPermissionArgs = {
-  permission: Scalars['String']['input'];
-};
-
-
-export type QueriesListingArgs = {
-  id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type QueriesListingsArgs = {
-  search: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueriesMembershipsArgs = {
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type QueriesOrderArgs = {
-  orderId: Scalars['ID']['input'];
-};
-
-
-export type QueriesOrdersByStatusArgs = {
-  productId: Scalars['ID']['input'];
-  status: Scalars['String']['input'];
-};
-
-
-export type QueriesOrganizationArgs = {
-  id: InputMaybe<Scalars['ID']['input']>;
-  slug: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueriesProductArgs = {
-  productId: Scalars['ID']['input'];
-};
-
-
-export type QueriesResponseArgs = {
-  formId: Scalars['ID']['input'];
-  responseId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type QueriesResponsesArgs = {
-  formId: Scalars['ID']['input'];
-};
-
-
-export type QueriesSignUpsArgs = {
-  eventId: Scalars['ID']['input'];
-};
-
-/** A question on a form. */
-export type QuestionType = {
-  __typename?: 'QuestionType';
-  answer: Maybe<AnswerType>;
-  answers: Maybe<Array<AnswerType>>;
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  mandatory: Scalars['Boolean']['output'];
-  options: Maybe<Array<OptionType>>;
-  question: Scalars['String']['output'];
-  questionType: Maybe<QuestionTypeEnum>;
-};
-
-
-/** A question on a form. */
-export type QuestionTypeAnswersArgs = {
-  userId: InputMaybe<Scalars['ID']['input']>;
-};
-
-export enum QuestionTypeEnum {
-  Checkboxes = 'CHECKBOXES',
-  Dropdown = 'DROPDOWN',
-  FileUpload = 'FILE_UPLOAD',
-  MultipleChoice = 'MULTIPLE_CHOICE',
-  Paragraph = 'PARAGRAPH',
-  ShortAnswer = 'SHORT_ANSWER',
-  Slider = 'SLIDER'
-}
-
-/** An enumeration. */
-export enum ResponseStatus {
-  /** Red */
-  A_0 = 'A_0',
-  /** Yellow */
-  A_1 = 'A_1',
-  /** Green */
-  A_2 = 'A_2',
-  /** Unknown */
-  None = 'NONE'
-}
-
-/** A response instance that contains information about a user's response to a form. */
-export type ResponseType = {
-  __typename?: 'ResponseType';
-  answers: Array<AnswerType>;
-  form: FormType;
-  id: Maybe<Scalars['UUID']['output']>;
-  questions: Maybe<Array<QuestionType>>;
-  respondent: UserType;
-  status: Maybe<ResponseStatus>;
-  uuid: Scalars['UUID']['output'];
-};
-
-export type ResponsibleGroupType = {
-  __typename?: 'ResponsibleGroupType';
-  description: Maybe<Scalars['String']['output']>;
-  groupType: Scalars['String']['output'];
+export type StudyProgram = {
+  __typename?: 'StudyProgram';
+  externalId: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  organization: OrganizationType;
-  uuid: Scalars['UUID']['output'];
 };
 
-/** Sends email to the user or an admin (or both) */
-export type SendEmail = {
-  __typename?: 'SendEmail';
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Send an email to all users signed up to an event */
-export type SendEventEmails = {
-  __typename?: 'SendEventEmails';
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type SignUpType = {
-  __typename?: 'SignUpType';
-  event: EventType;
-  extraInformation: Scalars['String']['output'];
-  hasBoughtTicket: Maybe<Scalars['Boolean']['output']>;
-  id: Scalars['ID']['output'];
-  isAttending: Scalars['Boolean']['output'];
-  timestamp: Scalars['DateTime']['output'];
-  user: UserType;
-  userAllergies: Maybe<Scalars['String']['output']>;
-  userEmail: Scalars['String']['output'];
-  userGradeYear: Scalars['Int']['output'];
-  userPhoneNumber: Scalars['String']['output'];
-};
-
-export type SubmitOrUpdateAnswers = {
-  __typename?: 'SubmitOrUpdateAnswers';
-  message: Maybe<Scalars['String']['output']>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateArchiveDocument = {
-  __typename?: 'UpdateArchiveDocument';
-  event: Maybe<ArchiveDocumentType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateBlog = {
-  __typename?: 'UpdateBlog';
-  blog: Maybe<BlogType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateBlogInput = {
-  description: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  name: InputMaybe<Scalars['String']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type UpdateBlogPost = {
-  __typename?: 'UpdateBlogPost';
-  blogPost: Maybe<BlogPostType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateBlogPostInput = {
-  blogId: InputMaybe<Scalars['ID']['input']>;
-  id: Scalars['ID']['input'];
-  text: InputMaybe<Scalars['String']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Change the given booking */
-export type UpdateBooking = {
-  __typename?: 'UpdateBooking';
-  booking: Maybe<AllBookingsType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateBookingInput = {
-  cabins: InputMaybe<Array<Scalars['Int']['input']>>;
-  checkIn: InputMaybe<Scalars['Date']['input']>;
-  checkOut: InputMaybe<Scalars['Date']['input']>;
-  declineReason: InputMaybe<Scalars['String']['input']>;
-  externalParticipants: InputMaybe<Scalars['Int']['input']>;
-  extraInfo: InputMaybe<Scalars['String']['input']>;
+export type SuperUpdateUserInput = {
+  allergies: InputMaybe<Scalars['String']['input']>;
   firstName: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  internalParticipants: InputMaybe<Scalars['Int']['input']>;
-  isDeclined: InputMaybe<Scalars['Boolean']['input']>;
-  isTentative: InputMaybe<Scalars['Boolean']['input']>;
+  graduationYear: InputMaybe<Scalars['Int']['input']>;
+  isSuperUser: InputMaybe<Scalars['Boolean']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
-  phone: InputMaybe<Scalars['String']['input']>;
-  receiverEmail: InputMaybe<Scalars['String']['input']>;
+  phoneNumber: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Update the booking semester */
-export type UpdateBookingSemester = {
-  __typename?: 'UpdateBookingSemester';
-  bookingSemester: Maybe<UpdateBookingSemesterType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type SuperUpdateUserResponse = {
+  __typename?: 'SuperUpdateUserResponse';
+  user: PrivateUser;
+};
+
+export type UpdateBookingContactInput = {
+  /** The email address of the booking contact, will be publicly available, pass the empty string to remove the email address */
+  email: InputMaybe<Scalars['String']['input']>;
+  /** The full name of the booking contact, will be publicly available, pass the empty string to remove the name */
+  name: InputMaybe<Scalars['String']['input']>;
+  /** The phone number of the booking contact, will be publicly available, pass the empty string to remove the phone number */
+  phoneNumber: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateBookingContactResponse = {
+  __typename?: 'UpdateBookingContactResponse';
+  bookingContact: BookingContact;
+};
+
+export type UpdateBookingResponse = {
+  __typename?: 'UpdateBookingResponse';
+  booking: Booking;
 };
 
 export type UpdateBookingSemesterInput = {
-  fallEndDate: InputMaybe<Scalars['Date']['input']>;
-  fallSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
-  fallStartDate: InputMaybe<Scalars['Date']['input']>;
-  springEndDate: InputMaybe<Scalars['Date']['input']>;
-  springSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
-  springStartDate: InputMaybe<Scalars['Date']['input']>;
+  /** Whether or not bookings are enabled for this semester */
+  bookingsEnabled: InputMaybe<Scalars['Boolean']['input']>;
+  /** The end date for the booking period */
+  endAt: InputMaybe<Scalars['DateTime']['input']>;
+  /** There are only ever two semesters, so this is the ID of the semester to update. */
+  semester: Semester;
+  /** The start date for the booking period */
+  startAt: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-export type UpdateBookingSemesterType = {
-  __typename?: 'UpdateBookingSemesterType';
-  fallEndDate: Scalars['Date']['output'];
-  fallSemesterActive: Scalars['Boolean']['output'];
-  fallStartDate: Scalars['Date']['output'];
-  id: Scalars['ID']['output'];
-  springEndDate: Scalars['Date']['output'];
-  springSemesterActive: Scalars['Boolean']['output'];
-  springStartDate: Scalars['Date']['output'];
+export type UpdateBookingSemesterResponse = {
+  __typename?: 'UpdateBookingSemesterResponse';
+  bookingSemester: BookingSemester;
 };
 
-/** Change the given cabin */
-export type UpdateCabin = {
-  __typename?: 'UpdateCabin';
-  cabin: Maybe<CabinType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type UpdateBookingStatusInput = {
+  id: Scalars['ID']['input'];
+  status: Status;
 };
 
-export type UpdateCabinInput = {
-  externalPrice: InputMaybe<Scalars['Int']['input']>;
-  externalPriceWeekend: InputMaybe<Scalars['Int']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  internalPrice: InputMaybe<Scalars['Int']['input']>;
-  internalPriceWeekend: InputMaybe<Scalars['Int']['input']>;
-  maxGuests: InputMaybe<Scalars['Int']['input']>;
-  name: InputMaybe<Scalars['String']['input']>;
+export type UpdateEventCategoryInput = {
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
 };
 
-/** Updates the category with a given ID with the data in category_data */
-export type UpdateCategory = {
-  __typename?: 'UpdateCategory';
-  category: Maybe<CategoryType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-/** Updates the event with a given ID with the data in event_data */
-export type UpdateEvent = {
-  __typename?: 'UpdateEvent';
-  event: Maybe<EventType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type UpdateEventCategoryResponse = {
+  __typename?: 'UpdateEventCategoryResponse';
+  category: EventCategory;
 };
 
 export type UpdateEventInput = {
-  allowedGradeYears: InputMaybe<Array<Scalars['Int']['input']>>;
-  availableSlots: InputMaybe<Scalars['Int']['input']>;
-  bindingSignup: InputMaybe<Scalars['Boolean']['input']>;
-  categoryId: InputMaybe<Scalars['ID']['input']>;
-  contactEmail: InputMaybe<Scalars['String']['input']>;
-  deadline: InputMaybe<Scalars['DateTime']['input']>;
+  /**
+   * Total capacity for the event, regardless of the capacity in each slot.
+   * This number takes precedence over the capacity in each slot, so if the remaining capacity on the event is 0
+   * no more users can be registered as attending. Cannot be less than the number of users currently signed up for the event.
+   */
+  capacity: InputMaybe<Scalars['Int']['input']>;
+  /** categories is a list of cateogry IDs to which the event belongs */
+  categories: InputMaybe<Array<Scalars['ID']['input']>>;
+  /**
+   * The description of the event, defaults to "". We support markdown on the client, so this can be markdown.
+   * This will be displayed to users.
+   */
   description: InputMaybe<Scalars['String']['input']>;
-  endTime: InputMaybe<Scalars['DateTime']['input']>;
-  hasExtraInformation: InputMaybe<Scalars['Boolean']['input']>;
-  image: InputMaybe<Scalars['String']['input']>;
-  isAttendable: InputMaybe<Scalars['Boolean']['input']>;
+  /** The end time of the event, must be after startAt. */
+  endAt: InputMaybe<Scalars['DateTime']['input']>;
+  /** location of the event */
   location: InputMaybe<Scalars['String']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-  price: InputMaybe<Scalars['Float']['input']>;
-  shortDescription: InputMaybe<Scalars['String']['input']>;
-  signupOpenDate: InputMaybe<Scalars['DateTime']['input']>;
-  startTime: InputMaybe<Scalars['DateTime']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
+  /** The name of the event, this will be displayed to users */
+  name: InputMaybe<Scalars['String']['input']>;
+  /** The start time of the event. Must be before endAt and after the current time. */
+  startAt: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-export type UpdateForm = {
-  __typename?: 'UpdateForm';
-  form: Maybe<FormType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type UpdateEventResponse = {
+  __typename?: 'UpdateEventResponse';
+  event: Event;
 };
 
-export type UpdateListing = {
-  __typename?: 'UpdateListing';
-  listing: Maybe<ListingType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
+export type UpdateListingInput = {
+  /** An optional URL to the application form for the listing. */
+  applicationUrl: InputMaybe<Scalars['String']['input']>;
+  /** At what time the listing will close, will show as a deadline to users, and the listing will be hidden afterwards */
+  closesAt: InputMaybe<Scalars['DateTime']['input']>;
+  /** The description of the listing, can be markdown. */
+  description: InputMaybe<Scalars['String']['input']>;
+  /** The name of the listing, will be visible to users. */
+  name: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateOrganization = {
-  __typename?: 'UpdateOrganization';
-  ok: Maybe<Scalars['Boolean']['output']>;
-  organization: Maybe<OrganizationType>;
+export type UpdateListingResponse = {
+  __typename?: 'UpdateListingResponse';
+  listing: Listing;
 };
 
-export type UpdateQuestion = {
-  __typename?: 'UpdateQuestion';
-  ok: Maybe<Scalars['Boolean']['output']>;
-  question: Maybe<QuestionType>;
+export type UpdateOrganizationInput = {
+  /**
+   * The new description of the organization, cannot exceed 10 000 characters
+   * Omitting the value or passing null will leave the description unchanged
+   */
+  description: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Features to enable for the organization.
+   * Requires that the current user is a super user, otherwise, this field is ignored.
+   */
+  featurePermissions: InputMaybe<Array<FeaturePermission>>;
+  /** The ID of the organization to update */
+  id: Scalars['ID']['input'];
+  /**
+   * The new name of the organization
+   * Omitting the value or passing null will leave the name unchanged
+   */
+  name: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateUser = {
-  __typename?: 'UpdateUser';
-  user: Maybe<UserType>;
+export type UpdateOrganizationResponse = {
+  __typename?: 'UpdateOrganizationResponse';
+  organization: Organization;
 };
 
-export type UserAttendingType = {
-  __typename?: 'UserAttendingType';
-  hasBoughtTicket: Maybe<Scalars['Boolean']['output']>;
-  isOnWaitingList: Maybe<Scalars['Boolean']['output']>;
-  isSignedUp: Maybe<Scalars['Boolean']['output']>;
-  positionOnWaitingList: Maybe<Scalars['Int']['output']>;
-};
-
-export type UserInput = {
+export type UpdateUserInput = {
   allergies: InputMaybe<Scalars['String']['input']>;
-  email: InputMaybe<Scalars['String']['input']>;
   firstName: InputMaybe<Scalars['String']['input']>;
   graduationYear: InputMaybe<Scalars['Int']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
   phoneNumber: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UserType = {
-  __typename?: 'UserType';
-  allergies: Maybe<Scalars['String']['output']>;
-  canUpdateYear: Maybe<Scalars['Boolean']['output']>;
-  dateJoined: Scalars['DateTime']['output'];
-  email: Scalars['String']['output'];
-  events: Maybe<Array<EventType>>;
-  feideEmail: Scalars['String']['output'];
-  feideUserid: Scalars['String']['output'];
-  firstLogin: Scalars['Boolean']['output'];
-  firstName: Scalars['String']['output'];
-  gradeYear: Maybe<Scalars['Int']['output']>;
-  graduationYear: Maybe<Scalars['Int']['output']>;
-  id: Scalars['ID']['output'];
-  idToken: Scalars['String']['output'];
-  lastLogin: Maybe<Scalars['DateTime']['output']>;
-  lastName: Scalars['String']['output'];
-  memberships: Array<MembershipType>;
-  organizations: Array<OrganizationType>;
-  phoneNumber: Scalars['String']['output'];
-  responses: Array<ResponseType>;
-  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
-  username: Scalars['String']['output'];
-  yearUpdatedAt: Maybe<Scalars['DateTime']['output']>;
+export type UpdateUserResponse = {
+  __typename?: 'UpdateUserResponse';
+  user: PrivateUser;
 };
 
-export type LoggedInUserQueryVariables = Exact<{ [key: string]: never; }>;
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  user: Maybe<PrivateUser>;
+};
+
+export type UsersResponse = {
+  __typename?: 'UsersResponse';
+  super: Array<PrivateUser>;
+  total: Scalars['Int']['output'];
+  users: Array<PublicUser>;
+};
+
+export type AppLoginButtonUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LoggedInUserQuery = { __typename?: 'Queries', user: { __typename?: 'UserType', id: string, firstName: string } | null };
+export type AppLoginButtonUserQuery = { __typename?: 'Query', user: { __typename?: 'UserResponse', user: { __typename?: 'PrivateUser', id: string, firstName: string } | null } };
 
-export type UserWithIdQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UserWithIdQuery = { __typename?: 'Queries', user: { __typename?: 'UserType', id: string } | null };
-
-export type HasPermissionQueryVariables = Exact<{
-  permission: Scalars['String']['input'];
-}>;
+export type AppLoginRequiredUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type HasPermissionQuery = { __typename?: 'Queries', hasPermission: boolean | null };
-
-export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+export type AppLoginRequiredUserQuery = { __typename?: 'Query', user: { __typename?: 'UserResponse', user: { __typename?: 'PrivateUser', id: string, firstName: string } | null } };
 
 
-export type LogoutMutation = { __typename?: 'Mutations', logout: { __typename?: 'Logout', idToken: string | null } | null };
-
-export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ProfileQuery = { __typename?: 'Queries', user: { __typename?: 'UserType', id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear: number | null, gradeYear: number | null, allergies: string | null, phoneNumber: string, firstLogin: boolean } | null };
-
-export type CabinPermissionQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CabinPermissionQuery = { __typename?: 'Queries', hasPermission: boolean | null };
-
-
-export const LoggedInUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoggedInUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]} as unknown as DocumentNode<LoggedInUserQuery, LoggedInUserQueryVariables>;
-export const UserWithIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserWithId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UserWithIdQuery, UserWithIdQueryVariables>;
-export const HasPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HasPermission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"permission"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"permission"},"value":{"kind":"Variable","name":{"kind":"Name","value":"permission"}}}]}]}}]} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
-export const LogoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"idToken"}}]}}]}}]} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
-export const ProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feideEmail"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"dateJoined"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"firstLogin"}}]}}]}}]} as unknown as DocumentNode<ProfileQuery, ProfileQueryVariables>;
-export const CabinPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CabinPermission"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"permission"},"value":{"kind":"StringValue","value":"cabins.manage_booking","block":false}}]}]}}]} as unknown as DocumentNode<CabinPermissionQuery, CabinPermissionQueryVariables>;
+export const AppLoginButtonUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppLoginButtonUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]}}]} as unknown as DocumentNode<AppLoginButtonUserQuery, AppLoginButtonUserQueryVariables>;
+export const AppLoginRequiredUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppLoginRequiredUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]}}]} as unknown as DocumentNode<AppLoginRequiredUserQuery, AppLoginRequiredUserQueryVariables>;

@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -939,3 +940,11 @@ export type UsersResponse = {
   total: Scalars['Int']['output'];
   users: Array<PublicUser>;
 };
+
+export type LoginButtonUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LoginButtonUserQuery = { __typename?: 'Query', user: { __typename?: 'UserResponse', user: { __typename?: 'PrivateUser', id: string, firstName: string } | null } };
+
+
+export const LoginButtonUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoginButtonUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]}}]} as unknown as DocumentNode<LoginButtonUserQuery, LoginButtonUserQueryVariables>;

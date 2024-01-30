@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 
 import { Link } from "@/components";
 import { LoginRequired } from "@/components/Auth/LoginRequired";
-import { UserDocument } from "@/generated/graphql";
+import { graphql } from "@/gql/pages";
 
 type Props = {
   fullWidth?: boolean;
@@ -12,7 +12,17 @@ type Props = {
 };
 
 export const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
-  const { data } = useQuery(UserDocument);
+  const { data } = useQuery(graphql(`
+    query LoginButtonUser {
+      user {
+        user {
+          id
+          firstName
+        }
+      }
+    }
+  `));
+  const user = data?.user?.user;
 
   return (
     <LoginRequired size="medium" color="secondary" data-test-id={dataTestId} fullWidth={fullWidth} variant="text">
@@ -25,7 +35,7 @@ export const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTe
         color="secondary"
         size="medium"
       >
-        {data?.user?.firstName}
+        {user?.firstName}
       </Button>
     </LoginRequired>
   );

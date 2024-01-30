@@ -4,8 +4,8 @@ import { Metadata } from "next";
 import { ApolloWrapper } from "@/lib/apollo";
 import { ThemeRegistry } from "@/lib/mui";
 
-import { AppBar } from "./components/Layout/AppBar";
-import { Footer } from "./components/Layout/Footer";
+import { AppBar } from "./v2/components/Layout/AppBar";
+import { Footer } from "./v2/components/Layout/Footer";
 
 export const metadata: Metadata = {
   title: "Indøk NTNU | Janus Linjeforening",
