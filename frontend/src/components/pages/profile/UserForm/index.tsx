@@ -19,9 +19,9 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import { Link } from "@/components";
-import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 
+import { graphql } from "@/gql/pages";
 import {
   IUserForm,
   currentGradeYear,
@@ -39,16 +39,58 @@ type Props = {
 };
 
 export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
-  const { data } = useQuery(UserToEditDocument);
-  const [updateUser] = useMutation(UpdateUserDocument, {
-    onCompleted: onCompleted,
-    refetchQueries: [{ query: UserToEditDocument }],
-  });
+  const { data } = useQuery(
+    graphql(`
+      query UserFormUser {
+        user {
+          user {
+            id
+            firstName
+            lastName
+            graduationYearUpdatedAt
+            canUpdateYear
+            gradeYear
+            graduationYear
+            allergies
+            phoneNumber
+            email
+            isSuperUser
+          }
+        }
+      }
+    `)
+  );
+
+  const user = data?.user?.user;
+  const [updateUser] = useMutation(
+    graphql(`
+      mutation UserFormUpdateUser($data: UpdateUserInput!) {
+        updateUser(data: $data) {
+          user {
+            id
+            firstName
+            lastName
+            graduationYearUpdatedAt
+            canUpdateYear
+            gradeYear
+            graduationYear
+            allergies
+            phoneNumber
+            email
+            isSuperUser
+          }
+        }
+      }
+    `),
+    {
+      onCompleted: onCompleted,
+    }
+  );
   const router = useRouter();
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
 
-  const minimumGraduationYear = Math.min(currentYear, data?.user?.graduationYear ?? currentYear);
+  const minimumGraduationYear = Math.min(currentYear, user?.graduationYear ?? currentYear);
   const graduationYears = range(minimumGraduationYear, maxGraduationYear + 1, 1);
 
   const {
@@ -59,20 +101,18 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
   } = useForm<IUserForm>({
     mode: "onTouched",
     defaultValues: {
-      firstName: data?.user?.firstName || "",
-      lastName: data?.user?.lastName || "",
-      email: data?.user?.email || data?.user?.feideEmail || "",
-      phoneNumber: data?.user?.phoneNumber || "",
-      graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
-      allergies: data?.user?.allergies || "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      phoneNumber: user?.phoneNumber || "",
+      graduationYear: user?.graduationYear || suggestGraduationYear(),
+      allergies: user?.allergies || "",
     },
     values: {
-      firstName: data?.user?.firstName || "",
-      lastName: data?.user?.lastName || "",
-      email: data?.user?.email || data?.user?.feideEmail || "",
-      phoneNumber: data?.user?.phoneNumber || "",
-      graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
-      allergies: data?.user?.allergies || "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      phoneNumber: user?.phoneNumber || "",
+      graduationYear: user?.graduationYear || suggestGraduationYear(),
+      allergies: user?.allergies || "",
     },
     resolver: yupResolver(validationSchema),
   });
@@ -81,7 +121,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
     <form
       onSubmit={handleSubmit((values) =>
         updateUser({
-          variables: { userData: values },
+          variables: { data: values },
         })
       )}
     >
@@ -144,13 +184,12 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
             <Grid container item direction="row" spacing={2}>
               <Grid item>
                 <TextField
+                  disabled
+                  value={user?.email}
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  {...register("email")}
                   label="E-post"
-                  error={Boolean(errors.email)}
-                  helperText={errors.email?.message}
                   data-test-id={`${ID_PREFIX}emailTextField`}
                 />
               </Grid>
@@ -181,7 +220,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                   variant="filled"
                   error={Boolean(errors.graduationYear)}
                   data-test-id={`${ID_PREFIX}graduationYearSelect`}
-                  disabled={!data?.user?.canUpdateYear}
+                  disabled={!user?.canUpdateYear}
                 >
                   {graduationYears.map((year) => (
                     <option key={year} value={year}>
@@ -194,10 +233,10 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                     errors.phoneNumber?.message
                   </FormHelperText>
                 )}
-                {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
-                {!data?.user?.canUpdateYear && (
+                {user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
+                {!user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("L")}
+                    Kan ikke endres før: {dayjs(user?.graduationYearUpdatedAt).add(1, "year").format("L")}
                   </FormHelperText>
                 )}
               </FormControl>

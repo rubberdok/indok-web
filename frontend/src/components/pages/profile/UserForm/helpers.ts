@@ -25,7 +25,6 @@ export const isVegetarian = (allergies: string | null): boolean => {
 export type IUserForm = {
   firstName: string;
   lastName: string;
-  email: string;
   allergies: string;
   graduationYear: number;
   phoneNumber: string;
@@ -34,7 +33,6 @@ export type IUserForm = {
 export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
   firstName: Yup.string().required("Fornavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn 2 tegn."),
   lastName: Yup.string().required("Etternavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn to tegn."),
-  email: Yup.string().email("Oppgi en gyldig e-postadresse.").ensure(),
   allergies: Yup.string().ensure(),
   graduationYear: Yup.number()
     .required()
