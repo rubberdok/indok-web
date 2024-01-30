@@ -13,8 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n    query AppLoginButtonUser {\n      user {\n        user {\n          id\n          firstName\n        }\n      }\n    }\n  ": types.AppLoginButtonUserDocument,
-    "\n    query AppLoginRequiredUser {\n      user {\n        user {\n          id\n          firstName\n        }\n      }\n    }\n  ": types.AppLoginRequiredUserDocument,
+    "\n      query AppLoginButtonUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    ": types.AppLoginButtonUserDocument,
+    "\n      query AppLoginRequiredUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    ": types.AppLoginRequiredUserDocument,
 };
 
 /**
@@ -34,11 +34,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query AppLoginButtonUser {\n      user {\n        user {\n          id\n          firstName\n        }\n      }\n    }\n  "): (typeof documents)["\n    query AppLoginButtonUser {\n      user {\n        user {\n          id\n          firstName\n        }\n      }\n    }\n  "];
+export function graphql(source: "\n      query AppLoginButtonUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    "): (typeof documents)["\n      query AppLoginButtonUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query AppLoginRequiredUser {\n      user {\n        user {\n          id\n          firstName\n        }\n      }\n    }\n  "): (typeof documents)["\n    query AppLoginRequiredUser {\n      user {\n        user {\n          id\n          firstName\n        }\n      }\n    }\n  "];
+export function graphql(source: "\n      query AppLoginRequiredUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    "): (typeof documents)["\n      query AppLoginRequiredUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    "];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

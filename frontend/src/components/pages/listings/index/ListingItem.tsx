@@ -1,7 +1,6 @@
-import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Grid, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 
 import { Link } from "@/components";
-import { ListingFragment } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 
 const timestamp = (datetime: string) => {
@@ -15,18 +14,13 @@ const timestamp = (datetime: string) => {
   }
 };
 
-const translateChip = (chip: string) => {
-  switch (chip) {
-    case "application":
-      return "søknad";
-    case "interview":
-      return "intervju";
-    default:
-      return chip;
-  }
+type Props = {
+  listing: {
+    id: string;
+    name: string;
+    closesAt: string;
+  };
 };
-
-type Props = { listing: ListingFragment };
 
 /** Component for listing item in overview of listings. */
 export const ListingItem: React.FC<Props> = ({ listing }) => {
@@ -35,25 +29,21 @@ export const ListingItem: React.FC<Props> = ({ listing }) => {
       <CardActionArea
         sx={{ width: "100%", height: "100%" }}
         component={Link}
-        href={`listings/${listing.id}/${listing.slug}/`}
+        href={`listings/${listing.id}`}
         noLinkStyle
       >
         <CardMedia
           component="img"
-          image={listing.heroImageUrl ? listing.heroImageUrl : ""}
           sx={{
             height: "10em",
             objectFit: "cover",
-            opacity: 0.65,
-            ...(!listing.heroImageUrl && {
-              background: "url('/nth.svg')",
-              opacity: 0.1,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              /* Primary color */
-              backgroundColor: "rgba(11,60,60,0.5)",
-            }),
+            background: "url('/nth.svg')",
+            opacity: 0.1,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            /* Primary color */
+            backgroundColor: "rgba(11,60,60,0.5)",
           }}
         />
         <CardContent sx={{ paddingTop: 0, position: "relative" }}>
@@ -75,7 +65,7 @@ export const ListingItem: React.FC<Props> = ({ listing }) => {
             })}
           >
             <img
-              src={listing.organization?.logoUrl || "/nth.svg"}
+              src={"/nth.svg"}
               alt=""
               onError={(e) => (
                 ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
@@ -91,29 +81,15 @@ export const ListingItem: React.FC<Props> = ({ listing }) => {
           >
             <Grid item sx={{ textAlign: "center" }}>
               <Typography variant="h5" component="h2">
-                {listing.title}
+                {listing.name}
               </Typography>
             </Grid>
             <Grid item sx={{ textAlign: "center" }}>
               <Typography variant="caption" component="p">
                 <b>Frist: </b>
-                {timestamp(listing.deadline)}
+                {timestamp(listing.closesAt)}
               </Typography>
             </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-            sx={{ marginTop: (theme) => theme.spacing(4) }}
-          >
-            {listing.chips.map((chip) => (
-              <Grid item key={chip}>
-                <Chip label={translateChip(chip)} size="small" />
-              </Grid>
-            ))}
           </Grid>
         </CardContent>
       </CardActionArea>

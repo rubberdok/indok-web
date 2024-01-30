@@ -12,16 +12,18 @@ type Props = {
 };
 
 export const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
-  const { data } = useQuery(graphql(`
-    query LoginButtonUser {
-      user {
+  const { data } = useQuery(
+    graphql(`
+      query LoginButtonUser {
         user {
-          id
-          firstName
+          user {
+            id
+            firstName
+          }
         }
       }
-    }
-  `));
+    `)
+  );
   const user = data?.user?.user;
 
   return (

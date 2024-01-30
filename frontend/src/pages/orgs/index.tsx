@@ -7,19 +7,21 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const OrganizationPage: NextPageWithLayout = () => {
-  const { data } = useQuery(graphql(`
-    query OrganizationPageUser {
-      user {
+  const { data } = useQuery(
+    graphql(`
+      query OrganizationPageUser {
         user {
-          id
-          organizations {
+          user {
             id
-            name
+            organizations {
+              id
+              name
+            }
           }
         }
       }
-    }
-  `) );
+    `)
+  );
 
   return (
     <Container>
@@ -31,15 +33,15 @@ const OrganizationPage: NextPageWithLayout = () => {
         </Grid>
         <Grid item container spacing={10} justifyContent="center">
           {data?.user?.user?.organizations.map((org) => (
-          <Grid item key={org.id}>
-          <Card>
-            <CardActionArea sx={{ p: 4 }} component={Link} href={`orgs/${org.id}`}>
-              <Typography variant="h5" align="center">
-                {org.name}
-              </Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
+            <Grid item key={org.id}>
+              <Card>
+                <CardActionArea sx={{ p: 4 }} component={Link} href={`orgs/${org.id}`}>
+                  <Typography variant="h5" align="center">
+                    {org.name}
+                  </Typography>
+                </CardActionArea>
+              </Card>
+            </Grid>
           ))}
         </Grid>
       </Grid>

@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 
 import { Link } from "@/components";
 import { ListingItem } from "@/components/pages/listings/index/ListingItem";
-import { ListingsDocument } from "@/generated/graphql";
+import { graphql } from "@/gql/pages";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 
 type Props = {
@@ -15,7 +15,24 @@ type Props = {
 /** Component to show an overview of all open listings. */
 export const Listings: React.FC<Props> = ({ reload }) => {
   // fetches all open listings
-  const { loading, error, data } = useQuery(ListingsDocument);
+  const { loading, error, data } = useQuery(
+    graphql(`
+      query Listings {
+        listings {
+          listings {
+            id
+            name
+            description
+            closesAt
+            organization {
+              id
+              name
+            }
+          }
+        }
+      }
+    `)
+  );
 
   // if the data is fetched, renders a ListingItem for each listing
   return (
@@ -44,14 +61,12 @@ export const Listings: React.FC<Props> = ({ reload }) => {
           </Grid>
         </Grid>
       )}
-      {data?.listings &&
-        data.listings.length > 0 &&
-        data.listings.map((listing) => (
-          <Grid container item key={listing.id} md={5} sm={7} xs={10}>
-            <ListingItem listing={listing} />
-          </Grid>
-        ))}
-      {data?.listings?.length === 0 && (
+      {data?.listings.listings.map((listing) => (
+        <Grid container item key={listing.id} md={5} sm={7} xs={10}>
+          <ListingItem listing={listing} />
+        </Grid>
+      ))}
+      {data?.listings.listings.length === 0 && (
         <Grid container item direction="column" alignItems="center">
           <Grid item>
             <Typography variant="body1" align="center">

@@ -2,10 +2,10 @@ import { useSuspenseQuery } from "@apollo/client";
 import { Button, ButtonProps } from "@mui/material";
 import React, { useMemo } from "react";
 
+import { graphql } from "@/gql/app";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 import { Link } from "../../../components/Link";
-import { graphql } from "@/gql/app";
 
 type Props = {
   redirect?: boolean;
@@ -14,8 +14,6 @@ type Props = {
   fallback?: React.ReactNode;
   "data-test-id"?: string;
 };
-
-
 
 /**
  * Wrapper for stuff that requires a user to be logged in to view.
@@ -27,18 +25,21 @@ export const LoginRequired: React.FC<
   React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size" | "variant">>
 > = ({ children, fallback, "data-test-id": dataTestId, ...buttonProps }) => {
   const url = useMemo<string>(() => generateFeideLoginUrl(), []);
-  const { data } = useSuspenseQuery(graphql(`
-    query AppLoginRequiredUser {
-      user {
+  const { data } = useSuspenseQuery(
+    graphql(`
+      query AppLoginRequiredUser {
         user {
-          id
-          firstName
+          user {
+            id
+            firstName
+          }
         }
       }
+    `),
+    {
+      returnPartialData: true,
     }
-  `), {
-    returnPartialData: true,
-  });
+  );
 
   if (data?.user) {
     return <>{children}</>;
