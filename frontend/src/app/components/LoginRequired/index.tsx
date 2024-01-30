@@ -1,11 +1,11 @@
 import { useSuspenseQuery } from "@apollo/client";
 import { Button, ButtonProps } from "@mui/material";
-import React, { useMemo } from "react";
+import React from "react";
 
 import { graphql } from "@/gql/app";
-import { generateFeideLoginUrl } from "@/utils/auth";
+import { config } from "@/utils/config";
 
-import { Link } from "../Link";
+import { NextLinkComposed } from "../Link";
 
 type Props = {
   redirect?: boolean;
@@ -24,7 +24,8 @@ type Props = {
 export const LoginRequired: React.FC<
   React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size" | "variant">>
 > = ({ children, fallback, "data-test-id": dataTestId, ...buttonProps }) => {
-  const url = useMemo<string>(() => generateFeideLoginUrl(), []);
+  const url = new URL(`/auth/login`, config.API_URL);
+  url.searchParams.set("redirect", `${config.FRONTEND_URI}/profile`);
   const { data } = useSuspenseQuery(
     graphql(`
       query AppLoginRequiredUser {
@@ -35,13 +36,10 @@ export const LoginRequired: React.FC<
           }
         }
       }
-    `),
-    {
-      returnPartialData: true,
-    }
+    `)
   );
 
-  if (data?.user) {
+  if (data?.user.user) {
     return <>{children}</>;
   }
 
@@ -51,9 +49,8 @@ export const LoginRequired: React.FC<
 
   return (
     <Button
-      component={Link}
-      noLinkStyle
-      href={url}
+      component={NextLinkComposed}
+      to={url}
       size="medium"
       variant="contained"
       color="primary"

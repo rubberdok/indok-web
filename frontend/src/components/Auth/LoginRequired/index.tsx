@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useMemo } from "react";
+import React from "react";
 
-import { UserDocument } from "@/generated/graphql";
-import { generateFeideLoginUrl } from "@/utils/auth";
+import { graphql } from "@/gql/pages";
+import { config } from "@/utils/config";
 
-import Link from "../../Link";
+import { NextLinkComposed } from "../../Link";
 
 type Props = {
   redirect?: boolean;
@@ -30,15 +30,27 @@ export const LoginRequired: React.FC<
   if (redirect) {
     path ||= router.asPath;
   }
-  const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
-  const { data, loading } = useQuery(UserDocument, {
-    returnPartialData: true,
-  });
+  const { data, loading } = useQuery(
+    graphql(`
+      query PagesLoginRequiredUser {
+        user {
+          user {
+            id
+            firstName
+          }
+        }
+      }
+    `),
+    {}
+  );
   const { fullWidth } = buttonProps;
 
-  if (data?.user) {
+  if (data?.user.user) {
     return <>{children}</>;
   }
+
+  const loginUrl = new URL("/auth/login", config.API_URL);
+  loginUrl.searchParams.set("redirect", `${config.FRONTEND_URI}${path ?? "/profile"}`);
 
   if (loading) {
     return (
@@ -47,9 +59,8 @@ export const LoginRequired: React.FC<
           size="medium"
           variant="contained"
           color="primary"
-          component={Link}
-          noLinkStyle
-          href={url}
+          component={NextLinkComposed}
+          to={loginUrl}
           {...buttonProps}
         >
           Logg inn
@@ -64,9 +75,8 @@ export const LoginRequired: React.FC<
 
   return (
     <Button
-      component={Link}
-      noLinkStyle
-      href={url}
+      component={NextLinkComposed}
+      to={loginUrl}
       size="medium"
       variant="contained"
       color="primary"

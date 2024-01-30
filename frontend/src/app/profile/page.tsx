@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { graphql } from "@/gql/app";
-import { generateFeideLoginUrl } from "@/utils/auth";
+import { config } from "@/utils/config";
 
 import { PermissionRequired } from "../components/PermissionRequired";
 
@@ -70,7 +70,9 @@ export default function ProfilePage() {
   );
 
   // If the user is not logged in, redirect to the login page
-  if (data.user.user === null) return redirect(generateFeideLoginUrl());
+  const loginUrl = new URL("/auth/login", config.API_URL);
+  loginUrl.searchParams.set("redirect", `${config.FRONTEND_URI}/profile`);
+  if (data.user.user === null) return redirect(loginUrl.toString());
   const { user } = data.user;
   const initials = getUserInitials(user.firstName, user.lastName);
 
