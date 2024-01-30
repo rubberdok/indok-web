@@ -17,6 +17,7 @@ const documents = {
     "\n      query UserFormUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            graduationYearUpdatedAt\n            canUpdateYear\n            gradeYear\n            graduationYear\n            allergies\n            phoneNumber\n            email\n            isSuperUser\n          }\n        }\n      }\n    ": types.UserFormUserDocument,
     "\n      mutation UserFormUpdateUser($data: UpdateUserInput!) {\n        updateUser(data: $data) {\n          user {\n            id\n            firstName\n            lastName\n            graduationYearUpdatedAt\n            canUpdateYear\n            gradeYear\n            graduationYear\n            allergies\n            phoneNumber\n            email\n            isSuperUser\n          }\n        }\n      }\n    ": types.UserFormUpdateUserDocument,
     "\n      query LoginButtonUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    ": types.LoginButtonUserDocument,
+    "\n  query ListingsPage($data: ListingInput!) {\n    listing(data: $data) {\n      listing {\n        id\n        name\n        description\n        applicationUrl\n        closesAt\n        organization {\n          id\n          name\n        }\n      }\n    }\n  }\n": types.ListingsPageDocument,
     "\n      query OrganizationPageUser {\n        user {\n          user {\n            id\n            organizations {\n              id\n              name\n            }\n          }\n        }\n      }\n    ": types.OrganizationPageUserDocument,
 };
 
@@ -50,6 +51,10 @@ export function graphql(source: "\n      mutation UserFormUpdateUser($data: Upda
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query LoginButtonUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    "): (typeof documents)["\n      query LoginButtonUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ListingsPage($data: ListingInput!) {\n    listing(data: $data) {\n      listing {\n        id\n        name\n        description\n        applicationUrl\n        closesAt\n        organization {\n          id\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query ListingsPage($data: ListingInput!) {\n    listing(data: $data) {\n      listing {\n        id\n        name\n        description\n        applicationUrl\n        closesAt\n        organization {\n          id\n          name\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
