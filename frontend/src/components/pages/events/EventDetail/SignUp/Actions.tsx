@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { LoginRequired, PermissionRequired } from "@/components/Auth";
 import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
-import { SignUpAvailability } from "@/gql/pages/graphql";
+import { FeaturePermission, SignUpAvailability } from "@/gql/pages/graphql";
 import dayjs from "@/lib/date";
 
 import { CountdownStatusText } from "./Countdown";
@@ -148,7 +148,7 @@ export const Actions: React.FC<Props> = (props) => {
         <LoginRequired fullWidth redirect>
           <PermissionRequired
             optimistic
-            permission="events.add_signup"
+            permission={FeaturePermission.EventWriteSignUps}
             fallback={<Typography>Arrangementet er kun åpent for Indøk</Typography>}
           >
             <Tooltip title={false && "Fyll in ekstra informasjon før påmelding"} placement="bottom" arrow>
