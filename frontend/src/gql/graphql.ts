@@ -58,6 +58,29 @@ export type AdminBookingType = {
   timestamp: Scalars['DateTime']['output'];
 };
 
+/** CarBooking type for admin users */
+export type AdminCarBookingType = {
+  __typename?: 'AdminCarBookingType';
+  cars: Array<CarType>;
+  checkIn: Scalars['Date']['output'];
+  checkOut: Scalars['Date']['output'];
+  declineReason: Scalars['String']['output'];
+  externalParticipants: Scalars['Int']['output'];
+  extraInfo: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  internalParticipants: Scalars['Int']['output'];
+  isDeclined: Scalars['Boolean']['output'];
+  isInternalPrice: Maybe<Scalars['Int']['output']>;
+  isTentative: Scalars['Boolean']['output'];
+  lastName: Scalars['String']['output'];
+  numberOfNights: Maybe<Scalars['Int']['output']>;
+  phone: Scalars['String']['output'];
+  price: Maybe<Scalars['Int']['output']>;
+  receiverEmail: Scalars['String']['output'];
+  timestamp: Scalars['DateTime']['output'];
+};
+
 /**
  * Sets the field is_attending to False in the Sign Up for the user with the
  * given ID, for the event with the given ID
@@ -73,6 +96,15 @@ export type AdminEventSignOff = {
 export type AllBookingsType = {
   __typename?: 'AllBookingsType';
   cabins: Array<CabinType>;
+  checkIn: Scalars['Date']['output'];
+  checkOut: Scalars['Date']['output'];
+  id: Scalars['ID']['output'];
+};
+
+/** CarBooking type for fields available for not logged in users */
+export type AllCarBookingsType = {
+  __typename?: 'AllCarBookingsType';
+  cars: Array<CarType>;
   checkIn: Scalars['Date']['output'];
   checkOut: Scalars['Date']['output'];
   id: Scalars['ID']['output'];
@@ -222,6 +254,41 @@ export type CabinType = {
   name: Scalars['String']['output'];
 };
 
+/** Basic car_booking object type used as a base for other types and as a standalone */
+export type CarBookingInput = {
+  cars: InputMaybe<Array<Scalars['Int']['input']>>;
+  checkIn: InputMaybe<Scalars['Date']['input']>;
+  checkOut: InputMaybe<Scalars['Date']['input']>;
+  externalParticipants: InputMaybe<Scalars['Int']['input']>;
+  extraInfo: InputMaybe<Scalars['String']['input']>;
+  firstName: InputMaybe<Scalars['String']['input']>;
+  internalParticipants: InputMaybe<Scalars['Int']['input']>;
+  lastName: InputMaybe<Scalars['String']['input']>;
+  phone: InputMaybe<Scalars['String']['input']>;
+  receiverEmail: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CarBookingResponsibleType = {
+  __typename?: 'CarBookingResponsibleType';
+  active: Maybe<Scalars['Boolean']['output']>;
+  email: Maybe<Scalars['String']['output']>;
+  firstName: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  lastName: Maybe<Scalars['String']['output']>;
+  phone: Maybe<Scalars['Int']['output']>;
+};
+
+export type CarType = {
+  __typename?: 'CarType';
+  externalPrice: Scalars['Int']['output'];
+  externalPriceWeekend: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  internalPrice: Scalars['Int']['output'];
+  internalPriceWeekend: Scalars['Int']['output'];
+  maxGuests: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type CategoryInput = {
   name: InputMaybe<Scalars['String']['input']>;
 };
@@ -254,6 +321,13 @@ export type CreateBlogPost = {
 export type CreateBooking = {
   __typename?: 'CreateBooking';
   booking: Maybe<AllBookingsType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Add a new car_booking to the database */
+export type CreateCarBooking = {
+  __typename?: 'CreateCarBooking';
+  carBooking: Maybe<AllCarBookingsType>;
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -400,6 +474,13 @@ export type DeleteBooking = {
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
+/** Deletes the car_booking with the given ID */
+export type DeleteCarBooking = {
+  __typename?: 'DeleteCarBooking';
+  carBookingId: Maybe<Scalars['ID']['output']>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
 /** Deletes the category with a given ID */
 export type DeleteCategory = {
   __typename?: 'DeleteCategory';
@@ -440,7 +521,7 @@ export type DeleteQuestion = {
 };
 
 export type EmailInput = {
-  cabins: InputMaybe<Array<Scalars['Int']['input']>>;
+  cars: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn: InputMaybe<Scalars['Date']['input']>;
   checkOut: InputMaybe<Scalars['Date']['input']>;
   emailType: InputMaybe<Scalars['String']['input']>;
@@ -600,6 +681,8 @@ export type Mutations = {
   createBlogPost: Maybe<CreateBlogPost>;
   /** Add a new booking to the database */
   createBooking: Maybe<CreateBooking>;
+  /** Add a new car_booking to the database */
+  createCarBooking: Maybe<CreateCarBooking>;
   /** Create a new event category */
   createCategory: Maybe<CreateCategory>;
   /** Create a new event */
@@ -618,6 +701,8 @@ export type Mutations = {
   deleteBlogPost: Maybe<DeleteBlogPost>;
   /** Deletes the booking with the given ID */
   deleteBooking: Maybe<DeleteBooking>;
+  /** Deletes the car_booking with the given ID */
+  deleteCarBooking: Maybe<DeleteCarBooking>;
   /** Deletes the category with a given ID */
   deleteCategory: Maybe<DeleteCategory>;
   /** Deletes the event with the given ID */
@@ -655,6 +740,12 @@ export type Mutations = {
   updateBookingSemester: Maybe<UpdateBookingSemester>;
   /** Change the given cabin */
   updateCabin: Maybe<UpdateCabin>;
+  /** Change the given car */
+  updateCar: Maybe<UpdateCar>;
+  /** Change the given car_booking */
+  updateCarBooking: Maybe<UpdateCarBooking>;
+  /** Update the car_booking semester */
+  updateCarBookingSemester: Maybe<UpdateCarBookingSemester>;
   /** Updates the category with a given ID with the data in category_data */
   updateCategory: Maybe<UpdateCategory>;
   /** Updates the event with a given ID with the data in event_data */
@@ -714,6 +805,11 @@ export type MutationsCreateBlogPostArgs = {
 
 export type MutationsCreateBookingArgs = {
   bookingData: InputMaybe<BookingInput>;
+};
+
+
+export type MutationsCreateCarBookingArgs = {
+  carBookingData: InputMaybe<CarBookingInput>;
 };
 
 
@@ -786,6 +882,11 @@ export type MutationsDeleteBlogPostArgs = {
 
 
 export type MutationsDeleteBookingArgs = {
+  id: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationsDeleteCarBookingArgs = {
   id: InputMaybe<Scalars['ID']['input']>;
 };
 
@@ -889,6 +990,21 @@ export type MutationsUpdateBookingSemesterArgs = {
 
 export type MutationsUpdateCabinArgs = {
   cabinData: InputMaybe<UpdateCabinInput>;
+};
+
+
+export type MutationsUpdateCarArgs = {
+  carData: InputMaybe<UpdateCarInput>;
+};
+
+
+export type MutationsUpdateCarBookingArgs = {
+  carBookingData: InputMaybe<UpdateCarBookingInput>;
+};
+
+
+export type MutationsUpdateCarBookingSemesterArgs = {
+  semesterData: InputMaybe<UpdateCarBookingSemesterInput>;
 };
 
 
@@ -1009,10 +1125,13 @@ export type ProductType = {
 export type Queries = {
   __typename?: 'Queries';
   activeBookingResponsible: Maybe<BookingResponsibleType>;
+  activeCarBookingResponsible: Maybe<CarBookingResponsibleType>;
   adminAllBookings: Maybe<Array<AdminBookingType>>;
+  adminAllCarBookings: Maybe<Array<AdminCarBookingType>>;
   allBlogPosts: Maybe<Array<BlogPostType>>;
   allBlogs: Maybe<Array<BlogType>>;
   allBookings: Maybe<Array<AllBookingsType>>;
+  allCarBookings: Maybe<Array<AllCarBookingsType>>;
   allCategories: Maybe<Array<CategoryType>>;
   allEvents: Maybe<Array<EventType>>;
   allOrganizations: Maybe<Array<OrganizationType>>;
@@ -1026,6 +1145,8 @@ export type Queries = {
   blogPost: Maybe<BlogPostType>;
   bookingSemester: Maybe<UpdateBookingSemesterType>;
   cabins: Maybe<Array<CabinType>>;
+  carBookingSemester: Maybe<UpdateCarBookingSemesterType>;
+  cars: Maybe<Array<CarType>>;
   category: Maybe<CategoryType>;
   defaultEvents: Maybe<Array<EventType>>;
   event: Maybe<EventType>;
@@ -1053,6 +1174,12 @@ export type Queries = {
 
 
 export type QueriesAdminAllBookingsArgs = {
+  after: InputMaybe<Scalars['String']['input']>;
+  before: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesAdminAllCarBookingsArgs = {
   after: InputMaybe<Scalars['String']['input']>;
   before: InputMaybe<Scalars['String']['input']>;
 };
@@ -1368,6 +1495,74 @@ export type UpdateCabin = {
 };
 
 export type UpdateCabinInput = {
+  externalPrice: InputMaybe<Scalars['Int']['input']>;
+  externalPriceWeekend: InputMaybe<Scalars['Int']['input']>;
+  id: InputMaybe<Scalars['ID']['input']>;
+  internalPrice: InputMaybe<Scalars['Int']['input']>;
+  internalPriceWeekend: InputMaybe<Scalars['Int']['input']>;
+  maxGuests: InputMaybe<Scalars['Int']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Change the given car */
+export type UpdateCar = {
+  __typename?: 'UpdateCar';
+  car: Maybe<CarType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Change the given car_booking */
+export type UpdateCarBooking = {
+  __typename?: 'UpdateCarBooking';
+  carBooking: Maybe<AllCarBookingsType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateCarBookingInput = {
+  cars: InputMaybe<Array<Scalars['Int']['input']>>;
+  checkIn: InputMaybe<Scalars['Date']['input']>;
+  checkOut: InputMaybe<Scalars['Date']['input']>;
+  declineReason: InputMaybe<Scalars['String']['input']>;
+  externalParticipants: InputMaybe<Scalars['Int']['input']>;
+  extraInfo: InputMaybe<Scalars['String']['input']>;
+  firstName: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  internalParticipants: InputMaybe<Scalars['Int']['input']>;
+  isDeclined: InputMaybe<Scalars['Boolean']['input']>;
+  isTentative: InputMaybe<Scalars['Boolean']['input']>;
+  lastName: InputMaybe<Scalars['String']['input']>;
+  phone: InputMaybe<Scalars['String']['input']>;
+  receiverEmail: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Update the car_booking semester */
+export type UpdateCarBookingSemester = {
+  __typename?: 'UpdateCarBookingSemester';
+  carBookingSemester: Maybe<UpdateCarBookingSemesterType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateCarBookingSemesterInput = {
+  fallEndDate: InputMaybe<Scalars['Date']['input']>;
+  fallSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
+  fallStartDate: InputMaybe<Scalars['Date']['input']>;
+  springEndDate: InputMaybe<Scalars['Date']['input']>;
+  springSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
+  springStartDate: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type UpdateCarBookingSemesterType = {
+  __typename?: 'UpdateCarBookingSemesterType';
+  fallEndDate: Scalars['Date']['output'];
+  fallSemesterActive: Scalars['Boolean']['output'];
+  fallStartDate: Scalars['Date']['output'];
+  id: Scalars['ID']['output'];
+  springEndDate: Scalars['Date']['output'];
+  springSemesterActive: Scalars['Boolean']['output'];
+  springStartDate: Scalars['Date']['output'];
+};
+
+export type UpdateCarInput = {
   externalPrice: InputMaybe<Scalars['Int']['input']>;
   externalPriceWeekend: InputMaybe<Scalars['Int']['input']>;
   id: InputMaybe<Scalars['ID']['input']>;

@@ -42,6 +42,29 @@ export type AdminBookingType = {
   timestamp: Scalars['DateTime']['output'];
 };
 
+/** CarBooking type for admin users */
+export type AdminCarBookingType = {
+  __typename?: 'AdminCarBookingType';
+  cars: Array<CarType>;
+  checkIn: Scalars['Date']['output'];
+  checkOut: Scalars['Date']['output'];
+  declineReason: Scalars['String']['output'];
+  externalParticipants: Scalars['Int']['output'];
+  extraInfo: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  internalParticipants: Scalars['Int']['output'];
+  isDeclined: Scalars['Boolean']['output'];
+  isInternalPrice?: Maybe<Scalars['Int']['output']>;
+  isTentative: Scalars['Boolean']['output'];
+  lastName: Scalars['String']['output'];
+  numberOfNights?: Maybe<Scalars['Int']['output']>;
+  phone: Scalars['String']['output'];
+  price?: Maybe<Scalars['Int']['output']>;
+  receiverEmail: Scalars['String']['output'];
+  timestamp: Scalars['DateTime']['output'];
+};
+
 /**
  * Sets the field is_attending to False in the Sign Up for the user with the
  * given ID, for the event with the given ID
@@ -57,6 +80,15 @@ export type AdminEventSignOff = {
 export type AllBookingsType = {
   __typename?: 'AllBookingsType';
   cabins: Array<CabinType>;
+  checkIn: Scalars['Date']['output'];
+  checkOut: Scalars['Date']['output'];
+  id: Scalars['ID']['output'];
+};
+
+/** CarBooking type for fields available for not logged in users */
+export type AllCarBookingsType = {
+  __typename?: 'AllCarBookingsType';
+  cars: Array<CarType>;
   checkIn: Scalars['Date']['output'];
   checkOut: Scalars['Date']['output'];
   id: Scalars['ID']['output'];
@@ -206,6 +238,41 @@ export type CabinType = {
   name: Scalars['String']['output'];
 };
 
+/** Basic car_booking object type used as a base for other types and as a standalone */
+export type CarBookingInput = {
+  cars?: InputMaybe<Array<Scalars['Int']['input']>>;
+  checkIn?: InputMaybe<Scalars['Date']['input']>;
+  checkOut?: InputMaybe<Scalars['Date']['input']>;
+  externalParticipants?: InputMaybe<Scalars['Int']['input']>;
+  extraInfo?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  internalParticipants?: InputMaybe<Scalars['Int']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  receiverEmail?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CarBookingResponsibleType = {
+  __typename?: 'CarBookingResponsibleType';
+  active?: Maybe<Scalars['Boolean']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  lastName?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CarType = {
+  __typename?: 'CarType';
+  externalPrice: Scalars['Int']['output'];
+  externalPriceWeekend: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  internalPrice: Scalars['Int']['output'];
+  internalPriceWeekend: Scalars['Int']['output'];
+  maxGuests: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type CategoryInput = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -238,6 +305,13 @@ export type CreateBlogPost = {
 export type CreateBooking = {
   __typename?: 'CreateBooking';
   booking?: Maybe<AllBookingsType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Add a new car_booking to the database */
+export type CreateCarBooking = {
+  __typename?: 'CreateCarBooking';
+  carBooking?: Maybe<AllCarBookingsType>;
   ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -384,6 +458,13 @@ export type DeleteBooking = {
   ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
+/** Deletes the car_booking with the given ID */
+export type DeleteCarBooking = {
+  __typename?: 'DeleteCarBooking';
+  carBookingId?: Maybe<Scalars['ID']['output']>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
 /** Deletes the category with a given ID */
 export type DeleteCategory = {
   __typename?: 'DeleteCategory';
@@ -424,7 +505,7 @@ export type DeleteQuestion = {
 };
 
 export type EmailInput = {
-  cabins?: InputMaybe<Array<Scalars['Int']['input']>>;
+  cars?: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn?: InputMaybe<Scalars['Date']['input']>;
   checkOut?: InputMaybe<Scalars['Date']['input']>;
   emailType?: InputMaybe<Scalars['String']['input']>;
@@ -584,6 +665,8 @@ export type Mutations = {
   createBlogPost?: Maybe<CreateBlogPost>;
   /** Add a new booking to the database */
   createBooking?: Maybe<CreateBooking>;
+  /** Add a new car_booking to the database */
+  createCarBooking?: Maybe<CreateCarBooking>;
   /** Create a new event category */
   createCategory?: Maybe<CreateCategory>;
   /** Create a new event */
@@ -602,6 +685,8 @@ export type Mutations = {
   deleteBlogPost?: Maybe<DeleteBlogPost>;
   /** Deletes the booking with the given ID */
   deleteBooking?: Maybe<DeleteBooking>;
+  /** Deletes the car_booking with the given ID */
+  deleteCarBooking?: Maybe<DeleteCarBooking>;
   /** Deletes the category with a given ID */
   deleteCategory?: Maybe<DeleteCategory>;
   /** Deletes the event with the given ID */
@@ -639,6 +724,12 @@ export type Mutations = {
   updateBookingSemester?: Maybe<UpdateBookingSemester>;
   /** Change the given cabin */
   updateCabin?: Maybe<UpdateCabin>;
+  /** Change the given car */
+  updateCar?: Maybe<UpdateCar>;
+  /** Change the given car_booking */
+  updateCarBooking?: Maybe<UpdateCarBooking>;
+  /** Update the car_booking semester */
+  updateCarBookingSemester?: Maybe<UpdateCarBookingSemester>;
   /** Updates the category with a given ID with the data in category_data */
   updateCategory?: Maybe<UpdateCategory>;
   /** Updates the event with a given ID with the data in event_data */
@@ -698,6 +789,11 @@ export type MutationsCreateBlogPostArgs = {
 
 export type MutationsCreateBookingArgs = {
   bookingData?: InputMaybe<BookingInput>;
+};
+
+
+export type MutationsCreateCarBookingArgs = {
+  carBookingData?: InputMaybe<CarBookingInput>;
 };
 
 
@@ -770,6 +866,11 @@ export type MutationsDeleteBlogPostArgs = {
 
 
 export type MutationsDeleteBookingArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationsDeleteCarBookingArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
@@ -873,6 +974,21 @@ export type MutationsUpdateBookingSemesterArgs = {
 
 export type MutationsUpdateCabinArgs = {
   cabinData?: InputMaybe<UpdateCabinInput>;
+};
+
+
+export type MutationsUpdateCarArgs = {
+  carData?: InputMaybe<UpdateCarInput>;
+};
+
+
+export type MutationsUpdateCarBookingArgs = {
+  carBookingData?: InputMaybe<UpdateCarBookingInput>;
+};
+
+
+export type MutationsUpdateCarBookingSemesterArgs = {
+  semesterData?: InputMaybe<UpdateCarBookingSemesterInput>;
 };
 
 
@@ -993,10 +1109,13 @@ export type ProductType = {
 export type Queries = {
   __typename?: 'Queries';
   activeBookingResponsible?: Maybe<BookingResponsibleType>;
+  activeCarBookingResponsible?: Maybe<CarBookingResponsibleType>;
   adminAllBookings?: Maybe<Array<AdminBookingType>>;
+  adminAllCarBookings?: Maybe<Array<AdminCarBookingType>>;
   allBlogPosts?: Maybe<Array<BlogPostType>>;
   allBlogs?: Maybe<Array<BlogType>>;
   allBookings?: Maybe<Array<AllBookingsType>>;
+  allCarBookings?: Maybe<Array<AllCarBookingsType>>;
   allCategories?: Maybe<Array<CategoryType>>;
   allEvents?: Maybe<Array<EventType>>;
   allOrganizations?: Maybe<Array<OrganizationType>>;
@@ -1010,6 +1129,8 @@ export type Queries = {
   blogPost?: Maybe<BlogPostType>;
   bookingSemester?: Maybe<UpdateBookingSemesterType>;
   cabins?: Maybe<Array<CabinType>>;
+  carBookingSemester?: Maybe<UpdateCarBookingSemesterType>;
+  cars?: Maybe<Array<CarType>>;
   category?: Maybe<CategoryType>;
   defaultEvents?: Maybe<Array<EventType>>;
   event?: Maybe<EventType>;
@@ -1037,6 +1158,12 @@ export type Queries = {
 
 
 export type QueriesAdminAllBookingsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesAdminAllCarBookingsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1361,6 +1488,74 @@ export type UpdateCabinInput = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Change the given car */
+export type UpdateCar = {
+  __typename?: 'UpdateCar';
+  car?: Maybe<CarType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Change the given car_booking */
+export type UpdateCarBooking = {
+  __typename?: 'UpdateCarBooking';
+  carBooking?: Maybe<AllCarBookingsType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateCarBookingInput = {
+  cars?: InputMaybe<Array<Scalars['Int']['input']>>;
+  checkIn?: InputMaybe<Scalars['Date']['input']>;
+  checkOut?: InputMaybe<Scalars['Date']['input']>;
+  declineReason?: InputMaybe<Scalars['String']['input']>;
+  externalParticipants?: InputMaybe<Scalars['Int']['input']>;
+  extraInfo?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  internalParticipants?: InputMaybe<Scalars['Int']['input']>;
+  isDeclined?: InputMaybe<Scalars['Boolean']['input']>;
+  isTentative?: InputMaybe<Scalars['Boolean']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  receiverEmail?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Update the car_booking semester */
+export type UpdateCarBookingSemester = {
+  __typename?: 'UpdateCarBookingSemester';
+  carBookingSemester?: Maybe<UpdateCarBookingSemesterType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateCarBookingSemesterInput = {
+  fallEndDate?: InputMaybe<Scalars['Date']['input']>;
+  fallSemesterActive?: InputMaybe<Scalars['Boolean']['input']>;
+  fallStartDate?: InputMaybe<Scalars['Date']['input']>;
+  springEndDate?: InputMaybe<Scalars['Date']['input']>;
+  springSemesterActive?: InputMaybe<Scalars['Boolean']['input']>;
+  springStartDate?: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type UpdateCarBookingSemesterType = {
+  __typename?: 'UpdateCarBookingSemesterType';
+  fallEndDate: Scalars['Date']['output'];
+  fallSemesterActive: Scalars['Boolean']['output'];
+  fallStartDate: Scalars['Date']['output'];
+  id: Scalars['ID']['output'];
+  springEndDate: Scalars['Date']['output'];
+  springSemesterActive: Scalars['Boolean']['output'];
+  springStartDate: Scalars['Date']['output'];
+};
+
+export type UpdateCarInput = {
+  externalPrice?: InputMaybe<Scalars['Int']['input']>;
+  externalPriceWeekend?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  internalPrice?: InputMaybe<Scalars['Int']['input']>;
+  internalPriceWeekend?: InputMaybe<Scalars['Int']['input']>;
+  maxGuests?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Updates the category with a given ID with the data in category_data */
 export type UpdateCategory = {
   __typename?: 'UpdateCategory';
@@ -1582,6 +1777,84 @@ export type BookingSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type BookingSemesterQuery = { __typename?: 'Queries', bookingSemester?: { __typename?: 'UpdateBookingSemesterType', fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean } | null };
+
+export type CarFragment = { __typename?: 'CarType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number };
+
+export type CarBookingFragment = { __typename?: 'AllCarBookingsType', id: string, checkIn: string, checkOut: string, cars: Array<{ __typename?: 'CarType', id: string, name: string }> };
+
+export type AdminCarBookingFragment = { __typename?: 'AdminCarBookingType', id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price?: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cars: Array<{ __typename?: 'CarType', id: string, name: string }> };
+
+export type CarBookingResponsibleFragment = { __typename?: 'CarBookingResponsibleType', id: string, active?: boolean | null, firstName?: string | null, lastName?: string | null, email?: string | null, phone?: number | null };
+
+export type CarBookingSemesterFragment = { __typename?: 'UpdateCarBookingSemesterType', fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean };
+
+export type CreateCarBookingMutationVariables = Exact<{
+  carBookingData: CarBookingInput;
+}>;
+
+
+export type CreateCarBookingMutation = { __typename?: 'Mutations', createCarBooking?: { __typename?: 'CreateCarBooking', ok?: boolean | null } | null };
+
+export type ConfirmCarBookingMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type ConfirmCarBookingMutation = { __typename?: 'Mutations', updateCarBooking?: { __typename?: 'UpdateCarBooking', ok?: boolean | null } | null };
+
+export type DeclineCarBookingMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  declineReason?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeclineCarBookingMutation = { __typename?: 'Mutations', updateCarBooking?: { __typename?: 'UpdateCarBooking', ok?: boolean | null } | null };
+
+export type UpdateCarMutationVariables = Exact<{
+  carData: UpdateCarInput;
+}>;
+
+
+export type UpdateCarMutation = { __typename?: 'Mutations', updateCar?: { __typename?: 'UpdateCar', car?: { __typename?: 'CarType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number } | null } | null };
+
+export type UpdateCarBookingSemesterMutationVariables = Exact<{
+  semesterData: UpdateCarBookingSemesterInput;
+}>;
+
+
+export type UpdateCarBookingSemesterMutation = { __typename?: 'Mutations', updateCarBookingSemester?: { __typename?: 'UpdateCarBookingSemester', carBookingSemester?: { __typename?: 'UpdateCarBookingSemesterType', fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean } | null } | null };
+
+export type CarsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CarsQuery = { __typename?: 'Queries', cars?: Array<{ __typename?: 'CarType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number }> | null };
+
+export type AllCarBookingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllCarBookingsQuery = { __typename?: 'Queries', allCarBookings?: Array<{ __typename?: 'AllCarBookingsType', id: string, checkIn: string, checkOut: string, cars: Array<{ __typename?: 'CarType', id: string, name: string }> }> | null };
+
+export type AdminAllCarBookingsQueryVariables = Exact<{
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type AdminAllCarBookingsQuery = { __typename?: 'Queries', adminAllCarBookings?: Array<{ __typename?: 'AdminCarBookingType', id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price?: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cars: Array<{ __typename?: 'CarType', id: string, name: string }> }> | null };
+
+export type ActiveCarBookingResponsibleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ActiveCarBookingResponsibleQuery = { __typename?: 'Queries', activeCarBookingResponsible?: { __typename?: 'CarBookingResponsibleType', id: string, active?: boolean | null, firstName?: string | null, lastName?: string | null, email?: string | null, phone?: number | null } | null };
+
+export type CarsAndResponsiblesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CarsAndResponsiblesQuery = { __typename?: 'Queries', cars?: Array<{ __typename?: 'CarType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number }> | null, activeCarBookingResponsible?: { __typename?: 'CarBookingResponsibleType', id: string, email?: string | null } | null };
+
+export type CarBookingSemesterQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CarBookingSemesterQuery = { __typename?: 'Queries', carBookingSemester?: { __typename?: 'UpdateCarBookingSemesterType', fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean } | null };
 
 export type ProductFragment = { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number };
 
@@ -1976,6 +2249,11 @@ export const BookingFragmentDoc = {"kind":"Document","definitions":[{"kind":"Fra
 export const AdminBookingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AdminBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AdminBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"checkIn"}},{"kind":"Field","name":{"kind":"Name","value":"checkOut"}},{"kind":"Field","name":{"kind":"Name","value":"cabins"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"receiverEmail"}},{"kind":"Field","name":{"kind":"Name","value":"externalParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"internalParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"isTentative"}},{"kind":"Field","name":{"kind":"Name","value":"isDeclined"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"extraInfo"}},{"kind":"Field","name":{"kind":"Name","value":"declineReason"}}]}}]} as unknown as DocumentNode<AdminBookingFragment, unknown>;
 export const BookingResponsibleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BookingResponsible"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BookingResponsibleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<BookingResponsibleFragment, unknown>;
 export const BookingSemesterFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BookingSemester"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateBookingSemesterType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fallStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"springStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"springEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallSemesterActive"}},{"kind":"Field","name":{"kind":"Name","value":"springSemesterActive"}}]}}]} as unknown as DocumentNode<BookingSemesterFragment, unknown>;
+export const CarFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Car"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<CarFragment, unknown>;
+export const CarBookingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AllCarBookingsType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"checkIn"}},{"kind":"Field","name":{"kind":"Name","value":"checkOut"}},{"kind":"Field","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CarBookingFragment, unknown>;
+export const AdminCarBookingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AdminCarBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AdminCarBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"checkIn"}},{"kind":"Field","name":{"kind":"Name","value":"checkOut"}},{"kind":"Field","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"receiverEmail"}},{"kind":"Field","name":{"kind":"Name","value":"externalParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"internalParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"isTentative"}},{"kind":"Field","name":{"kind":"Name","value":"isDeclined"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"extraInfo"}},{"kind":"Field","name":{"kind":"Name","value":"declineReason"}}]}}]} as unknown as DocumentNode<AdminCarBookingFragment, unknown>;
+export const CarBookingResponsibleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBookingResponsible"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarBookingResponsibleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<CarBookingResponsibleFragment, unknown>;
+export const CarBookingSemesterFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBookingSemester"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarBookingSemesterType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fallStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"springStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"springEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallSemesterActive"}},{"kind":"Field","name":{"kind":"Name","value":"springSemesterActive"}}]}}]} as unknown as DocumentNode<CarBookingSemesterFragment, unknown>;
 export const ProductFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Product"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"maxBuyableQuantity"}}]}}]} as unknown as DocumentNode<ProductFragment, unknown>;
 export const OrderFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Order"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrderType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Product"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Product"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"maxBuyableQuantity"}}]}}]} as unknown as DocumentNode<OrderFragment, unknown>;
 export const EventFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"shortDescription"}},{"kind":"Field","name":{"kind":"Name","value":"allowedGradeYears"}},{"kind":"Field","name":{"kind":"Name","value":"isFull"}},{"kind":"Field","name":{"kind":"Name","value":"isAttendable"}},{"kind":"Field","name":{"kind":"Name","value":"signupOpenDate"}},{"kind":"Field","name":{"kind":"Name","value":"userAttendance"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isSignedUp"}},{"kind":"Field","name":{"kind":"Name","value":"isOnWaitingList"}}]}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<EventFieldsFragment, unknown>;
@@ -2021,6 +2299,17 @@ export const AdminAllBookingsDocument = {"kind":"Document","definitions":[{"kind
 export const ActiveBookingResponsibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"activeBookingResponsible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activeBookingResponsible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"BookingResponsible"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BookingResponsible"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BookingResponsibleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
 export const CabinsAndResponsiblesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"cabinsAndResponsibles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cabins"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Cabin"}}]}},{"kind":"Field","name":{"kind":"Name","value":"activeBookingResponsible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Cabin"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CabinType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<CabinsAndResponsiblesQuery, CabinsAndResponsiblesQueryVariables>;
 export const BookingSemesterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"bookingSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bookingSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"BookingSemester"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BookingSemester"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateBookingSemesterType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fallStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"springStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"springEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallSemesterActive"}},{"kind":"Field","name":{"kind":"Name","value":"springSemesterActive"}}]}}]} as unknown as DocumentNode<BookingSemesterQuery, BookingSemesterQueryVariables>;
+export const CreateCarBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCarBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"carBookingData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CarBookingInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCarBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carBookingData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"carBookingData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<CreateCarBookingMutation, CreateCarBookingMutationVariables>;
+export const ConfirmCarBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"confirmCarBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCarBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carBookingData"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"isTentative"},"value":{"kind":"BooleanValue","value":false}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<ConfirmCarBookingMutation, ConfirmCarBookingMutationVariables>;
+export const DeclineCarBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"declineCarBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"declineReason"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCarBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carBookingData"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"isTentative"},"value":{"kind":"BooleanValue","value":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"isDeclined"},"value":{"kind":"BooleanValue","value":true}},{"kind":"ObjectField","name":{"kind":"Name","value":"declineReason"},"value":{"kind":"Variable","name":{"kind":"Name","value":"declineReason"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<DeclineCarBookingMutation, DeclineCarBookingMutationVariables>;
+export const UpdateCarDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCar"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"carData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCar"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"carData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"car"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Car"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Car"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<UpdateCarMutation, UpdateCarMutationVariables>;
+export const UpdateCarBookingSemesterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCarBookingSemester"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"semesterData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarBookingSemesterInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCarBookingSemester"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"semesterData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"semesterData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"carBookingSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CarBookingSemester"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBookingSemester"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarBookingSemesterType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fallStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"springStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"springEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallSemesterActive"}},{"kind":"Field","name":{"kind":"Name","value":"springSemesterActive"}}]}}]} as unknown as DocumentNode<UpdateCarBookingSemesterMutation, UpdateCarBookingSemesterMutationVariables>;
+export const CarsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Car"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Car"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<CarsQuery, CarsQueryVariables>;
+export const AllCarBookingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allCarBookings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allCarBookings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CarBooking"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AllCarBookingsType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"checkIn"}},{"kind":"Field","name":{"kind":"Name","value":"checkOut"}},{"kind":"Field","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<AllCarBookingsQuery, AllCarBookingsQueryVariables>;
+export const AdminAllCarBookingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"adminAllCarBookings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminAllCarBookings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AdminCarBooking"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AdminCarBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AdminCarBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"checkIn"}},{"kind":"Field","name":{"kind":"Name","value":"checkOut"}},{"kind":"Field","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"receiverEmail"}},{"kind":"Field","name":{"kind":"Name","value":"externalParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"internalParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"isTentative"}},{"kind":"Field","name":{"kind":"Name","value":"isDeclined"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"extraInfo"}},{"kind":"Field","name":{"kind":"Name","value":"declineReason"}}]}}]} as unknown as DocumentNode<AdminAllCarBookingsQuery, AdminAllCarBookingsQueryVariables>;
+export const ActiveCarBookingResponsibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"activeCarBookingResponsible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activeCarBookingResponsible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CarBookingResponsible"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBookingResponsible"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarBookingResponsibleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<ActiveCarBookingResponsibleQuery, ActiveCarBookingResponsibleQueryVariables>;
+export const CarsAndResponsiblesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"carsAndResponsibles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Car"}}]}},{"kind":"Field","name":{"kind":"Name","value":"activeCarBookingResponsible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Car"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<CarsAndResponsiblesQuery, CarsAndResponsiblesQueryVariables>;
+export const CarBookingSemesterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"carBookingSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"carBookingSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CarBookingSemester"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBookingSemester"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarBookingSemesterType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fallStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"springStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"springEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallSemesterActive"}},{"kind":"Field","name":{"kind":"Name","value":"springSemesterActive"}}]}}]} as unknown as DocumentNode<CarBookingSemesterQuery, CarBookingSemesterQueryVariables>;
 export const InitiateOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"initiateOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"quantity"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fallbackRedirect"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initiateOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productId"}}},{"kind":"Argument","name":{"kind":"Name","value":"quantity"},"value":{"kind":"Variable","name":{"kind":"Name","value":"quantity"}}},{"kind":"Argument","name":{"kind":"Name","value":"fallbackRedirect"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fallbackRedirect"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"orderId"}}]}}]}}]} as unknown as DocumentNode<InitiateOrderMutation, InitiateOrderMutationVariables>;
 export const AttemptCapturePaymentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"attemptCapturePayment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"attemptCapturePayment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Order"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Product"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"maxBuyableQuantity"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Order"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrderType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Product"}}]}}]}}]} as unknown as DocumentNode<AttemptCapturePaymentMutation, AttemptCapturePaymentMutationVariables>;
 export const ProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"product"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Product"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Product"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"maxBuyableQuantity"}}]}}]} as unknown as DocumentNode<ProductQuery, ProductQueryVariables>;

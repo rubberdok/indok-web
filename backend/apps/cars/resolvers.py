@@ -4,7 +4,7 @@ from decorators import permission_required
 
 class CarResolvers:
     def resolve_all_car_bookings(self, info):
-        """
+        """backend/apps/cars/resolvers.py
         Fetch all car_bookings sorted by the their check-in date
         """
         return CarBookingModel.objects.filter(is_declined=False).order_by("check_in")
