@@ -1,0 +1,12 @@
+query allBlogPosts {
+  allBlogPosts {
+    id
+    title
+    text
+    publishDate
+    author {
+      firstName
+      lastName
+    }
+  }
+}

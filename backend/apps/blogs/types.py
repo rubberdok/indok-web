@@ -1,19 +1,6 @@
 from graphene_django import DjangoObjectType
 
-from .models import BlogPost as BlogPostModel, Blog as BlogModel
-
-
-class BlogType(DjangoObjectType):
-    class Meta:
-        model = BlogModel
-        fields = [
-            "id",
-            "description",
-            "organization",
-            "name",
-            "blog_posts",
-        ]
-
+from .models import BlogPost as BlogPostModel
 
 class BlogPostType(DjangoObjectType):
     class Meta:
@@ -24,5 +11,6 @@ class BlogPostType(DjangoObjectType):
             "text",
             "publish_date",
             "author",
-            "blog",
+            "organization"
+            
         ]
