@@ -8,6 +8,7 @@ import { Template } from "@/components/pages/Janus/Template";
 import { ProductDocument, ProductFragment } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
+import { PurchaseButton } from "@/components/pages/Janus/Shop/purchasebutton";
 
 const ProductPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ product }) => {
   console.log(ProductDocument);
@@ -32,7 +33,7 @@ const ProductPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           <ProductInfo price={0} sizes={["S", "M", "L"]} types={["Blue", "Red", "Gray"]} />
         </Stack>
       </Stack>
-      <PayWithVipps productId={data?.product?.id ?? ""} quantity={1} disabled={false} fallbackRedirect={undefined} />
+      <PurchaseButton productId={data?.product?.id ?? ""} />
     </Template>
   );
 };
