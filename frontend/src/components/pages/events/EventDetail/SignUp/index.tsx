@@ -2,14 +2,30 @@ import { Alert, AlertTitle, Unstable_Grid2 as Grid } from "@mui/material";
 
 import Link from "@/components/Link";
 import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
-import { SignUpAvailability } from "@/gql/pages/graphql";
+import { OrderPaymentStatus, SignUpAvailability } from "@/gql/pages/graphql";
 
 import { Actions } from "./Actions";
+import { PaymentStatus } from "./Payments";
 
 const SignUpFragment = graphql(`
   fragment EventSignUp_EventFragment on Event {
     signUpAvailability
     id
+    user {
+      id
+      ticket {
+        id
+        paymentStatus
+      }
+    }
+    ticketInformation {
+      product {
+        id
+        price {
+          valueInNok
+        }
+      }
+    }
     ...Action_EventFragment
   }
 `);
@@ -41,15 +57,14 @@ export const SignUp: React.FC<Props> = (props) => {
               .
             </Alert>
           </Grid>
-          {/* {event.product && (
+          {event.ticketInformation?.product && event.user?.ticket && (
             <Grid xs={12} sm={8} md={6}>
               <PaymentStatus
-                eventId={event.id}
-                hasBoughtTicket={event.userAttendance?.hasBoughtTicket}
-                productId={event.product.id}
+                hasBoughtTicket={event.user.ticket.paymentStatus === OrderPaymentStatus.Captured}
+                orderId={event.user.ticket.id}
               />
             </Grid>
-          )} */}
+          )}
         </>
       )}
       {isOnWaitingList && (

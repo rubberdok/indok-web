@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { Alert, Unstable_Grid2 as Grid, Snackbar, Tooltip, Typography } from "@mui/material";
+import { Alert, Unstable_Grid2 as Grid, Snackbar, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 
 import { LoginRequired, PermissionRequired } from "@/components/Auth";
@@ -19,6 +19,8 @@ const ActionEventFragment = graphql(`
       signUpsEndAt
     }
     signUpAvailability
+    signUpsRetractable
+    signUpsRequireUserProvidedInformation
   }
 `);
 
@@ -27,6 +29,7 @@ type Props = {
 };
 
 export const Actions: React.FC<Props> = (props) => {
+  const [extraInformation, setExtraInformation] = useState<string | null>(null);
   const event = getFragmentData(ActionEventFragment, props.event);
 
   const [alert, setAlert] = useState<
@@ -45,6 +48,12 @@ export const Actions: React.FC<Props> = (props) => {
             id
             participationStatus
             event {
+              user {
+                ticket {
+                  id
+                  paymentStatus
+                }
+              }
               id
               signUpAvailability
             }
@@ -104,15 +113,15 @@ export const Actions: React.FC<Props> = (props) => {
     event.signUpAvailability === SignUpAvailability.Confirmed ||
     event.signUpAvailability === SignUpAvailability.OnWaitlist;
   const isAttending = event.signUpAvailability === SignUpAvailability.Confirmed;
-  const isBindingSignup = isAttending && false;
   const signUpOpen = dayjs().isBetween(event.signUpDetails?.signUpsStartAt, event.signUpDetails?.signUpsEndAt);
-  const disabled = isBindingSignup || !signUpOpen;
+  const disabled = (isAttending && !event.signUpsRetractable) || !signUpOpen;
 
   function handleSignUp() {
     signUp({
       variables: {
         data: {
           eventId: event.id,
+          userProvidedInformation: null,
         },
       },
     });
@@ -164,7 +173,7 @@ export const Actions: React.FC<Props> = (props) => {
           </PermissionRequired>
         </LoginRequired>
       </Grid>
-      {/* {!isSignedUp && event.hasExtraInformation && (
+      {!isSignedUp && event.signUpsRequireUserProvidedInformation && (
         <Grid xs={12}>
           <TextField
             variant="filled"
@@ -178,7 +187,7 @@ export const Actions: React.FC<Props> = (props) => {
             rows={6}
           />
         </Grid>
-      )} */}
+      )}
     </>
   );
 };

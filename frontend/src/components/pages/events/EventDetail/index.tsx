@@ -1,5 +1,6 @@
-import { CalendarToday, Email, Label, Place } from "@mui/icons-material";
+import { CalendarToday, CreditCard, Email, Label, Place } from "@mui/icons-material";
 import {
+  Alert,
   Card,
   CardContent,
   CardHeader,
@@ -36,6 +37,16 @@ const EventDetailFragment = graphql(`
     endAt
     signUpsEnabled
     contactEmail
+    signUpsRetractable
+    type
+    ticketInformation {
+      product {
+        id
+        price {
+          valueInNok
+        }
+      }
+    }
     categories {
       id
       name
@@ -114,13 +125,24 @@ export const EventDetail: React.FC<Props> = (props) => {
               <CardHeader title="Informasjon" />
               <CardContent>
                 <List>
-                  {/* {event.bindingSignup && (
+                  {event.ticketInformation?.product && (
+                    <ListItem>
+                      <ListItemIcon>
+                        <CreditCard />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Pris"
+                        secondary={`${event.ticketInformation.product.price.valueInNok} kr`}
+                      />
+                    </ListItem>
+                  )}
+                  {!event.signUpsRetractable && (
                     <ListItem>
                       <Alert severity="warning" variant="outlined">
                         Arrangementet har bindende påmelding
                       </Alert>
                     </ListItem>
-                  )} */}
+                  )}
                   <ListItem>
                     <ListItemIcon>
                       <CalendarToday />

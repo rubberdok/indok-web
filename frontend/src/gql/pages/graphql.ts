@@ -98,12 +98,6 @@ export type CreateEventCategoryResponse = {
 
 export type CreateEventInput = {
   event: EventData;
-  /**
-   * The organization that is hosting the event. Events must be hosted by an organization, and the user
-   * creating the event must be a member of the organization.
-   */
-  organizationId: Scalars['ID']['input'];
-  signUpDetails: InputMaybe<SignUpData>;
 };
 
 export type CreateEventResponse = {
@@ -134,6 +128,25 @@ export type CreateListingResponse = {
   listing: Listing;
 };
 
+export type CreateMerchantInput = {
+  /** Client ID for the merchant, retrieved from the payment provider. */
+  clientId: Scalars['String']['input'];
+  /** Client secret for the merchant, retrieved from the payment provider. */
+  clientSecret: Scalars['String']['input'];
+  /** The name of the merchant to create. */
+  name: Scalars['String']['input'];
+  /** Merchant serial number for the merchant, retrieved from the payment provider. */
+  serialNumber: Scalars['String']['input'];
+  /** Subscription key for the merchant, retrieved from the payment provider. */
+  subscriptionKey: Scalars['String']['input'];
+};
+
+export type CreateMerchantResponse = {
+  __typename?: 'CreateMerchantResponse';
+  /** The merchant that was created. */
+  merchant: Merchant;
+};
+
 export type CreateOrderInput = {
   /** The ID of the product to create an order for. */
   productId: Scalars['ID']['input'];
@@ -161,6 +174,11 @@ export type CreateOrganizationResponse = {
   organization: Organization;
 };
 
+export type CreateSlotInput = {
+  capacity: Scalars['Int']['input'];
+  gradeYears: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
 export type DeleteEventCategoryInput = {
   id: Scalars['ID']['input'];
 };
@@ -177,6 +195,10 @@ export type DeleteListingInput = {
 export type DeleteListingResponse = {
   __typename?: 'DeleteListingResponse';
   listing: Listing;
+};
+
+export type DeleteSlotInput = {
+  id: Scalars['ID']['input'];
 };
 
 export type Event = {
@@ -205,8 +227,16 @@ export type Event = {
   signUpAvailability: SignUpAvailability;
   signUpDetails: Maybe<EventSignUpDetails>;
   signUpsEnabled: Scalars['Boolean']['output'];
+  /** If true, signing up for the event requires that the user submits additional information. */
+  signUpsRequireUserProvidedInformation: Scalars['Boolean']['output'];
+  /** If true, sign ups can be retracted for the event. Otherwise, sign ups are final. */
+  signUpsRetractable: Scalars['Boolean']['output'];
   /** The start time of the event. */
   startAt: Scalars['DateTime']['output'];
+  /** The ticket information for the event, if the event is a TICKETS event. */
+  ticketInformation: Maybe<EventTicketInformation>;
+  type: EventType;
+  user: Maybe<EventUser>;
 };
 
 export type EventCategoriesResponse = {
@@ -220,9 +250,13 @@ export type EventCategory = {
   name: Scalars['String']['output'];
 };
 
+export type EventCategoryInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type EventData = {
   /** categories is a list of cateogry IDs to which the event belongs */
-  categories: InputMaybe<Array<Scalars['ID']['input']>>;
+  categories: InputMaybe<Array<EventCategoryInput>>;
   /**
    * The description of the event, defaults to "". We support markdown on the client, so this can be markdown.
    * This will be displayed to users.
@@ -235,8 +269,31 @@ export type EventData = {
   endAt: InputMaybe<Scalars['DateTime']['input']>;
   /** The name of the event, this will be displayed to users */
   name: Scalars['String']['input'];
+  /**
+   * The ID of the organization that is hosting the event. Events must be hosted by an organization, and the user
+   * creating the event must be a member of the organization.
+   */
+  organizationId: Scalars['ID']['input'];
+  /** If the event is a sign up event, this will be the sign up details. */
+  signUpDetails: InputMaybe<SignUpData>;
+  /**
+   * If sign ups are currently enabled for the event. If this is false, users cannot sign up for the event. Defaults to
+   * false
+   */
+  signUpsEnabled: InputMaybe<Scalars['Boolean']['input']>;
+  /** If true, signing up requires that the user submits additional information. Defaults to false */
+  signUpsRequireUserProvidedInformation: InputMaybe<Scalars['Boolean']['input']>;
+  /** If true, users can retract their sign up for the event. Defaults to false */
+  signUpsRetractable: InputMaybe<Scalars['Boolean']['input']>;
   /** The start time of the event. Events must have a start time. */
   startAt: Scalars['DateTime']['input'];
+  /**
+   * The event type
+   * - BASIC has no sign ups, and no tickets
+   * - SIGN_UPS has sign ups, but no tickets (free event)
+   * - TICKETS has tickets and sign ups (paid event)
+   */
+  type: EventType;
 };
 
 export type EventInput = {
@@ -253,6 +310,42 @@ export type EventSignUpDetails = {
   capacity: Scalars['Int']['output'];
   signUpsEndAt: Scalars['DateTime']['output'];
   signUpsStartAt: Scalars['DateTime']['output'];
+};
+
+export type EventTicketData = {
+  /** MerchantID is the ID for the merchant, this will be the recipient of the payments. */
+  merchantId: Scalars['ID']['input'];
+  /** Price in øre, i.e. 100 = 1 NOK */
+  price: Scalars['Int']['input'];
+};
+
+export type EventTicketInformation = {
+  __typename?: 'EventTicketInformation';
+  product: Maybe<Product>;
+};
+
+export enum EventTicketStatus {
+  Bought = 'BOUGHT',
+  NotBought = 'NOT_BOUGHT'
+}
+
+export enum EventType {
+  /** Basic event has no sign ups, and no tickets */
+  Basic = 'BASIC',
+  /** Sign up event has sign ups, but no tickets */
+  SignUps = 'SIGN_UPS',
+  /** Ticketed event has tickets and sign ups */
+  Tickets = 'TICKETS'
+}
+
+export type EventUser = {
+  __typename?: 'EventUser';
+  /** The ID of the user */
+  id: Scalars['ID']['output'];
+  signUp: Maybe<SignUp>;
+  ticket: Maybe<Order>;
+  /** The ticket status for the user on the event, null if it's not a ticket event */
+  ticketStatus: Maybe<EventTicketStatus>;
 };
 
 export type EventsInput = {
@@ -297,6 +390,8 @@ export type HasFeaturePermissionResponse = {
 export type InitiatePaymentAttemptInput = {
   /** The ID of the order to initiate a payment attempt for. */
   orderId: Scalars['ID']['input'];
+  /** The return URL to redirect the user to after the payment attempt has been completed. */
+  returnUrl: Scalars['String']['input'];
 };
 
 export type InitiatePaymentAttemptResponse = {
@@ -345,6 +440,12 @@ export type Member = {
   user: PublicUser;
 };
 
+export type Merchant = {
+  __typename?: 'Merchant';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Add a member to the organization */
@@ -354,6 +455,11 @@ export type Mutation = {
   /** Create a new event category, requires super user status */
   createEventCategory: CreateEventCategoryResponse;
   createListing: CreateListingResponse;
+  /**
+   * Create a new Vipps merchant, and return the created merchant.
+   * Requires super user status.
+   */
+  createMerchant: CreateMerchantResponse;
   /** Creates an order for the given product. */
   createOrder: CreateOrderResponse;
   /** Create a new organization, and add the current user as an admin of the organization. */
@@ -413,6 +519,11 @@ export type MutationCreateEventCategoryArgs = {
 
 export type MutationCreateListingArgs = {
   data: CreateListingInput;
+};
+
+
+export type MutationCreateMerchantArgs = {
+  data: CreateMerchantInput;
 };
 
 
@@ -525,7 +636,67 @@ export type NewBookingResponse = {
 
 export type Order = {
   __typename?: 'Order';
+  /** Number of attempts to pay for the order. */
+  attempt: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
+  isFinalState: Scalars['Boolean']['output'];
+  paymentAttempt: Maybe<PaymentAttempt>;
+  /**
+   * The current payment status of the order. This is updated asynchronously, so if the payment status is PENDING or CREATED,
+   * it is recommended to poll the order to get the current status.
+   */
+  paymentStatus: OrderPaymentStatus;
+  /** The product that the order is for. */
+  product: Product;
+  purchasedAt: Maybe<Scalars['DateTime']['output']>;
+  totalPrice: Price;
+  user: Maybe<PrivateUser>;
+};
+
+
+export type OrderPaymentAttemptArgs = {
+  reference: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OrderInput = {
+  id: Scalars['ID']['input'];
+};
+
+export enum OrderPaymentStatus {
+  /** The order has been cancelled. This is a final state. */
+  Cancelled = 'CANCELLED',
+  /** The payment attempt has been authorized, but and the payment has been captured. This is a final state. */
+  Captured = 'CAPTURED',
+  /** The order has been created, and a payment attempt has been made. */
+  Created = 'CREATED',
+  /** The order has been created, but no payment attempt has been made. */
+  Pending = 'PENDING',
+  /** The payment attempt has been authorized, but the payment has been refunded. This is a final state. */
+  Refunded = 'REFUNDED',
+  /** The payment attempt has been authorized, but the payment has been reserved, but not captured. */
+  Reserved = 'RESERVED'
+}
+
+export type OrderResponse = {
+  __typename?: 'OrderResponse';
+  order: Order;
+};
+
+export type OrdersInput = {
+  /** Only get orders for the given product ID. */
+  productId: InputMaybe<Scalars['ID']['input']>;
+  /**
+   * Only get orders for the given user ID. Requires super user status,
+   * or the user ID to match the user ID of the order. Omit to default to
+   * the current user.
+   */
+  userId: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type OrdersResponse = {
+  __typename?: 'OrdersResponse';
+  orders: Array<Order>;
+  total: Scalars['Int']['output'];
 };
 
 export type Organization = {
@@ -558,12 +729,62 @@ export enum ParticipationStatus {
   Retracted = 'RETRACTED'
 }
 
+export type PaymentAttempt = {
+  __typename?: 'PaymentAttempt';
+  id: Scalars['ID']['output'];
+  isFinalState: Scalars['Boolean']['output'];
+  /** The order that the payment attempt is for. */
+  order: Order;
+  /** The reference for the payment attempt with the payment provider. */
+  reference: Scalars['String']['output'];
+  /**
+   * The current state of the payment attempt. If the payment attempt is CREATED, it is recommended to poll
+   * to get the most current state, as it can change asynchronously.
+   */
+  state: PaymentAttemptState;
+};
+
+export enum PaymentAttemptState {
+  /** The payment attempt was aborted by the user. This is a final state. */
+  Aborted = 'ABORTED',
+  /** The payment attempt was successful, and the user has authorized the payment. This is a final state. */
+  Authorized = 'AUTHORIZED',
+  /** The payment attempt has been started, but not completed. */
+  Created = 'CREATED',
+  /** The payment attempt expired. This is a final state. */
+  Expired = 'EXPIRED',
+  /** The payment attempt failed. This is a final state. */
+  Failed = 'FAILED',
+  /** The payment attempt was terminated (typically by us). This is a final state. */
+  Terminated = 'TERMINATED'
+}
+
+export type PaymentAttemptsInput = {
+  /** Only get payment atttempts for the given order ID. */
+  orderId: InputMaybe<Scalars['ID']['input']>;
+  /** Only get payment attempts for the given product ID. */
+  productId: InputMaybe<Scalars['ID']['input']>;
+  /**
+   * Only get payment attempts for the given user ID. Requires super user status,
+   * or the user ID to match the user ID of the payment attempt. Omit to default to
+   * the current user.
+   */
+  userId: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type PaymentAttemptsResponse = {
+  __typename?: 'PaymentAttemptsResponse';
+  paymentAttempts: Array<PaymentAttempt>;
+  total: Scalars['Int']['output'];
+};
+
 export type Price = {
   __typename?: 'Price';
   /** The unit of the price, e.g. NOK, USD, EUR, etc. */
   unit: Scalars['String']['output'];
   /** The value of the price, in the given unit. */
   value: Scalars['Int']['output'];
+  valueInNok: Scalars['Float']['output'];
 };
 
 /**
@@ -600,7 +821,11 @@ export type PrivateUser = {
 
 export type Product = {
   __typename?: 'Product';
+  /** The description of the product. */
+  description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  /** The name of the product */
+  name: Scalars['String']['output'];
   /** price in øre, i.e. 100 = 1 NOK */
   price: Price;
 };
@@ -640,8 +865,20 @@ export type Query = {
   hasFeaturePermission: HasFeaturePermissionResponse;
   listing: ListingResponse;
   listings: ListingsResponse;
+  /** Get an order by its ID. */
+  order: OrderResponse;
+  /**
+   * Get orders, filtered by the given input. Unless the user is a super user, only
+   * orders for the current user will be returned.
+   */
+  orders: OrdersResponse;
   /** Get all organizations */
   organizations: Maybe<OrganizationsResponse>;
+  /**
+   * Get payment attempts, filtered by the given input. Unless the user is a super user, only
+   * payment attempts for the current user will be returned.
+   */
+  paymentAttempts: PaymentAttemptsResponse;
   products: ProductResponse;
   serverTime: ServerTimeResponse;
   user: UserResponse;
@@ -666,6 +903,21 @@ export type QueryHasFeaturePermissionArgs = {
 
 export type QueryListingArgs = {
   data: ListingInput;
+};
+
+
+export type QueryOrderArgs = {
+  data: OrderInput;
+};
+
+
+export type QueryOrdersArgs = {
+  data: InputMaybe<OrdersInput>;
+};
+
+
+export type QueryPaymentAttemptsArgs = {
+  data: InputMaybe<PaymentAttemptsInput>;
 };
 
 export type RemoveMemberInput = {
@@ -715,10 +967,12 @@ export type SignUp = {
   /** The event the user signed up for */
   event: Event;
   id: Scalars['ID']['output'];
+  order: Maybe<Order>;
   /** The status of the user's participation in the event */
   participationStatus: ParticipationStatus;
   /** The user that signed up for the event */
   user: PublicUser;
+  userProvidedInformation: Maybe<Scalars['String']['output']>;
 };
 
 export enum SignUpAvailability {
@@ -748,19 +1002,21 @@ export type SignUpData = {
    * no more users can be registered as attending.
    */
   capacity: Scalars['Int']['input'];
-  /** If true, users can sign up for the event. If false, users cannot sign up for the event. */
-  enabled: Scalars['Boolean']['input'];
   /** The time that sign ups close for the event. This must be after signUpsOpenAt. */
   signUpsEndAt: Scalars['DateTime']['input'];
   /** The time that sign ups open for the event. This must be before the start time of the event. */
   signUpsStartAt: Scalars['DateTime']['input'];
   /** The slots for the event. If this is not provided, but capacity is, then all users can attend the event. */
   slots: Array<CreateEventSlot>;
+  /** Ticket purchase details for the event. If this is not provided, then the event is free. */
+  tickets: InputMaybe<EventTicketData>;
 };
 
 export type SignUpInput = {
   /** The event to sign up for */
   eventId: Scalars['ID']['input'];
+  /** If the event requires user provided information, this field must be set */
+  userProvidedInformation: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SignUpResponse = {
@@ -836,6 +1092,10 @@ export type UpdateBookingStatusInput = {
   status: Status;
 };
 
+export type UpdateCategoriesInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type UpdateEventCategoryInput = {
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
@@ -854,7 +1114,7 @@ export type UpdateEventInput = {
    */
   capacity: InputMaybe<Scalars['Int']['input']>;
   /** categories is a list of cateogry IDs to which the event belongs */
-  categories: InputMaybe<Array<Scalars['ID']['input']>>;
+  categories: InputMaybe<Array<UpdateCategoriesInput>>;
   /**
    * The description of the event, defaults to "". We support markdown on the client, so this can be markdown.
    * This will be displayed to users.
@@ -866,6 +1126,11 @@ export type UpdateEventInput = {
   location: InputMaybe<Scalars['String']['input']>;
   /** The name of the event, this will be displayed to users */
   name: InputMaybe<Scalars['String']['input']>;
+  /** If true, sign ups require user provided information */
+  signUpsRequireUserProvidedInformation: InputMaybe<Scalars['Boolean']['input']>;
+  /** If true, sign ups are retractable for the event */
+  signUpsRetractable: InputMaybe<Scalars['Boolean']['input']>;
+  slots: InputMaybe<UpdateSlotsInput>;
   /** The start time of the event. Must be before endAt and after the current time. */
   startAt: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -914,6 +1179,18 @@ export type UpdateOrganizationInput = {
 export type UpdateOrganizationResponse = {
   __typename?: 'UpdateOrganizationResponse';
   organization: Organization;
+};
+
+export type UpdateSlotInput = {
+  capacity: InputMaybe<Scalars['Int']['input']>;
+  gradeYears: InputMaybe<Array<Scalars['Int']['input']>>;
+  id: Scalars['ID']['input'];
+};
+
+export type UpdateSlotsInput = {
+  create: InputMaybe<Array<CreateSlotInput>>;
+  delete: InputMaybe<Array<DeleteSlotInput>>;
+  update: InputMaybe<Array<UpdateSlotInput>>;
 };
 
 export type UpdateUserInput = {
@@ -986,14 +1263,14 @@ export type EventsPageQuery = { __typename?: 'Query', events: { __typename?: 'Ev
       & { ' $fragmentRefs'?: { 'EventListItemFragment': EventListItemFragment } }
     )> }, user: { __typename?: 'UserResponse', user: { __typename?: 'PrivateUser', id: string, gradeYear: number | null } | null } };
 
-export type Action_EventFragmentFragment = { __typename?: 'Event', id: string, signUpAvailability: SignUpAvailability, signUpDetails: { __typename?: 'EventSignUpDetails', signUpsStartAt: string, signUpsEndAt: string } | null } & { ' $fragmentName'?: 'Action_EventFragmentFragment' };
+export type Action_EventFragmentFragment = { __typename?: 'Event', id: string, signUpAvailability: SignUpAvailability, signUpsRetractable: boolean, signUpsRequireUserProvidedInformation: boolean, signUpDetails: { __typename?: 'EventSignUpDetails', signUpsStartAt: string, signUpsEndAt: string } | null } & { ' $fragmentName'?: 'Action_EventFragmentFragment' };
 
 export type EventSignUpMutationVariables = Exact<{
   data: SignUpInput;
 }>;
 
 
-export type EventSignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'SignUpResponse', signUp: { __typename?: 'SignUp', id: string, participationStatus: ParticipationStatus, event: { __typename?: 'Event', id: string, signUpAvailability: SignUpAvailability } } } };
+export type EventSignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'SignUpResponse', signUp: { __typename?: 'SignUp', id: string, participationStatus: ParticipationStatus, event: { __typename?: 'Event', id: string, signUpAvailability: SignUpAvailability, user: { __typename?: 'EventUser', ticket: { __typename?: 'Order', id: string, paymentStatus: OrderPaymentStatus } | null } | null } } } };
 
 export type EventRetractSignUpMutationVariables = Exact<{
   data: RetractSignUpInput;
@@ -1003,12 +1280,12 @@ export type EventRetractSignUpMutationVariables = Exact<{
 export type EventRetractSignUpMutation = { __typename?: 'Mutation', retractSignUp: { __typename?: 'RetractSignUpResponse', signUp: { __typename?: 'SignUp', id: string, participationStatus: ParticipationStatus, event: { __typename?: 'Event', id: string, signUpAvailability: SignUpAvailability } } } };
 
 export type EventSignUp_EventFragmentFragment = (
-  { __typename?: 'Event', signUpAvailability: SignUpAvailability, id: string }
+  { __typename?: 'Event', signUpAvailability: SignUpAvailability, id: string, user: { __typename?: 'EventUser', id: string, ticket: { __typename?: 'Order', id: string, paymentStatus: OrderPaymentStatus } | null } | null, ticketInformation: { __typename?: 'EventTicketInformation', product: { __typename?: 'Product', id: string, price: { __typename?: 'Price', valueInNok: number } } | null } | null }
   & { ' $fragmentRefs'?: { 'Action_EventFragmentFragment': Action_EventFragmentFragment } }
 ) & { ' $fragmentName'?: 'EventSignUp_EventFragmentFragment' };
 
 export type EventDetailFieldsFragment = (
-  { __typename?: 'Event', id: string, name: string, description: string, location: string, startAt: string, endAt: string, signUpsEnabled: boolean, contactEmail: string, organization: { __typename?: 'Organization', id: string, name: string } | null, categories: Array<{ __typename?: 'EventCategory', id: string, name: string }> | null }
+  { __typename?: 'Event', id: string, name: string, description: string, location: string, startAt: string, endAt: string, signUpsEnabled: boolean, contactEmail: string, signUpsRetractable: boolean, type: EventType, organization: { __typename?: 'Organization', id: string, name: string } | null, ticketInformation: { __typename?: 'EventTicketInformation', product: { __typename?: 'Product', id: string, price: { __typename?: 'Price', valueInNok: number } } | null } | null, categories: Array<{ __typename?: 'EventCategory', id: string, name: string }> | null }
   & { ' $fragmentRefs'?: { 'EventSignUp_EventFragmentFragment': EventSignUp_EventFragmentFragment } }
 ) & { ' $fragmentName'?: 'EventDetailFieldsFragment' };
 
@@ -1073,9 +1350,9 @@ export type OrganizationPageUserQueryVariables = Exact<{ [key: string]: never; }
 
 export type OrganizationPageUserQuery = { __typename?: 'Query', user: { __typename?: 'UserResponse', user: { __typename?: 'PrivateUser', id: string, organizations: Array<{ __typename?: 'Organization', id: string, name: string }> } | null } };
 
-export const Action_EventFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}}]} as unknown as DocumentNode<Action_EventFragmentFragment, unknown>;
-export const EventSignUp_EventFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventSignUp_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Action_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}}]} as unknown as DocumentNode<EventSignUp_EventFragmentFragment, unknown>;
-export const EventDetailFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventDetailFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"contactEmail"}},{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventSignUp_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventSignUp_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Action_EventFragment"}}]}}]} as unknown as DocumentNode<EventDetailFieldsFragment, unknown>;
+export const Action_EventFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRetractable"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRequireUserProvidedInformation"}}]}}]} as unknown as DocumentNode<Action_EventFragmentFragment, unknown>;
+export const EventSignUp_EventFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventSignUp_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ticket"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"ticketInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Action_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRetractable"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRequireUserProvidedInformation"}}]}}]} as unknown as DocumentNode<EventSignUp_EventFragmentFragment, unknown>;
+export const EventDetailFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventDetailFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"contactEmail"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRetractable"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"ticketInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventSignUp_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRetractable"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRequireUserProvidedInformation"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventSignUp_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ticket"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"ticketInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Action_EventFragment"}}]}}]} as unknown as DocumentNode<EventDetailFieldsFragment, unknown>;
 export const UserOrganizationQueryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserOrganizationQuery"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organizations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UserOrganizationQueryFragment, unknown>;
 export const EventListItemFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventListItem"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}}]} as unknown as DocumentNode<EventListItemFragment, unknown>;
 export const PagesLoginRequiredUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PagesLoginRequiredUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]}}]} as unknown as DocumentNode<PagesLoginRequiredUserQuery, PagesLoginRequiredUserQueryVariables>;
@@ -1084,7 +1361,7 @@ export const CabinsBookNowDocument = {"kind":"Document","definitions":[{"kind":"
 export const BookingContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"BookingContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bookingContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bookingContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<BookingContactQuery, BookingContactQueryVariables>;
 export const PayWithVippsInitiatePaymentAttemptDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PayWithVippsInitiatePaymentAttempt"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"InitiatePaymentAttemptInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initiatePaymentAttempt"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"redirectUrl"}}]}}]}}]} as unknown as DocumentNode<PayWithVippsInitiatePaymentAttemptMutation, PayWithVippsInitiatePaymentAttemptMutationVariables>;
 export const EventsPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"EventsPage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EventsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"events"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nextWeek"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventListItem"}}]}},{"kind":"Field","name":{"kind":"Name","value":"thisWeek"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventListItem"}}]}},{"kind":"Field","name":{"kind":"Name","value":"twoWeeksOrLater"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventListItem"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventListItem"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}}]} as unknown as DocumentNode<EventsPageQuery, EventsPageQueryVariables>;
-export const EventSignUpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EventSignUp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SignUpInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUp"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUp"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"participationStatus"}},{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}}]}}]}}]}}]} as unknown as DocumentNode<EventSignUpMutation, EventSignUpMutationVariables>;
+export const EventSignUpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EventSignUp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SignUpInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUp"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUp"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"participationStatus"}},{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ticket"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}}]}}]}}]}}]} as unknown as DocumentNode<EventSignUpMutation, EventSignUpMutationVariables>;
 export const EventRetractSignUpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EventRetractSignUp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RetractSignUpInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"retractSignUp"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUp"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"participationStatus"}},{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}}]}}]}}]}}]} as unknown as DocumentNode<EventRetractSignUpMutation, EventRetractSignUpMutationVariables>;
 export const CategoryFilterCategoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CategoryFilterCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<CategoryFilterCategoriesQuery, CategoryFilterCategoriesQueryVariables>;
 export const EventOrganizationFilterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"EventOrganizationFilter"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"events"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"futureEventsOnly"},"value":{"kind":"BooleanValue","value":true}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<EventOrganizationFilterQuery, EventOrganizationFilterQueryVariables>;
@@ -1092,6 +1369,6 @@ export const ListingsDocument = {"kind":"Document","definitions":[{"kind":"Opera
 export const UserFormUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserFormUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYearUpdatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"canUpdateYear"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"isSuperUser"}}]}}]}}]}}]} as unknown as DocumentNode<UserFormUserQuery, UserFormUserQueryVariables>;
 export const UserFormUpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UserFormUpdateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYearUpdatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"canUpdateYear"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"isSuperUser"}}]}}]}}]}}]} as unknown as DocumentNode<UserFormUpdateUserMutation, UserFormUpdateUserMutationVariables>;
 export const LoginButtonUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoginButtonUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]}}]} as unknown as DocumentNode<LoginButtonUserQuery, LoginButtonUserQueryVariables>;
-export const EventPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"EventPage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EventInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventDetailFields"}}]}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserOrganizationQuery"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventSignUp_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Action_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventDetailFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"contactEmail"}},{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventSignUp_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserOrganizationQuery"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organizations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<EventPageQuery, EventPageQueryVariables>;
+export const EventPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"EventPage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EventInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventDetailFields"}}]}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserOrganizationQuery"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Action_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpsStartAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEndAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRetractable"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRequireUserProvidedInformation"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventSignUp_EventFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpAvailability"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ticket"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"ticketInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Action_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventDetailFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"contactEmail"}},{"kind":"Field","name":{"kind":"Name","value":"signUpsRetractable"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"ticketInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventSignUp_EventFragment"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserOrganizationQuery"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organizations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<EventPageQuery, EventPageQueryVariables>;
 export const ListingsPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListingsPage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ListingInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"applicationUrl"}},{"kind":"Field","name":{"kind":"Name","value":"closesAt"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ListingsPageQuery, ListingsPageQueryVariables>;
 export const OrganizationPageUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OrganizationPageUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organizations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<OrganizationPageUserQuery, OrganizationPageUserQueryVariables>;
