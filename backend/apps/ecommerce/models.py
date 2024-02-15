@@ -9,6 +9,8 @@ from django.db.models.fields import DateTimeField, UUIDField
 from apps.ecommerce.mixins import Sellable
 from django.contrib.contenttypes.fields import GenericRelation
 
+# from django.contrib.postgres.fields import ArrayField
+
 from apps.organizations.models import Organization
 from apps.users.models import User
 
@@ -21,8 +23,7 @@ class Product(models.Model, Sellable):
     total_quantity = models.PositiveIntegerField()
     current_quantity = models.PositiveIntegerField(null=True)  # Set to total_quantity upon initialization
     max_buyable_quantity = models.PositiveIntegerField(default=1)
-    types = models.JSONField(default=list, blank=True)
-    sizes = models.JSONField(default=list, blank=True)
+    shop_item = models.BooleanField(default=False)
     products = GenericRelation("ecommerce.Product")
 
     # Generic foreign key to related product model instance (e.g event model)
