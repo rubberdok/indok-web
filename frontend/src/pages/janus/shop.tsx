@@ -17,11 +17,12 @@ const ShopPage: NextPageWithLayout = () => {
         <Grid container spacing={2}>
           {data?.products?.map((product) => {
             console.log(product);
-            return (
-              <Grid key={product.id} item xs={12} sm={6} md={6}>
-                <ShopItem key={product.id} product={product}></ShopItem>
-              </Grid>
-            );
+            if (product.shopItem === true)
+              return (
+                <Grid key={product.id} item xs={12} sm={6} md={6}>
+                  <ShopItem key={product.id} product={product}></ShopItem>
+                </Grid>
+              );
           })}
         </Grid>
       </Typography>

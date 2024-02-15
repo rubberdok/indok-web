@@ -4,11 +4,12 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
 import { ProductInfo } from "@/components/pages/Janus/Shop/ProductInfo";
+import { PurchaseButton } from "@/components/pages/Janus/Shop/purchasebutton";
+import { ShopItem } from "@/components/pages/Janus/Shop/ShopItem";
 import { Template } from "@/components/pages/Janus/Template";
 import { ProductDocument, ProductFragment } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
-import { PurchaseButton } from "@/components/pages/Janus/Shop/purchasebutton";
 
 const ProductPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ product }) => {
   console.log(ProductDocument);

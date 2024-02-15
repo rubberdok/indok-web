@@ -29,13 +29,6 @@ export type Scalars = {
   /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: { input: number; output: number; }
   /**
-   * Allows use of a JSON String for input / output from the GraphQL schema.
-   *
-   * Use of this type is *not recommended* as you lose the benefits of having a defined, static
-   * schema (one of the key benefits of GraphQL).
-   */
-  JSONString: { input: any; output: any; }
-  /**
    * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
@@ -1009,8 +1002,7 @@ export type ProductType = {
   maxBuyableQuantity: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   price: Scalars['Decimal']['output'];
-  sizes: Scalars['JSONString']['output'];
-  types: Scalars['JSONString']['output'];
+  shopItem: Scalars['Boolean']['output'];
 };
 
 export type Queries = {
