@@ -9,7 +9,7 @@ export const OrdersCard: React.VFC = ({ ...props }) => {
     <ProfileCardBase
       title="Ordrehistorikk"
       actionText="Se ordrehistorikk"
-      actionLink="/ecommerce"
+      actionLink="/profile/orders"
       image={CreditCard}
       alt=""
       {...props}
