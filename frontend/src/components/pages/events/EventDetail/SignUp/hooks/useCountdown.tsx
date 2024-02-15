@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 
-import { ServerTimeDocument } from "@/generated/graphql";
+import { graphql } from "@/gql/pages";
 import dayjs from "@/lib/date";
 
 /**
@@ -17,9 +17,16 @@ export function useCountdown(date?: string) {
    */
   const [difference, setDifference] = useState<number>(0);
 
-  useQuery(ServerTimeDocument, {
-    onCompleted: (data) => {
-      if (data.serverTime) {
+  useQuery(
+    graphql(`
+      query UseCountdownServerTime {
+        serverTime {
+          serverTime
+        }
+      }
+    `),
+    {
+      onCompleted: (data) => {
         /**
          * Store the difference between the server time and the client time
          * to be able to calculate the correct time left.
@@ -27,18 +34,18 @@ export function useCountdown(date?: string) {
          * the same, and the server time is the correct one.
          * The difference is stored in milliseconds.
          */
-        const serverTime = dayjs(data.serverTime);
+        const serverTime = dayjs(data.serverTime.serverTime);
         const currentTime = dayjs();
         const difference = currentTime.diff(serverTime);
         setDifference(difference);
-      }
-    },
-    /**
-     * Always fetch the server time from the server, completely ignoring the cache
-     * as a cached server time will be outdated.
-     */
-    fetchPolicy: "network-only",
-  });
+      },
+      /**
+       * Always fetch the server time from the server, completely ignoring the cache
+       * as a cached server time will be outdated.
+       */
+      fetchPolicy: "network-only",
+    }
+  );
 
   /**
    * The time on the client at the time of the previous render.

@@ -121,7 +121,7 @@ export const Actions: React.FC<Props> = (props) => {
       variables: {
         data: {
           eventId: event.id,
-          userProvidedInformation: null,
+          userProvidedInformation: extraInformation,
         },
       },
     });

@@ -22,6 +22,7 @@ const documents = {
     "\n  fragment Action_EventFragment on Event {\n    id\n    signUpDetails {\n      signUpsStartAt\n      signUpsEndAt\n    }\n    signUpAvailability\n    signUpsRetractable\n    signUpsRequireUserProvidedInformation\n  }\n": types.Action_EventFragmentFragmentDoc,
     "\n      mutation EventSignUp($data: SignUpInput!) {\n        signUp(data: $data) {\n          signUp {\n            id\n            participationStatus\n            event {\n              user {\n                ticket {\n                  id\n                  paymentStatus\n                }\n              }\n              id\n              signUpAvailability\n            }\n          }\n        }\n      }\n    ": types.EventSignUpDocument,
     "\n      mutation EventRetractSignUp($data: RetractSignUpInput!) {\n        retractSignUp(data: $data) {\n          signUp {\n            id\n            participationStatus\n            event {\n              id\n              signUpAvailability\n            }\n          }\n        }\n      }\n    ": types.EventRetractSignUpDocument,
+    "\n      query UseCountdownServerTime {\n        serverTime {\n          serverTime\n        }\n      }\n    ": types.UseCountdownServerTimeDocument,
     "\n  fragment EventSignUp_EventFragment on Event {\n    signUpAvailability\n    id\n    user {\n      id\n      ticket {\n        id\n        paymentStatus\n      }\n    }\n    ticketInformation {\n      product {\n        id\n        price {\n          valueInNok\n        }\n      }\n    }\n    ...Action_EventFragment\n  }\n": types.EventSignUp_EventFragmentFragmentDoc,
     "\n  fragment EventDetailFields on Event {\n    id\n    name\n    description\n    organization {\n      id\n      name\n    }\n    location\n    startAt\n    endAt\n    signUpsEnabled\n    contactEmail\n    signUpsRetractable\n    type\n    ticketInformation {\n      product {\n        id\n        price {\n          valueInNok\n        }\n      }\n    }\n    categories {\n      id\n      name\n    }\n    ...EventSignUp_EventFragment\n  }\n": types.EventDetailFieldsFragmentDoc,
     "\n  fragment UserOrganizationQuery on Query {\n    user {\n      user {\n        id\n        organizations {\n          id\n        }\n      }\n    }\n  }\n": types.UserOrganizationQueryFragmentDoc,
@@ -87,6 +88,10 @@ export function graphql(source: "\n      mutation EventSignUp($data: SignUpInput
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation EventRetractSignUp($data: RetractSignUpInput!) {\n        retractSignUp(data: $data) {\n          signUp {\n            id\n            participationStatus\n            event {\n              id\n              signUpAvailability\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation EventRetractSignUp($data: RetractSignUpInput!) {\n        retractSignUp(data: $data) {\n          signUp {\n            id\n            participationStatus\n            event {\n              id\n              signUpAvailability\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query UseCountdownServerTime {\n        serverTime {\n          serverTime\n        }\n      }\n    "): (typeof documents)["\n      query UseCountdownServerTime {\n        serverTime {\n          serverTime\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
