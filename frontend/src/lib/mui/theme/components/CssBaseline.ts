@@ -20,6 +20,7 @@ export const CssBaseline: ThemeOptions["components"] = {
         flexDirection: "column",
       },
       ".content": {
+        minHeight: `100vh`,
         flex: "1 0 auto",
       },
       ".footer": {
