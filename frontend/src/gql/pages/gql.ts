@@ -29,6 +29,7 @@ const documents = {
     "\n  fragment EventListItem on Event {\n    id\n    name\n    description\n    startAt\n    signUpAvailability\n  }\n": types.EventListItemFragmentDoc,
     "\n      query CategoryFilterCategories {\n        categories {\n          categories {\n            id\n            name\n          }\n        }\n      }\n    ": types.CategoryFilterCategoriesDocument,
     "\n      query EventOrganizationFilter {\n        events(data: { futureEventsOnly: true }) {\n          events {\n            id\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    ": types.EventOrganizationFilterDocument,
+    "\n  fragment ListingItem_Listing on Listing {\n    id\n    name\n    closesAt\n  }\n": types.ListingItem_ListingFragmentDoc,
     "\n      query Listings {\n        listings {\n          listings {\n            id\n            name\n            description\n            closesAt\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    ": types.ListingsDocument,
     "\n      query UserFormUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            graduationYearUpdatedAt\n            canUpdateYear\n            gradeYear\n            graduationYear\n            allergies\n            phoneNumber\n            email\n            isSuperUser\n          }\n        }\n      }\n    ": types.UserFormUserDocument,
     "\n      mutation UserFormUpdateUser($data: UpdateUserInput!) {\n        updateUser(data: $data) {\n          user {\n            id\n            firstName\n            lastName\n            graduationYearUpdatedAt\n            canUpdateYear\n            gradeYear\n            graduationYear\n            allergies\n            phoneNumber\n            email\n            isSuperUser\n          }\n        }\n      }\n    ": types.UserFormUpdateUserDocument,
@@ -116,6 +117,10 @@ export function graphql(source: "\n      query CategoryFilterCategories {\n     
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query EventOrganizationFilter {\n        events(data: { futureEventsOnly: true }) {\n          events {\n            id\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query EventOrganizationFilter {\n        events(data: { futureEventsOnly: true }) {\n          events {\n            id\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ListingItem_Listing on Listing {\n    id\n    name\n    closesAt\n  }\n"): (typeof documents)["\n  fragment ListingItem_Listing on Listing {\n    id\n    name\n    closesAt\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

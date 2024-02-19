@@ -18,6 +18,15 @@ const documents = {
     "\n      query AppLoginButtonUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    ": types.AppLoginButtonUserDocument,
     "\n      query AppLoginRequiredUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    ": types.AppLoginRequiredUserDocument,
     "\n      query HasFeaturePermission($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.HasFeaturePermissionDocument,
+    "\n  fragment ListingItem_Listing on Listing {\n    id\n    name\n    closesAt\n  }\n": types.ListingItem_ListingFragmentDoc,
+    "\n  fragment Listings_Query on Query {\n    listings {\n      listings {\n        id\n        ...ListingItem_Listing\n        organization {\n          id\n          name\n        }\n      }\n    }\n  }\n": types.Listings_QueryFragmentDoc,
+    "\n      query ListingsPage_Query {\n        ...Listings_Query\n      }\n    ": types.ListingsPage_QueryDocument,
+    "\n  query ListingPage_Query($data: ListingInput!) {\n    listing(data: $data) {\n      listing {\n        id\n        description\n        ...TitleCard_Listing\n      }\n    }\n  }\n": types.ListingPage_QueryDocument,
+    "\n  fragment TitleCard_Listing on Listing {\n    name\n    applicationUrl\n    closesAt\n    organization {\n      id\n      name\n    }\n  }\n": types.TitleCard_ListingFragmentDoc,
+    "\n      query ListingLayout_Query($data: ListingInput!) {\n        listing(data: $data) {\n          listing {\n            id\n            name\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    ": types.ListingLayout_QueryDocument,
+    "\n      query ListingMetadata($data: ListingInput!) {\n        listing(data: $data) {\n          listing {\n            id\n            name\n            description\n          }\n        }\n      }\n    ": types.ListingMetadataDocument,
+    "\n      query NewListing_Query {\n        user {\n          user {\n            id\n            organizations {\n              id\n              name\n            }\n          }\n        }\n      }\n    ": types.NewListing_QueryDocument,
+    "\n      mutation NewListing_CreateListingMutation($data: CreateListingInput!) {\n        createListing(data: $data) {\n          listing {\n            id\n            name\n            description\n            closesAt\n            organization {\n              id\n              name\n            }\n            applicationUrl\n          }\n        }\n      }\n    ": types.NewListing_CreateListingMutationDocument,
     "\n      query EventAdminLayout_Event($data: EventInput!) {\n        event(data: $data) {\n          event {\n            id\n            name\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    ": types.EventAdminLayout_EventDocument,
     "\n      query OrganizationsAdminPage_EventDetail($data: EventInput!) {\n        event(data: $data) {\n          event {\n            id\n            name\n            startAt\n            endAt\n            type\n            location\n            contactEmail\n            ticketInformation {\n              product {\n                id\n                price {\n                  valueInNok\n                }\n              }\n            }\n            organization {\n              id\n              name\n            }\n            signUps {\n              confirmed {\n                total\n                signUps {\n                  ...OrganizationsAdminPage_SignUpFields\n                }\n              }\n              waitList {\n                total\n                signUps {\n                  ...OrganizationsAdminPage_SignUpFields\n                }\n              }\n              retracted {\n                total\n                signUps {\n                  ...OrganizationsAdminPage_SignUpFields\n                }\n              }\n            }\n          }\n        }\n      }\n\n      fragment OrganizationsAdminPage_SignUpFields on SignUp {\n        id\n        user {\n          id\n          firstName\n          lastName\n        }\n      }\n    ": types.OrganizationsAdminPage_EventDetailDocument,
     "\n      query AdminOrganizationsEventsPage($data: OrganizationInput!) {\n        organization(data: $data) {\n          organization {\n            id\n            events {\n              type\n              signUps {\n                confirmed {\n                  total\n                }\n              }\n              id\n              name\n              startAt\n              signUpDetails {\n                capacity\n              }\n            }\n          }\n        }\n      }\n    ": types.AdminOrganizationsEventsPageDocument,
@@ -67,6 +76,42 @@ export function graphql(source: "\n      query AppLoginRequiredUser {\n        u
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query HasFeaturePermission($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "): (typeof documents)["\n      query HasFeaturePermission($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ListingItem_Listing on Listing {\n    id\n    name\n    closesAt\n  }\n"): (typeof documents)["\n  fragment ListingItem_Listing on Listing {\n    id\n    name\n    closesAt\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment Listings_Query on Query {\n    listings {\n      listings {\n        id\n        ...ListingItem_Listing\n        organization {\n          id\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  fragment Listings_Query on Query {\n    listings {\n      listings {\n        id\n        ...ListingItem_Listing\n        organization {\n          id\n          name\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query ListingsPage_Query {\n        ...Listings_Query\n      }\n    "): (typeof documents)["\n      query ListingsPage_Query {\n        ...Listings_Query\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ListingPage_Query($data: ListingInput!) {\n    listing(data: $data) {\n      listing {\n        id\n        description\n        ...TitleCard_Listing\n      }\n    }\n  }\n"): (typeof documents)["\n  query ListingPage_Query($data: ListingInput!) {\n    listing(data: $data) {\n      listing {\n        id\n        description\n        ...TitleCard_Listing\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment TitleCard_Listing on Listing {\n    name\n    applicationUrl\n    closesAt\n    organization {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  fragment TitleCard_Listing on Listing {\n    name\n    applicationUrl\n    closesAt\n    organization {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query ListingLayout_Query($data: ListingInput!) {\n        listing(data: $data) {\n          listing {\n            id\n            name\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query ListingLayout_Query($data: ListingInput!) {\n        listing(data: $data) {\n          listing {\n            id\n            name\n            organization {\n              id\n              name\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query ListingMetadata($data: ListingInput!) {\n        listing(data: $data) {\n          listing {\n            id\n            name\n            description\n          }\n        }\n      }\n    "): (typeof documents)["\n      query ListingMetadata($data: ListingInput!) {\n        listing(data: $data) {\n          listing {\n            id\n            name\n            description\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query NewListing_Query {\n        user {\n          user {\n            id\n            organizations {\n              id\n              name\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query NewListing_Query {\n        user {\n          user {\n            id\n            organizations {\n              id\n              name\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation NewListing_CreateListingMutation($data: CreateListingInput!) {\n        createListing(data: $data) {\n          listing {\n            id\n            name\n            description\n            closesAt\n            organization {\n              id\n              name\n            }\n            applicationUrl\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation NewListing_CreateListingMutation($data: CreateListingInput!) {\n        createListing(data: $data) {\n          listing {\n            id\n            name\n            description\n            closesAt\n            organization {\n              id\n              name\n            }\n            applicationUrl\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
