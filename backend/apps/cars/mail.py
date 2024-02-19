@@ -5,13 +5,13 @@ from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
 from apps.cars.models import CarBookingResponsible
-from apps.cars.types import CarBookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
+from apps.cars.types import CarBookingInfoType, CarAdminTemplateType, CarUserTemplateType, EmailTypes
 
 from weasyprint import HTML
 from datetime import datetime
 import io
 
-user_templates: UserTemplateType = {
+user_templates: CarUserTemplateType = {
     "reserve_subject": "Bekreftelse på mottatt søknad om car_booking av ",
     "decision_subject": "Hytteforeningen har tatt stilling til søknaden din om car_booking av ",
     "reserve_car_booking": "user_reserve_template.html",
@@ -19,7 +19,7 @@ user_templates: UserTemplateType = {
     "disapprove_car_booking": "user_disapproved_template.html",
 }
 
-admin_templates: AdminTemplateType = {
+admin_templates: CarAdminTemplateType = {
     "reserve_subject": "CarBooking av ",
     "reserve_car_booking": "admin_reserve_template.html",
 }
@@ -64,7 +64,7 @@ def send_mail(car_booking_info: CarBookingInfoType, email_type: EmailTypes, admi
     text_content = strip_tags(html_content)
 
     email = TransactionalEmail(
-        stream="car-car_booking-confirmations",
+        stream="car-booking-confirmations",
         subject=subject,
         body=text_content,
         bcc=[car_booking_responsible.email if admin else car_booking_info["receiver_email"]],
@@ -73,9 +73,9 @@ def send_mail(car_booking_info: CarBookingInfoType, email_type: EmailTypes, admi
 
     # Don't send attachments to admin nor when a car_booking is disapproved
     if email_type != "disapprove_car_booking" and not admin:
-        email.attach_file("static/cars/Sjekkliste.pdf")
-        email.attach_file("static/cars/Reglement.pdf")
-        email.attach_file("static/cars/Stamp_brukerveiledning.pdf")
+        #email.attach_file("static/cars/Sjekkliste.pdf")
+        email.attach_file("static/cabins/Reglement.pdf")
+        #email.attach_file("static/cabins/Stamp_brukerveiledning.pdf")
         contract_pdf = html_to_pdf("contract_template.html", content)
         email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
     email.send()

@@ -9,7 +9,7 @@ from apps.cars.models import Car as CarModel
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .helpers import price
 from .mail import send_mail
-from .types import AllCarBookingsType, CarBookingInfoType, CarType, EmailInputType, UpdateCarBookingSemesterType
+from .types import AllCarBookingsType, CarBookingInfoType, CarType, CarEmailInputType, UpdateCarBookingSemesterType
 from .validators import create_car_booking_validation
 
 
@@ -30,7 +30,7 @@ class CarBookingInput(graphene.InputObjectType):
     extra_info = graphene.String(required=False)
 
 
-class EmailInput(CarBookingInput):
+class CarEmailInput(CarBookingInput):
     email_type = graphene.String()
 
 
@@ -152,17 +152,17 @@ class DeleteCarBooking(graphene.Mutation):
         return DeleteCarBooking(ok=True, car_booking_id=car_booking_id)
 
 
-class SendEmail(graphene.Mutation):
+class CarSendEmail(graphene.Mutation):
     """
     Sends email to the user or an admin (or both)
     """
 
     class Arguments:
-        email_input = EmailInput()
+        email_input = CarEmailInput()
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, email_input: EmailInputType):
+    def mutate(self, info, email_input: CarEmailInputType):
         cars = CarModel.objects.filter(id__in=email_input["cars"])
 
         car_booking_price = price(
@@ -195,7 +195,7 @@ class SendEmail(graphene.Mutation):
         if email_input["email_type"] not in [APPROVE_BOOKING, DISAPPROVE_BOOKING]:
             send_mail(car_booking_info=car_booking_info, email_type=email_input["email_type"], admin=True)
 
-        return SendEmail(ok=True)
+        return CarSendEmail(ok=True)
 
 
 class UpdateCarBookingSemester(graphene.Mutation):

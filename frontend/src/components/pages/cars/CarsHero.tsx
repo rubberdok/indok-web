@@ -10,7 +10,7 @@ export const CarsHero: React.VFC = () => {
       variant="dark"
       breadcrumbs={[
         { href: "/", name: "Hjem" },
-        { href: "/cars", name: "Hyttebooking" },
+        { href: "/cars", name: "Bilbooking" },
       ]}
       bgImage={car}
     />

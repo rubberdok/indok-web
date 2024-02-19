@@ -12,7 +12,7 @@ from apps.cars.mutations import (
     CreateCarBooking,
     UpdateCarBooking,
     DeleteCarBooking,
-    SendEmail,
+    CarSendEmail,
     UpdateCarBookingSemester,
     UpdateCar,
 )
@@ -23,7 +23,7 @@ class CarMutations(graphene.ObjectType):
     create_car_booking = CreateCarBooking.Field()
     update_car_booking = UpdateCarBooking.Field()
     delete_car_booking = DeleteCarBooking.Field()
-    send_email = SendEmail.Field()
+    car_send_email = CarSendEmail.Field()
     update_car_booking_semester = UpdateCarBookingSemester.Field()
     update_car = UpdateCar.Field()
 

@@ -4,9 +4,9 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography }
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-import { SendEventMailsDocument } from "@/generated/graphql";
-
 import { EmailForm } from "./EmailDialog";
+
+import { SendEventMailsDocument } from "@/generated/graphql";
 
 export type SendEmailProps = {
   receiverEmails: string[];

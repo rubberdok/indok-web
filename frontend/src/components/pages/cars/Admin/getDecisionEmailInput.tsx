@@ -1,7 +1,7 @@
-import { AdminBookingFragment, SendEmailMutationVariables } from "@/generated/graphql";
+import { AdminCarBookingFragment, SendEmailMutationVariables } from "@/generated/graphql";
 
 export function getDecisionEmailInput(
-  booking: AdminBookingFragment,
+  booking: AdminCarBookingFragment,
   approved: boolean,
   declineMessage?: string
 ): SendEmailMutationVariables {

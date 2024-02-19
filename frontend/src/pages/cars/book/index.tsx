@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { BookingSteps } from "@/components/pages/cars/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cars/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cars/booking/Steps/ContactInfo";
-import { CarFragment, CarsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
+import { CarFragment, CarsDocument, CreateCarBookingDocument, CarSendEmailDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
@@ -34,8 +34,8 @@ const CarBookingPage: NextPageWithLayout = () => {
   const [contactInfo, setContactInfo] = useState<ContactInfo | undefined>();
 
   // Booking creation and email mutations
-  const [createBooking] = useMutation(CreateBookingDocument);
-  const [sendEmail] = useMutation(SendEmailDocument);
+  const [createCarBooking] = useMutation(CreateCarBookingDocument);
+  const [sendEmail] = useMutation(CarSendEmailDocument);
 
   // Extra info from the user, sent to Hytteforeningen
   const [extraInfo, setExtraInfo] = useState("");
@@ -108,21 +108,22 @@ const CarBookingPage: NextPageWithLayout = () => {
    * @todo move the email sendout to the backend. It should absolutely not be done on the client like this :)
    */
   function onSubmitBooking() {
+    console.log(contactInfo, chosenCars, extraInfo);
     sendEmail({
       variables: {
-        emailInput: {
+        carEmailInput: {
           ...contactInfo,
           cars: chosenCars.map((car) => parseInt(car.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),
           checkOut: dateRange.end?.format("YYYY-MM-DD"),
           extraInfo: extraInfo,
-          emailType: "reserve_booking",
+          emailType: "reserve_car_booking",
         },
       },
     });
-    createBooking({
+    createCarBooking({
       variables: {
-        bookingData: {
+        carBookingData: {
           ...contactInfo,
           cars: chosenCars.map((car) => parseInt(car.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),

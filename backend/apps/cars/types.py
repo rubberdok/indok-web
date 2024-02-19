@@ -69,7 +69,7 @@ class UpdateCarBookingSemesterType(DjangoObjectType):
 EmailTypes = Literal["reserve_car_booking", "approve_car_booking", "disapprove_car_booking"]
 
 
-class EmailInputType(TypedDict):
+class CarEmailInputType(TypedDict):
     first_name: str
     last_name: str
     receiver_email: str
@@ -83,11 +83,11 @@ class EmailInputType(TypedDict):
     extra_info: str
 
 
-class CarBookingInfoType(EmailInputType):
+class CarBookingInfoType(CarEmailInputType):
     price: int
 
 
-class UserTemplateType(TypedDict):
+class CarUserTemplateType(TypedDict):
     reserve_subject: str
     decision_subject: str
     reserve_car_booking: str
@@ -95,6 +95,6 @@ class UserTemplateType(TypedDict):
     disapprove_car_booking: str
 
 
-class AdminTemplateType(TypedDict):
+class CarAdminTemplateType(TypedDict):
     reserve_subject: str
     reserve_car_booking: str

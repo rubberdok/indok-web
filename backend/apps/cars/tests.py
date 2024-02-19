@@ -443,9 +443,10 @@ class EmailTestCase(CarsBaseTestCase):
         self.test_question = "This is a test question"
 
     def send_email(self, car_booking, email_type: str = "reserve_car_booking", user=None):
+        # cars: [{self.oksen_car.id}],
         query = f"""
             mutation {{
-              sendEmail(
+              CarsendEmail(
                 emailInput: {{
                   firstName: \"{car_booking.first_name}\",
                   lastName: \"{car_booking.last_name}\",
@@ -453,7 +454,7 @@ class EmailTestCase(CarsBaseTestCase):
                   phone: \"{car_booking.phone}\",
                   internalParticipants: {car_booking.internal_participants},
                   externalParticipants: {car_booking.external_participants},
-                  cars: [{self.oksen_car.id}],
+
                   checkIn: \"{car_booking.check_in.strftime(self.date_fmt)}\",
                   checkOut: \"{car_booking.check_out.strftime(self.date_fmt)}\",
                   emailType: \"{email_type}\",

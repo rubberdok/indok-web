@@ -278,6 +278,26 @@ export type CarBookingResponsibleType = {
   phone: Maybe<Scalars['Int']['output']>;
 };
 
+export type CarEmailInput = {
+  cars: InputMaybe<Array<Scalars['Int']['input']>>;
+  checkIn: InputMaybe<Scalars['Date']['input']>;
+  checkOut: InputMaybe<Scalars['Date']['input']>;
+  emailType: InputMaybe<Scalars['String']['input']>;
+  externalParticipants: InputMaybe<Scalars['Int']['input']>;
+  extraInfo: InputMaybe<Scalars['String']['input']>;
+  firstName: InputMaybe<Scalars['String']['input']>;
+  internalParticipants: InputMaybe<Scalars['Int']['input']>;
+  lastName: InputMaybe<Scalars['String']['input']>;
+  phone: InputMaybe<Scalars['String']['input']>;
+  receiverEmail: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Sends email to the user or an admin (or both) */
+export type CarSendEmail = {
+  __typename?: 'CarSendEmail';
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type CarType = {
   __typename?: 'CarType';
   externalPrice: Scalars['Int']['output'];
@@ -521,7 +541,7 @@ export type DeleteQuestion = {
 };
 
 export type EmailInput = {
-  cars: InputMaybe<Array<Scalars['Int']['input']>>;
+  cabins: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn: InputMaybe<Scalars['Date']['input']>;
   checkOut: InputMaybe<Scalars['Date']['input']>;
   emailType: InputMaybe<Scalars['String']['input']>;
@@ -676,6 +696,8 @@ export type Mutations = {
   assignMembership: Maybe<AssignMembership>;
   attemptCapturePayment: Maybe<AttemptCapturePayment>;
   authUser: AuthUser;
+  /** Sends email to the user or an admin (or both) */
+  carSendEmail: Maybe<CarSendEmail>;
   createArchivedocument: Maybe<CreateArchiveDocument>;
   createBlog: Maybe<CreateBlog>;
   createBlogPost: Maybe<CreateBlogPost>;
@@ -776,6 +798,11 @@ export type MutationsAttemptCapturePaymentArgs = {
 
 export type MutationsAuthUserArgs = {
   code: Scalars['String']['input'];
+};
+
+
+export type MutationsCarSendEmailArgs = {
+  emailInput: InputMaybe<CarEmailInput>;
 };
 
 

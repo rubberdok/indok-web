@@ -262,6 +262,26 @@ export type CarBookingResponsibleType = {
   phone?: Maybe<Scalars['Int']['output']>;
 };
 
+export type CarEmailInput = {
+  cars?: InputMaybe<Array<Scalars['Int']['input']>>;
+  checkIn?: InputMaybe<Scalars['Date']['input']>;
+  checkOut?: InputMaybe<Scalars['Date']['input']>;
+  emailType?: InputMaybe<Scalars['String']['input']>;
+  externalParticipants?: InputMaybe<Scalars['Int']['input']>;
+  extraInfo?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  internalParticipants?: InputMaybe<Scalars['Int']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  receiverEmail?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Sends email to the user or an admin (or both) */
+export type CarSendEmail = {
+  __typename?: 'CarSendEmail';
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type CarType = {
   __typename?: 'CarType';
   externalPrice: Scalars['Int']['output'];
@@ -505,7 +525,7 @@ export type DeleteQuestion = {
 };
 
 export type EmailInput = {
-  cars?: InputMaybe<Array<Scalars['Int']['input']>>;
+  cabins?: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn?: InputMaybe<Scalars['Date']['input']>;
   checkOut?: InputMaybe<Scalars['Date']['input']>;
   emailType?: InputMaybe<Scalars['String']['input']>;
@@ -660,6 +680,8 @@ export type Mutations = {
   assignMembership?: Maybe<AssignMembership>;
   attemptCapturePayment?: Maybe<AttemptCapturePayment>;
   authUser: AuthUser;
+  /** Sends email to the user or an admin (or both) */
+  carSendEmail?: Maybe<CarSendEmail>;
   createArchivedocument?: Maybe<CreateArchiveDocument>;
   createBlog?: Maybe<CreateBlog>;
   createBlogPost?: Maybe<CreateBlogPost>;
@@ -760,6 +782,11 @@ export type MutationsAttemptCapturePaymentArgs = {
 
 export type MutationsAuthUserArgs = {
   code: Scalars['String']['input'];
+};
+
+
+export type MutationsCarSendEmailArgs = {
+  emailInput?: InputMaybe<CarEmailInput>;
 };
 
 
@@ -1810,6 +1837,13 @@ export type DeclineCarBookingMutationVariables = Exact<{
 
 export type DeclineCarBookingMutation = { __typename?: 'Mutations', updateCarBooking?: { __typename?: 'UpdateCarBooking', ok?: boolean | null } | null };
 
+export type CarSendEmailMutationVariables = Exact<{
+  carEmailInput: CarEmailInput;
+}>;
+
+
+export type CarSendEmailMutation = { __typename?: 'Mutations', carSendEmail?: { __typename?: 'CarSendEmail', ok?: boolean | null } | null };
+
 export type UpdateCarMutationVariables = Exact<{
   carData: UpdateCarInput;
 }>;
@@ -2302,6 +2336,7 @@ export const BookingSemesterDocument = {"kind":"Document","definitions":[{"kind"
 export const CreateCarBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCarBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"carBookingData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CarBookingInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCarBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carBookingData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"carBookingData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<CreateCarBookingMutation, CreateCarBookingMutationVariables>;
 export const ConfirmCarBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"confirmCarBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCarBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carBookingData"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"isTentative"},"value":{"kind":"BooleanValue","value":false}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<ConfirmCarBookingMutation, ConfirmCarBookingMutationVariables>;
 export const DeclineCarBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"declineCarBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"declineReason"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCarBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carBookingData"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"isTentative"},"value":{"kind":"BooleanValue","value":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"isDeclined"},"value":{"kind":"BooleanValue","value":true}},{"kind":"ObjectField","name":{"kind":"Name","value":"declineReason"},"value":{"kind":"Variable","name":{"kind":"Name","value":"declineReason"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<DeclineCarBookingMutation, DeclineCarBookingMutationVariables>;
+export const CarSendEmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"carSendEmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"carEmailInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CarEmailInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"carSendEmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"emailInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"carEmailInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<CarSendEmailMutation, CarSendEmailMutationVariables>;
 export const UpdateCarDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCar"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"carData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCar"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"carData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"carData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"car"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Car"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Car"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<UpdateCarMutation, UpdateCarMutationVariables>;
 export const UpdateCarBookingSemesterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCarBookingSemester"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"semesterData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarBookingSemesterInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCarBookingSemester"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"semesterData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"semesterData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"carBookingSemester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CarBookingSemester"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CarBookingSemester"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCarBookingSemesterType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fallStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"springStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"springEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"fallSemesterActive"}},{"kind":"Field","name":{"kind":"Name","value":"springSemesterActive"}}]}}]} as unknown as DocumentNode<UpdateCarBookingSemesterMutation, UpdateCarBookingSemesterMutationVariables>;
 export const CarsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cars"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Car"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Car"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CarType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<CarsQuery, CarsQueryVariables>;

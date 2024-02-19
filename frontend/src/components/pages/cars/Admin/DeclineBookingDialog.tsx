@@ -2,19 +2,19 @@ import { useMutation } from "@apollo/client";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { useState } from "react";
 
+import { getDecisionEmailInput } from "./getDecisionEmailInput";
+
 import {
   AdminAllBookingsDocument,
-  AdminBookingFragment,
+  AdminCarBookingFragment,
   DeclineBookingDocument,
   SendEmailDocument,
 } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 
-import { getDecisionEmailInput } from "./getDecisionEmailInput";
-
 type DialogProps = {
-  bookingToBeDeclined?: AdminBookingFragment;
-  setBookingToBeDeclined: React.Dispatch<React.SetStateAction<AdminBookingFragment | undefined>>;
+  bookingToBeDeclined?: AdminCarBookingFragment;
+  setBookingToBeDeclined: React.Dispatch<React.SetStateAction<AdminCarBookingFragment | undefined>>;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
   refetchBookings: () => void;

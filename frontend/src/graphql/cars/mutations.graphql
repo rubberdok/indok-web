@@ -16,8 +16,8 @@ mutation declineCarBooking($id: ID!, $declineReason: String) {
   }
 }
 
-mutation sendEmail($emailInput: EmailInput!) {
-  sendEmail(emailInput: $emailInput) {
+mutation carSendEmail($carEmailInput: CarEmailInput!) {
+  carSendEmail(emailInput: $carEmailInput) {
     ok
   }
 }
@@ -28,7 +28,8 @@ mutation updateCar($carData: UpdateCarInput!) {
       ...Car
     }
   }
-}
+  }
+
 
 mutation updateCarBookingSemester($semesterData: UpdateCarBookingSemesterInput!) {
   updateCarBookingSemester(semesterData: $semesterData) {
