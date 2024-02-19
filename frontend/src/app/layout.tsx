@@ -8,6 +8,7 @@ import { ThemeRegistry } from "@/lib/mui";
 import { AppBar } from "./components/Layout/AppBar";
 import { Footer } from "./components/Layout/Footer";
 import { config } from "@/utils/config";
+import { AlertsWrapper } from "./components/Alerts";
 
 export const metadata: Metadata = {
   title: "Indøk NTNU | Janus Linjeforening",
@@ -24,15 +25,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" data-color-scheme="light" suppressHydrationWarning>
       <body>
         <ThemeRegistry>
-          <ApolloWrapper>
-            <main className="content">
-              <AppBar />
-              {children}
-            </main>
-            <footer className="footer">
-              <Footer />
-            </footer>
-          </ApolloWrapper>
+          <AlertsWrapper>
+            <ApolloWrapper>
+              <main className="content">
+                <AppBar />
+                {children}
+              </main>
+              <footer className="footer">
+                <Footer />
+              </footer>
+            </ApolloWrapper>
+          </AlertsWrapper>
         </ThemeRegistry>
         <Analytics mode={process.env.VERCEL_ENV === "production" ? "production" : "development"} />
       </body>
