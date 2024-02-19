@@ -1,5 +1,5 @@
 import { Link } from "../../../../../Link";
-import { Route } from "../../types";
+import { Route } from "../props";
 
 type Props = {
   route: Route;

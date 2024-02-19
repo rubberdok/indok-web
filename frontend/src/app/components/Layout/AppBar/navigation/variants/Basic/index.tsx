@@ -1,16 +1,16 @@
 import { Box, Stack } from "@mui/material";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 import { LoginButton } from "@/app/components/LoginButton";
 import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 
-import { PermissionRequired } from "../../../../../PermissionRequired";
-import { NavigationProps } from "../../types";
+import { NavigationProps } from "../props";
 
 import { NavigationLink } from "./NavigationLink";
+import { PermissionRequired } from "@/app/components/PermissionRequired";
 
 export const Basic: React.FC<NavigationProps> = ({ routes }) => {
-  const pathname = usePathname();
+  const segment = useSelectedLayoutSegment();
 
   return (
     <Box sx={{ display: { xs: "none", md: "block" }, width: "100%" }}>
@@ -20,10 +20,10 @@ export const Basic: React.FC<NavigationProps> = ({ routes }) => {
             if (route.permission)
               return (
                 <PermissionRequired permission={route.permission} key={route.title}>
-                  <NavigationLink route={route} active={pathname?.includes(route.path)} />
+                  <NavigationLink route={route} active={route.segment === segment} />
                 </PermissionRequired>
               );
-            return <NavigationLink route={route} active={pathname?.includes(route.path)} key={route.title} />;
+            return <NavigationLink route={route} active={route.segment === segment} key={route.title} />;
           })}
         </Stack>
         <Stack direction="row" gap={2}>

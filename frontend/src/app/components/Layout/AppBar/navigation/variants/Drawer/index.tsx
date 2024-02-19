@@ -1,20 +1,22 @@
+"use client";
+
 import { Menu } from "@mui/icons-material";
 import { Box, Divider, IconButton, Drawer as MuiDrawer, Stack } from "@mui/material";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 import { useState } from "react";
 
 import { LoginButton } from "@/app/components/LoginButton";
 import { PermissionRequired } from "@/app/components/PermissionRequired";
 import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 
-import { Logo } from "../../../../Logo";
-import { NavigationProps } from "../../types";
+import { NavigationProps } from "../props";
 
 import { NavigationLink } from "./NavigationLink";
+import { Logo } from "@/app/components/Layout/Logo";
 
 export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+  const segment = useSelectedLayoutSegment();
 
   return (
     <Box sx={{ display: { xs: "block", md: "none" }, width: "100%" }}>
@@ -43,11 +45,11 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
                 if (route.permission) {
                   return (
                     <PermissionRequired permission={route.permission} key={route.title}>
-                      <NavigationLink route={route} active={pathname?.includes(route.path)} />
+                      <NavigationLink route={route} active={route.segment === segment} />
                     </PermissionRequired>
                   );
                 }
-                return <NavigationLink key={route.title} route={route} active={pathname?.includes(route.path)} />;
+                return <NavigationLink key={route.title} route={route} active={route.segment === segment} />;
               })}
               <Divider />
               <LoginButton />

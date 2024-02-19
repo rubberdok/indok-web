@@ -1,6 +1,6 @@
 import { Link } from "@/app/components/Link";
 
-import { Route } from "../../types";
+import { Route } from "../props";
 
 type Props = {
   active?: boolean;
