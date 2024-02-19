@@ -1,0 +1,5 @@
+fragment BlogPost on BlogPostType {
+    id
+    title
+    text
+}

@@ -5,9 +5,18 @@ import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 
 function BlogPage({ params }: { params: { id: number } }) {
-
+    
     const allBlogPosts = useQuery(AllBlogPostsDocument);
     console.log("all blog posts:", allBlogPosts);
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     const title = "Tittel";
     const content =
@@ -16,7 +25,6 @@ function BlogPage({ params }: { params: { id: number } }) {
     const author = "Stephen Hawking";
     const organization = "Mordi AS";
     const img = "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg";
-
     const id = params.id;
 
     function edit() {
