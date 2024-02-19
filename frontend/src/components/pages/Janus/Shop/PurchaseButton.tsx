@@ -1,4 +1,4 @@
-import { Alert, Button } from "@mui/material";
+import { Button } from "@mui/material";
 
 import { NextLinkComposed } from "@/components/Link";
 
@@ -9,6 +9,7 @@ type Props = {
 export const PurchaseButton: React.FC<Props> = ({ productId }) => {
   return (
     <Button
+      disabled={true}
       component={NextLinkComposed}
       to={{
         pathname: "/ecommerce/checkout",
