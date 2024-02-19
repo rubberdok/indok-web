@@ -18,7 +18,9 @@ function useCabins(): CabinInfoForm | undefined {
     values = {
       bjornen: {
         internalPrice: bjornen.internalPrice,
+        internalPriceWeekend: bjornen.internalPriceWeekend,
         externalPrice: bjornen.externalPrice,
+        externalPriceWeekend: bjornen.externalPriceWeekend,
         maxGuests: bjornen.maxGuests,
       },
     };
@@ -29,7 +31,9 @@ function useCabins(): CabinInfoForm | undefined {
       ...values,
       oksen: {
         internalPrice: oksen.internalPrice,
+        internalPriceWeekend: oksen.internalPriceWeekend,
         externalPrice: oksen.externalPrice,
+        externalPriceWeekend: oksen.externalPriceWeekend,
         maxGuests: oksen.maxGuests,
       },
     };
@@ -74,7 +78,9 @@ export const CabinInfoPicker: React.FC = () => {
       const oksenData: UpdateCabinInput = {
         name: "Oksen",
         internalPrice: data.oksen.internalPrice,
+        internalPriceWeekend: data.oksen.internalPriceWeekend,
         externalPrice: data.oksen.externalPrice,
+        externalPriceWeekend: data.oksen.externalPriceWeekend,
         maxGuests: data.oksen.maxGuests,
       };
       updateCabin({ variables: { cabinData: oksenData } });
@@ -84,7 +90,9 @@ export const CabinInfoPicker: React.FC = () => {
       const bjornenData: UpdateCabinInput = {
         name: "Bjørnen",
         internalPrice: data.bjornen.internalPrice,
+        internalPriceWeekend: data.bjornen.internalPriceWeekend,
         externalPrice: data.bjornen.externalPrice,
+        externalPriceWeekend: data.bjornen.externalPriceWeekend,
         maxGuests: data.bjornen.maxGuests,
       };
 
@@ -105,12 +113,16 @@ export const CabinInfoPicker: React.FC = () => {
         defaultValues={{
           oksen: {
             internalPrice: 1100,
-            externalPrice: 2700,
+            internalPriceWeekend: 1100,
+            externalPrice: 3950,
+            externalPriceWeekend: 5400,
             maxGuests: 18,
           },
           bjornen: {
             internalPrice: 1100,
-            externalPrice: 2700,
+            internalPriceWeekend: 1100,
+            externalPrice: 3950,
+            externalPriceWeekend: 5400,
             maxGuests: 18,
           },
         }}

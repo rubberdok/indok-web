@@ -214,8 +214,10 @@ export type BookingResponsibleType = {
 export type CabinType = {
   __typename?: 'CabinType';
   externalPrice: Scalars['Int']['output'];
+  externalPriceWeekend: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   internalPrice: Scalars['Int']['output'];
+  internalPriceWeekend: Scalars['Int']['output'];
   maxGuests: Scalars['Int']['output'];
   name: Scalars['String']['output'];
 };
@@ -1368,8 +1370,10 @@ export type UpdateCabin = {
 
 export type UpdateCabinInput = {
   externalPrice: InputMaybe<Scalars['Int']['input']>;
+  externalPriceWeekend: InputMaybe<Scalars['Int']['input']>;
   id: InputMaybe<Scalars['ID']['input']>;
   internalPrice: InputMaybe<Scalars['Int']['input']>;
+  internalPriceWeekend: InputMaybe<Scalars['Int']['input']>;
   maxGuests: InputMaybe<Scalars['Int']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
 };

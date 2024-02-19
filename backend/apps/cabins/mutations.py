@@ -55,7 +55,9 @@ class UpdateCabinInput(graphene.InputObjectType):
     name = graphene.String()
     max_guests = graphene.Int()
     internal_price = graphene.Int()
+    internal_price_weekend = graphene.Int()
     external_price = graphene.Int()
+    external_price_weekend = graphene.Int()
 
 
 class CreateBooking(graphene.Mutation):

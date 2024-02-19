@@ -8,4 +8,6 @@ class CabinFactory(DjangoModelFactory):
 
     max_guests = 18
     internal_price = 1100
+    internal_price_weekend = 1100
     external_price = 2700
+    external_price_weekend = 5000
