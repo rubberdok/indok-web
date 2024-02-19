@@ -7,32 +7,26 @@
     "**/.git": true,
     "**/.venv": true
   },
-
   // Configures Black, our formatter for Python
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": ["--config=backend/pyproject.toml"],
-
   // Configures flake8, our linter for Python
   "python.linting.flake8Enabled": true,
   "python.linting.flake8Args": ["--config=backend/tox.ini"],
-
   // Configured the Python Language Server
   "python.languageServer": "Pylance",
   "python.analysis.stubPath": "typings, django-stubs",
   // Allows the Python VSCode extension to suggest correct auto-import paths when having the project open in indok-web
   "python.analysis.extraPaths": ["backend"],
-
   // Runs eslint --fix on save
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },
   "editor.formatOnSave": true,
-
-  // Configures Prettier, our formatter for TypeScript
+  // Configures Prettier, our formatter for TypeScriptj
   "[html][css][json][jsonc][yaml][javascript][javascriptreact][typescript][typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-
   // Configures ESLint to mute warnings related to rules that are automatically fixed
   "eslint.rules.customizations": [
     { "rule": "prettier/*", "severity": "off" },
