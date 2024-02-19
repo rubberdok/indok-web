@@ -1,4 +1,5 @@
-import { QueryReference, useQuery, useReadQuery } from "@apollo/client";
+"use client";
+import { QueryReference, useReadQuery, useSuspenseQuery } from "@apollo/client";
 import { PropsWithChildren } from "react";
 
 import { graphql } from "@/gql/app";
@@ -39,7 +40,7 @@ type PermissionRequiredProps = {
 
 function QueryPermissionRequired(props: PropsWithChildren<PermissionRequiredProps>) {
   const { permission, children } = props;
-  const { data } = useQuery(
+  const { data } = useSuspenseQuery(
     graphql(`
       query HasFeaturePermission($data: HasFeaturePermissionInput!) {
         hasFeaturePermission(data: $data) {
