@@ -226,6 +226,7 @@ export type Event = {
   /** signUpAvailability describes the availability of sign ups for the event for the current user. */
   signUpAvailability: SignUpAvailability;
   signUpDetails: Maybe<EventSignUpDetails>;
+  signUps: Maybe<SignUps>;
   signUpsEnabled: Scalars['Boolean']['output'];
   /** If true, signing up for the event requires that the user submits additional information. */
   signUpsRequireUserProvidedInformation: Scalars['Boolean']['output'];
@@ -385,6 +386,16 @@ export type HasFeaturePermissionResponse = {
   __typename?: 'HasFeaturePermissionResponse';
   hasFeaturePermission: Scalars['Boolean']['output'];
   id: FeaturePermission;
+};
+
+export type HasRoleInput = {
+  organizationId: Scalars['ID']['input'];
+  role: Role;
+};
+
+export type HasRoleResponse = {
+  __typename?: 'HasRoleResponse';
+  hasRole: Scalars['Boolean']['output'];
 };
 
 export type InitiatePaymentAttemptInput = {
@@ -706,15 +717,26 @@ export type OrdersResponse = {
 export type Organization = {
   __typename?: 'Organization';
   description: Scalars['String']['output'];
+  events: Array<Event>;
   /**
    * The features that are enabled for the organization.
    * Changing these fields requires super user permissions.
    */
   featurePermissions: Array<FeaturePermission>;
   id: Scalars['ID']['output'];
+  listings: Array<Listing>;
   /** The members of the organization */
   members: Array<Member>;
   name: Scalars['String']['output'];
+};
+
+export type OrganizationInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type OrganizationReseponse = {
+  __typename?: 'OrganizationReseponse';
+  organization: Organization;
 };
 
 export type OrganizationsResponse = {
@@ -867,6 +889,7 @@ export type Query = {
   event: EventResponse;
   events: EventsResponse;
   hasFeaturePermission: HasFeaturePermissionResponse;
+  hasRole: HasRoleResponse;
   listing: ListingResponse;
   listings: ListingsResponse;
   /** Get an order by its ID. */
@@ -876,8 +899,10 @@ export type Query = {
    * orders for the current user will be returned.
    */
   orders: OrdersResponse;
+  /** Get an organization by its ID */
+  organization: OrganizationReseponse;
   /** Get all organizations */
-  organizations: Maybe<OrganizationsResponse>;
+  organizations: OrganizationsResponse;
   /**
    * Get payment attempts, filtered by the given input. Unless the user is a super user, only
    * payment attempts for the current user will be returned.
@@ -905,6 +930,11 @@ export type QueryHasFeaturePermissionArgs = {
 };
 
 
+export type QueryHasRoleArgs = {
+  data: HasRoleInput;
+};
+
+
 export type QueryListingArgs = {
   data: ListingInput;
 };
@@ -917,6 +947,11 @@ export type QueryOrderArgs = {
 
 export type QueryOrdersArgs = {
   data: InputMaybe<OrdersInput>;
+};
+
+
+export type QueryOrganizationArgs = {
+  data: OrganizationInput;
 };
 
 
@@ -1026,6 +1061,19 @@ export type SignUpInput = {
 export type SignUpResponse = {
   __typename?: 'SignUpResponse';
   signUp: SignUp;
+};
+
+export type SignUps = {
+  __typename?: 'SignUps';
+  confirmed: SignUpsWithTotalCount;
+  retracted: SignUpsWithTotalCount;
+  waitList: SignUpsWithTotalCount;
+};
+
+export type SignUpsWithTotalCount = {
+  __typename?: 'SignUpsWithTotalCount';
+  signUps: Array<SignUp>;
+  total: Scalars['Int']['output'];
 };
 
 export enum Status {
@@ -1253,10 +1301,82 @@ export type HasFeaturePermissionQueryVariables = Exact<{
 
 export type HasFeaturePermissionQuery = { __typename?: 'Query', hasFeaturePermission: { __typename?: 'HasFeaturePermissionResponse', id: FeaturePermission, hasFeaturePermission: boolean } };
 
+export type EventAdminLayout_EventQueryVariables = Exact<{
+  data: EventInput;
+}>;
+
+
+export type EventAdminLayout_EventQuery = { __typename?: 'Query', event: { __typename?: 'EventResponse', event: { __typename?: 'Event', id: string, name: string, organization: { __typename?: 'Organization', id: string, name: string } | null } } };
+
+export type OrganizationsAdminPage_EventDetailQueryVariables = Exact<{
+  data: EventInput;
+}>;
+
+
+export type OrganizationsAdminPage_EventDetailQuery = { __typename?: 'Query', event: { __typename?: 'EventResponse', event: { __typename?: 'Event', id: string, name: string, startAt: string, endAt: string, type: EventType, location: string, contactEmail: string, ticketInformation: { __typename?: 'EventTicketInformation', product: { __typename?: 'Product', id: string, price: { __typename?: 'Price', valueInNok: number } } | null } | null, organization: { __typename?: 'Organization', id: string, name: string } | null, signUps: { __typename?: 'SignUps', confirmed: { __typename?: 'SignUpsWithTotalCount', total: number, signUps: Array<(
+            { __typename?: 'SignUp' }
+            & { ' $fragmentRefs'?: { 'OrganizationsAdminPage_SignUpFieldsFragment': OrganizationsAdminPage_SignUpFieldsFragment } }
+          )> }, waitList: { __typename?: 'SignUpsWithTotalCount', total: number, signUps: Array<(
+            { __typename?: 'SignUp' }
+            & { ' $fragmentRefs'?: { 'OrganizationsAdminPage_SignUpFieldsFragment': OrganizationsAdminPage_SignUpFieldsFragment } }
+          )> }, retracted: { __typename?: 'SignUpsWithTotalCount', total: number, signUps: Array<(
+            { __typename?: 'SignUp' }
+            & { ' $fragmentRefs'?: { 'OrganizationsAdminPage_SignUpFieldsFragment': OrganizationsAdminPage_SignUpFieldsFragment } }
+          )> } } | null } } };
+
+export type OrganizationsAdminPage_SignUpFieldsFragment = { __typename?: 'SignUp', id: string, user: { __typename?: 'PublicUser', id: string, firstName: string, lastName: string } } & { ' $fragmentName'?: 'OrganizationsAdminPage_SignUpFieldsFragment' };
+
+export type AdminOrganizationsEventsPageQueryVariables = Exact<{
+  data: OrganizationInput;
+}>;
+
+
+export type AdminOrganizationsEventsPageQuery = { __typename?: 'Query', organization: { __typename?: 'OrganizationReseponse', organization: { __typename?: 'Organization', id: string, events: Array<{ __typename?: 'Event', type: EventType, id: string, name: string, startAt: string, signUps: { __typename?: 'SignUps', confirmed: { __typename?: 'SignUpsWithTotalCount', total: number } } | null, signUpDetails: { __typename?: 'EventSignUpDetails', capacity: number } | null }> } } };
+
+export type OrganizationPageLayoutQueryVariables = Exact<{
+  organizationId: Scalars['ID']['input'];
+}>;
+
+
+export type OrganizationPageLayoutQuery = { __typename?: 'Query', organization: { __typename?: 'OrganizationReseponse', organization: { __typename?: 'Organization', id: string, name: string } } };
+
+export type AdminOrganizationsPageListingsQueryVariables = Exact<{
+  data: OrganizationInput;
+}>;
+
+
+export type AdminOrganizationsPageListingsQuery = { __typename?: 'Query', organization: { __typename?: 'OrganizationReseponse', organization: { __typename?: 'Organization', id: string, listings: Array<{ __typename?: 'Listing', id: string, name: string, closesAt: string }> } } };
+
+export type AdminOrganizationsPageMembersQueryVariables = Exact<{
+  organizationId: Scalars['ID']['input'];
+}>;
+
+
+export type AdminOrganizationsPageMembersQuery = { __typename?: 'Query', organization: { __typename?: 'OrganizationReseponse', organization: { __typename?: 'Organization', id: string, members: Array<{ __typename?: 'Member', id: string, role: Role, user: { __typename?: 'PublicUser', id: string, firstName: string, lastName: string } }> } }, user: { __typename?: 'UserResponse', user: { __typename?: 'PrivateUser', id: string } | null }, hasRole: { __typename?: 'HasRoleResponse', hasRole: boolean } };
+
+export type OrganizationsAdminMembersPage_RemoveMemberMutationVariables = Exact<{
+  data: RemoveMemberInput;
+}>;
+
+
+export type OrganizationsAdminMembersPage_RemoveMemberMutation = { __typename?: 'Mutation', removeMember: { __typename?: 'RemoveMemberResponse', member: { __typename?: 'Member', id: string } } };
+
+export type OrganizationAdminLayout_HasRoleQueryVariables = Exact<{
+  organizationId: Scalars['ID']['input'];
+}>;
+
+
+export type OrganizationAdminLayout_HasRoleQuery = { __typename?: 'Query', hasRole: { __typename?: 'HasRoleResponse', hasRole: boolean } };
+
 export type ProfileOrdersPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProfileOrdersPageQuery = { __typename?: 'Query', orders: { __typename?: 'OrdersResponse', orders: Array<{ __typename?: 'Order', id: string, createdAt: string, purchasedAt: string | null, paymentStatus: OrderPaymentStatus, isFinalState: boolean, capturedPaymentAttempt: { __typename?: 'PaymentAttempt', id: string, reference: string, state: PaymentAttemptState } | null, product: { __typename?: 'Product', id: string, name: string }, totalPrice: { __typename?: 'Price', valueInNok: number } }> } };
+
+export type UserOrganizationsPageQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserOrganizationsPageQuery = { __typename?: 'Query', user: { __typename?: 'UserResponse', user: { __typename?: 'PrivateUser', id: string, organizations: Array<{ __typename?: 'Organization', id: string, name: string }> } | null } };
 
 export type AppProfileUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1276,13 +1396,22 @@ export type ReceiptPage_OrderQueryVariables = Exact<{
 
 export type ReceiptPage_OrderQuery = { __typename?: 'Query', order: { __typename?: 'OrderResponse', order: { __typename?: 'Order', id: string, isFinalState: boolean, purchasedAt: string | null, paymentStatus: OrderPaymentStatus, product: { __typename?: 'Product', id: string, name: string }, paymentAttempt: { __typename?: 'PaymentAttempt', id: string, state: PaymentAttemptState, reference: string, isFinalState: boolean } | null, totalPrice: { __typename?: 'Price', value: number, unit: string, valueInNok: number } } } };
 
-
+export const OrganizationsAdminPage_SignUpFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrganizationsAdminPage_SignUpFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SignUp"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]} as unknown as DocumentNode<OrganizationsAdminPage_SignUpFieldsFragment, unknown>;
 export const OrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"order"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}},{"kind":"Field","name":{"kind":"Name","value":"isFinalState"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"unit"}},{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}}]}}]} as unknown as DocumentNode<OrderQuery, OrderQueryVariables>;
 export const InitiatePaymentAttemptDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"initiatePaymentAttempt"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"InitiatePaymentAttemptInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initiatePaymentAttempt"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"redirectUrl"}}]}}]}}]} as unknown as DocumentNode<InitiatePaymentAttemptMutation, InitiatePaymentAttemptMutationVariables>;
 export const AppLoginButtonUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppLoginButtonUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]}}]} as unknown as DocumentNode<AppLoginButtonUserQuery, AppLoginButtonUserQueryVariables>;
 export const AppLoginRequiredUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppLoginRequiredUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]}}]} as unknown as DocumentNode<AppLoginRequiredUserQuery, AppLoginRequiredUserQueryVariables>;
 export const HasFeaturePermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HasFeaturePermission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"HasFeaturePermissionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasFeaturePermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"hasFeaturePermission"}}]}}]}}]} as unknown as DocumentNode<HasFeaturePermissionQuery, HasFeaturePermissionQueryVariables>;
+export const EventAdminLayout_EventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"EventAdminLayout_Event"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EventInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<EventAdminLayout_EventQuery, EventAdminLayout_EventQueryVariables>;
+export const OrganizationsAdminPage_EventDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OrganizationsAdminPage_EventDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EventInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"contactEmail"}},{"kind":"Field","name":{"kind":"Name","value":"ticketInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signUps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"confirmed"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"signUps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrganizationsAdminPage_SignUpFields"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"waitList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"signUps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrganizationsAdminPage_SignUpFields"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"retracted"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"signUps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrganizationsAdminPage_SignUpFields"}}]}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrganizationsAdminPage_SignUpFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SignUp"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]} as unknown as DocumentNode<OrganizationsAdminPage_EventDetailQuery, OrganizationsAdminPage_EventDetailQueryVariables>;
+export const AdminOrganizationsEventsPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminOrganizationsEventsPage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OrganizationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"signUps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"confirmed"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"capacity"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AdminOrganizationsEventsPageQuery, AdminOrganizationsEventsPageQueryVariables>;
+export const OrganizationPageLayoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OrganizationPageLayout"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<OrganizationPageLayoutQuery, OrganizationPageLayoutQueryVariables>;
+export const AdminOrganizationsPageListingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminOrganizationsPageListings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OrganizationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"listings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"closesAt"}}]}}]}}]}}]}}]} as unknown as DocumentNode<AdminOrganizationsPageListingsQuery, AdminOrganizationsPageListingsQueryVariables>;
+export const AdminOrganizationsPageMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminOrganizationsPageMembers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"organizationId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"role"},"value":{"kind":"EnumValue","value":"ADMIN"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasRole"}}]}}]}}]} as unknown as DocumentNode<AdminOrganizationsPageMembersQuery, AdminOrganizationsPageMembersQueryVariables>;
+export const OrganizationsAdminMembersPage_RemoveMemberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"OrganizationsAdminMembersPage_RemoveMember"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RemoveMemberInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeMember"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<OrganizationsAdminMembersPage_RemoveMemberMutation, OrganizationsAdminMembersPage_RemoveMemberMutationVariables>;
+export const OrganizationAdminLayout_HasRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OrganizationAdminLayout_HasRole"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"organizationId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"role"},"value":{"kind":"EnumValue","value":"MEMBER"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasRole"}}]}}]}}]} as unknown as DocumentNode<OrganizationAdminLayout_HasRoleQuery, OrganizationAdminLayout_HasRoleQueryVariables>;
 export const ProfileOrdersPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProfileOrdersPage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orders"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orders"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"capturedPaymentAttempt"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"reference"}},{"kind":"Field","name":{"kind":"Name","value":"state"}}]}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}},{"kind":"Field","name":{"kind":"Name","value":"purchasedAt"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}},{"kind":"Field","name":{"kind":"Name","value":"isFinalState"}}]}}]}}]}}]} as unknown as DocumentNode<ProfileOrdersPageQuery, ProfileOrdersPageQueryVariables>;
+export const UserOrganizationsPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserOrganizationsPage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organizations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UserOrganizationsPageQuery, UserOrganizationsPageQueryVariables>;
 export const AppProfileUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppProfileUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}}]}}]}}]}}]} as unknown as DocumentNode<AppProfileUserQuery, AppProfileUserQueryVariables>;
 export const AppProfileCabinPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppProfileCabinPermission"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasFeaturePermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"featurePermission"},"value":{"kind":"EnumValue","value":"CABIN_ADMIN"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"hasFeaturePermission"}}]}}]}}]} as unknown as DocumentNode<AppProfileCabinPermissionQuery, AppProfileCabinPermissionQueryVariables>;
 export const ReceiptPage_OrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ReceiptPage_Order"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"reference"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isFinalState"}},{"kind":"Field","name":{"kind":"Name","value":"purchasedAt"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"paymentAttempt"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"reference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"reference"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"reference"}},{"kind":"Field","name":{"kind":"Name","value":"isFinalState"}}]}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"unit"}},{"kind":"Field","name":{"kind":"Name","value":"valueInNok"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ReceiptPage_OrderQuery, ReceiptPage_OrderQueryVariables>;

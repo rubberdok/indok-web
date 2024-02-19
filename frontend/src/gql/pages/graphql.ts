@@ -226,6 +226,7 @@ export type Event = {
   /** signUpAvailability describes the availability of sign ups for the event for the current user. */
   signUpAvailability: SignUpAvailability;
   signUpDetails: Maybe<EventSignUpDetails>;
+  signUps: Maybe<SignUps>;
   signUpsEnabled: Scalars['Boolean']['output'];
   /** If true, signing up for the event requires that the user submits additional information. */
   signUpsRequireUserProvidedInformation: Scalars['Boolean']['output'];
@@ -385,6 +386,16 @@ export type HasFeaturePermissionResponse = {
   __typename?: 'HasFeaturePermissionResponse';
   hasFeaturePermission: Scalars['Boolean']['output'];
   id: FeaturePermission;
+};
+
+export type HasRoleInput = {
+  organizationId: Scalars['ID']['input'];
+  role: Role;
+};
+
+export type HasRoleResponse = {
+  __typename?: 'HasRoleResponse';
+  hasRole: Scalars['Boolean']['output'];
 };
 
 export type InitiatePaymentAttemptInput = {
@@ -706,15 +717,26 @@ export type OrdersResponse = {
 export type Organization = {
   __typename?: 'Organization';
   description: Scalars['String']['output'];
+  events: Array<Event>;
   /**
    * The features that are enabled for the organization.
    * Changing these fields requires super user permissions.
    */
   featurePermissions: Array<FeaturePermission>;
   id: Scalars['ID']['output'];
+  listings: Array<Listing>;
   /** The members of the organization */
   members: Array<Member>;
   name: Scalars['String']['output'];
+};
+
+export type OrganizationInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type OrganizationReseponse = {
+  __typename?: 'OrganizationReseponse';
+  organization: Organization;
 };
 
 export type OrganizationsResponse = {
@@ -867,6 +889,7 @@ export type Query = {
   event: EventResponse;
   events: EventsResponse;
   hasFeaturePermission: HasFeaturePermissionResponse;
+  hasRole: HasRoleResponse;
   listing: ListingResponse;
   listings: ListingsResponse;
   /** Get an order by its ID. */
@@ -876,8 +899,10 @@ export type Query = {
    * orders for the current user will be returned.
    */
   orders: OrdersResponse;
+  /** Get an organization by its ID */
+  organization: OrganizationReseponse;
   /** Get all organizations */
-  organizations: Maybe<OrganizationsResponse>;
+  organizations: OrganizationsResponse;
   /**
    * Get payment attempts, filtered by the given input. Unless the user is a super user, only
    * payment attempts for the current user will be returned.
@@ -905,6 +930,11 @@ export type QueryHasFeaturePermissionArgs = {
 };
 
 
+export type QueryHasRoleArgs = {
+  data: HasRoleInput;
+};
+
+
 export type QueryListingArgs = {
   data: ListingInput;
 };
@@ -917,6 +947,11 @@ export type QueryOrderArgs = {
 
 export type QueryOrdersArgs = {
   data: InputMaybe<OrdersInput>;
+};
+
+
+export type QueryOrganizationArgs = {
+  data: OrganizationInput;
 };
 
 
@@ -1026,6 +1061,19 @@ export type SignUpInput = {
 export type SignUpResponse = {
   __typename?: 'SignUpResponse';
   signUp: SignUp;
+};
+
+export type SignUps = {
+  __typename?: 'SignUps';
+  confirmed: SignUpsWithTotalCount;
+  retracted: SignUpsWithTotalCount;
+  waitList: SignUpsWithTotalCount;
+};
+
+export type SignUpsWithTotalCount = {
+  __typename?: 'SignUpsWithTotalCount';
+  signUps: Array<SignUp>;
+  total: Scalars['Int']['output'];
 };
 
 export enum Status {

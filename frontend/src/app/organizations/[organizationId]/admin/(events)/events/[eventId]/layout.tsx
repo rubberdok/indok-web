@@ -1,0 +1,46 @@
+"use client";
+import { Title } from "@/components";
+import { graphql } from "@/gql/app";
+import { HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
+import { useSuspenseQuery } from "@apollo/client";
+
+export default function Layout({
+  params,
+  children,
+}: React.PropsWithChildren<{ params: { eventId: string; organizationId: string } }>) {
+  const { eventId, organizationId } = params;
+  const { data } = useSuspenseQuery(
+    graphql(`
+      query EventAdminLayout_Event($data: EventInput!) {
+        event(data: $data) {
+          event {
+            id
+            name
+            organization {
+              id
+              name
+            }
+          }
+        }
+      }
+    `),
+    { variables: { data: { id: eventId } } }
+  );
+
+  return (
+    <>
+      <Title
+        variant="dark"
+        title={data.event.event.name}
+        overline={data.event.event.organization?.name}
+        sx={{ marginTop: { xs: `-${HEADER_MOBILE_HEIGHT}px`, md: `-${HEADER_MOBILE_HEIGHT}px` } }}
+        breadcrumbs={[
+          { href: "/", name: "Hjem" },
+          { href: `/organizations/${organizationId}/admin`, name: data.event.event.organization?.name ?? "" },
+          { href: `/organizations/${organizationId}/admin/events/${eventId}`, name: data.event.event.name },
+        ]}
+      />
+      {children}
+    </>
+  );
+}

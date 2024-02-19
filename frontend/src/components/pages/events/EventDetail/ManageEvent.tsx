@@ -24,7 +24,7 @@ const ManageEventActions: React.FC<Props> = ({ eventId, organizationId }) => {
       </Button>
       <Button
         component={NextLinkComposed}
-        to={`/orgs/${organizationId}/events/${eventId}`}
+        to={`/organizations/${organizationId}/admin/events/${eventId}`}
         variant="contained"
         color="secondary"
         startIcon={<Settings />}
