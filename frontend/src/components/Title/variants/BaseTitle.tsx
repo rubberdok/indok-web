@@ -1,3 +1,4 @@
+"use client";
 import { Box, Container, Stack, Tabs, Typography } from "@mui/material";
 import { SxProps, Theme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
