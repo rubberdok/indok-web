@@ -9,6 +9,7 @@ type Props = {
 export const PurchaseButton: React.FC<Props> = ({ productId }) => {
   return (
     <Button
+      disabled={true}
       component={NextLinkComposed}
       to={{
         pathname: "/ecommerce/checkout",
