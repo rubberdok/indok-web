@@ -2,10 +2,8 @@ import { useQuery } from "@apollo/client";
 import { Box, Stack } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
 import { ProductInfo } from "@/components/pages/Janus/Shop/ProductInfo";
-import { PurchaseButton } from "@/components/pages/Janus/Shop/purchasebutton";
-import { ShopItem } from "@/components/pages/Janus/Shop/ShopItem";
+import { PurchaseButton } from "@/components/pages/Janus/Shop/PurchaseButton";
 import { Template } from "@/components/pages/Janus/Template";
 import { ProductDocument, ProductFragment } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";

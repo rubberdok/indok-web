@@ -1,4 +1,4 @@
-import { Alert, Button } from "@mui/material";
+import { Button } from "@mui/material";
 
 import { NextLinkComposed } from "@/components/Link";
 
