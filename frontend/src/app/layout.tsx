@@ -18,7 +18,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeRegistry>
           <ApolloWrapper>
             <main className="content">
-              <AppBar />
               {children}
             </main>
             <footer className="footer">

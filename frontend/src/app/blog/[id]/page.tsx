@@ -1,8 +1,14 @@
 "use client";
 
+import { AllBlogPostsDocument } from "@/generated/graphql";
+import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 
 function BlogPage({ params }: { params: { id: number } }) {
+
+    const allBlogPosts = useQuery(AllBlogPostsDocument);
+    console.log("all blog posts:", allBlogPosts);
+    
     const title = "Tittel";
     const content =
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, corporis repudiandae sunt doloremque tenetur distinctio voluptatum nemo quis. Commodi, eligendi officiis repudiandae optio veniam reprehenderit culpa quos quidem rerum saepe.";
@@ -34,16 +40,16 @@ function BlogPage({ params }: { params: { id: number } }) {
                     <Box component={"img"} alt={"T"} src={img} sx={{ width: "70%", borderRadius: "8px" }} />
                 </Grid>
 
-                <Grid direction={"column"} sx={{ padding: "10px" }}>
-                    <Grid md={4}>
+                <Grid container direction={"column"} sx={{ padding: "10px" }}>
+                    <Grid item md={4}>
                         <Typography>Skrevet av {author}</Typography>
                     </Grid>
 
-                    <Grid md={4}>
+                    <Grid item md={4}>
                         <Typography>Sist oppdatert {date}</Typography>
                     </Grid>
 
-                    <Grid md={4}>
+                    <Grid item md={4}>
                         <Typography>{organization}</Typography>
                     </Grid>
                 </Grid>

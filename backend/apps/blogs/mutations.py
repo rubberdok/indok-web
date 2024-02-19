@@ -12,7 +12,7 @@ class CreateBlogPost(graphene.Mutation):
         title = graphene.String()
         text = graphene.String()
         author_id = graphene.ID()
-        blog_id = graphene.ID()
+        id = graphene.ID()
 
     ok = graphene.Boolean()
     blog_post = graphene.Field(BlogPostType)
@@ -24,10 +24,10 @@ class CreateBlogPost(graphene.Mutation):
         title,
         text,
         author_id,
-        blog_id,
+        id,
     ):
         try:
-            blog = BlogModel.objects.get(pk=blog_id)
+            blog = BlogModel.objects.get(pk=id)
 
             blog_post = BlogPostModel.objects.create(
                 title=title,
@@ -62,7 +62,7 @@ class DeleteBlogPost(graphene.Mutation):
 class BlogPostInput(graphene.InputObjectType):
     title = graphene.String()
     text = graphene.String()
-    blog_id = graphene.ID()
+    id = graphene.ID()
 
 
 class UpdateBlogPostInput(BlogPostInput):

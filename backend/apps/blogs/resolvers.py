@@ -6,9 +6,9 @@ class BlogResolvers:
     def resolve_all_blogs(self, info):
         return models.Blog.objects.all()
 
-    def resolve_blog(self, info, blog_id):
+    def resolve_blog(self, info, id):
         try:
-            return models.Blog.objects.get(pk=blog_id)
+            return models.Blog.objects.get(pk=id)
         except models.Blog.DoesNotExist:
             return None
 
