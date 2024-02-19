@@ -1,10 +1,10 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { NextLinkComposed } from "@/components/Link";
-
 import { carImages } from "./ImageSlider/imageData";
 import { ImageSlider } from "./ImageSlider/ImageSlider";
+
+import { NextLinkComposed } from "@/components/Link";
 
 const RootStyle = styled("div")(({ theme }) => ({
   background: theme.vars.palette.background.elevated,
@@ -30,17 +30,15 @@ export const CarsDetailsSection: React.FC = () => {
             }}
           >
             <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
-              Foreningens hytter
+              Foreningens bil
             </Typography>
-            <Typography variant="h2">Indøkhyttene - Oksen og Bjørnen</Typography>
+            <Typography variant="h2">Indøkbilen</Typography>
             <Typography sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
-              De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i Oppdal.
-              Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til sosiale, spontane
-              venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle bylivet. Indøks egne
-              Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er en flott mulighet til både å
-              bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre indøkere på tvers av
-              klassetrinnene. Hytteforeningen har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og
-              organisering av utleie.
+              VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM
+              VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM
+              VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM
+              VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM VROOM
+              VROOM VROOM
             </Typography>
             <Grid item>
               <Button
