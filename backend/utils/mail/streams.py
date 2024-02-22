@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 from django.core.mail import EmailMultiAlternatives
 
 TransactionalStream = Literal[
-    "order-confirmations", "cabin-booking-confirmations", "wait-list-notifications", "event-updates", "car-booking-confirmations"
+    "order-confirmations", "product-booking-confirmations", "wait-list-notifications", "event-updates"
 ]
 BroadcastStream = Literal["event-notifications"]
 TemplateVariables = dict[

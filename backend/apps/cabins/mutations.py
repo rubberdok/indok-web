@@ -4,7 +4,7 @@ from decorators import permission_required
 
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import BookingSemester
-from apps.cabins.models import Cabin as CabinModel
+from apps.cabins.models import Cabin as CabinModel, Car as CarModel
 
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .helpers import price
@@ -27,6 +27,7 @@ class BookingInput(graphene.InputObjectType):
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(NonNull(graphene.Int))
+    cars = graphene.List(NonNull(graphene.Int))
     extra_info = graphene.String(required=False)
 
 
@@ -50,7 +51,7 @@ class UpdateBookingSemesterInput(graphene.InputObjectType):
     spring_semester_active = graphene.Boolean()
 
 
-class UpdateCabinInput(graphene.InputObjectType):
+class UpdateProductInput(graphene.InputObjectType):
     id = graphene.ID()
     name = graphene.String()
     max_guests = graphene.Int()
@@ -164,14 +165,25 @@ class SendEmail(graphene.Mutation):
 
     def mutate(self, info, email_input: EmailInputType):
         cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
+        cars = CarModel.objects.filter(id__in=email_input["cars"])
 
-        booking_price = price(
-            cabins,
-            email_input["check_in"],
-            email_input["check_out"],
-            email_input["internal_participants"],
-            email_input["external_participants"],
-        )
+        if cabins.exists():
+            booking_price = price(
+                cabins,
+                email_input["check_in"],
+                email_input["check_out"],
+                email_input["internal_participants"],
+                email_input["external_participants"],
+            )
+
+        elif cars.exists():
+            booking_price = price(
+                cars,
+                email_input["check_in"],
+                email_input["check_out"],
+                email_input["internal_participants"],
+                email_input["external_participants"],
+            )
 
         booking_info: BookingInfoType = {
             "first_name": email_input["first_name"],
@@ -184,6 +196,7 @@ class SendEmail(graphene.Mutation):
             "check_in": email_input["check_in"],
             "check_out": email_input["check_out"],
             "cabins": cabins,
+            "cars": cars,
             "price": booking_price,
             "extra_info": email_input.get("extra_info", ""),
         }
@@ -231,13 +244,13 @@ class UpdateBookingSemester(graphene.Mutation):
         return UpdateBookingSemester(ok=ok, booking_semester=semester)
 
 
-class UpdateCabin(graphene.Mutation):
+class UpdateProduct(graphene.Mutation):
     """
-    Change the given cabin
+    Change the given product
     """
 
     class Arguments:
-        cabin_data = UpdateCabinInput()
+        product_data = UpdateProductInput()
 
     ok = graphene.Boolean()
     cabin = graphene.Field(CabinType)
@@ -254,9 +267,9 @@ class UpdateCabin(graphene.Mutation):
                 setattr(cabin, input_field, input_value)
             cabin.save()
 
-            return UpdateCabin(cabin=cabin, ok=ok)
+            return UpdateProduct(cabin=cabin, ok=ok)
         except CabinModel.DoesNotExist:
-            return UpdateCabin(
+            return UpdateProduct(
                 cabin=None,
                 ok=False,
             )

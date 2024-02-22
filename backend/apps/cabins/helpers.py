@@ -1,11 +1,11 @@
 from datetime import date, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from django.db import models
 from django.db.models import QuerySet
 
 if TYPE_CHECKING:
-    from apps.cabins.models import Cabin
+    from apps.cabins.models import Cabin, Car
 
 """
 Helper method used in the app
@@ -34,14 +34,14 @@ def get_weekday_nights(check_in: date, check_out: date) -> int:
 
 
 def price(
-    cabins: QuerySet["Cabin"], check_in: date, check_out: date, internal_participants: int, external_participants: int
+    product: Union[QuerySet["Cabin"], QuerySet["Car"]], check_in: date, check_out: date, internal_participants: int, external_participants: int
 ) -> int:
     if is_internal_price(internal_participants, external_participants):
-        weekday_price_pr_night = cabins.aggregate(models.Sum("internal_price"))["internal_price__sum"]
-        weekend_price_pr_night = cabins.aggregate(models.Sum("internal_price_weekend"))["internal_price_weekend__sum"]
+        weekday_price_pr_night = product.aggregate(models.Sum("internal_price"))["internal_price__sum"]
+        weekend_price_pr_night = product.aggregate(models.Sum("internal_price_weekend"))["internal_price_weekend__sum"]
     else:
-        weekday_price_pr_night = cabins.aggregate(models.Sum("external_price"))["external_price__sum"]
-        weekend_price_pr_night = cabins.aggregate(models.Sum("external_price_weekend"))["external_price_weekend__sum"]
+        weekday_price_pr_night = product.aggregate(models.Sum("external_price"))["external_price__sum"]
+        weekend_price_pr_night = product.aggregate(models.Sum("external_price_weekend"))["external_price_weekend__sum"]
     nights = number_of_nights(check_out, check_in)
     weekday_nights = get_weekday_nights(check_in, check_out)
     weekend_nights = nights - weekday_nights

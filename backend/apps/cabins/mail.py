@@ -25,7 +25,7 @@ admin_templates: AdminTemplateType = {
 }
 
 
-def get_email_subject(chosen_cabins_string: str, email_type: str, admin: bool) -> str:
+def get_email_subject(chosen_products_string: str, email_type: str, admin: bool) -> str:
     if admin:
         subject = admin_templates["reserve_subject"]
     else:
@@ -33,7 +33,7 @@ def get_email_subject(chosen_cabins_string: str, email_type: str, admin: bool) -
             user_templates["reserve_subject"] if email_type == "reserve_booking" else user_templates["decision_subject"]
         )
 
-    return subject + chosen_cabins_string
+    return subject + chosen_products_string
 
 
 def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool) -> None:
@@ -42,9 +42,9 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     else:
         template = user_templates[email_type]
 
-    chosen_cabins_names = booking_info["cabins"].values_list("name", flat=True)
-    chosen_cabins_string = " og ".join(chosen_cabins_names)
-    subject = get_email_subject(chosen_cabins_string, email_type, admin)
+    chosen_products_names = booking_info["cabins"].values_list("name", flat=True)
+    chosen_products_string = " og ".join(chosen_products_names)
+    subject = get_email_subject(chosen_products_string, email_type, admin)
     # DEFINITIVT IKKE OPTIONAL
     booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(active=True).first()
 
@@ -53,7 +53,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
         **booking_info,
         "check_in": booking_info["check_in"].strftime("%d-%m-%Y"),
         "check_out": booking_info["check_out"].strftime("%d-%m-%Y"),
-        "chosen_cabins_string": chosen_cabins_string,
+        "chosen_products_string": chosen_products_string,
         "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",
         "booking_responsible_phone": booking_responsible.phone,
         "booking_responsible_email": booking_responsible.email,
@@ -65,7 +65,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     text_content = strip_tags(html_content)
 
     email = TransactionalEmail(
-        stream="cabin-booking-confirmations",
+        stream="product-booking-confirmations",
         subject=subject,
         body=text_content,
         bcc=[booking_responsible.email if admin else booking_info["receiver_email"]],
