@@ -2,7 +2,7 @@ import graphene
 
 from apps.archive.schema import ArchiveMutations, ArchiveQueries
 from apps.blogs.schema import BlogMutations, BlogQueries
-from apps.cabins.schema import CabinMutations, CabinQueries
+from apps.booking.schema import BookingMutations, BookingQueries
 from apps.events.schema import EventMutations, EventQueries
 from apps.forms.schema import FormMutations, FormQueries
 from apps.listings.schema import ListingMutations, ListingQueries
@@ -17,7 +17,7 @@ class Queries(
     EventQueries,
     ArchiveQueries,
     UserQueries,
-    CabinQueries,
+    BookingQueries,
     OrganizationQueries,
     ListingQueries,
     FormQueries,
@@ -33,7 +33,7 @@ class Mutations(
     EventMutations,
     ArchiveMutations,
     UserMutations,
-    CabinMutations,
+    BookingMutations,
     OrganizationMutations,
     ListingMutations,
     FormMutations,

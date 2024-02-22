@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import QuerySet
 
 if TYPE_CHECKING:
-    from apps.cabins.models import Cabin, Car
+    from apps.booking.models import Cabin, Car
 
 """
 Helper method used in the app

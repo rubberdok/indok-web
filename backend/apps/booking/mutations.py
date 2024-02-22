@@ -2,9 +2,9 @@ import graphene
 from graphene import NonNull
 from decorators import permission_required
 
-from apps.cabins.models import Booking as BookingModel
-from apps.cabins.models import BookingSemester
-from apps.cabins.models import Cabin as CabinModel, Car as CarModel
+from apps.booking.models import Booking as BookingModel
+from apps.booking.models import BookingSemester
+from apps.booking.models import Cabin as CabinModel, Car as CarModel
 
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .helpers import price

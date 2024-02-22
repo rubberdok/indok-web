@@ -4,8 +4,8 @@ from utils.mail.streams import TransactionalEmail
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
-from apps.cabins.models import BookingResponsible
-from apps.cabins.types import BookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
+from apps.booking.models import BookingResponsible
+from apps.booking.types import BookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
 
 from weasyprint import HTML
 from datetime import datetime

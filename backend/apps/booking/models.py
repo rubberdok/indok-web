@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.cabins.helpers import number_of_nights, is_internal_price, price
+from apps.booking.helpers import number_of_nights, is_internal_price, price
 
 
 class Cabin(models.Model):

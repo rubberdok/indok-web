@@ -1,5 +1,5 @@
 from factory.django import DjangoModelFactory
-from apps.cabins import models
+from apps.booking import models
 
 
 class CabinFactory(DjangoModelFactory):

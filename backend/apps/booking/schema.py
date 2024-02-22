@@ -1,14 +1,14 @@
 import graphene
 from graphene import NonNull
 
-from apps.cabins.types import (
+from apps.booking.types import (
     AllBookingsType,
     CabinType,
     AdminBookingType,
     BookingResponsibleType,
     UpdateBookingSemesterType,
 )
-from apps.cabins.mutations import (
+from apps.booking.mutations import (
     CreateBooking,
     UpdateBooking,
     DeleteBooking,
@@ -16,10 +16,10 @@ from apps.cabins.mutations import (
     UpdateBookingSemester,
     UpdateProduct,
 )
-from apps.cabins.resolvers import CabinResolvers
+from apps.booking.resolvers import BookingResolvers
 
 
-class CabinMutations(graphene.ObjectType):
+class BookingMutations(graphene.ObjectType):
     create_booking = CreateBooking.Field()
     update_booking = UpdateBooking.Field()
     delete_booking = DeleteBooking.Field()
@@ -28,7 +28,7 @@ class CabinMutations(graphene.ObjectType):
     update_cabin = UpdateProduct.Field()
 
 
-class CabinQueries(graphene.ObjectType, CabinResolvers):
+class BookingQueries(graphene.ObjectType, BookingResolvers):
     all_bookings = graphene.List(NonNull(AllBookingsType))
     admin_all_bookings = graphene.List(
         NonNull(AdminBookingType),

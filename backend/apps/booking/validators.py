@@ -2,11 +2,11 @@ import datetime
 from typing import List
 from graphql import GraphQLError
 from django.utils import timezone
-from apps.cabins.models import Booking as BookingModel
-from apps.cabins.models import Cabin as CabinModel
+from apps.booking.models import Booking as BookingModel
+from apps.booking.models import Cabin as CabinModel
 from django.db.models import Sum
 
-from apps.cabins.models import BookingSemester
+from apps.booking.models import BookingSemester
 
 
 def create_booking_validation(booking_data: BookingModel, booking_semester: BookingSemester):

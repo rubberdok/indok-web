@@ -69,7 +69,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "apps.archive",
     "apps.blogs",
-    "apps.cabins",
+    "apps.booking",
     "apps.events",
     "apps.organizations",
     "apps.users",

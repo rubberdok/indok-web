@@ -1,8 +1,8 @@
-from apps.cabins.models import Booking as BookingModel, Cabin, BookingResponsible, BookingSemester
+from apps.booking.models import Booking as BookingModel, Cabin, BookingResponsible, BookingSemester
 from decorators import permission_required
 
 
-class CabinResolvers:
+class BookingResolvers:
     def resolve_all_bookings(self, info):
         """
         Fetch all bookings sorted by the their check-in date

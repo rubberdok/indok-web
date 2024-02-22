@@ -1,7 +1,7 @@
 from faker import Faker
 from factory.django import DjangoModelFactory
 import factory
-from apps.cabins.models import Booking as BookingModel
+from apps.booking.models import Booking as BookingModel
 import random
 from django.utils import timezone
 

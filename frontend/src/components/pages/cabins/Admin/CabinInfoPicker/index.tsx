@@ -3,7 +3,7 @@ import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useState } from "react";
 
 import { Link } from "@/components";
-import { CabinsDocument, UpdateCabinDocument, UpdateCabinInput } from "@/generated/graphql";
+import { CabinsDocument, UpdateCabinDocument, UpdateProductInput } from "@/generated/graphql";
 
 import { CabinInfoForm } from "./CabinInfoForm";
 
@@ -75,7 +75,7 @@ export const CabinInfoPicker: React.FC = () => {
 
   function handleSubmit(data: CabinInfoForm) {
     if (data.oksen) {
-      const oksenData: UpdateCabinInput = {
+      const oksenData: UpdateProductInput = {
         name: "Oksen",
         internalPrice: data.oksen.internalPrice,
         internalPriceWeekend: data.oksen.internalPriceWeekend,
@@ -87,7 +87,7 @@ export const CabinInfoPicker: React.FC = () => {
     }
 
     if (data.bjornen) {
-      const bjornenData: UpdateCabinInput = {
+      const bjornenData: UpdateProductInput = {
         name: "Bjørnen",
         internalPrice: data.bjornen.internalPrice,
         internalPriceWeekend: data.bjornen.internalPriceWeekend,

@@ -2,9 +2,9 @@ import json
 
 from django.core import mail
 
-from apps.cabins.models import Booking, BookingResponsible, Cabin
-from apps.cabins.models import BookingSemester
-from apps.cabins.helpers import snake_case_to_camel_case, price
+from apps.booking.models import Booking, BookingResponsible, Cabin
+from apps.booking.models import BookingSemester
+from apps.booking.helpers import snake_case_to_camel_case, price
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
