@@ -70,7 +70,6 @@ LOCAL_APPS = [
     "apps.archive",
     "apps.blogs",
     "apps.cabins",
-    "apps.cars",
     "apps.events",
     "apps.organizations",
     "apps.users",

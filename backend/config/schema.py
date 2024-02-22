@@ -4,7 +4,6 @@ from apps.archive.schema import ArchiveMutations, ArchiveQueries
 from apps.blogs.schema import BlogMutations, BlogQueries
 from apps.cabins.schema import CabinMutations, CabinQueries
 from apps.events.schema import EventMutations, EventQueries
-from apps.cars.schema import CarMutations, CarQueries
 from apps.forms.schema import FormMutations, FormQueries
 from apps.listings.schema import ListingMutations, ListingQueries
 from apps.organizations.schema import OrganizationMutations, OrganizationQueries
@@ -19,7 +18,6 @@ class Queries(
     ArchiveQueries,
     UserQueries,
     CabinQueries,
-    CarQueries,
     OrganizationQueries,
     ListingQueries,
     FormQueries,
@@ -34,7 +32,6 @@ class Queries(
 class Mutations(
     EventMutations,
     ArchiveMutations,
-    CarMutations,
     UserMutations,
     CabinMutations,
     OrganizationMutations,
