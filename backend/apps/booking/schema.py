@@ -3,7 +3,7 @@ from graphene import NonNull
 
 from apps.booking.types import (
     AllBookingsType,
-    ProductType,
+    BookingProductType,
     AdminBookingType,
     BookingResponsibleType,
     UpdateBookingSemesterType,
@@ -35,6 +35,6 @@ class BookingQueries(graphene.ObjectType, BookingResolvers):
         before=graphene.String(required=False),
         after=graphene.String(required=False),
     )
-    products = graphene.List(NonNull(ProductType))
+    products = graphene.List(NonNull(BookingProductType))
     active_booking_responsible = graphene.Field(BookingResponsibleType)
     booking_semester = graphene.Field(UpdateBookingSemesterType)

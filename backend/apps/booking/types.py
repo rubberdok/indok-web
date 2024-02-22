@@ -36,7 +36,7 @@ class AdminBookingType(DjangoObjectType):
         model = BookingModel
 
 
-class ProductType(DjangoObjectType):
+class BookingProductType(DjangoObjectType):
     class Meta:
         model = ProductModel
         fields = [

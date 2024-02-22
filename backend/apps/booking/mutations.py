@@ -9,7 +9,7 @@ from apps.booking.models import Product as ProductModel
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .helpers import price
 from .mail import send_mail
-from .types import AllBookingsType, BookingInfoType, ProductType, EmailInputType, UpdateBookingSemesterType
+from .types import AllBookingsType, BookingInfoType, BookingProductType, EmailInputType, UpdateBookingSemesterType
 from .validators import create_booking_validation
 
 
@@ -241,7 +241,7 @@ class UpdateProduct(graphene.Mutation):
         product_data = UpdateProductInput()
 
     ok = graphene.Boolean()
-    product = graphene.Field(ProductType)
+    product = graphene.Field(BookingProductType)
 
     @permission_required("booking.change_product")
     def mutate(self, info, product_data):
