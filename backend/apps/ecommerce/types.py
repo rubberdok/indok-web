@@ -14,6 +14,7 @@ class ProductType(DjangoObjectType):
             "price",
             "description",
             "max_buyable_quantity",
+            "shop_item",
         ]
 
 

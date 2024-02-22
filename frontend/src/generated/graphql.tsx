@@ -938,6 +938,7 @@ export type ProductType = {
   maxBuyableQuantity: Scalars["Int"]["output"];
   name: Scalars["String"]["output"];
   price: Scalars["Decimal"]["output"];
+  shopItem: Scalars["Boolean"]["output"];
 };
 
 export type Queries = {
@@ -1804,6 +1805,7 @@ export type ProductsQuery = {
     price: number;
     description: string;
     maxBuyableQuantity: number;
+    shopItem: boolean;
   }> | null;
 };
 
@@ -6244,6 +6246,7 @@ export const ProductsDocument = {
                 { kind: "Field", name: { kind: "Name", value: "price" } },
                 { kind: "Field", name: { kind: "Name", value: "description" } },
                 { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+                { kind: "Field", name: { kind: "Name", value: "shopItem" } },
               ],
             },
           },

@@ -1004,6 +1004,7 @@ export type ProductType = {
   maxBuyableQuantity: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   price: Scalars['Decimal']['output'];
+  shopItem: Scalars['Boolean']['output'];
 };
 
 export type Queries = {
