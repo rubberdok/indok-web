@@ -5,7 +5,7 @@ from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 import graphene
 
-from .models import Booking as BookingModel, Cabin as CabinModel, Car as CarModel, BookingResponsible, BookingSemester
+from .models import Booking as BookingModel, Product as ProductModel, BookingResponsible, BookingSemester
 
 
 class AllBookingsType(DjangoObjectType):
@@ -19,8 +19,7 @@ class AllBookingsType(DjangoObjectType):
             "id",
             "check_in",
             "check_out",
-            "cabins",
-            "cars"
+            "products",
         ]
 
 
@@ -37,9 +36,9 @@ class AdminBookingType(DjangoObjectType):
         model = BookingModel
 
 
-class CabinType(DjangoObjectType):
+class ProductType(DjangoObjectType):
     class Meta:
-        model = CabinModel
+        model = ProductModel
         fields = [
             "id",
             "name",
@@ -48,19 +47,6 @@ class CabinType(DjangoObjectType):
             "external_price",
             "internal_price_weekend",
             "external_price_weekend",
-        ]
-
-class CarType(DjangoObjectType):
-
-    class Meta:
-        model = CarModel
-        fields = [
-            "id",
-            "name",
-            "internal_price",
-            "external_price",
-            "internal_price_weekend",
-            "external_price_weekend"
         ]
 
 
@@ -91,8 +77,7 @@ class EmailInputType(TypedDict):
     internal_participants: int
     external_participants: int
     email_type: EmailTypes
-    cabins: QuerySet
-    cars: QuerySet
+    products: QuerySet
     check_in: date
     check_out: date
     extra_info: str

@@ -1,4 +1,4 @@
-from apps.booking.models import Booking as BookingModel, Cabin, BookingResponsible, BookingSemester
+from apps.booking.models import Booking as BookingModel, Product, BookingResponsible, BookingSemester
 from decorators import permission_required
 
 
@@ -9,7 +9,7 @@ class BookingResolvers:
         """
         return BookingModel.objects.filter(is_declined=False).order_by("check_in")
 
-    @permission_required("cabins.manage_booking")
+    @permission_required("products.manage_booking")
     def resolve_admin_all_bookings(self, root, **kwargs):
         """
         This admin view lets the user see more fields in the booking object through the AdminBookingType in the schema.
@@ -22,11 +22,11 @@ class BookingResolvers:
             query = query.filter(check_in__gt=kwargs.get("after"))
         return query
 
-    def resolve_cabins(self, info):
+    def resolve_products(self, info):
         """
-        Returns all cabins in the database
+        Returns all products in the database
         """
-        return Cabin.objects.all()
+        return Product.objects.all()
 
     def resolve_active_booking_responsible(self, info):
         """

@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import QuerySet
 
 if TYPE_CHECKING:
-    from apps.booking.models import Cabin, Car
+    from apps.booking.models import Product
 
 """
 Helper method used in the app
@@ -34,7 +34,7 @@ def get_weekday_nights(check_in: date, check_out: date) -> int:
 
 
 def price(
-    product: Union[QuerySet["Cabin"], QuerySet["Car"]], check_in: date, check_out: date, internal_participants: int, external_participants: int
+    product: QuerySet["Product"], check_in: date, check_out: date, internal_participants: int, external_participants: int
 ) -> int:
     if is_internal_price(internal_participants, external_participants):
         weekday_price_pr_night = product.aggregate(models.Sum("internal_price"))["internal_price__sum"]

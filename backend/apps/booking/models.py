@@ -3,25 +3,21 @@ from django.db import models
 from apps.booking.helpers import number_of_nights, is_internal_price, price
 
 
-class Cabin(models.Model):
+class Product(models.Model):
     name = models.CharField(max_length=100)
     max_guests = models.PositiveIntegerField(default=18)
-    # Prices for whole cabin per night
+
     internal_price = models.PositiveIntegerField(default=1100)
     internal_price_weekend = models.PositiveIntegerField(default=1100)
     external_price = models.PositiveIntegerField(default=3950)
     external_price_weekend = models.PositiveIntegerField(default=5400)
 
-    def __str__(self):
-        return self.name
+    PRODUCT_TYPES = (
+        (1, "Cabin"),
+        (2, "Car")
+    )
 
-class Car(models.Model):
-    name = models.CharField(max_length=100)
-    # CHANGE DEFAULT VALUES TO WHATEVER IS NORMAL FOR THE CAR IDK
-    internal_price = models.PositiveIntegerField(default=1100)
-    internal_price_weekend = models.PositiveIntegerField(default=1100)
-    external_price = models.PositiveIntegerField(default=3950)
-    external_price_weekend = models.PositiveIntegerField(default=5400)
+    product_type = models.IntegerField(choices=PRODUCT_TYPES)
 
     def __str__(self):
         return self.name
@@ -36,8 +32,7 @@ class Booking(models.Model):
     receiver_email = models.EmailField(max_length=100)
     check_in = models.DateField()
     check_out = models.DateField()
-    cabins = models.ManyToManyField(Cabin, blank=True, null=True)
-    cars = models.ManyToManyField(Car, blank=True, null=True)
+    products = models.ManyToManyField(Product, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     internal_participants = models.IntegerField()
     external_participants = models.IntegerField()
@@ -55,23 +50,14 @@ class Booking(models.Model):
         return is_internal_price(self.internal_participants, self.external_participants)
 
     @property
-    def cabinprice(self) -> int:
-        if self.cars != None:
-            return price(
-                self.cars,
-                self.check_in,
-                self.check_out,
-                self.internal_participants,
-                self.external_participants,
-            )
-        elif self.cabins != None:
-            return price(
-                self.cabins,
-                self.check_in,
-                self.check_out,
-                self.internal_participants,
-                self.external_participants,
-            )
+    def cprice(self) -> int:
+        return price(
+            self.products,
+            self.check_in,
+            self.check_out,
+            self.internal_participants,
+            self.external_participants,
+        )
 
     def __str__(self):
         return f"Booking {self.id}, {self.first_name} {self.last_name}"

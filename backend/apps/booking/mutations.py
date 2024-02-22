@@ -4,12 +4,12 @@ from decorators import permission_required
 
 from apps.booking.models import Booking as BookingModel
 from apps.booking.models import BookingSemester
-from apps.booking.models import Cabin as CabinModel, Car as CarModel
+from apps.booking.models import Product as ProductModel
 
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .helpers import price
 from .mail import send_mail
-from .types import AllBookingsType, BookingInfoType, CabinType, EmailInputType, UpdateBookingSemesterType
+from .types import AllBookingsType, BookingInfoType, ProductType, EmailInputType, UpdateBookingSemesterType
 from .validators import create_booking_validation
 
 
@@ -26,8 +26,7 @@ class BookingInput(graphene.InputObjectType):
     check_out = graphene.Date()
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
-    cabins = graphene.List(NonNull(graphene.Int))
-    cars = graphene.List(NonNull(graphene.Int))
+    products = graphene.List(NonNull(graphene.Int))
     extra_info = graphene.String(required=False)
 
 
@@ -83,11 +82,11 @@ class CreateBooking(graphene.Mutation):
         create_booking_validation(booking_data, booking_semester=semester)
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
-            if input_field and input_field != "cabins":
+            if input_field and input_field != "products":
                 setattr(booking, input_field, input_value)
         booking.is_tentative = True
         booking.save()
-        booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
+        booking.products.set(ProductModel.objects.filter(id__in=booking_data.products))
 
         return CreateBooking(booking=booking, ok=ok)
 
@@ -103,7 +102,7 @@ class UpdateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
-    @permission_required("cabins.manage_booking")
+    @permission_required("booking.manage_booking")
     def mutate(
         self,
         info,
@@ -117,11 +116,11 @@ class UpdateBooking(graphene.Mutation):
             semester = BookingSemester.objects.first()
             create_booking_validation(booking_data, booking_semester=semester)
             for input_field, input_value in booking_data.items():
-                if input_field and input_field != "cabins":
+                if input_field and input_field != "products":
                     setattr(booking, input_field, input_value)
             booking.save()
-            if booking_data.cabins:
-                booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
+            if booking_data.products:
+                booking.products.set(ProductModel.objects.filter(id__in=booking_data.products))
                 booking.save()
             return UpdateBooking(booking=booking, ok=ok)
         except BookingModel.DoesNotExist:
@@ -142,7 +141,7 @@ class DeleteBooking(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
 
-    @permission_required("cabins.manage_booking")
+    @permission_required("booking.manage_booking")
     def mutate(self, info, id, **kwargs):
         try:
             booking = BookingModel.objects.get(pk=id)
@@ -164,26 +163,16 @@ class SendEmail(graphene.Mutation):
     ok = graphene.Boolean()
 
     def mutate(self, info, email_input: EmailInputType):
-        cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
-        cars = CarModel.objects.filter(id__in=email_input["cars"])
+        products = ProductModel.objects.filter(id__in=email_input["products"])
 
-        if cabins.exists():
-            booking_price = price(
-                cabins,
-                email_input["check_in"],
-                email_input["check_out"],
-                email_input["internal_participants"],
-                email_input["external_participants"],
-            )
+        booking_price = price(
+            products,
+            email_input["check_in"],
+            email_input["check_out"],
+            email_input["internal_participants"],
+            email_input["external_participants"],
+        )
 
-        elif cars.exists():
-            booking_price = price(
-                cars,
-                email_input["check_in"],
-                email_input["check_out"],
-                email_input["internal_participants"],
-                email_input["external_participants"],
-            )
 
         booking_info: BookingInfoType = {
             "first_name": email_input["first_name"],
@@ -195,8 +184,7 @@ class SendEmail(graphene.Mutation):
             "email_type": email_input["email_type"],
             "check_in": email_input["check_in"],
             "check_out": email_input["check_out"],
-            "cabins": cabins,
-            "cars": cars,
+            "products": products,
             "price": booking_price,
             "extra_info": email_input.get("extra_info", ""),
         }
@@ -222,7 +210,7 @@ class UpdateBookingSemester(graphene.Mutation):
     ok = graphene.Boolean()
     booking_semester = graphene.Field(UpdateBookingSemesterType)
 
-    @permission_required("cabins.change_bookingsemester")
+    @permission_required("booking.change_bookingsemester")
     def mutate(
         self,
         info,
@@ -253,23 +241,23 @@ class UpdateProduct(graphene.Mutation):
         product_data = UpdateProductInput()
 
     ok = graphene.Boolean()
-    cabin = graphene.Field(CabinType)
+    product = graphene.Field(ProductType)
 
-    @permission_required("cabins.change_cabin")
-    def mutate(self, info, cabin_data):
+    @permission_required("booking.change_product")
+    def mutate(self, info, product_data):
         ok = True
 
         try:
             # Fetch cabin object by id
-            cabin = CabinModel.objects.get(name=cabin_data.name)
+            product = ProductModel.objects.get(name=product_data.name)
 
-            for input_field, input_value in cabin_data.items():
-                setattr(cabin, input_field, input_value)
-            cabin.save()
+            for input_field, input_value in product_data.items():
+                setattr(product, input_field, input_value)
+            product.save()
 
-            return UpdateProduct(cabin=cabin, ok=ok)
-        except CabinModel.DoesNotExist:
+            return UpdateProduct(product=product, ok=ok)
+        except ProductModel.DoesNotExist:
             return UpdateProduct(
-                cabin=None,
+                product=None,
                 ok=False,
             )

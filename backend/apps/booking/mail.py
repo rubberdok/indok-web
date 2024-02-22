@@ -42,7 +42,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     else:
         template = user_templates[email_type]
 
-    chosen_products_names = booking_info["cabins"].values_list("name", flat=True)
+    chosen_products_names = booking_info["products"].values_list("name", flat=True)
     chosen_products_string = " og ".join(chosen_products_names)
     subject = get_email_subject(chosen_products_string, email_type, admin)
     # DEFINITIVT IKKE OPTIONAL
