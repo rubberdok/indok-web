@@ -4,6 +4,7 @@ fragment Product on ProductType {
   description
   price
   maxBuyableQuantity
+  shopItem
 }
 
 fragment Order on OrderType {
@@ -14,5 +15,11 @@ fragment Order on OrderType {
   timestamp
   product {
     ...Product
+  }
+  user {
+    id
+    username
+    firstName
+    lastName
   }
 }
