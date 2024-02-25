@@ -3,17 +3,17 @@ import { KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Checkbox, Divider, FormControlLabel, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import React from "react";
 
-import { Calendar } from "@/components/Calendar";
-import { BookingSemesterDocument, CarFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import { Stepper } from "./Stepper";
 import { useOverlappingBookings } from "./useOverlappingBookings";
 
+import { Calendar } from "@/components/Calendar";
+import { BookingSemesterDocument, BookingProductFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+
 type Props = {
-  allCars: CarFragment[];
-  chosenCars: CarFragment[];
-  onCarsChange: (cars: CarFragment[]) => void;
+  allCars: BookingProductFragment[];
+  chosenCars: BookingProductFragment[];
+  onCarsChange: (cars: BookingProductFragment[]) => void;
   onDateChange: (date: dayjs.Dayjs) => void;
   startDate: dayjs.Dayjs | undefined;
   endDate: dayjs.Dayjs | undefined;
@@ -47,7 +47,7 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
    * selected dates are valid, i.e. not overlapping with disabled dates.
    */
   function validateCarAndDateSelection(
-    chosenCars: CarFragment[],
+    chosenCars: BookingProductFragment[],
     dates: { start: dayjs.Dayjs | undefined; end: dayjs.Dayjs | undefined }
   ): Validation {
     const { start, end } = dates;

@@ -1,13 +1,13 @@
 import { Divider, Grid, Typography } from "@mui/material";
 
-import { CarFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import { CarBookingStatus } from "./CarStatus";
 import { ContactInfo } from "./ContactInfo";
 
+import { BookingProductFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+
 type Props = {
-  chosenCars: CarFragment[];
+  chosenCars: BookingProductFragment[];
   contactInfo: ContactInfo | undefined;
   mailSent?: boolean;
   startDate: dayjs.Dayjs | undefined;

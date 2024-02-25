@@ -5,7 +5,12 @@ import { useMemo, useState } from "react";
 import { BookingSteps } from "@/components/pages/cabins/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cabins/booking/Steps/ContactInfo";
-import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
+import {
+  BookingProductFragment,
+  BookingproductsDocument,
+  CreateBookingDocument,
+  SendEmailDocument,
+} from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
@@ -20,9 +25,9 @@ const CabinBookingPage: NextPageWithLayout = () => {
   // Which step of the booking process we're on
   const [activeStep, setActiveStep] = useState<number>(0);
   // Which cabins the user has chosen
-  const [chosenCabins, setChosenCabins] = useState<CabinFragment[]>([]);
+  const [chosenCabins, setChosenCabins] = useState<BookingProductFragment[]>([]);
 
-  const { data } = useQuery(CabinsDocument);
+  const { data } = useQuery(BookingproductsDocument);
 
   // Which range of dates the user has chosen
   const [dateRange, setDateRange] = useState<{ start: dayjs.Dayjs | undefined; end: dayjs.Dayjs | undefined }>({
@@ -112,7 +117,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
       variables: {
         emailInput: {
           ...contactInfo,
-          cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
+          products: chosenCabins.map((cabin) => parseInt(cabin.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),
           checkOut: dateRange.end?.format("YYYY-MM-DD"),
           extraInfo: extraInfo,
@@ -124,7 +129,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
       variables: {
         bookingData: {
           ...contactInfo,
-          cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
+          products: chosenCabins.map((cabin) => parseInt(cabin.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),
           checkOut: dateRange.end?.format("YYYY-MM-DD"),
           extraInfo: extraInfo,
@@ -157,7 +162,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
         </Box>
         <StepContext.Provider value={contextValue}>
           <BookingSteps
-            allCabins={data?.cabins ?? []}
+            allCabins={data?.bookingproducts ?? []}
             chosenCabins={chosenCabins}
             contactInfo={contactInfo}
             onContactInfoChange={setContactInfo}

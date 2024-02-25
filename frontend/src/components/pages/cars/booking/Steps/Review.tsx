@@ -2,17 +2,17 @@ import { KeyboardArrowLeft, Send } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, Divider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 
-import { CarFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import { useStepContext } from "../StepContext";
 
 import { CarBookingStatus } from "./CarStatus";
 import { ContactInfo } from "./ContactInfo";
 import { Stepper } from "./Stepper";
 
+import { BookingProductFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+
 type Props = {
-  chosenCars: CarFragment[];
+  chosenCars: BookingProductFragment[];
   contactInfo: ContactInfo | undefined;
   startDate: dayjs.Dayjs | undefined;
   endDate: dayjs.Dayjs | undefined;

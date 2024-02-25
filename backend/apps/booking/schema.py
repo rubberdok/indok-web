@@ -35,6 +35,6 @@ class BookingQueries(graphene.ObjectType, BookingResolvers):
         before=graphene.String(required=False),
         after=graphene.String(required=False),
     )
-    products = graphene.List(NonNull(BookingProductType))
+    bookingproducts = graphene.List(NonNull(BookingProductType))
     active_booking_responsible = graphene.Field(BookingResponsibleType)
     booking_semester = graphene.Field(UpdateBookingSemesterType)

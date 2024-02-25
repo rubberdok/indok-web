@@ -1,11 +1,11 @@
 import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 
-import { CarFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import { calculatePrice } from "./calculatePrice";
 import { ContactInfo } from "./ContactInfo";
+
+import { BookingProductFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
@@ -14,7 +14,7 @@ const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => 
 );
 
 type Props = {
-  chosenCars: CarFragment[];
+  chosenCars: BookingProductFragment[];
   contactInfo: ContactInfo | undefined;
   carText?: string;
   mailSent?: boolean;

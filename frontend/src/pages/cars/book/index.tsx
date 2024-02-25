@@ -5,7 +5,12 @@ import { useMemo, useState } from "react";
 import { BookingSteps } from "@/components/pages/cars/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cars/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cars/booking/Steps/ContactInfo";
-import { CarFragment, CarsDocument, CreateCarBookingDocument, CarSendEmailDocument } from "@/generated/graphql";
+import {
+  BookingProductFragment,
+  BookingproductsDocument,
+  CreateBookingDocument,
+  SendEmailDocument,
+} from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
@@ -20,9 +25,9 @@ const CarBookingPage: NextPageWithLayout = () => {
   // Which step of the booking process we're on
   const [activeStep, setActiveStep] = useState<number>(0);
   // Which cars the user has chosen
-  const [chosenCars, setChosenCars] = useState<CarFragment[]>([]);
+  const [chosenCars, setChosenCars] = useState<BookingProductFragment[]>([]);
 
-  const { data } = useQuery(CarsDocument);
+  const { data } = useQuery(BookingproductsDocument);
 
   // Which range of dates the user has chosen
   const [dateRange, setDateRange] = useState<{ start: dayjs.Dayjs | undefined; end: dayjs.Dayjs | undefined }>({
@@ -34,8 +39,8 @@ const CarBookingPage: NextPageWithLayout = () => {
   const [contactInfo, setContactInfo] = useState<ContactInfo | undefined>();
 
   // Booking creation and email mutations
-  const [createCarBooking] = useMutation(CreateCarBookingDocument);
-  const [sendEmail] = useMutation(CarSendEmailDocument);
+  const [createCarBooking] = useMutation(CreateBookingDocument);
+  const [sendEmail] = useMutation(SendEmailDocument);
 
   // Extra info from the user, sent to Hytteforeningen
   const [extraInfo, setExtraInfo] = useState("");
@@ -111,9 +116,9 @@ const CarBookingPage: NextPageWithLayout = () => {
     console.log(contactInfo, chosenCars, extraInfo);
     sendEmail({
       variables: {
-        carEmailInput: {
+        emailInput: {
           ...contactInfo,
-          cars: chosenCars.map((car) => parseInt(car.id)),
+          products: chosenCars.map((car) => parseInt(car.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),
           checkOut: dateRange.end?.format("YYYY-MM-DD"),
           extraInfo: extraInfo,
@@ -123,9 +128,9 @@ const CarBookingPage: NextPageWithLayout = () => {
     });
     createCarBooking({
       variables: {
-        carBookingData: {
+        bookingData: {
           ...contactInfo,
-          cars: chosenCars.map((car) => parseInt(car.id)),
+          products: chosenCars.map((car) => parseInt(car.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),
           checkOut: dateRange.end?.format("YYYY-MM-DD"),
           extraInfo: extraInfo,
@@ -158,7 +163,7 @@ const CarBookingPage: NextPageWithLayout = () => {
         </Box>
         <StepContext.Provider value={contextValue}>
           <BookingSteps
-            allCars={data?.cars ?? []}
+            allCars={data?.bookingproducts ?? []}
             chosenCars={chosenCars}
             contactInfo={contactInfo}
             onContactInfoChange={setContactInfo}

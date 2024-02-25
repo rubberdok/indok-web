@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import { Divider, Grid, Typography } from "@mui/material";
 
-import { CarsDocument } from "@/generated/graphql";
+import { BookingproductsDocument } from "@/generated/graphql";
 
 /** Shows an overview of car prices. Fetches the prices from the Car model. */
 export const CarPrices: React.VFC = () => {
-  const carQuery = useQuery(CarsDocument);
-  const cars = carQuery?.data?.cars;
+  const carQuery = useQuery(BookingproductsDocument);
+  const cars = carQuery?.data?.bookingproducts;
 
   return (
     <Grid container spacing={10}>

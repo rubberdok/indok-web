@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 
-import { AllCarBookingsDocument } from "@/generated/graphql";
+import { AllBookingsDocument } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 
 interface BookedDatesByCar {
@@ -11,11 +11,11 @@ interface BookedDatesByCar {
 }
 
 export function useOverlappingBookings() {
-  const { data } = useQuery(AllCarBookingsDocument);
+  const { data } = useQuery(AllBookingsDocument);
 
   const bookedDatesByCar: BookedDatesByCar =
-    data?.allCarBookings?.reduce<BookedDatesByCar>((bookedDates, booking) => {
-      booking.cars.forEach((car) => {
+    data?.allBookings?.reduce<BookedDatesByCar>((bookedDates, booking) => {
+      booking.products.forEach((car) => {
         const prevBookedDatesForCar = bookedDates[car.id] ?? [];
         bookedDates[car.id] = prevBookedDatesForCar.concat({
           start: booking.checkIn,

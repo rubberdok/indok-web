@@ -11,7 +11,7 @@ import { ContactCarBoard } from "@/components/pages/cars/ContactCarBoard";
 import { FAQ } from "@/components/pages/cars/FAQ";
 import { outsideImages } from "@/components/pages/cars/ImageSlider/imageData";
 import { ImageSlider } from "@/components/pages/cars/ImageSlider/ImageSlider";
-import { CarsAndResponsiblesDocument } from "@/generated/graphql";
+import { ProductsAndResponsiblesDocument } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -86,7 +86,7 @@ const CarsPage: NextPageWithLayout = () => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data } = await client.query({ query: CarsAndResponsiblesDocument });
+  const { data } = await client.query({ query: ProductsAndResponsiblesDocument });
 
   return addApolloState(client, {
     props: {

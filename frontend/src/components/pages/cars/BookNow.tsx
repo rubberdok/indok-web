@@ -4,10 +4,11 @@ import { Button, Card, CardContent, Divider, Stack, Typography } from "@mui/mate
 import React from "react";
 
 import { NextLinkComposed } from "@/components/Link";
-import { CarsAndResponsiblesDocument } from "@/generated/graphql";
+import { ProductsAndResponsiblesDocument } from "@/generated/graphql";
 
 export const BookNow: React.FC = () => {
-  const { data } = useQuery(CarsAndResponsiblesDocument);
+  const { data } = useQuery(ProductsAndResponsiblesDocument);
+  console.log(data?.bookingproducts?.[0]?.internalPrice);
   return (
     <Card sx={{ height: "50%" }} elevation={0} data-color-scheme="dark">
       <CardContent sx={{ height: "100%" }}>
@@ -18,9 +19,9 @@ export const BookNow: React.FC = () => {
             </Typography>
             <Typography variant="subtitle1">Hel bil</Typography>
             <Divider />
-            <Typography variant="subtitle2">Intern: {data?.cars?.[0]?.internalPrice} kr</Typography>
+            <Typography variant="subtitle2">Intern: {data?.bookingproducts?.[0]?.internalPrice} kr</Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Ekstern: {data?.cars?.[0]?.externalPrice} kr
+              Ekstern: {data?.bookingproducts?.[0]?.externalPrice} kr
             </Typography>
           </Stack>
           <Button

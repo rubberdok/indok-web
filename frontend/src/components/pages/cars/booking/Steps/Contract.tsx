@@ -16,19 +16,19 @@ import {
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
-import { ActiveBookingResponsibleDocument, CarFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-import * as yup from "@/lib/validation";
-import hytteforeningen from "~/public/static/cabins/logo.svg";
-
 import { useStepContext } from "../StepContext";
 
 import { calculatePrice } from "./calculatePrice";
 import { ContactInfo } from "./ContactInfo";
 import { Stepper } from "./Stepper";
 
+import { ActiveBookingResponsibleDocument, BookingProductFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+import * as yup from "@/lib/validation";
+import hytteforeningen from "~/public/static/cabins/logo.svg";
+
 type Props = {
-  chosenCars: CarFragment[];
+  chosenCars: BookingProductFragment[];
   contactInfo: ContactInfo | undefined;
   startDate: dayjs.Dayjs | undefined;
   endDate: dayjs.Dayjs | undefined;

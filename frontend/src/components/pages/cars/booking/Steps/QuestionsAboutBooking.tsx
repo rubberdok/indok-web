@@ -1,13 +1,13 @@
 import { Stack, TextField, Typography } from "@mui/material";
 
-import { CarFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import { Stepper } from "./Stepper";
+
+import { BookingProductFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
-  chosenCars: CarFragment[];
+  chosenCars: BookingProductFragment[];
   startDate: dayjs.Dayjs | undefined;
   endDate: dayjs.Dayjs | undefined;
 };

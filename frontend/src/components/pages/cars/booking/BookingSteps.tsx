@@ -1,9 +1,6 @@
 import { Typography } from "@mui/material";
 import React from "react";
 
-import { CarFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import { useStepContext } from "./StepContext";
 import { CheckInOut } from "./Steps/CarSelection";
 import { CarContactInfo, ContactInfo } from "./Steps/ContactInfo";
@@ -12,12 +9,15 @@ import { ExtraInfoSite } from "./Steps/QuestionsAboutBooking";
 import { ReceiptSite } from "./Steps/Receipt";
 import { PaymentSite } from "./Steps/Review";
 
+import { BookingProductFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+
 type Props = {
-  allCars: CarFragment[];
-  chosenCars: CarFragment[];
+  allCars: BookingProductFragment[];
+  chosenCars: BookingProductFragment[];
   contactInfo: ContactInfo | undefined;
   onContactInfoChange: (contactInfo: ContactInfo) => void;
-  onCarsChange: (cars: CarFragment[]) => void;
+  onCarsChange: (cars: BookingProductFragment[]) => void;
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
   onDateChange: (date: dayjs.Dayjs) => void;
   startDate: dayjs.Dayjs | undefined;
