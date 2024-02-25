@@ -1,6 +1,6 @@
-query cabins {
-  cabins {
-    ...Cabin
+query bookingproducts {
+  bookingproducts {
+    ...BookingProduct
   }
 }
 
@@ -22,9 +22,9 @@ query activeBookingResponsible {
   }
 }
 
-query cabinsAndResponsibles {
-  cabins {
-    ...Cabin
+query productsAndResponsibles {
+  bookingproducts {
+    ...BookingProduct
   }
   activeBookingResponsible {
     id

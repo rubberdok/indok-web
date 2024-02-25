@@ -1,4 +1,4 @@
 projects:
   next:
-    schema: "https://api.indokntnu.no/graphql/"
+    schema: "localhost:8000/graphql/"
     documents: frontend/src/**/*.{graphql,js,ts,jsx,tsx}

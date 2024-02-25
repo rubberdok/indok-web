@@ -22,10 +22,10 @@ mutation sendEmail($emailInput: EmailInput!) {
   }
 }
 
-mutation updateCabin($cabinData: UpdateCabinInput!) {
-  updateCabin(cabinData: $cabinData) {
-    cabin {
-      ...Cabin
+mutation updateProduct($productData: UpdateProductInput!) {
+  updateProduct(productData: $productData) {
+    product {
+      ...BookingProduct
     }
   }
 }
