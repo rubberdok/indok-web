@@ -1,5 +1,7 @@
 import { useQuery } from "@apollo/client";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
+
+import { ShopSale } from "../orgs/ShopSale";
 
 import { AdminOrganizationFragment, UserOrdersDocument } from "@/generated/graphql";
 
@@ -28,11 +30,13 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
         if (order.product.shopItem === true) {
           return (
             <Grid key={order.id} item xs={12} sm={12} md={12}>
-              <Stack spacing={1} border={1}>
-                <Typography variant="body1" paragraph>
-                  {order.user.firstName} {order.user.lastName}, {order.product.name}, {order.quantity} stk, Har betalt:{" "}
-                  {order.paymentStatus === "CAPTURED" ? "Ja" : "Nei"} Utlevert: Dette er en TODO
-                </Typography>
+              <Stack border={1}>
+                <ShopSale
+                  name={order.user.firstName + " " + order.user.lastName}
+                  product_name={order.product.name}
+                  quantity={order.quantity}
+                  has_paid={order.paymentStatus === "CAPTURED"}
+                />
               </Stack>
             </Grid>
           );
