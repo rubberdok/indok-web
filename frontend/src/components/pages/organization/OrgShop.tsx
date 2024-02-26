@@ -36,6 +36,7 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
                   product_name={order.product.name}
                   quantity={order.quantity}
                   has_paid={order.paymentStatus === "CAPTURED"}
+                  is_delivered={order.delivered}
                 />
               </Stack>
             </Grid>

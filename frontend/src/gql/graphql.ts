@@ -947,6 +947,7 @@ export type OptionType = {
 
 export type OrderType = {
   __typename?: 'OrderType';
+  delivered: Scalars['Boolean']['output'];
   id: Scalars['UUID']['output'];
   paymentStatus: PaymentStatus;
   product: ProductType;
