@@ -32,7 +32,7 @@ class Booking(models.Model):
     receiver_email = models.EmailField(max_length=100)
     check_in = models.DateField()
     check_out = models.DateField()
-    products = models.ManyToManyField(Product, blank=True, null=True)
+    booking_products = models.ManyToManyField(Product, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     internal_participants = models.IntegerField()
     external_participants = models.IntegerField()
@@ -50,9 +50,9 @@ class Booking(models.Model):
         return is_internal_price(self.internal_participants, self.external_participants)
 
     @property
-    def cprice(self) -> int:
+    def price(self) -> int:
         return price(
-            self.products,
+            self.booking_products,
             self.check_in,
             self.check_out,
             self.internal_participants,

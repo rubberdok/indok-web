@@ -683,7 +683,27 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
-              "name": "bookingproducts",
+              "name": "cabins",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "BookingProductType",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "cars",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -4218,7 +4238,7 @@
               "deprecationReason": null,
               "description": "",
               "isDeprecated": false,
-              "name": "products",
+              "name": "bookingProducts",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -4434,7 +4454,7 @@
               "deprecationReason": null,
               "description": "",
               "isDeprecated": false,
-              "name": "products",
+              "name": "bookingProducts",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -8456,7 +8476,7 @@
             {
               "defaultValue": null,
               "description": null,
-              "name": "products",
+              "name": "bookingProducts",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -8610,7 +8630,7 @@
             {
               "defaultValue": null,
               "description": null,
-              "name": "products",
+              "name": "bookingProducts",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -8831,7 +8851,7 @@
             {
               "defaultValue": null,
               "description": null,
-              "name": "products",
+              "name": "bookingProducts",
               "type": {
                 "kind": "LIST",
                 "name": null,

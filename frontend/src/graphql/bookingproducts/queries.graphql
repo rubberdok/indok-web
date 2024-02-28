@@ -1,8 +1,15 @@
-query bookingproducts {
-  bookingproducts {
+query cabins {
+  cabins {
     ...BookingProduct
   }
 }
+
+query cars {
+  cars {
+    ...BookingProduct
+  }
+}
+
 
 query allBookings {
   allBookings {
@@ -21,9 +28,18 @@ query activeBookingResponsible {
     ...BookingResponsible
   }
 }
+query cabinsAndResponsibles {
+  cabins {
+    ...BookingProduct
+  }
+  activeBookingResponsible {
+    id
+    email
+  }
+}
 
-query productsAndResponsibles {
-  bookingproducts {
+query carsAndResponsibles {
+  cars {
     ...BookingProduct
   }
   activeBookingResponsible {

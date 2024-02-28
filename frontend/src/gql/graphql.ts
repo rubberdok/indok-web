@@ -38,6 +38,7 @@ export type Scalars = {
 /** Booking type for admin users */
 export type AdminBookingType = {
   __typename?: 'AdminBookingType';
+  bookingProducts: Array<BookingProductType>;
   checkIn: Scalars['Date']['output'];
   checkOut: Scalars['Date']['output'];
   declineReason: Scalars['String']['output'];
@@ -53,7 +54,6 @@ export type AdminBookingType = {
   numberOfNights: Maybe<Scalars['Int']['output']>;
   phone: Scalars['String']['output'];
   price: Maybe<Scalars['Int']['output']>;
-  products: Array<BookingProductType>;
   receiverEmail: Scalars['String']['output'];
   timestamp: Scalars['DateTime']['output'];
 };
@@ -72,10 +72,10 @@ export type AdminEventSignOff = {
 /** Booking type for fields available for not logged in users */
 export type AllBookingsType = {
   __typename?: 'AllBookingsType';
+  bookingProducts: Array<BookingProductType>;
   checkIn: Scalars['Date']['output'];
   checkOut: Scalars['Date']['output'];
   id: Scalars['ID']['output'];
-  products: Array<BookingProductType>;
 };
 
 export type AnswerInput = {
@@ -189,6 +189,7 @@ export type BlogType = {
 
 /** Basic booking object type used as a base for other types and as a standalone */
 export type BookingInput = {
+  bookingProducts: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn: InputMaybe<Scalars['Date']['input']>;
   checkOut: InputMaybe<Scalars['Date']['input']>;
   externalParticipants: InputMaybe<Scalars['Int']['input']>;
@@ -197,7 +198,6 @@ export type BookingInput = {
   internalParticipants: InputMaybe<Scalars['Int']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
   phone: InputMaybe<Scalars['String']['input']>;
-  products: InputMaybe<Array<Scalars['Int']['input']>>;
   receiverEmail: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -440,6 +440,7 @@ export type DeleteQuestion = {
 };
 
 export type EmailInput = {
+  bookingProducts: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn: InputMaybe<Scalars['Date']['input']>;
   checkOut: InputMaybe<Scalars['Date']['input']>;
   emailType: InputMaybe<Scalars['String']['input']>;
@@ -449,7 +450,6 @@ export type EmailInput = {
   internalParticipants: InputMaybe<Scalars['Int']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
   phone: InputMaybe<Scalars['String']['input']>;
-  products: InputMaybe<Array<Scalars['Int']['input']>>;
   receiverEmail: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1025,7 +1025,8 @@ export type Queries = {
   blog: Maybe<BlogType>;
   blogPost: Maybe<BlogPostType>;
   bookingSemester: Maybe<UpdateBookingSemesterType>;
-  bookingproducts: Maybe<Array<BookingProductType>>;
+  cabins: Maybe<Array<BookingProductType>>;
+  cars: Maybe<Array<BookingProductType>>;
   category: Maybe<CategoryType>;
   defaultEvents: Maybe<Array<EventType>>;
   event: Maybe<EventType>;
@@ -1317,6 +1318,7 @@ export type UpdateBooking = {
 };
 
 export type UpdateBookingInput = {
+  bookingProducts: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn: InputMaybe<Scalars['Date']['input']>;
   checkOut: InputMaybe<Scalars['Date']['input']>;
   declineReason: InputMaybe<Scalars['String']['input']>;
@@ -1329,7 +1331,6 @@ export type UpdateBookingInput = {
   isTentative: InputMaybe<Scalars['Boolean']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
   phone: InputMaybe<Scalars['String']['input']>;
-  products: InputMaybe<Array<Scalars['Int']['input']>>;
   receiverEmail: InputMaybe<Scalars['String']['input']>;
 };
 

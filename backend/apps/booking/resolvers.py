@@ -1,7 +1,6 @@
 from apps.booking.models import Booking as BookingModel, Product, BookingResponsible, BookingSemester
 from decorators import permission_required
 
-
 class BookingResolvers:
     def resolve_all_bookings(self, info):
         """
@@ -22,11 +21,17 @@ class BookingResolvers:
             query = query.filter(check_in__gt=kwargs.get("after"))
         return query
 
-    def resolve_products(self, info):
+    def resolve_cabins(self, info):
         """
         Returns all products in the database
         """
-        return Product.objects.all()
+        return Product.objects.filter(product_type=1)
+
+    def resolve_cars(self, info):
+        """
+        Returns all products in the database
+        """
+        return Product.objects.filter(product_type=2)
 
     def resolve_active_booking_responsible(self, info):
         """

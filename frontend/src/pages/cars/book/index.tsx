@@ -5,12 +5,7 @@ import { useMemo, useState } from "react";
 import { BookingSteps } from "@/components/pages/cars/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cars/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cars/booking/Steps/ContactInfo";
-import {
-  BookingProductFragment,
-  BookingproductsDocument,
-  CreateBookingDocument,
-  SendEmailDocument,
-} from "@/generated/graphql";
+import { BookingProductFragment, CarsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
@@ -27,7 +22,7 @@ const CarBookingPage: NextPageWithLayout = () => {
   // Which cars the user has chosen
   const [chosenCars, setChosenCars] = useState<BookingProductFragment[]>([]);
 
-  const { data } = useQuery(BookingproductsDocument);
+  const { data } = useQuery(CarsDocument);
 
   // Which range of dates the user has chosen
   const [dateRange, setDateRange] = useState<{ start: dayjs.Dayjs | undefined; end: dayjs.Dayjs | undefined }>({
@@ -118,11 +113,11 @@ const CarBookingPage: NextPageWithLayout = () => {
       variables: {
         emailInput: {
           ...contactInfo,
-          products: chosenCars.map((car) => parseInt(car.id)),
+          bookingProducts: chosenCars.map((car) => parseInt(car.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),
           checkOut: dateRange.end?.format("YYYY-MM-DD"),
           extraInfo: extraInfo,
-          emailType: "reserve_car_booking",
+          emailType: "reserve_booking",
         },
       },
     });
@@ -130,7 +125,7 @@ const CarBookingPage: NextPageWithLayout = () => {
       variables: {
         bookingData: {
           ...contactInfo,
-          products: chosenCars.map((car) => parseInt(car.id)),
+          bookingProducts: chosenCars.map((car) => parseInt(car.id)),
           checkIn: dateRange.start?.format("YYYY-MM-DD"),
           checkOut: dateRange.end?.format("YYYY-MM-DD"),
           extraInfo: extraInfo,
@@ -163,7 +158,7 @@ const CarBookingPage: NextPageWithLayout = () => {
         </Box>
         <StepContext.Provider value={contextValue}>
           <BookingSteps
-            allCars={data?.bookingproducts ?? []}
+            allCars={data?.cars ?? []}
             chosenCars={chosenCars}
             contactInfo={contactInfo}
             onContactInfoChange={setContactInfo}

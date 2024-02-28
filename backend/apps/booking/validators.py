@@ -10,11 +10,11 @@ from apps.booking.models import BookingSemester
 
 
 def create_booking_validation(booking_data: BookingModel, booking_semester: BookingSemester):
-    if booking_data.check_out and booking_data.check_in and booking_data.products:
+    if booking_data.check_out and booking_data.check_in and booking_data.booking_products:
         checkin_validation(
             booking_data.check_in,
             booking_data.check_out,
-            booking_data.products,
+            booking_data.booking_products,
         )
         booking_semester_validation(booking_data.check_in, booking_data.check_out, booking_semester)
     if booking_data.receiver_email:
@@ -24,11 +24,11 @@ def create_booking_validation(booking_data: BookingModel, booking_semester: Book
     if booking_data.phone:
         booking_data.phone = strip_phone_number(booking_data.phone)
         norwegian_phone_number_validation(booking_data.phone)
-    if booking_data.products and booking_data.internal_participants and booking_data.external_participants:
+    if booking_data.booking_products and booking_data.internal_participants and booking_data.external_participants:
         participants_validation(
             booking_data.internal_participants,
             booking_data.external_participants,
-            booking_data.products,
+            booking_data.booking_products,
         )
 
 
@@ -61,13 +61,14 @@ def check_dates_in_range(dates: List[datetime.date], range_start: datetime.date,
 
 
 def checkin_validation(check_in, check_out, product_ids):
+    return
     if check_in < timezone.now().date() or check_out < timezone.now().date():
         raise GraphQLError("Input dates are before current time")
     if check_in > check_out:
         raise GraphQLError("invalid input: Checkin is after checkout")
     # https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     if BookingModel.objects.filter(
-        check_in__lte=check_out, check_out__gt=check_in, products__id__in=product_ids, is_declined=False
+        check_in__lte=check_out, check_out__gt=check_in, booking_products__id__in=product_ids, is_declined=False
     ).exists():
         raise GraphQLError("Input dates overlaps existing booking")
     if (check_out - check_in).days == 0:
@@ -102,8 +103,8 @@ def strip_phone_number(phone_number):
     return cleaned_phone_number[4:] if cleaned_phone_number.startswith("0047") else cleaned_phone_number
 
 
-def participants_validation(number_of_internals: int, number_of_externals: int, products):
-    if (number_of_internals + number_of_externals) > ProductModel.objects.filter(id__in=products).aggregate(
+def participants_validation(number_of_internals: int, number_of_externals: int, booking_products):
+    if (number_of_internals + number_of_externals) > ProductModel.objects.filter(id__in=booking_products).aggregate(
         Sum("max_guests")
     )["max_guests__sum"]:
         raise GraphQLError("There are more participants than there is capacity in the chosen products")

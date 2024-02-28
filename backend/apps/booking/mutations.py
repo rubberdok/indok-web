@@ -26,7 +26,7 @@ class BookingInput(graphene.InputObjectType):
     check_out = graphene.Date()
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
-    products = graphene.List(NonNull(graphene.Int))
+    booking_products = graphene.List(NonNull(graphene.Int))
     extra_info = graphene.String(required=False)
 
 
@@ -82,11 +82,11 @@ class CreateBooking(graphene.Mutation):
         create_booking_validation(booking_data, booking_semester=semester)
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
-            if input_field and input_field != "products":
+            if input_field and input_field != "booking_products":
                 setattr(booking, input_field, input_value)
         booking.is_tentative = True
         booking.save()
-        booking.products.set(ProductModel.objects.filter(id__in=booking_data.products))
+        booking.booking_products.set(ProductModel.objects.filter(id__in=booking_data.booking_products))
 
         return CreateBooking(booking=booking, ok=ok)
 
@@ -116,11 +116,11 @@ class UpdateBooking(graphene.Mutation):
             semester = BookingSemester.objects.first()
             create_booking_validation(booking_data, booking_semester=semester)
             for input_field, input_value in booking_data.items():
-                if input_field and input_field != "products":
+                if input_field and input_field != "booking_products":
                     setattr(booking, input_field, input_value)
             booking.save()
-            if booking_data.products:
-                booking.products.set(ProductModel.objects.filter(id__in=booking_data.products))
+            if booking_data.booking_products:
+                booking.booking_products.set(ProductModel.objects.filter(id__in=booking_data.booking_products))
                 booking.save()
             return UpdateBooking(booking=booking, ok=ok)
         except BookingModel.DoesNotExist:
@@ -163,10 +163,10 @@ class SendEmail(graphene.Mutation):
     ok = graphene.Boolean()
 
     def mutate(self, info, email_input: EmailInputType):
-        products = ProductModel.objects.filter(id__in=email_input["products"])
+        booking_products = ProductModel.objects.filter(id__in=email_input["booking_products"])
 
         booking_price = price(
-            products,
+            booking_products,
             email_input["check_in"],
             email_input["check_out"],
             email_input["internal_participants"],
@@ -184,7 +184,7 @@ class SendEmail(graphene.Mutation):
             "email_type": email_input["email_type"],
             "check_in": email_input["check_in"],
             "check_out": email_input["check_out"],
-            "products": products,
+            "booking_products": booking_products,
             "price": booking_price,
             "extra_info": email_input.get("extra_info", ""),
         }

@@ -19,7 +19,7 @@ class AllBookingsType(DjangoObjectType):
             "id",
             "check_in",
             "check_out",
-            "products",
+            "booking_products",
         ]
 
 
@@ -77,7 +77,7 @@ class EmailInputType(TypedDict):
     internal_participants: int
     external_participants: int
     email_type: EmailTypes
-    products: QuerySet
+    booking_products: QuerySet
     check_in: date
     check_out: date
     extra_info: str
