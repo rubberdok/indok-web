@@ -125,6 +125,13 @@ export const EventDetail: React.FC<Props> = (props) => {
               <CardHeader title="Informasjon" />
               <CardContent>
                 <List>
+                  {!event.signUpsRetractable && (
+                    <ListItem>
+                      <Alert severity="warning" variant="outlined">
+                        Arrangementet har bindende påmelding
+                      </Alert>
+                    </ListItem>
+                  )}
                   {event.ticketInformation?.product && (
                     <ListItem>
                       <ListItemIcon>
@@ -134,13 +141,6 @@ export const EventDetail: React.FC<Props> = (props) => {
                         primary="Pris"
                         secondary={`${event.ticketInformation.product.price.valueInNok} kr`}
                       />
-                    </ListItem>
-                  )}
-                  {!event.signUpsRetractable && (
-                    <ListItem>
-                      <Alert severity="warning" variant="outlined">
-                        Arrangementet har bindende påmelding
-                      </Alert>
                     </ListItem>
                   )}
                   <ListItem>

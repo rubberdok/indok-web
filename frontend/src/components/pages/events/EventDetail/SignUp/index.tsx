@@ -1,9 +1,10 @@
-import { Alert, AlertTitle, Unstable_Grid2 as Grid } from "@mui/material";
+import { Alert, AlertTitle, Unstable_Grid2 as Grid, Typography } from "@mui/material";
 
 import Link from "@/components/Link";
 import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
-import { OrderPaymentStatus, SignUpAvailability } from "@/gql/pages/graphql";
+import { OrderPaymentStatus } from "@/gql/pages/graphql";
 
+import { ParticipationStatus } from "@/gql/app/graphql";
 import { Actions } from "./Actions";
 import { PaymentStatus } from "./Payments";
 
@@ -13,6 +14,11 @@ const SignUpFragment = graphql(`
     id
     user {
       id
+      signUp {
+        id
+        participationStatus
+        approximatePositionOnWaitList
+      }
       ticket {
         id
         paymentStatus
@@ -37,8 +43,8 @@ type Props = {
 export const SignUp: React.FC<Props> = (props) => {
   const event = getFragmentData(SignUpFragment, props.event);
 
-  const isSignedUp = event.signUpAvailability === SignUpAvailability.Confirmed;
-  const isOnWaitingList = event.signUpAvailability === SignUpAvailability.OnWaitlist;
+  const isSignedUp = event.user?.signUp?.participationStatus === ParticipationStatus.Confirmed;
+  const isOnWaitingList = event.user?.signUp?.participationStatus === ParticipationStatus.OnWaitlist;
 
   return (
     <Grid container direction="column" alignItems="center" spacing={2}>
@@ -71,7 +77,10 @@ export const SignUp: React.FC<Props> = (props) => {
         <Grid xs={12} sm={8} md={6}>
           <Alert color="info" variant="outlined">
             <AlertTitle>Du er på ventelisten</AlertTitle>
-            {/* <Typography>Du er nummer {event.userAttendance?.positionOnWaitingList} på ventelisten.</Typography> */}
+            <Typography>Du er nummer {event.user?.signUp?.approximatePositionOnWaitList} på ventelisten.</Typography>
+            <Typography variant="caption">
+              Dette er et estimat, som følge av plassfordeling kan det forekomme avvik.
+            </Typography>
           </Alert>
         </Grid>
       )}

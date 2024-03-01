@@ -2,11 +2,9 @@ import { useQuery } from "@apollo/client";
 import { Unstable_Grid2 as Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 
-import { PermissionRequired } from "@/components";
 import { graphql } from "@/gql/pages";
 
 import { EventListItem } from "./EventListItem";
-import { ManageEvents } from "./ManageEvents";
 
 export const AllEvents: React.FC = () => {
   const { error, data } = useQuery(
@@ -51,11 +49,6 @@ export const AllEvents: React.FC = () => {
 
   return (
     <Grid container direction="row" spacing={2}>
-      <PermissionRequired permission="events.add_event">
-        <Grid xs={12}>
-          <ManageEvents />
-        </Grid>
-      </PermissionRequired>
       <Grid xs={12} md={9}>
         <Stack direction="column" spacing={4}>
           {error && (

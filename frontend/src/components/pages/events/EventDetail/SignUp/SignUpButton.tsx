@@ -7,22 +7,24 @@ type Props = {
   disabled?: boolean;
   onSignUp: () => void;
   onSignOff: () => void;
+  loading?: boolean;
 };
 
-export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff, disabled }) => {
+export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff, disabled, loading }) => {
   const [confirmSignOff, setConfirmSignOff] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingBuffer, setLoadingBuffer] = useState(false);
+  const isLoading = loading || loadingBuffer;
 
   function handleSignUp() {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 1000);
+    setLoadingBuffer(true);
+    setTimeout(() => setLoadingBuffer(false), 500);
     onSignUp();
   }
 
   function handleSignOff() {
-    setLoading(true);
+    setLoadingBuffer(true);
     setConfirmSignOff(false);
-    setTimeout(() => setLoading(false), 1000);
+    setTimeout(() => setLoadingBuffer(false), 500);
     onSignOff();
   }
 
@@ -34,7 +36,7 @@ export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff,
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmSignOff(false)}>Avbryt</Button>
-          <LoadingButton loading={loading} onClick={handleSignOff} color="error" variant="contained">
+          <LoadingButton loading={isLoading} onClick={handleSignOff} color="error" variant="contained">
             Meld av
           </LoadingButton>
         </DialogActions>
@@ -42,7 +44,7 @@ export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff,
       {isSignedUp && (
         <LoadingButton
           fullWidth
-          loading={loading}
+          loading={isLoading}
           variant="outlined"
           onClick={() => {
             setConfirmSignOff(true);
@@ -53,7 +55,7 @@ export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff,
         </LoadingButton>
       )}
       {!isSignedUp && (
-        <LoadingButton fullWidth loading={loading} variant="contained" onClick={handleSignUp} disabled={disabled}>
+        <LoadingButton fullWidth loading={isLoading} variant="contained" onClick={handleSignUp} disabled={disabled}>
           Meld på
         </LoadingButton>
       )}

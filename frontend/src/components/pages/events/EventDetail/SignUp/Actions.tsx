@@ -21,6 +21,11 @@ const ActionEventFragment = graphql(`
     signUpAvailability
     signUpsRetractable
     signUpsRequireUserProvidedInformation
+    signUp {
+      id
+      participationStatus
+      approximatePositionOnWaitList
+    }
   }
 `);
 
@@ -114,7 +119,9 @@ export const Actions: React.FC<Props> = (props) => {
     event.signUpAvailability === SignUpAvailability.OnWaitlist;
   const isAttending = event.signUpAvailability === SignUpAvailability.Confirmed;
   const signUpOpen = dayjs().isBetween(event.signUpDetails?.signUpsStartAt, event.signUpDetails?.signUpsEndAt);
-  const disabled = (isAttending && !event.signUpsRetractable) || !signUpOpen;
+  const missingUserProvidedInformation =
+    !isSignedUp && event.signUpsRequireUserProvidedInformation && !extraInformation;
+  const disabled = (isAttending && !event.signUpsRetractable) || !signUpOpen || missingUserProvidedInformation;
 
   function handleSignUp() {
     signUp({
@@ -160,7 +167,11 @@ export const Actions: React.FC<Props> = (props) => {
             permission={FeaturePermission.EventWriteSignUps}
             fallback={<Typography>Arrangementet er kun åpent for Indøk</Typography>}
           >
-            <Tooltip title={false && "Fyll in ekstra informasjon før påmelding"} placement="bottom" arrow>
+            <Tooltip
+              title={missingUserProvidedInformation && "Fyll in ekstra informasjon før påmelding"}
+              placement="bottom"
+              arrow
+            >
               <span>
                 <SignUpButton
                   disabled={disabled}

@@ -1,6 +1,6 @@
 import { Alert, Button } from "@mui/material";
 
-import { NextLinkComposed } from "@/components/Link";
+import Link, { NextLinkComposed } from "@/components/Link";
 
 type Props = {
   hasBoughtTicket?: boolean | null;
@@ -11,7 +11,7 @@ export const PaymentStatus: React.FC<Props> = ({ hasBoughtTicket, orderId }) => 
   if (hasBoughtTicket)
     return (
       <Alert color="success" variant="outlined">
-        Du har betalt for billetten.
+        Du har betalt for billetten. <Link href={`/receipt/${orderId}`}>Se kvittering</Link>
       </Alert>
     );
   return (

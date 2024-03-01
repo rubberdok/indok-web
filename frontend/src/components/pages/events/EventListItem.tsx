@@ -13,6 +13,9 @@ const EventListItemFragment = graphql(`
     description
     startAt
     signUpAvailability
+    signUpDetails {
+      signUpsStartAt
+    }
   }
 `);
 
@@ -47,7 +50,10 @@ export const EventListItem: React.FC<Props> = (props) => {
 
               <Typography variant="body2">{event.description || "Trykk for å lese mer"}</Typography>
             </Stack>
-            <StatusChip signUpAvailability={event.signUpAvailability} />
+            <StatusChip
+              signUpAvailability={event.signUpAvailability}
+              signUpsStartAt={event.signUpDetails?.signUpsStartAt}
+            />
           </Stack>
         </CardContent>
       </CardActionArea>
@@ -57,9 +63,10 @@ export const EventListItem: React.FC<Props> = (props) => {
 
 type StatusChipProps = {
   signUpAvailability: SignUpAvailability;
+  signUpsStartAt?: string | null;
 };
 
-function StatusChip({ signUpAvailability }: StatusChipProps): React.ReactElement | null {
+function StatusChip({ signUpAvailability, signUpsStartAt }: StatusChipProps): React.ReactElement | null {
   switch (signUpAvailability) {
     case SignUpAvailability.Confirmed:
       return <Chip label="Påmeldt" variant="outlined" color="primary" />;
@@ -74,6 +81,6 @@ function StatusChip({ signUpAvailability }: StatusChipProps): React.ReactElement
     case SignUpAvailability.Unavailable:
       return null;
     case SignUpAvailability.NotOpen:
-      return <Chip label={`Påmelding åpner ${dayjs().format("DD. MMMM [kl.] HH:mm")}`} />;
+      return <Chip label={`Påmelding åpner ${dayjs(signUpsStartAt).format("DD. MMMM [kl.] HH:mm")}`} />;
   }
 }
