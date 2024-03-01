@@ -9,7 +9,7 @@ export const EventCard: React.VFC = ({ ...props }) => {
     <ProfileCardBase
       title="Arrangementer"
       actionText="Se arrangementer"
-      actionLink="/events"
+      actionLink="/profile/events"
       image={Event}
       alt=""
       {...props}

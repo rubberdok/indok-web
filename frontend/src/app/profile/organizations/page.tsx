@@ -30,7 +30,7 @@ export default function Page() {
   const { organizations } = data.user.user;
   return (
     <Container>
-      <Typography variant="h3" component="h1">
+      <Typography variant="subtitle1" component="h1">
         Dine foreninger
       </Typography>
       {organizations.map((organization) => (

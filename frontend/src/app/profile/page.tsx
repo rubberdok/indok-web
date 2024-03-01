@@ -2,19 +2,15 @@
 
 import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { graphql } from "@/gql/app";
-import { config } from "@/utils/config";
 
 import { PermissionRequired } from "../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
-import { CabinsAdmin, Event, Form, Orders, Organization, Personal, Report } from "./components/ProfileCard";
-
-// Opt out of caching for all data requests in the route segment
-export const dynamic = "force-dynamic";
+import { CabinsAdmin, Event, Orders, Organization, Personal, Report } from "./components/ProfileCard";
 
 // Returns a string with the first letter of the given first name,
 // and the first letter of the last space-separated part of lastName.
@@ -46,6 +42,10 @@ export default function ProfilePage() {
             firstName
             lastName
             gradeYear
+            studyProgram {
+              id
+              name
+            }
           }
         }
       }
@@ -69,10 +69,7 @@ export default function ProfilePage() {
     `)
   );
 
-  // If the user is not logged in, redirect to the login page
-  const loginUrl = new URL("/auth/login", config.API_URL);
-  loginUrl.searchParams.set("redirect", `${config.FRONTEND_URI}/profile`);
-  if (data.user.user === null) return redirect(loginUrl.toString());
+  if (!data.user.user) return notFound();
   const { user } = data.user;
   const initials = getUserInitials(user.firstName, user.lastName);
 
@@ -119,9 +116,6 @@ export default function ProfilePage() {
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
             <Organization data-test-id={`${ID_PREFIX}organization-`} />
-          </Grid>
-          <Grid item xs={12} md={6} lg={5}>
-            <Form data-test-id={`${ID_PREFIX}form-`} />
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
             <Report data-test-id={`${ID_PREFIX}report-`} />

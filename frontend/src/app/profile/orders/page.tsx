@@ -45,7 +45,7 @@ export default function Page() {
 
       <Stack spacing={2}>
         {orders.map((order) => (
-          <Card elevation={0} sx={{ bgcolor: "grey.100" }}>
+          <Card>
             <CardHeader
               title={order.product.name}
               subheader={

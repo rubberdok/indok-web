@@ -9,6 +9,9 @@ type Props = {
     firstName: string;
     lastName: string;
     gradeYear: number | null;
+    studyProgram: {
+      name: string;
+    } | null;
   };
   "data-test-id"?: string;
 };
@@ -46,6 +49,11 @@ export const PersonalCard: React.FC<Props> = ({ user, "data-test-id": dataTestId
             </Skeleton>
           )}
         </Grid>
+        {user?.studyProgram && (
+          <Grid item>
+            <Typography variant="body2">{user.studyProgram.name}</Typography>
+          </Grid>
+        )}
       </Grid>
     </ProfileCardBase>
   );
