@@ -12,7 +12,7 @@ export const { getClient } = registerApolloClient(() => {
     cache: new InMemoryCache(),
     link: new HttpLink({
       headers: {
-        cookies: cookieStore.toString(),
+        Cookie: cookieStore.toString(),
       },
       credentials: "include",
       uri: config.GRAPHQL_ENDPOINT,

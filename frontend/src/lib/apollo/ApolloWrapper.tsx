@@ -22,7 +22,7 @@ function getMakeClientHandler(cookies: string) {
       fetchOptions: { cache: "no-store" },
       credentials: "include",
       headers: {
-        cookies: cookies,
+        Cookie: cookies,
       },
     });
 
@@ -31,7 +31,7 @@ function getMakeClientHandler(cookies: string) {
       cache: new NextSSRInMemoryCache(),
       connectToDevTools: true,
       headers: {
-        cookies: cookies,
+        Cookie: cookies,
       },
       link:
         typeof window === "undefined"

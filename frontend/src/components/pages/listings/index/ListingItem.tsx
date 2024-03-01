@@ -1,6 +1,7 @@
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 
 import { Link } from "@/components";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
 
 const timestamp = (datetime: string) => {
@@ -15,15 +16,20 @@ const timestamp = (datetime: string) => {
 };
 
 type Props = {
-  listing: {
-    id: string;
-    name: string;
-    closesAt: string;
-  };
+  listing: FragmentType<typeof ListingFragment>;
 };
 
+const ListingFragment = graphql(`
+  fragment ListingItem_Listing on Listing {
+    id
+    name
+    closesAt
+  }
+`);
+
 /** Component for listing item in overview of listings. */
-export const ListingItem: React.FC<Props> = ({ listing }) => {
+export const ListingItem: React.FC<Props> = (props) => {
+  const listing = getFragmentData(ListingFragment, props.listing);
   return (
     <Card sx={{ width: "100%", height: "100%" }}>
       <CardActionArea
