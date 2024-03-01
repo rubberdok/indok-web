@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <Card elevation={0} sx={{ bgcolor: "background.elevated" }}>
+    <Card>
       <CardHeader title="Ny vervutlysning" />
       <CardContent>
         <NewListing />

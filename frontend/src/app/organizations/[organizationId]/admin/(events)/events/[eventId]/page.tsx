@@ -74,7 +74,7 @@ export default function Page({ params }: { params: { organizationId: string; eve
     <>
       <Grid container justifyContent="center">
         <Grid md={6}>
-          <Card elevation={0} sx={{ bgcolor: "background.elevated" }}>
+          <Card>
             <CardHeader title={event.name} />
             <CardContent>
               <Stack direction="column" spacing={1}>

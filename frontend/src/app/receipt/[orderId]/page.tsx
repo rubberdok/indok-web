@@ -10,7 +10,7 @@ export default function Page({ params }: { params: { orderId: string } }) {
   const searchParams = useSearchParams();
   const reference = searchParams?.get("reference");
 
-  const { data, startPolling, stopPolling } = useQuery(
+  const { data, stopPolling } = useQuery(
     graphql(`
       query ReceiptPage_Order($data: OrderInput!, $reference: String) {
         order(data: $data) {
@@ -28,6 +28,11 @@ export default function Page({ params }: { params: { orderId: string } }) {
               reference
               isFinalState
             }
+            capturedPaymentAttempt {
+              id
+              state
+              reference
+            }
             paymentStatus
             totalPrice {
               value
@@ -39,13 +44,12 @@ export default function Page({ params }: { params: { orderId: string } }) {
       }
     `),
     {
+      pollInterval: 1_000,
       variables: { data: { id: params.orderId }, reference: reference ?? null },
       onCompleted(data) {
         const { order } = data.order;
         if (order.isFinalState) {
           stopPolling();
-        } else {
-          startPolling(1_000);
         }
       },
     }
@@ -72,16 +76,19 @@ export default function Page({ params }: { params: { orderId: string } }) {
   return (
     <>
       <Container maxWidth="sm">
-        <Card elevation={0}>
+        <Card elevation={0} sx={{ bgcolor: "background.elevated" }}>
           <CardHeader title="Betaling" subheader={data?.order.order.product.name} />
           <CardContent>
-            <Stack direction="column" alignItems="center">
+            <Stack direction="column" alignItems="flex-start">
               <Typography variant="subtitle1">{data?.order.order.product.name}</Typography>
               <Typography variant="subtitle2">Total Price: {data?.order.order.totalPrice.valueInNok}</Typography>
               <Typography variant="subtitle2">Payment Status: {data?.order.order.paymentStatus}</Typography>
               <Typography variant="subtitle2">Status: {paymentAttemptState}</Typography>
               <Typography variant="subtitle2">Purchased at: {data?.order.order.purchasedAt}</Typography>
-              {!data?.order.order.paymentAttempt?.isFinalState && <CircularProgress />}
+              <Typography variant="subtitle2">
+                Betalingsreferanse: {data?.order.order.capturedPaymentAttempt?.reference}
+              </Typography>
+              {data?.order.order.paymentAttempt?.isFinalState === false && <CircularProgress />}
             </Stack>
           </CardContent>
         </Card>

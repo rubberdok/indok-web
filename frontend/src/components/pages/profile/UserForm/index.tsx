@@ -11,6 +11,7 @@ import {
   Grid,
   InputLabel,
   NativeSelect,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -210,14 +211,13 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
               <Typography variant="subtitle2">Studieinformasjon</Typography>
             </Grid>
             <Grid item>
-              <FormControl variant="standard">
+              <FormControl>
                 <InputLabel htmlFor="graduationYear" shrink={true}>
                   Uteksamineringsår
                 </InputLabel>
-                <NativeSelect
+                <Select
                   {...register("graduationYear")}
                   required
-                  variant="filled"
                   error={Boolean(errors.graduationYear)}
                   data-test-id={`${ID_PREFIX}graduationYearSelect`}
                   disabled={!user?.canUpdateYear}
@@ -227,7 +227,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                       {`${year} (${currentGradeYear(year)}. klasse)`}
                     </option>
                   ))}
-                </NativeSelect>
+                </Select>
                 {Boolean(errors.graduationYear) && (
                   <FormHelperText sx={{ color: (theme) => theme.vars.palette.error.main }}>
                     errors.phoneNumber?.message
