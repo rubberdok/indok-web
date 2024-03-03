@@ -153,6 +153,7 @@ function UserForm({ onSubmit, "data-test-id": dataTestId, onCancel, ...props }: 
                 </InputLabel>
                 <Select
                   {...register("graduationYear")}
+                  label="Uteksamineringsår"
                   labelId="graduation-year-select-label"
                   id="graduation-year-select"
                   native

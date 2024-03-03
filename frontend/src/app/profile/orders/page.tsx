@@ -1,5 +1,6 @@
 "use client";
 
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { Link } from "@/app/components/Link";
 import { graphql } from "@/gql/app";
 import { OrderPaymentStatus } from "@/gql/app/graphql";
@@ -38,68 +39,77 @@ export default function Page() {
   const { orders } = data.orders;
 
   return (
-    <Container maxWidth="sm">
+    <Container>
+      <Breadcrumbs
+        links={[
+          { href: "/", name: "Hjem" },
+          { href: "/profile", name: "Profil" },
+          { href: "/profile/orders", name: "Ordrehistorikk" },
+        ]}
+      />
       <Typography variant="subtitle1" component="h1" gutterBottom>
         Ordrehistorikk
       </Typography>
 
-      <Stack spacing={2}>
-        {orders.map((order) => (
-          <Card>
-            <CardHeader
-              title={order.product.name}
-              subheader={
-                <Stack>
-                  <div>Ordrenummer: {order.id}</div>
-                  {order.capturedPaymentAttempt && (
-                    <div>
-                      Betalingsreferanse:{" "}
-                      <Link href={`/receipt/${order.id}?reference=${order.capturedPaymentAttempt.reference}`}>
-                        {order.capturedPaymentAttempt.reference}
-                      </Link>
-                    </div>
-                  )}
-                </Stack>
-              }
-            />
-            <CardContent>
-              <Grid container direction="row">
-                <Grid>
-                  <Typography>Totalpris:</Typography>
-                </Grid>
-                <Grid xs>
-                  <Typography textAlign="right">{order.totalPrice.valueInNok} kr</Typography>
-                </Grid>
-              </Grid>
-              <Grid container direction="row">
-                <Grid>
-                  <Typography>Bestillingstidspunkt:</Typography>
-                </Grid>
-                <Grid xs>
-                  <Typography textAlign="right">{dayjs(order.createdAt).format("LLL")}</Typography>
-                </Grid>
-              </Grid>
-              {order.purchasedAt && (
+      <Stack direction="row" justifyContent="center">
+        <Stack spacing={2} maxWidth={(theme) => theme.breakpoints.values.sm} width="100%">
+          {orders.map((order) => (
+            <Card>
+              <CardHeader
+                title={order.product.name}
+                subheader={
+                  <Stack>
+                    <div>Ordrenummer: {order.id}</div>
+                    {order.capturedPaymentAttempt && (
+                      <div>
+                        Betalingsreferanse:{" "}
+                        <Link href={`/receipt/${order.id}?reference=${order.capturedPaymentAttempt.reference}`}>
+                          {order.capturedPaymentAttempt.reference}
+                        </Link>
+                      </div>
+                    )}
+                  </Stack>
+                }
+              />
+              <CardContent>
                 <Grid container direction="row">
                   <Grid>
-                    <Typography>Betalingstidspunkt:</Typography>
+                    <Typography>Totalpris:</Typography>
                   </Grid>
                   <Grid xs>
-                    <Typography textAlign="right">{dayjs(order.purchasedAt).format("LLL")} kr</Typography>
+                    <Typography textAlign="right">{order.totalPrice.valueInNok} kr</Typography>
                   </Grid>
                 </Grid>
-              )}
-              <Grid container direction="row">
-                <Grid>
-                  <Typography>Status:</Typography>
+                <Grid container direction="row">
+                  <Grid>
+                    <Typography>Bestillingstidspunkt:</Typography>
+                  </Grid>
+                  <Grid xs>
+                    <Typography textAlign="right">{dayjs(order.createdAt).format("LLL")}</Typography>
+                  </Grid>
                 </Grid>
-                <Grid xs>
-                  <Typography textAlign="right">{getStatus(order.paymentStatus)}</Typography>
+                {order.purchasedAt && (
+                  <Grid container direction="row">
+                    <Grid>
+                      <Typography>Betalingstidspunkt:</Typography>
+                    </Grid>
+                    <Grid xs>
+                      <Typography textAlign="right">{dayjs(order.purchasedAt).format("LLL")} kr</Typography>
+                    </Grid>
+                  </Grid>
+                )}
+                <Grid container direction="row">
+                  <Grid>
+                    <Typography>Status:</Typography>
+                  </Grid>
+                  <Grid xs>
+                    <Typography textAlign="right">{getStatus(order.paymentStatus)}</Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
+        </Stack>
       </Stack>
     </Container>
   );
