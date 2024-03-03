@@ -218,6 +218,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                 <Select
                   {...register("graduationYear")}
                   required
+                  label="Uteksamineringsår"
                   error={Boolean(errors.graduationYear)}
                   data-test-id={`${ID_PREFIX}graduationYearSelect`}
                   disabled={!user?.canUpdateYear}

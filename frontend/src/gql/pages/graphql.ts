@@ -82,6 +82,10 @@ export type Cabin = {
   name: Scalars['String']['output'];
 };
 
+export type CabinInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type CabinsResponse = {
   __typename?: 'CabinsResponse';
   cabins: Array<Cabin>;
@@ -640,7 +644,9 @@ export type NewBookingInput = {
   cabins: Array<NewBookingCabinInput>;
   email: Scalars['String']['input'];
   endDate: Scalars['DateTime']['input'];
+  externalParticipantsCount: Scalars['Int']['input'];
   firstName: Scalars['String']['input'];
+  internalParticipantsCount: Scalars['Int']['input'];
   lastName: Scalars['String']['input'];
   phoneNumber: Scalars['String']['input'];
   startDate: Scalars['DateTime']['input'];
@@ -678,6 +684,11 @@ export type Order = {
 export type OrderPaymentAttemptArgs = {
   reference: InputMaybe<Scalars['String']['input']>;
 };
+
+export enum OrderBy {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
 
 export type OrderInput = {
   id: Scalars['ID']['input'];
@@ -748,6 +759,11 @@ export type OrganizationReseponse = {
 export type OrganizationsResponse = {
   __typename?: 'OrganizationsResponse';
   organizations: Array<Organization>;
+};
+
+export type ParticipantsInput = {
+  external: Scalars['Int']['input'];
+  internal: Scalars['Int']['input'];
 };
 
 export enum ParticipationStatus {
@@ -846,9 +862,20 @@ export type PrivateUser = {
   /** All organizations the user is a member of */
   organizations: Array<Organization>;
   phoneNumber: Maybe<Scalars['String']['output']>;
+  /** The users' sign ups */
+  signUps: UserSignUps;
   /** The users' study program */
   studyProgram: Maybe<StudyProgram>;
   username: Scalars['String']['output'];
+};
+
+
+/**
+ * PrivateUser should only be used when accessed by the authenticated user themselves
+ * as it contains sensitive information.
+ */
+export type PrivateUserSignUpsArgs = {
+  data: InputMaybe<UserSignUpsInput>;
 };
 
 export type Product = {
@@ -916,6 +943,7 @@ export type Query = {
   paymentAttempts: PaymentAttemptsResponse;
   products: ProductResponse;
   serverTime: ServerTimeResponse;
+  totalCost: TotalCostResponse;
   user: UserResponse;
   users: UsersResponse;
 };
@@ -963,6 +991,11 @@ export type QueryOrganizationArgs = {
 
 export type QueryPaymentAttemptsArgs = {
   data: InputMaybe<PaymentAttemptsInput>;
+};
+
+
+export type QueryTotalCostArgs = {
+  data: TotalCostInput;
 };
 
 export type RemoveMemberInput = {
@@ -1015,6 +1048,8 @@ export type SignUp = {
    * factors, this is a naive approximation and should not be relied upon for anything other than a rough estimate.
    */
   approximatePositionOnWaitList: Maybe<Scalars['Int']['output']>;
+  /** The time the user signed up for the event */
+  createdAt: Scalars['DateTime']['output'];
   /** The event the user signed up for */
   event: Event;
   id: Scalars['ID']['output'];
@@ -1114,6 +1149,18 @@ export type SuperUpdateUserInput = {
 export type SuperUpdateUserResponse = {
   __typename?: 'SuperUpdateUserResponse';
   user: PrivateUser;
+};
+
+export type TotalCostInput = {
+  cabins: Array<CabinInput>;
+  endDate: Scalars['DateTime']['input'];
+  participants: ParticipantsInput;
+  startDate: Scalars['DateTime']['input'];
+};
+
+export type TotalCostResponse = {
+  __typename?: 'TotalCostResponse';
+  totalCost: Scalars['Int']['output'];
 };
 
 export type UpdateBookingContactInput = {
@@ -1273,6 +1320,17 @@ export type UpdateUserResponse = {
 export type UserResponse = {
   __typename?: 'UserResponse';
   user: Maybe<PrivateUser>;
+};
+
+export type UserSignUps = {
+  __typename?: 'UserSignUps';
+  signUps: Array<SignUp>;
+  total: Scalars['Int']['output'];
+};
+
+export type UserSignUpsInput = {
+  orderBy: InputMaybe<OrderBy>;
+  participationStatus: InputMaybe<ParticipationStatus>;
 };
 
 export type UsersResponse = {

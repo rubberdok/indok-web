@@ -8,7 +8,7 @@ const config: CodegenConfig = {
       
       documents: ["src/(pages|components|layouts)/**/*.{ts,tsx}"],
       preset: "client-preset",
-      config: {
+      config: { 
         avoidOptionals: true,
       },
       presetConfig: {

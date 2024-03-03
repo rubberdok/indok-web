@@ -143,7 +143,7 @@ function NewListing() {
         render={({ field }) => (
           <FormControl variant="filled" required fullWidth error={Boolean(errors.organizationId)}>
             <InputLabel>Forening</InputLabel>
-            <Select {...field} native>
+            <Select {...field} native label="Forening">
               {organizations.map((organization) => (
                 <option key={organization.id} value={organization.id}>
                   {organization.name}

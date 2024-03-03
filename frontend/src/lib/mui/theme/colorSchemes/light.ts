@@ -41,7 +41,7 @@ export const light: PaletteOptions = {
     contrastText: "#fff",
   },
   background: {
-    elevated: "#f0f0f0",
+    elevated: "#f5f5f7",
     default: "#fff",
     paper: "#fff",
   },
