@@ -11,7 +11,10 @@ import { config } from "@/utils/config";
 import { AlertsWrapper } from "./components/Alerts";
 
 export const metadata: Metadata = {
-  title: "Indøk NTNU | Janus Linjeforening",
+  title: {
+    template: "%s | Janus Linjeforening",
+    default: "Janus Linjeforening",
+  },
 };
 
 if (config.APP_ENV === "development") {
