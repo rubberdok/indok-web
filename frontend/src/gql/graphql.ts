@@ -439,6 +439,12 @@ export type DeleteQuestion = {
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type DeliveredProduct = {
+  __typename?: 'DeliveredProduct';
+  ok: Maybe<Scalars['Boolean']['output']>;
+  order: Maybe<OrderType>;
+};
+
 export type EmailInput = {
   cabins: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn: InputMaybe<Scalars['Date']['input']>;
@@ -627,6 +633,7 @@ export type Mutations = {
   deleteListing: Maybe<DeleteListing>;
   deleteOrganization: Maybe<DeleteOrganization>;
   deleteQuestion: Maybe<DeleteQuestion>;
+  deliveredProduct: Maybe<DeliveredProduct>;
   /**
    * Sets the field is_attending to False in the Sign Up for the user that
    * sent the request, for the event with the given ID
@@ -820,6 +827,11 @@ export type MutationsDeleteQuestionArgs = {
 };
 
 
+export type MutationsDeliveredProductArgs = {
+  orderId: Scalars['ID']['input'];
+};
+
+
 export type MutationsEventSignOffArgs = {
   eventId: Scalars['ID']['input'];
 };
@@ -947,7 +959,7 @@ export type OptionType = {
 
 export type OrderType = {
   __typename?: 'OrderType';
-  delivered: Scalars['Boolean']['output'];
+  deliveredProduct: Scalars['Boolean']['output'];
   id: Scalars['UUID']['output'];
   paymentStatus: PaymentStatus;
   product: ProductType;

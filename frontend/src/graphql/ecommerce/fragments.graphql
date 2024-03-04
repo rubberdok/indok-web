@@ -13,7 +13,7 @@ fragment Order on OrderType {
   totalPrice
   paymentStatus
   timestamp
-  delivered
+  deliveredProduct
   product {
     ...Product
   }

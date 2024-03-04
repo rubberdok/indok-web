@@ -1,7 +1,7 @@
 import graphene
 from graphene import NonNull
 
-from .mutations import AttemptCapturePayment, CreateProduct, InitiateOrder
+from .mutations import AttemptCapturePayment, CreateProduct, DeliveredProduct, InitiateOrder
 from .resolvers import EcommerceResolvers
 from .types import OrdersByStatusType, OrderType, ProductType
 
@@ -10,6 +10,7 @@ class EcommerceMutations(graphene.ObjectType):
     initiate_order = InitiateOrder.Field()
     attempt_capture_payment = AttemptCapturePayment.Field()
     create_product = CreateProduct.Field()
+    delivered_product = DeliveredProduct.Field()
 
 
 class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):

@@ -35,7 +35,7 @@ class OrderType(DjangoObjectType):
             "total_price",
             "payment_status",
             "timestamp",
-            "delivered",
+            "delivered_product",
         ]
 
 
