@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Divider, Grid } from "@mui/material";
+import { Box, Container } from "@mui/material";
 
 import { BlogPostType } from "./BlogPostType";
 import BlogPost from "./components/BlogPost";
@@ -13,10 +13,11 @@ const Blog = () => {
       description:
         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias aspernatur odit a impedit ad doloribus aut distinctio, illo, ipsa libero mollitia nulla, error voluptatum rem nisi facere dolorem molestias commodi!",
       author: "Mr. Lysen",
-      date: "1998-40-01"
+      date: "1998-40-01",
     },
     {
-      imageURL: "https://img.freepik.com/free-photo/cute-domestic-kitten-sits-window-staring-outside-generative-ai_188544-12519.jpg",
+      imageURL:
+        "https://img.freepik.com/free-photo/cute-domestic-kitten-sits-window-staring-outside-generative-ai_188544-12519.jpg",
       title: "tittel 2",
       description:
         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias aspernatur odit a impedit ad doloribus aut distinctio, illo, ipsa libero mollitia nulla, error voluptatum rem nisi facere dolorem molestias commodi!",
@@ -27,15 +28,12 @@ const Blog = () => {
 
   return (
     <div>
-      <Container>
-        <Grid container direction={"column"}>
+      <Container sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ width: "70%" }}>
           {blogPosts.map((post: BlogPostType, index: number) => (
-            <div>
-              <BlogPost post={post} key={index} />
-              <Divider />
-            </div>
+            <BlogPost post={post} key={index} />
           ))}
-        </Grid>
+        </Box>
       </Container>
     </div>
   );
