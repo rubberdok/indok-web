@@ -168,25 +168,6 @@ export type BaseQuestionInput = {
   questionType: InputMaybe<QuestionTypeEnum>;
 };
 
-export type BlogPostType = {
-  __typename?: 'BlogPostType';
-  author: Maybe<UserType>;
-  blog: Maybe<BlogType>;
-  id: Scalars['ID']['output'];
-  publishDate: Scalars['DateTime']['output'];
-  text: Scalars['String']['output'];
-  title: Scalars['String']['output'];
-};
-
-export type BlogType = {
-  __typename?: 'BlogType';
-  blogPosts: Array<BlogPostType>;
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  organization: Maybe<OrganizationType>;
-};
-
 /** Basic booking object type used as a base for other types and as a standalone */
 export type BookingInput = {
   cabins: InputMaybe<Array<Scalars['Int']['input']>>;
@@ -235,18 +216,6 @@ export type CategoryType = {
 export type CreateArchiveDocument = {
   __typename?: 'CreateArchiveDocument';
   arhiveDocument: Maybe<ArchiveDocumentType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type CreateBlog = {
-  __typename?: 'CreateBlog';
-  blog: Maybe<BlogType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type CreateBlogPost = {
-  __typename?: 'CreateBlogPost';
-  blogPost: Maybe<BlogPostType>;
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -380,16 +349,6 @@ export type DeleteAnswersToForm = {
 export type DeleteArchiveDocument = {
   __typename?: 'DeleteArchiveDocument';
   archiveDocument: Maybe<ArchiveDocumentType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type DeleteBlog = {
-  __typename?: 'DeleteBlog';
-  ok: Maybe<Scalars['ID']['output']>;
-};
-
-export type DeleteBlogPost = {
-  __typename?: 'DeleteBlogPost';
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -596,8 +555,6 @@ export type Mutations = {
   attemptCapturePayment: Maybe<AttemptCapturePayment>;
   authUser: AuthUser;
   createArchivedocument: Maybe<CreateArchiveDocument>;
-  createBlog: Maybe<CreateBlog>;
-  createBlogPost: Maybe<CreateBlogPost>;
   /** Add a new booking to the database */
   createBooking: Maybe<CreateBooking>;
   /** Create a new event category */
@@ -614,8 +571,6 @@ export type Mutations = {
   deleteAnswer: Maybe<DeleteAnswer>;
   deleteAnswers: Maybe<DeleteAnswersToForm>;
   deleteArchivedocument: Maybe<DeleteArchiveDocument>;
-  deleteBlog: Maybe<DeleteBlog>;
-  deleteBlogPost: Maybe<DeleteBlogPost>;
   /** Deletes the booking with the given ID */
   deleteBooking: Maybe<DeleteBooking>;
   /** Deletes the category with a given ID */
@@ -647,8 +602,6 @@ export type Mutations = {
   sendEventMails: Maybe<SendEventEmails>;
   submitAnswers: Maybe<SubmitOrUpdateAnswers>;
   updateArchivedocument: Maybe<UpdateArchiveDocument>;
-  updateBlog: Maybe<UpdateBlog>;
-  updateBlogPost: Maybe<UpdateBlogPost>;
   /** Change the given booking */
   updateBooking: Maybe<UpdateBooking>;
   /** Update the booking semester */
@@ -694,21 +647,6 @@ export type MutationsCreateArchivedocumentArgs = {
   title: InputMaybe<Scalars['String']['input']>;
   typeDoc: InputMaybe<Scalars['String']['input']>;
   webLink: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationsCreateBlogArgs = {
-  description: InputMaybe<Scalars['String']['input']>;
-  name: InputMaybe<Scalars['String']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsCreateBlogPostArgs = {
-  authorId: InputMaybe<Scalars['ID']['input']>;
-  blogId: InputMaybe<Scalars['ID']['input']>;
-  text: InputMaybe<Scalars['String']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -772,16 +710,6 @@ export type MutationsDeleteAnswersArgs = {
 
 export type MutationsDeleteArchivedocumentArgs = {
   id: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteBlogArgs = {
-  blogId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsDeleteBlogPostArgs = {
-  blogPostId: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -864,16 +792,6 @@ export type MutationsUpdateArchivedocumentArgs = {
   title: InputMaybe<Scalars['String']['input']>;
   typeDoc: InputMaybe<Scalars['String']['input']>;
   webLink: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationsUpdateBlogArgs = {
-  blogData: InputMaybe<UpdateBlogInput>;
-};
-
-
-export type MutationsUpdateBlogPostArgs = {
-  blogPostData: InputMaybe<UpdateBlogPostInput>;
 };
 
 
@@ -1011,8 +929,6 @@ export type Queries = {
   __typename?: 'Queries';
   activeBookingResponsible: Maybe<BookingResponsibleType>;
   adminAllBookings: Maybe<Array<AdminBookingType>>;
-  allBlogPosts: Maybe<Array<BlogPostType>>;
-  allBlogs: Maybe<Array<BlogType>>;
   allBookings: Maybe<Array<AllBookingsType>>;
   allCategories: Maybe<Array<CategoryType>>;
   allEvents: Maybe<Array<EventType>>;
@@ -1023,8 +939,6 @@ export type Queries = {
   attendeeReportOrg: Maybe<Scalars['String']['output']>;
   attendeeReports: Maybe<Scalars['String']['output']>;
   availableYears: Array<Scalars['String']['output']>;
-  blog: Maybe<BlogType>;
-  blogPost: Maybe<BlogPostType>;
   bookingSemester: Maybe<UpdateBookingSemesterType>;
   cabins: Maybe<Array<CabinType>>;
   category: Maybe<CategoryType>;
@@ -1097,16 +1011,6 @@ export type QueriesAttendeeReportsArgs = {
   eventIds: Array<Scalars['ID']['input']>;
   fields: InputMaybe<Array<Scalars['String']['input']>>;
   filetype: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueriesBlogArgs = {
-  blogId: Scalars['ID']['input'];
-};
-
-
-export type QueriesBlogPostArgs = {
-  blogPostId: Scalars['ID']['input'];
 };
 
 
@@ -1282,32 +1186,6 @@ export type UpdateArchiveDocument = {
   __typename?: 'UpdateArchiveDocument';
   event: Maybe<ArchiveDocumentType>;
   ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateBlog = {
-  __typename?: 'UpdateBlog';
-  blog: Maybe<BlogType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateBlogInput = {
-  description: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  name: InputMaybe<Scalars['String']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type UpdateBlogPost = {
-  __typename?: 'UpdateBlogPost';
-  blogPost: Maybe<BlogPostType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type UpdateBlogPostInput = {
-  blogId: InputMaybe<Scalars['ID']['input']>;
-  id: Scalars['ID']['input'];
-  text: InputMaybe<Scalars['String']['input']>;
-  title: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Change the given booking */
