@@ -1,8 +1,9 @@
 "use client";
 
+import { useAlerts } from "@/app/components/Alerts";
 import { getFragmentData, graphql } from "@/gql/app";
 import { EventType, OrderPaymentStatus } from "@/gql/app/graphql";
-import { useSuspenseQuery } from "@apollo/client";
+import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { Cancel, CheckCircle, MoreVert } from "@mui/icons-material";
 import {
   Card,
@@ -69,6 +70,12 @@ export default function Page({ params }: { params: { organizationId: string; eve
                   ...OrganizationsAdminEventsSignUpsPage_SignUp
                 }
               }
+              removed {
+                total
+                signUps {
+                  ...OrganizationsAdminEventsSignUpsPage_SignUp
+                }
+              }
             }
           }
         }
@@ -81,6 +88,7 @@ export default function Page({ params }: { params: { organizationId: string; eve
   const confirmedSignUps = getFragmentData(SignUpFragment, event.signUps?.confirmed.signUps);
   const waitListSignUps = getFragmentData(SignUpFragment, event.signUps?.waitList.signUps);
   const retractedSignUps = getFragmentData(SignUpFragment, event.signUps?.retracted.signUps);
+  const removedSignUps = getFragmentData(SignUpFragment, event.signUps?.removed.signUps);
 
   return (
     <Stack direction="column" spacing={3}>
@@ -194,6 +202,39 @@ export default function Page({ params }: { params: { organizationId: string; eve
           </Table>
         </TableContainer>
       </Card>
+
+      <Card sx={{ overflow: "hidden" }}>
+        <TableContainer sx={{ maxHeight: 500, minHeight: 300 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Navn</TableCell>
+                <TableCell>Brukernavn (NTNU)</TableCell>
+                <TableCell>E-post</TableCell>
+                <TableCell>Telefonnummer</TableCell>
+                <TableCell>Klasse</TableCell>
+                <TableCell align="right">Påmeldingstidspunkt</TableCell>
+                <TableCell align="right">Avmeldingstidspunkt</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {removedSignUps?.map((signUp) => (
+                <TableRow key={signUp.id}>
+                  <TableCell>
+                    {signUp.user.firstName} {signUp.user.lastName}
+                  </TableCell>
+                  <TableCell>{signUp.user.username}</TableCell>
+                  <TableCell>{signUp.user.firstName}</TableCell>
+                  <TableCell>{signUp.user.lastName}</TableCell>
+                  <TableCell>{signUp.user.gradeYear}. klasse</TableCell>
+                  <TableCell align="right">{dayjs(signUp.createdAt).format("DD.MM.YYYY HH:mm:ss")}</TableCell>
+                  <TableCell align="right">{dayjs(signUp.createdAt).format("DD.MM.YYYY HH:mm:ss")}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
     </Stack>
   );
 }
@@ -204,16 +245,43 @@ type SignUpActionProps = {
   };
 };
 
-function SignUpActionCell(props: SignUpActionProps) {
+function SignUpActionCell({ signUp }: SignUpActionProps) {
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
   const menuOpen = Boolean(menuAnchorEl);
+  const { notify } = useAlerts();
+
+  const [removeSignUp] = useMutation(
+    graphql(`
+      mutation OrganizationsAdminEventsSignUpsPage_RemoveSignUp($data: RemoveSignUpInput!) {
+        removeSignUp(data: $data) {
+          signUp {
+            id
+            participationStatus
+            user {
+              id
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+    `),
+    {
+      onCompleted(data) {
+        const { firstName, lastName } = data.removeSignUp.signUp.user;
+        notify({ message: `${firstName} ${lastName} er nå meldt av arrangementet`, type: "success" });
+      },
+    }
+  );
   return (
     <TableCell align="center">
       <IconButton onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
         <MoreVert />
       </IconButton>
       <Menu open={menuOpen} anchorEl={menuAnchorEl} onClose={() => setMenuAnchorEl(null)}>
-        <MenuItem>Meld av arrangementet</MenuItem>
+        <MenuItem onClick={() => removeSignUp({ variables: { data: { signUpId: signUp.id } } })}>
+          Meld av arrangementet
+        </MenuItem>
       </Menu>
     </TableCell>
   );

@@ -5,6 +5,15 @@ import { PropsWithChildren } from "react";
 import { graphql } from "@/gql/app";
 import { FeaturePermission, HasFeaturePermissionQuery } from "@/gql/app/graphql";
 
+type PermissionRequiredProps<T extends HasFeaturePermissionQuery> =
+  | BackgroundQueryProps<T>
+  | QueryPermissionRequiredProps;
+
+type SharedProps = {
+  optimistic?: boolean;
+  fallback?: React.ReactNode;
+};
+
 /**
  * Wrapper component that renders its children if the user has the given permission.
  * Permissions can either be passed as strings, or as a query reference if using `useBackgroundQuery`
@@ -12,7 +21,7 @@ import { FeaturePermission, HasFeaturePermissionQuery } from "@/gql/app/graphql"
  * be done in the background while the rest of the page is rendered.
  */
 export function PermissionRequired<T extends HasFeaturePermissionQuery>(
-  props: React.PropsWithChildren<BackgroundQueryProps<T> | PermissionRequiredProps>
+  props: React.PropsWithChildren<PermissionRequiredProps<T>>
 ) {
   if ("queryRef" in props) {
     return <BackgroundQueryPermissionRequired {...props} />;
@@ -22,7 +31,7 @@ export function PermissionRequired<T extends HasFeaturePermissionQuery>(
 
 type BackgroundQueryProps<T extends HasFeaturePermissionQuery> = {
   queryRef: QueryReference<T>;
-};
+} & SharedProps;
 
 function BackgroundQueryPermissionRequired<T extends HasFeaturePermissionQuery>(
   props: PropsWithChildren<BackgroundQueryProps<T>>
@@ -31,14 +40,16 @@ function BackgroundQueryPermissionRequired<T extends HasFeaturePermissionQuery>(
   const { data } = useReadQuery(queryRef);
 
   if (data.hasFeaturePermission) return <>{children}</>;
+  if (props.optimistic) return <>{children}</>;
+  if (props.fallback) return props.fallback;
   return null;
 }
 
-type PermissionRequiredProps = {
+type QueryPermissionRequiredProps = {
   permission: FeaturePermission;
-};
+} & SharedProps;
 
-function QueryPermissionRequired(props: PropsWithChildren<PermissionRequiredProps>) {
+function QueryPermissionRequired(props: PropsWithChildren<QueryPermissionRequiredProps>) {
   const { permission, children } = props;
   const { data } = useSuspenseQuery(
     graphql(`
@@ -59,5 +70,7 @@ function QueryPermissionRequired(props: PropsWithChildren<PermissionRequiredProp
   );
 
   if (data?.hasFeaturePermission) return <>{children}</>;
+  if (props.optimistic) return <>{children}</>;
+  if (props.fallback) return props.fallback;
   return null;
 }
