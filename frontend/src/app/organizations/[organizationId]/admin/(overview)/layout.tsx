@@ -1,10 +1,12 @@
 "use client";
 
+import { NextLinkComposed } from "@/app/components/Link";
 import { Title } from "@/components";
 import { graphql } from "@/gql/app";
 import { HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 import { useSuspenseQuery } from "@apollo/client";
-import { Container, Tab, Tabs } from "@mui/material";
+import { Settings } from "@mui/icons-material";
+import { Box, Container, IconButton, Stack, Tab, Tabs } from "@mui/material";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
 import React from "react";
 
@@ -20,6 +22,10 @@ export default function Page({ params, children }: React.PropsWithChildren<{ par
           organization {
             id
             name
+            logo {
+              id
+              url
+            }
           }
         }
       }
@@ -41,14 +47,21 @@ export default function Page({ params, children }: React.PropsWithChildren<{ par
           { name: organization.name, href: `/organizations/${organization.id}/admin` },
         ]}
         children={
-          <Tabs
-            value={activeTab}
-            onChange={(_e, value) => router.replace(`/organizations/${organizationId}/admin/${value}`)}
-          >
-            <Tab label="Arrangementer" value="events" />
-            <Tab label="Annonser" value="listings" />
-            <Tab label="Medlemmer" value="members" />
-          </Tabs>
+          <Stack direction="row" justifyContent="space-between">
+            <Tabs
+              value={activeTab}
+              onChange={(_e, value) => router.replace(`/organizations/${organizationId}/admin/${value}`)}
+            >
+              <Tab label="Arrangementer" value="events" />
+              <Tab label="Annonser" value="listings" />
+              <Tab label="Medlemmer" value="members" />
+            </Tabs>
+            <Box>
+              <IconButton component={NextLinkComposed} to={`/organizations/${organizationId}/admin/edit`}>
+                <Settings />
+              </IconButton>
+            </Box>
+          </Stack>
         }
       />
       <Container>{children}</Container>
