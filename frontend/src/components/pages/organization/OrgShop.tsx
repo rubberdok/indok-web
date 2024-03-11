@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 
-import { AdminOrganizationFragment, UserOrdersDocument } from "@/generated/graphql";
-
 import { ShopSale } from "../orgs/ShopSale";
+
+import { AdminOrganizationFragment, UserOrdersDocument } from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
@@ -13,7 +13,7 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
   if (error) return <p>Error</p>;
 
   console.log(data);
-  if ("24" !== organization.id) {
+  if ("18" !== organization.id) {
     //Janus har ID 16
     return (
       <p>

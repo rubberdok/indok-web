@@ -18,8 +18,8 @@ export const ShopSale: React.FC<Props> = ({ name, product_name, quantity, has_pa
   const [delivered, setdelivered] = useState(is_delivered);
   const [deliverProduct] = useMutation(DeliveredProductDocument);
 
-  function handle_click() {
-    setdelivered(true);
+  function handle_click(bool: boolean) {
+    setdelivered(bool);
     deliverProduct({ variables: { orderId: order_id } });
   }
   return (
@@ -45,7 +45,7 @@ export const ShopSale: React.FC<Props> = ({ name, product_name, quantity, has_pa
                 size="large"
                 disabled={delivered}
                 onClick={() => {
-                  handle_click();
+                  handle_click(true);
                 }}
               >
                 <Check />
@@ -54,7 +54,14 @@ export const ShopSale: React.FC<Props> = ({ name, product_name, quantity, has_pa
           </Tooltip>
           <Tooltip title="Angre levert status Levert">
             <Box display="inline" component="span">
-              <IconButton color="error" size="large" disabled={!delivered} onClick={() => setdelivered(false)}>
+              <IconButton
+                color="error"
+                size="large"
+                disabled={!delivered}
+                onClick={() => {
+                  handle_click(false);
+                }}
+              >
                 <Clear />
               </IconButton>
             </Box>

@@ -15,7 +15,7 @@ mutation attemptCapturePayment($orderId: ID!) {
 }
 
 mutation deliveredProduct($orderId: ID!) {
-  attemptCapturePayment(orderId: $orderId) {
+  deliveredProduct(orderId: $orderId) {
     order {
       ...Order
     }

@@ -175,19 +175,17 @@ class CreateProduct(graphene.Mutation):
 class DeliveredProduct(graphene.Mutation):
     ok = graphene.Boolean()
     order = graphene.Field(OrderType)
-    print("DeliveredProduct mutation", flush=True)
 
     class Arguments:
         order_id = graphene.ID(required=True)
 
     def mutate(self, info, order_id):
         try:
-            print(order_id, flush=True)
             order = Order.objects.get(id=order_id)
             if order.delivered_product == False:
-                setattr(order, "delivered_product", True)
+                order.delivered_product = True
             elif order.delivered_product == True:
-                setattr(order, "delivered_product", False)
+                order.delivered_product = False
             order.save()
             ok = True
         except Order.DoesNotExist:
