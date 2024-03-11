@@ -20,3 +20,9 @@ query userOrders {
     ...Order
   }
 }
+
+query allUserOrders {
+  allUserOrders {
+    ...Order
+  }
+}
