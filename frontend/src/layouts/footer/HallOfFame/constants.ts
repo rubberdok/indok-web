@@ -12,6 +12,7 @@ export const rubberdokMembers: Record<string, Member[]> = {
     { name: "Frederik Egelund Edvardsen", class: 2 },
     { name: "Hannah Köberle", class: 1 },
     { name: "Andreas Tauge", class: 1 },
+    { name: "Kristian Tveråmo Aastveit", class: 2 },
   ],
   "2022/2023": [
     { name: "Simen Sandhaug", class: 1, position: "Prosjektleder" },
