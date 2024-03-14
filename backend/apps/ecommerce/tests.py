@@ -436,7 +436,9 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
     def test_delivered_product(self) -> None:
         unique_user = IndokUserFactory()
+        order = OrderFactory(product=self.product_1, user=unique_user)
         order: Order = Order.objects.get(user=unique_user, product=self.product_1)
+
         query = f"""
             mutation DeliveredProduct {{
                 deliveredProduct(productId: {self.order.id}) {{
