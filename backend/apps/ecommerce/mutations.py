@@ -179,6 +179,7 @@ class DeliveredProduct(graphene.Mutation):
     class Arguments:
         order_id = graphene.ID(required=True)
 
+    @staff_member_required
     def mutate(self, info, order_id):
         try:
             order = Order.objects.get(id=order_id)
