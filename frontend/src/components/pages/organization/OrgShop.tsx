@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 
-import { AdminOrganizationFragment, AllUserOrdersDocument } from "@/generated/graphql";
-
 import { ShopSale } from "../orgs/ShopSale";
+
+import { AdminOrganizationFragment, AllUserOrdersDocument } from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
@@ -13,8 +13,7 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
   if (error) return <p>Error</p>;
 
   console.log(data);
-  if ("18" !== organization.id) {
-    //Janus har ID 16
+  if (organization.name !== "Janus linjeforening") {
     return (
       <p>
         Per nå har kun Janus tilgang på buttikk administrasjon. Etter hvert vil vi åpne for at flere kan bruke siden
