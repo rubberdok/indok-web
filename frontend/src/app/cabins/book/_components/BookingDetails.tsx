@@ -94,11 +94,36 @@ function BookingDetails({ bookingDetails, selectedCabins, onSubmit, onPrevious, 
           <CardContent>
             <Stack direction="column" spacing={2}>
               <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-                <TextField {...register("firstName")} label="Fornavn" autoComplete="given-name" required fullWidth />
-                <TextField {...register("lastName")} label="Etternavn" autoComplete="family-name" required fullWidth />
+                <TextField
+                  {...register("firstName")}
+                  label="Fornavn"
+                  autoComplete="given-name"
+                  required
+                  fullWidth
+                  error={Boolean(errors.firstName)}
+                  helperText={errors.firstName?.message ?? " "}
+                />
+                <TextField
+                  {...register("lastName")}
+                  label="Etternavn"
+                  autoComplete="family-name"
+                  required
+                  fullWidth
+                  error={Boolean(errors.lastName)}
+                  helperText={errors.lastName?.message ?? " "}
+                />
               </Stack>
               <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-                <TextField {...register("email")} label="E-post" autoComplete="email" type="email" required fullWidth />
+                <TextField
+                  {...register("email")}
+                  label="E-post"
+                  autoComplete="email"
+                  type="email"
+                  required
+                  fullWidth
+                  error={Boolean(errors.email)}
+                  helperText={errors.email?.message ?? " "}
+                />
                 <TextField
                   {...register("phone")}
                   label="Mobilnummer"
@@ -106,6 +131,8 @@ function BookingDetails({ bookingDetails, selectedCabins, onSubmit, onPrevious, 
                   autoComplete="tel"
                   required
                   fullWidth
+                  error={Boolean(errors.phone)}
+                  helperText={errors.phone?.message ?? " "}
                 />
               </Stack>
               <Grid container direction="row" spacing={2} alignItems="center">

@@ -1,5 +1,6 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Container, Stack, Typography } from "@mui/material";
 import { BookingDetailsFields } from "./BookingDetails";
+import { Send } from "@mui/icons-material";
 
 type Props = {
   dates: {
@@ -61,8 +62,8 @@ function Summary({ dates, selectedCabins, bookingDetails, onSubmit, onPrevious, 
         <CardActions>
           <Stack direction="row" width="100%" justifyContent="flex-end" spacing={2}>
             <Button onClick={onPrevious}>Tilbake</Button>
-            <Button onClick={onSubmit} variant="contained">
-              Bekreft
+            <Button onClick={onSubmit} variant="contained" endIcon={<Send />}>
+              Send søknad
             </Button>
           </Stack>
         </CardActions>

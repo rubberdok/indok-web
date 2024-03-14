@@ -2,14 +2,15 @@
 
 import { useAlerts } from "@/app/components/Alerts";
 import { graphql } from "@/gql/app";
-import { skipToken, useMutation, useSuspenseQuery } from "@apollo/client";
-import { MobileStepper, Stack, Step, StepLabel, Stepper } from "@mui/material";
+import { skipToken, useMutation, useQuery, useSuspenseQuery } from "@apollo/client";
+import { Stack, Step, StepLabel, Stepper } from "@mui/material";
 import { useState } from "react";
 import { BookingDetails, BookingDetailsFields } from "./_components/BookingDetails";
 import { Contract } from "./_components/Contract";
 import { PickDates } from "./_components/PickDates";
 import { Questions } from "./_components/Questions";
 import { Summary } from "./_components/Summary";
+import dayjs from "dayjs";
 
 const steps = ["Velg dato", "Kontaktinfo", "Ekstra info", "Kontrakt", "Send søknad", "Kvittering"] as const;
 
@@ -25,13 +26,18 @@ export default function Page() {
 
   const { data } = useSuspenseQuery(
     graphql(`
-      query CabinsBookPage {
+      query CabinsBookPage($calendarData: GetAvailabilityCalendarInput!) {
         cabins {
           cabins {
             id
             name
             capacity
             ...PickDates_Cabin
+          }
+        }
+        getAvailabilityCalendar(data: $calendarData) {
+          calendarMonths {
+            ...PickDates_CalendarMonth
           }
         }
         user {
@@ -45,7 +51,21 @@ export default function Page() {
         }
         ...Contract_Query
       }
-    `)
+    `),
+    {
+      variables: {
+        calendarData: {
+          count: 12,
+          month: dayjs().month() + 1,
+          year: dayjs().year(),
+          cabins: [],
+          guests: {
+            internal: 0,
+            external: 0,
+          },
+        },
+      },
+    }
   );
 
   const [bookingDetails, setBookingDetails] = useState<BookingDetailsFields>(() => {
@@ -69,6 +89,33 @@ export default function Page() {
     };
   });
 
+  const { data: getAvailabilityCalendarData, previousData } = useQuery(
+    graphql(`
+      query CabinsBookPage_GetAvailabilityCalendar($data: GetAvailabilityCalendarInput!) {
+        getAvailabilityCalendar(data: $data) {
+          calendarMonths {
+            ...PickDates_CalendarMonth
+          }
+        }
+      }
+    `),
+    {
+      variables: {
+        data: {
+          count: 12,
+          month: dayjs().month() + 1,
+          year: dayjs().year(),
+          cabins: selectedCabins.map((cabin) => ({ id: cabin.id })),
+          guests: {
+            internal: bookingDetails?.internalParticipants ?? 0,
+            external: bookingDetails?.externalParticipants ?? 0,
+          },
+        },
+      },
+      returnPartialData: true,
+    }
+  );
+
   const { data: totalCostData } = useSuspenseQuery(
     graphql(`
       query CabinsBookPageTotalCost($data: TotalCostInput!) {
@@ -84,7 +131,7 @@ export default function Page() {
               startDate: dates.start.toISOString(),
               endDate: dates.end.toISOString(),
               cabins: selectedCabins.map((cabin) => ({ id: cabin.id })),
-              participants: {
+              guests: {
                 internal: bookingDetails.internalParticipants,
                 external: bookingDetails.externalParticipants,
               },
@@ -126,11 +173,11 @@ export default function Page() {
     }
   );
 
-  function handleSelectedCabinsChanged(cabins: string[]) {
+  function handleSelectedCabinsChanged(cabins: { id: string }[]) {
     setSelectedCabins(
-      cabins.map((id) => {
-        const cabin = data.cabins.cabins.find((cabin) => cabin.id === id);
-        if (!cabin) throw new Error(`Cabin with id ${id} not found`);
+      cabins.map((selected) => {
+        const cabin = data.cabins.cabins.find((cabin) => cabin.id === selected.id);
+        if (!cabin) throw new Error(`Cabin with id ${selected.id} not found`);
         return cabin;
       })
     );
@@ -145,18 +192,19 @@ export default function Page() {
           </Step>
         ))}
       </Stepper>
-      <MobileStepper activeStep={step} sx={{ display: { xs: "flex", md: "none" } }} steps={steps.length} />
       <Stack direction="column" alignItems="center">
         {step === 0 && (
           <PickDates
+            calendarMonths={
+              getAvailabilityCalendarData?.getAvailabilityCalendar.calendarMonths ??
+              previousData?.getAvailabilityCalendar.calendarMonths ??
+              []
+            }
             selectedCabins={selectedCabins}
+            onCabinsChange={handleSelectedCabinsChanged}
+            onDatesChange={setDates}
             cabins={data.cabins.cabins}
             dates={dates}
-            onSubmit={({ cabins, dates }) => {
-              handleSelectedCabinsChanged(cabins);
-              setDates(dates);
-              setStep(1);
-            }}
           />
         )}
         {step === 1 && (
@@ -213,6 +261,9 @@ export default function Page() {
                     firstName: bookingDetails.firstName,
                     lastName: bookingDetails.lastName,
                     phoneNumber: bookingDetails.phone,
+                    internalParticipantsCount: bookingDetails.internalParticipants,
+                    externalParticipantsCount: bookingDetails.externalParticipants,
+                    questions,
                   },
                 },
               });

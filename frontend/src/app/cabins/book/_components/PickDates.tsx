@@ -19,7 +19,9 @@ type Props = {
   dates: { start: Date | undefined; end: Date | undefined };
   selectedCabins: { id: string; name: string }[];
   cabins: FragmentType<typeof PickDatesCabinFragment>[];
-  onSubmit: (values: { cabins: string[]; dates: { start: Date; end: Date } }) => void;
+  calendarMonths: FragmentType<typeof PickDatesCalendarMonthFragment>[];
+  onCabinsChange: (cabins: { id: string; name: string }[]) => void;
+  onDatesChange: (dates: { start: Date | undefined; end: Date | undefined }) => void;
 };
 
 const PickDatesCabinFragment = graphql(`
@@ -29,10 +31,26 @@ const PickDatesCabinFragment = graphql(`
   }
 `);
 
-function PickDates({ onSubmit, ...props }: Props) {
+const PickDatesCalendarMonthFragment = graphql(`
+  fragment PickDates_CalendarMonth on CalendarMonth {
+    month
+    year
+    days {
+      calendarDate
+      bookable
+      available
+      availableForCheckIn
+      availableForCheckOut
+      price
+    }
+  }
+`);
+
+function PickDates({ onCabinsChange, selectedCabins, ...props }: Props) {
   const cabins = getFragmentData(PickDatesCabinFragment, props.cabins);
+  const calendarMonths = getFragmentData(PickDatesCalendarMonthFragment, props.calendarMonths);
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
   const [dates, setDates] = useState(props.dates);
-  const [selectedCabins, setSelectedCabins] = useState(props.selectedCabins.map((cabin) => cabin.id));
 
   /**
    * Update the booking dates when the user selects a new date in the calendar.
@@ -122,12 +140,12 @@ function PickDates({ onSubmit, ...props }: Props) {
                     <Checkbox
                       color="primary"
                       disableRipple
-                      checked={selectedCabins.some((selectedCabin) => selectedCabin === cabin.id)}
+                      checked={selectedCabins.some((selectedCabin) => selectedCabin.id === cabin.id)}
                       onChange={(_, checked) => {
                         if (checked) {
-                          setSelectedCabins([...selectedCabins.map((cabin) => cabin), cabin.id]);
+                          onCabinsChange([...selectedCabins, cabin]);
                         } else {
-                          setSelectedCabins(selectedCabins.filter((chosenCabin) => cabin.id !== chosenCabin));
+                          onCabinsChange(selectedCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
                         }
                       }}
                     />
@@ -139,8 +157,13 @@ function PickDates({ onSubmit, ...props }: Props) {
               title="Velg innsjekk og utsjekk"
               startDate={dates.start && dayjs(dates.start)}
               endDate={dates.end && dayjs(dates.end)}
-              isDateDisabled={(date) => selectedCabins.length === 0}
+              calendarMonths={calendarMonths}
               onDateClick={(date) => handleDateChanged(date)}
+              currentMonthIndex={currentMonthIndex}
+              onCurrentMonthIndexChanged={(index) => {
+                if (index < 0 || index >= calendarMonths.length) return;
+                setCurrentMonthIndex(index);
+              }}
             />
           </Stack>
         </CardContent>
@@ -148,11 +171,9 @@ function PickDates({ onSubmit, ...props }: Props) {
           <Stack direction="row" width="100%" justifyContent="flex-end" spacing={2}>
             <Button
               endIcon={<KeyboardArrowRight />}
-              disabled={!dates.start || !dates.end || selectedCabins.length === 0}
               onClick={() => {
                 if (!dates.start || !dates.end) return;
                 if (selectedCabins.length === 0) return;
-                onSubmit({ cabins: selectedCabins, dates: { start: dates.start, end: dates.end } });
               }}
             >
               Neste
