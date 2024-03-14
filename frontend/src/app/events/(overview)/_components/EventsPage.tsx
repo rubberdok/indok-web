@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 import { EventListItem } from "./EventListItem";
 import { FilterMenu, Filters } from "./FilterMenu";
+import dayjs from "dayjs";
 
 function EventsPage() {
   const [filters, setFilters] = useState<Filters | null>(null);
@@ -47,9 +48,9 @@ function EventsPage() {
     {
       variables: {
         data: {
-          endBefore: filters?.endBefore ?? null,
+          endBefore: filters?.endBefore ? dayjs(filters.endBefore).endOf("day").toISOString() : null,
           organizations: filters?.organizations ?? null,
-          startAfter: filters?.startAfter ?? null,
+          startAfter: filters?.startAfter ? dayjs(filters.startAfter).startOf("day").toISOString() : null,
           categories: filters?.categories ?? null,
           futureEventsOnly: true,
         },
