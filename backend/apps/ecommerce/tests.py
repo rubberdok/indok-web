@@ -440,15 +440,14 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         order: Order = Order.objects.get(user=unique_user, product=self.product_1)
 
         orderId = order.id
-        deliveredProduct = "someValue"  # Replace "someValue" with the actual value
         query = f"""
-            mutation {deliveredProduct}({orderId}: ID!) {{
-                {deliveredProduct}({orderId}: {orderId}) {{
-                order {{
-                    ...Order
+            mutation DeliverProduct {{
+                deliverProduct(
+                    orderId: "{orderId}",
+                ) {{
+                ok
+                    }}
                 }}
-              }}
-            }}
             """
 
         response = self.query(query, user=self.staff_user)
