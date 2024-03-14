@@ -441,8 +441,8 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
         orderId = order.id
         query = f"""
-            mutation DeliverProduct {{
-                deliverProduct(
+            mutation deliveredProduct {{
+                deliveredProduct(
                     orderId: "{orderId}",
                 ) {{
                 ok
