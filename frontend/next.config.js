@@ -71,7 +71,7 @@ const moduleExports = {
     typedRoutes: true,
   },
   images: {
-    domains: ["indokweb-assets.s3.eu-north-1.amazonaws.com"],
+    domains: ["indokweb-assets.s3.eu-north-1.amazonaws.com", "appstore7o8xwaka.blob.core.windows.net"],
   },
 };
 
