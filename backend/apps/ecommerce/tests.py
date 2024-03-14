@@ -441,7 +441,7 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
         query = f"""
             mutation DeliveredProduct {{
-                deliveredProduct(productId: {self.order.id}) {{
+                deliveredProduct(productId: {order.id}) {{
                     ok
                 }}
             }}
@@ -450,5 +450,8 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         response = self.query(query, user=self.staff_user)
         self.assertResponseNoErrors(response)
 
-        order = Order.objects.get(pk=self.order.id)
+        response = self.query(query, user=unique_user)
+        self.assert_permission_error(response)
+
+        order = Order.objects.get(pk=order.id)
         self.assertTrue(order.delivered)
