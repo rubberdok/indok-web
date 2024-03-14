@@ -182,9 +182,9 @@ class DeliveredProduct(graphene.Mutation):
     def mutate(self, info, order_id):
         try:
             order = Order.objects.get(id=order_id)
-            if order.delivered_product == False:
+            if order.delivered_product is False:
                 order.delivered_product = True
-            elif order.delivered_product == True:
+            elif order.delivered_product is True:
                 order.delivered_product = False
             order.save()
             ok = True
