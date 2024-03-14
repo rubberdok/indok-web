@@ -436,7 +436,7 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
     def test_delivered_product(self) -> None:
         unique_user = IndokUserFactory()
-        order = OrderFactory(product=self.product_1, user=unique_user, delivered_product=False)
+        order = OrderFactory(product=self.product_1, user=unique_user)
 
         orderId = order.id
         query = f"""
@@ -456,4 +456,4 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.assert_permission_error(response)
 
         order = Order.objects.get(pk=order.id)
-        self.assertTrue(order.delivered)
+        self.assertTrue(order.delivered_product)
