@@ -15,11 +15,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { notFound } from "next/navigation";
 import { useState } from "react";
 
 export default function Page({ params }: { params: { organizationId: string } }) {
   const { organizationId } = params;
-  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const { data } = useSuspenseQuery(
     graphql(`
@@ -51,6 +51,48 @@ export default function Page({ params }: { params: { organizationId: string } })
     { variables: { organizationId } }
   );
 
+  const { organization } = data.organization;
+  const { members } = organization;
+  const { hasRole: isAdmin } = data.hasRole;
+  const { user } = data.user;
+  if (!user) return notFound();
+
+  return (
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Navn</TableCell>
+            <TableCell>Rolle</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {members?.map((member) => (
+            <TableRow key={member.id}>
+              <TableCell>{`${member.user.firstName} ${member.user.lastName}`}</TableCell>
+              <TableCell>{member.role}</TableCell>
+              <ActionTableCell user={user} isAdmin={isAdmin} member={member} />
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+type ActionTableCellProps = {
+  user: { id: string };
+  isAdmin: boolean;
+  member: {
+    id: string;
+    role: Role;
+    user: { id: string; firstName: string; lastName: string };
+  };
+};
+
+function ActionTableCell({ user, isAdmin, member }: ActionTableCellProps) {
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [removeMember] = useMutation(
     graphql(`
       mutation OrganizationsAdminMembersPage_RemoveMember($data: RemoveMemberInput!) {
@@ -81,47 +123,22 @@ export default function Page({ params }: { params: { organizationId: string } })
     }
   );
 
-  const { organization } = data.organization;
-  const { members } = organization;
-  const { hasRole: isAdmin } = data.hasRole;
-  const { user } = data.user;
-
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Navn</TableCell>
-            <TableCell>Rolle</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {members.map((member) => (
-            <TableRow key={member.id}>
-              <TableCell>{`${member.user.firstName} ${member.user.lastName}`}</TableCell>
-              <TableCell>{member.role}</TableCell>
-              <TableCell>
-                <IconButton onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
-                  <MoreVert />
-                </IconButton>
-                <Menu anchorEl={menuAnchorEl} open={menuAnchorEl !== null} onClose={() => setMenuAnchorEl(null)}>
-                  {member.role === Role.Member && <MenuItem disabled={!isAdmin}>Gjør til administrator</MenuItem>}
-                  {member.role === Role.Admin && <MenuItem disabled={!isAdmin}>Fjern som administrator</MenuItem>}
-                  {member.user.id !== user?.id && (
-                    <MenuItem
-                      disabled={!isAdmin}
-                      onClick={() => removeMember({ variables: { data: { id: member.id } } })}
-                    >
-                      Fjern fra organisasjonen
-                    </MenuItem>
-                  )}
-                </Menu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <TableCell>
+      <IconButton onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
+        <MoreVert />
+      </IconButton>
+      <Menu anchorEl={menuAnchorEl} open={menuAnchorEl !== null} onClose={() => setMenuAnchorEl(null)}>
+        {member.role === Role.Member && <MenuItem disabled={!isAdmin}>Gjør til administrator</MenuItem>}
+        {member.role === Role.Admin && (
+          <MenuItem disabled={!isAdmin || member.user.id === user.id}>Fjern som administrator</MenuItem>
+        )}
+        {member.user.id !== user?.id && (
+          <MenuItem disabled={!isAdmin} onClick={() => removeMember({ variables: { data: { id: member.id } } })}>
+            Fjern fra organisasjonen
+          </MenuItem>
+        )}
+      </Menu>
+    </TableCell>
   );
 }
