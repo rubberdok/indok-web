@@ -3,6 +3,7 @@ import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } f
 import { Link } from "@/app/components/Link";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
+import Image from "next/image";
 
 const timestamp = (datetime: string) => {
   // returns monday 23:59 if < 2 days remaining, 02. february 1999 otherwise
@@ -24,6 +25,14 @@ const ListingFragment = graphql(`
     id
     name
     closesAt
+    organization {
+      id
+      name
+      logo {
+        id
+        url
+      }
+    }
   }
 `);
 
@@ -56,6 +65,9 @@ export const ListingItem: React.FC<Props> = (props) => {
           <Box
             sx={(theme) => ({
               objectFit: "contain",
+              position: "relative",
+              borderRadius: "100%",
+              overflow: "hidden",
               objectPosition: "center",
               background: theme.vars.palette.background.paper,
               [theme.breakpoints.up("sm")]: {
@@ -70,13 +82,7 @@ export const ListingItem: React.FC<Props> = (props) => {
               },
             })}
           >
-            <img
-              src={"/nth.svg"}
-              alt=""
-              onError={(e) => (
-                ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
-              )}
-            />
+            <Image unoptimized fill src={listing.organization.logo?.url || "/nth.svg"} alt="" />
           </Box>
           <Grid
             container

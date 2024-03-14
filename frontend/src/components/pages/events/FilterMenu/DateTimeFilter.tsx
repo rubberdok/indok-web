@@ -3,16 +3,14 @@ import React from "react";
 
 type Props = {
   /** The currently applied filters */
-  dateTimeFilter: {
-    startAt?: string;
-    endAt?: string;
-  };
+  endBeforeFilter?: string | null;
+  startAfterFilter?: string | null;
   /** Function called when filters are updated */
-  onDateTimeFilterChange: (dateTimeFilter: { startAt?: string; endAt?: string }) => void;
+  onDateTimeFilterChange: (dateTimeFilter: { endBefore?: string | null; startAfter?: string | null }) => void;
 };
 
 /** Component for the date filter in the filter menu. */
-export const DateTimeFilter: React.FC<Props> = ({ dateTimeFilter, onDateTimeFilterChange }) => {
+export const DateTimeFilter: React.FC<Props> = ({ endBeforeFilter, startAfterFilter, onDateTimeFilterChange }) => {
   return (
     <>
       <Grid container item direction="column">
@@ -23,9 +21,9 @@ export const DateTimeFilter: React.FC<Props> = ({ dateTimeFilter, onDateTimeFilt
             type="date"
             fullWidth
             margin="normal"
-            value={dateTimeFilter.startAt}
+            value={startAfterFilter}
             InputLabelProps={{ shrink: true }}
-            onChange={(e) => onDateTimeFilterChange({ startAt: e.currentTarget.value, endAt: dateTimeFilter.endAt })}
+            onChange={(e) => onDateTimeFilterChange({ startAfter: e.currentTarget.value, endBefore: endBeforeFilter })}
           />
         </Grid>
         <Grid item>
@@ -34,9 +32,9 @@ export const DateTimeFilter: React.FC<Props> = ({ dateTimeFilter, onDateTimeFilt
             label="Sluttid"
             type="date"
             fullWidth
-            value={dateTimeFilter.endAt}
+            value={endBeforeFilter}
             InputLabelProps={{ shrink: true }}
-            onChange={(e) => onDateTimeFilterChange({ endAt: e.currentTarget.value, startAt: dateTimeFilter.endAt })}
+            onChange={(e) => onDateTimeFilterChange({ endBefore: e.currentTarget.value, startAfter: startAfterFilter })}
           />
         </Grid>
       </Grid>

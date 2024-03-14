@@ -15,10 +15,6 @@ const ListingsQueryFragment = graphql(`
       listings {
         id
         ...ListingItem_Listing
-        organization {
-          id
-          name
-        }
       }
     }
   }

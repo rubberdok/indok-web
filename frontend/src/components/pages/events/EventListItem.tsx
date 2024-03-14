@@ -7,12 +7,13 @@ import { SignUpAvailability } from "@/gql/pages/graphql";
 import dayjs from "@/lib/date";
 
 const EventListItemFragment = graphql(`
-  fragment EventListItem on Event {
+  fragment EventListItem_Event on Event {
     id
     name
     description
     startAt
     signUpAvailability
+    shortDescription
     signUpDetails {
       signUpsStartAt
     }
@@ -48,7 +49,7 @@ export const EventListItem: React.FC<Props> = (props) => {
 
               <Typography variant="body2">Dato: {dayjs(event.startAt).format("LLL")}</Typography>
 
-              <Typography variant="body2">{event.description || "Trykk for å lese mer"}</Typography>
+              <Typography variant="body2">{event.shortDescription || "Trykk for å lese mer"}</Typography>
             </Stack>
             <StatusChip
               signUpAvailability={event.signUpAvailability}

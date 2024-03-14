@@ -6,9 +6,9 @@ import { graphql } from "@/gql/pages";
 
 type Props = {
   /** The currently applied filters */
-  categoryFilters: Record<string, boolean>;
+  categoryFilters?: { id: string }[] | null;
   /** Method called when filters are updated */
-  onCategoryFiltersChange: (categoryFilters: Record<string, boolean>) => void;
+  onCategoryFiltersChange: (categoryFilters: { id: string }[]) => void;
 };
 
 /** Component for the category filter in the filter menu. */
@@ -26,6 +26,10 @@ export const CategoryFilter: React.FC<Props> = ({ categoryFilters, onCategoryFil
     `)
   );
 
+  const categoriesById = categoryFilters
+    ? Object.fromEntries(categoryFilters?.map((category) => [category.id, category]))
+    : {};
+
   return (
     <Grid container item direction="column">
       {data?.categories.categories.map(
@@ -35,9 +39,16 @@ export const CategoryFilter: React.FC<Props> = ({ categoryFilters, onCategoryFil
               <Grid item>{category.name}</Grid>
               <Grid item>
                 <Checkbox
-                  checked={categoryFilters[category.name]}
+                  checked={Boolean(categoriesById[category.id])}
                   onChange={(e) => {
-                    onCategoryFiltersChange({ ...categoryFilters, [category.name]: e.target.checked });
+                    const prevFilters = categoryFilters ?? [];
+                    let newFilters;
+                    if (e.target.checked) {
+                      newFilters = [...prevFilters, { id: category.id }];
+                    } else {
+                      newFilters = prevFilters.filter((c) => c.id !== category.id);
+                    }
+                    onCategoryFiltersChange(newFilters);
                   }}
                 />
               </Grid>

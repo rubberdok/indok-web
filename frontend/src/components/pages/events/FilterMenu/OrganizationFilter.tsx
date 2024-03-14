@@ -7,9 +7,9 @@ import { graphql } from "@/gql/pages";
 
 type Props = {
   /** The currently applied filters */
-  organizationsFilter: Record<string, boolean>;
+  organizationsFilter?: { id: string }[] | null;
   /** Function called when filters are updated */
-  onOrganizationsFilterChange: (organizations: Record<string, boolean>) => void;
+  onOrganizationsFilterChange: (organizations: { id: string }[]) => void;
 };
 
 /** Component for the organization filter in the filter menu. */
@@ -54,6 +54,9 @@ export const OrganizationFilter: React.FC<Props> = ({ organizationsFilter, onOrg
       </Grid>
     );
   }
+  const organizationsById = organizationsFilter
+    ? Object.fromEntries(organizationsFilter?.map((organization) => [organization.id, organization]))
+    : {};
 
   return (
     <Grid container item direction="column">
@@ -64,9 +67,16 @@ export const OrganizationFilter: React.FC<Props> = ({ organizationsFilter, onOrg
           </Grid>
           <Grid item>
             <Checkbox
-              checked={organizationsFilter[organization.id]}
+              checked={Boolean(organizationsById[organization.id])}
               onChange={(e) => {
-                onOrganizationsFilterChange({ ...organizationsFilter, [organization.id]: e.target.checked });
+                const prevFilters = organizationsFilter ?? [];
+                let newFilters;
+                if (e.target.checked) {
+                  newFilters = [...prevFilters, { id: organization.id }];
+                } else {
+                  newFilters = prevFilters.filter((c) => c.id !== organization.id);
+                }
+                onOrganizationsFilterChange(newFilters);
               }}
             />
           </Grid>

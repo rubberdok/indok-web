@@ -18,6 +18,7 @@ import timezone from "dayjs/plugin/timezone";
 import updateLocale from "dayjs/plugin/updateLocale";
 import utc from "dayjs/plugin/utc";
 import weekday from "dayjs/plugin/weekday";
+import objectSupport from "dayjs/plugin/objectSupport";
 
 /**
  * Working with relative time
@@ -32,6 +33,11 @@ dayjs.extend(relativeTime);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrAfter);
+
+/**
+ * Object support
+ */
+dayjs.extend(objectSupport);
 
 /**
  * Timezone plugins
