@@ -1,11 +1,15 @@
-import { graphql } from "@/gql/app";
-import { getClient } from "@/lib/apollo/ApolloClient";
-import { config } from "@/utils/config";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
+import { graphql } from "@/gql/app";
+import { getClient } from "@/lib/apollo/ApolloClient";
+import { config } from "@/utils/config";
+
 export const metadata: Metadata = {
-  title: "Profil",
+  title: {
+    default: "Profil",
+    template: "%s | Indøk NTNU",
+  },
 };
 
 export default async function Layout({ children }: React.PropsWithChildren) {

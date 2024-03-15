@@ -1,5 +1,5 @@
-import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Refresh } from "@mui/icons-material";
 import {
   Button,
   FormControl,
@@ -12,11 +12,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { range } from "lodash";
 import { useForm } from "react-hook-form";
+
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import dayjs from "@/lib/date";
+
 import { maxGraduationYear, minGraduationYear, userValidationSchema } from "./validationSchema";
-import { Refresh } from "@mui/icons-material";
 
 type Props = {
   onSubmit: (values: UserFields) => void;

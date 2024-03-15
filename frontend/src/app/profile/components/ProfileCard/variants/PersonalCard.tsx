@@ -8,8 +8,8 @@ type Props = {
   user?: {
     firstName: string;
     lastName: string;
-    gradeYear: number | null;
-    studyProgram: {
+    gradeYear?: number | null;
+    studyProgram?: {
       name: string;
     } | null;
   };

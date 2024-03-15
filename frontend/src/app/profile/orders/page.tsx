@@ -1,12 +1,13 @@
 "use client";
 
+import { useSuspenseQuery } from "@apollo/client";
+import { Card, CardContent, CardHeader, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
+
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { Link } from "@/app/components/Link";
 import { graphql } from "@/gql/app";
 import { OrderPaymentStatus } from "@/gql/app/graphql";
-import { useSuspenseQuery } from "@apollo/client";
-import { Card, CardContent, CardHeader, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
-import dayjs from "dayjs";
+import dayjs from "@/lib/date";
 
 export default function Page() {
   const { data } = useSuspenseQuery(
@@ -54,7 +55,7 @@ export default function Page() {
       <Stack direction="row" justifyContent="center">
         <Stack spacing={2} maxWidth={(theme) => theme.breakpoints.values.sm} width="100%">
           {orders.map((order) => (
-            <Card>
+            <Card key={order.id}>
               <CardHeader
                 title={order.product.name}
                 subheader={

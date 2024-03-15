@@ -1,10 +1,12 @@
 "use client";
-import { useAlerts } from "@/app/components/Alerts";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { graphql } from "@/gql/app";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { Container, Typography } from "@mui/material";
 import { notFound, useRouter } from "next/navigation";
+
+import { useAlerts } from "@/app/components/Alerts";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { graphql } from "@/gql/app";
+
 import { UserForm } from "./_components/UserForm";
 
 const ID_PREFIX = "editUser-";

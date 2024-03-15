@@ -1,9 +1,5 @@
 "use client";
 
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { NextLinkComposed } from "@/app/components/Link";
-import { graphql } from "@/gql/app";
-import { ParticipationStatus as EventParticipationStatus, EventType } from "@/gql/app/graphql";
 import { useSuspenseQuery } from "@apollo/client";
 import {
   Button,
@@ -17,10 +13,16 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { capitalize } from "lodash";
 import { notFound } from "next/navigation";
 import { useState } from "react";
+
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { NextLinkComposed } from "@/app/components/Link";
+import { graphql } from "@/gql/app";
+import { ParticipationStatus as EventParticipationStatus, EventType } from "@/gql/app/graphql";
+import dayjs from "@/lib/date";
+
 import { OrderStatus } from "./_components/OrderStatus";
 import { ParticipationStatus } from "./_components/ParticipationStatus";
 

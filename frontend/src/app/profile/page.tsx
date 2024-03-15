@@ -69,8 +69,9 @@ export default function ProfilePage() {
     `)
   );
 
-  if (!data.user.user) return notFound();
-  const { user } = data.user;
+  const user = data.user.user;
+
+  if (!user) return notFound();
   const initials = getUserInitials(user.firstName, user.lastName);
 
   return (
@@ -91,15 +92,13 @@ export default function ProfilePage() {
               height: (theme) => theme.spacing(16),
             }}
           >
-            {data?.user && (
-              <Typography variant="h3" component="p" color="common.white">
-                {initials}
-              </Typography>
-            )}
+            <Typography variant="h3" component="p" color="common.white">
+              {initials}
+            </Typography>
           </Avatar>
         </Grid>
         <Grid item>
-          {data?.user && <Typography variant="h4" component="h1">{`Hei, ${user.firstName}`}</Typography>}
+          <Typography variant="h4" component="h1">{`Hei, ${user.firstName}`}</Typography>
         </Grid>
         <Grid item xs={10}>
           <Typography variant="body1" align="center">
@@ -109,7 +108,7 @@ export default function ProfilePage() {
 
         <Grid container item justifyContent="center" alignItems="stretch" spacing={4}>
           <Grid item xs={12} md={6} lg={5}>
-            <Personal user={user ?? undefined} data-test-id={`${ID_PREFIX}personal-`} />
+            <Personal user={user} data-test-id={`${ID_PREFIX}personal-`} />
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
             <Event data-test-id={`${ID_PREFIX}event-`} />

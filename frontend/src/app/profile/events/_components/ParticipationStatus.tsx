@@ -1,8 +1,9 @@
 "use client";
+import { Cancel, CheckCircle, Pending } from "@mui/icons-material";
+import { Stack, Typography } from "@mui/material";
+
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import { ParticipationStatus as EventParticipationStatus } from "@/gql/app/graphql";
-import { Stack, Typography } from "@mui/material";
-import { Cancel, CheckCircle, Pending } from "@mui/icons-material";
 
 type ParticipationStatusProps = {
   signUp: FragmentType<typeof ParticipationStatusFragment>;

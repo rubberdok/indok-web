@@ -1,10 +1,12 @@
 "use client";
 
-import { NextLinkComposed } from "@/app/components/Link";
-import { graphql } from "@/gql/app";
 import { useSuspenseQuery } from "@apollo/client";
-import { Card, CardActionArea, CardHeader, Container, Typography } from "@mui/material";
+import { Unstable_Grid2 as Grid, Typography } from "@mui/material";
 import { notFound } from "next/navigation";
+
+import { Organization } from "@/app/_components/Organization";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { graphql } from "@/gql/app";
 
 export default function Page() {
   const { data } = useSuspenseQuery(
@@ -16,6 +18,10 @@ export default function Page() {
             organizations {
               id
               name
+              logo {
+                id
+                url
+              }
             }
           }
         }
@@ -29,17 +35,24 @@ export default function Page() {
 
   const { organizations } = data.user.user;
   return (
-    <Container>
+    <>
+      <Breadcrumbs
+        links={[
+          { name: "Hjem", href: "/" },
+          { name: "Profil", href: "/profile" },
+          { name: "Mine foreninger", href: "/profile/organizations" },
+        ]}
+      />
       <Typography variant="subtitle1" component="h1">
         Dine foreninger
       </Typography>
-      {organizations.map((organization) => (
-        <Card key={organization.id}>
-          <CardActionArea component={NextLinkComposed} to={`/organizations/${organization.id}/admin`}>
-            <CardHeader title={organization.name} />
-          </CardActionArea>
-        </Card>
-      ))}
-    </Container>
+      <Grid container direction="row">
+        {organizations.map((organization) => (
+          <Grid xs={12} sm={6} md={3} key={organization.id}>
+            <Organization organization={organization} link={`/organizations/${organization.id}/admin`} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 }

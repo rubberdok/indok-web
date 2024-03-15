@@ -28,7 +28,7 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
           {actionText && actionLink && (
-            <CardActions sx={{ ml: 1 }}>
+            <CardActions>
               <Button
                 component={Link}
                 noLinkStyle

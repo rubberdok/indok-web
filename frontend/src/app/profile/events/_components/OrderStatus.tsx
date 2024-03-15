@@ -1,9 +1,10 @@
 "use client";
+import { Cancel, CheckCircle, Pending } from "@mui/icons-material";
+import { Button, Stack, Typography } from "@mui/material";
+
 import { NextLinkComposed } from "@/app/components/Link";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import { OrderPaymentStatus } from "@/gql/app/graphql";
-import { Cancel, CheckCircle, Pending } from "@mui/icons-material";
-import { Button, Stack, Typography } from "@mui/material";
 
 type OrderStatusProps = {
   signUp: FragmentType<typeof OrderStatusFragment>;
