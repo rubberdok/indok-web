@@ -1,14 +1,15 @@
 "use client";
 
-import { NextLinkComposed } from "@/app/components/Link";
-import { Title } from "@/components";
-import { graphql } from "@/gql/app";
-import { HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 import { useSuspenseQuery } from "@apollo/client";
 import { Settings } from "@mui/icons-material";
 import { Box, Container, IconButton, Stack, Tab, Tabs } from "@mui/material";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
 import React from "react";
+
+import { NextLinkComposed } from "@/app/components/Link";
+import { Title } from "@/components";
+import { graphql } from "@/gql/app";
+import { HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 
 export default function Page({ params, children }: React.PropsWithChildren<{ params: { organizationId: string } }>) {
   const { organizationId } = params;
@@ -46,24 +47,23 @@ export default function Page({ params, children }: React.PropsWithChildren<{ par
           { name: "Hjem", href: "/" },
           { name: organization.name, href: `/organizations/${organization.id}/admin` },
         ]}
-        children={
-          <Stack direction="row" justifyContent="space-between">
-            <Tabs
-              value={activeTab}
-              onChange={(_e, value) => router.replace(`/organizations/${organizationId}/admin/${value}`)}
-            >
-              <Tab label="Arrangementer" value="events" />
-              <Tab label="Annonser" value="listings" />
-              <Tab label="Medlemmer" value="members" />
-            </Tabs>
-            <Box>
-              <IconButton component={NextLinkComposed} to={`/organizations/${organizationId}/admin/edit`}>
-                <Settings />
-              </IconButton>
-            </Box>
-          </Stack>
-        }
-      />
+      >
+        <Stack direction="row" justifyContent="space-between">
+          <Tabs
+            value={activeTab}
+            onChange={(_e, value) => router.replace(`/organizations/${organizationId}/admin/${value}`)}
+          >
+            <Tab label="Arrangementer" value="events" />
+            <Tab label="Annonser" value="listings" />
+            <Tab label="Medlemmer" value="members" />
+          </Tabs>
+          <Box>
+            <IconButton component={NextLinkComposed} to={`/organizations/${organizationId}/admin/edit`}>
+              <Settings />
+            </IconButton>
+          </Box>
+        </Stack>
+      </Title>
       <Container>{children}</Container>
     </>
   );

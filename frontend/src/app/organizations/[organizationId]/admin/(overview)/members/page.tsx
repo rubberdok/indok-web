@@ -1,9 +1,7 @@
 "use client";
 
-import { graphql } from "@/gql/app";
-import { Role } from "@/gql/app/graphql";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
-import { MoreVert } from "@mui/icons-material";
+import { Add, MoreVert } from "@mui/icons-material";
 import {
   IconButton,
   Menu,
@@ -14,12 +12,18 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 
+import { graphql } from "@/gql/app";
+import { Role } from "@/gql/app/graphql";
+import { AddMemberDialog } from "./_components/AddMemberDialog";
+
 export default function Page({ params }: { params: { organizationId: string } }) {
   const { organizationId } = params;
+  const [addMemberOpen, setAddMemberOpen] = useState(false);
 
   const { data } = useSuspenseQuery(
     graphql(`
@@ -58,26 +62,35 @@ export default function Page({ params }: { params: { organizationId: string } })
   if (!user) return notFound();
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Navn</TableCell>
-            <TableCell>Rolle</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {members?.map((member) => (
-            <TableRow key={member.id}>
-              <TableCell>{`${member.user.firstName} ${member.user.lastName}`}</TableCell>
-              <TableCell>{member.role}</TableCell>
-              <ActionTableCell user={user} isAdmin={isAdmin} member={member} />
+    <>
+      <AddMemberDialog open={addMemberOpen} onClose={() => setAddMemberOpen(false)} organizationId={organizationId} />
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Navn</TableCell>
+              <TableCell>Rolle</TableCell>
+              <TableCell align="center">
+                <Tooltip title="Legg til nytt medlem" arrow placement="top">
+                  <IconButton onClick={() => setAddMemberOpen(true)}>
+                    <Add />
+                  </IconButton>
+                </Tooltip>
+              </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {members?.map((member) => (
+              <TableRow key={member.id}>
+                <TableCell>{`${member.user.firstName} ${member.user.lastName}`}</TableCell>
+                <TableCell>{member.role}</TableCell>
+                <ActionTableCell user={user} isAdmin={isAdmin} member={member} />
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 
@@ -124,7 +137,7 @@ function ActionTableCell({ user, isAdmin, member }: ActionTableCellProps) {
   );
 
   return (
-    <TableCell>
+    <TableCell align="center">
       <IconButton onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
         <MoreVert />
       </IconButton>

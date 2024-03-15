@@ -1,11 +1,12 @@
 "use client";
 
+import { useSuspenseQuery } from "@apollo/client";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+
 import { Link } from "@/app/components/Link";
 import { graphql } from "@/gql/app";
 import { EventType } from "@/gql/app/graphql";
-import { useSuspenseQuery } from "@apollo/client";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import dayjs from "dayjs";
+import dayjs from "@/lib/date";
 
 export default function Page({ params }: { params: { organizationId: string } }) {
   const { organizationId } = params;

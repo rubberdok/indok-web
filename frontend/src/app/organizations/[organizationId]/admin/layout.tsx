@@ -1,7 +1,8 @@
-import { graphql } from "@/gql/app";
-import { getClient } from "@/lib/apollo/ApolloClient";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+import { graphql } from "@/gql/app";
+import { getClient } from "@/lib/apollo/ApolloClient";
 
 export const generateMetadata = async ({ params }: { params: { organizationId: string } }): Promise<Metadata> => {
   const { organizationId } = params;

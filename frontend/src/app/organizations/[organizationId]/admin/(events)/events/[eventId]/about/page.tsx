@@ -1,9 +1,10 @@
 "use client";
 
-import { graphql } from "@/gql/app";
 import { useSuspenseQuery } from "@apollo/client";
 import { Card, CardContent, CardHeader, Typography, Unstable_Grid2 as Grid, Stack } from "@mui/material";
-import dayjs from "dayjs";
+
+import { graphql } from "@/gql/app";
+import dayjs from "@/lib/date";
 
 export default function Page({ params }: { params: { organizationId: string; eventId: string } }) {
   const { eventId } = params;

@@ -1,9 +1,6 @@
 "use client";
 
-import { useAlerts } from "@/app/components/Alerts";
-import { getFragmentData, graphql } from "@/gql/app";
-import { EventType, OrderPaymentStatus } from "@/gql/app/graphql";
-import { useMutation, useSuspenseQuery } from "@apollo/client";
+import { useMutation, useQuery, useSuspenseQuery } from "@apollo/client";
 import { Cancel, CheckCircle, MoreVert } from "@mui/icons-material";
 import {
   Card,
@@ -18,8 +15,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { useState } from "react";
+
+import { useAlerts } from "@/app/components/Alerts";
+import { getFragmentData, graphql } from "@/gql/app";
+import { EventType, OrderPaymentStatus } from "@/gql/app/graphql";
+import dayjs from "@/lib/date";
 
 const SignUpFragment = graphql(`
   fragment OrganizationsAdminEventsSignUpsPage_SignUp on SignUp {
@@ -40,49 +41,52 @@ const SignUpFragment = graphql(`
   }
 `);
 
-export default function Page({ params }: { params: { organizationId: string; eventId: string } }) {
-  const { eventId } = params;
-
-  const { data } = useSuspenseQuery(
-    graphql(`
-      query OrganizationsAdminEventsSignUpsPage_EventQuery($data: EventInput!) {
-        event(data: $data) {
-          event {
-            id
-            type
-            signUpsRequireUserProvidedInformation
+const EventSignUpsQuery = graphql(`
+  query OrganizationsAdminEventsSignUpsPage_EventQuery($data: EventInput!) {
+    event(data: $data) {
+      event {
+        id
+        type
+        signUpsRequireUserProvidedInformation
+        signUps {
+          confirmed {
+            total
             signUps {
-              confirmed {
-                total
-                signUps {
-                  ...OrganizationsAdminEventsSignUpsPage_SignUp
-                }
-              }
-              waitList {
-                total
-                signUps {
-                  ...OrganizationsAdminEventsSignUpsPage_SignUp
-                }
-              }
-              retracted {
-                total
-                signUps {
-                  ...OrganizationsAdminEventsSignUpsPage_SignUp
-                }
-              }
-              removed {
-                total
-                signUps {
-                  ...OrganizationsAdminEventsSignUpsPage_SignUp
-                }
-              }
+              ...OrganizationsAdminEventsSignUpsPage_SignUp
+            }
+          }
+          waitList {
+            total
+            signUps {
+              ...OrganizationsAdminEventsSignUpsPage_SignUp
+            }
+          }
+          retracted {
+            total
+            signUps {
+              ...OrganizationsAdminEventsSignUpsPage_SignUp
+            }
+          }
+          removed {
+            total
+            signUps {
+              ...OrganizationsAdminEventsSignUpsPage_SignUp
             }
           }
         }
       }
-    `),
-    { variables: { data: { id: eventId } } }
-  );
+    }
+  }
+`);
+
+export default function Page({ params }: { params: { organizationId: string; eventId: string } }) {
+  const { eventId } = params;
+
+  const { data } = useSuspenseQuery(EventSignUpsQuery, { variables: { data: { id: eventId } } });
+  useQuery(EventSignUpsQuery, {
+    variables: { data: { id: eventId } },
+    pollInterval: 1000 * 30, // Every 30 seconds to get live updates
+  });
 
   const { event } = data.event;
   const confirmedSignUps = getFragmentData(SignUpFragment, event.signUps?.confirmed.signUps);
@@ -262,11 +266,15 @@ function SignUpActionCell({ signUp }: SignUpActionProps) {
               firstName
               lastName
             }
+            event {
+              id
+            }
           }
         }
       }
     `),
     {
+      refetchQueries: [EventSignUpsQuery],
       onCompleted(data) {
         const { firstName, lastName } = data.removeSignUp.signUp.user;
         notify({ message: `${firstName} ${lastName} er nå meldt av arrangementet`, type: "success" });

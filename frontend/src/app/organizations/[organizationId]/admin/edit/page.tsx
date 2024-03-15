@@ -1,12 +1,6 @@
 "use client";
-import { useAlerts } from "@/app/components/Alerts";
-import { FileUpload } from "@/app/components/FileUpload";
-import { Link, NextLinkComposed } from "@/app/components/Link";
-import { graphql } from "@/gql/app";
-import { FeaturePermission } from "@/gql/app/graphql";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import {
-  Box,
   Button,
   Card,
   CardActions,
@@ -22,10 +16,15 @@ import {
   Typography,
 } from "@mui/material";
 import { sortBy } from "lodash";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+
+import { useAlerts } from "@/app/components/Alerts";
+import { FileUpload } from "@/app/components/FileUpload";
+import { Link, NextLinkComposed } from "@/app/components/Link";
+import { graphql } from "@/gql/app";
+import { FeaturePermission } from "@/gql/app/graphql";
 
 type UpdateOrganizationFormType = {
   name: string;
@@ -78,9 +77,6 @@ export default function Page({ params }: { params: { organizationId: string } })
     };
   });
 
-  if (!data.user.user) return notFound();
-  const { isSuperUser } = data.user.user;
-
   const { notify } = useAlerts();
   const [updateOrganization] = useMutation(
     graphql(`
@@ -121,6 +117,9 @@ export default function Page({ params }: { params: { organizationId: string } })
       featurePermissions: data.organization.organization.featurePermissions,
     },
   });
+
+  if (!data.user.user) return notFound();
+  const { isSuperUser } = data.user.user;
 
   function onSubmit(values: UpdateOrganizationFormType) {
     updateOrganization({

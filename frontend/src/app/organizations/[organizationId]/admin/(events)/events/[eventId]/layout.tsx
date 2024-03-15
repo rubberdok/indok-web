@@ -1,10 +1,11 @@
 "use client";
-import { Title } from "@/components";
-import { graphql } from "@/gql/app";
-import { HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 import { useSuspenseQuery } from "@apollo/client";
 import { Container, Tab, Tabs } from "@mui/material";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
+
+import { Title } from "@/components";
+import { graphql } from "@/gql/app";
+import { HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 
 const segments: { "sign-ups": string; about: string; [key: string]: string } = {
   "sign-ups": "Påmeldinger",
