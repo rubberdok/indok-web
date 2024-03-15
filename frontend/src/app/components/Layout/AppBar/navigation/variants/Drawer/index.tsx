@@ -5,6 +5,7 @@ import { Box, Divider, IconButton, Drawer as MuiDrawer, Stack } from "@mui/mater
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useState } from "react";
 
+import { Logo } from "@/app/components/Layout/Logo";
 import { LoginButton } from "@/app/components/LoginButton";
 import { PermissionRequired } from "@/app/components/PermissionRequired";
 import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
@@ -12,7 +13,6 @@ import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 import { NavigationProps } from "../props";
 
 import { NavigationLink } from "./NavigationLink";
-import { Logo } from "@/app/components/Layout/Logo";
 
 export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   const [open, setOpen] = useState(false);

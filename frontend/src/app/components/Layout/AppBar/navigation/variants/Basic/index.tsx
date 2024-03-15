@@ -2,12 +2,12 @@ import { Box, Stack } from "@mui/material";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 import { LoginButton } from "@/app/components/LoginButton";
+import { PermissionRequired } from "@/app/components/PermissionRequired";
 import { ColorModeSwitcher } from "@/layouts/components/ColorModeSwitcher";
 
 import { NavigationProps } from "../props";
 
 import { NavigationLink } from "./NavigationLink";
-import { PermissionRequired } from "@/app/components/PermissionRequired";
 
 export const Basic: React.FC<NavigationProps> = ({ routes }) => {
   const segment = useSelectedLayoutSegment();

@@ -1,14 +1,14 @@
 import { FeaturePermission } from "@/gql/app/graphql";
 
 type NavigationProps = {
-    routes: Route[];
-  };
+  routes: Route[];
+};
 
-  type Route = {
-    title: string;
-    path: string;
-    segment: string;
-    permission?: FeaturePermission;
-  };
+type Route = {
+  title: string;
+  path: string;
+  segment: string;
+  permission?: FeaturePermission;
+};
 
-  export type { NavigationProps, Route}
+export type { NavigationProps, Route };

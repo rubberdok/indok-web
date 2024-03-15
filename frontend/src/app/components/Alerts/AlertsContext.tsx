@@ -15,7 +15,7 @@ const AlertsContext = createContext<{
 
 function AlertsWrapper({ children }: React.PropsWithChildren) {
   const [alerts, setAlerts] = useState<(Alert & { timestamp: number })[]>([]);
-  let currentAlert: (Alert & { timestamp: number }) | undefined = alerts[0];
+  const currentAlert: (Alert & { timestamp: number }) | undefined = alerts[0];
 
   const notify = (alert: Alert) => {
     setAlerts((previousAlerts) => {
