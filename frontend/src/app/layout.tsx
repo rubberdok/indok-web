@@ -1,14 +1,14 @@
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
-import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 
 import { ApolloWrapper } from "@/lib/apollo";
 import { ThemeRegistry } from "@/lib/mui";
+import { config } from "@/utils/config";
 
+import { AlertsWrapper } from "./components/Alerts";
 import { AppBar } from "./components/Layout/AppBar";
 import { Footer } from "./components/Layout/Footer";
-import { config } from "@/utils/config";
-import { AlertsWrapper } from "./components/Alerts";
 
 export const metadata: Metadata = {
   title: {
