@@ -1,9 +1,11 @@
-import { graphql } from "@/gql/app";
 import { useMutation } from "@apollo/client";
-import { convertFileToArrayBuffer } from "./convert-file-to-array-buffer";
 import { BlockBlobClient } from "@azure/storage-blob";
-import { useState } from "react";
 import { CircularProgress, FormHelperText } from "@mui/material";
+import { useState } from "react";
+
+import { graphql } from "@/gql/app";
+
+import { convertFileToArrayBuffer } from "./convert-file-to-array-buffer";
 
 const MAX_FILE_SIZE_B = 16 * 1024 * 1024; // 16 MB
 
@@ -94,4 +96,47 @@ function FileUpload({ onComplete, fileTypeAllowList, currentObjectUrl, imagePrev
   );
 }
 
-export { FileUpload };
+function useFileUpload(data: { onComplete?: (file: { file: File }) => void; fileTypeAllowList?: string[] }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | undefined>(undefined);
+  const [completed, setCompleted] = useState(false);
+  const { onComplete, fileTypeAllowList } = data;
+
+  async function uploadFile(file: File | undefined, url: string) {
+    try {
+      setLoading(true);
+      setError(undefined);
+      setCompleted(false);
+      if (!file) throw new Error("No file selected");
+      const fileArrayBuffer = await convertFileToArrayBuffer(file);
+
+      if (!fileArrayBuffer) throw new Error("Failed to convert file to array buffer");
+      const fileExtension = file.name.split(".").pop();
+      if (!fileExtension) throw new Error("Failed to get file extension");
+      if (fileTypeAllowList && !fileTypeAllowList.includes(fileExtension)) throw new Error("File type not allowed");
+
+      if (fileArrayBuffer === null || fileArrayBuffer.byteLength < 1 || fileArrayBuffer.byteLength > MAX_FILE_SIZE_B)
+        throw new Error("File size too large");
+
+      const blockBlobClient = new BlockBlobClient(url);
+
+      await blockBlobClient.uploadData(fileArrayBuffer, {
+        blobHTTPHeaders: {
+          blobContentType: file.type,
+        },
+      });
+      setCompleted(true);
+      onComplete?.({ file });
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { uploadFile, loading, error, completed };
+}
+
+export { FileUpload, useFileUpload };
