@@ -1,12 +1,9 @@
 "use client";
 
-import { graphql } from "@/gql/app";
 import { useQuery, useSuspenseQuery } from "@apollo/client";
 import {
-  Button,
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardHeader,
   CardMedia,
@@ -16,6 +13,9 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
+
+import { graphql } from "@/gql/app";
+
 import { NextLinkComposed } from "../components/Link";
 
 const DocumentsPageQuery = graphql(`
@@ -48,8 +48,16 @@ export default function Page() {
   return (
     <Grid container direction="row" spacing={2} alignItems="stretch">
       {data.documents.documents.map((document) => (
-        <Grid md={3} xs={12} sm={6}>
-          <Card sx={{ height: 1 }}>
+        <Grid md={3} xs={12} sm={6} key={document.id}>
+          <Card
+            sx={{
+              height: 1,
+              ":hover": {
+                transform: "scale(1.01)",
+                transition: "transform 0.3s ease-in-out",
+              },
+            }}
+          >
             <CardActionArea
               sx={{ height: 1 }}
               component={NextLinkComposed}
@@ -64,7 +72,8 @@ export default function Page() {
                       sx={{
                         position: "relative",
                         height: 150,
-                        borderRadius: (theme) => theme.shape.borderRadius,
+                        overflow: "hidden",
+                        borderRadius: 1,
                         m: (theme) => theme.spacing(1, 1, 0, 1),
                       }}
                     >
@@ -87,7 +96,7 @@ export default function Page() {
                   <CardContent>
                     <Grid container spacing={1} direction="row">
                       {document.categories.map((category) => (
-                        <Grid>
+                        <Grid key={category.id}>
                           <Chip key={category.id} label={category.name} />
                         </Grid>
                       ))}
