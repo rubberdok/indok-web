@@ -1,9 +1,10 @@
 "use client";
+import { useSuspenseQuery } from "@apollo/client";
+import { Container } from "@mui/material";
+
 import { Title } from "@/components/Title";
 import { graphql } from "@/gql/app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
-import { useSuspenseQuery } from "@apollo/client";
-import { Container } from "@mui/material";
 
 export default function Layout({ params, children }: React.PropsWithChildren<{ params: { listingId: string } }>) {
   const { data } = useSuspenseQuery(

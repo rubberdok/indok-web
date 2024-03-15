@@ -1,6 +1,8 @@
+import { Metadata } from "next";
+
 import { graphql } from "@/gql/app";
 import { getClient } from "@/lib/apollo/ApolloClient";
-import { Metadata } from "next";
+
 import { Listing } from "./components/Listing";
 
 export async function generateMetadata({ params }: { params: { listingId: string } }): Promise<Metadata> {

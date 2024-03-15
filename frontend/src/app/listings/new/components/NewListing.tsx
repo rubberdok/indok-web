@@ -1,13 +1,14 @@
 "use client";
 
-import { useAlerts } from "@/app/components/Alerts";
-import { graphql } from "@/gql/app";
-import * as yup from "@/lib/validation";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, FormControl, FormHelperText, InputLabel, Select, TextField } from "@mui/material";
 import { notFound, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+
+import { useAlerts } from "@/app/components/Alerts";
+import { graphql } from "@/gql/app";
+import * as yup from "@/lib/validation";
 
 type NewListingForm = {
   organizationId: string;
@@ -44,10 +45,6 @@ function NewListing() {
     `)
   );
 
-  if (!data.user.user) return notFound();
-  const { organizations } = data.user.user;
-  if (organizations.length <= 0) return notFound();
-
   const {
     register,
     handleSubmit,
@@ -55,7 +52,7 @@ function NewListing() {
     formState: { errors },
   } = useForm<NewListingForm>({
     defaultValues: {
-      organizationId: data.user.user.organizations[0].id,
+      organizationId: data.user.user?.organizations[0].id,
     },
     resolver: yupResolver(schema),
   });
@@ -110,6 +107,10 @@ function NewListing() {
       },
     });
   }
+
+  if (!data.user.user) return notFound();
+  const { organizations } = data.user.user;
+  if (organizations.length <= 0) return notFound();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

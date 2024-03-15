@@ -1,6 +1,7 @@
+import { Container } from "@mui/material";
+
 import { Title } from "@/components/Title";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
-import { Container } from "@mui/material";
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (

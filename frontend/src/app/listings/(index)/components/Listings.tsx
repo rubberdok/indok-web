@@ -1,9 +1,10 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 
-import { ListingItem } from "./ListingItem";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
+
+import { ListingItem } from "./ListingItem";
 
 type Props = {
   query: FragmentType<typeof ListingsQueryFragment>;

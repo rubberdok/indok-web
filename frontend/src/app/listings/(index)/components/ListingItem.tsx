@@ -1,9 +1,9 @@
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import Image from "next/image";
 
 import { Link } from "@/app/components/Link";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
-import Image from "next/image";
 
 const timestamp = (datetime: string) => {
   // returns monday 23:59 if < 2 days remaining, 02. february 1999 otherwise

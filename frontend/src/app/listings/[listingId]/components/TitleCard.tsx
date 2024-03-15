@@ -3,8 +3,8 @@ import { Button, Card, CardContent, Divider, Grid, Typography } from "@mui/mater
 import React from "react";
 
 import { Link } from "@/app/components/Link";
-import dayjs from "@/lib/date";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import dayjs from "@/lib/date";
 
 type Props = {
   listing: FragmentType<typeof ListingFragment>;

@@ -1,10 +1,12 @@
 "use client";
 
-import { graphql } from "@/gql/app";
 import { useSuspenseQuery } from "@apollo/client";
-import { TitleCard } from "./TitleCard";
 import { Unstable_Grid2 as Grid } from "@mui/material";
+
 import { Markdown } from "@/components";
+import { graphql } from "@/gql/app";
+
+import { TitleCard } from "./TitleCard";
 
 type Props = {
   params: { listingId: string };
