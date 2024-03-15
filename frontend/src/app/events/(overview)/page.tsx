@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { EventsPage } from "./_components/EventsPage";
 
 export const metadata: Metadata = {

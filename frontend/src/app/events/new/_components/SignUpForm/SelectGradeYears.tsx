@@ -1,6 +1,7 @@
 import { Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack } from "@mui/material";
 import { sortBy } from "lodash";
 import { Controller, FieldPath, useFormContext } from "react-hook-form";
+
 import { SignUpFormType } from ".";
 
 type Props = {

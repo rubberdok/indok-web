@@ -1,7 +1,5 @@
 "use client";
-import { Markdown } from "@/components/Markdown";
-import { graphql } from "@/gql/app";
-import { useSuspenseQuery } from "@apollo/client";
+import { useQuery, useSuspenseQuery } from "@apollo/client";
 import { CalendarToday, CreditCard, Email, Label, Place } from "@mui/icons-material";
 import {
   Stack,
@@ -16,51 +14,63 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { AddToCalendar } from "./_components/AddToCalendar";
+
 import { Link } from "@/app/components/Link";
-import dayjs from "dayjs";
+import { Markdown } from "@/components/Markdown";
+import { graphql } from "@/gql/app";
+import dayjs from "@/lib/date";
+
+import { AddToCalendar } from "./_components/AddToCalendar";
 import { SignUp } from "./_components/SignUp";
 
-export default function Page({ params }: { params: { eventId: string } }) {
-  const { data } = useSuspenseQuery(
-    graphql(`
-      query EventPage_EventQuery($data: EventInput!) {
-        event(data: $data) {
-          event {
+const EventPageEventQuery = graphql(`
+  query EventPage_EventQuery($data: EventInput!) {
+    event(data: $data) {
+      event {
+        id
+        name
+        description
+        signUpsEnabled
+        location
+        signUpsRetractable
+        endAt
+        startAt
+        contactEmail
+        ticketInformation {
+          product {
             id
-            name
-            description
-            signUpsEnabled
-            location
-            signUpsRetractable
-            endAt
-            startAt
-            contactEmail
-            ticketInformation {
-              product {
-                id
-                price {
-                  valueInNok
-                }
-              }
+            price {
+              valueInNok
             }
-            categories {
-              id
-              name
-            }
-            ...EventSignUp_EventFragment
           }
         }
+        categories {
+          id
+          name
+        }
+        ...EventSignUp_EventFragment
       }
-    `),
-    {
-      variables: {
-        data: {
-          id: params.eventId,
-        },
-      },
     }
-  );
+  }
+`);
+
+export default function Page({ params }: { params: { eventId: string } }) {
+  const { data } = useSuspenseQuery(EventPageEventQuery, {
+    variables: {
+      data: {
+        id: params.eventId,
+      },
+    },
+  });
+  useQuery(EventPageEventQuery, {
+    pollInterval: 1000 * 30, // 30 seconds
+    variables: {
+      data: {
+        id: params.eventId,
+      },
+    },
+  });
+
   const { event } = data.event;
   return (
     <Grid container direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={2}>

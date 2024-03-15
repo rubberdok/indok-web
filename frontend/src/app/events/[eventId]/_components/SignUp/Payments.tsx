@@ -1,5 +1,6 @@
-import { Link, NextLinkComposed } from "@/app/components/Link";
 import { Alert, Button } from "@mui/material";
+
+import { Link, NextLinkComposed } from "@/app/components/Link";
 
 type Props = {
   hasBoughtTicket?: boolean | null;

@@ -2,13 +2,13 @@ import { useMutation } from "@apollo/client";
 import { Unstable_Grid2 as Grid, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 
-import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
-import { FeaturePermission, SignUpAvailability } from "@/gql/pages/graphql";
-import dayjs from "@/lib/date";
-
 import { useAlerts } from "@/app/components/Alerts";
 import { LoginRequired } from "@/app/components/LoginRequired";
 import { PermissionRequired } from "@/app/components/PermissionRequired";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import { FeaturePermission, SignUpAvailability } from "@/gql/app/graphql";
+import dayjs from "@/lib/date";
+
 import { CountdownStatusText } from "./Countdown";
 import { useCountdown } from "./hooks/useCountdown";
 import { SignUpButton } from "./SignUpButton";

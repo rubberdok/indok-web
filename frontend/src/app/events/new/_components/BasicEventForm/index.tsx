@@ -1,13 +1,15 @@
 "use client";
 
-import { Link } from "@/app/components/Link";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Email, LocationOn } from "@mui/icons-material";
 import { Stack, TextField, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { Link } from "@/app/components/Link";
+
 import { SelectCategories } from "./SelectCategories";
 import { SelectOrganization } from "./SelectOrganization";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 type BasicEventFormType = {
   name: string;

@@ -1,15 +1,17 @@
 "use client";
 
-import { useAlerts } from "@/app/components/Alerts";
-import { Markdown } from "@/components";
-import { graphql } from "@/gql/app";
-import { EventType } from "@/gql/app/graphql";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@mui/lab";
 import { Card, CardActions, CardContent, CardHeader, Unstable_Grid2 as Grid, Stack } from "@mui/material";
 import { notFound, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+
+import { useAlerts } from "@/app/components/Alerts";
+import { Markdown } from "@/components";
+import { graphql } from "@/gql/app";
+import { EventType } from "@/gql/app/graphql";
+
 import { BasicEventForm, BasicEventFormType, basicEventValidationSchema } from "../_components/BasicEventForm";
 
 export default function Page() {
@@ -46,7 +48,7 @@ export default function Page() {
     },
   });
 
-  const { handleSubmit, watch } = methods;
+  const { watch } = methods;
 
   const { notify } = useAlerts();
   const router = useRouter();

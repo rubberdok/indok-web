@@ -1,7 +1,8 @@
-import { SignUpAvailability } from "@/gql/app/graphql";
 import { LoadingButton } from "@mui/lab";
 import { Button, Dialog, DialogActions, DialogContent, Typography } from "@mui/material";
 import { useState } from "react";
+
+import { SignUpAvailability } from "@/gql/app/graphql";
 
 type Props = {
   disabled?: boolean;

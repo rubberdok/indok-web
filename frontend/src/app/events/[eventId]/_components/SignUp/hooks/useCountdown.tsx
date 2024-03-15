@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 
-import { graphql } from "@/gql/pages";
+import { graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
 
 /**

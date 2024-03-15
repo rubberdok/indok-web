@@ -1,10 +1,10 @@
 import { Card, CardActionArea, CardContent, Chip, Stack, Typography } from "@mui/material";
 import React from "react";
 
-import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
-import { SignUpAvailability } from "@/gql/pages/graphql";
-import dayjs from "@/lib/date";
 import { NextLinkComposed } from "@/app/components/Link";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import { SignUpAvailability } from "@/gql/app/graphql";
+import dayjs from "@/lib/date";
 
 const EventListItemFragment = graphql(`
   fragment EventListItem_Event on Event {

@@ -3,6 +3,7 @@ import { Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import React from "react";
 
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+
 import { CategoryFilter } from "./CategoryFilter";
 import { DateTimeFilter } from "./DateTimeFilter";
 import { OrganizationFilter } from "./OrganizationFilter";

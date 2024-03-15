@@ -1,6 +1,5 @@
 "use client";
 
-import { graphql } from "@/gql/app";
 import { useSuspenseQuery } from "@apollo/client";
 import { Close, Tune } from "@mui/icons-material";
 import {
@@ -17,9 +16,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+
+import { graphql } from "@/gql/app";
+import dayjs from "@/lib/date";
+
 import { EventListItem } from "./EventListItem";
 import { FilterMenu, Filters } from "./FilterMenu";
-import dayjs from "dayjs";
 
 function EventsPage() {
   const [filters, setFilters] = useState<Filters | null>(null);

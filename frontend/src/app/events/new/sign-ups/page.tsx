@@ -1,11 +1,13 @@
 "use client";
-import { graphql } from "@/gql/app";
-import { EventType } from "@/gql/app/graphql";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { LoadingButton } from "@mui/lab";
 import { Button, Card, CardActions, CardContent, Stack, Step, StepLabel, Stepper } from "@mui/material";
 import { notFound } from "next/navigation";
 import { useState } from "react";
+
+import { graphql } from "@/gql/app";
+import { EventType } from "@/gql/app/graphql";
+
 import { BasicEventForm, BasicEventFormType } from "../_components/BasicEventForm";
 import { SignUpForm, SignUpFormType } from "../_components/SignUpForm";
 
@@ -46,12 +48,11 @@ export default function Page() {
       }
     `)
   );
+  const [step, setStep] = useState(0);
 
   const organizations = data.user.user?.organizations ?? [];
   if (!organizations.length) return notFound();
   const categories = data.categories.categories;
-
-  const [step, setStep] = useState(0);
 
   function onSubmit(data: SignUpFormType) {
     if (basicEventData === null) return setStep(0);

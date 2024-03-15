@@ -1,9 +1,10 @@
 "use client";
 
-import { Title } from "@/components/Title";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 import { Container, Tab, Tabs } from "@mui/material";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
+
+import { Title } from "@/components/Title";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 
 export default function Layout({ children }: React.PropsWithChildren) {
   const segment = useSelectedLayoutSegment();

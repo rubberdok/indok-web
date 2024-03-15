@@ -1,5 +1,6 @@
-import { NextLinkComposed } from "@/app/components/Link";
 import { Button, Card, CardContent, Unstable_Grid2 as Grid } from "@mui/material";
+
+import { NextLinkComposed } from "@/app/components/Link";
 
 export default function Page() {
   return (

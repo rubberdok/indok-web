@@ -1,12 +1,11 @@
 import { Alert, AlertTitle, Unstable_Grid2 as Grid, Typography } from "@mui/material";
 
-import { FragmentType, getFragmentData, graphql } from "@/gql/pages";
-import { OrderPaymentStatus } from "@/gql/pages/graphql";
+import { Link } from "@/app/components/Link";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import { OrderPaymentStatus, ParticipationStatus } from "@/gql/app/graphql";
 
-import { ParticipationStatus } from "@/gql/app/graphql";
 import { Actions } from "./Actions";
 import { PaymentStatus } from "./Payments";
-import { Link } from "@/app/components/Link";
 
 const SignUpFragment = graphql(`
   fragment EventSignUp_EventFragment on Event {

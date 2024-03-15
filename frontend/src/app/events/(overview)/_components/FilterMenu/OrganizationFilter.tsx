@@ -1,6 +1,5 @@
-import { useQuery } from "@apollo/client";
-import { Checkbox, Grid, Skeleton, Typography } from "@mui/material";
-import { compact, range, uniq } from "lodash";
+import { Checkbox, Grid, Typography } from "@mui/material";
+import { compact, uniq } from "lodash";
 import React from "react";
 
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";

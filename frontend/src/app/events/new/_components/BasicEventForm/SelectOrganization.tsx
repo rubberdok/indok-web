@@ -1,6 +1,7 @@
 import { FormControl, FormHelperText, InputLabel, Select } from "@mui/material";
 import { notFound } from "next/navigation";
 import { Controller, useFormContext } from "react-hook-form";
+
 import { BasicEventFormType } from ".";
 
 type Props = {
@@ -8,9 +9,8 @@ type Props = {
 };
 
 function SelectOrganization({ organizations }: Props) {
-  if (!organizations.length) return notFound();
-
   const { control } = useFormContext<BasicEventFormType>();
+  if (!organizations.length) return notFound();
   return (
     <Controller
       control={control}

@@ -1,9 +1,10 @@
+import { Container } from "@mui/material";
+import { Metadata } from "next";
+
 import { Title } from "@/components/Title";
 import { getFragmentData, graphql } from "@/gql/app";
 import { getClient } from "@/lib/apollo/ApolloClient";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
-import { Container } from "@mui/material";
-import { Metadata } from "next";
 
 const EventLayoutEventFragment = graphql(`
   fragment EventLayout_Event on Event {
