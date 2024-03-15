@@ -1,6 +1,4 @@
 "use client";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { NextLinkComposed } from "@/app/components/Link";
 import {
   Card,
   CardActionArea,
@@ -10,6 +8,9 @@ import {
   Unstable_Grid2 as Grid,
   Typography,
 } from "@mui/material";
+
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { NextLinkComposed } from "@/app/components/Link";
 
 export default function Page() {
   return (

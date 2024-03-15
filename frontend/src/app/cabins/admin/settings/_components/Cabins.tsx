@@ -1,5 +1,3 @@
-import { useAlerts } from "@/app/components/Alerts";
-import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import { useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit } from "@mui/icons-material";
@@ -28,6 +26,10 @@ import {
 import { useState } from "react";
 import { UseFormRegister, UseFormStateReturn, useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { useAlerts } from "@/app/components/Alerts";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import { Currency } from "@/app/_components/Currency";
 
 type CabinsProps = {
   query: FragmentType<typeof CabinsQueryFragment>;
@@ -296,16 +298,6 @@ function Cabin(props: CabinProps) {
           </Table>
         </Box>
       </Stack>
-    </>
-  );
-}
-
-function Currency(props: { amount: number }) {
-  return (
-    <>
-      {new Intl.NumberFormat("nb-NO", { style: "currency", currency: "NOK", maximumFractionDigits: 0 }).format(
-        props.amount
-      )}
     </>
   );
 }

@@ -1,6 +1,7 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Container, Stack, Typography } from "@mui/material";
-import { BookingDetailsFields } from "./BookingDetails";
 import { Send } from "@mui/icons-material";
+import { Button, Card, CardActions, CardContent, CardHeader, Container, Stack, Typography } from "@mui/material";
+
+import { BookingDetailsFields } from "./BookingDetails";
 
 type Props = {
   dates: {

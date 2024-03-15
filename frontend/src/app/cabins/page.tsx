@@ -1,19 +1,22 @@
 "use client";
 
-import { Title } from "@/components";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
+import { useSuspenseQuery } from "@apollo/client";
 import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
-import cabin from "~/public/img/hytte.jpg";
-import { Link } from "../components/Link";
-import { CabinsInfoSection } from "./_components/CabinsInfoSection";
-import { useSuspenseQuery } from "@apollo/client";
+
+import { Title } from "@/components";
 import { graphql } from "@/gql/app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
+import cabin from "~/public/img/hytte.jpg";
+
+import { Link } from "../components/Link";
+
 import { CabinsDetailsSection } from "./_components/CabinsDetailsSection";
-import { ImageSlider } from "./_components/ImageSlider/ImageSlider";
-import { outsideImages } from "./_components/ImageSlider/imageData";
-import { FAQ } from "./_components/FAQ";
+import { CabinsInfoSection } from "./_components/CabinsInfoSection";
 import { ContactCabinBoard } from "./_components/ContactCabinBoard";
+import { FAQ } from "./_components/FAQ";
+import { outsideImages } from "./_components/ImageSlider/imageData";
+import { ImageSlider } from "./_components/ImageSlider/ImageSlider";
 
 const transportData = [
   {

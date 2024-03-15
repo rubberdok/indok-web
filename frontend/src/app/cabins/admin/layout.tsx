@@ -1,8 +1,9 @@
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+
 import { graphql } from "@/gql/app";
 import { FeaturePermission } from "@/gql/app/graphql";
 import { getClient } from "@/lib/apollo/ApolloClient";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: {

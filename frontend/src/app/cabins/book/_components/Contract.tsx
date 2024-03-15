@@ -9,18 +9,17 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
-  Grid,
   Stack,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
 import * as yup from "@/lib/validation";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
 
-import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import { BookingDetailsFields } from "./BookingDetails";
 
 type Props = {

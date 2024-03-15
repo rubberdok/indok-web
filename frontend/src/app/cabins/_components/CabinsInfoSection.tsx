@@ -1,8 +1,9 @@
 import { Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 
-import { BookNow } from "./BookNow";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+
+import { BookNow } from "./BookNow";
 
 {
   /* Bilder er generert på nettsiden: https://undraw.co/ */

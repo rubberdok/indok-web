@@ -1,5 +1,3 @@
-import { Calendar } from "@/components/Calendar";
-import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import { KeyboardArrowRight } from "@mui/icons-material";
 import {
   Button,
@@ -12,8 +10,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { useState } from "react";
+
+import { Calendar } from "@/components/Calendar";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import dayjs from "@/lib/date";
 
 type Props = {
   dates: { start: Date | undefined; end: Date | undefined };

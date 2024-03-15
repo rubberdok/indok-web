@@ -1,8 +1,10 @@
 "use client";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { graphql } from "@/gql/app";
 import { useSuspenseQuery } from "@apollo/client";
 import { Stack, Typography } from "@mui/material";
+
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { graphql } from "@/gql/app";
+
 import { BookingContact } from "./_components/BookingContact";
 import { BookingSemesters } from "./_components/BookingSemesters";
 import { Cabins } from "./_components/Cabins";

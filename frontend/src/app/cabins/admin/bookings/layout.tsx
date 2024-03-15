@@ -1,7 +1,8 @@
 "use client";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { Container, Tab, Tabs, Typography } from "@mui/material";
 import { redirect, useRouter, useSelectedLayoutSegment } from "next/navigation";
+
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 
 const nameBySegment: Record<string, string> = {
   all: "Alle",

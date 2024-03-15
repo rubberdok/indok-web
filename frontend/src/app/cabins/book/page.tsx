@@ -1,16 +1,18 @@
 "use client";
 
-import { useAlerts } from "@/app/components/Alerts";
-import { graphql } from "@/gql/app";
 import { skipToken, useMutation, useQuery, useSuspenseQuery } from "@apollo/client";
 import { Stack, Step, StepLabel, Stepper } from "@mui/material";
 import { useState } from "react";
+
+import { useAlerts } from "@/app/components/Alerts";
+import { graphql } from "@/gql/app";
+import dayjs from "@/lib/date";
+
 import { BookingDetails, BookingDetailsFields } from "./_components/BookingDetails";
 import { Contract } from "./_components/Contract";
 import { PickDates } from "./_components/PickDates";
 import { Questions } from "./_components/Questions";
 import { Summary } from "./_components/Summary";
-import dayjs from "dayjs";
 
 const steps = ["Velg dato", "Kontaktinfo", "Ekstra info", "Kontrakt", "Send søknad", "Kvittering"] as const;
 

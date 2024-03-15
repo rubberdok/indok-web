@@ -1,10 +1,12 @@
 "use client";
 
+import { useMutation, useSuspenseQuery } from "@apollo/client";
+import { Unstable_Grid2 as Grid, Typography } from "@mui/material";
+
 import { useAlerts } from "@/app/components/Alerts";
 import { graphql } from "@/gql/app";
 import { BookingStatus } from "@/gql/app/graphql";
-import { useMutation, useSuspenseQuery } from "@apollo/client";
-import { Unstable_Grid2 as Grid, Typography } from "@mui/material";
+
 import { Booking } from "../_components/Booking";
 
 function BookingPage({ status }: { status?: BookingStatus }) {
@@ -77,7 +79,7 @@ function BookingPage({ status }: { status?: BookingStatus }) {
         </Grid>
       )}
       {data.bookings.bookings.map((booking) => (
-        <Grid xs={12}>
+        <Grid xs={12} key={booking.id}>
           <Booking
             key={booking.id}
             booking={booking}

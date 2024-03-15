@@ -1,6 +1,5 @@
 "use client";
 
-import { graphql } from "@/gql/app";
 import { skipToken, useSuspenseQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
@@ -23,7 +22,9 @@ import {
 } from "@mui/material";
 import { range } from "lodash";
 import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
+
+import { graphql } from "@/gql/app";
+import * as yup from "@/lib/validation";
 
 type BookingDetailsFields = {
   firstName: string;
@@ -74,7 +75,7 @@ function BookingDetails({ bookingDetails, selectedCabins, onSubmit, onPrevious, 
               startDate: dates.start.toISOString(),
               endDate: dates.end.toISOString(),
               cabins: selectedCabins.map((cabin) => ({ id: cabin.id })),
-              participants: {
+              guests: {
                 internal: internalParticipants,
                 external: externalParticipants,
               },

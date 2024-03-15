@@ -10,8 +10,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
+
+import dayjs from "@/lib/date";
 
 type Props = {
   selectedCabins: { id: string; name: string; capacity: number }[];
