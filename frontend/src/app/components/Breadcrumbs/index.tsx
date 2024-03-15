@@ -1,3 +1,4 @@
+"use client";
 import { NavigateNext } from "@mui/icons-material";
 import { BreadcrumbsProps, Breadcrumbs as MUIBreadcrumbs, SxProps } from "@mui/material";
 import { Route } from "next";
