@@ -16,7 +16,6 @@ const ShopPage: NextPageWithLayout = () => {
         Butikk
         <Grid container spacing={2}>
           {data?.products?.map((product) => {
-            console.log(product);
             if (product.shopItem === true)
               return (
                 <Grid key={product.id} item xs={12} sm={6} md={6}>

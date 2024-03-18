@@ -14,7 +14,7 @@ class EcommerceResolvers:
         except Product.DoesNotExist:
             return None
 
-    @staff_member_required
+    @login_required
     def resolve_products(self, info):
         return Product.objects.all()
 
