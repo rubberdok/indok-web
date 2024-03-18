@@ -8,12 +8,21 @@ import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const ShopPage: NextPageWithLayout = () => {
-  const { loading, data } = useQuery(ProductsDocument);
+  const { loading, error, data } = useQuery(ProductsDocument);
 
   if (loading) {
     return (
       <Template title="Janus Nettbutikk" description="">
         <CircularProgress />
+      </Template>
+    );
+  }
+  if (error) {
+    return (
+      <Template title="Janus Nettbutikk" description="">
+        <Typography variant="body1" gutterBottom>
+          Feil ved lasting av produkter. Vennligst prøv igjen senere. Hvis problemet vedvarer, kontakt
+        </Typography>
       </Template>
     );
   }
