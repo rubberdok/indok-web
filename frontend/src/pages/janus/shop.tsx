@@ -22,6 +22,7 @@ const ShopPage: NextPageWithLayout = () => {
       <Template title="Janus Nettbutikk" description="">
         <Typography variant="body1" gutterBottom>
           Feil ved lasting av produkter. Vennligst prøv igjen senere. Hvis problemet vedvarer, kontakt
+          leder@rubberdok.no.
         </Typography>
       </Template>
     );
@@ -31,7 +32,7 @@ const ShopPage: NextPageWithLayout = () => {
       <Template title="Janus Nettbutikk" description="">
         <Typography variant="body1" gutterBottom>
           Fant ingen produkter. Vennligst sjekk at du er innlogget og prøv igjen. Hvis problemet vedvarer, kontakt
-          leder@rubbedok.no.
+          leder@rubberdok.no.
         </Typography>
       </Template>
     );
