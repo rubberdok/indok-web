@@ -433,3 +433,27 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     def test_authorized_user_attempt_capture_cancelled_order(self) -> None:
         # Authorized users should be able to update cancelled orders from INITIATED -> CANCELLED
         self.do_attempt_capture_cancelled_order_test(user=self.indok_user)
+
+    def test_delivered_product(self) -> None:
+        unique_user = IndokUserFactory()
+        order = OrderFactory(product=self.product_1, user=unique_user)
+
+        orderId = order.id
+        query = f"""
+            mutation deliveredProduct {{
+                deliveredProduct(
+                    orderId: "{orderId}",
+                ) {{
+                ok
+                    }}
+                }}
+            """
+
+        response = self.query(query, user=self.staff_user)
+        self.assertResponseNoErrors(response)
+
+        response = self.query(query, user=unique_user)
+        self.assert_permission_error(response)
+
+        order = Order.objects.get(pk=order.id)
+        self.assertTrue(order.delivered_product)

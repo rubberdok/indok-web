@@ -25,6 +25,7 @@ export const OrganizationHero: React.FC<Props> = ({ organization, handleTabChang
         <Tab label="Arrangementer" />
         <Tab label="Verv" />
         <Tab label="Medlemmer" />
+        <Tab label="Butikk" />
       </Tabs>
     </Title>
   );
