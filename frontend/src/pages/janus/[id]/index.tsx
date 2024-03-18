@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Alert, Box, Link, Stack } from "@mui/material";
+import { Alert, Box, Link, Stack, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { ProductInfo } from "@/components/pages/Janus/Shop/ProductInfo";
@@ -26,9 +26,17 @@ const ProductPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
         <Stack direction={{ xs: "column", sm: "row" }} spacing={{ xs: 12, sm: 2, md: 8 }}>
           <Box style={{ width: "75%" }}>{data?.product?.description}</Box>
           {/* <ProductInfo price={0} sizes={["S", "M", "L"]} types={["Blue", "Red", "Gray"]} /> */}
+          <Box style={{ width: "25%", borderRadius: "3px" }}>
+            {" "}
+            <Typography variant="h6" textAlign="left" padding={1}>
+              Pris: {data?.product?.price}
+            </Typography>{" "}
+            <Box color="white" bgcolor="primary.main" borderRadius={"3px"}>
+              <PurchaseButton productId={data?.product?.id ?? ""} />
+            </Box>
+          </Box>
         </Stack>
       </Stack>
-      <PurchaseButton productId={data?.product?.id ?? ""} />
     </Template>
   );
 };
