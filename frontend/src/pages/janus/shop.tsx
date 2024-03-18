@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Grid, Typography } from "@mui/material";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 
 import { ShopItem } from "@/components/pages/Janus/Shop/ShopItem";
 import { Template } from "@/components/pages/Janus/Template";
@@ -8,8 +8,25 @@ import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const ShopPage: NextPageWithLayout = () => {
-  const { data } = useQuery(ProductsDocument);
+  const { loading, data } = useQuery(ProductsDocument);
 
+  if (loading) {
+    return (
+      <Template title="Janus Nettbutikk" description="">
+        <CircularProgress />
+      </Template>
+    );
+  }
+  if (data === undefined) {
+    return (
+      <Template title="Janus Nettbutikk" description="">
+        <Typography variant="body1" gutterBottom>
+          Fant ingen produkter. Vennligst sjekk at du er innlogget og prøv igjen. Hvis problemet vedvarer, kontakt
+          leder@rubbedok.no.
+        </Typography>
+      </Template>
+    );
+  }
   return (
     <Template title="Janus Nettbutikk" description="">
       <Typography variant="h3" gutterBottom>
