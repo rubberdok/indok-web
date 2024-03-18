@@ -28,7 +28,7 @@ const ProductPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           <Box style={{ width: "25%", borderRadius: "3px" }}>
             {" "}
             <Typography variant="h6" textAlign="left" padding={1}>
-              Pris: {data?.product?.price}
+              Pris: {data?.product?.price} kr
             </Typography>{" "}
             <Box color="white" bgcolor="primary.main" borderRadius={"3px"}>
               <PurchaseButton productId={data?.product?.id ?? ""} />
