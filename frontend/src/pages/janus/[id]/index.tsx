@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import { Alert, Box, Link, Stack, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-import { ProductInfo } from "@/components/pages/Janus/Shop/ProductInfo";
 import { PurchaseButton } from "@/components/pages/Janus/Shop/PurchaseButton";
 import { Template } from "@/components/pages/Janus/Template";
 import { ProductDocument, ProductFragment } from "@/generated/graphql";
