@@ -96,47 +96,5 @@ function FileUpload({ onComplete, fileTypeAllowList, currentObjectUrl, imagePrev
   );
 }
 
-function useFileUpload(data: { onComplete?: (file: { file: File }) => void; fileTypeAllowList?: string[] }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [completed, setCompleted] = useState(false);
-  const { onComplete, fileTypeAllowList } = data;
-
-  async function uploadFile(file: File | undefined, url: string) {
-    try {
-      setLoading(true);
-      setError(undefined);
-      setCompleted(false);
-      if (!file) throw new Error("No file selected");
-      const fileArrayBuffer = await convertFileToArrayBuffer(file);
-
-      if (!fileArrayBuffer) throw new Error("Failed to convert file to array buffer");
-      const fileExtension = file.name.split(".").pop();
-      if (!fileExtension) throw new Error("Failed to get file extension");
-      if (fileTypeAllowList && !fileTypeAllowList.includes(fileExtension)) throw new Error("File type not allowed");
-
-      if (fileArrayBuffer === null || fileArrayBuffer.byteLength < 1 || fileArrayBuffer.byteLength > MAX_FILE_SIZE_B)
-        throw new Error("File size too large");
-
-      const blockBlobClient = new BlockBlobClient(url);
-
-      await blockBlobClient.uploadData(fileArrayBuffer, {
-        blobHTTPHeaders: {
-          blobContentType: file.type,
-        },
-      });
-      setCompleted(true);
-      onComplete?.({ file });
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return { uploadFile, loading, error, completed };
-}
-
-export { FileUpload, useFileUpload };
+export { useFileUpload } from "./useFileUpload";
+export { FileUpload };
