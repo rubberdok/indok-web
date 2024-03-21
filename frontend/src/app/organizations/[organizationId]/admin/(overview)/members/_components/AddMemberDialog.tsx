@@ -1,7 +1,7 @@
 "use client";
 import { useAlerts } from "@/app/components/Alerts";
 import { getFragmentData, graphql } from "@/gql/app";
-import { Role } from "@/gql/app/graphql";
+import { AddMemberErrorCode, Role } from "@/gql/app/graphql";
 import { useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@mui/lab";
@@ -50,36 +50,42 @@ function AddMemberDialog({ open, onClose, organizationId }: AddMemberDialogProps
     graphql(`
       mutation OrganizationsAdminMembersPage_AddMember($data: AddMemberInput!) {
         addMember(data: $data) {
-          member {
-            ...AddMemberDialog_Member
+          ... on AddMemberSuccessResponse {
+            member {
+              ...AddMemberDialog_Member
+            }
+          }
+          ... on AddMemberErrorResponse {
+            code
+            message
           }
         }
       }
     `),
     {
-      onCompleted() {
-        notify({ message: "Medlem lagt til", type: "success" });
-        onClose();
-      },
-      onError(errors) {
-        const error = errors.graphQLErrors[0];
-        switch (error.extensions?.code) {
-          case "NOT_FOUND": {
-            return notify({
-              message: "Kunne ikke legge til e-posten som medlem, sjekk at den stemmer.",
-              type: "error",
-            });
-          }
-          case "BAD_USER_INPUT": {
-            return notify({ message: "Personen er allerede medlem av organisasjonen", type: "info" });
-          }
-          default: {
-            return notify({ title: "Noe gikk galt", message: errors.message, type: "error" });
+      onCompleted({ addMember }) {
+        if (addMember.__typename === "AddMemberSuccessResponse") {
+          notify({ message: "Medlem lagt til", type: "success" });
+          onClose();
+        } else if (addMember.__typename === "AddMemberErrorResponse") {
+          switch (addMember.code) {
+            case AddMemberErrorCode.AlreadyMember: {
+              return notify({ message: "Personen er allerede medlem av organisasjonen", type: "info" });
+            }
+            case AddMemberErrorCode.UserNotFound: {
+              return notify({
+                message: "Fant ingen bruker med den e-posten, sjekk at den stemmer.",
+                type: "error",
+              });
+            }
           }
         }
       },
+      onError(errors) {
+        return notify({ title: "Noe gikk galt", message: errors.message, type: "error" });
+      },
       update(cache, { data }) {
-        if (data?.addMember.member) {
+        if (data?.addMember.__typename === "AddMemberSuccessResponse" && data?.addMember.member) {
           const member = getFragmentData(MemberFragment, data.addMember.member);
           cache.modify({
             id: cache.identify(member.organization),
