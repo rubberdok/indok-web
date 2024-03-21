@@ -8,6 +8,7 @@ import { graphql } from "@/gql/app";
 import { BookingContact } from "./_components/BookingContact";
 import { BookingSemesters } from "./_components/BookingSemesters";
 import { Cabins } from "./_components/Cabins";
+import { BookingTerms } from "./_components/BookingTerms";
 
 export default function Page() {
   const { data } = useSuspenseQuery(
@@ -16,6 +17,7 @@ export default function Page() {
         ...Cabins_Query
         ...BookingSemesters_Query
         ...BookingContact_Query
+        ...BookingTerms_Query
       }
     `)
   );
@@ -36,6 +38,7 @@ export default function Page() {
         <Cabins query={data} />
         <BookingSemesters query={data} />
         <BookingContact query={data} />
+        <BookingTerms query={data} />
       </Stack>
     </>
   );

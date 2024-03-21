@@ -166,15 +166,17 @@ function BookingContact(props: BookingContactProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableCell>{bookingContact.name}</TableCell>
-                <TableCell>{bookingContact.email}</TableCell>
-                <TableCell>{bookingContact.phoneNumber}</TableCell>
-                <TableCell align="right">{dayjs(bookingContact.updatedAt).format("LL")}</TableCell>
-                <TableCell align="center">
-                  <IconButton onClick={() => setEditing(true)}>
-                    <Edit />
-                  </IconButton>
-                </TableCell>
+                <TableRow>
+                  <TableCell>{bookingContact.name}</TableCell>
+                  <TableCell>{bookingContact.email}</TableCell>
+                  <TableCell>{bookingContact.phoneNumber}</TableCell>
+                  <TableCell align="right">{dayjs(bookingContact.updatedAt).format("LL")}</TableCell>
+                  <TableCell align="center">
+                    <IconButton onClick={() => setEditing(true)}>
+                      <Edit />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

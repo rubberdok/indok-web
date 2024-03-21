@@ -259,9 +259,11 @@ function Cabin(props: CabinProps) {
             </Typography>
             <Typography variant="caption">{cabin.capacity} sengeplasser</Typography>
           </Stack>
-          <IconButton onClick={() => setEditing(true)}>
-            <Edit />
-          </IconButton>
+          <Box>
+            <IconButton onClick={() => setEditing(true)}>
+              <Edit />
+            </IconButton>
+          </Box>
         </Stack>
         <Box>
           <Typography variant="subtitle2" gutterBottom>
