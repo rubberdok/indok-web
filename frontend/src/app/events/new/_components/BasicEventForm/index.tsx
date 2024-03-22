@@ -1,9 +1,8 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Email, LocationOn } from "@mui/icons-material";
 import { Stack, TextField, Typography } from "@mui/material";
-import { FormProvider, useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 
 import { Link } from "@/app/components/Link";
@@ -32,9 +31,6 @@ const descriptionPlaceholderText = `### Overskrifter
 type Props = {
   organizations: { id: string; name: string }[];
   categories: { id: string; name: string }[];
-  id: string;
-  onSubmit: (values: BasicEventFormType) => void;
-  defaultValues: Partial<BasicEventFormType>;
 };
 
 const basicEventValidationSchema = z
@@ -59,118 +55,115 @@ const basicEventValidationSchema = z
     }
   );
 
-function BasicEventForm({ organizations, categories, id, onSubmit, defaultValues }: Props) {
-  const methods = useForm<BasicEventFormType>({
-    defaultValues,
-    resolver: zodResolver(basicEventValidationSchema),
-  });
+function BasicEventForm({ organizations, categories }: Props) {
+  const methods = useFormContext<BasicEventFormType>();
   const {
     register,
     formState: { errors },
-    handleSubmit,
   } = methods;
 
   return (
-    <FormProvider {...methods}>
-      <form id={id} onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="column" spacing={2}>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <TextField
-              {...register("name")}
-              label="Navn på arrangementet"
-              required
-              fullWidth
-              error={Boolean(errors.name)}
-              helperText={errors.name?.message ?? " "}
-            />
-            <SelectOrganization organizations={organizations} />
-          </Stack>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <TextField
-              {...register("startAt")}
-              label="Starttid"
-              required
-              fullWidth
-              type="datetime-local"
-              InputLabelProps={{ shrink: true }}
-              helperText={errors.startAt?.message ?? " "}
-              error={Boolean(errors.startAt)}
-            />
-            <TextField
-              {...register("endAt")}
-              label="Sluttid"
-              required
-              fullWidth
-              type="datetime-local"
-              InputLabelProps={{ shrink: true }}
-              helperText={errors.endAt?.message ?? " "}
-              error={Boolean(errors.endAt)}
-            />
-          </Stack>
+    <Stack direction="column" spacing={2}>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <TextField
+          {...register("name")}
+          label="Navn på arrangementet"
+          required
+          fullWidth
+          error={Boolean(errors.name)}
+          helperText={errors.name?.message ?? " "}
+        />
+        <SelectOrganization organizations={organizations} />
+      </Stack>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <TextField
+          {...register("startAt")}
+          label="Starttid"
+          required
+          fullWidth
+          type="datetime-local"
+          InputLabelProps={{ shrink: true }}
+          helperText={errors.startAt?.message ?? " "}
+          error={Boolean(errors.startAt)}
+        />
+        <TextField
+          {...register("endAt")}
+          label="Sluttid"
+          required
+          fullWidth
+          type="datetime-local"
+          InputLabelProps={{ shrink: true }}
+          helperText={errors.endAt?.message ?? " "}
+          error={Boolean(errors.endAt)}
+        />
+      </Stack>
 
-          <TextField
-            {...register("description")}
-            label="Beskrivelse"
-            multiline
-            minRows={3}
-            maxRows={10}
-            fullWidth
-            placeholder={descriptionPlaceholderText}
-            error={Boolean(errors.description)}
-            helperText={
-              errors.description?.message ?? (
-                <Typography variant="inherit" component="span">
-                  Beskrivelsen kan bruke markdown for formattering,{" "}
-                  <Link target="_blank" href="https://www.markdownguide.org/cheat-sheet/">
-                    trykk her for en guide
-                  </Link>
-                </Typography>
-              )
-            }
-          />
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <TextField
-              {...register("shortDescription")}
-              label="Kort beskrivelse"
-              fullWidth
-              error={Boolean(errors.shortDescription)}
-              placeholder="Årets kuleste arrangement..."
-              helperText={
-                errors.shortDescription?.message ?? (
-                  <Typography variant="inherit" component="span">
-                    Vises i oversikten over arrangementer
-                  </Typography>
-                )
-              }
-            />
-            <SelectCategories categories={categories} />
-          </Stack>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <TextField
-              {...register("location")}
-              label="Sted"
-              fullWidth
-              error={Boolean(errors.location)}
-              helperText={errors.location?.message ?? " "}
-              InputProps={{
-                endAdornment: <LocationOn color="action" />,
-              }}
-            />
-            <TextField
-              {...register("contactEmail")}
-              label="Kontakt (e-post)"
-              fullWidth
-              type="email"
-              error={Boolean(errors.contactEmail)}
-              helperText={errors.contactEmail?.message ?? " "}
-              InputProps={{
-                endAdornment: <Email color="action" />,
-              }}
-            />
-          </Stack>
-        </Stack>
-      </form>
-    </FormProvider>
+      <TextField
+        {...register("description")}
+        label="Beskrivelse"
+        multiline
+        minRows={3}
+        maxRows={10}
+        fullWidth
+        placeholder={descriptionPlaceholderText}
+        error={Boolean(errors.description)}
+        InputProps={{
+          sx: {
+            fontFamily: "ui-monospace, monospace",
+          },
+        }}
+        helperText={
+          errors.description?.message ?? (
+            <Typography variant="inherit" component="span">
+              Beskrivelsen kan bruke markdown for formattering,{" "}
+              <Link target="_blank" href="https://www.markdownguide.org/cheat-sheet/">
+                trykk her for en guide
+              </Link>
+            </Typography>
+          )
+        }
+      />
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <TextField
+          {...register("shortDescription")}
+          label="Kort beskrivelse"
+          fullWidth
+          error={Boolean(errors.shortDescription)}
+          placeholder="Årets kuleste arrangement..."
+          helperText={
+            errors.shortDescription?.message ?? (
+              <Typography variant="inherit" component="span">
+                Vises i oversikten over arrangementer
+              </Typography>
+            )
+          }
+        />
+        <SelectCategories categories={categories} />
+      </Stack>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <TextField
+          {...register("location")}
+          label="Sted"
+          fullWidth
+          error={Boolean(errors.location)}
+          helperText={errors.location?.message ?? " "}
+          InputProps={{
+            endAdornment: <LocationOn color="action" />,
+          }}
+        />
+        <TextField
+          {...register("contactEmail")}
+          label="Kontakt (e-post)"
+          fullWidth
+          type="email"
+          error={Boolean(errors.contactEmail)}
+          helperText={errors.contactEmail?.message ?? " "}
+          InputProps={{
+            endAdornment: <Email color="action" />,
+          }}
+        />
+      </Stack>
+    </Stack>
   );
 }
 

@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@mui/lab";
 import { Card, CardActions, CardContent, CardHeader, Unstable_Grid2 as Grid, Stack } from "@mui/material";
 import { notFound, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { useAlerts } from "@/app/components/Alerts";
 import { Markdown } from "@/components";
@@ -48,7 +48,7 @@ export default function Page() {
     },
   });
 
-  const { watch } = methods;
+  const { watch, handleSubmit } = methods;
 
   const { notify } = useAlerts();
   const router = useRouter();
@@ -120,22 +120,20 @@ export default function Page() {
     <Grid container direction="row" spacing={2}>
       <Grid md={6} xs={12}>
         <Card>
-          <CardContent>
-            <BasicEventForm
-              id="basic-event-form"
-              onSubmit={onSubmit}
-              defaultValues={{ organizationId: organizations[0]?.id }}
-              categories={categories}
-              organizations={organizations}
-            />
-          </CardContent>
-          <CardActions>
-            <Stack direction="row" justifyContent="flex-end" width="1">
-              <LoadingButton loading={loading} type="submit" form="basic-event-form" variant="contained">
-                Opprett arrangement
-              </LoadingButton>
-            </Stack>
-          </CardActions>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent>
+              <FormProvider {...methods}>
+                <BasicEventForm categories={categories} organizations={organizations} />
+              </FormProvider>
+            </CardContent>
+            <CardActions>
+              <Stack direction="row" justifyContent="flex-end" width="1">
+                <LoadingButton loading={loading} type="submit" variant="contained">
+                  Opprett arrangement
+                </LoadingButton>
+              </Stack>
+            </CardActions>
+          </form>
         </Card>
       </Grid>
       <Grid display={{ xs: "none", md: "block" }} md={6}>
