@@ -5,7 +5,7 @@ import { useState } from "react";
 const MB_16 = 16 * 1024 * 1024;
 const MB_32 = 32 * 1024 * 1024;
 
-function useFileUpload(data: {
+function useFileUpload(data?: {
   onComplete?: (file: { file: File }) => void;
   onError?: (error: Error) => void;
   fileTypeAllowList?: string[];
@@ -14,8 +14,8 @@ function useFileUpload(data: {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [completed, setCompleted] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const { onComplete, fileTypeAllowList, onError, fileMaxSizeBytes = MB_16 } = data;
+  const [progress, setProgress] = useState<{ [fileName: string]: number }>({});
+  const { onComplete, fileTypeAllowList, onError, fileMaxSizeBytes = MB_16 } = data ?? {};
 
   async function uploadFile(file: File | undefined, url: string) {
     try {
@@ -42,7 +42,7 @@ function useFileUpload(data: {
         onProgress(progress) {
           const fileSize = fileArrayBuffer.byteLength;
           const percent = (progress.loadedBytes / fileSize) * 100;
-          setProgress(percent);
+          setProgress({ [file.name]: percent });
         },
       });
       setCompleted(true);
