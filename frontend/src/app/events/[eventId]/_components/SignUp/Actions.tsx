@@ -178,10 +178,12 @@ export const Actions: React.FC<Props> = (props) => {
         <Grid xs={12}>
           <TextField
             onChange={(e) => setExtraInformation(e.target.value)}
-            value={extraInformation}
+            value={extraInformation ?? ""}
             label="Ekstra informasjon"
             required
             fullWidth
+            minRows={2}
+            maxRows={4}
             multiline
             helperText="Må fylles ut før påmelding blir tilgjengelig."
           />

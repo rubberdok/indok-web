@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 
 import { Link } from "@/app/components/Link";
-import { Markdown } from "@/components/Markdown";
+import { Markdown } from "@/app/_components/Markdown";
 import { graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
 

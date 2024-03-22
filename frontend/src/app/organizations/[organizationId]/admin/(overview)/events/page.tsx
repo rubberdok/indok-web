@@ -1,12 +1,13 @@
 "use client";
 
 import { useSuspenseQuery } from "@apollo/client";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 
-import { Link } from "@/app/components/Link";
+import { Link, NextLinkComposed } from "@/app/components/Link";
 import { graphql } from "@/gql/app";
 import { EventType } from "@/gql/app/graphql";
 import dayjs from "@/lib/date";
+import { Add } from "@mui/icons-material";
 
 export default function Page({ params }: { params: { organizationId: string } }) {
   const { organizationId } = params;
@@ -50,6 +51,11 @@ export default function Page({ params }: { params: { organizationId: string } })
             <TableCell>Starttid</TableCell>
             <TableCell>Type arrangement</TableCell>
             <TableCell>Påmeldte</TableCell>
+            <TableCell>
+              <IconButton component={NextLinkComposed} to="/events/new">
+                <Add />
+              </IconButton>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

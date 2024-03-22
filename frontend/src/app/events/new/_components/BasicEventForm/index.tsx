@@ -23,8 +23,11 @@ type BasicEventFormType = {
 };
 const descriptionPlaceholderText = `### Overskrifter
 
-[Lenke til noe](https://indokntnu.no)
+Bilde: ![beskrivelse av bildet](https://source.unsplash.com/WqZoyvzViBA)
 
+Lenke til noe: [Sjekk ut vår instagram!](https://indokntnu.no)
+
+Liste med punkter:
 * Punkt 1
 * Punkt 2`;
 
