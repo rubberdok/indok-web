@@ -2,20 +2,37 @@ import { Send } from "@mui/icons-material";
 import { Button, Card, CardActions, CardContent, CardHeader, Container, Stack, Typography } from "@mui/material";
 
 import { BookingDetailsFields } from "./BookingDetails";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
+import { useBookingSearchParams } from "../useBookingSearchParams";
 
 type Props = {
-  dates: {
-    start: Date | undefined;
-    end: Date | undefined;
-  };
-  selectedCabins: { id: string; name: string }[];
+  cabins: FragmentType<typeof CabinFragment>[];
   bookingDetails: BookingDetailsFields;
   onSubmit: () => void;
   onPrevious: () => void;
   price: number;
 };
 
-function Summary({ dates, selectedCabins, bookingDetails, onSubmit, onPrevious, price }: Props) {
+const CabinFragment = graphql(`
+  fragment Summary_Cabin on Cabin {
+    id
+    name
+  }
+`);
+
+function getCabinNames(params: { cabins: FragmentType<typeof CabinFragment>[]; selectedCabins: string[] }): string[] {
+  const cabins = getFragmentData(CabinFragment, params.cabins);
+  const cabinNames: string[] = [];
+  for (const id of params.selectedCabins) {
+    cabinNames.push(cabins.find((cabin) => cabin.id === id)?.name ?? "");
+  }
+  return cabinNames;
+}
+
+function Summary({ bookingDetails, onSubmit, onPrevious, price, ...props }: Props) {
+  const { selectedCabins, checkIn, checkOut } = useBookingSearchParams();
+  const cabinNames = getCabinNames({ cabins: props.cabins, selectedCabins });
+
   return (
     <Container maxWidth="sm" disableGutters>
       <Card>
@@ -25,12 +42,12 @@ function Summary({ dates, selectedCabins, bookingDetails, onSubmit, onPrevious, 
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body1">Dato</Typography>
               <Typography variant="body1">
-                {dates.start?.toLocaleDateString()} - {dates.end?.toLocaleDateString()}
+                {checkIn?.toLocaleDateString()} - {checkOut?.toLocaleDateString()}
               </Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body1">Hytter</Typography>
-              <Typography variant="body1">{selectedCabins.map((cabin) => cabin.name).join(", ")}</Typography>
+              <Typography variant="body1">{cabinNames.join(", ")}</Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body1">Pris</Typography>

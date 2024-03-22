@@ -29,7 +29,7 @@ import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
 
 const BookingContactQueryFragment = graphql(`
-  fragment BookingContact_Query on Query {
+  fragment AdminBookingContact_Query on Query {
     bookingContact {
       bookingContact {
         id

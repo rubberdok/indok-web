@@ -43,7 +43,7 @@ const BookingSemesterFragment = graphql(`
 `);
 
 const BookingSemestersQueryFragment = graphql(`
-  fragment BookingSemesters_Query on Query {
+  fragment AdminBookingSemesters_Query on Query {
     bookingSemesters {
       spring {
         ...BookingSemester_BookingSemester

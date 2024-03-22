@@ -36,7 +36,7 @@ type CabinsProps = {
 };
 
 const CabinsQueryFragment = graphql(`
-  fragment Cabins_Query on Query {
+  fragment AdminCabins_Query on Query {
     cabins {
       cabins {
         id

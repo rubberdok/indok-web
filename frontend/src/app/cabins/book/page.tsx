@@ -9,22 +9,23 @@ import { graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
 
 import { BookingDetails, BookingDetailsFields } from "./_components/BookingDetails";
-import { Contract } from "./_components/Contract";
+import { Contract } from "./_components/BookingTerms";
 import { PickDates } from "./_components/PickDates";
 import { Questions } from "./_components/Questions";
 import { Summary } from "./_components/Summary";
+import { useBookingSearchParams } from "./useBookingSearchParams";
+import { useRouter } from "next/navigation";
 
-const steps = ["Velg dato", "Kontaktinfo", "Ekstra info", "Kontrakt", "Send søknad", "Kvittering"] as const;
+const steps = ["Velg dato", "Kontaktinfo", "Ekstra info", "Bestillingsvilkår", "Send søknad", "Kvittering"] as const;
 
 export default function Page() {
+  const { checkIn, checkOut, selectedCabins, onBookingChange } = useBookingSearchParams();
+
   const [step, setStep] = useState(0);
-  const [selectedCabins, setSelectedCabins] = useState<{ id: string; name: string; capacity: number }[]>([]);
-  const [dates, setDates] = useState<{ start: Date | undefined; end: Date | undefined }>({
-    start: undefined,
-    end: undefined,
-  });
+
   const [questions, setQuestions] = useState<string>("");
   const { notify } = useAlerts();
+  const router = useRouter();
 
   const { data } = useSuspenseQuery(
     graphql(`
@@ -35,6 +36,8 @@ export default function Page() {
             name
             capacity
             ...PickDates_Cabin
+            ...BookingDetails_Cabin
+            ...Summary_Cabin
           }
         }
         getAvailabilityCalendar(data: $calendarData) {
@@ -51,7 +54,7 @@ export default function Page() {
             email
           }
         }
-        ...Contract_Query
+        ...BookingTerms_Query
       }
     `),
     {
@@ -60,7 +63,7 @@ export default function Page() {
           count: 12,
           month: dayjs().month() + 1,
           year: dayjs().year(),
-          cabins: [],
+          cabins: selectedCabins.map((id) => ({ id })),
           guests: {
             internal: 0,
             external: 0,
@@ -107,7 +110,7 @@ export default function Page() {
           count: 12,
           month: dayjs().month() + 1,
           year: dayjs().year(),
-          cabins: selectedCabins.map((cabin) => ({ id: cabin.id })),
+          cabins: selectedCabins?.map((id) => ({ id })) ?? [],
           guests: {
             internal: bookingDetails?.internalParticipants ?? 0,
             external: bookingDetails?.externalParticipants ?? 0,
@@ -126,13 +129,13 @@ export default function Page() {
         }
       }
     `),
-    dates.start && dates.end && selectedCabins.length
+    checkIn && checkOut && selectedCabins?.length
       ? {
           variables: {
             data: {
-              startDate: dates.start.toISOString(),
-              endDate: dates.end.toISOString(),
-              cabins: selectedCabins.map((cabin) => ({ id: cabin.id })),
+              startDate: checkIn.toISOString(),
+              endDate: checkOut.toISOString(),
+              cabins: selectedCabins.map((id) => ({ id })),
               guests: {
                 internal: bookingDetails.internalParticipants,
                 external: bookingDetails.externalParticipants,
@@ -166,24 +169,15 @@ export default function Page() {
       }
     `),
     {
-      onCompleted() {
+      onCompleted({ newBooking }) {
         notify({ message: "Bookingen ble sendt", type: "success" });
+        router.push(`/cabins/bookings/${newBooking.booking.id}/?email=${newBooking.booking.email}`);
       },
       onError(error) {
         notify({ message: `Noe gikk galt: ${error.message}`, type: "error" });
       },
     }
   );
-
-  function handleSelectedCabinsChanged(cabins: { id: string }[]) {
-    setSelectedCabins(
-      cabins.map((selected) => {
-        const cabin = data.cabins.cabins.find((cabin) => cabin.id === selected.id);
-        if (!cabin) throw new Error(`Cabin with id ${selected.id} not found`);
-        return cabin;
-      })
-    );
-  }
 
   return (
     <Stack spacing={4}>
@@ -203,17 +197,25 @@ export default function Page() {
               []
             }
             selectedCabins={selectedCabins}
-            onCabinsChange={handleSelectedCabinsChanged}
-            onDatesChange={setDates}
+            onCabinsChange={(cabins) => {
+              onBookingChange({
+                cabins,
+                checkIn: checkIn?.toISOString(),
+                checkOut: checkOut?.toISOString(),
+              });
+            }}
+            onDatesChange={({ start, end }) => {
+              onBookingChange({ cabins: selectedCabins, checkIn: start?.toISOString(), checkOut: end?.toISOString() });
+            }}
             cabins={data.cabins.cabins}
-            dates={dates}
+            dates={{ end: checkOut, start: checkIn }}
+            onSubmit={() => setStep(1)}
           />
         )}
         {step === 1 && (
           <BookingDetails
-            selectedCabins={selectedCabins}
             bookingDetails={bookingDetails}
-            dates={dates}
+            cabins={data.cabins.cabins}
             onSubmit={(bookingDetails) => {
               setBookingDetails(bookingDetails);
               setStep(2);
@@ -223,8 +225,6 @@ export default function Page() {
         )}
         {step === 2 && (
           <Questions
-            dates={dates}
-            selectedCabins={selectedCabins}
             onSubmit={(values) => {
               setQuestions(values.extraInfo);
               setStep(3);
@@ -232,33 +232,22 @@ export default function Page() {
             onPrevious={() => setStep(1)}
           />
         )}
-        {step === 3 && (
-          <Contract
-            selectedCabins={selectedCabins}
-            dates={dates}
-            bookingDetails={bookingDetails}
-            price={totalCost ?? Number.NaN}
-            onSubmit={() => setStep(4)}
-            onPrevious={() => setStep(2)}
-            query={data}
-          />
-        )}
+        {step === 3 && <Contract onSubmit={() => setStep(4)} onPrevious={() => setStep(2)} query={data} />}
         {step === 4 && (
           <Summary
-            dates={dates}
-            selectedCabins={selectedCabins}
+            cabins={data.cabins.cabins}
             bookingDetails={bookingDetails}
             price={totalCost ?? Number.NaN}
             onPrevious={() => setStep(3)}
             onSubmit={() => {
-              if (!dates.start || !dates.end) return;
+              if (!checkIn || !checkOut) return;
 
               createBooking({
                 variables: {
                   data: {
-                    cabins: selectedCabins.map((cabin) => ({ id: cabin.id })),
-                    startDate: dates.start.toISOString(),
-                    endDate: dates.end.toISOString(),
+                    cabins: selectedCabins.map((id) => ({ id })),
+                    startDate: checkIn.toISOString(),
+                    endDate: checkOut.toISOString(),
                     email: bookingDetails.email,
                     firstName: bookingDetails.firstName,
                     lastName: bookingDetails.lastName,

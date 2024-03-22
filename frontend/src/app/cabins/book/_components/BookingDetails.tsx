@@ -23,8 +23,9 @@ import {
 import { range } from "lodash";
 import { Controller, useForm } from "react-hook-form";
 
-import { graphql } from "@/gql/app";
+import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import * as yup from "@/lib/validation";
+import { useBookingSearchParams } from "../useBookingSearchParams";
 
 type BookingDetailsFields = {
   firstName: string;
@@ -36,16 +37,35 @@ type BookingDetailsFields = {
   externalParticipants: number;
 };
 
+const CabinFragment = graphql(`
+  fragment BookingDetails_Cabin on Cabin {
+    id
+    capacity
+  }
+`);
+
 type Props = {
   bookingDetails: BookingDetailsFields;
   onSubmit: (bookingDetails: BookingDetailsFields) => void;
-  selectedCabins: { id: string; capacity: number }[];
-  dates: { start: Date | undefined; end: Date | undefined };
   onPrevious: () => void;
+  cabins: FragmentType<typeof CabinFragment>[];
 };
 
-function BookingDetails({ bookingDetails, selectedCabins, onSubmit, onPrevious, dates }: Props) {
-  const totalGuestsAllowed = selectedCabins.reduce((sum, currentCabin) => sum + currentCabin.capacity, 0);
+function getTotalGuestsAllowed(params: {
+  cabins: FragmentType<typeof CabinFragment>[];
+  selectedCabins: string[];
+}): number {
+  const cabins = getFragmentData(CabinFragment, params.cabins);
+  let total = 0;
+  for (const id of params.selectedCabins) {
+    total += cabins.find((cabin) => cabin.id === id)?.capacity ?? 0;
+  }
+  return total;
+}
+
+function BookingDetails({ bookingDetails, onSubmit, onPrevious, ...props }: Props) {
+  const { checkIn, checkOut, selectedCabins } = useBookingSearchParams();
+  const totalGuestsAllowed = getTotalGuestsAllowed({ cabins: props.cabins, selectedCabins });
   const {
     register,
     handleSubmit,
@@ -68,13 +88,13 @@ function BookingDetails({ bookingDetails, selectedCabins, onSubmit, onPrevious, 
         }
       }
     `),
-    dates.start && dates.end && selectedCabins.length
+    checkIn && checkOut && selectedCabins.length
       ? {
           variables: {
             data: {
-              startDate: dates.start.toISOString(),
-              endDate: dates.end.toISOString(),
-              cabins: selectedCabins.map((cabin) => ({ id: cabin.id })),
+              startDate: checkIn.toISOString(),
+              endDate: checkOut.toISOString(),
+              cabins: selectedCabins.map((id) => ({ id })),
               guests: {
                 internal: internalParticipants,
                 external: externalParticipants,

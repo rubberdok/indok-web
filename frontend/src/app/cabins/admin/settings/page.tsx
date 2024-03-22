@@ -14,10 +14,10 @@ export default function Page() {
   const { data } = useSuspenseQuery(
     graphql(`
       query CabinsAdminSettingsPage_Query {
-        ...Cabins_Query
-        ...BookingSemesters_Query
-        ...BookingContact_Query
-        ...BookingTerms_Query
+        ...AdminCabins_Query
+        ...AdminBookingSemesters_Query
+        ...AdminBookingContact_Query
+        ...AdminBookingTerms_Query
       }
     `)
   );

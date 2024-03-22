@@ -18,11 +18,12 @@ import dayjs from "@/lib/date";
 
 type Props = {
   dates: { start: Date | undefined; end: Date | undefined };
-  selectedCabins: { id: string; name: string }[];
+  selectedCabins: string[];
   cabins: FragmentType<typeof PickDatesCabinFragment>[];
   calendarMonths: FragmentType<typeof PickDatesCalendarMonthFragment>[];
-  onCabinsChange: (cabins: { id: string; name: string }[]) => void;
+  onCabinsChange: (cabins: string[]) => void;
   onDatesChange: (dates: { start: Date | undefined; end: Date | undefined }) => void;
+  onSubmit: () => void;
 };
 
 const PickDatesCabinFragment = graphql(`
@@ -47,11 +48,10 @@ const PickDatesCalendarMonthFragment = graphql(`
   }
 `);
 
-function PickDates({ onCabinsChange, selectedCabins, ...props }: Props) {
+function PickDates({ onCabinsChange, selectedCabins, onSubmit, onDatesChange, dates, ...props }: Props) {
   const cabins = getFragmentData(PickDatesCabinFragment, props.cabins);
   const calendarMonths = getFragmentData(PickDatesCalendarMonthFragment, props.calendarMonths);
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
-  const [dates, setDates] = useState(props.dates);
 
   /**
    * Update the booking dates when the user selects a new date in the calendar.
@@ -74,21 +74,21 @@ function PickDates({ onCabinsChange, selectedCabins, ...props }: Props) {
      * If start is not set, then we set the start date to the date the user has chosen.
      */
     if (!start) {
-      return setDates({ start: date.toDate(), end: undefined });
+      return onDatesChange({ start: date.toDate(), end: undefined });
     }
 
     /**
      * If start is set, and the user clicks the start day, we reset the range.
      */
     if (start?.isSame(date, "day")) {
-      return setDates({ start: undefined, end: undefined });
+      return onDatesChange({ start: undefined, end: undefined });
     }
 
     /**
      * If the user has already selected a date range, then we reset the range and start a new one.
      */
     if (start && end) {
-      return setDates({ start: date.toDate(), end: undefined });
+      return onDatesChange({ start: date.toDate(), end: undefined });
     }
 
     /**
@@ -96,7 +96,7 @@ function PickDates({ onCabinsChange, selectedCabins, ...props }: Props) {
      * current end date
      */
     if (start && date.isAfter(start, "day")) {
-      return setDates({ start: dates.start, end: date.toDate() });
+      return onDatesChange({ start: dates.start, end: date.toDate() });
     }
 
     /**
@@ -104,7 +104,7 @@ function PickDates({ onCabinsChange, selectedCabins, ...props }: Props) {
      * current start date
      */
     if (start && date.isBefore(start, "day")) {
-      return setDates({ start: date.toDate(), end: undefined });
+      return onDatesChange({ start: date.toDate(), end: undefined });
     }
   }
 
@@ -141,12 +141,12 @@ function PickDates({ onCabinsChange, selectedCabins, ...props }: Props) {
                     <Checkbox
                       color="primary"
                       disableRipple
-                      checked={selectedCabins.some((selectedCabin) => selectedCabin.id === cabin.id)}
+                      checked={selectedCabins.some((selectedCabin) => selectedCabin === cabin.id)}
                       onChange={(_, checked) => {
                         if (checked) {
-                          onCabinsChange([...selectedCabins, cabin]);
+                          onCabinsChange([...selectedCabins, cabin.id]);
                         } else {
-                          onCabinsChange(selectedCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
+                          onCabinsChange(selectedCabins.filter((chosenCabin) => cabin.id !== chosenCabin));
                         }
                       }}
                     />
@@ -175,6 +175,7 @@ function PickDates({ onCabinsChange, selectedCabins, ...props }: Props) {
               onClick={() => {
                 if (!dates.start || !dates.end) return;
                 if (selectedCabins.length === 0) return;
+                onSubmit();
               }}
             >
               Neste

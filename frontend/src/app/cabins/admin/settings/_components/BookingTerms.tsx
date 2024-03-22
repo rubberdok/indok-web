@@ -15,7 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const BookingTermsQuery = graphql(`
-  fragment BookingTerms_Query on Query {
+  fragment AdminBookingTerms_Query on Query {
     bookingTerms {
       bookingTerms {
         ...BookingTerms_BookingTerms

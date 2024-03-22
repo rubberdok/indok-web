@@ -13,15 +13,15 @@ import {
 import { useForm } from "react-hook-form";
 
 import dayjs from "@/lib/date";
+import { useBookingSearchParams } from "../useBookingSearchParams";
 
 type Props = {
-  selectedCabins: { id: string; name: string; capacity: number }[];
-  dates: { start: Date | undefined; end: Date | undefined };
   onSubmit: (values: { extraInfo: string }) => void;
   onPrevious: () => void;
 };
 
-function Questions({ onSubmit, onPrevious, selectedCabins, dates }: Props) {
+function Questions({ onSubmit, onPrevious }: Props) {
+  const { selectedCabins, checkIn, checkOut } = useBookingSearchParams();
   const { handleSubmit, register } = useForm<{ extraInfo: string }>({});
 
   return (
@@ -31,10 +31,10 @@ function Questions({ onSubmit, onPrevious, selectedCabins, dates }: Props) {
           <CardHeader title="Spørsmål" />
           <CardContent>
             <Typography gutterBottom>
-              På neste side sender du søknad om å booke {selectedCabins.map((cabin) => cabin.name).join(", ")} fra{" "}
-              {dayjs(dates.start).format("LL")} til {dayjs(dates.end).format("LL")}. Hytteforeningen får en e-post med
-              søknaden din, og hvis de godkjenner bookingen sender de en faktura. Har du noen spørsmål? Da kan du skrive
-              de inn nedenfor, så sendes de sammen med søknaden din.
+              På neste side sender du søknad om å booke {selectedCabins.length} hytter fra {dayjs(checkIn).format("LL")}{" "}
+              til {dayjs(checkOut).format("LL")}. Hytteforeningen får en e-post med søknaden din, og hvis de godkjenner
+              bookingen sender de en faktura. Har du noen spørsmål? Da kan du skrive de inn nedenfor, så sendes de
+              sammen med søknaden din.
             </Typography>
             <TextField
               fullWidth
