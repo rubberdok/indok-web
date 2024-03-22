@@ -14,7 +14,7 @@ import { HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 export default function Page({ params, children }: React.PropsWithChildren<{ params: { organizationId: string } }>) {
   const { organizationId } = params;
   const router = useRouter();
-  const activeTab = useSelectedLayoutSegment();
+  const activeTab = useSelectedLayoutSegment() ?? "events";
 
   const { data } = useSuspenseQuery(
     graphql(`

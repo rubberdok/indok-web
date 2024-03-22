@@ -13,7 +13,7 @@ import { styled } from "@mui/material/styles";
 import { typographyClasses } from "@mui/material/Typography";
 import { Components } from "react-markdown";
 
-import Link from "../Link";
+import { Link } from "@/app/components/Link";
 
 const H1: Components["h1"] = ({ children, id }) => {
   return (
