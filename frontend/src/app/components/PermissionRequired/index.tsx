@@ -39,7 +39,7 @@ function BackgroundQueryPermissionRequired<T extends HasFeaturePermissionQuery>(
   const { queryRef, children } = props;
   const { data } = useReadQuery(queryRef);
 
-  if (data.hasFeaturePermission) return <>{children}</>;
+  if (data.hasFeaturePermission.hasFeaturePermission) return <>{children}</>;
   if (props.optimistic) return <>{children}</>;
   if (props.fallback) return props.fallback;
   return null;
@@ -69,7 +69,7 @@ function QueryPermissionRequired(props: PropsWithChildren<QueryPermissionRequire
     }
   );
 
-  if (data?.hasFeaturePermission) return <>{children}</>;
+  if (data?.hasFeaturePermission.hasFeaturePermission) return <>{children}</>;
   if (props.optimistic) return <>{children}</>;
   if (props.fallback) return props.fallback;
   return null;
