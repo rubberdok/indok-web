@@ -183,7 +183,6 @@ export const p: Components["p"] = ({ children }) => {
   if (children && children[0]) {
     const child = children[0];
     if (isValidElement(child)) {
-      console.log({ child });
       if ("src" in child.props)
         return (
           <Typography variant="body1" component="span">

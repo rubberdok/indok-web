@@ -16,10 +16,10 @@ import { Link } from "@/app/components/Link";
 import { Title } from "@/components/Title";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/lib/mui/theme/constants";
 
-import { getOrganizationData } from "../../_data/organizations";
+import { getOrganizationData } from "../../../../_data/organizations";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const { organizationData } = await import("../../_data/organizations");
+  const { organizationData } = await import("../../../../_data/organizations");
   return organizationData.map(({ slug }) => ({ slug }));
 }
 
