@@ -43,7 +43,7 @@ const FallbackPage: NextPageWithLayout = () => {
   const order = data?.attemptCapturePayment?.order;
 
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
-  const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
+  const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
 
   useEffect(() => {
     if (orderId && paymentStatus === PaymentStatus.Reserved) {
