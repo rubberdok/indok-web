@@ -11,11 +11,18 @@ query products {
     price
     description
     maxBuyableQuantity
+    shopItem
   }
 }
 
 query userOrders {
   userOrders {
+    ...Order
+  }
+}
+
+query allUserOrders {
+  allUserOrders {
     ...Order
   }
 }

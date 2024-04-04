@@ -13,3 +13,11 @@ mutation attemptCapturePayment($orderId: ID!) {
     }
   }
 }
+
+mutation deliveredProduct($orderId: ID!) {
+  deliveredProduct(orderId: $orderId) {
+    order {
+      ...Order
+    }
+  }
+}

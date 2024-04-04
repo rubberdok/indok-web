@@ -134,6 +134,9 @@ const AboutPage: NextPageWithLayout = () => {
           <ListItem>
             <ListItemText secondary="2022-2023" primary="Morten Vinje og Erlend Heir" />
           </ListItem>
+          <ListItem>
+            <ListItemText secondary="2023-2024" primary="Olav Bjørlykke, Tord Johan Espe og Arnas Tribusininas" />
+          </ListItem>
         </List>
       </Template>
     </>

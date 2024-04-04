@@ -125,6 +125,10 @@ export const SalesTermsDialog: React.FC<Props> = ({ onClose, open }) => {
                   uten unødig opphold og senest 30 dager etter bestillingen fra kunden. Varen skal leveres hos kjøperen
                   med mindre annet er særskilt avtalt mellom partene.
                 </p>
+                <p>
+                  Ved kjøp fra indokntnu.no/janus/shop skal produkter hentes på Januskontoret med mindre annet er
+                  avtalt.
+                </p>
               </div>
             </section>
             <section id="chapter-7">

@@ -132,6 +132,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
             fullWidth
             multiline
             helperText="Må fylles ut før påmelding blir tilgjengelig."
+            rows={6}
           />
         </Grid>
       )}

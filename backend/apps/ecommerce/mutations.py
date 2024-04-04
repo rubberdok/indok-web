@@ -170,3 +170,26 @@ class CreateProduct(graphene.Mutation):
         ok = True
 
         return CreateProduct(product=product, ok=ok)
+
+
+class DeliveredProduct(graphene.Mutation):
+    ok = graphene.Boolean()
+    order = graphene.Field(OrderType)
+
+    class Arguments:
+        order_id = graphene.ID(required=True)
+
+    @staff_member_required
+    def mutate(self, info, order_id):
+        try:
+            order = Order.objects.get(id=order_id)
+            if order.delivered_product is False:
+                order.delivered_product = True
+            elif order.delivered_product is True:
+                order.delivered_product = False
+            order.save()
+            ok = True
+        except Order.DoesNotExist:
+            raise ValueError("Cannot identify order.")
+
+        return DeliveredProduct(order=order, ok=ok)

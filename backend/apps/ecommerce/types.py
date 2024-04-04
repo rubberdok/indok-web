@@ -14,6 +14,7 @@ class ProductType(DjangoObjectType):
             "price",
             "description",
             "max_buyable_quantity",
+            "shop_item",
         ]
 
 
@@ -34,6 +35,7 @@ class OrderType(DjangoObjectType):
             "total_price",
             "payment_status",
             "timestamp",
+            "delivered_product",
         ]
 
 
