@@ -1,8 +1,15 @@
-- model: cabins.cabin
+- model: booking.product
   pk: 1
   fields:
     name: Oksen
-- model: cabins.cabin
+    product_type: 1
+- model: booking.product
   pk: 2
   fields:
     name: Bjørnen
+    product_type: 1
+- model: booking.product
+  pk: 3
+  fields:
+    name: Indøk mobile 9000
+    product_type: 2
