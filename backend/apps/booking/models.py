@@ -32,7 +32,7 @@ class Booking(models.Model):
     receiver_email = models.EmailField(max_length=100)
     check_in = models.DateField()
     check_out = models.DateField()
-    booking_products = models.ManyToManyField(Product, blank=True)
+    booking_products = models.ManyToManyField(Product, related_name="bookings")
     timestamp = models.DateTimeField(auto_now_add=True)
     internal_participants = models.IntegerField()
     external_participants = models.IntegerField()
