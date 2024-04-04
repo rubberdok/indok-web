@@ -14,7 +14,7 @@ class EcommerceResolvers:
         except Product.DoesNotExist:
             return None
 
-    @staff_member_required
+    @login_required
     def resolve_products(self, info):
         return Product.objects.all()
 
@@ -33,6 +33,10 @@ class EcommerceResolvers:
     @login_required
     def resolve_user_orders(self, info):
         return Order.objects.filter(user=info.context.user)
+
+    @staff_member_required
+    def resolve_all_user_orders(self, info):
+        return Order.objects.all()
 
     @staff_member_required
     def resolve_orders_by_status(self, info: "ResolveInfo", product_id, status):

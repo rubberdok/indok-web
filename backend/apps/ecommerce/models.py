@@ -6,12 +6,16 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.db.models import F, Sum
 from django.db.models.fields import DateTimeField, UUIDField
+from apps.ecommerce.mixins import Sellable
+from django.contrib.contenttypes.fields import GenericRelation
+
+# from django.contrib.postgres.fields import ArrayField
 
 from apps.organizations.models import Organization
 from apps.users.models import User
 
 
-class Product(models.Model):
+class Product(models.Model, Sellable):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     description = models.TextField()
@@ -19,6 +23,8 @@ class Product(models.Model):
     total_quantity = models.PositiveIntegerField()
     current_quantity = models.PositiveIntegerField(null=True)  # Set to total_quantity upon initialization
     max_buyable_quantity = models.PositiveIntegerField(default=1)
+    shop_item = models.BooleanField(default=False)
+    products = GenericRelation("ecommerce.Product")
 
     # Generic foreign key to related product model instance (e.g event model)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
@@ -110,6 +116,7 @@ class Order(models.Model):
     timestamp = DateTimeField(auto_now_add=True)
     auth_token = models.CharField(max_length=32, default=get_auth_token)  # For authenticating Vipps callback
     payment_attempt = models.PositiveIntegerField(default=1)
+    delivered_product = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Order(product={self.product}, user={self.user})"

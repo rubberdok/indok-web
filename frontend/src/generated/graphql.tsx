@@ -423,6 +423,12 @@ export type DeleteQuestion = {
   ok?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
+export type DeliveredProduct = {
+  __typename?: "DeliveredProduct";
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
+  order?: Maybe<OrderType>;
+};
+
 export type EmailInput = {
   cabins?: InputMaybe<Array<Scalars["Int"]["input"]>>;
   checkIn?: InputMaybe<Scalars["Date"]["input"]>;
@@ -608,6 +614,7 @@ export type Mutations = {
   deleteListing?: Maybe<DeleteListing>;
   deleteOrganization?: Maybe<DeleteOrganization>;
   deleteQuestion?: Maybe<DeleteQuestion>;
+  deliveredProduct?: Maybe<DeliveredProduct>;
   /**
    * Sets the field is_attending to False in the Sign Up for the user that
    * sent the request, for the event with the given ID
@@ -772,6 +779,10 @@ export type MutationsDeleteQuestionArgs = {
   id: Scalars["ID"]["input"];
 };
 
+export type MutationsDeliveredProductArgs = {
+  orderId: Scalars["ID"]["input"];
+};
+
 export type MutationsEventSignOffArgs = {
   eventId: Scalars["ID"]["input"];
 };
@@ -881,6 +892,7 @@ export type OptionType = {
 
 export type OrderType = {
   __typename?: "OrderType";
+  deliveredProduct: Scalars["Boolean"]["output"];
   id: Scalars["UUID"]["output"];
   paymentStatus: PaymentStatus;
   product: ProductType;
@@ -938,6 +950,7 @@ export type ProductType = {
   maxBuyableQuantity: Scalars["Int"]["output"];
   name: Scalars["String"]["output"];
   price: Scalars["Decimal"]["output"];
+  shopItem: Scalars["Boolean"]["output"];
 };
 
 export type Queries = {
@@ -950,6 +963,7 @@ export type Queries = {
   allCategories?: Maybe<Array<CategoryType>>;
   allEvents?: Maybe<Array<EventType>>;
   allOrganizations?: Maybe<Array<OrganizationType>>;
+  allUserOrders?: Maybe<Array<OrderType>>;
   allUsers?: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
   attendeeReport?: Maybe<Scalars["String"]["output"]>;
@@ -1719,6 +1733,7 @@ export type ProductFragment = {
   description: string;
   price: number;
   maxBuyableQuantity: number;
+  shopItem: boolean;
 };
 
 export type OrderFragment = {
@@ -1728,6 +1743,7 @@ export type OrderFragment = {
   totalPrice: number;
   paymentStatus: PaymentStatus;
   timestamp: string;
+  deliveredProduct: boolean;
   product: {
     __typename?: "ProductType";
     id: string;
@@ -1735,7 +1751,9 @@ export type OrderFragment = {
     description: string;
     price: number;
     maxBuyableQuantity: number;
+    shopItem: boolean;
   };
+  user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
 };
 
 export type InitiateOrderMutationVariables = Exact<{
@@ -1765,6 +1783,7 @@ export type AttemptCapturePaymentMutation = {
       totalPrice: number;
       paymentStatus: PaymentStatus;
       timestamp: string;
+      deliveredProduct: boolean;
       product: {
         __typename?: "ProductType";
         id: string;
@@ -1772,7 +1791,39 @@ export type AttemptCapturePaymentMutation = {
         description: string;
         price: number;
         maxBuyableQuantity: number;
+        shopItem: boolean;
       };
+      user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+    } | null;
+  } | null;
+};
+
+export type DeliveredProductMutationVariables = Exact<{
+  orderId: Scalars["ID"]["input"];
+}>;
+
+export type DeliveredProductMutation = {
+  __typename?: "Mutations";
+  deliveredProduct?: {
+    __typename?: "DeliveredProduct";
+    order?: {
+      __typename?: "OrderType";
+      id: string;
+      quantity: number;
+      totalPrice: number;
+      paymentStatus: PaymentStatus;
+      timestamp: string;
+      deliveredProduct: boolean;
+      product: {
+        __typename?: "ProductType";
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        maxBuyableQuantity: number;
+        shopItem: boolean;
+      };
+      user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
     } | null;
   } | null;
 };
@@ -1790,6 +1841,7 @@ export type ProductQuery = {
     description: string;
     price: number;
     maxBuyableQuantity: number;
+    shopItem: boolean;
   } | null;
 };
 
@@ -1804,6 +1856,7 @@ export type ProductsQuery = {
     price: number;
     description: string;
     maxBuyableQuantity: number;
+    shopItem: boolean;
   }> | null;
 };
 
@@ -1818,6 +1871,7 @@ export type UserOrdersQuery = {
     totalPrice: number;
     paymentStatus: PaymentStatus;
     timestamp: string;
+    deliveredProduct: boolean;
     product: {
       __typename?: "ProductType";
       id: string;
@@ -1825,7 +1879,34 @@ export type UserOrdersQuery = {
       description: string;
       price: number;
       maxBuyableQuantity: number;
+      shopItem: boolean;
     };
+    user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+  }> | null;
+};
+
+export type AllUserOrdersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllUserOrdersQuery = {
+  __typename?: "Queries";
+  allUserOrders?: Array<{
+    __typename?: "OrderType";
+    id: string;
+    quantity: number;
+    totalPrice: number;
+    paymentStatus: PaymentStatus;
+    timestamp: string;
+    deliveredProduct: boolean;
+    product: {
+      __typename?: "ProductType";
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      maxBuyableQuantity: number;
+      shopItem: boolean;
+    };
+    user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
   }> | null;
 };
 
@@ -3433,6 +3514,7 @@ export const ProductFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "price" } },
           { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
         ],
       },
     },
@@ -3453,12 +3535,26 @@ export const OrderFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
           { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
           { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "product" },
             selectionSet: {
               kind: "SelectionSet",
               selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
             },
           },
         ],
@@ -3476,6 +3572,7 @@ export const OrderFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "price" } },
           { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
         ],
       },
     },
@@ -6143,6 +6240,7 @@ export const AttemptCapturePaymentDocument = {
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "price" } },
           { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
         ],
       },
     },
@@ -6158,6 +6256,7 @@ export const AttemptCapturePaymentDocument = {
           { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
           { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
           { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "product" },
@@ -6166,11 +6265,123 @@ export const AttemptCapturePaymentDocument = {
               selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
             },
           },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
         ],
       },
     },
   ],
 } as unknown as DocumentNode<AttemptCapturePaymentMutation, AttemptCapturePaymentMutationVariables>;
+export const DeliveredProductDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "deliveredProduct" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deliveredProduct" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "order" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeliveredProductMutation, DeliveredProductMutationVariables>;
 export const ProductDocument = {
   kind: "Document",
   definitions: [
@@ -6218,6 +6429,7 @@ export const ProductDocument = {
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "price" } },
           { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
         ],
       },
     },
@@ -6244,6 +6456,7 @@ export const ProductsDocument = {
                 { kind: "Field", name: { kind: "Name", value: "price" } },
                 { kind: "Field", name: { kind: "Name", value: "description" } },
                 { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+                { kind: "Field", name: { kind: "Name", value: "shopItem" } },
               ],
             },
           },
@@ -6285,6 +6498,7 @@ export const UserOrdersDocument = {
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "price" } },
           { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
         ],
       },
     },
@@ -6300,6 +6514,7 @@ export const UserOrdersDocument = {
           { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
           { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
           { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "product" },
@@ -6308,11 +6523,100 @@ export const UserOrdersDocument = {
               selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
             },
           },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
         ],
       },
     },
   ],
 } as unknown as DocumentNode<UserOrdersQuery, UserOrdersQueryVariables>;
+export const AllUserOrdersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "allUserOrders" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allUserOrders" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllUserOrdersQuery, AllUserOrdersQueryVariables>;
 export const CreateEventDocument = {
   kind: "Document",
   definitions: [

@@ -35,8 +35,7 @@ def permission_required(
     fn: Optional[LookupFn[P_lookup, M]] = ...,
     return_none: Literal[False] = ...,
     **kwargs,
-) -> Callable[[ResolverSignature[P, R]], Callable[P, R]]:
-    ...
+) -> Callable[[ResolverSignature[P, R]], Callable[P, R]]: ...
 
 
 @overload
@@ -46,8 +45,7 @@ def permission_required(
     fn: Optional[LookupFn[P_lookup, M]] = ...,
     return_none: Literal[True] = ...,
     **kwargs,
-) -> Callable[[ResolverSignature[P, R]], Callable[P, Optional[R]]]:
-    ...
+) -> Callable[[ResolverSignature[P, R]], Callable[P, Optional[R]]]: ...
 
 
 def permission_required(

@@ -3,7 +3,7 @@ import Image, { StaticImageData } from "next/image";
 
 import { NextLinkComposed } from "@/components/Link";
 import { ProductType } from "@/generated/graphql";
-import cabin from "~/public/static/cabins/00.jpg";
+import cabin from "~/public/img/januslogo.png";
 
 type Props = {
   product: ProductType;
@@ -22,7 +22,7 @@ export const ShopItem: React.VFC<Props> = ({ product }) => {
             {product.name}
           </Typography>
           <Typography variant="body2" textAlign="left" color="text.secondary">
-            -, {product.price}
+            {product.price} kr
           </Typography>
         </CardContent>
       </CardActionArea>
