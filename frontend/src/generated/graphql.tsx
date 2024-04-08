@@ -1493,8 +1493,10 @@ export type CabinFragment = {
   maxGuests: number;
   internalPrice: number;
   externalPrice: number;
+  externalStudentPrice: number;
   internalPriceWeekend: number;
   externalPriceWeekend: number;
+  externalStudentPriceWeekend: number;
 };
 
 export type BookingFragment = {
