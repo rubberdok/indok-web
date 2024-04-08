@@ -38,6 +38,7 @@ export const CabinPrices: React.VFC = () => {
                 </Typography>
                 <Typography variant="body2">Internpris: {cabin.internalPrice} kr</Typography>
                 <Typography variant="body2">Eksternpris: {cabin.externalPrice} kr</Typography>
+                <Typography variant="body2">Eksternpris (studenter): {cabin.externalStudentPrice} kr</Typography>
               </>
             ))}
           </Typography>

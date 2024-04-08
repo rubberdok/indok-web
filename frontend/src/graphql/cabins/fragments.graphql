@@ -4,8 +4,10 @@ fragment Cabin on CabinType {
   maxGuests
   internalPrice
   externalPrice
+  externalStudentPrice
   internalPriceWeekend
   externalPriceWeekend
+  externalStudentPriceWeekend
 }
 
 fragment Booking on AllBookingsType {

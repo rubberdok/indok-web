@@ -45,8 +45,10 @@ class CabinType(DjangoObjectType):
             "max_guests",
             "internal_price",
             "external_price",
+            "external_student_price",
             "internal_price_weekend",
             "external_price_weekend",
+            "external_student_price_weekend"
         ]
 
 
