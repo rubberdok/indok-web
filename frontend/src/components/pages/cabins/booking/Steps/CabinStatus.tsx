@@ -67,7 +67,14 @@ export const CabinBookingStatus: React.FC<Props> = ({
               Gjester:{" "}
             </Typography>
             {contactInfo.internalParticipants > 0 ? `${contactInfo.internalParticipants} indøkere` : null}
-            {contactInfo.internalParticipants > 0 && contactInfo.externalParticipants > 0 ? ", " : null}
+            {contactInfo.internalParticipants > 0 &&
+            (contactInfo.externalStudentParticipants > 0 || contactInfo.externalParticipants > 0)
+              ? ", "
+              : null}
+            {contactInfo.externalStudentParticipants > 0
+              ? `${contactInfo.externalStudentParticipants} eksterne (studenter)`
+              : null}
+            {contactInfo.externalStudentParticipants > 0 && contactInfo.externalParticipants > 0 ? ", " : null}
             {contactInfo.externalParticipants > 0 ? `${contactInfo.externalParticipants} eksterne` : null}
           </InfoText>
           <InfoText>
@@ -76,7 +83,8 @@ export const CabinBookingStatus: React.FC<Props> = ({
             </Typography>
             <Tooltip
               title={
-                contactInfo.internalParticipants >= contactInfo.externalParticipants
+                contactInfo.internalParticipants >=
+                contactInfo.externalParticipants + contactInfo.externalStudentParticipants
                   ? "Du har fått internpris da det er flest indøkere med"
                   : "Du har fått eksternpris da det er for få indøkere med"
               }
