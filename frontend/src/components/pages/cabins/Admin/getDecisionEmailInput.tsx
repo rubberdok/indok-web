@@ -6,14 +6,24 @@ export function getDecisionEmailInput(
   declineMessage?: string
 ): SendEmailMutationVariables {
   // omit unwanted fields
-  const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
-    booking;
+  const {
+    checkIn,
+    checkOut,
+    externalParticipants,
+    externalStudentParticipants,
+    firstName,
+    internalParticipants,
+    lastName,
+    phone,
+    receiverEmail,
+  } = booking;
 
   const emailInput = {
     ...{
       checkIn,
       checkOut,
       externalParticipants,
+      externalStudentParticipants,
       firstName,
       internalParticipants,
       lastName,

@@ -122,6 +122,7 @@ export const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, cu
               <InlineTableCell>{dayjs(booking.timestamp).format("HH:mm DD-MM-YYYY")}</InlineTableCell>
               <InlineTableCell>{booking.internalParticipants}</InlineTableCell>
               <InlineTableCell>{booking.externalParticipants}</InlineTableCell>
+              <InlineTableCell>{booking.externalStudentParticipants}</InlineTableCell>
               <InlineTableCell>{booking.extraInfo}</InlineTableCell>
               {isDeclinedTab ? <InlineTableCell>{booking.declineReason}</InlineTableCell> : <></>}
             </TableRow>

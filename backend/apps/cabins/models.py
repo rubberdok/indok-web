@@ -9,8 +9,8 @@ class Cabin(models.Model):
     # Prices for whole cabin per night
     internal_price = models.PositiveIntegerField(default=1100)
     internal_price_weekend = models.PositiveIntegerField(default=1100)
-    # external_student_price = models.PositiveIntegerField(default=2950)
-    # external_student_price_weekend = models.PositiveIntegerField(default=3950)
+    external_student_price = models.PositiveIntegerField(default=2950)
+    external_student_price_weekend = models.PositiveIntegerField(default=3950)
     external_price = models.PositiveIntegerField(default=3950)
     external_price_weekend = models.PositiveIntegerField(default=5400)
 

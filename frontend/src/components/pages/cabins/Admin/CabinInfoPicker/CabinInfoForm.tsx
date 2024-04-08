@@ -10,6 +10,8 @@ export type CabinInfoForm = {
     internalPriceWeekend: number;
     externalPrice: number;
     externalPriceWeekend: number;
+    externalStudentPrice: number;
+    externalStudentPriceWeekend: number;
     maxGuests: number;
   };
   bjornen?: {
@@ -17,6 +19,8 @@ export type CabinInfoForm = {
     internalPriceWeekend: number;
     externalPrice: number;
     externalPriceWeekend: number;
+    externalStudentPrice: number;
+    externalStudentPriceWeekend: number;
     maxGuests: number;
   };
 };
@@ -27,6 +31,8 @@ const validationSchema: yup.ObjectSchema<CabinInfoForm> = yup.object({
     internalPriceWeekend: yup.number().positive().required().label("Internpris i helg"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
     externalPriceWeekend: yup.number().positive().required().label("Eksternpris i helg"),
+    externalStudentPrice: yup.number().positive().required().label("Eksternpris (studenter)"),
+    externalStudentPriceWeekend: yup.number().positive().required().label("Eksternpris i helg (studenter)"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),
   }),
   bjornen: yup.object({
@@ -34,6 +40,8 @@ const validationSchema: yup.ObjectSchema<CabinInfoForm> = yup.object({
     internalPriceWeekend: yup.number().positive().required().label("Internpris i helg"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
     externalPriceWeekend: yup.number().positive().required().label("Eksternpris i helg"),
+    externalStudentPrice: yup.number().positive().required().label("Eksternpris (studenter)"),
+    externalStudentPriceWeekend: yup.number().positive().required().label("Eksternpris i helg (studenter)"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),
   }),
 });
@@ -124,6 +132,34 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
             </Grid>
             <Grid>
               <TextField
+                {...register("bjornen.externalStudentPrice")}
+                required
+                helperText={errors.bjornen?.externalStudentPrice?.message}
+                error={Boolean(errors.bjornen?.externalStudentPrice)}
+                type="number"
+                fullWidth
+                label="Eksternpris (studenter)"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                {...register("bjornen.externalStudentPriceWeekend")}
+                required
+                helperText={errors.bjornen?.externalStudentPriceWeekend?.message}
+                error={Boolean(errors.bjornen?.externalStudentPriceWeekend)}
+                type="number"
+                fullWidth
+                label="Eksternpris i helg (studenter)"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
                 {...register("bjornen.maxGuests")}
                 required
                 helperText={errors.bjornen?.maxGuests?.message}
@@ -194,6 +230,34 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
                 type="number"
                 fullWidth
                 label="Eksternpris i helg"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                {...register("oksen.externalStudentPrice")}
+                required
+                helperText={errors.oksen?.externalStudentPrice?.message}
+                error={Boolean(errors.oksen?.externalStudentPrice)}
+                type="number"
+                fullWidth
+                label="Eksternpris (studenter)"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                {...register("oksen.externalStudentPriceWeekend")}
+                required
+                helperText={errors.oksen?.externalStudentPriceWeekend?.message}
+                error={Boolean(errors.oksen?.externalStudentPriceWeekend)}
+                type="number"
+                fullWidth
+                label="Eksternpris i helg (studenter)"
                 InputLabelProps={{
                   shrink: true,
                 }}

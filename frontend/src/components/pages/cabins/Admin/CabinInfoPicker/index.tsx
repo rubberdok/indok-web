@@ -21,6 +21,8 @@ function useCabins(): CabinInfoForm | undefined {
         internalPriceWeekend: bjornen.internalPriceWeekend,
         externalPrice: bjornen.externalPrice,
         externalPriceWeekend: bjornen.externalPriceWeekend,
+        externalStudentPrice: bjornen.externalStudentPrice,
+        externalStudentPriceWeekend: bjornen.externalStudentPriceWeekend,
         maxGuests: bjornen.maxGuests,
       },
     };
@@ -34,6 +36,8 @@ function useCabins(): CabinInfoForm | undefined {
         internalPriceWeekend: oksen.internalPriceWeekend,
         externalPrice: oksen.externalPrice,
         externalPriceWeekend: oksen.externalPriceWeekend,
+        externalStudentPrice: oksen.externalStudentPrice,
+        externalStudentPriceWeekend: oksen.externalStudentPriceWeekend,
         maxGuests: oksen.maxGuests,
       },
     };
@@ -81,6 +85,8 @@ export const CabinInfoPicker: React.FC = () => {
         internalPriceWeekend: data.oksen.internalPriceWeekend,
         externalPrice: data.oksen.externalPrice,
         externalPriceWeekend: data.oksen.externalPriceWeekend,
+        externalStudentPrice: data.oksen.externalStudentPrice,
+        externalStudentPriceWeekend: data.oksen.externalStudentPriceWeekend,
         maxGuests: data.oksen.maxGuests,
       };
       updateCabin({ variables: { cabinData: oksenData } });
@@ -93,6 +99,8 @@ export const CabinInfoPicker: React.FC = () => {
         internalPriceWeekend: data.bjornen.internalPriceWeekend,
         externalPrice: data.bjornen.externalPrice,
         externalPriceWeekend: data.bjornen.externalPriceWeekend,
+        externalStudentPrice: data.bjornen.externalStudentPrice,
+        externalStudentPriceWeekend: data.bjornen.externalStudentPriceWeekend,
         maxGuests: data.bjornen.maxGuests,
       };
 
@@ -116,6 +124,8 @@ export const CabinInfoPicker: React.FC = () => {
             internalPriceWeekend: 1100,
             externalPrice: 3950,
             externalPriceWeekend: 5400,
+            externalStudentPrice: 2950,
+            externalStudentPriceWeekend: 3950,
             maxGuests: 18,
           },
           bjornen: {
@@ -123,6 +133,8 @@ export const CabinInfoPicker: React.FC = () => {
             internalPriceWeekend: 1100,
             externalPrice: 3950,
             externalPriceWeekend: 5400,
+            externalStudentPrice: 2950,
+            externalStudentPriceWeekend: 3950,
             maxGuests: 18,
           },
         }}

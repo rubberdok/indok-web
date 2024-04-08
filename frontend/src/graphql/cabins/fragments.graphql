@@ -33,6 +33,7 @@ fragment AdminBooking on AdminBookingType {
   phone
   receiverEmail
   externalParticipants
+  externalStudentParticipants
   internalParticipants
   price
   isTentative
