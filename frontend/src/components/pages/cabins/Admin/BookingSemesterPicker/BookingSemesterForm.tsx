@@ -7,13 +7,13 @@ import * as yup from "@/lib/validation";
 export type BookingForm = {
   fall: {
     active: boolean;
-    start: string;
-    end: string;
+    start: Date;
+    end: Date;
   };
   spring: {
     active: boolean;
-    start: string;
-    end: string;
+    start: Date;
+    end: Date;
   };
 };
 
