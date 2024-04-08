@@ -1,7 +1,7 @@
 coverage==7.2.7
 cryptography==41.0.5
 django-alive==1.2.1
-django-anymail[postmark]==10.0
+django-anymail[postmark]==10.3
 django-cors-headers==4.3.0
 django-environ==0.11.2
 django-guardian==2.4.0
@@ -10,7 +10,7 @@ django-phonenumber-field==7.2.0
 Django==3.2.22
 djangorestframework==3.14.0
 factory-boy==3.3.0
-google-api-python-client==2.101.0
+google-api-python-client==2.125.0
 graphene-django==2.15.0
 graphene==2.1.8
 gunicorn==21.2.0
