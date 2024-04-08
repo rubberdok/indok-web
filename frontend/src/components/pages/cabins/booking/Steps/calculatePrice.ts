@@ -18,8 +18,7 @@ export function calculatePrice(
   if (!contactInfo) return NaN;
   const internalPrice =
     contactInfo.internalParticipants >= contactInfo.externalParticipants + contactInfo.externalStudentParticipants;
-  const externalPrice =
-    contactInfo.externalParticipants >= contactInfo.externalStudentParticipants + contactInfo.internalParticipants;
+  const externalPrice = contactInfo.externalParticipants >= contactInfo.externalStudentParticipants;
 
   let currentDate = dayjs(startDate);
   const finalDate = dayjs(endDate);
