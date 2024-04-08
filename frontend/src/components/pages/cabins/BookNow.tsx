@@ -20,7 +20,13 @@ export const BookNow: React.FC = () => {
             <Divider />
             <Typography variant="subtitle2">Intern: {data?.cabins?.[0]?.internalPrice} kr</Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Ekstern Ukedag: {data?.cabins?.[0]?.externalPrice} kr
+              Ekstern (student) Helg: 2950 kr
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Ekstern (student) Ukedag: 3950 kr
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Ekstern ukedag: {data?.cabins?.[0]?.externalPriceWeekend} kr
             </Typography>
             <Typography variant="subtitle2" gutterBottom>
               Ekstern Helg: {data?.cabins?.[0]?.externalPriceWeekend} kr

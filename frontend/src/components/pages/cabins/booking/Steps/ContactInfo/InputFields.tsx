@@ -52,17 +52,26 @@ export function getContactInfoSchema(totalGuestsAllowed: number): yup.ObjectSche
         message: "Du må ha minst én deltaker",
         name: "minParticipants",
         test(value, context) {
-          return value + context.parent.externalParticipants > 0;
+          return value + context.parent.externalParticipants + context.parent.externalStudentParticipants > 0;
         },
       })
       .test({
         name: "maxParticipants",
         message: `Du kan maks ha ${totalGuestsAllowed} deltakere`,
         test(value, context) {
-          return value + context.parent.externalParticipants <= totalGuestsAllowed;
+          return (
+            value + context.parent.externalParticipants + context.parent.externalStudentParticipants <=
+            totalGuestsAllowed
+          );
         },
       }),
     externalParticipants: yup.number().min(0).integer().required().label("Antall eksterne deltakere"),
+    externalStudentParticipants: yup
+      .number()
+      .min(0)
+      .integer()
+      .required()
+      .label("Antall eksterne deltakere (studenter)"),
   });
 }
 
@@ -70,7 +79,15 @@ export function getContactInfoSchema(totalGuestsAllowed: number): yup.ObjectSche
 export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins, onSubmit, onPrevious }) => {
   const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 
-  const { firstName, externalParticipants, internalParticipants, lastName, phone, receiverEmail } = defaultContactInfo;
+  const {
+    firstName,
+    externalParticipants,
+    externalStudentParticipants,
+    internalParticipants,
+    lastName,
+    phone,
+    receiverEmail,
+  } = defaultContactInfo;
   const {
     register,
     handleSubmit,
@@ -85,6 +102,7 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
       phone: phone ?? "",
       internalParticipants: internalParticipants ?? 0,
       externalParticipants: externalParticipants ?? 0,
+      externalStudentParticipants: externalStudentParticipants ?? 0,
     },
   });
 
@@ -158,6 +176,25 @@ export const InputFields: React.FC<Props> = ({ defaultContactInfo, chosenCabins,
                 </Select>
                 <FormHelperText error={Boolean(errors.internalParticipants)}>
                   {errors.internalParticipants?.message ?? " "}
+                </FormHelperText>
+              </FormControl>
+            )}
+          />
+          <Controller
+            name="externalStudentParticipants"
+            control={control}
+            render={({ field }) => (
+              <FormControl variant="filled" fullWidth error={Boolean(errors.externalStudentParticipants)} required>
+                <InputLabel id="external-student-participants-label">Antall eksterne (studenter)</InputLabel>
+                <Select {...field} labelId="external-student-participants-label" id="external-student-participants">
+                  {range(0, totalGuestsAllowed + 1).map((val: number) => (
+                    <MenuItem key={val} value={val}>
+                      {val}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText error={Boolean(errors.externalStudentParticipants)}>
+                  {errors.externalStudentParticipants?.message ?? " "}
                 </FormHelperText>
               </FormControl>
             )}

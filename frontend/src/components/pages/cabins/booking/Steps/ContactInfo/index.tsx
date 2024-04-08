@@ -13,6 +13,7 @@ export type BasicBooking = {
 
 export type Participants = {
   internalParticipants: number;
+  externalStudentParticipants: number;
   externalParticipants: number;
 };
 
@@ -42,6 +43,7 @@ export const CabinContactInfo: React.FC<Props> = ({ chosenCabins, onSubmit, onPr
     receiverEmail: data?.user?.email,
     phone: data?.user?.phoneNumber,
     externalParticipants: 0,
+    externalStudentParticipants: 0,
     internalParticipants: 0,
     ...contactInfo,
   };
