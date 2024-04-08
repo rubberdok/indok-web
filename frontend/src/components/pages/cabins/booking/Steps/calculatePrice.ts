@@ -4,15 +4,23 @@ export function calculatePrice(
   chosenCabins: {
     internalPrice: number;
     externalPrice: number;
+    externalStudentPrice: number;
     internalPriceWeekend: number;
     externalPriceWeekend: number;
+    externalStudentPriceWeekend: number;
   }[],
-  contactInfo: { internalParticipants: number; externalParticipants: number } | undefined,
+  contactInfo:
+    | { internalParticipants: number; externalParticipants: number; externalStudentParticipants: number }
+    | undefined,
   startDate: dayjs.Dayjs | undefined,
   endDate: dayjs.Dayjs | undefined
 ): number | undefined {
   if (!contactInfo) return NaN;
-  const internalPrice = contactInfo.internalParticipants >= contactInfo.externalParticipants;
+  const internalPrice =
+    contactInfo.internalParticipants >= contactInfo.externalParticipants + contactInfo.externalStudentParticipants;
+  const externalPrice =
+    contactInfo.externalParticipants >= contactInfo.externalStudentParticipants + contactInfo.internalParticipants;
+
   let currentDate = dayjs(startDate);
   const finalDate = dayjs(endDate);
   let weekdayNights = 0;
@@ -32,8 +40,10 @@ export function calculatePrice(
   chosenCabins.forEach((cabin) => {
     if (internalPrice) {
       totalPrice += weekdayNights * cabin.internalPrice + weekendNights * cabin.internalPriceWeekend;
-    } else {
+    } else if (externalPrice) {
       totalPrice += weekdayNights * cabin.externalPrice + weekendNights * cabin.externalPriceWeekend;
+    } else {
+      totalPrice += weekdayNights * cabin.externalStudentPrice + weekendNights * cabin.externalStudentPriceWeekend;
     }
   }); // Add closing parenthesis here
 
