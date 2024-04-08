@@ -24,6 +24,7 @@ export const JanusSidebar: React.FC = () => {
           noLinkStyle
           label="Indøk kalender"
         />
+        <Tab component={Link} href="/janus/shop" value="/janus/shop" noLinkStyle label="Butikk" />
         <Tab component={Link} href="/janus" value="/janus" noLinkStyle label="Kontakt oss" />
       </Tabs>
     </Box>

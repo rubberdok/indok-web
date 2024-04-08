@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9.7"
 
@@ -340,7 +340,7 @@ jobs:
           wait-for-service-stability: true
 
       - name: Sentry release
-        uses: getsentry/action-release@v1.4.1
+        uses: getsentry/action-release@v1.7.0
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ env.SENTRY_ORG }}

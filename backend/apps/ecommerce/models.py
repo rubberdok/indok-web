@@ -116,6 +116,7 @@ class Order(models.Model):
     timestamp = DateTimeField(auto_now_add=True)
     auth_token = models.CharField(max_length=32, default=get_auth_token)  # For authenticating Vipps callback
     payment_attempt = models.PositiveIntegerField(default=1)
+    delivered_product = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Order(product={self.product}, user={self.user})"

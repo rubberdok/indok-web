@@ -187,6 +187,26 @@
               }
             },
             {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "allUserOrders",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "OrderType",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
               "args": [
                 {
                   "defaultValue": null,
@@ -3785,6 +3805,22 @@
                 "name": "ResponsibleGroupType",
                 "ofType": null
               }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "",
+              "isDeprecated": false,
+              "name": "deliveredProduct",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
             }
           ],
           "inputFields": null,
@@ -4898,6 +4934,33 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "CreateProduct",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": null,
+                  "name": "orderId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  }
+                }
+              ],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "deliveredProduct",
+              "type": {
+                "kind": "OBJECT",
+                "name": "DeliveredProduct",
                 "ofType": null
               }
             },
@@ -6368,6 +6431,41 @@
           "interfaces": null,
           "kind": "INPUT_OBJECT",
           "name": "CreateProductInput",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "ok",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "order",
+              "type": {
+                "kind": "OBJECT",
+                "name": "OrderType",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "DeliveredProduct",
           "possibleTypes": null
         },
         {

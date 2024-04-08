@@ -382,6 +382,12 @@ export type DeleteQuestion = {
   ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type DeliveredProduct = {
+  __typename?: "DeliveredProduct";
+  ok?: Maybe<Scalars["Boolean"]["output"]>;
+  order?: Maybe<OrderType>;
+};
+
 export type EmailInput = {
   cabins?: InputMaybe<Array<Scalars['Int']['input']>>;
   checkIn?: InputMaybe<Scalars['Date']['input']>;
@@ -566,6 +572,7 @@ export type Mutations = {
   deleteListing?: Maybe<DeleteListing>;
   deleteOrganization?: Maybe<DeleteOrganization>;
   deleteQuestion?: Maybe<DeleteQuestion>;
+  deliveredProduct?: Maybe<DeliveredProduct>;
   /**
    * Sets the field is_attending to False in the Sign Up for the user that
    * sent the request, for the event with the given ID
@@ -731,6 +738,12 @@ export type MutationsDeleteQuestionArgs = {
   id: Scalars['ID']['input'];
 };
 
+<<<<<<< HEAD
+=======
+export type MutationsDeliveredProductArgs = {
+  orderId: Scalars["ID"]["input"];
+};
+>>>>>>> e3e36e6b0b62d238c9bb412dd91d85565b5741b0
 
 export type MutationsEventSignOffArgs = {
   eventId: Scalars['ID']['input'];
@@ -848,8 +861,14 @@ export type OptionType = {
 };
 
 export type OrderType = {
+<<<<<<< HEAD
   __typename?: 'OrderType';
   id: Scalars['UUID']['output'];
+=======
+  __typename?: "OrderType";
+  deliveredProduct: Scalars["Boolean"]["output"];
+  id: Scalars["UUID"]["output"];
+>>>>>>> e3e36e6b0b62d238c9bb412dd91d85565b5741b0
   paymentStatus: PaymentStatus;
   product: ProductType;
   quantity: Scalars['Int']['output'];
@@ -917,6 +936,7 @@ export type Queries = {
   allCategories?: Maybe<Array<CategoryType>>;
   allEvents?: Maybe<Array<EventType>>;
   allOrganizations?: Maybe<Array<OrganizationType>>;
+  allUserOrders?: Maybe<Array<OrderType>>;
   allUsers?: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
   attendeeReport?: Maybe<Scalars['String']['output']>;
@@ -1455,6 +1475,7 @@ export type ActiveBookingResponsibleQuery = { __typename?: 'Queries', activeBook
 export type CabinsAndResponsiblesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
+<<<<<<< HEAD
 export type CabinsAndResponsiblesQuery = { __typename?: 'Queries', cabins?: Array<{ __typename?: 'CabinType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number }> | null, activeBookingResponsible?: { __typename?: 'BookingResponsibleType', id: string, email?: string | null } | null };
 
 export type BookingSemesterQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1465,6 +1486,37 @@ export type BookingSemesterQuery = { __typename?: 'Queries', bookingSemester?: {
 export type ProductFragment = { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number };
 
 export type OrderFragment = { __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number } };
+=======
+export type ProductFragment = {
+  __typename?: "ProductType";
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  maxBuyableQuantity: number;
+  shopItem: boolean;
+};
+
+export type OrderFragment = {
+  __typename?: "OrderType";
+  id: string;
+  quantity: number;
+  totalPrice: number;
+  paymentStatus: PaymentStatus;
+  timestamp: string;
+  deliveredProduct: boolean;
+  product: {
+    __typename?: "ProductType";
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    maxBuyableQuantity: number;
+    shopItem: boolean;
+  };
+  user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+};
+>>>>>>> e3e36e6b0b62d238c9bb412dd91d85565b5741b0
 
 export type InitiateOrderMutationVariables = Exact<{
   productId: Scalars['ID']['input'];
@@ -1479,20 +1531,144 @@ export type AttemptCapturePaymentMutationVariables = Exact<{
   orderId: Scalars['ID']['input'];
 }>;
 
+<<<<<<< HEAD
 
 export type AttemptCapturePaymentMutation = { __typename?: 'Mutations', attemptCapturePayment?: { __typename?: 'AttemptCapturePayment', status?: PaymentStatus | null, order?: { __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number } } | null } | null };
+=======
+export type AttemptCapturePaymentMutation = {
+  __typename?: "Mutations";
+  attemptCapturePayment?: {
+    __typename?: "AttemptCapturePayment";
+    status?: PaymentStatus | null;
+    order?: {
+      __typename?: "OrderType";
+      id: string;
+      quantity: number;
+      totalPrice: number;
+      paymentStatus: PaymentStatus;
+      timestamp: string;
+      deliveredProduct: boolean;
+      product: {
+        __typename?: "ProductType";
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        maxBuyableQuantity: number;
+        shopItem: boolean;
+      };
+      user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+    } | null;
+  } | null;
+};
+
+export type DeliveredProductMutationVariables = Exact<{
+  orderId: Scalars["ID"]["input"];
+}>;
+
+export type DeliveredProductMutation = {
+  __typename?: "Mutations";
+  deliveredProduct?: {
+    __typename?: "DeliveredProduct";
+    order?: {
+      __typename?: "OrderType";
+      id: string;
+      quantity: number;
+      totalPrice: number;
+      paymentStatus: PaymentStatus;
+      timestamp: string;
+      deliveredProduct: boolean;
+      product: {
+        __typename?: "ProductType";
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        maxBuyableQuantity: number;
+        shopItem: boolean;
+      };
+      user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+    } | null;
+  } | null;
+};
+>>>>>>> e3e36e6b0b62d238c9bb412dd91d85565b5741b0
 
 export type ProductQueryVariables = Exact<{
   productId: Scalars['ID']['input'];
 }>;
 
+<<<<<<< HEAD
+=======
+export type ProductQuery = {
+  __typename?: "Queries";
+  product?: {
+    __typename?: "ProductType";
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    maxBuyableQuantity: number;
+    shopItem: boolean;
+  } | null;
+};
+>>>>>>> e3e36e6b0b62d238c9bb412dd91d85565b5741b0
 
 export type ProductQuery = { __typename?: 'Queries', product?: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number } | null };
 
 export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
+<<<<<<< HEAD
 export type ProductsQuery = { __typename?: 'Queries', products?: Array<{ __typename?: 'ProductType', id: string, name: string, price: number, description: string, maxBuyableQuantity: number, shopItem: boolean }> | null };
+=======
+export type UserOrdersQuery = {
+  __typename?: "Queries";
+  userOrders?: Array<{
+    __typename?: "OrderType";
+    id: string;
+    quantity: number;
+    totalPrice: number;
+    paymentStatus: PaymentStatus;
+    timestamp: string;
+    deliveredProduct: boolean;
+    product: {
+      __typename?: "ProductType";
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      maxBuyableQuantity: number;
+      shopItem: boolean;
+    };
+    user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+  }> | null;
+};
+
+export type AllUserOrdersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllUserOrdersQuery = {
+  __typename?: "Queries";
+  allUserOrders?: Array<{
+    __typename?: "OrderType";
+    id: string;
+    quantity: number;
+    totalPrice: number;
+    paymentStatus: PaymentStatus;
+    timestamp: string;
+    deliveredProduct: boolean;
+    product: {
+      __typename?: "ProductType";
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      maxBuyableQuantity: number;
+      shopItem: boolean;
+    };
+    user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+  }> | null;
+};
+>>>>>>> e3e36e6b0b62d238c9bb412dd91d85565b5741b0
 
 export type UserOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1841,6 +2017,7 @@ export type UserWithEventsAndOrgsQuery = { __typename?: 'Queries', user?: { __ty
 
 export type UserToEditQueryVariables = Exact<{ [key: string]: never; }>;
 
+<<<<<<< HEAD
 
 export type UserToEditQuery = { __typename?: 'Queries', user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies?: string | null, email: string, graduationYear?: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear?: boolean | null, yearUpdatedAt?: string | null } | null };
 
@@ -1947,3 +2124,6905 @@ export const UserDocument = {"kind":"Document","definitions":[{"kind":"Operation
 export const UserWithEventsAndOrgsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userWithEventsAndOrgs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserWithEventsAndOrgs"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feideEmail"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"dateJoined"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"firstLogin"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserWithEventsAndOrgs"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"User"}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"organizations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<UserWithEventsAndOrgsQuery, UserWithEventsAndOrgsQueryVariables>;
 export const UserToEditDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userToEdit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserToEdit"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserToEdit"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"firstLogin"}},{"kind":"Field","name":{"kind":"Name","value":"feideEmail"}},{"kind":"Field","name":{"kind":"Name","value":"canUpdateYear"}},{"kind":"Field","name":{"kind":"Name","value":"yearUpdatedAt"}}]}}]} as unknown as DocumentNode<UserToEditQuery, UserToEditQueryVariables>;
 export const ServerTimeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"serverTime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"serverTime"}}]}}]} as unknown as DocumentNode<ServerTimeQuery, ServerTimeQueryVariables>;
+=======
+export const DocumentFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Document" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ArchiveDocumentType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
+          { kind: "Field", name: { kind: "Name", value: "typeDoc" } },
+          { kind: "Field", name: { kind: "Name", value: "year" } },
+          { kind: "Field", name: { kind: "Name", value: "webLink" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DocumentFragment, unknown>;
+export const CabinFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Cabin" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "CabinType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CabinFragment, unknown>;
+export const BookingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Booking" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AllBookingsType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+          { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BookingFragment, unknown>;
+export const AdminBookingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminBooking" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AdminBookingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+          { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "phone" } },
+          { kind: "Field", name: { kind: "Name", value: "receiverEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "externalParticipants" } },
+          { kind: "Field", name: { kind: "Name", value: "internalParticipants" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "isTentative" } },
+          { kind: "Field", name: { kind: "Name", value: "isDeclined" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInfo" } },
+          { kind: "Field", name: { kind: "Name", value: "declineReason" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminBookingFragment, unknown>;
+export const BookingResponsibleFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "BookingResponsible" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "BookingResponsibleType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "active" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "phone" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BookingResponsibleFragment, unknown>;
+export const BookingSemesterFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "BookingSemester" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UpdateBookingSemesterType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "fallStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallSemesterActive" } },
+          { kind: "Field", name: { kind: "Name", value: "springSemesterActive" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BookingSemesterFragment, unknown>;
+export const ProductFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductFragment, unknown>;
+export const OrderFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OrderFragment, unknown>;
+export const EventFieldsFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventFieldsFragment, unknown>;
+export const EventDetailFieldsFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventDetailFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "endTime" } },
+          { kind: "Field", name: { kind: "Name", value: "location" } },
+          { kind: "Field", name: { kind: "Name", value: "contactEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "bindingSignup" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+                { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
+                { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "category" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventDetailFieldsFragment, unknown>;
+export const SignUpWithTicketFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "SignUpWithTicket" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SignUpType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "userEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
+          { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SignUpWithTicketFragment, unknown>;
+export const SignUpFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "SignUp" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SignUpType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "userEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
+          { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SignUpFragment, unknown>;
+export const AdminEventFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminEvent" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "endTime" } },
+          { kind: "Field", name: { kind: "Name", value: "location" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "category" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "image" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "publisher" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "availableSlots" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersAttending" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "SignUpWithTicket" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersOnWaitingList" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "SignUp" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "bindingSignup" } },
+          { kind: "Field", name: { kind: "Name", value: "contactEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "SignUpWithTicket" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SignUpType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "userEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
+          { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "SignUp" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SignUpType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "userEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
+          { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminEventFragment, unknown>;
+export const OptionFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OptionFragment, unknown>;
+export const QuestionFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<QuestionFragment, unknown>;
+export const AnswerFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AnswerFragment, unknown>;
+export const QuestionWithAnswerFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answer" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<QuestionWithAnswerFragment, unknown>;
+export const FormWithAnswersFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAnswers" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswer" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answer" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FormWithAnswersFragment, unknown>;
+export const ListingOrganizationFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingOrganizationFragment, unknown>;
+export const ListingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingFragment, unknown>;
+export const ListingWithFormIdFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingWithFormId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingWithFormIdFragment, unknown>;
+export const FormFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Form" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Question" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FormFragment, unknown>;
+export const ListingWithFormFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingWithForm" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Form" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Form" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Question" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingWithFormFragment, unknown>;
+export const QuestionWithAnswerIdsFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<QuestionWithAnswerIdsFragment, unknown>;
+export const AnswerWithQuestionIdFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AnswerWithQuestionIdFragment, unknown>;
+export const ResponseFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Response" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ResponseType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "respondent" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AnswerWithQuestionId" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ResponseFragment, unknown>;
+export const FormWithAllResponsesFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAllResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "responses" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Response" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Response" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ResponseType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "respondent" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AnswerWithQuestionId" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FormWithAllResponsesFragment, unknown>;
+export const ListingWithResponsesFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingWithResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FormWithAllResponses" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Response" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ResponseType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "respondent" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AnswerWithQuestionId" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAllResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "responses" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Response" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingWithResponsesFragment, unknown>;
+export const OrgAdminEventFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminEvent" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "availableSlots" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersAttending" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OrgAdminEventFragment, unknown>;
+export const OrgAdminListingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminListing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OrgAdminListingFragment, unknown>;
+export const AdminOrganizationFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hrGroup" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "primaryGroup" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "OrgAdminEvent" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listings" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "OrgAdminListing" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminEvent" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "availableSlots" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersAttending" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminListing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminOrganizationFragment, unknown>;
+export const MembershipFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Membership" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "MembershipType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "group" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MembershipFragment, unknown>;
+export const UserFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "User" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserFragment, unknown>;
+export const UserWithEventsAndOrgsFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "UserWithEventsAndOrgs" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "User" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organizations" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "User" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserWithEventsAndOrgsFragment, unknown>;
+export const UserToEditFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "UserToEdit" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "canUpdateYear" } },
+          { kind: "Field", name: { kind: "Name", value: "yearUpdatedAt" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserToEditFragment, unknown>;
+export const ArchiveByTypesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "archiveByTypes" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "ListType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "year" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "names" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "archiveByTypes" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "typeDoc" },
+                value: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "year" },
+                value: { kind: "Variable", name: { kind: "Name", value: "year" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "names" },
+                value: { kind: "Variable", name: { kind: "Name", value: "names" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Document" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ArchiveDocumentType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
+          { kind: "Field", name: { kind: "Name", value: "typeDoc" } },
+          { kind: "Field", name: { kind: "Name", value: "year" } },
+          { kind: "Field", name: { kind: "Name", value: "webLink" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ArchiveByTypesQuery, ArchiveByTypesQueryVariables>;
+export const FeaturedArchiveDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "featuredArchive" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "featuredArchive" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Document" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ArchiveDocumentType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
+          { kind: "Field", name: { kind: "Name", value: "typeDoc" } },
+          { kind: "Field", name: { kind: "Name", value: "year" } },
+          { kind: "Field", name: { kind: "Name", value: "webLink" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FeaturedArchiveQuery, FeaturedArchiveQueryVariables>;
+export const AvailableYearsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "availableYears" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [{ kind: "Field", name: { kind: "Name", value: "availableYears" } }],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AvailableYearsQuery, AvailableYearsQueryVariables>;
+export const DocumentsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "documents" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "year" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "names" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "archiveByTypes" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "typeDoc" },
+                value: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "year" },
+                value: { kind: "Variable", name: { kind: "Name", value: "year" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "names" },
+                value: { kind: "Variable", name: { kind: "Name", value: "names" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "featuredArchive" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Document" } }],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "availableYears" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "StringValue", value: "archive.view_archivedocument", block: false },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Document" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ArchiveDocumentType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "thumbnail" } },
+          { kind: "Field", name: { kind: "Name", value: "typeDoc" } },
+          { kind: "Field", name: { kind: "Name", value: "year" } },
+          { kind: "Field", name: { kind: "Name", value: "webLink" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DocumentsQuery, DocumentsQueryVariables>;
+export const CreateBookingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "createBooking" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "bookingData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "BookingInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createBooking" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "bookingData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "bookingData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateBookingMutation, CreateBookingMutationVariables>;
+export const ConfirmBookingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "confirmBooking" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateBooking" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "bookingData" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "id" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "isTentative" },
+                      value: { kind: "BooleanValue", value: false },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ConfirmBookingMutation, ConfirmBookingMutationVariables>;
+export const DeclineBookingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "declineBooking" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "declineReason" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateBooking" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "bookingData" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "id" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "isTentative" },
+                      value: { kind: "BooleanValue", value: false },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "isDeclined" },
+                      value: { kind: "BooleanValue", value: true },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "declineReason" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "declineReason" } },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeclineBookingMutation, DeclineBookingMutationVariables>;
+export const SendEmailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "sendEmail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "EmailInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "sendEmail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "emailInput" },
+                value: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SendEmailMutation, SendEmailMutationVariables>;
+export const UpdateCabinDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateCabin" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "cabinData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "UpdateCabinInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateCabin" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "cabinData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "cabinData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "cabin" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Cabin" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Cabin" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "CabinType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateCabinMutation, UpdateCabinMutationVariables>;
+export const UpdateBookingSemesterDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateBookingSemester" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "semesterData" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "UpdateBookingSemesterInput" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateBookingSemester" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "semesterData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "semesterData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "bookingSemester" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BookingSemester" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "BookingSemester" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UpdateBookingSemesterType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "fallStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallSemesterActive" } },
+          { kind: "Field", name: { kind: "Name", value: "springSemesterActive" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateBookingSemesterMutation, UpdateBookingSemesterMutationVariables>;
+export const CabinsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "cabins" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Cabin" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Cabin" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "CabinType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CabinsQuery, CabinsQueryVariables>;
+export const AllBookingsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "allBookings" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allBookings" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Booking" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Booking" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AllBookingsType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+          { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllBookingsQuery, AllBookingsQueryVariables>;
+export const AdminAllBookingsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "adminAllBookings" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "after" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "adminAllBookings" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "after" },
+                value: { kind: "Variable", name: { kind: "Name", value: "after" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AdminBooking" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminBooking" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AdminBookingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+          { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "phone" } },
+          { kind: "Field", name: { kind: "Name", value: "receiverEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "externalParticipants" } },
+          { kind: "Field", name: { kind: "Name", value: "internalParticipants" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "isTentative" } },
+          { kind: "Field", name: { kind: "Name", value: "isDeclined" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInfo" } },
+          { kind: "Field", name: { kind: "Name", value: "declineReason" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminAllBookingsQuery, AdminAllBookingsQueryVariables>;
+export const ActiveBookingResponsibleDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "activeBookingResponsible" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "activeBookingResponsible" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BookingResponsible" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "BookingResponsible" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "BookingResponsibleType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "active" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "phone" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
+export const CabinsAndResponsiblesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "cabinsAndResponsibles" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Cabin" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "activeBookingResponsible" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Cabin" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "CabinType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPriceWeekend" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPriceWeekend" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CabinsAndResponsiblesQuery, CabinsAndResponsiblesQueryVariables>;
+export const BookingSemesterDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "bookingSemester" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "bookingSemester" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BookingSemester" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "BookingSemester" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UpdateBookingSemesterType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "fallStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallSemesterActive" } },
+          { kind: "Field", name: { kind: "Name", value: "springSemesterActive" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BookingSemesterQuery, BookingSemesterQueryVariables>;
+export const InitiateOrderDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "initiateOrder" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "quantity" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "fallbackRedirect" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "initiateOrder" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "productId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "quantity" },
+                value: { kind: "Variable", name: { kind: "Name", value: "quantity" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "fallbackRedirect" },
+                value: { kind: "Variable", name: { kind: "Name", value: "fallbackRedirect" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "redirect" } },
+                { kind: "Field", name: { kind: "Name", value: "orderId" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<InitiateOrderMutation, InitiateOrderMutationVariables>;
+export const AttemptCapturePaymentDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "attemptCapturePayment" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "attemptCapturePayment" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "status" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "order" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AttemptCapturePaymentMutation, AttemptCapturePaymentMutationVariables>;
+export const DeliveredProductDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "deliveredProduct" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deliveredProduct" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "order" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeliveredProductMutation, DeliveredProductMutationVariables>;
+export const ProductDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "product" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "productId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductQuery, ProductQueryVariables>;
+export const ProductsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "products" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "products" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "price" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+                { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductsQuery, ProductsQueryVariables>;
+export const UserOrdersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userOrders" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userOrders" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserOrdersQuery, UserOrdersQueryVariables>;
+export const AllUserOrdersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "allUserOrders" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allUserOrders" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllUserOrdersQuery, AllUserOrdersQueryVariables>;
+export const CreateEventDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "createEvent" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "CreateEventInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createEvent" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "event" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFields" } }],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateEventMutation, CreateEventMutationVariables>;
+export const UpdateEventDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateEvent" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "UpdateEventInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateEvent" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "event" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventDetailFields" } }],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventDetailFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "endTime" } },
+          { kind: "Field", name: { kind: "Name", value: "location" } },
+          { kind: "Field", name: { kind: "Name", value: "contactEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "bindingSignup" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+                { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
+                { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "category" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateEventMutation, UpdateEventMutationVariables>;
+export const EventSignUpDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "eventSignUp" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "extraInformation" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "eventSignUp" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "data" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "extraInformation" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "extraInformation" } },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isFull" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "event" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userAttendance" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                            { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+                            { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventSignUpMutation, EventSignUpMutationVariables>;
+export const EventSignOffDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "eventSignOff" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "eventSignOff" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isFull" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "event" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userAttendance" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                            { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+                            { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventSignOffMutation, EventSignOffMutationVariables>;
+export const AdminEventSignOffDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "adminEventSignOff" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "userId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "adminEventSignOff" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "userId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "userId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "event" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminEventSignOffMutation, AdminEventSignOffMutationVariables>;
+export const SendEventMailsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "sendEventMails" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "receiverEmails" } },
+          type: {
+            kind: "ListType",
+            type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "content" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "subject" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "sendEventMails" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "receiverEmails" },
+                value: { kind: "Variable", name: { kind: "Name", value: "receiverEmails" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "content" },
+                value: { kind: "Variable", name: { kind: "Name", value: "content" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "subject" },
+                value: { kind: "Variable", name: { kind: "Name", value: "subject" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SendEventMailsMutation, SendEventMailsMutationVariables>;
+export const EventsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "events" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "organization" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "category" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allEvents" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "organization" },
+                value: { kind: "Variable", name: { kind: "Name", value: "organization" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "category" },
+                value: { kind: "Variable", name: { kind: "Name", value: "category" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "startTime" },
+                value: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "endTime" },
+                value: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFields" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "defaultEvents" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFields" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "StringValue", value: "events.add_event", block: false },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventsQuery, EventsQueryVariables>;
+export const EventDetailsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "eventDetails" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "event" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventDetailFields" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "organizations" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventDetailFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "endTime" } },
+          { kind: "Field", name: { kind: "Name", value: "location" } },
+          { kind: "Field", name: { kind: "Name", value: "contactEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "bindingSignup" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+                { kind: "Field", name: { kind: "Name", value: "positionOnWaitingList" } },
+                { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "category" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventDetailsQuery, EventDetailsQueryVariables>;
+export const AllCategoriesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "allCategories" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allCategories" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllCategoriesQuery, AllCategoriesQueryVariables>;
+export const EventFilteredOrganizationsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "eventFilteredOrganizations" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "eventFilteredOrganizations" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "children" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventFilteredOrganizationsQuery, EventFilteredOrganizationsQueryVariables>;
+export const AdminEventDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "adminEvent" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "event" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AdminEvent" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "SignUpWithTicket" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SignUpType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "userEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
+          { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "hasBoughtTicket" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "SignUp" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SignUpType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "userEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "userGradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "userAllergies" } },
+          { kind: "Field", name: { kind: "Name", value: "userPhoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInformation" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminEvent" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "endTime" } },
+          { kind: "Field", name: { kind: "Name", value: "location" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "category" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "image" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "publisher" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "availableSlots" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersAttending" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "SignUpWithTicket" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersOnWaitingList" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "SignUp" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "bindingSignup" } },
+          { kind: "Field", name: { kind: "Name", value: "contactEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminEventQuery, AdminEventQueryVariables>;
+export const EventSignUpsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "eventSignUps" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "event" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "usersAttending" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "userEmail" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventSignUpsQuery, EventSignUpsQueryVariables>;
+export const AttendeeReportDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "attendeeReport" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "fields" } },
+          type: {
+            kind: "ListType",
+            type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "filetype" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "attendeeReport" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "fields" },
+                value: { kind: "Variable", name: { kind: "Name", value: "fields" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "filetype" },
+                value: { kind: "Variable", name: { kind: "Name", value: "filetype" } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AttendeeReportQuery, AttendeeReportQueryVariables>;
+export const AttendeeReportOrgDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "attendeeReportOrg" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orgId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "fields" } },
+          type: {
+            kind: "ListType",
+            type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "filetype" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "attendeeReportOrg" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orgId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orgId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "fields" },
+                value: { kind: "Variable", name: { kind: "Name", value: "fields" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "filetype" },
+                value: { kind: "Variable", name: { kind: "Name", value: "filetype" } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AttendeeReportOrgQuery, AttendeeReportOrgQueryVariables>;
+export const AttendeeReportsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "attendeeReports" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "eventIds" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+            },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "fields" } },
+          type: {
+            kind: "ListType",
+            type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "filetype" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "attendeeReports" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "eventIds" },
+                value: { kind: "Variable", name: { kind: "Name", value: "eventIds" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "fields" },
+                value: { kind: "Variable", name: { kind: "Name", value: "fields" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "filetype" },
+                value: { kind: "Variable", name: { kind: "Name", value: "filetype" } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AttendeeReportsQuery, AttendeeReportsQueryVariables>;
+export const EventUserOrganizationsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "eventUserOrganizations" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "organizations" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventUserOrganizationsQuery, EventUserOrganizationsQueryVariables>;
+export const CreateFormDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "createForm" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "formData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "CreateFormInput" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "listingId" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createForm" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "formData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "formData" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "listingId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "listingId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "form" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FormWithAllResponses" } }],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Response" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ResponseType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "respondent" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AnswerWithQuestionId" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAllResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "responses" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Response" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateFormMutation, CreateFormMutationVariables>;
+export const UpdateFormDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateForm" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "formData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "BaseFormInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateForm" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "formData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "formData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "form" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FormWithAllResponses" } }],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Response" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ResponseType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "respondent" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AnswerWithQuestionId" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAllResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "responses" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Response" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateFormMutation, UpdateFormMutationVariables>;
+export const CreateQuestionDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "createQuestion" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "questionData" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "CreateQuestionInput" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createQuestion" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "formId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "questionData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "questionData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "question" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateQuestionMutation, CreateQuestionMutationVariables>;
+export const UpdateQuestionDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateQuestion" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "questionData" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "BaseQuestionInput" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "optionData" } },
+          type: {
+            kind: "ListType",
+            type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "OptionInput" } } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createUpdateAndDeleteOptions" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "questionId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "optionData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "optionData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateQuestion" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "questionData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "questionData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "question" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
+export const DeleteQuestionDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "deleteQuestion" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteQuestion" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "deletedId" } },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
+export const SubmitAnswersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "submitAnswers" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "answersData" } },
+          type: {
+            kind: "ListType",
+            type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "AnswerInput" } } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "submitAnswers" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "formId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "answersData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "answersData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SubmitAnswersMutation, SubmitAnswersMutationVariables>;
+export const FormWithAllResponsesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "formWithAllResponses" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "formId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FormWithAllResponses" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Response" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ResponseType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "respondent" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AnswerWithQuestionId" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAllResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "responses" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Response" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FormWithAllResponsesQuery, FormWithAllResponsesQueryVariables>;
+export const FormWithAnswersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "formWithAnswers" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "formId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "formId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FormWithAnswers" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answer" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAnswers" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswer" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FormWithAnswersQuery, FormWithAnswersQueryVariables>;
+export const CreateListingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "createListing" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "CreateListingInput" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createListing" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "listingData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "input" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "listing" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "slug" } },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateListingMutation, CreateListingMutationVariables>;
+export const UpdateListingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateListing" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "BaseListingInput" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateListing" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "listingData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "input" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "listing" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "slug" } },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateListingMutation, UpdateListingMutationVariables>;
+export const DeleteListingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "deleteListing" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteListing" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "listingId" } },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteListingMutation, DeleteListingMutationVariables>;
+export const ListingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "listing" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listing" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingWithFormId" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingWithFormId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingQuery, ListingQueryVariables>;
+export const ListingsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "listings" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listings" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingsQuery, ListingsQueryVariables>;
+export const ListingWithFormDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "listingWithForm" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listing" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingWithForm" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Form" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Question" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingWithForm" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Form" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingWithFormQuery, ListingWithFormQueryVariables>;
+export const ListingWithResponsesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "listingWithResponses" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listing" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingWithResponses" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Option" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OptionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Question" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "question" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "questionType" } },
+          { kind: "Field", name: { kind: "Name", value: "mandatory" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "options" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Option" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "QuestionWithAnswerIds" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "QuestionType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Question" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Answer" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "answer" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AnswerWithQuestionId" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AnswerType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Answer" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "question" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Response" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ResponseType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "respondent" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "answers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AnswerWithQuestionId" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "FormWithAllResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "FormType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "questions" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "QuestionWithAnswerIds" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "responses" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Response" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingWithResponses" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "form" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "FormWithAllResponses" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingWithResponsesQuery, ListingWithResponsesQueryVariables>;
+export const UserOrganizationsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userOrganizations" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "organizations" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "ListingOrganization" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "ListingOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "color" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserOrganizationsQuery, UserOrganizationsQueryVariables>;
+export const AdminOrganizationDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "adminOrganization" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orgId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orgId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AdminOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminEvent" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "availableSlots" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersAttending" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminListing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hrGroup" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "primaryGroup" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "OrgAdminEvent" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listings" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "OrgAdminListing" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminOrganizationQuery, AdminOrganizationQueryVariables>;
+export const MembershipsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "memberships" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "organizationId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "memberships" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "organizationId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "organizationId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "user" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                      { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "group" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MembershipsQuery, MembershipsQueryVariables>;
+export const HasPermissionDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "hasPermission" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
+export const LogoutDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "logout" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "logout" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "idToken" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
+export const AuthUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "authUser" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "code" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "authUser" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "code" },
+                value: { kind: "Variable", name: { kind: "Name", value: "code" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "user" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "User" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "User" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AuthUserMutation, AuthUserMutationVariables>;
+export const UpdateUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateUser" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "userData" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "UserInput" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateUser" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "userData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "userData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "user" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "User" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "User" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "user" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "User" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "User" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const UserWithEventsAndOrgsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userWithEventsAndOrgs" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserWithEventsAndOrgs" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "User" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "UserWithEventsAndOrgs" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "User" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organizations" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserWithEventsAndOrgsQuery, UserWithEventsAndOrgsQueryVariables>;
+export const UserToEditDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userToEdit" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserToEdit" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "UserToEdit" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "canUpdateYear" } },
+          { kind: "Field", name: { kind: "Name", value: "yearUpdatedAt" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserToEditQuery, UserToEditQueryVariables>;
+export const ServerTimeDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "serverTime" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [{ kind: "Field", name: { kind: "Name", value: "serverTime" } }],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ServerTimeQuery, ServerTimeQueryVariables>;
+>>>>>>> e3e36e6b0b62d238c9bb412dd91d85565b5741b0

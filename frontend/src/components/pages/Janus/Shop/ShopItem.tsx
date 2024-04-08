@@ -22,7 +22,7 @@ export const ShopItem: React.VFC<Props> = ({ product }) => {
             {product.name}
           </Typography>
           <Typography variant="body2" textAlign="left" color="text.secondary">
-            -, {product.price}
+            {product.price} kr
           </Typography>
         </CardContent>
       </CardActionArea>
