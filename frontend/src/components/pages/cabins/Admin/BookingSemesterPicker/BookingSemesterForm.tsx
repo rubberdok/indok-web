@@ -59,7 +59,7 @@ export const BookingSemesterForm: React.FC<Props> = ({ defaultValues, values, on
     formState: { errors },
     control,
     handleSubmit,
-  } = useForm<BookingForm>({
+  } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onTouched",
     defaultValues,
