@@ -10,7 +10,7 @@ django-phonenumber-field==7.2.0
 Django==3.2.22
 djangorestframework==3.14.0
 factory-boy==3.3.0
-google-api-python-client==2.101.0
+google-api-python-client==2.125.0
 graphene-django==2.15.0
 graphene==2.1.8
 gunicorn==21.2.0
