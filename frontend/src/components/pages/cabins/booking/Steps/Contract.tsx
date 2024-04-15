@@ -43,11 +43,15 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ boolean }>({
+  } = useForm({
     resolver: yupResolver(
-      yup.object({
-        approved: yup.boolean().required("Du må godkjenne leieavtalen").isTrue("Du må godkjenne leieavtalen"),
-      })
+      yup
+        .object({
+          approved: yup.boolean().required("Du må godkjenne leieavtalen").isTrue("Du må godkjenne leieavtalen"),
+        })
+        .shape({
+          approved: yup.boolean().required().isTrue(),
+        })
     ),
     defaultValues: {
       approved: false,
