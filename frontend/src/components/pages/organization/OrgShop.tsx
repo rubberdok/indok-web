@@ -1,15 +1,15 @@
 import { useQuery } from "@apollo/client";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 
-import { AdminOrganizationFragment, AllUserOrdersDocument } from "@/generated/graphql";
-
 import { ShopSale } from "../orgs/ShopSale";
+
+import { AdminOrganizationFragment, AllShopOrdersDocument } from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
 };
 export const OrgProducts: React.FC<Props> = ({ organization }) => {
-  const { data, error } = useQuery(AllUserOrdersDocument);
+  const { data, error } = useQuery(AllShopOrdersDocument);
   if (error) return <p>Error</p>;
 
   console.log(data);
@@ -20,7 +20,7 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
       </p>
     );
   }
-  if (data?.allUserOrders?.length === 0) {
+  if (data?.allShopOrders?.length === 0) {
     return <p>Ingen ordre</p>;
   }
   return (
@@ -46,23 +46,21 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
         </Box>
       </Stack>
       <Grid container spacing={0}>
-        {data?.allUserOrders?.map((order) => {
-          if (order.product.shopItem === true) {
-            return (
-              <Grid key={order.id} item xs={12} sm={12} md={12}>
-                <Stack border={1}>
-                  <ShopSale
-                    name={order.user.firstName + " " + order.user.lastName}
-                    product_name={order.product.name}
-                    quantity={order.quantity}
-                    has_paid={order.paymentStatus === "CAPTURED"}
-                    is_delivered={order.deliveredProduct === true}
-                    order_id={order.id}
-                  />
-                </Stack>
-              </Grid>
-            );
-          }
+        {data?.allShopOrders?.map((order) => {
+          return (
+            <Grid key={order.id} item xs={12} sm={12} md={12}>
+              <Stack border={1}>
+                <ShopSale
+                  name={order.user.firstName + " " + order.user.lastName}
+                  product_name={order.product.name}
+                  quantity={order.quantity}
+                  has_paid={order.paymentStatus === "CAPTURED"}
+                  is_delivered={order.deliveredProduct === true}
+                  order_id={order.id}
+                />
+              </Stack>
+            </Grid>
+          );
         })}
       </Grid>
     </>
