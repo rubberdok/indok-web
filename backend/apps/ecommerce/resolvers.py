@@ -40,7 +40,7 @@ class EcommerceResolvers:
 
     @staff_member_required
     def resolve_all_shop_orders(self, info):
-        return Order.objects.all()
+        return Order.objects.filter(product__shop_item=True)
 
 
     @staff_member_required
