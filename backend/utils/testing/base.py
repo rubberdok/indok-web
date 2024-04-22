@@ -97,7 +97,9 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
     def deep_assert_equal(self, data: dict[str, Any], obj: model) -> None: ...
 
     @overload
-    def deep_assert_equal(self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]) -> None: ...
+    def deep_assert_equal(
+        self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]
+        ) -> None: ...
 
     def deep_assert_equal(
         self,
