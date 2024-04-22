@@ -26,3 +26,9 @@ query allUserOrders {
     ...Order
   }
 }
+
+query allShopOrders {
+  allShopOrders {
+    ...Order
+  }
+}

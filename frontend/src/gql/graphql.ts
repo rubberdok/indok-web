@@ -1030,6 +1030,7 @@ export type Queries = {
   allCategories: Maybe<Array<CategoryType>>;
   allEvents: Maybe<Array<EventType>>;
   allOrganizations: Maybe<Array<OrganizationType>>;
+  allShopOrders: Maybe<Array<OrderType>>;
   allUserOrders: Maybe<Array<OrderType>>;
   allUsers: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
