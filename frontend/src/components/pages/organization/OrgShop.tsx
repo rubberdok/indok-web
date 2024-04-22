@@ -47,22 +47,20 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
       </Stack>
       <Grid container spacing={0}>
         {data?.allShopOrders?.map((order) => {
-          if (order.product.shopItem === true) {
-            return (
-              <Grid key={order.id} item xs={12} sm={12} md={12}>
-                <Stack border={1}>
-                  <ShopSale
-                    name={order.user.firstName + " " + order.user.lastName}
-                    product_name={order.product.name}
-                    quantity={order.quantity}
-                    has_paid={order.paymentStatus === "CAPTURED"}
-                    is_delivered={order.deliveredProduct === true}
-                    order_id={order.id}
-                  />
-                </Stack>
-              </Grid>
-            );
-          }
+          return (
+            <Grid key={order.id} item xs={12} sm={12} md={12}>
+              <Stack border={1}>
+                <ShopSale
+                  name={order.user.firstName + " " + order.user.lastName}
+                  product_name={order.product.name}
+                  quantity={order.quantity}
+                  has_paid={order.paymentStatus === "CAPTURED"}
+                  is_delivered={order.deliveredProduct === true}
+                  order_id={order.id}
+                />
+              </Stack>
+            </Grid>
+          );
         })}
       </Grid>
     </>
