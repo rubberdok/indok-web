@@ -48,6 +48,8 @@ export default function ProfilePage() {
             }
           }
         }
+
+        ...CabinsAdminCard_Query
       }
     `)
   );
@@ -124,7 +126,7 @@ export default function ProfilePage() {
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
             <PermissionRequired queryRef={queryRef}>
-              <CabinsAdmin data-test-id={`${ID_PREFIX}cabin-`} />
+              <CabinsAdmin data-test-id={`${ID_PREFIX}cabin-`} query={data} />
             </PermissionRequired>
           </Grid>
         </Grid>

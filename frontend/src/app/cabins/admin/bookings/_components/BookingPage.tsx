@@ -9,27 +9,26 @@ import { BookingStatus } from "@/gql/app/graphql";
 
 import { Booking } from "../_components/Booking";
 
-function BookingPage({ status }: { status?: BookingStatus }) {
-  const { data } = useSuspenseQuery(
-    graphql(`
-      query CabinsAdminBookingsPage_Bookings($data: BookingsInput!) {
-        bookings(data: $data) {
-          bookings {
-            id
-            ...Booking_Booking
-          }
-          total
-        }
+const BookingsQuery = graphql(`
+  query CabinsAdminBookingsPage_Bookings($data: BookingsInput!) {
+    bookings(data: $data) {
+      bookings {
+        id
+        ...Booking_Booking
       }
-    `),
-    {
-      variables: {
-        data: {
-          status: status ?? null,
-        },
-      },
+      total
     }
-  );
+  }
+`);
+
+function BookingPage({ status }: { status?: BookingStatus }) {
+  const { data } = useSuspenseQuery(BookingsQuery, {
+    variables: {
+      data: {
+        status: status ?? null,
+      },
+    },
+  });
 
   const { notify } = useAlerts();
   const [changeBookingStatus, { loading }] = useMutation(
@@ -66,6 +65,7 @@ function BookingPage({ status }: { status?: BookingStatus }) {
           type: "error",
         });
       },
+      refetchQueries: [BookingsQuery],
     }
   );
 

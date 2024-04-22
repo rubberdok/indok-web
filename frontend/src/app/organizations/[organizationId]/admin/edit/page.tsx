@@ -21,7 +21,9 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { useAlerts } from "@/app/components/Alerts";
-import { FileUpload } from "@/app/components/FileUpload";
+import { useFileUpload } from "@/app/components/FileUpload";
+import { Dropzone } from "@/app/components/FileUpload/Dropzone";
+import { FilePreview } from "@/app/components/FileUpload/FilePreview";
 import { Link, NextLinkComposed } from "@/app/components/Link";
 import { graphql } from "@/gql/app";
 import { FeaturePermission } from "@/gql/app/graphql";
@@ -67,15 +69,14 @@ export default function Page({ params }: { params: { organizationId: string } })
     }
   );
 
-  const [uploadPreview, setUploadPreview] = useState<string | undefined>();
-
+  const [filePreviewUrl, setFilePreviewUrl] = useState<string | undefined>();
   useEffect(() => {
     return () => {
-      if (uploadPreview) {
-        URL.revokeObjectURL(uploadPreview);
+      if (filePreviewUrl) {
+        URL.revokeObjectURL(filePreviewUrl);
       }
     };
-  });
+  }, [filePreviewUrl]);
 
   const { notify } = useAlerts();
   const [updateOrganization] = useMutation(
@@ -118,6 +119,20 @@ export default function Page({ params }: { params: { organizationId: string } })
     },
   });
 
+  const [createFileUploadUrl] = useMutation(
+    graphql(`
+      mutation OrganizationsAdminEditPageUploadFile($data: UploadFileInput!) {
+        uploadFile(data: $data) {
+          sasUrl
+          file {
+            id
+          }
+        }
+      }
+    `)
+  );
+  const { uploadFile, progress, loading } = useFileUpload();
+
   if (!data.user.user) return notFound();
   const { isSuperUser } = data.user.user;
 
@@ -149,17 +164,43 @@ export default function Page({ params }: { params: { organizationId: string } })
                 helperText={errors.name?.message ?? " "}
                 fullWidth
               />
-              <FileUpload
-                currentObjectUrl={uploadPreview ?? data.organization.organization.logo?.url}
-                imagePreview
-                onComplete={({ id, file }) => {
-                  setUploadPreview(URL.createObjectURL(file));
-                  setValue("logoFileId", id, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                  });
-                }}
-              />
+              <Stack direction="row" spacing={2}>
+                <Dropzone
+                  fullWidth
+                  color="secondary"
+                  progress={progress}
+                  loading={loading}
+                  onFilesChange={async (files) => {
+                    const file = files[0];
+                    if (file) {
+                      setFilePreviewUrl(URL.createObjectURL(file));
+
+                      const extension = file.name.split(".").pop();
+                      if (!extension) {
+                        return notify({ message: "Filtypen støttes ikke", type: "error" });
+                      }
+                      const { data: fileUploadData } = await createFileUploadUrl({
+                        variables: {
+                          data: {
+                            extension,
+                          },
+                        },
+                      });
+                      const uploadUrl = fileUploadData?.uploadFile.sasUrl;
+                      if (!uploadUrl) {
+                        return notify({ message: "Kunne ikke laste opp filen", type: "error" });
+                      }
+                      await uploadFile(file, uploadUrl);
+                      setValue("logoFileId", fileUploadData?.uploadFile.file.id, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                      });
+                    }
+                  }}
+                />
+                <FilePreview url={filePreviewUrl ?? data.organization.organization.logo?.url} />
+              </Stack>
+
               <TextField
                 {...register("description")}
                 label="Beskrivelse"

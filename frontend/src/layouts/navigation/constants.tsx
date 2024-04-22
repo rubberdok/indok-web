@@ -1,3 +1,5 @@
+import { FeaturePermission } from "@/gql/app/graphql";
+
 import { Route } from "./types";
 
 export const routes: Route[] = [
@@ -8,6 +10,6 @@ export const routes: Route[] = [
   { title: "Verv", path: "/listings" },
   { title: "Hyttebooking", path: "/cabins" },
   { title: "Bang", path: "bangg.pages.dev" },
-  { title: "Dokumenter", path: "/archive", permission: "archive.view_archivedocument" },
+  { title: "Dokumenter", path: "/documents", permission: FeaturePermission.ArchiveViewDocuments },
   { title: "Om oss", path: "/about" },
 ];

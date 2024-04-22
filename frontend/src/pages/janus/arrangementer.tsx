@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
+import { ImageSlider } from "@/app/cabins/_components/ImageSlider/ImageSlider";
 import {
   aareturImages,
   immballImages,

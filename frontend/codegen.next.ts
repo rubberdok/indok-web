@@ -4,27 +4,21 @@ const config: CodegenConfig = {
   ignoreNoDocuments: true,
   generates: {
     "./src/gql/pages/": {
-      schema: [{"http://localhost:4000/graphql": { headers: { "apollo-require-preflight": "1"}}}],
-      
+      schema: [{ "http://localhost:4000/graphql": { headers: { "apollo-require-preflight": "1" } } }],
+
       documents: ["src/(pages|components|layouts)/**/*.{ts,tsx}"],
       preset: "client-preset",
-      config: { 
-        avoidOptionals: true,
-      },
       presetConfig: {
-        fragmentMasking: { unmaskFunctionName: 'getFragmentData' }
+        fragmentMasking: { unmaskFunctionName: "getFragmentData" },
       },
     },
     "./src/gql/app/": {
-      schema: [{"http://localhost:4000/graphql": { headers: { "apollo-require-preflight": "1"}}}],
+      schema: [{ "http://localhost:4000/graphql": { headers: { "apollo-require-preflight": "1" } } }],
       documents: ["src/app/**/*.{ts,tsx}"],
       preset: "client-preset",
-      config: {
-        avoidOptionals: true,
-      },
       presetConfig: {
-        fragmentMasking: { unmaskFunctionName: 'getFragmentData' }
-      }
+        fragmentMasking: { unmaskFunctionName: "getFragmentData" },
+      },
     },
   },
   config: {

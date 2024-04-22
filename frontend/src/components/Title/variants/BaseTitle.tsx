@@ -7,12 +7,13 @@ import { ImageProps, StaticImageData } from "next/image";
 import { Props as BreadcrumbProps, Breadcrumbs, TLink } from "@/components/Breadcrumbs";
 
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
+import React from "react";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
 const Image = dynamic(() => import("next/image"));
 
 export type Props = {
-  title?: string;
+  title?: string | React.ReactNode;
   overline?: string;
   breadcrumbs?: TLink[];
   sx?: SxProps<Theme>;
@@ -57,9 +58,16 @@ export const BaseTitle: React.FC<React.PropsWithChildren<Props>> = ({
             <Typography variant="overline" color="text.secondary">
               {overline ? overline : <>&nbsp;</>}
             </Typography>
-            <Typography variant="h2" component="h1" mb={4}>
-              {title}
-            </Typography>
+            {typeof title === "string" && (
+              <Typography variant="h2" component="h1" mb={4}>
+                {title}
+              </Typography>
+            )}
+            {typeof title !== "string" && (
+              <Typography variant="h2" component="span" mb={4}>
+                {title}
+              </Typography>
+            )}
           </Box>
           {children ? <>{children}</> : <Tabs />}
         </Stack>

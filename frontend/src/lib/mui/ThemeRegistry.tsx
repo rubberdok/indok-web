@@ -11,11 +11,11 @@ import {
 import NextAppDirEmotionCacheProvider from "./EmotionCache";
 import { getCssVarsDesignTokens } from "./theme";
 
-export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
-  const designTokens = getCssVarsDesignTokens();
-  const theme = extendTheme(designTokens);
-  const responsiveTheme = responsiveFontSizes(theme);
+const designTokens = getCssVarsDesignTokens();
+const theme = extendTheme(designTokens);
+const responsiveTheme = responsiveFontSizes(theme);
 
+export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   return (
     <>
       {getInitColorSchemeScript({

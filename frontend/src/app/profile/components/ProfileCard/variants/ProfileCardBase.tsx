@@ -5,6 +5,7 @@ import { Link } from "@/app/components/Link";
 
 type Props = {
   title: string;
+  actions?: React.ReactNode;
   actionText?: string;
   actionLink?: string;
   image?: StaticImageData;
@@ -20,6 +21,7 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
   image,
   alt,
   "data-test-id": dataTestId,
+  actions,
 }) => {
   return (
     <Card sx={{ height: 1 }}>
@@ -27,7 +29,7 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
         <Grid container item xs sx={{ height: 1 }} direction="column" justifyContent="space-between">
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
-          {actionText && actionLink && (
+          {actionText && actionLink && !actions && (
             <CardActions>
               <Button
                 component={Link}
@@ -41,6 +43,7 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
               </Button>
             </CardActions>
           )}
+          {actions}
         </Grid>
         {image && (
           <Grid item xs={3} sx={{ mr: 4 }}>

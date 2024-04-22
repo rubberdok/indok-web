@@ -37,6 +37,12 @@ const moduleExports = {
       },
     ];
   },
+
+  i18n: {
+    locales: ["no-NB"],
+    defaultLocale: "no-NB",
+  },
+
   compiler: {
     ...getPresets(),
     /* https://nextjs.org/docs/advanced-features/compiler#emotion */

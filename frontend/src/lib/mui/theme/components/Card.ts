@@ -30,4 +30,11 @@ export const Card: ThemeOptions["components"] = {
       }),
     },
   },
+  MuiCardActions: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        padding: theme.spacing(0, 3, 3),
+      }),
+    },
+  },
 };

@@ -1,12 +1,10 @@
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { Box, ButtonBase, IconButton, Stack, Typography } from "@mui/material";
+import clsx from "clsx";
+import { range } from "lodash";
 import React from "react";
 
 import dayjs from "@/lib/date";
-
-import clsx from "clsx";
-import { Dayjs } from "dayjs";
-import { range } from "lodash";
 
 type CalendarMonth = {
   month: number;
@@ -25,9 +23,9 @@ export type CalendarDay = {
 
 type Props = {
   title?: string;
-  onDateClick: (date: Dayjs) => void;
-  startDate: Dayjs | undefined;
-  endDate: Dayjs | undefined;
+  onDateClick: (date: dayjs.Dayjs) => void;
+  startDate: dayjs.Dayjs | undefined;
+  endDate: dayjs.Dayjs | undefined;
   calendarMonths: readonly CalendarMonth[];
   currentMonthIndex: number;
   onCurrentMonthIndexChanged: (index: number) => void;

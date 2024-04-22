@@ -1,3 +1,5 @@
+"use client";
+
 import { useSuspenseQuery } from "@apollo/client";
 import { Button, ButtonProps } from "@mui/material";
 import React from "react";
