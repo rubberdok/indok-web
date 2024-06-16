@@ -16,16 +16,16 @@ import {
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
-import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-import * as yup from "@/lib/validation";
-import hytteforeningen from "~/public/static/cabins/logo.svg";
-
 import { useStepContext } from "../StepContext";
 
 import { calculatePrice } from "./calculatePrice";
 import { ContactInfo } from "./ContactInfo";
 import { Stepper } from "./Stepper";
+
+import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+import * as yup from "@/lib/validation";
+import hytteforeningen from "~/public/static/cabins/logo.svg";
 
 type Props = {
   chosenCabins: CabinFragment[];
@@ -43,11 +43,15 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ approved: boolean }>({
+  } = useForm({
     resolver: yupResolver(
-      yup.object({
-        approved: yup.boolean().required("Du må godkjenne leieavtalen").isTrue("Du må godkjenne leieavtalen"),
-      })
+      yup
+        .object({
+          approved: yup.boolean().required("Du må godkjenne leieavtalen").isTrue("Du må godkjenne leieavtalen"),
+        })
+        .shape({
+          approved: yup.boolean().required().isTrue(),
+        })
     ),
     defaultValues: {
       approved: false,

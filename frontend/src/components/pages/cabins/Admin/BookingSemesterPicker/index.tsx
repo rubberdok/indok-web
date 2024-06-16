@@ -2,11 +2,11 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useState } from "react";
 
+import { BookingForm, BookingSemesterForm } from "./BookingSemesterForm";
+
 import { Link } from "@/components";
 import { BookingSemesterDocument, UpdateBookingSemesterDocument } from "@/generated/graphql";
 import dayjs from "@/lib/date";
-
-import { BookingForm, BookingSemesterForm } from "./BookingSemesterForm";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
@@ -14,15 +14,19 @@ function formatDate(date: string | Date) {
   return dayjs(date).format(DATE_FORMAT);
 }
 
+function parseDate(date: string) {
+  return dayjs(date, DATE_FORMAT).toDate();
+}
+
 const defaultBookingSemester: BookingForm = {
   fall: {
-    start: formatDate(new Date()),
-    end: formatDate(new Date()),
+    start: new Date(),
+    end: new Date(),
     active: false,
   },
   spring: {
-    start: formatDate(new Date()),
-    end: formatDate(new Date()),
+    start: new Date(),
+    end: new Date(),
     active: false,
   },
 };
@@ -90,13 +94,13 @@ function useBookingSemester(): BookingForm | undefined {
   if (data?.bookingSemester) {
     values = {
       fall: {
-        start: data.bookingSemester.fallStartDate,
-        end: data.bookingSemester.fallEndDate,
+        start: parseDate(data.bookingSemester.fallStartDate),
+        end: parseDate(data.bookingSemester.fallEndDate),
         active: data.bookingSemester.fallSemesterActive,
       },
       spring: {
-        start: data.bookingSemester.springStartDate,
-        end: data.bookingSemester.springEndDate,
+        start: parseDate(data.bookingSemester.springStartDate),
+        end: parseDate(data.bookingSemester.springEndDate),
         active: data.bookingSemester.springSemesterActive,
       },
     };
