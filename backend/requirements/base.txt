@@ -7,7 +7,7 @@ django-environ==0.11.2
 django-guardian==2.4.0
 django-multiselectfield==0.1.12
 django-phonenumber-field==7.3.0
-Django==3.2.22
+Django==3.2.25
 djangorestframework==3.14.0
 factory-boy==3.3.0
 google-api-python-client==2.125.0
