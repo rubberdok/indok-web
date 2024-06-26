@@ -44,7 +44,6 @@ export default function Page({ params, children }: React.PropsWithChildren<{ par
         variant="dark"
         title={organization.name}
         overline="Administrasjonsside"
-        bgcolor={organization.colorScheme}
         breadcrumbs={[
           { name: "Hjem", href: "/" },
           { name: organization.name, href: `/organizations/${organization.id}/admin` },
