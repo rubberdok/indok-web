@@ -55,6 +55,7 @@ const documents = {
     "\n      query AppLoginRequiredUser {\n        user {\n          user {\n            id\n            firstName\n          }\n        }\n      }\n    ": types.AppLoginRequiredUserDocument,
     "\n      query HasFeaturePermission($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.HasFeaturePermissionDocument,
     "\n      query DocumentsLayout_HasFeaturePermission($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.DocumentsLayout_HasFeaturePermissionDocument,
+    "\n      query DocumentsNew_Layout {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.DocumentsNew_LayoutDocument,
     "\n      mutation NewDocumentPage_CreateDocument($data: CreateDocumentInput!) {\n        createDocument(data: $data) {\n          document {\n            id\n            name\n          }\n          uploadUrl\n        }\n      }\n    ": types.NewDocumentPage_CreateDocumentDocument,
     "\n  query DocumentsPage_Documents {\n    documents {\n      documents {\n        id\n        name\n        description\n        categories {\n          id\n          name\n        }\n        file {\n          id\n          url\n        }\n      }\n    }\n  }\n": types.DocumentsPage_DocumentsDocument,
     "\n      mutation DropzoneUploadFile($data: UploadFileInput!) {\n        uploadFile(data: $data) {\n          sasUrl\n        }\n      }\n    ": types.DropzoneUploadFileDocument,
@@ -304,6 +305,10 @@ export function graphql(source: "\n      query HasFeaturePermission($data: HasFe
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query DocumentsLayout_HasFeaturePermission($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "): (typeof documents)["\n      query DocumentsLayout_HasFeaturePermission($data: HasFeaturePermissionInput!) {\n        hasFeaturePermission(data: $data) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query DocumentsNew_Layout {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "): (typeof documents)["\n      query DocumentsNew_Layout {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

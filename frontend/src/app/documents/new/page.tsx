@@ -13,6 +13,7 @@ import { z } from "zod";
 import { useAlerts } from "@/app/components/Alerts";
 import { useFileUpload } from "@/app/components/FileUpload";
 import { graphql } from "@/gql/app";
+import { Dropzone } from "@/app/components/FileUpload/Dropzone";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -79,17 +80,9 @@ export default function Page() {
       },
     });
   }
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  function onAddDocumentClick() {
-    fileInputRef.current?.click();
-  }
-
-  const handleAddDocument = (event: ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = event.target.files?.[0];
-    if (uploadedFile) setValue("file", uploadedFile);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+  const handleAddDocument = (files: File[]) => {
+    const uploadedFile = files?.[0];
+    if (uploadedFile) setValue("file", uploadedFile, { shouldValidate: true, shouldTouch: true, shouldDirty: true });
   };
 
   return (
@@ -99,9 +92,8 @@ export default function Page() {
       {completed && <Box>Document uploaded</Box>}
       <Card>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <input hidden type="file" ref={fileInputRef} onChange={handleAddDocument} />
           <CardContent>
-            <Stack direction="row" spacing={2}>
+            <Stack direction="column" spacing={2}>
               <TextField
                 fullWidth
                 {...register("name")}
@@ -113,20 +105,12 @@ export default function Page() {
                 control={control}
                 name="file"
                 render={({ field, fieldState: { error } }) => (
-                  <TextField
+                  <Dropzone
+                    {...field}
                     fullWidth
-                    value={field.value?.name ?? "Legg til dokument"}
-                    onClick={onAddDocumentClick}
-                    type="button"
-                    label="Dokument"
-                    placeholder="Legg til dokument"
-                    inputMode="none"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    InputProps={{
-                      endAdornment: <InsertDriveFile />,
-                    }}
+                    color="secondary"
+                    value={undefined}
+                    onFilesChange={(files) => handleAddDocument(files)}
                     error={Boolean(error)}
                     helperText={error?.message ?? " "}
                   />
