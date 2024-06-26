@@ -17,6 +17,10 @@ const EventListItemFragment = graphql(`
     signUpDetails {
       signUpsStartAt
     }
+    organization {
+      id
+      colorScheme
+    }
   }
 `);
 
@@ -31,7 +35,7 @@ export const EventListItem: React.FC<Props> = (props) => {
       sx={{
         borderLeftWidth: "16px",
         borderLeftStyle: "solid",
-        borderLeftColor: "primary.main",
+        borderLeftColor: event.organization?.colorScheme ?? "primary.main",
       }}
     >
       <CardActionArea component={NextLinkComposed} key={event.id} to={`/events/${event.id}`}>

@@ -14,12 +14,13 @@ import {
   TableRow,
   Tooltip,
 } from "@mui/material";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { graphql } from "@/gql/app";
 import { Role } from "@/gql/app/graphql";
 import { AddMemberDialog } from "./_components/AddMemberDialog";
+import { useAlerts } from "@/app/components/Alerts";
 
 export default function Page({ params }: { params: { organizationId: string } }) {
   const { organizationId } = params;
@@ -106,32 +107,73 @@ type ActionTableCellProps = {
 
 function ActionTableCell({ user, isAdmin, member }: ActionTableCellProps) {
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const { notify } = useAlerts();
+  const [updateRole] = useMutation(
+    graphql(`
+      mutation OrganizationsAdminMembersPage_UpdateRole($data: UpdateRoleInput!) {
+        updateRole(data: $data) {
+          member {
+            id
+            role
+            user {
+              id
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+    `),
+    {
+      onCompleted(data) {
+        setMenuAnchorEl(null);
+        notify({
+          title: "Rolle oppdatert",
+          message: `${data.updateRole.member.user.firstName} ${data.updateRole.member.user.lastName} er nå ${data.updateRole.member.role}`,
+          type: "success",
+        });
+      },
+      onError(error) {
+        notify({ title: "Kunne ikke oppdatere rolle", message: error.message, type: "error" });
+      },
+    }
+  );
+  const router = useRouter();
   const [removeMember] = useMutation(
     graphql(`
       mutation OrganizationsAdminMembersPage_RemoveMember($data: RemoveMemberInput!) {
         removeMember(data: $data) {
           member {
             id
+            user {
+              id
+              firstName
+              lastName
+            }
           }
         }
       }
     `),
     {
-      optimisticResponse({ data: { id } }) {
-        return {
-          removeMember: {
-            member: {
-              id,
-            },
-          },
-        };
-      },
-      onCompleted() {
+      onCompleted(data) {
+        const removedUser = data.removeMember.member.user;
         setMenuAnchorEl(null);
+        notify({
+          title: "Medlem fjernet",
+          message: `${removedUser.firstName} ${removedUser.lastName} er nå fjernet fra foreningen`,
+          type: "success",
+        });
+        if (removedUser.id === user.id) {
+          router.replace("/");
+        }
       },
       update(cache, { data }) {
         if (!data) return;
         cache.evict({ id: cache.identify(data.removeMember.member) });
+        cache.gc();
+      },
+      onError(error) {
+        notify({ title: "Kunne ikke fjerne medlem", message: error.message, type: "error" });
       },
     }
   );
@@ -142,9 +184,26 @@ function ActionTableCell({ user, isAdmin, member }: ActionTableCellProps) {
         <MoreVert />
       </IconButton>
       <Menu anchorEl={menuAnchorEl} open={menuAnchorEl !== null} onClose={() => setMenuAnchorEl(null)}>
-        {member.role === Role.Member && <MenuItem disabled={!isAdmin}>Gjør til administrator</MenuItem>}
+        {member.role === Role.Member && (
+          <MenuItem
+            disabled={!isAdmin || member.id === user.id}
+            onClick={() => updateRole({ variables: { data: { memberId: member.id, role: Role.Admin } } })}
+          >
+            Gjør til administrator
+          </MenuItem>
+        )}
         {member.role === Role.Admin && (
-          <MenuItem disabled={!isAdmin || member.user.id === user.id}>Fjern som administrator</MenuItem>
+          <MenuItem
+            disabled={!isAdmin || member.user.id === user.id}
+            onClick={() => updateRole({ variables: { data: { memberId: member.id, role: Role.Member } } })}
+          >
+            Fjern som administrator
+          </MenuItem>
+        )}
+        {member.user.id === user.id && (
+          <MenuItem onClick={() => removeMember({ variables: { data: { id: member.id } } })}>
+            Forlat organisasjonen
+          </MenuItem>
         )}
         {member.user.id !== user?.id && (
           <MenuItem disabled={!isAdmin} onClick={() => removeMember({ variables: { data: { id: member.id } } })}>

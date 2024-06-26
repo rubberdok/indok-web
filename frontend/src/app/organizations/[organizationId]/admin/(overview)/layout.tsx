@@ -23,6 +23,7 @@ export default function Page({ params, children }: React.PropsWithChildren<{ par
           organization {
             id
             name
+            colorScheme
             logo {
               id
               url
@@ -43,6 +44,7 @@ export default function Page({ params, children }: React.PropsWithChildren<{ par
         variant="dark"
         title={organization.name}
         overline="Administrasjonsside"
+        bgcolor={organization.colorScheme}
         breadcrumbs={[
           { name: "Hjem", href: "/" },
           { name: organization.name, href: `/organizations/${organization.id}/admin` },
@@ -58,7 +60,7 @@ export default function Page({ params, children }: React.PropsWithChildren<{ par
             <Tab label="Medlemmer" value="members" />
           </Tabs>
           <Box>
-            <IconButton component={NextLinkComposed} to={`/organizations/${organizationId}/admin/edit`}>
+            <IconButton component={NextLinkComposed} to={`/organizations/${organizationId}/admin/edit`} color="inherit">
               <Settings />
             </IconButton>
           </Box>

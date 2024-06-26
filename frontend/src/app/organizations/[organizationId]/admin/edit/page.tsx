@@ -14,6 +14,7 @@ import {
   Stack,
   TextField,
   Typography,
+  Unstable_Grid2 as Grid,
 } from "@mui/material";
 import { sortBy } from "lodash";
 import { notFound } from "next/navigation";
@@ -25,7 +26,7 @@ import { useFileUpload } from "@/app/components/FileUpload";
 import { Dropzone } from "@/app/components/FileUpload/Dropzone";
 import { FilePreview } from "@/app/components/FileUpload/FilePreview";
 import { Link, NextLinkComposed } from "@/app/components/Link";
-import { graphql } from "@/gql/app";
+import { getFragmentData, graphql } from "@/gql/app";
 import { FeaturePermission } from "@/gql/app/graphql";
 
 type UpdateOrganizationFormType = {
@@ -33,7 +34,22 @@ type UpdateOrganizationFormType = {
   description: string;
   featurePermissions: FeaturePermission[];
   logoFileId: string | null;
+  colorScheme: string | null;
 };
+
+const OrganizationFragment = graphql(`
+  fragment OrganizationsAdminEditPage_OrganizationFragment on Organization {
+    id
+    colorScheme
+    logo {
+      url
+      id
+    }
+    name
+    description
+    featurePermissions
+  }
+`);
 
 export default function Page({ params }: { params: { organizationId: string } }) {
   const { organizationId } = params;
@@ -48,14 +64,7 @@ export default function Page({ params }: { params: { organizationId: string } })
         }
         organization(data: $data) {
           organization {
-            id
-            logo {
-              url
-              id
-            }
-            name
-            description
-            featurePermissions
+            ...OrganizationsAdminEditPage_OrganizationFragment
           }
         }
       }
@@ -84,12 +93,7 @@ export default function Page({ params }: { params: { organizationId: string } })
       mutation OrganizationsAdminEditPage($data: UpdateOrganizationInput!) {
         updateOrganization(data: $data) {
           organization {
-            id
-            name
-            logo {
-              id
-              url
-            }
+            ...OrganizationsAdminEditPage_OrganizationFragment
           }
         }
       }
@@ -104,6 +108,8 @@ export default function Page({ params }: { params: { organizationId: string } })
     }
   );
 
+  const organization = getFragmentData(OrganizationFragment, data.organization.organization);
+
   const {
     register,
     control,
@@ -112,10 +118,11 @@ export default function Page({ params }: { params: { organizationId: string } })
     formState: { errors, dirtyFields },
   } = useForm<UpdateOrganizationFormType>({
     defaultValues: {
-      logoFileId: data.organization.organization.logo?.id,
-      name: data.organization.organization.name,
-      description: data.organization.organization.description,
-      featurePermissions: data.organization.organization.featurePermissions,
+      logoFileId: organization.logo?.id,
+      name: organization.name,
+      description: organization.description,
+      featurePermissions: organization.featurePermissions,
+      colorScheme: organization.colorScheme ?? null,
     },
   });
 
@@ -145,6 +152,7 @@ export default function Page({ params }: { params: { organizationId: string } })
           name: dirtyFields.name ? values.name : null,
           description: dirtyFields.description ? values.description : null,
           featurePermissions: dirtyFields.featurePermissions ? values.featurePermissions : null,
+          colorScheme: dirtyFields.colorScheme ? values.colorScheme : null,
         },
       },
     });
@@ -157,49 +165,68 @@ export default function Page({ params }: { params: { organizationId: string } })
         <Card>
           <CardContent>
             <Stack direction="column" spacing={2}>
-              <TextField
-                {...register("name")}
-                label="Navn"
-                error={Boolean(errors.name)}
-                helperText={errors.name?.message ?? " "}
-                fullWidth
-              />
-              <Stack direction="row" spacing={2}>
-                <Dropzone
-                  fullWidth
-                  color="secondary"
-                  progress={progress}
-                  loading={loading}
-                  onFilesChange={async (files) => {
-                    const file = files[0];
-                    if (file) {
-                      setFilePreviewUrl(URL.createObjectURL(file));
+              <Grid container direction="row" spacing={2}>
+                <Grid xs={10}>
+                  <TextField
+                    {...register("name")}
+                    label="Navn"
+                    error={Boolean(errors.name)}
+                    helperText={errors.name?.message ?? " "}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid xs={2}>
+                  <TextField
+                    {...register("colorScheme")}
+                    label="Farge"
+                    type="color"
+                    error={Boolean(errors.colorScheme)}
+                    helperText={errors.colorScheme?.message ?? " "}
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+              <Grid container direction="row" spacing={2}>
+                <Grid xs={10}>
+                  <Dropzone
+                    fullWidth
+                    sx={{ height: "100%" }}
+                    color="secondary"
+                    progress={progress}
+                    loading={loading}
+                    onFilesChange={async (files) => {
+                      const file = files[0];
+                      if (file) {
+                        setFilePreviewUrl(URL.createObjectURL(file));
 
-                      const extension = file.name.split(".").pop();
-                      if (!extension) {
-                        return notify({ message: "Filtypen støttes ikke", type: "error" });
-                      }
-                      const { data: fileUploadData } = await createFileUploadUrl({
-                        variables: {
-                          data: {
-                            extension,
+                        const extension = file.name.split(".").pop();
+                        if (!extension) {
+                          return notify({ message: "Filtypen støttes ikke", type: "error" });
+                        }
+                        const { data: fileUploadData } = await createFileUploadUrl({
+                          variables: {
+                            data: {
+                              extension,
+                            },
                           },
-                        },
-                      });
-                      const uploadUrl = fileUploadData?.uploadFile.sasUrl;
-                      if (!uploadUrl) {
-                        return notify({ message: "Kunne ikke laste opp filen", type: "error" });
+                        });
+                        const uploadUrl = fileUploadData?.uploadFile.sasUrl;
+                        if (!uploadUrl) {
+                          return notify({ message: "Kunne ikke laste opp filen", type: "error" });
+                        }
+                        await uploadFile(file, uploadUrl);
+                        setValue("logoFileId", fileUploadData?.uploadFile.file.id, {
+                          shouldDirty: true,
+                          shouldTouch: true,
+                        });
                       }
-                      await uploadFile(file, uploadUrl);
-                      setValue("logoFileId", fileUploadData?.uploadFile.file.id, {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                      });
-                    }
-                  }}
-                />
-                <FilePreview url={filePreviewUrl ?? data.organization.organization.logo?.url} />
-              </Stack>
+                    }}
+                  />
+                </Grid>
+                <Grid xs={2}>
+                  <FilePreview url={filePreviewUrl ?? data.organization.organization.logo?.url} />
+                </Grid>
+              </Grid>
 
               <TextField
                 {...register("description")}
