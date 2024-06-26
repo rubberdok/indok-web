@@ -2,18 +2,16 @@
 
 import { useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InsertDriveFile } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Card, CardActions, CardContent, CircularProgress, Stack, TextField } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useAlerts } from "@/app/components/Alerts";
 import { useFileUpload } from "@/app/components/FileUpload";
-import { graphql } from "@/gql/app";
 import { Dropzone } from "@/app/components/FileUpload/Dropzone";
+import { graphql } from "@/gql/app";
 
 const schema = z.object({
   name: z.string().min(1),

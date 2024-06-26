@@ -1,12 +1,13 @@
-import { Container } from "@mui/material";
-import type { Metadata } from "next";
-
 import { graphql } from "@/gql/app";
 import { getClient } from "@/lib/apollo/ApolloClient";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Nytt dokument",
+  title: {
+    default: "Dokumenter",
+    template: "%s | Indøk NTNU",
+  },
 };
 
 export default async function Layout({ children }: React.PropsWithChildren) {
@@ -26,5 +27,5 @@ export default async function Layout({ children }: React.PropsWithChildren) {
     return notFound();
   }
 
-  return <Container maxWidth="sm">{children}</Container>;
+  return <>{children}</>;
 }
