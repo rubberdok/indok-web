@@ -46,7 +46,7 @@ export default function Page() {
       <Typography variant="subtitle1" component="h1">
         Dine foreninger
       </Typography>
-      <Grid container direction="row">
+      <Grid container direction="row" justifyContent="center" spacing={2}>
         {organizations.map((organization) => (
           <Grid xs={12} sm={6} md={3} key={organization.id}>
             <Organization organization={organization} link={`/organizations/${organization.id}/admin`} />

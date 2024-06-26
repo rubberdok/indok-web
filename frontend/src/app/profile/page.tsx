@@ -1,7 +1,7 @@
 "use client";
 
 import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client";
-import { Avatar, Container, Grid, Typography } from "@mui/material";
+import { Avatar, Container, Grid, Tooltip, Typography } from "@mui/material";
 import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
@@ -10,7 +10,7 @@ import { graphql } from "@/gql/app";
 import { PermissionRequired } from "../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
-import { CabinsAdmin, Event, Orders, Organization, Personal, Report } from "./components/ProfileCard";
+import { CabinsAdmin, DocumentsAdmin, Event, Orders, Organization, Personal, Report } from "./components/ProfileCard";
 
 // Returns a string with the first letter of the given first name,
 // and the first letter of the last space-separated part of lastName.
@@ -42,6 +42,7 @@ export default function ProfilePage() {
             firstName
             lastName
             gradeYear
+            isSuperUser
             studyProgram {
               id
               name
@@ -60,10 +61,20 @@ export default function ProfilePage() {
    * has finished fetching. Instead, we run the query in the background, and read it
    * in the PermissionRequired component.
    */
-  const [queryRef] = useBackgroundQuery(
+  const [cabinQueryRef] = useBackgroundQuery(
     graphql(`
       query AppProfileCabinPermission {
         hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {
+          id
+          hasFeaturePermission
+        }
+      }
+    `)
+  );
+  const [documentsQueryRef] = useBackgroundQuery(
+    graphql(`
+      query AppProfileDocumentsPermission {
+        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {
           id
           hasFeaturePermission
         }
@@ -96,6 +107,13 @@ export default function ProfilePage() {
           >
             <Typography variant="h3" component="p" color="common.white">
               {initials}
+              {user.isSuperUser && (
+                <span>
+                  <Tooltip title="Superbruker" arrow>
+                    <span>🦸</span>
+                  </Tooltip>
+                </span>
+              )}
             </Typography>
           </Avatar>
         </Grid>
@@ -125,8 +143,13 @@ export default function ProfilePage() {
             <Orders data-test-id={`${ID_PREFIX}orders-`} />
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
-            <PermissionRequired queryRef={queryRef}>
+            <PermissionRequired queryRef={cabinQueryRef}>
               <CabinsAdmin data-test-id={`${ID_PREFIX}cabin-`} query={data} />
+            </PermissionRequired>
+          </Grid>
+          <Grid item xs={12} md={6} lg={5}>
+            <PermissionRequired queryRef={documentsQueryRef}>
+              <DocumentsAdmin data-test-id={`${ID_PREFIX}documents-`} />
             </PermissionRequired>
           </Grid>
         </Grid>

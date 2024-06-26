@@ -2,13 +2,14 @@ import { Button, Card, CardActions, CardContent, CardHeader, Grid } from "@mui/m
 import Image, { StaticImageData } from "next/image";
 
 import { Link } from "@/app/components/Link";
+import React from "react";
 
 type Props = {
   title: string;
   actions?: React.ReactNode;
   actionText?: string;
   actionLink?: string;
-  image?: StaticImageData;
+  image?: StaticImageData | React.ReactNode;
   alt?: string;
   "data-test-id"?: string;
 };
@@ -45,9 +46,14 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
           )}
           {actions}
         </Grid>
-        {image && (
+        {typeof image === "object" && image !== null && "src" in image && (
           <Grid item xs={3} sx={{ mr: 4 }}>
             <Image src={image} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={alt ?? ""} />
+          </Grid>
+        )}
+        {React.isValidElement(image) && (
+          <Grid item xs={3} sx={{ mr: 4 }}>
+            {image}
           </Grid>
         )}
       </Grid>

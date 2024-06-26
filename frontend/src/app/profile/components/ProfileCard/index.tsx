@@ -11,3 +11,4 @@ export const Personal = PersonalCard;
 export const Report = ReportCard;
 export const Orders = OrdersCard;
 export const CabinsAdmin = CabinsAdminCard;
+export { DocumentsAdminCard as DocumentsAdmin } from "./variants/DocumentsAdminCard";

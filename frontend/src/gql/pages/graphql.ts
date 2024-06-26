@@ -286,6 +286,8 @@ export type CreateOrderResponse = {
 };
 
 export type CreateOrganizationInput = {
+  /** The primary color (hex) for the organization, for example: #FF0000 for red. */
+  colorScheme?: InputMaybe<Scalars['String']['input']>;
   /** The description of the organization, cannot exceed 10 000 characters */
   description?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -305,6 +307,11 @@ export type CreateOrganizationResponse = {
 export type CreateSlotInput = {
   capacity: Scalars['Int']['input'];
   gradeYears?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type DeleteDocumentCategoryResponse = {
+  __typename?: 'DeleteDocumentCategoryResponse';
+  category: DocumentCategory;
 };
 
 export type DeleteDocumentInput = {
@@ -365,6 +372,21 @@ export type DocumentCategory = {
 
 export type DocumentCategoryInput = {
   name: Scalars['String']['input'];
+};
+
+export type DocumentCategoryResponse = {
+  __typename?: 'DocumentCategoryResponse';
+  categories: Array<DocumentCategory>;
+  total: Scalars['Int']['output'];
+};
+
+export type DocumentInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type DocumentResponse = {
+  __typename?: 'DocumentResponse';
+  document?: Maybe<Document>;
 };
 
 export type DocumentsCategoryInput = {
@@ -756,6 +778,8 @@ export type Mutation = {
    * Passing null or omitting a value will leave the value unchanged.
    */
   updateOrganization: UpdateOrganizationResponse;
+  /** Change the role of a member in the organization */
+  updateRole: UpdateRoleResponse;
   updateUser: UpdateUserResponse;
   uploadFile: UploadFileResponse;
 };
@@ -904,6 +928,11 @@ export type MutationUpdateOrganizationArgs = {
 };
 
 
+export type MutationUpdateRoleArgs = {
+  data: UpdateRoleInput;
+};
+
+
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
@@ -1012,6 +1041,8 @@ export type OrdersResponse = {
 
 export type Organization = {
   __typename?: 'Organization';
+  /** The primary color (hex) for the organization, for example: #FF0000 for red. */
+  colorScheme?: Maybe<Scalars['String']['output']>;
   description: Scalars['String']['output'];
   events: Array<Event>;
   /**
@@ -1198,6 +1229,8 @@ export type Query = {
   bookings: BookingsResponse;
   cabins: CabinsResponse;
   categories: EventCategoriesResponse;
+  document: DocumentResponse;
+  documentCategories: DocumentCategoryResponse;
   documents: DocumentsResponse;
   event: EventResponse;
   events: EventsResponse;
@@ -1238,6 +1271,11 @@ export type QueryBookingArgs = {
 
 export type QueryBookingsArgs = {
   data?: InputMaybe<BookingsInput>;
+};
+
+
+export type QueryDocumentArgs = {
+  data: DocumentInput;
 };
 
 
@@ -1619,6 +1657,8 @@ export type UpdateListingResponse = {
 };
 
 export type UpdateOrganizationInput = {
+  /** The primary color (hex) for the organization, for example: #FF0000 for red. */
+  colorScheme?: InputMaybe<Scalars['String']['input']>;
   /**
    * The new description of the organization, cannot exceed 10 000 characters
    * Omitting the value or passing null will leave the description unchanged
@@ -1642,6 +1682,18 @@ export type UpdateOrganizationInput = {
 export type UpdateOrganizationResponse = {
   __typename?: 'UpdateOrganizationResponse';
   organization: Organization;
+};
+
+export type UpdateRoleInput = {
+  /** The ID of the member to change the role of */
+  memberId: Scalars['ID']['input'];
+  /** The new role of the member */
+  role: Role;
+};
+
+export type UpdateRoleResponse = {
+  __typename?: 'UpdateRoleResponse';
+  member: Member;
 };
 
 export type UpdateSlotInput = {
