@@ -13,53 +13,50 @@ import {
   Typography,
 } from "@mui/material";
 import { amber, green, red } from "@mui/material/colors";
-import Head from "next/head";
-import { useRef } from "react";
+import type { Metadata } from "next";
 
-import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
-import { Layout, RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "@/lib/next";
 import Amund from "~/public/img/Amund Norland.jpg";
 import Hilvi from "~/public/img/Hilvi Fjose.jpg";
 import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
 
-const ReportsPage: NextPageWithLayout = () => {
-  const formRef = useRef<null | HTMLDivElement>(null);
-  const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
+import { NextLinkComposed } from "../components/Link";
 
-  const responsibles = [
-    {
-      id: 1,
-      name: "Solveig Lund Christiansen",
-      initials: "SLC",
-      color: red[800],
-      image: Solveig,
-      email: "solveilc@stud.ntnu.no",
-    },
-    {
-      id: 2,
-      name: "Hilvi Fjose ",
-      initials: "HF",
-      color: amber[500],
-      image: Hilvi,
-      email: "hilvif@stud.ntnu.no",
-    },
-    {
-      id: 3,
-      name: "Amund Norland",
-      initials: "AN",
-      color: green[500],
-      image: Amund,
-      email: "amundno@stud.ntnu.no",
-    },
-  ];
+import { ContactInfo } from "./ContactInfo";
 
+const responsibles = [
+  {
+    id: 1,
+    name: "Solveig Lund Christiansen",
+    initials: "SLC",
+    color: red[800],
+    image: Solveig,
+    email: "solveilc@stud.ntnu.no",
+  },
+  {
+    id: 2,
+    name: "Hilvi Fjose ",
+    initials: "HF",
+    color: amber[500],
+    image: Hilvi,
+    email: "hilvif@stud.ntnu.no",
+  },
+  {
+    id: 3,
+    name: "Amund Norland",
+    initials: "AN",
+    color: green[500],
+    image: Amund,
+    email: "amundno@stud.ntnu.no",
+  },
+];
+
+export const metadata: Metadata = {
+  title: "Baksida",
+};
+
+const ReportsPage = () => {
   return (
     <>
-      <Head>
-        <title>Baksida | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
-        <meta name="og:title" content="Baksida | Indøk NTNU" key="title" />
-      </Head>
       <Container>
         <Grid
           container
@@ -93,7 +90,13 @@ const ReportsPage: NextPageWithLayout = () => {
                   </Typography>
                   <Grid container direction="column" alignItems="center" spacing={2}>
                     <Grid item>
-                      <Button onClick={scrollToForm} variant="contained" color="primary" size="large">
+                      <Button
+                        component={Link}
+                        to={{ href: "/baksida", hash: "form", replace: true }}
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                      >
                         Varsel? Trykk her
                       </Button>
                     </Grid>
@@ -205,7 +208,13 @@ const ReportsPage: NextPageWithLayout = () => {
                             <strong>Skjema på nettsiden:</strong>
                           </Grid>
                           <Grid item>
-                            <Button size="small" variant="contained" color="primary" onClick={scrollToForm}>
+                            <Button
+                              size="small"
+                              variant="contained"
+                              color="primary"
+                              component={NextLinkComposed}
+                              to={{ href: "/baksida", hash: "form", replace: true }}
+                            >
                               Fylle ut varslingsskjema
                             </Button>
                           </Grid>
@@ -247,7 +256,7 @@ const ReportsPage: NextPageWithLayout = () => {
                     justifyContent="center"
                     alignItems="stretch"
                     spacing={8}
-                    sx={{ mb: (theme) => theme.spacing(8) }}
+                    sx={{ mb: 8 }}
                   >
                     {responsibles.map((responsible) => (
                       <Grid container item sm={3} xs={8} key={responsible.id}>
@@ -314,7 +323,7 @@ const ReportsPage: NextPageWithLayout = () => {
               </Card>
             </Grid>
 
-            <Grid style={{ width: "100%" }} item ref={formRef}>
+            <Grid style={{ width: "100%" }} item id="form">
               <iframe
                 title="Reports"
                 src="https://docs.google.com/forms/d/e/1FAIpQLSdXFXYU7O1_qcDbX3PONucYLDv3K6KrUIEQ6rtfcRiiR3DEzg/viewform?embedded=true"
@@ -333,9 +342,3 @@ const ReportsPage: NextPageWithLayout = () => {
 };
 
 export default ReportsPage;
-
-ReportsPage.getLayout = (page) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
