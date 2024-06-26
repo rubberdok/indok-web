@@ -21,7 +21,7 @@ function FilePreview(props: FilePreviewProps) {
       justifyContent="center"
       alignItems="center"
     >
-      <Box position="relative" sx={{ aspectRatio: 1 }}>
+      <Box position="relative" sx={{ aspectRatio: 1 }} height="100%" width="100%">
         <Image src={props.url} fill style={{ objectFit: "contain", objectPosition: "center" }} alt="" />
       </Box>
     </Box>

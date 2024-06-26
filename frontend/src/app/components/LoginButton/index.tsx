@@ -39,7 +39,7 @@ export const InnerLoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": d
         color="secondary"
         size="medium"
       >
-        {data?.user?.user?.firstName}
+        {data?.user.user?.firstName}
       </Button>
     </LoginRequired>
   );

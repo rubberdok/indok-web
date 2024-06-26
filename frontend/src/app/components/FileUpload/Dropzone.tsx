@@ -129,6 +129,7 @@ const Dropzone = React.forwardRef<HTMLInputElement, Props>(function Dropzone(pro
           className,
           disabled,
         })}
+        fullWidth={fullWidth}
         color={color}
         sx={sx}
       >
