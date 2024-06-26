@@ -70,10 +70,10 @@ export const Contract: React.FC<Props> = ({ onSubmit, onPrevious, query }) => {
   });
 
   if (!data.bookingTerms.bookingTerms?.file.url)
-    return <Error statusCode={500} title="Avtalevilkårene er ikke tilgjengelig" />;
+    return <Error statusCode={404} title="Avtalevilkårene er ikke tilgjengelig" />;
 
   return (
-    <Container maxWidth="md" disableGutters>
+    <Container maxWidth="sm" disableGutters>
       <Card>
         <CardHeader
           title="Leieavtale og bestillingsvilkår"

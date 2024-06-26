@@ -23,7 +23,7 @@ const ticketEventFormSchema = z.object({
   merchantId: z.string().uuid(),
 });
 
-const fee = 0.0175;
+const fee = 0.0299;
 
 type TicketEventFormType = z.infer<typeof ticketEventFormSchema>;
 
