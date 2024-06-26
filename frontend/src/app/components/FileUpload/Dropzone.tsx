@@ -6,11 +6,14 @@ import {
   ButtonBaseProps,
   CircularProgress,
   CircularProgressProps,
+  FormHelperText,
   Stack,
   Theme,
   Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import cl from "clsx";
+import React, { HTMLProps, useImperativeHandle } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { MB_16 } from "./useFileUpload";
 
@@ -25,9 +28,49 @@ type Props = {
   fullWidth?: boolean;
   onFilesChange?: (files: File[]) => void;
   onFilesRejected?: (fileRejections: FileRejection[]) => void;
-} & Pick<ButtonBaseProps, "disabled" | "sx">;
+  error?: boolean;
+  helperText?: string;
+} & Pick<ButtonBaseProps, "disabled" | "sx"> &
+  HTMLProps<HTMLInputElement>;
 
-function Dropzone(props: Props) {
+function getColor(
+  theme: Theme,
+  color: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" = "primary"
+) {
+  if (color === "inherit") return { main: "inherit", mainChannel: "inherit" };
+  return { main: theme.vars.palette[color].main, mainChannel: theme.vars.palette[color].mainChannel };
+}
+
+const DropzoneContainer = styled(ButtonBase)<Props>(({ theme: t, fullWidth, color }) => ({
+  padding: t.spacing(2),
+  width: fullWidth ? "100%" : undefined,
+  color: getColor(t, color).main,
+  borderColor: getColor(t, color).main,
+  borderStyle: "dashed",
+  borderRadius: t.shape.borderRadius,
+  borderWidth: 2,
+  transition: "background-color 0.3s",
+  "&.Mui-selected": {
+    bgcolor: `rgb(${getColor(t, color).mainChannel} / ${t.vars.palette.action.selectedOpacity})`,
+  },
+  "&.Mui-hover": {
+    bgcolor: `rgb(${getColor(t, color).mainChannel} / ${t.vars.palette.action.hoverOpacity})`,
+  },
+  "&.Mui-disabled": {
+    color: t.vars.palette.action.disabled,
+    borderColor: t.vars.palette.action.disabled,
+  },
+  "&.Mui-error": {
+    borderColor: t.vars.palette.error.main,
+  },
+  justifyContent: "center",
+  alignItems: "center",
+  display: "flex",
+  minHeight: "100px",
+  minWidth: "13rem",
+}));
+
+const Dropzone = React.forwardRef<HTMLInputElement, Props>(function Dropzone(props, ref) {
   const {
     color = "primary",
     sx,
@@ -39,82 +82,68 @@ function Dropzone(props: Props) {
     maxSize = MB_16,
     onFilesRejected,
     fullWidth,
-    ...boxProps
+    error,
+    helperText,
+    ...inputProps
   } = props;
   function onDrop(acceptedFiles: File[]) {
     onFilesChange?.(acceptedFiles);
   }
 
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles, fileRejections, isFileDialogActive, isFocused } =
-    useDropzone({
-      maxSize,
-      onDrop,
-      multiple,
-      disabled,
-      onDropRejected: onFilesRejected,
-    });
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    acceptedFiles,
+    fileRejections,
+    isFileDialogActive,
+    isFocused,
+    inputRef,
+  } = useDropzone({
+    maxSize,
+    onDrop,
+    multiple,
+    disabled,
+    onDropRejected: onFilesRejected,
+    preventDropOnDocument: true,
+  });
+
   const className = cl({
     "Mui-hover": isDragActive,
     "Mui-selected": isFileDialogActive,
     "Mui-focused": isFocused,
-    "Mui-error": fileRejections.length > 0,
+    "Mui-error": fileRejections.length > 0 || props.error,
   });
 
-  function getColor(
-    theme: Theme,
-    color: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" = "primary"
-  ) {
-    if (color === "inherit") return { main: "inherit", mainChannel: "inherit" };
-    return { main: theme.vars.palette[color].main, mainChannel: theme.vars.palette[color].mainChannel };
-  }
+  /**
+   * React Dropzone does not provide a way to pass a ref to the input element,
+   * so we need to use `useImperativeHandle` to expose the input ref to the parent component.
+   */
+  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current, [inputRef]);
 
   return (
     <>
-      <ButtonBase
-        {...getRootProps()}
-        className={className}
-        disabled={disabled}
-        sx={(theme) => ({
-          padding: theme.spacing(2),
-          width: fullWidth ? "100%" : undefined,
-          color: getColor(theme, color).main,
-          borderColor: getColor(theme, color).main,
-          borderStyle: "dashed",
-          borderRadius: theme.shape.borderRadius,
-          borderWidth: 2,
-          transition: "background-color 0.3s",
-          "&.Mui-selected": {
-            bgcolor: `rgb(${getColor(theme, color).mainChannel} / ${theme.vars.palette.action.selectedOpacity})`,
-          },
-          "&.Mui-hover": {
-            bgcolor: `rgb(${getColor(theme, color).mainChannel} / ${theme.vars.palette.action.hoverOpacity})`,
-          },
-          "&.Mui-disabled": {
-            color: theme.vars.palette.action.disabled,
-            borderColor: theme.vars.palette.action.disabled,
-          },
-          "&.Mui-error": {
-            borderColor: theme.vars.palette.error.main,
-          },
-          justifyContent: "center",
-          alignItems: "center",
-          display: "flex",
-          minHeight: "100px",
-          minWidth: "13rem",
+      <DropzoneContainer
+        {...getRootProps({
+          onClick: () => {},
+          className,
+          disabled,
         })}
-        {...boxProps}
+        color={color}
+        sx={sx}
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps({ ...inputProps })} />
         <InnerDropzone
           loading={loading}
           progress={progress}
           acceptedFiles={acceptedFiles}
           fileRejections={fileRejections}
         />
-      </ButtonBase>
+      </DropzoneContainer>
+      <FormHelperText error={error}>{helperText}</FormHelperText>
     </>
   );
-}
+});
 
 export { Dropzone };
 
