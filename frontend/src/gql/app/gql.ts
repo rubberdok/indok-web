@@ -62,7 +62,8 @@ const documents = {
     "\n      query EditDocumentsPage_Document($data: DocumentInput!) {\n        document(data: $data) {\n          document {\n            id\n            name\n            description\n            ...DocumentFragment\n            categories {\n              id\n              name\n            }\n          }\n        }\n        documentCategories {\n          categories {\n            id\n            name\n          }\n        }\n      }\n    ": types.EditDocumentsPage_DocumentDocument,
     "\n      mutation EditDocumentsPage_UpdateDocument($data: UpdateDocumentInput!) {\n        updateDocument(data: $data) {\n          document {\n            id\n            name\n          }\n        }\n      }\n    ": types.EditDocumentsPage_UpdateDocumentDocument,
     "\n      query DocumentsNew_Layout {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.DocumentsNew_LayoutDocument,
-    "\n      mutation NewDocumentPage_CreateDocument($data: CreateDocumentInput!) {\n        createDocument(data: $data) {\n          document {\n            id\n            name\n          }\n          uploadUrl\n        }\n      }\n    ": types.NewDocumentPage_CreateDocumentDocument,
+    "\n      query NewDocumentsPage_DocumentCategories {\n        documentCategories {\n          categories {\n            id\n            name\n          }\n        }\n      }\n    ": types.NewDocumentsPage_DocumentCategoriesDocument,
+    "\n      mutation NewDocumentPage_CreateDocument($data: CreateDocumentInput!) {\n        createDocument(data: $data) {\n          document {\n            ...DocumentFragment\n          }\n          uploadUrl\n        }\n      }\n    ": types.NewDocumentPage_CreateDocumentDocument,
     "\n  fragment DocumentFragment on Document {\n    file {\n      id\n      url\n    }\n    name\n    description\n    categories {\n      id\n      name\n    }\n  }\n": types.DocumentFragmentFragmentDoc,
     "\n      mutation DropzoneUploadFile($data: UploadFileInput!) {\n        uploadFile(data: $data) {\n          sasUrl\n        }\n      }\n    ": types.DropzoneUploadFileDocument,
     "\n  fragment EventListItem_Event on Event {\n    id\n    name\n    description\n    startAt\n    signUpAvailability\n    shortDescription\n    signUpDetails {\n      signUpsStartAt\n    }\n    organization {\n      id\n      colorScheme\n    }\n  }\n": types.EventListItem_EventFragmentDoc,
@@ -116,6 +117,9 @@ const documents = {
     "\n      query OrganizationLayout_Organization($organizationId: ID!) {\n        organization(data: { id: $organizationId }) {\n          organization {\n            id\n            name\n          }\n        }\n        hasRole(data: { organizationId: $organizationId, role: MEMBER }) {\n          hasRole\n        }\n      }\n    ": types.OrganizationLayout_OrganizationDocument,
     "\n      query OrganizationAdminLayout_HasRole($organizationId: ID!) {\n        hasRole(data: { organizationId: $organizationId, role: MEMBER }) {\n          hasRole\n        }\n      }\n    ": types.OrganizationAdminLayout_HasRoleDocument,
     "\n  fragment CabinsAdminCard_Query on Query {\n    bookings(data: { status: PENDING }) {\n      total\n      bookings {\n        id\n        status\n      }\n    }\n  }\n": types.CabinsAdminCard_QueryFragmentDoc,
+    "\n      query AppProfileUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            gradeYear\n            isSuperUser\n            studyProgram {\n              id\n              name\n            }\n          }\n        }\n\n        ...CabinsAdminCard_Query\n      }\n    ": types.AppProfileUserDocument,
+    "\n      query AppProfileCabinPermission {\n        hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.AppProfileCabinPermissionDocument,
+    "\n      query AppProfileDocumentsPermission {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.AppProfileDocumentsPermissionDocument,
     "\n  fragment UserForm_User on PrivateUser {\n    firstName\n    lastName\n    phoneNumber\n    graduationYear\n    allergies\n    graduationYearUpdatedAt\n    canUpdateYear\n    gradeYear\n    email\n    studyProgram {\n      id\n      name\n    }\n  }\n": types.UserForm_UserFragmentDoc,
     "\n  query ProfileEditPage_User {\n    user {\n      user {\n        id\n        ...UserForm_User\n      }\n    }\n  }\n": types.ProfileEditPage_UserDocument,
     "\n      mutation ProfileEditPage_UpdateUser($data: UpdateUserInput!) {\n        updateUser(data: $data) {\n          user {\n            id\n            ...UserForm_User\n          }\n        }\n      }\n    ": types.ProfileEditPage_UpdateUserDocument,
@@ -125,9 +129,6 @@ const documents = {
     "\n      query ProfileLayout_UserQuery {\n        user {\n          user {\n            id\n          }\n        }\n      }\n    ": types.ProfileLayout_UserQueryDocument,
     "\n      query ProfileOrdersPage {\n        orders {\n          orders {\n            id\n            createdAt\n            capturedPaymentAttempt {\n              id\n              reference\n              state\n            }\n            product {\n              id\n              name\n            }\n            totalPrice {\n              valueInNok\n            }\n            purchasedAt\n            paymentStatus\n            isFinalState\n          }\n        }\n      }\n    ": types.ProfileOrdersPageDocument,
     "\n      query UserOrganizationsPage {\n        user {\n          user {\n            id\n            organizations {\n              id\n              name\n              logo {\n                id\n                url\n              }\n            }\n          }\n        }\n      }\n    ": types.UserOrganizationsPageDocument,
-    "\n      query AppProfileUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            gradeYear\n            isSuperUser\n            studyProgram {\n              id\n              name\n            }\n          }\n        }\n\n        ...CabinsAdminCard_Query\n      }\n    ": types.AppProfileUserDocument,
-    "\n      query AppProfileCabinPermission {\n        hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.AppProfileCabinPermissionDocument,
-    "\n      query AppProfileDocumentsPermission {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    ": types.AppProfileDocumentsPermissionDocument,
     "\n      query ReceiptLayout_Order($data: OrderInput!) {\n        order(data: $data) {\n          order {\n            id\n            product {\n              name\n            }\n          }\n        }\n      }\n    ": types.ReceiptLayout_OrderDocument,
     "\n  query ReceiptPage_Order($data: OrderInput!, $reference: String) {\n    order(data: $data) {\n      order {\n        id\n        isFinalState\n        purchasedAt\n        product {\n          id\n          name\n          description\n        }\n        paymentAttempt(reference: $reference) {\n          id\n          state\n          reference\n          isFinalState\n        }\n        capturedPaymentAttempt {\n          id\n          state\n          reference\n        }\n        paymentStatus\n        totalPrice {\n          value\n          unit\n          valueInNok\n        }\n      }\n    }\n  }\n": types.ReceiptPage_OrderDocument,
 };
@@ -345,7 +346,11 @@ export function graphql(source: "\n      query DocumentsNew_Layout {\n        ha
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n      mutation NewDocumentPage_CreateDocument($data: CreateDocumentInput!) {\n        createDocument(data: $data) {\n          document {\n            id\n            name\n          }\n          uploadUrl\n        }\n      }\n    "): (typeof documents)["\n      mutation NewDocumentPage_CreateDocument($data: CreateDocumentInput!) {\n        createDocument(data: $data) {\n          document {\n            id\n            name\n          }\n          uploadUrl\n        }\n      }\n    "];
+export function graphql(source: "\n      query NewDocumentsPage_DocumentCategories {\n        documentCategories {\n          categories {\n            id\n            name\n          }\n        }\n      }\n    "): (typeof documents)["\n      query NewDocumentsPage_DocumentCategories {\n        documentCategories {\n          categories {\n            id\n            name\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation NewDocumentPage_CreateDocument($data: CreateDocumentInput!) {\n        createDocument(data: $data) {\n          document {\n            ...DocumentFragment\n          }\n          uploadUrl\n        }\n      }\n    "): (typeof documents)["\n      mutation NewDocumentPage_CreateDocument($data: CreateDocumentInput!) {\n        createDocument(data: $data) {\n          document {\n            ...DocumentFragment\n          }\n          uploadUrl\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -561,6 +566,18 @@ export function graphql(source: "\n  fragment CabinsAdminCard_Query on Query {\n
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n      query AppProfileUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            gradeYear\n            isSuperUser\n            studyProgram {\n              id\n              name\n            }\n          }\n        }\n\n        ...CabinsAdminCard_Query\n      }\n    "): (typeof documents)["\n      query AppProfileUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            gradeYear\n            isSuperUser\n            studyProgram {\n              id\n              name\n            }\n          }\n        }\n\n        ...CabinsAdminCard_Query\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query AppProfileCabinPermission {\n        hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "): (typeof documents)["\n      query AppProfileCabinPermission {\n        hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query AppProfileDocumentsPermission {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "): (typeof documents)["\n      query AppProfileDocumentsPermission {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  fragment UserForm_User on PrivateUser {\n    firstName\n    lastName\n    phoneNumber\n    graduationYear\n    allergies\n    graduationYearUpdatedAt\n    canUpdateYear\n    gradeYear\n    email\n    studyProgram {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  fragment UserForm_User on PrivateUser {\n    firstName\n    lastName\n    phoneNumber\n    graduationYear\n    allergies\n    graduationYearUpdatedAt\n    canUpdateYear\n    gradeYear\n    email\n    studyProgram {\n      id\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -594,18 +611,6 @@ export function graphql(source: "\n      query ProfileOrdersPage {\n        orde
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query UserOrganizationsPage {\n        user {\n          user {\n            id\n            organizations {\n              id\n              name\n              logo {\n                id\n                url\n              }\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query UserOrganizationsPage {\n        user {\n          user {\n            id\n            organizations {\n              id\n              name\n              logo {\n                id\n                url\n              }\n            }\n          }\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      query AppProfileUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            gradeYear\n            isSuperUser\n            studyProgram {\n              id\n              name\n            }\n          }\n        }\n\n        ...CabinsAdminCard_Query\n      }\n    "): (typeof documents)["\n      query AppProfileUser {\n        user {\n          user {\n            id\n            firstName\n            lastName\n            gradeYear\n            isSuperUser\n            studyProgram {\n              id\n              name\n            }\n          }\n        }\n\n        ...CabinsAdminCard_Query\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      query AppProfileCabinPermission {\n        hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "): (typeof documents)["\n      query AppProfileCabinPermission {\n        hasFeaturePermission(data: { featurePermission: CABIN_ADMIN }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      query AppProfileDocumentsPermission {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "): (typeof documents)["\n      query AppProfileDocumentsPermission {\n        hasFeaturePermission(data: { featurePermission: ARCHIVE_WRITE_DOCUMENTS }) {\n          id\n          hasFeaturePermission\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -36,7 +36,7 @@ const isFrontMatter = (obj: Record<string, unknown>): obj is Frontmatter => {
   return obj.description !== undefined && obj.title !== undefined;
 };
 
-export const getPostsFolders = (page: string) => {
+const getPostsFolders = (page: string) => {
   const postsFolders = fs.readdirSync(`${process.cwd()}/content/${page}/`).map((file) => ({
     filename: `${file}`,
   }));
