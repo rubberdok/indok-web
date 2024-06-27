@@ -1,13 +1,13 @@
 "use client";
 
 import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client";
-import { Avatar, Container, Grid, Tooltip, Typography } from "@mui/material";
+import { Avatar, Container, Unstable_Grid2 as Grid, Tooltip, Typography } from "@mui/material";
 import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { graphql } from "@/gql/app";
 
-import { PermissionRequired } from "../components/PermissionRequired";
+import { PermissionRequired } from "../../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
 import { CabinsAdmin, DocumentsAdmin, Event, Orders, Organization, Personal, Report } from "./components/ProfileCard";
@@ -97,7 +97,7 @@ export default function ProfilePage() {
         sx={{ mb: 4 }}
       />
       <Grid container direction="column" spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 4 }}>
-        <Grid item>
+        <Grid>
           <Avatar
             sx={{
               bgcolor: "primary.main",
@@ -117,44 +117,44 @@ export default function ProfilePage() {
             </Typography>
           </Avatar>
         </Grid>
-        <Grid item>
+        <Grid>
           <Typography variant="h4" component="h1">{`Hei, ${user.firstName}`}</Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid xs={10}>
           <Typography variant="body1" align="center">
             Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
           </Typography>
         </Grid>
 
-        <Grid container item justifyContent="center" alignItems="stretch" spacing={4}>
-          <Grid item xs={12} md={6} lg={5}>
+        <Grid container justifyContent="center" alignItems="stretch" spacing={4}>
+          <Grid xs={12} md={6} lg={5}>
             <Personal user={user} data-test-id={`${ID_PREFIX}personal-`} />
           </Grid>
-          <Grid item xs={12} md={6} lg={5}>
+          <Grid xs={12} md={6} lg={5}>
             <Event data-test-id={`${ID_PREFIX}event-`} />
           </Grid>
-          <Grid item xs={12} md={6} lg={5}>
+          <Grid xs={12} md={6} lg={5}>
             <Organization data-test-id={`${ID_PREFIX}organization-`} />
           </Grid>
-          <Grid item xs={12} md={6} lg={5}>
+          <Grid xs={12} md={6} lg={5}>
             <Report data-test-id={`${ID_PREFIX}report-`} />
           </Grid>
-          <Grid item xs={12} md={6} lg={5}>
+          <Grid xs={12} md={6} lg={5}>
             <Orders data-test-id={`${ID_PREFIX}orders-`} />
           </Grid>
-          <Grid item xs={12} md={6} lg={5}>
+          <Grid xs={12} md={6} lg={5}>
             <PermissionRequired queryRef={cabinQueryRef}>
               <CabinsAdmin data-test-id={`${ID_PREFIX}cabin-`} query={data} />
             </PermissionRequired>
           </Grid>
-          <Grid item xs={12} md={6} lg={5}>
+          <Grid xs={12} md={6} lg={5}>
             <PermissionRequired queryRef={documentsQueryRef}>
               <DocumentsAdmin data-test-id={`${ID_PREFIX}documents-`} />
             </PermissionRequired>
           </Grid>
         </Grid>
 
-        <Grid item>
+        <Grid>
           <LogoutButton />
         </Grid>
       </Grid>

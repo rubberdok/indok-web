@@ -2,13 +2,14 @@
 import { NextLinkComposed } from "@/app/components/Link";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
-import { Delete, Download, Edit, MoreVert } from "@mui/icons-material";
+import { Add, Delete, Download, Edit, MoreVert } from "@mui/icons-material";
 import {
   Avatar,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -69,6 +70,14 @@ export default function Page() {
   return (
     <Stack direction="column">
       <List>
+        <ListItem>
+          <ListItemButton component={NextLinkComposed} to="/documents/new">
+            <ListItemIcon>
+              <Add />
+            </ListItemIcon>
+            <ListItemText primary="Legg til nytt dokument" />
+          </ListItemButton>
+        </ListItem>
         {data.documents.documents.map((document) => (
           <DocumentListItem
             key={document.id}

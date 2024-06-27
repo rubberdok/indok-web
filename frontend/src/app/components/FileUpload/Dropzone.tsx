@@ -84,6 +84,7 @@ const Dropzone = React.forwardRef<HTMLInputElement, Props>(function Dropzone(pro
     fullWidth,
     error,
     helperText,
+    required,
     ...inputProps
   } = props;
   function onDrop(acceptedFiles: File[]) {
@@ -139,6 +140,7 @@ const Dropzone = React.forwardRef<HTMLInputElement, Props>(function Dropzone(pro
           progress={progress}
           acceptedFiles={acceptedFiles}
           fileRejections={fileRejections}
+          required={required}
         />
       </DropzoneContainer>
       <FormHelperText error={error}>{helperText}</FormHelperText>
@@ -153,6 +155,7 @@ type InnerDropzoneProps = {
   acceptedFiles: File[];
   fileRejections?: FileRejection[];
   progress?: { [fileName: string]: number };
+  required?: boolean;
 };
 
 function InnerDropzone(props: InnerDropzoneProps) {
@@ -192,7 +195,10 @@ function InnerDropzone(props: InnerDropzoneProps) {
   return (
     <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
       <FileUploadOutlined />
-      <Typography>Dra og slipp filer</Typography>
+      <Typography>
+        Dra og slipp filer
+        {props.required && "*"}
+      </Typography>
     </Stack>
   );
 }

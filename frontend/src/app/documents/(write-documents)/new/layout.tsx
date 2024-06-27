@@ -20,7 +20,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
         ]}
         sx={{ mt: { xs: `-${HEADER_MOBILE_HEIGHT}px`, md: `-${HEADER_DESKTOP_HEIGHT}px` } }}
       />
-      <Container maxWidth="sm">{children}</Container>;
+      <Container>{children}</Container>;
     </>
   );
 }
