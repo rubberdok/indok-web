@@ -1,4 +1,5 @@
 import { ColorSystemOptions, createTheme } from "@mui/material/styles";
+import { colorChannel } from "@mui/system/colorManipulator";
 import deepmerge from "deepmerge";
 
 import { light } from "./light";
@@ -20,4 +21,5 @@ export const janus: ColorSystemOptions["palette"] = deepmerge(janusPaletteBase, 
     default: "#FAF9F6",
     paper: "#FAF9F6",
   },
+  shadowChannel: colorChannel("#000000"),
 });
