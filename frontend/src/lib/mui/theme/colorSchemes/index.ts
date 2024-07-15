@@ -2,6 +2,7 @@ import { CssVarsThemeOptions } from "@mui/material";
 
 import { dark } from "./dark";
 import { janus } from "./janus";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { light } from "./light"; // Old palette. If we want it back all we need is to change the light palette to  from janus to light
 
 export const colorSchemes: CssVarsThemeOptions["colorSchemes"] = {
