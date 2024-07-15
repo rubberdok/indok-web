@@ -67,14 +67,7 @@ export const LandingSection: React.FC = () => {
               studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
             </Typography>
 
-            <Button
-              component={Link}
-              href="/about/board"
-              noLinkStyle
-              variant="contained"
-              size="medium"
-              sx={{ backgroundColor: "#800020" }}
-            >
+            <Button component={Link} href="/about/board" noLinkStyle variant="contained" size="medium">
               Les mer
             </Button>
           </Stack>
