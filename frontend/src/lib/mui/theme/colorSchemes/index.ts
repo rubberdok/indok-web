@@ -2,11 +2,11 @@ import { CssVarsThemeOptions } from "@mui/material";
 
 import { dark } from "./dark";
 import { janus } from "./janus";
-import { light } from "./light";
+import { light } from "./light"; // Old palette. If we want it back all we need is to change the light palette to  from janus to light
 
 export const colorSchemes: CssVarsThemeOptions["colorSchemes"] = {
   light: {
-    palette: light,
+    palette: janus,
   },
   dark: {
     palette: dark,
