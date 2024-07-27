@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 
-import { ShopSale } from "../orgs/ShopSale";
-
 import { AdminOrganizationFragment, AllShopOrdersDocument } from "@/generated/graphql";
+
+import { ShopSale } from "../orgs/ShopSale";
 
 type Props = {
   organization: AdminOrganizationFragment;
