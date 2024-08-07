@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useRouter } from "next/router";
@@ -8,12 +8,7 @@ import { Link } from "@/components";
 import { EditForm } from "@/components/pages/forms/formAdmin/EditForm";
 import { FormResponse } from "@/components/pages/forms/formAdmin/FormResponse";
 import { OrganizationListing } from "@/components/pages/listings/organization/OrganizationListing";
-import {
-  CreateFormDocument,
-  FormWithAllResponsesFragmentDoc,
-  ListingWithResponsesDocument,
-  ResponseFragment,
-} from "@/generated/graphql";
+import { ListingWithResponsesDocument, ResponseFragment } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -29,42 +24,6 @@ const ListingAdminPage: NextPageWithLayout = () => {
     variables: { id: listingId as string },
     skip: !listingId,
   });
-
-  // mutation to create a new form
-  const [createForm] = useMutation(CreateFormDocument, {
-    // updates the cache so the new form can show instantly
-    update: (cache, { data }) => {
-      const newForm = data?.createForm?.form;
-      if (newForm) {
-        cache.modify({
-          id: `ListingType:${listingId}`,
-          fields: {
-            form(_, { INVALIDATE }) {
-              const newRef = cache.writeFragment({
-                data: newForm,
-                fragment: FormWithAllResponsesFragmentDoc,
-                fragmentName: "FormWithAllResponses",
-              });
-              if (newRef) return newRef;
-              return INVALIDATE;
-            },
-          },
-        });
-      }
-    },
-  });
-
-  const onCreateFormClick = () => {
-    const listing = data?.listing;
-    if (listing) {
-      createForm({
-        variables: {
-          formData: { name: `Søknad: ${listing.title}`, description: "", organizationId: orgId as string },
-          listingId: listing.id,
-        },
-      });
-    }
-  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -143,15 +102,7 @@ const ListingAdminPage: NextPageWithLayout = () => {
                 <Grid item>
                   <OrganizationListing listing={data.listing} />
                 </Grid>
-                <Grid item>
-                  {data.listing.form ? (
-                    <EditForm form={data.listing.form} />
-                  ) : (
-                    <Button fullWidth variant="contained" color="primary" onClick={onCreateFormClick}>
-                      Lag søknad
-                    </Button>
-                  )}
-                </Grid>
+                <Grid item>{data.listing.form ? <EditForm form={data.listing.form} /> : <></>}</Grid>
               </Grid>
             ) : (
               <>{data.listing.form && <FormResponse response={selectedView} form={data.listing.form} />}</>
