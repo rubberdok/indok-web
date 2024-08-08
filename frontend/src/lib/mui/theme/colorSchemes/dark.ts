@@ -34,7 +34,7 @@ export const dark: PaletteOptions = {
     contrastText: "#fff",
   },
   primary: {
-    main: "#3E878A",
+    main: "#6a001a", //This has been changed from #3E878A to allow for janus change easily... Bad practice
   },
   secondary: {
     main: "#f5f5f5f5",

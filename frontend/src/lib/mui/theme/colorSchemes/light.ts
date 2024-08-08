@@ -16,7 +16,7 @@ const grey: Partial<Color> = {
 
 export const light: PaletteOptions = {
   primary: {
-    main: "#2D6365",
+    main: "#6a001a", //This has been changed from #2D6365 to allow for janus change easily... Bad practice
     contrastText: "#fff",
   },
   secondary: {
