@@ -113,10 +113,9 @@ const JanusPage: NextPageWithLayout = () => {
   return (
     <Template title="Om Janus linjeforening" description="Janus er indøks linjeforening">
       <Typography variant="body1" paragraph>
-        Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-        («moderforeningen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
-        ivrige sjeler og over 20 ulike underforeninger, hvor alt fra veldedighet og ølbrygging til fadderuker og
-        case-trening står på agendaen.
+        Janus Linjeforening er den øverste instansen («moderforeningen») for all studentfrivillighet på masterstudiet
+        Industriell Økonomi og Teknologiledelse ved NTNU. Foreningen drives av over 200 ivrige sjeler og over 20 ulike
+        underforeninger, hvor alt fra veldedighet og ølbrygging til fadderuker og case-trening står på agendaen.
       </Typography>
       <Typography variant="h3" gutterBottom>
         Janus

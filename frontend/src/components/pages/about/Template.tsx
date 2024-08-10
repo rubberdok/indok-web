@@ -25,7 +25,7 @@ export const Template: React.FC<React.PropsWithChildren<Props>> = ({
   return (
     <>
       <Head>
-        <title>{`${title} | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse`}</title>
+        <title>{`${title} | Indøk NTNU - Janus Linjeforening`}</title>
         <meta name="description" content={description} />
       </Head>
       <RootStyle>

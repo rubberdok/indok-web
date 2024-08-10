@@ -66,9 +66,8 @@ export const SalesTermsDialog: React.FC<Props> = ({ onClose, open }) => {
 
               <div>
                 <p>
-                  Selger er Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU, Kolbjørn Hejes
-                  vei 1E, 7034 Trondheim, leder@indokhs.no, Org.nr. 994 778 463, og betegnes i det følgende som
-                  &nbsp;selger/selgeren.
+                  Selger er Janus Linjeforening, NTNU, Kolbjørn Hejes vei 1E, 7034 Trondheim, leder@indokhs.no, Org.nr.
+                  994 778 463, og betegnes i det følgende som &nbsp;selger/selgeren.
                 </p>
                 <p>
                   Kjøper er den forbrukeren som foretar bestillingen, og betegnes i det følgende som
