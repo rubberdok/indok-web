@@ -9,15 +9,14 @@ const AboutPage: NextPageWithLayout = () => {
     <>
       <Template
         title="Om oss"
-        description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-      (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
+        description="Janus Linjeforening er den øverste instansen
+      (moderforeningen) for all studentfrivillighet på masterstudiet Industriell Økonomi og Teknologiledelse ved NTNU."
         nextPost={{ title: "Våre foreninger", slug: "/about/organization" }}
       >
         <Typography variant="body1" paragraph>
-          Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-          («moderforeningen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
-          ivrige sjeler og over 20 ulike underforeninger, hvor alt fra veldedighet og ølbrygging til fadderuker og
-          case-trening står på agendaen.
+          Janus Linjeforening er den øverste instansen («moderforeningen») for all studentfrivillighet på masterstudiet
+          Industriell Økonomi og Teknologiledelse ved NTNU. Foreningen drives av over 200 ivrige sjeler og over 20 ulike
+          underforeninger, hvor alt fra veldedighet og ølbrygging til fadderuker og case-trening står på agendaen.
         </Typography>
         <Typography variant="body1" paragraph>
           Foreningen ledes av Hovedstyret, som forvalter midlene og fungerer som et koordinerende forum mellom de ulike
@@ -67,9 +66,9 @@ const AboutPage: NextPageWithLayout = () => {
           Hovedstyret
         </Typography>
         <Typography variant="body1" paragraph>
-          Hovedstyret (HS) er styret i Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU.
-          Styrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene,
-          samt forvalte og disponere Indøks midler på en forsvarlig måte.
+          Hovedstyret (HS) er styret i Janus Linjeforening ved Industriell Økonomi og Teknologiledelse, NTNU. Styrets
+          fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene, samt
+          forvalte og disponere Indøks midler på en forsvarlig måte.
         </Typography>
         <Typography variant="body1" paragraph>
           Hovedstyret er videre ansvarlig for å forberede og avholde generalforsamling for studentene ved Indøk.

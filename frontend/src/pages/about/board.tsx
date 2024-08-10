@@ -10,61 +10,61 @@ const BoardPage: NextPageWithLayout = () => {
   const boardMembers: BoardMember[] = [
     {
       rank: 1,
-      name: "Olav Bjørlykke",
+      name: "Kristoffer Grude",
       position: "Leder Hovedstyret",
       email: "leder@indokhs.no",
     },
     {
       rank: 2,
-      name: "Tord Johan Espe",
+      name: "Branny Lin",
       position: "Leder Hovedstyret",
       email: "leder@indokhs.no",
     },
     {
       rank: 3,
-      name: "Arnas Tribusininas",
+      name: "Markus Kile Søyland",
       position: "Finanssjef Hovedstyret",
       email: "finans@indokhs.no",
     },
     {
       rank: 4,
-      name: "Jenny Temmerud",
-      position: "President Janus",
+      name: "Thomas Kallasten Pedersen",
+      position: "President Janus Sosial",
       email: "president@janulinjeforening.no",
     },
     {
       rank: 5,
-      name: "Amund Andreassen",
+      name: "Aidan Stautland",
       position: "Instituttstillitsvalg",
       email: "itv@iot.ntnu.no",
     },
     {
       rank: 6,
-      name: "Noah Meland",
+      name: "Ida Harneshaug",
       position: "Leder Bindeleddet",
       email: "leder@bindeleddet.ntnu.no",
     },
     {
       rank: 7,
-      name: "Olav Seim",
+      name: "Jens Skaug",
       position: "Leder Janus IF",
       email: "if@indokhs.no",
     },
     {
       rank: 8,
-      name: "Fannar Lindal",
-      position: "Leder Indøk Kultur",
+      name: "Live Krohg",
+      position: "Leder Janus Kultur",
       email: "kultur@indokhs.no",
     },
     {
       rank: 9,
-      name: "Mats Torsvik",
+      name: "Brage Sømoen",
       position: "Leder Hytteforeningen",
       email: "leder@indokhyttene.no",
     },
     {
       rank: 10,
-      name: "Benjamin Svarød",
+      name: "Bjørn Borkamo",
       position: "Leder ESTIEM",
       email: "leder@estiem.no",
     },
@@ -73,13 +73,13 @@ const BoardPage: NextPageWithLayout = () => {
   return (
     <Template
       title="Hovedstyret"
-      description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU."
+      description="Hovedstyret (HS) er styret i Janus Linjeforening ved Industriell Økonomi og Teknologiledelse, NTNU."
       prevPost={{ title: "Våre foreninger", slug: "/about/organization", cover: "/img/hero.jpg" }}
       nextPost={{ title: "Instituttillitsvalgte", slug: "/about/itv", cover: "/img/itv.png" }}
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
-        Janus, Bindeleddet, ESTIEM, Hytteforeningen, Janus IF og Indøk Kultur.
+        Janus, Bindeleddet, ESTIEM, Hytteforeningen, Janus IF og Janus Kultur.
       </Typography>
       <Typography variant="body1" paragraph>
         Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene,

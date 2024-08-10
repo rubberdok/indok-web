@@ -139,7 +139,7 @@
 - model: organizations.organization
   pk: 20
   fields:
-    name: Indøk Kultur
+    name: Janus Kultur
     slug: indok-kultur
     description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,

@@ -3,10 +3,10 @@
 import { Box, Button, Container, Unstable_Grid2 as Grid, Typography } from "@mui/material";
 import Image from "next/image";
 
+import { OrganizationsSlider } from "./OrganizationsSlider";
+
 import { Link } from "@/app/components/Link";
 import Hero from "~/public/static/landing/hero.webp";
-
-import { OrganizationsSlider } from "./OrganizationsSlider";
 
 export const LandingHero: React.FC = () => {
   return (
@@ -45,7 +45,7 @@ export const LandingHero: React.FC = () => {
                     [t.getColorSchemeSelector("dark")]: { color: "primary.light" },
                   })}
                 >
-                  Foreningen for studentene ved
+                  Janus linjeforening
                 </Typography>
               </Grid>
               <Grid>
