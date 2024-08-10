@@ -51,11 +51,10 @@ export const Footer: React.FC = () => {
               <Stack alignItems="flex-start" spacing={3}>
                 <Logo />
                 <Typography variant="caption">
-                  Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
-                  7034 Trondheim Org.nr. 994 778 463
+                  Janus Linjeforening, NTNU Kolbjørn Hejes vei 1E, 7034 Trondheim Org.nr. 994 778 463
                 </Typography>
                 <Typography variant="caption">
-                  {`Foreningen for Studentene ved Indøk © ${dayjs().format("YYYY")}`}
+                  {`Janus linjeforening ved Indøk © ${dayjs().format("YYYY")}`}
                 </Typography>
               </Stack>
             </Grid>

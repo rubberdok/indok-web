@@ -8,7 +8,7 @@ import { AppBar } from "./components/Layout/AppBar";
 import { Footer } from "./components/Layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Indøk NTNU | Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse",
+  title: "Indøk NTNU | Janus Linjeforening",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

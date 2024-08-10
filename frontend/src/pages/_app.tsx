@@ -26,8 +26,8 @@ const App = (props: CustomAppProps): JSX.Element => {
         <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
         <meta
           name="description"
-          content="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-             for all studentfrivillighet på masterstudiet Indøk ved NTNU. Arrangementer, verv,
+          content="Janus Linjeforening er den øverste instansen
+             for all studentfrivillighet på masterstudiet Industriell Økonomi og Teknologiledelse ved NTNU. Arrangementer, verv,
              og oversikt over det sosiale på Indøk."
         />
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
