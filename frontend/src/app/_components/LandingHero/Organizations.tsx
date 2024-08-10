@@ -12,7 +12,7 @@ const organizations: Readonly<Organization[]> = [
   { name: "Janus", internalUrl: "/janus/info" },
   { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
-  { name: "Indøk Kultur", internalUrl: "/about/organization?category=kultur" },
+  { name: "Janus Kultur", internalUrl: "/about/organization?category=kultur" },
   { name: "Rubberdøk", internalUrl: "/about/organizations/rubberdok" },
   { name: "Hytteforeningen", internalUrl: "/about/organizations/hytteforeningen" },
   { name: "Janus IF", internalUrl: "/about/organization?category=idrett" },

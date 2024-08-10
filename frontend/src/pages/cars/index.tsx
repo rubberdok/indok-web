@@ -56,7 +56,7 @@ const CarsPage: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Hyttebooking | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <title>Hyttebooking | Indøk NTNU - Janus Linjeforening</title>
         <meta name="og:image" content="/img/hytte.jpg" />
       </Head>
       <CarsHero />

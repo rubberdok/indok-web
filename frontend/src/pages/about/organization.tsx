@@ -95,8 +95,8 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
   return (
     <Template
       title="Foreningene under Hovedstyret"
-      description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-      (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
+      description="Janus Linjeforening er den øverste instansen
+      (moderforeningen) for all studentfrivillighet på masterstudiet Industriell Økonomi og Teknologiledelse ved NTNU."
       prevPost={{ title: "Om oss", slug: "/about", cover: "/img/hero.jpg" }}
       nextPost={{ title: "Les om Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
@@ -118,7 +118,7 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
         <Card variant="outlined" elevation={0} sx={{ mb: 2 }}>
           <CardContent>
             <Typography>
-              Indøk Kultur er paraplyforeningen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
+              Janus Kultur er paraplyforeningen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
               Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon
               (IVI).
             </Typography>
