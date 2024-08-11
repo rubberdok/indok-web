@@ -35,7 +35,7 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
   return (
     <>
       <Head>
-        <title>Dokumenter | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <title>Dokumenter | Indøk NTNU - Janus Linjeforening</title>
         <meta name="description" content="Januscript, budsjetter, og andre dokumenter fra Indøk." />
       </Head>
       <Title

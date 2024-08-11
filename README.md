@@ -166,10 +166,10 @@ Website for the students at Industrial Economics and Technology Management at NT
 
 [With Docker](#with-docker) below describes how to set up the project fully in Docker. This may not work perfectly for
 everyone, particularly those using Windows - they may instead wish to follow the steps under
-[Without Docker](#without-docker). Finally, [VSCode](#vscode) describes how to configure your development environment in
+[Without Docker](#without-docker), but DOCKER IS RECOMMENDED FOR EVERYONE. Finally, [VSCode](#vscode) describes how to configure your development environment in
 the VSCode editor.
 
-### With Docker
+### With Docker (Recommended)
 
 1. Download, install and start Docker Desktop: https://www.docker.com/products/docker-desktop
 2. In the terminal, move to where you want to store the project (easiest is just where you are when you open the
@@ -177,9 +177,9 @@ the VSCode editor.
 3. Type `git clone https://github.com/rubberdok/indok-web.git`
    - This creates a new folder named `indok-web`, which contains the project
 4. Type `cd indok-web` to move into the new folder
-5. (optional, but recommended) Set up the backend locally, to get linting, auto-complete and environment variables
+5. (optional, but extremely recommended) Set up the backend locally, to get linting, auto-complete and environment variables
    - Follow steps 1-9 under [Without Docker: Backend](#backend) below
-6. (optional, but recommended) Set up the frontend locally, to get pre-commit hooks, linting, auto-complete and
+6. (optional, but extremely  recommended) Set up the frontend locally, to get pre-commit hooks, linting, auto-complete and
    environment variables
    - Follow steps 1-8 under [Without Docker: Frontend](#frontend) below
 7. Type `docker compose build` to build the project
@@ -201,8 +201,9 @@ tab in Docker Desktop, and delete `indok-web_postgres_data`.
 
 ### Without Docker
 
+(Think this is no longer true)
 Some users, particularly those using Windows, may have issues running the app through Docker. Some functionality such as
-hot reloading (which drastically improves developer experience) only work when you have the whole project in WSL
+hot reloading (which drastically improves developer experience) may only work when you have the whole project in WSL
 (Windows Subsystem for Linux, which is what Docker on Windows uses). Therefore, you may prefer to run the project
 without Docker — in that case, follow the below steps to set up the frontend, backend and database locally.
 

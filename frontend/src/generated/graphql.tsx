@@ -963,6 +963,7 @@ export type Queries = {
   allCategories?: Maybe<Array<CategoryType>>;
   allEvents?: Maybe<Array<EventType>>;
   allOrganizations?: Maybe<Array<OrganizationType>>;
+  allShopOrders?: Maybe<Array<OrderType>>;
   allUserOrders?: Maybe<Array<OrderType>>;
   allUsers?: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
@@ -1890,6 +1891,31 @@ export type AllUserOrdersQueryVariables = Exact<{ [key: string]: never }>;
 export type AllUserOrdersQuery = {
   __typename?: "Queries";
   allUserOrders?: Array<{
+    __typename?: "OrderType";
+    id: string;
+    quantity: number;
+    totalPrice: number;
+    paymentStatus: PaymentStatus;
+    timestamp: string;
+    deliveredProduct: boolean;
+    product: {
+      __typename?: "ProductType";
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      maxBuyableQuantity: number;
+      shopItem: boolean;
+    };
+    user: { __typename?: "UserType"; id: string; username: string; firstName: string; lastName: string };
+  }> | null;
+};
+
+export type AllShopOrdersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllShopOrdersQuery = {
+  __typename?: "Queries";
+  allShopOrders?: Array<{
     __typename?: "OrderType";
     id: string;
     quantity: number;
@@ -6617,6 +6643,82 @@ export const AllUserOrdersDocument = {
     },
   ],
 } as unknown as DocumentNode<AllUserOrdersQuery, AllUserOrdersQueryVariables>;
+export const AllShopOrdersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "allShopOrders" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allShopOrders" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+          { kind: "Field", name: { kind: "Name", value: "shopItem" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "deliveredProduct" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllShopOrdersQuery, AllShopOrdersQueryVariables>;
 export const CreateEventDocument = {
   kind: "Document",
   definitions: [

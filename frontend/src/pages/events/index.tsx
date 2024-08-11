@@ -22,9 +22,7 @@ const Events: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>
-          Arrangementer | Indøk NTNU - Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse
-        </title>
+        <title>Arrangementer | Indøk NTNU - Janus Linjeforening</title>
         <meta name="description" content="Arrangementer på Industriell Økonomi og Teknologiledelse." />
       </Head>
       <Title title="Arrangementer" breadcrumbs={links}>
