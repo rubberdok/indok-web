@@ -1,5 +1,4 @@
 import { BlockBlobClient } from "@azure/storage-blob";
-import { convertFileToArrayBuffer } from "./convert-file-to-array-buffer";
 import { useState } from "react";
 
 const MB_16 = 16 * 1024 * 1024;
@@ -23,24 +22,20 @@ function useFileUpload(data?: {
       setError(undefined);
       setCompleted(false);
       if (!file) throw new Error("No file selected");
-      const fileArrayBuffer = await convertFileToArrayBuffer(file);
-
-      if (!fileArrayBuffer) throw new Error("Failed to convert file to array buffer");
       const fileExtension = file.name.split(".").pop();
       if (!fileExtension) throw new Error("Failed to get file extension");
       if (fileTypeAllowList && !fileTypeAllowList.includes(fileExtension)) throw new Error("File type not allowed");
 
-      if (fileArrayBuffer === null || fileArrayBuffer.byteLength < 1 || fileArrayBuffer.byteLength > fileMaxSizeBytes)
-        throw new Error("File size too large");
+      if (file.size > fileMaxSizeBytes) throw new Error("File size too large");
 
       const blockBlobClient = new BlockBlobClient(url);
 
-      await blockBlobClient.uploadData(fileArrayBuffer, {
+      await blockBlobClient.uploadData(file, {
         blobHTTPHeaders: {
           blobContentType: file.type,
         },
         onProgress(progress) {
-          const fileSize = fileArrayBuffer.byteLength;
+          const fileSize = file.size;
           const percent = (progress.loadedBytes / fileSize) * 100;
           setProgress({ [file.name]: percent });
         },
