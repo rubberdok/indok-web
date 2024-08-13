@@ -5,8 +5,6 @@ import { useState } from "react";
 
 import { graphql } from "@/gql/app";
 
-import { convertFileToArrayBuffer } from "./convert-file-to-array-buffer";
-
 const MAX_FILE_SIZE_B = 16 * 1024 * 1024; // 16 MB
 
 type Props = {
@@ -40,9 +38,7 @@ function FileUpload({ onComplete, fileTypeAllowList, currentObjectUrl, imagePrev
       setError(undefined);
       setCompleted(false);
       if (!file) throw new Error("No file selected");
-      const fileArrayBuffer = await convertFileToArrayBuffer(file);
 
-      if (!fileArrayBuffer) throw new Error("Failed to convert file to array buffer");
       const fileExtension = file.name.split(".").pop();
       if (!fileExtension) throw new Error("Failed to get file extension");
       if (fileTypeAllowList && !fileTypeAllowList.includes(fileExtension)) throw new Error("File type not allowed");
@@ -58,12 +54,11 @@ function FileUpload({ onComplete, fileTypeAllowList, currentObjectUrl, imagePrev
       if (!data) throw new Error("Failed to get file upload url");
       const { sasUrl } = data.uploadFile;
 
-      if (fileArrayBuffer === null || fileArrayBuffer.byteLength < 1 || fileArrayBuffer.byteLength > MAX_FILE_SIZE_B)
-        throw new Error("File size too large");
+      if (file.size < 1 || file.size > MAX_FILE_SIZE_B) throw new Error("File size too large");
 
       const blockBlobClient = new BlockBlobClient(sasUrl);
 
-      await blockBlobClient.uploadData(fileArrayBuffer, {
+      await blockBlobClient.uploadData(file, {
         blobHTTPHeaders: {
           blobContentType: file.type,
         },
