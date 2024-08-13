@@ -134,10 +134,7 @@ export default function Page() {
       },
       onCompleted(data) {
         const uploadUrl = data.createDocument.uploadUrl;
-        uploadFile(file, uploadUrl).then(() => {
-          notify({ message: "Dokumentet er lastet opp", type: "success" });
-          router.push("/documents");
-        });
+        uploadFile(file, uploadUrl);
       },
       update(cache, { data }) {
         if (data) {
