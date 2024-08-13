@@ -31,6 +31,7 @@ import { z } from "zod";
 import { useAlerts } from "@/app/components/Alerts";
 import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
+import { Semester } from "@/gql/app/graphql";
 
 const BookingSemesterFragment = graphql(`
   fragment BookingSemester_BookingSemester on BookingSemester {
@@ -191,6 +192,24 @@ function BookingSemesters(props: Props) {
                     <TableCell>
                       <FormControlLabel control={<Switch />} disabled label="Av" labelPlacement="start" />
                     </TableCell>
+                    <EditBookingSemesterCell
+                      bookingSemester={{
+                        startAt: dayjs().set("month", 0).startOf("month").toISOString(),
+                        endAt: dayjs().set("month", 6).endOf("month").toISOString(),
+                      }}
+                      loading={loading}
+                      onSubmit={(data) => {
+                        updateBookingSemester({
+                          variables: {
+                            data: {
+                              semester: Semester.Spring,
+                              endAt: new Date(data.endAt).toISOString(),
+                              startAt: new Date(data.startAt).toISOString(),
+                            },
+                          },
+                        });
+                      }}
+                    />
                   </TableRow>
                 )}
                 {!fall && (
@@ -201,6 +220,24 @@ function BookingSemesters(props: Props) {
                     <TableCell>
                       <FormControlLabel control={<Switch />} disabled label="Av" labelPlacement="start" />
                     </TableCell>
+                    <EditBookingSemesterCell
+                      bookingSemester={{
+                        startAt: dayjs().set("month", 7).startOf("month").toISOString(),
+                        endAt: dayjs().set("month", 11).endOf("month").toISOString(),
+                      }}
+                      loading={loading}
+                      onSubmit={(data) => {
+                        updateBookingSemester({
+                          variables: {
+                            data: {
+                              semester: Semester.Fall,
+                              endAt: new Date(data.endAt).toISOString(),
+                              startAt: new Date(data.startAt).toISOString(),
+                            },
+                          },
+                        });
+                      }}
+                    />
                   </TableRow>
                 )}
               </>
