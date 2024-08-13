@@ -16,7 +16,7 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
-import dayjs from "dayjs";
+import dayjs from "@/lib/date";
 import Image from "next/image";
 import { useState } from "react";
 

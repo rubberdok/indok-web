@@ -44,7 +44,9 @@ function SelectMerchant({ disabled, fullWidth, size, helperText, ...props }: Pro
           >
             <option value={undefined}></option>
             {merchants.map(({ id, name }) => (
-              <option value={id}>{name}</option>
+              <option value={id} key={id}>
+                {name}
+              </option>
             ))}
           </Select>
           <FormHelperText error={Boolean(error)}>{error?.message ?? helperText}</FormHelperText>
