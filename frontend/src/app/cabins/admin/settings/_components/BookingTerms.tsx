@@ -149,10 +149,13 @@ function BookingTerms(props: BookingTermsProps) {
           {uploadFileLoading && (
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Box sx={{ width: "100%", mr: 1 }}>
-                <LinearProgress variant="determinate" value={progress} />
+                <LinearProgress variant="determinate" value={Object.values(progress)[0]} />
               </Box>
               <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" color="text.secondary">{`${Math.round(progress)}%`}</Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >{`${Math.round(Object.values(progress)[0])}%`}</Typography>
               </Box>
             </Box>
           )}

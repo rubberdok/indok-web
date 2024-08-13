@@ -91,8 +91,8 @@ const ReportsPage = () => {
                   <Grid container direction="column" alignItems="center" spacing={2}>
                     <Grid item>
                       <Button
-                        component={Link}
-                        to={{ href: "/baksida", hash: "form", replace: true }}
+                        component={NextLinkComposed}
+                        to="/baksida#form"
                         variant="contained"
                         color="primary"
                         size="large"
@@ -213,7 +213,7 @@ const ReportsPage = () => {
                               variant="contained"
                               color="primary"
                               component={NextLinkComposed}
-                              to={{ href: "/baksida", hash: "form", replace: true }}
+                              to="/baksida#form"
                             >
                               Fylle ut varslingsskjema
                             </Button>

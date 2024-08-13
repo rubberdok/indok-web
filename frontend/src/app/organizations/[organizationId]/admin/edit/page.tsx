@@ -224,7 +224,7 @@ export default function Page({ params }: { params: { organizationId: string } })
                   />
                 </Grid>
                 <Grid xs={2}>
-                  <FilePreview url={filePreviewUrl ?? data.organization.organization.logo?.url} />
+                  <FilePreview url={filePreviewUrl ?? organization.logo?.url} />
                 </Grid>
               </Grid>
 
