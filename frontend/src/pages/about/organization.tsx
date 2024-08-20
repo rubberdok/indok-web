@@ -101,7 +101,7 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
       nextPost={{ title: "Les om Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
       <Box height={460} position="relative">
-        <Image src="/img/organisasjonskart2023.svg" alt="Foreningskart" fill priority />
+        <Image src="/img/organisasjonskart2024.svg" alt="Foreningskart" fill priority />
       </Box>
 
       <Typography variant="h3" component="h2" gutterBottom>
