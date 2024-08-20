@@ -9,12 +9,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 
-import { Link } from "@/app/components/Link";
-
 import { Organization, OrganizationLink } from "./OrganizationLink";
 
+import { Link } from "@/app/components/Link";
+
 const organizations: Readonly<Organization[]> = [
-  { name: "Janus", internalUrl: "/janus" },
+  { name: "Janus Sosial", internalUrl: "/janus" },
   { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
   { name: "Janus Kultur", internalUrl: "/about/organization?category=kultur" },
