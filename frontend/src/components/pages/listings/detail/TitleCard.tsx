@@ -1,5 +1,5 @@
 import { ArrowForward } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 
@@ -54,18 +54,21 @@ export const TitleCard: React.FC<Props> = ({ listing }) => {
               {`Frist ${dayjs(listing?.deadline).format("LLL")}`}
             </Typography>
             {link && (
-              <Grid container item justifyContent="center">
-                <Button
-                  component={Link}
-                  href={link}
-                  noLinkStyle
-                  variant="contained"
-                  color="primary"
-                  endIcon={<ArrowForward />}
-                >
-                  Søk her
-                </Button>
-              </Grid>
+              <Tooltip title="Dette fristen for dette vervet har gått ut. Hvis du tror dette er en feil sjekk årstallet på fristen. Hvis du fortsatt tror det er en feil ta kontakt med vervet.">
+                <Grid container item justifyContent="center">
+                  <Button
+                    component={Link}
+                    href={link}
+                    noLinkStyle
+                    variant="contained"
+                    disabled={dayjs(listing?.deadline).isBefore(dayjs())}
+                    color="primary"
+                    endIcon={<ArrowForward />}
+                  >
+                    Søk her
+                  </Button>
+                </Grid>
+              </Tooltip>
             )}
           </Grid>
         </Grid>
