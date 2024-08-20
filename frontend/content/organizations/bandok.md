@@ -17,5 +17,4 @@ tag: kultur
 Bandøk er en gyllen mulighet for deg som ønsker å ta vare på det musikalske gjennom studieløpet. Vi er også en tett og god sosial gjeng som koser oss både av og på scenen. Spiller du et instrument eller synger, og er glad i å skape et skikkelig show – da er Bandøk noe for deg!
 ![Bandøks nydelige logo](/img/bandoklogo.png)
 
-Vegard Holm Gundersen
-Musikkansvarlig
+
