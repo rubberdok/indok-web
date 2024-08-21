@@ -27,7 +27,7 @@ export default async function Layout({ children }: React.PropsWithChildren) {
   });
   if (data.user.user === null) {
     const loginUrl = new URL("/auth/login", config.API_URL);
-    loginUrl.searchParams.set("redirect", `${config.FRONTEND_URI}/profile`);
+    loginUrl.searchParams.set("return-to", `${config.FRONTEND_URI}/profile`);
     return redirect(loginUrl.toString());
   }
   return <>{children}</>;

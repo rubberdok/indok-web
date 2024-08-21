@@ -50,7 +50,7 @@ export const LoginRequired: React.FC<
   }
 
   const loginUrl = new URL("/auth/login", config.API_URL);
-  loginUrl.searchParams.set("redirect", `${config.FRONTEND_URI}${path ?? "/profile"}`);
+  loginUrl.searchParams.set("return-to", `${config.FRONTEND_URI}${path ?? "/profile"}`);
 
   if (loading) {
     return (

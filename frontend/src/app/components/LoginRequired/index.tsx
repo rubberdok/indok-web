@@ -27,7 +27,7 @@ export const LoginRequired: React.FC<
   React.PropsWithChildren<Props & Pick<ButtonProps, "color" | "fullWidth" | "size" | "variant">>
 > = ({ children, fallback, "data-test-id": dataTestId, ...buttonProps }) => {
   const url = new URL(`/auth/login`, config.API_URL);
-  url.searchParams.set("redirect", `${config.FRONTEND_URI}/profile`);
+  url.searchParams.set("return-to", `${config.FRONTEND_URI}/profile`);
   const { data } = useSuspenseQuery(
     graphql(`
       query AppLoginRequiredUser {
