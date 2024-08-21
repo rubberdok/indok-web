@@ -6,6 +6,7 @@ import {
   FormHelperText,
   Unstable_Grid2 as Grid,
   IconButton,
+  InputAdornment,
   InputLabel,
   Select,
   Stack,
@@ -19,6 +20,8 @@ import { FragmentType, getFragmentData, graphql } from "@/gql/app";
 import dayjs from "@/lib/date";
 
 import { maxGraduationYear, minGraduationYear, userValidationSchema } from "./validationSchema";
+import { usePathname, useRouter } from "next/navigation";
+import { config } from "@/utils/config";
 
 type Props = {
   onSubmit: (values: UserFields) => void;
@@ -70,9 +73,16 @@ function UserForm({ onSubmit, "data-test-id": dataTestId, onCancel, ...props }: 
     },
     resolver: yupResolver(userValidationSchema),
   });
+  const router = useRouter();
+  const pathname = usePathname();
 
   const minimumGraduationYear = Math.min(minGraduationYear, user?.graduationYear ?? minGraduationYear);
   const graduationYears = range(minimumGraduationYear, maxGraduationYear + 1, 1);
+  function updateStudyProgram() {
+    const updateStudyProgramUrl = new URL("/auth/study-program", config.API_URL);
+    updateStudyProgramUrl.searchParams.set("return-to", `${config.FRONTEND_URI}${pathname}`);
+    router.push(updateStudyProgramUrl.toString());
+  }
 
   return (
     <Stack direction="row" justifyContent="center">
@@ -175,10 +185,7 @@ function UserForm({ onSubmit, "data-test-id": dataTestId, onCancel, ...props }: 
                 {user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
                 {!user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før:{" "}
-                    {dayjs(user?.graduationYearUpdatedAt)
-                      .add(1, "year")
-                      .format("L")}
+                    Kan ikke endres før: {dayjs(user?.graduationYearUpdatedAt).add(1, "year").format("L")}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -194,9 +201,15 @@ function UserForm({ onSubmit, "data-test-id": dataTestId, onCancel, ...props }: 
                 data-test-id={`${dataTestId}studyProgramTextField`}
                 InputProps={{
                   endAdornment: (
-                    <IconButton>
-                      <Refresh />
-                    </IconButton>
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => {
+                          updateStudyProgram();
+                        }}
+                      >
+                        <Refresh />
+                      </IconButton>
+                    </InputAdornment>
                   ),
                 }}
               />
