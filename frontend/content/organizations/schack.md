@@ -1,5 +1,5 @@
 ---
-title: Janus To Tårn
+title: "Janus: To Tårn"
 description: Sjakk matt
 logo: /img/schacklogo.jpg
 image: /img/hero.jpg
