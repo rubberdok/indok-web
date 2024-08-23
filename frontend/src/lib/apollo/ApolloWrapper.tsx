@@ -10,10 +10,19 @@ import {
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
 import { config } from "@/utils/config";
+import { setContext } from "@apollo/client/link/context";
 
 function getMakeClientHandler(cookies: string) {
   // have a function to create a client for you
   return function makeClient() {
+    const transactionIdLink = setContext(() => {
+      return {
+        headers: {
+          "x-transaction-id": Math.random().toString(16).slice(2),
+        },
+      };
+    });
+
     const httpLink = new HttpLink({
       // this needs to be an absolute url, as relative urls cannot be used in SSR
       uri: config.GRAPHQL_ENDPOINT,
@@ -25,6 +34,8 @@ function getMakeClientHandler(cookies: string) {
         Cookie: cookies,
       },
     });
+
+    const link = ApolloLink.from([transactionIdLink, httpLink]);
 
     return new NextSSRApolloClient({
       // use the `NextSSRInMemoryCache`, not the normal `InMemoryCache`
@@ -42,9 +53,9 @@ function getMakeClientHandler(cookies: string) {
               new SSRMultipartLink({
                 stripDefer: true,
               }),
-              httpLink,
+              link,
             ])
-          : httpLink,
+          : link,
     });
   };
 }
