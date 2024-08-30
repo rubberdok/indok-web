@@ -9,7 +9,7 @@ board:
     title: Leder
 
   leder2:
-    name: Mine Malthe-Sørenssen
+    name: Mina Malthe-Sørenssen
     title: Leder
 
 tag: kultur
