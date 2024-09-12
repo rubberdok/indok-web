@@ -179,7 +179,7 @@ the VSCode editor.
    - If you don't have git you will need to install it
 4. Type `cd indok-web` to move into the new folder
 5. (optional, but extremely recommended) Set up the backend locally, to get linting, auto-complete and environment variables
-   - Follow steps 1-9 under [Without Docker: Backend](#backend) below
+   - Follow steps 1-10 under [Without Docker: Backend](#backend) below
 6. (optional, but extremely  recommended) Set up the frontend locally, to get pre-commit hooks, linting, auto-complete and
    environment variables
    - Follow steps 1-8 under [Without Docker: Frontend](#frontend) below
@@ -324,14 +324,16 @@ If you want to close the backend, press `Ctrl + C` in the terminal where it runs
      - Type `.\nvm-setup.exe`, and go through the installer
    - Type `nvm version` in a new terminal to check that it was installed correctly
 2. Type `nvm install --lts` in the terminal to install the current long-term support (LTS) version of Node.
+  - if on widows try `nvm install lts`
 3. Type `nvm use --lts`
+   - If on Windows try `nvm use lts`
    - If on Windows, you may have to run the terminal as administrator
-4. Open the `indok-web` folder in VSCode, and create a file called `.env.local`
+4. Open the `indok-web` folder in VSCode, and create a file called `.env.local` in the frontend folder
 5. Ask the project maintainers for dev environment variables
    - If you're a member of Rubberdøk:
      - Go to the `#dev` channel in Slack
      - Find the pinned post with dev environment variables
-     - Copy the variables for `frontend/.env.local` into your own `.env.local` file in `indok-web/backend`
+     - Copy the variables for `frontend/.env.local` into your own `.env.local` file in `indok-web/frontend`
 6. Type `cd indok-web/frontend` to move into the frontend folder (or just `cd frontend` if you were already in indok-web)
 7. Type `npm install -g yarn`
    - This installs Yarn, which we use to manage dependencies in the frontend
