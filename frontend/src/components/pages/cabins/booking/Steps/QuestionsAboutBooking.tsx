@@ -26,7 +26,7 @@ export const ExtraInfoSite: React.FC<Props> = ({ setExtraInfo, startDate, endDat
               {startDate?.format("LL")} til {endDate?.format("LL")}.
             </Typography>
             <Typography variant="body1">
-              Hytteforeningen får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.
+              Janushyttene får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.
             </Typography>
             <Typography variant="body1" gutterBottom>
               Har du noen spørsmål? Da kan du skrive de inn nedenfor, så sendes de sammen med søknaden din.
