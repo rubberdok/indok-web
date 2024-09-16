@@ -14,7 +14,7 @@ const organizations: Readonly<Organization[]> = [
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
   { name: "Janus Kultur", internalUrl: "/about/organization?category=kultur" },
   { name: "Rubberdøk", internalUrl: "/about/organizations/rubberdok" },
-  { name: "Hytteforeningen", internalUrl: "/about/organizations/hytteforeningen" },
+  { name: "Janushyttene", internalUrl: "/about/organizations/Janushyttene" },
   { name: "Janus IF", internalUrl: "/about/organization?category=idrett" },
 ] as const;
 

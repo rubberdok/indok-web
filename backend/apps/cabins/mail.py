@@ -13,7 +13,7 @@ import io
 
 user_templates: UserTemplateType = {
     "reserve_subject": "Bekreftelse på mottatt søknad om booking av ",
-    "decision_subject": "Hytteforeningen har tatt stilling til søknaden din om booking av ",
+    "decision_subject": "Janushyttene har tatt stilling til søknaden din om booking av ",
     "reserve_booking": "user_reserve_template.html",
     "approve_booking": "user_approved_template.html",
     "disapprove_booking": "user_disapproved_template.html",

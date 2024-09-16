@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 import * as yup from "@/lib/validation";
-import hytteforeningen from "~/public/static/cabins/logo.svg";
+import Janushyttene from "~/public/static/cabins/logo.svg";
 
 import { useStepContext } from "../StepContext";
 
@@ -64,7 +64,7 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate
         <Grid container maxWidth={(theme) => theme.breakpoints.values.sm}>
           <Box m={2}>
             <Box display="flex" justifyContent="center" alignItems="center">
-              <Image alt="Hytteforeningen" src={hytteforeningen} width={300} height={165} />
+              <Image alt="Janushyttene" src={Janushyttene} width={300} height={165} />
             </Box>
             <Typography variant="h2" align="center">
               Leiekontrakt
@@ -72,7 +72,7 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate
             <Divider component="br" />
             <Typography variant="body2" component="span">
               På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått
-              følgende leiekontrakt mellom Hytteforeningen og
+              følgende leiekontrakt mellom Janushyttene og
               <Box display="inline" fontWeight="fontWeightBold">
                 {` ${contactInfo?.firstName} ${contactInfo?.lastName}`}.
               </Box>
@@ -166,8 +166,8 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate
               Partene vedtar eiendommens verneting i alle tvister som måtte oppstå i forbindelse med avtalen.
             </Typography>
             <Typography variant="body2">
-              Hytteforeningen forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå
-              uforutsette hendelser.
+              Janushyttene forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå uforutsette
+              hendelser.
             </Typography>
             <Typography variant="body2">
               Flytter ikke leietager når leieperioden er utløpt, kan vedkommende kastes ut uten søksmål og dom etter §
