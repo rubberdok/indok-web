@@ -1,6 +1,7 @@
 "use client";
 
 import Board from "@/components/pages/ticTacToe/Board";
+import MoveList from "@/components/pages/ticTacToe/MoveList";
 import { NextPageWithLayout } from "@/lib/next";
 import { Box, Stack, Typography } from "@mui/material";
 import { useRef, useState } from "react";
@@ -56,7 +57,10 @@ const TicTacToe: NextPageWithLayout = () => {
       <Typography variant="h3" align="center">
         {generateGameOverString()}
       </Typography>
-      <Board squares={history[history.length - 1]} handleMove={handleMove} />
+      <Stack direction={"row"} spacing={2}>
+        <Board squares={history[history.length - 1]} handleMove={handleMove} />
+        <MoveList />
+      </Stack>
     </Stack>
   );
 
