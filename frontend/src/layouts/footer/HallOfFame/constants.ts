@@ -20,7 +20,6 @@ export const rubberdokMembers: Record<string, Member[]> = {
     { name: "Thomas Falkeid Hagland", class: 2 },
     { name: "Torgeir Keun Lysen", class: 2 },
     { name: "Frederik Egelund Edvardsen", class: 2 },
-
     { name: "Andreas Tauge", class: 1 },
     { name: "Kristian Tveråmo Aastveit", class: 2 },
   ],
