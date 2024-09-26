@@ -176,6 +176,7 @@ the VSCode editor.
    terminal)
 3. Type `git clone https://github.com/rubberdok/indok-web.git`
    - This creates a new folder named `indok-web`, which contains the project
+   - If you don't have git you will need to install it
 4. Type `cd indok-web` to move into the new folder
 5. (optional, but extremely recommended) Set up the backend locally, to get linting, auto-complete and environment variables
    - Follow steps 1-9 under [Without Docker: Backend](#backend) below

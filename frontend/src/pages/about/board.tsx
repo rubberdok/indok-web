@@ -59,7 +59,7 @@ const BoardPage: NextPageWithLayout = () => {
     {
       rank: 9,
       name: "Brage Sømoen",
-      position: "Leder Hytteforeningen",
+      position: "Leder Janushyttene",
       email: "leder@indokhyttene.no",
     },
     {
@@ -79,7 +79,7 @@ const BoardPage: NextPageWithLayout = () => {
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
-        Janus, Bindeleddet, ESTIEM, Hytteforeningen, Janus IF og Janus Kultur.
+        Janus, Bindeleddet, ESTIEM, Janushyttene, Janus IF og Janus Kultur.
       </Typography>
       <Typography variant="body1" paragraph>
         Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene,

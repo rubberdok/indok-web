@@ -490,7 +490,7 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the subject of the first message is correct.
-        self.assertTrue("Hytteforeningen har tatt stilling til søknaden din om booking av" in mail.outbox[0].subject)
+        self.assertTrue("Janushyttene har tatt stilling til søknaden din om booking av" in mail.outbox[0].subject)
 
     def test_reservation_mail_content(self):
         response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
