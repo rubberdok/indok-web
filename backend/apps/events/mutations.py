@@ -37,6 +37,11 @@ class BaseEventInput:
 
 class CreateEventInput(BaseEventInput, graphene.InputObjectType):
     organization_id = graphene.ID(required=True)
+    grade1_tickets = graphene.Int(required=True)
+    grade2_tickets = graphene.Int(required=True)
+    grade3_tickets = graphene.Int(required=True)
+    grade4_tickets = graphene.Int(required=True)
+    grade5_tickets = graphene.Int(required=True)
 
 
 class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
@@ -45,6 +50,11 @@ class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
     start_time = graphene.DateTime(required=False)
     organization_id = graphene.ID(required=False)
     is_attendable = graphene.Boolean(required=False)
+    grade1_tickets = graphene.Int(required=False)
+    grade2_tickets = graphene.Int(required=False)
+    grade3_tickets = graphene.Int(required=False)
+    grade4_tickets = graphene.Int(required=False)
+    grade5_tickets = graphene.Int(required=False)
 
 
 class CreateEvent(graphene.Mutation):

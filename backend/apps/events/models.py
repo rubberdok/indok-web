@@ -30,6 +30,12 @@ class Event(models.Model, Sellable):
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
+    grade1_tickets = models.PositiveIntegerField(default=0)
+    grade2_tickets = models.PositiveIntegerField(default=0)
+    grade3_tickets = models.PositiveIntegerField(default=0)
+    grade4_tickets = models.PositiveIntegerField(default=0)
+    grade5_tickets = models.PositiveIntegerField(default=0)
+
 
     # ------------------ Fully optional fields ------------------
     publisher = models.ForeignKey(
@@ -98,6 +104,20 @@ class Event(models.Model, Sellable):
 
     def is_user_allowed_to_buy_product(self, user) -> bool:
         return user in self.signed_up_users
+
+    @property
+    def available_tickets(self, grade: int) -> int:
+        if grade == 1:
+            return self.grade1_tickets
+        elif grade == 2:
+            return self.grade2_tickets
+        elif grade == 3:
+            return self.grade3_tickets
+        elif grade == 4:
+            return self.grade4_tickets
+        elif grade == 5:
+            return self.grade5_tickets
+        return 0
 
 
 class SignUp(models.Model):
