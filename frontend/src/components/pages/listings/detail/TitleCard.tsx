@@ -54,7 +54,13 @@ export const TitleCard: React.FC<Props> = ({ listing }) => {
               {`Frist ${dayjs(listing?.deadline).format("LLL")}`}
             </Typography>
             {link && (
-              <Tooltip title="Dette fristen for dette vervet har gått ut. Hvis du tror dette er en feil sjekk årstallet på fristen. Hvis du fortsatt tror det er en feil ta kontakt med vervet.">
+              <Tooltip
+                title={
+                  dayjs(listing?.deadline).isBefore(dayjs())
+                    ? "Fristen for dette vervet har gått ut. Hvis du tror dette er en feil sjekk årstallet på fristen. Hvis du fortsatt tror det er en feil ta kontakt med vervet."
+                    : ""
+                }
+              >
                 <Grid container item justifyContent="center">
                   <Button
                     component={Link}
