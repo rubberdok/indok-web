@@ -9,11 +9,21 @@ type Props = {
   organization: AdminOrganizationFragment;
 };
 export const OrgProducts: React.FC<Props> = ({ organization }) => {
-  const { data, error } = useQuery(AllShopOrdersDocument);
+
+  const limit = 5
+  const page = 1//[page, setPage] = useState(0);
+
+
+  const { data, error } = useQuery(AllShopOrdersDocument, {
+    variables: {
+      limit: limit,    // The number of orders you want to fetch
+      offset: page * limit,    // The starting index (e.g., 0 for the first set of results)
+    },
+  });
   if (error) return <p>Error</p>;
 
   console.log(data);
-  if (organization.name !== "Janus linjeforening") {
+  if (organization.name.toLowerCase() !== "janus linjeforening") {
     return (
       <p>
         Per nå har kun Janus tilgang på buttikk administrasjon. Etter hvert vil vi åpne for at flere kan bruke siden

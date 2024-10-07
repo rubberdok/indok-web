@@ -35,7 +35,7 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
 
       <Container>
         {data?.organization && (
-          <Stack spacing={4}>
+          <Stack spacing={4} padding = {2}>
             {activeTab == 0 && data.organization.events && <OrganizationEvents organization={data.organization} />}
             {activeTab == 1 && data.organization.listings && <OrganizationListings organization={data.organization} />}
             {activeTab == 2 && data.organization && <OrgMembers organization={data.organization} />}

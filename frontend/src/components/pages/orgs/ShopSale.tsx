@@ -23,7 +23,7 @@ export const ShopSale: React.FC<Props> = ({ name, product_name, quantity, has_pa
     deliverProduct({ variables: { orderId: order_id } });
   }
   return (
-    <Stack direction={"row"} padding={2} spacing={1}>
+    <Stack direction={"row"} padding={0} spacing={1}>
       <Box display="flex" alignItems="left" justifyContent="left" width={"15%"} padding={1}>
         <Typography variant="body1">{name}</Typography>
       </Box>
