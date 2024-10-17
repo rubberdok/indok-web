@@ -1087,6 +1087,12 @@ export type QueriesAllOrganizationsArgs = {
 };
 
 
+export type QueriesAllShopOrdersArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueriesArchiveByTypesArgs = {
   names: InputMaybe<Scalars['String']['input']>;
   typeDoc: Array<InputMaybe<Scalars['String']['input']>>;

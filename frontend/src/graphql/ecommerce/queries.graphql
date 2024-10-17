@@ -27,8 +27,8 @@ query allUserOrders {
   }
 }
 
-query allShopOrders {
-  allShopOrders {
+query allShopOrders($limit: Int, $offset: Int) {
+  allShopOrders(limit: $limit, offset: $offset) {
     ...Order
   }
 }
