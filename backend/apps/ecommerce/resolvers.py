@@ -38,9 +38,9 @@ class EcommerceResolvers:
     def resolve_all_user_orders(self, info):
         return Order.objects.all()
 
-    def resolve_all_shop_orders(self, limit, offset, info):
+    def resolve_all_shop_orders(self, info, limit, offset):
         # Apply pagination if limit and offset are provided
-        orders = Order.objects.filter(product__shop_item=True)
+        orders = Order.objects.filter(product__shop_item=True).order_by('delivered_product', 'payment_status', 'timestamp')
         if offset is not None:
             orders = orders[offset:]
         if limit is not None:
