@@ -1,17 +1,15 @@
-import React from 'react';
-import { Button, Typography, Stack } from '@mui/material';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import { Button, Typography, Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React from "react";
 
 type Props = {
-    hasNextPage: boolean;
-    page: number;
-    handlePageChange: (page: number) => void;
-}
+  hasNextPage: boolean;
+  page: number;
+  handlePageChange: (page: number) => void;
+};
 
-
-export const TableStepper: React.FC<Props> = ({hasNextPage, page, handlePageChange}) => {
-
+export const TableStepper: React.FC<Props> = ({ hasNextPage, page, handlePageChange }) => {
   const theme = useTheme();
   const nextPage = () => handlePageChange(page + 1);
   const prevPage = () => handlePageChange(page > 0 ? page - 1 : 0);
@@ -21,10 +19,10 @@ export const TableStepper: React.FC<Props> = ({hasNextPage, page, handlePageChan
 
   return (
     <Stack
-      sx={{ maxWidth: 300, flexGrow: 1, position: 'static', flexDirection: 'row', justifyContent: 'space-between' }}
+      sx={{ maxWidth: 300, flexGrow: 1, position: "static", flexDirection: "row", justifyContent: "space-between" }}
     >
       <Button size="small" onClick={prevPage} disabled={page === 0}>
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+        {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
         Back
       </Button>
 
@@ -32,7 +30,7 @@ export const TableStepper: React.FC<Props> = ({hasNextPage, page, handlePageChan
 
       <Button size="small" onClick={nextPage} disabled={hasNextPage}>
         Next
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+        {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </Button>
     </Stack>
   );
