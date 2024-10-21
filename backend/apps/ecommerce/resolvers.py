@@ -38,13 +38,16 @@ class EcommerceResolvers:
     def resolve_all_user_orders(self, info):
         return Order.objects.all()
 
-    def resolve_all_shop_orders(self, info, limit, offset):
+    def resolve_paginated_shop_orders(self, info, limit, offset):
         # Apply pagination if limit and offset are provided
         orders = Order.objects.filter(product__shop_item=True).order_by('delivered_product', 'payment_status', 'timestamp')
-        if offset is not None:
-            orders = orders[offset:]
-        if limit is not None:
-            orders = orders[:limit]
+        if offset is None:
+            offset = 0
+        orders = orders[offset:]
+
+        if limit is None or limit > 300:
+            limit = 300 #Add hard cap of maximum 300 orders per query. If we allowed this query to be bigger it would crash the website
+        orders = orders[:limit]
         return orders
 
     @staff_member_required

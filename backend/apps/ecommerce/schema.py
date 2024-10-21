@@ -19,7 +19,7 @@ class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):
     order = graphene.Field(OrderType, order_id=graphene.ID(required=True))
     user_orders = graphene.List(NonNull(OrderType))
     all_user_orders = graphene.List(NonNull(OrderType))
-    all_shop_orders = graphene.List(graphene.NonNull(OrderType), limit=graphene.Int(), offset=graphene.Int())
+    paginated_shop_orders = graphene.List(graphene.NonNull(OrderType), limit=graphene.Int(), offset=graphene.Int())
 
     orders_by_status = graphene.Field(
         OrdersByStatusType, product_id=graphene.ID(required=True), status=graphene.String(required=True)
