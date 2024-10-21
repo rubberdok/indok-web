@@ -48,7 +48,7 @@ class EcommerceResolvers:
         orders = orders[offset:]
 
         if limit is None or limit > 300:
-#Add hard cap of maximum 300 orders per query. A bigger query would crash the website
+        #Add hard cap of maximum 300 orders per query. A bigger query would crash the website
             limit = 300
         orders = orders[:limit]
         return orders
