@@ -963,7 +963,6 @@ export type Queries = {
   allCategories?: Maybe<Array<CategoryType>>;
   allEvents?: Maybe<Array<EventType>>;
   allOrganizations?: Maybe<Array<OrganizationType>>;
-  allShopOrders?: Maybe<Array<OrderType>>;
   allUserOrders?: Maybe<Array<OrderType>>;
   allUsers?: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
@@ -990,6 +989,7 @@ export type Queries = {
   order?: Maybe<OrderType>;
   ordersByStatus?: Maybe<OrdersByStatusType>;
   organization?: Maybe<OrganizationType>;
+  paginatedShopOrders?: Maybe<Array<OrderType>>;
   product?: Maybe<ProductType>;
   products?: Maybe<Array<ProductType>>;
   response?: Maybe<ResponseType>;
@@ -1088,6 +1088,11 @@ export type QueriesOrdersByStatusArgs = {
 export type QueriesOrganizationArgs = {
   id?: InputMaybe<Scalars["ID"]["input"]>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type QueriesPaginatedShopOrdersArgs = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type QueriesProductArgs = {
@@ -1911,11 +1916,14 @@ export type AllUserOrdersQuery = {
   }> | null;
 };
 
-export type AllShopOrdersQueryVariables = Exact<{ [key: string]: never }>;
+export type PaginatedShopOrdersQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
 
-export type AllShopOrdersQuery = {
+export type PaginatedShopOrdersQuery = {
   __typename?: "Queries";
-  allShopOrders?: Array<{
+  paginatedShopOrders?: Array<{
     __typename?: "OrderType";
     id: string;
     quantity: number;
@@ -6643,19 +6651,43 @@ export const AllUserOrdersDocument = {
     },
   ],
 } as unknown as DocumentNode<AllUserOrdersQuery, AllUserOrdersQueryVariables>;
-export const AllShopOrdersDocument = {
+export const PaginatedShopOrdersDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "allShopOrders" },
+      name: { kind: "Name", value: "paginatedShopOrders" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "limit" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "offset" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+      ],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "allShopOrders" },
+            name: { kind: "Name", value: "paginatedShopOrders" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: { kind: "Variable", name: { kind: "Name", value: "limit" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "offset" },
+                value: { kind: "Variable", name: { kind: "Name", value: "offset" } },
+              },
+            ],
             selectionSet: {
               kind: "SelectionSet",
               selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
@@ -6718,7 +6750,7 @@ export const AllShopOrdersDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<AllShopOrdersQuery, AllShopOrdersQueryVariables>;
+} as unknown as DocumentNode<PaginatedShopOrdersQuery, PaginatedShopOrdersQueryVariables>;
 export const CreateEventDocument = {
   kind: "Document",
   definitions: [
