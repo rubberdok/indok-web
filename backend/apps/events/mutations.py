@@ -178,6 +178,9 @@ class EventSignUp(graphene.Mutation):
                 event.allowed_grade_years,
             )
 
+        if event.tickets[user.grade_year - 1] == 0:
+            raise Exception("Ditt trinn har ingen tilgjengelige plasser")
+
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
             raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")
 

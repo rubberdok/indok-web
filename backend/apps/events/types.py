@@ -82,11 +82,7 @@ class EventType(DjangoObjectType):
     allowed_grade_years = graphene.List(NonNull(graphene.Int))
     available_slots = graphene.Int()
     product = graphene.Field(ProductType)
-    grade1_tickets = graphene.Int()
-    grade2_tickets = graphene.Int()
-    grade3_tickets = graphene.Int()
-    grade4_tickets = graphene.Int()
-    grade5_tickets = graphene.Int()
+    tickets = graphene.List(graphene.Int)
 
 
     class Meta:
@@ -132,24 +128,9 @@ class EventType(DjangoObjectType):
             return wrapper
 
     @staticmethod
-    def resolve_grade1_tickets(event, info):
-        return event.grade1_tickets
+    def resolve_tickets(event, info, grade):
+        return event.tickets[grade-1]
 
-    @staticmethod
-    def resolve_grade2_tickets(event, info):
-        return event.grade2_tickets
-
-    @staticmethod
-    def resolve_grade3_tickets(event, info):
-        return event.grade3_tickets
-
-    @staticmethod
-    def resolve_grade4_tickets(event, info):
-        return event.grade4_tickets
-
-    @staticmethod
-    def resolve_grade5_tickets(event, info):
-        return event.grade5_tickets
 
     @staticmethod
     def resolve_user_attendance(event: Event, info) -> UserAttendance:
