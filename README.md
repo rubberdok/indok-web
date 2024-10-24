@@ -567,7 +567,7 @@ An outline of how a developer may work with this project:
 
 The models.py file is essentially a description of what should be stored in our database. Types.py tells graphene, the service we use to autogenerate a ton of stuff what types the database has.
 
-If you are adding a brand new models.py file make sure to add your changes LOCAL_APPS in the base.py of our django settings. In order to make the migrations work you will also need a migrations folder containing a file named **init**.py. The file init file is empty but nessecary.
+If you are adding a brand new models.py file make sure to add your changes to LOCAL_APPS in the base.py of our django settings. In order to make the migrations work you will also need a migrations folder containing a file named **init**.py. The file init file is empty but nessecary.
 
 After changes have been made to thease files you need to push them to the database. This is done first by making the migrations using `docker compose exec backend python manage.py makemigrations` After the migrations are made you migrate useing `docker compose exec backend python manage.py migrate`. For the changes to show up in the admin panel you will need to restart docker
 
