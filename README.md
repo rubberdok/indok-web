@@ -561,6 +561,75 @@ An outline of how a developer may work with this project:
   - Respond to any questions or concerns they may have with your Pull Request
   - If an automatic test fails, click `Details` on it to see what went wrong in the logs
   - Once your Pull Request is approved, and the tests pass, you can merge it - now your changes are live!
+### Comprehenceive Api and Backend Models Guide
+
+#### Making a model (changes to the database)
+
+The models.py file is essentially a description of what should be stored in our database. Types.py tells graphene, the service we use to autogenerate a ton of stuff what types the database has.
+
+If you are adding a brand new models.py file make sure to add your changes LOCAL_APPS in the base.py of our django settings. In order to make the migrations work you will also need a migrations folder containing a file named **init**.py. The file init file is empty but nessecary.
+
+After changes have been made to thease files you need to push them to the database. This is done first by making the migrations using `docker compose exec backend python manage.py makemigrations` After the migrations are made you migrate useing `docker compose exec backend python manage.py migrate`. For the changes to show up in the admin panel you will need to restart docker
+
+#### Making a query
+
+A query is a request for data made to the backend by the frontend. The following is a guide on how to make queries.
+
+##### Queries in Backend
+
+All queries have a respective resolver function in the backends `resolvers.py` function. This is how the backend knows what to send to the frontend. A resolver function is ALWAYS named `resolver_something`. Note that Python uses camel case and GraphQL does not. This means that in communication the frontend is going to capitalize the letter(s) after the underscore(s) and remove the underscore. For example, the resolver, `resolve_get_winners_list`, will be referenced as `getWinnersList` in the frontend.
+
+All resolvers must also be referenced in the `schema.py` file. Here they are again named using camel case and given return types, often the type is just the model from `models.py`.
+
+If you are making the first queries of this backend folder you will also need to add the schema to `backend/config/schema.py`. This is to tell the command `python manage.py graphql_schema` to include the new schema file that it exists.
+
+After adding the new resolvers you can run `docker compose exec backend python manage.py graphql_schema` in the `indok-web` directory to add the new schema. The query is now done from the backend perspective. NOTE: if you have forgotten to add the resolver to the schema or done so incorrectly the terminal will say it was successful. After this command, there should be a change in `schema.json`.
+
+##### Queries in Frontend
+
+In the frontend all query defining is done in the `graphql` folder. The generated folder should not be touched! (However it can be useful to look at in troubleshooting).
+
+The `graphql` folder usually has 3 files, mutations, queries and fragments. Fragemnts are selections of fields on one of our API types, that can be reused across different queries/mutations to ensure consistent types. You can read more here: (https://www.apollographql.com/docs/react/data/fragments/). If a selection is used only once it can be written in the queries file directy.
+
+After having written your query run the command `yarn generate` in the frontend directory to generate machine readable queries.
+
+After the above is done the queries can be used and tested. In code they are used using the apollo function useQuery. Here is an example: `const { error, loading, data } = useQuery(GetWinnersListDocument);`. Notice the three terms before the query. Things can ALWAYS go wrong with queries and they requre data to be sent, therefore it is common to define what is done in rare cases.
+
+- `data` is the normal data when the query has returned something expected from the backend.
+- `loading` is a waiting status. Queries are not instant and it can be useful to define some action while waiting.
+- `error` is what you recive if the query returned that something has gone wrong. This should almost always have some sort of notification to the user and or admins.
+
+An important security notice: Permissions are handled in the backend. It is possible for anyone to try to call queries withut a frontend interface, it is therefore important that all queries that should have a permission check has them before it is pushed to production regardless of if there exists a frontend interface.
+
+One last note about queries is that we limit size. If you return more than about 300 items the query will fail. Therefore it is important that sorting and things of that kind is done in the backend.
+
+#### Making a mutation
+
+A mutation is a request for data to be changed or added made to the backend by the frontend. The following is a guide on how to make mutations. Note that it is very similar to making a query.
+
+##### Queries in Backend
+
+All mutations have a respective mutation class in the backends `mutations.py` file. This is how the backend knows what to change when the mutation is called. A mutation class has no strict naming scheme but it is higly reccommended to end the name in "Mutation". Every mutation class has a function named mutate that does the changing, an Arguments class that takes in the data that can be passed from the frontend, and an ok that is returned if the mutation is successful.
+
+All mutations must also be referenced in the `schema.py` file. Here they are named using camel case for the name of the mutation.
+
+If you are making the first mutations of this backend folder you will also need to add the schema to `backend/config/schema.py`. This is to tell the command `python manage.py graphql_schema` to include the new schema file that it exists.
+
+After adding the new resolvers you can run `docker compose exec backend python manage.py graphql_schema` in the `indok-web` directory to add the new schema. The mutation is now done from the backend perspective. NOTE: if you have forgotten to add the resolver to the schema or done so incorrectly the terminal will say it was successful. After this command, there should be a change in `schema.json`.
+
+An important security notice: Permissions are handled in the backend. It is possible for anyone to try to call mutations withut a frontend interface, it is therefore important that all mutations that should have a permission check has it before it is pushed to production regardless of if there exists a frontend interface.
+
+##### Mutations in Frontend
+
+In the frontend all mutation defining is done in the `graphql` folder. The generated folder should not be touched! (However it can be useful to look at in troubleshooting).
+
+The `graphql` folder usually has 3 files, mutations, queries and fragments. Obvously mutations are written in the mutations folder.
+
+After having written your mutation run the command `yarn generate` in the frontend directory to generate machine readable mutation.
+
+After the above is done the queries can be used and tested. In code they are used using the apollo function useUsemutation to define a function that can be run. Here is an example: `const [logTicTacToe] = useMutation(LogTicTacToeDocument);`. After this the `logTicTacToe` function can be used to run the mutation. It lookes like this: `logTicTacToe({ variables: { winner: "Draw" } })`; Note that this does not trigger a react rerender so if you need to change visuals you need to handle that as well.
+
+An important security notice: Permissions are handled in the backend. It is possible for anyone to try to call queries withut a frontend interface, it is therefore important that all queries that should have a permission check has them before it is pushed to production regardless of if there exists a frontend interface. Most mutations (mabye all the ones we currenly have) need a permission check.
 
 ## Tech Stack
 
