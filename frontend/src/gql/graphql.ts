@@ -288,6 +288,7 @@ export type CreateEventInput = {
   price: InputMaybe<Scalars['Float']['input']>;
   shortDescription: InputMaybe<Scalars['String']['input']>;
   signupOpenDate: InputMaybe<Scalars['DateTime']['input']>;
+  slotsPerYear: InputMaybe<Array<Scalars['Int']['input']>>;
   startTime: Scalars['DateTime']['input'];
   title: Scalars['String']['input'];
 };
@@ -507,6 +508,7 @@ export type EventType = {
   publisher: Maybe<UserType>;
   shortDescription: Maybe<Scalars['String']['output']>;
   signupOpenDate: Maybe<Scalars['DateTime']['output']>;
+  slotsPerYear: Maybe<Array<Scalars['Int']['output']>>;
   startTime: Scalars['DateTime']['output'];
   title: Scalars['String']['output'];
   userAttendance: Maybe<UserAttendingType>;
@@ -1424,6 +1426,7 @@ export type UpdateEventInput = {
   price: InputMaybe<Scalars['Float']['input']>;
   shortDescription: InputMaybe<Scalars['String']['input']>;
   signupOpenDate: InputMaybe<Scalars['DateTime']['input']>;
+  slotsPerYear: InputMaybe<Array<Scalars['Int']['input']>>;
   startTime: InputMaybe<Scalars['DateTime']['input']>;
   title: InputMaybe<Scalars['String']['input']>;
 };

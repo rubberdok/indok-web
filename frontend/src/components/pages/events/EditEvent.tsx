@@ -39,6 +39,7 @@ export const EditEvent: React.FC<Props> = ({ id, onCompleted }) => {
           isAttendable: values.registration.variant !== "closed",
           bindingSignup: values.registration.variant === "binding",
           availableSlots: values.registration.details.availableSeats,
+          slotsPerYear: values.registration.details.slotsPerYear,
           hasExtraInformation: values.registration.details.requiresExtraInformation,
           signupOpenDate: dayjs(values.registration.details.signUpOpen).format("YYYY-MM-DDTHH:mm:ss"),
           deadline: dayjs(values.registration.details.deadline).format("YYYY-MM-DDTHH:mm:ss"),
@@ -78,6 +79,7 @@ export const EditEvent: React.FC<Props> = ({ id, onCompleted }) => {
         variant: registrationVariant,
         details: {
           availableSeats: event.availableSlots ?? 0,
+          slotsPerYear: event.slotsPerYear ?? [0, 0, 0, 0, 0],
           requiresExtraInformation: event.hasExtraInformation ?? false,
           signUpOpen: dayjs(event.signupOpenDate ?? new Date()).toDate(),
           deadline: dayjs(event.deadline ?? new Date()).toDate(),

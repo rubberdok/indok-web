@@ -1,5 +1,6 @@
 import { PeopleOutlineRounded } from "@mui/icons-material";
 import {
+  Box,
   Checkbox,
   Divider,
   FormControl,
@@ -18,10 +19,12 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IEventForm } from "../schema";
 
+import { sortBy } from "lodash";
 import { DateTimePicker } from "./DateTimePicker";
 
 export const Registration: React.FC = () => {
   const {
+    setValue,
     register,
     control,
     watch,
@@ -29,6 +32,13 @@ export const Registration: React.FC = () => {
   } = useFormContext<IEventForm>();
 
   const disabled = watch("registration.variant") === "closed";
+  const allowedGradeYears = watch("info.gradeYears");
+
+  [1, 2, 3, 4, 5].forEach((year) => {
+    if (!allowedGradeYears.includes(year)) {
+      setValue(`registration.details.slotsPerYear.${year - 1}`, 0);
+    }
+  });
 
   return (
     <Stack direction="column" spacing={2}>
@@ -73,7 +83,7 @@ export const Registration: React.FC = () => {
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
         <TextField
           fullWidth
-          label="Antall plasser"
+          label="Totalt antall plasser"
           {...register("registration.details.availableSeats")}
           type="number"
           disabled={disabled}
@@ -103,6 +113,28 @@ export const Registration: React.FC = () => {
           />
         </FormControl>
       </Stack>
+      <Typography variant="subtitle2">Plasser per klasse</Typography>
+      <Box component={"div"} sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+        {sortBy(allowedGradeYears.length === 0 ? [1, 2, 3, 4, 5] : allowedGradeYears).map((year) => (
+          <TextField
+            key={year}
+            fullWidth
+            label={`${year}. klasse plasser`}
+            {...register(`registration.details.slotsPerYear.${year - 1}`)}
+            type="number"
+            disabled={disabled}
+            error={Boolean(errors.registration?.details?.slotsPerYear)}
+            helperText={errors.registration?.details?.slotsPerYear?.message}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PeopleOutlineRounded />
+                </InputAdornment>
+              ),
+            }}
+          />
+        ))}
+      </Box>
     </Stack>
   );
 };

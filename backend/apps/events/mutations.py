@@ -1,14 +1,13 @@
 import graphene
-from graphene import NonNull
+from apps.organizations.models import Organization
+from apps.organizations.permissions import check_user_membership
+from decorators import login_required, permission_required, staff_member_required
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from decorators import login_required, staff_member_required, permission_required
-
-from apps.organizations.models import Organization
-from apps.organizations.permissions import check_user_membership
+from graphene import NonNull
 
 from .mail import EventEmail
 from .models import Category, Event, SignUp
@@ -27,6 +26,7 @@ class BaseEventInput:
     deadline = graphene.DateTime(required=False)
     signup_open_date = graphene.DateTime(required=False)
     available_slots = graphene.Int(required=False)
+    slots_per_year = graphene.List(NonNull(graphene.Int))
     price = graphene.Float(required=False)
     short_description = graphene.String(required=False)
     has_extra_information = graphene.Boolean(required=False)
@@ -37,11 +37,6 @@ class BaseEventInput:
 
 class CreateEventInput(BaseEventInput, graphene.InputObjectType):
     organization_id = graphene.ID(required=True)
-    grade1_tickets = graphene.Int(required=True)
-    grade2_tickets = graphene.Int(required=True)
-    grade3_tickets = graphene.Int(required=True)
-    grade4_tickets = graphene.Int(required=True)
-    grade5_tickets = graphene.Int(required=True)
 
 
 class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
@@ -50,11 +45,6 @@ class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
     start_time = graphene.DateTime(required=False)
     organization_id = graphene.ID(required=False)
     is_attendable = graphene.Boolean(required=False)
-    grade1_tickets = graphene.Int(required=False)
-    grade2_tickets = graphene.Int(required=False)
-    grade3_tickets = graphene.Int(required=False)
-    grade4_tickets = graphene.Int(required=False)
-    grade5_tickets = graphene.Int(required=False)
 
 
 class CreateEvent(graphene.Mutation):
@@ -177,6 +167,13 @@ class EventSignUp(graphene.Mutation):
                 "Kun studenter i følgende trinn kan melde seg på",
                 event.allowed_grade_years,
             )
+
+        if (
+            event.slots_per_year[user.grade_year - 1]
+            - SignUp.objects.filter(event_id=event_id, is_attending=True, user_grade_year=user.grade_year).count()
+            <= 0
+        ):
+            raise Exception("Det har gått tomt for plasser for årstrinnet ditt")
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
             raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")

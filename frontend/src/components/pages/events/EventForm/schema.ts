@@ -59,6 +59,7 @@ type RegistrationSchema = {
     signUpOpen: Date;
     deadline: Date;
     availableSeats: number | null;
+    slotsPerYear: number[] | null;
   };
 };
 
@@ -78,6 +79,12 @@ const registrationSchema: yup.ObjectSchema<RegistrationSchema> = yup.object({
         .required()
         .label("Sluttid"),
       availableSeats: yup.number().min(0).default(null).nullable().label("Antall plasser"),
+      slotsPerYear: yup
+        .array()
+        .of(yup.number().defined().required().min(0).default(0))
+        .defined()
+        .label("Plasser per klasse")
+        .default([0, 0, 0, 0, 0]),
     })
     .when("variant", {
       is: "closed",

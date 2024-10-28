@@ -109,6 +109,7 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
         registration: {
           variant: "closed",
           details: {
+            slotsPerYear: null,
             requiresExtraInformation: false,
             availableSeats: null,
             deadline: dayjs().add(1, "day").set("hour", 18).set("minute", 15).toDate(),

@@ -1,13 +1,12 @@
 from typing import List, Optional, TypedDict, Union
 
 import graphene
-from graphene import NonNull
-from graphene_django import DjangoObjectType
-from decorators import login_required, PermissionDenied
-
 from apps.ecommerce.models import Order, Product
 from apps.ecommerce.types import ProductType
 from apps.users.models import User
+from decorators import PermissionDenied, login_required
+from graphene import NonNull
+from graphene_django import DjangoObjectType
 
 from .models import Category, Event, SignUp
 
@@ -82,23 +81,14 @@ class EventType(DjangoObjectType):
     allowed_grade_years = graphene.List(NonNull(graphene.Int))
     available_slots = graphene.Int()
     product = graphene.Field(ProductType)
-    grade1_tickets = graphene.Int()
-    grade2_tickets = graphene.Int()
-    grade3_tickets = graphene.Int()
-    grade4_tickets = graphene.Int()
-    grade5_tickets = graphene.Int()
-
+    slots_per_year = graphene.List(NonNull(graphene.Int))
 
     class Meta:
         model = Event
         fields = [
             "id",
             "title",
-            "grade1_tickets",
-            "grade2_tickets",
-            "grade3_tickets",
-            "grade4_tickets",
-            "grade5_tickets",
+            "slots_per_year",
             "start_time",
             "end_time",
             "location",
@@ -132,26 +122,6 @@ class EventType(DjangoObjectType):
             return wrapper
 
     @staticmethod
-    def resolve_grade1_tickets(event, info):
-        return event.grade1_tickets
-
-    @staticmethod
-    def resolve_grade2_tickets(event, info):
-        return event.grade2_tickets
-
-    @staticmethod
-    def resolve_grade3_tickets(event, info):
-        return event.grade3_tickets
-
-    @staticmethod
-    def resolve_grade4_tickets(event, info):
-        return event.grade4_tickets
-
-    @staticmethod
-    def resolve_grade5_tickets(event, info):
-        return event.grade5_tickets
-
-    @staticmethod
     def resolve_user_attendance(event: Event, info) -> UserAttendance:
         user = info.context.user
         return {
@@ -164,6 +134,10 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_allowed_grade_years(event: Event, info) -> List[int]:
         return [int(grade) for grade in event.allowed_grade_years]
+
+    @staticmethod
+    def resolve_slots_per_year(event: Event, info):
+        return [int(slots) for slots in event.slots_per_year]
 
     @staticmethod
     @login_required

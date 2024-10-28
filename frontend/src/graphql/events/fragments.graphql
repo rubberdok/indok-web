@@ -81,6 +81,7 @@ fragment AdminEvent on EventType {
     dateJoined
   }
   availableSlots
+  slotsPerYear
   price
   shortDescription
   signupOpenDate

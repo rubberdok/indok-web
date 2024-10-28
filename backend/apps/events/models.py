@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING
+
+from apps.ecommerce.mixins import Sellable
+from apps.organizations.models import Organization
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from multiselectfield import MultiSelectField
 from phonenumber_field.modelfields import PhoneNumberField
-
-from apps.ecommerce.mixins import Sellable
-from apps.organizations.models import Organization
 
 if TYPE_CHECKING:
     from apps.users.models import User
@@ -30,12 +30,7 @@ class Event(models.Model, Sellable):
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
-    grade1_tickets = models.PositiveIntegerField(default=0)
-    grade2_tickets = models.PositiveIntegerField(default=0)
-    grade3_tickets = models.PositiveIntegerField(default=0)
-    grade4_tickets = models.PositiveIntegerField(default=0)
-    grade5_tickets = models.PositiveIntegerField(default=0)
-
+    slots_per_year = models.JSONField(default=list)  # 0 slots for all classes
 
     # ------------------ Fully optional fields ------------------
     publisher = models.ForeignKey(
@@ -106,18 +101,11 @@ class Event(models.Model, Sellable):
         return user in self.signed_up_users
 
     @property
-    def available_tickets(self, grade: int) -> int:
-        if grade == 1:
-            return self.grade1_tickets
-        elif grade == 2:
-            return self.grade2_tickets
-        elif grade == 3:
-            return self.grade3_tickets
-        elif grade == 4:
-            return self.grade4_tickets
-        elif grade == 5:
-            return self.grade5_tickets
-        return 0
+    def available_year_slots(self, grade: int) -> int:
+        try:
+            return self.slots_per_year[grade - 1]
+        except:
+            return 0
 
 
 class SignUp(models.Model):
