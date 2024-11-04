@@ -1,0 +1,5 @@
+mutation logTicTacToe($winner: String) {
+  logTicTacToe(winner: $winner) {
+    ok
+  }
+}

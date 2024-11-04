@@ -570,6 +570,12 @@ export type ListingType = {
   viewCount: Scalars['Int']['output'];
 };
 
+export type LogTicTacToeMutation = {
+  __typename?: 'LogTicTacToeMutation';
+  game: Maybe<TicTacToeType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type Logout = {
   __typename?: 'Logout';
   idToken: Maybe<Scalars['String']['output']>;
@@ -647,6 +653,7 @@ export type Mutations = {
    */
   eventSignUp: Maybe<EventSignUp>;
   initiateOrder: Maybe<InitiateOrder>;
+  logTicTacToe: Maybe<LogTicTacToeMutation>;
   logout: Maybe<Logout>;
   /** Sends email to the user or an admin (or both) */
   sendEmail: Maybe<SendEmail>;
@@ -850,6 +857,11 @@ export type MutationsInitiateOrderArgs = {
 };
 
 
+export type MutationsLogTicTacToeArgs = {
+  winner: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationsSendEmailArgs = {
   emailInput: InputMaybe<EmailInput>;
 };
@@ -1049,6 +1061,7 @@ export type Queries = {
   featuredArchive: Array<ArchiveDocumentType>;
   form: Maybe<FormType>;
   forms: Maybe<Array<FormType>>;
+  getWinnersList: Maybe<Array<Maybe<TicTacToeType>>>;
   hasPermission: Maybe<Scalars['Boolean']['output']>;
   listing: Maybe<ListingType>;
   listings: Maybe<Array<ListingType>>;
@@ -1498,6 +1511,13 @@ export type UserType = {
   /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars['String']['output'];
   yearUpdatedAt: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type TicTacToeType = {
+  __typename?: 'ticTacToeType';
+  gameResult: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  timestamp: Scalars['DateTime']['output'];
 };
 
 export type LoggedInUserQueryVariables = Exact<{ [key: string]: never; }>;

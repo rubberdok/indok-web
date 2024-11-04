@@ -11,6 +11,7 @@ from apps.permissions.schema import PermissionQueries
 from apps.users.schema import UserMutations, UserQueries
 from utils.graphql.schema import UtilQueries
 from apps.ecommerce.schema import EcommerceMutations, EcommerceQueries
+from apps.ticTacToe.schema import TicTacToeMutations, TicTacToeQueries
 
 
 class Queries(
@@ -25,6 +26,7 @@ class Queries(
     EcommerceQueries,
     BlogQueries,
     PermissionQueries,
+    TicTacToeQueries,
 ):
     pass
 
@@ -39,6 +41,7 @@ class Mutations(
     FormMutations,
     EcommerceMutations,
     BlogMutations,
+    TicTacToeMutations,
 ):
     pass
 

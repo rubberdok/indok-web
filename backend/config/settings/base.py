@@ -77,6 +77,7 @@ LOCAL_APPS = [
     "apps.permissions",
     "apps.ecommerce",
     "apps.integrationserver",
+    "apps.ticTacToe"
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

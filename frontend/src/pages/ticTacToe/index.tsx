@@ -5,6 +5,8 @@ import MoveHistory from "@/components/pages/ticTacToe/MoveHistory";
 import { NextPageWithLayout } from "@/lib/next";
 import { Box, Stack, Typography } from "@mui/material";
 import { useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { GetWinnersListDocument, LogTicTacToeDocument } from "@/generated/graphql";
 
 const TicTacToe: NextPageWithLayout = () => {
   const [winner, setWinner] = useState<string>("");
@@ -13,6 +15,10 @@ const TicTacToe: NextPageWithLayout = () => {
   const [history, setHistory] = useState<string[][]>([squares]);
   const [turn, setTurn] = useState<string>("X");
   const currentlyViewing = useRef(history.length - 1);
+
+  const [logTicTacToe] = useMutation(LogTicTacToeDocument);
+  const { data } = useQuery(GetWinnersListDocument);
+  console.log(data);
 
   function isGameOver(currentSquares: string[]) {
     const lines = [
@@ -30,10 +36,12 @@ const TicTacToe: NextPageWithLayout = () => {
       if (currentSquares[a] && currentSquares[a] === currentSquares[b] && currentSquares[a] === currentSquares[c]) {
         setWinner(currentSquares[a]);
         setGameOver(true);
+        logTicTacToe({ variables: { winner: currentSquares[a] } });
       }
     }
     if (currentSquares.every((currentSquares) => currentSquares !== "")) {
       setGameOver(true);
+      logTicTacToe({ variables: { winner: "Draw" } });
     }
   }
 
