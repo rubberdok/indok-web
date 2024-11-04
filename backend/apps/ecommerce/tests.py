@@ -301,6 +301,7 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     @patch("requests.get", side_effect=setup_mock_get())
     @patch("requests.post", side_effect=setup_mock_post())
     @patch("requests.put", side_effect=setup_mock_put())
+
     def test_authorized_user_initiate_order(self, *args, **kwargs) -> None:
         # Scenario 1: Requesting more than available is not allowed
         response = self.query(self.INITIATE_ORDER_MUTATION(self.total_quantity + 1), user=self.indok_user)
@@ -457,3 +458,85 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
         order = Order.objects.get(pk=order.id)
         self.assertTrue(order.delivered_product)
+
+
+class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
+    def setUp(self):
+        # Create a staff user using the StaffUserFactory
+        self.staff_user = StaffUserFactory(username='staffuser')
+
+        # Ensure the user satisfies the requirements for the new decorators
+        self.staff_user.is_staff = True  # Required for @staff_member_required
+        self.staff_user.is_superuser = True  # Required for @superuser_required if added
+        self.staff_user.save()
+
+        # Create a product with `shop_item=True` to pass the resolver's filter condition
+        self.product = ProductFactory(
+            name='Test Product',
+            price=decimal.Decimal('1000.00'),
+            description='A test product description',
+            max_buyable_quantity=2,
+            total_quantity=5,
+            shop_item=True  # Ensure this matches the resolver's filter condition
+        )
+
+        # Create multiple orders associated with the product and user
+        self.orders = [
+            OrderFactory(
+                product=self.product,
+                user=self.staff_user,
+                payment_status=Order.PaymentStatus.INITIATED,
+            )
+            for i in range(10)
+        ]
+
+    def test_paginated_shop_orders_with_fragment_and_product(self):
+        query = '''
+        query paginatedShopOrders($limit: Int, $offset: Int) {
+          paginatedShopOrders(limit: $limit, offset: $offset) {
+            ...Order
+          }
+        }
+
+        fragment Order on OrderType {
+          id
+          quantity
+          totalPrice
+          paymentStatus
+          timestamp
+          deliveredProduct
+          product {
+            ...Product
+          }
+        }
+
+        fragment Product on ProductType {
+          id
+          name
+          price
+          description
+          maxBuyableQuantity
+          shopItem
+        }
+        '''
+
+        # Execute the query using the query method from ExtendedGraphQLTestCase
+        response = self.query(query, variables={"limit": 5, "offset": 2}, user=self.staff_user)  # Use staff user
+        data = json.loads(response.content)
+
+        # Check if the response data matches expectations
+        self.assertIn('data', data)
+        self.assertIn('paginatedShopOrders', data['data'])
+        self.assertEqual(len(data['data']['paginatedShopOrders']), 5)
+
+        # Verify the structure of the nested product field in the first order
+        first_order = data['data']['paginatedShopOrders'][0]
+        self.assertIn('product', first_order)
+        self.assertEqual(first_order['product']['name'], 'Test Product')
+        self.assertEqual(first_order['product']['price'], '1000.00')  # Adjusted for consistency
+        self.assertTrue(first_order['product']['shopItem'])
+
+        # Additional checks for other fields
+        self.assertIn('quantity', first_order)
+        self.assertIn('paymentStatus', first_order)
+        self.assertIn('timestamp', first_order)

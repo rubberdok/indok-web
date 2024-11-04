@@ -38,6 +38,8 @@ class EcommerceResolvers:
     def resolve_all_user_orders(self, info):
         return Order.objects.all()
 
+    @login_required
+    @staff_member_required
     def resolve_paginated_shop_orders(self, info, limit, offset):
         # Apply pagination if limit and offset are provided
         orders = Order.objects.filter(product__shop_item=True).order_by(
@@ -52,6 +54,7 @@ class EcommerceResolvers:
             limit = 300
         orders = orders[:limit]
         return orders
+
 
     @staff_member_required
     def resolve_orders_by_status(self, info: "ResolveInfo", product_id, status):
