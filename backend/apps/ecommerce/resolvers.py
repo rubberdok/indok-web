@@ -55,7 +55,6 @@ class EcommerceResolvers:
         orders = orders[:limit]
         return orders
 
-
     @staff_member_required
     def resolve_orders_by_status(self, info: "ResolveInfo", product_id, status):
         orders = Order.objects.filter(product_id=product_id, payment_status=status)
