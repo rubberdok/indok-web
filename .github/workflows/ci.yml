@@ -104,7 +104,7 @@ jobs:
             APP_ENV=production
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.dockerfile }}
           path: /tmp/${{ env.dockerfile }}.tar
@@ -222,7 +222,7 @@ jobs:
             APP_ENV=test
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.dockerfile }}
           path: /tmp/${{ env.dockerfile }}.tar
