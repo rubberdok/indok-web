@@ -5,9 +5,11 @@ logo: /img/eivlogo.jpg
 image: /img/eivbilde.jpg
 board:
   ceo:
-    name: Johan Martin Emberland Johnsen
-    title: Sommelier
-
+    name: Olav Utle Kolltveit
+    title: Head of Red
+  cto:
+    name: Nora Vengstad Furøy
+    title: Head of Bread
 tag: kultur
 ---
 
@@ -20,4 +22,4 @@ Fagseksjonen for EiV legger grunnlaget for å gradere friskhet, sødme, fylde og
 ![Vin på Indøk!](/img/eivbilde.jpg)
 
 Ved spørsmål ta kontakt med styrets sommelierer:
-Phillip Kolkmeier, Erlend Heir, Haakon Døssland og Ane Sandvik Rognskaug
+Olav Utle Kolltveit og Nora Vengstad Furøy
