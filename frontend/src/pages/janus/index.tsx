@@ -15,7 +15,7 @@ import Nestleder from "~/public/img/JanusstyretsMedlemmer/Nestleder.jpg";
 import President from "~/public/img/JanusstyretsMedlemmer/President.jpg";
 import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpg";
 import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
-import Websjef from "~/public/img/JanusstyretsMedlemmer/Websjef.jpg";
+import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpg";
 const JanusPage: NextPageWithLayout = () => {
   const responsibles = [
     {
@@ -41,7 +41,7 @@ const JanusPage: NextPageWithLayout = () => {
       name: "Julie Pape Bjørseth",
       position: "Sosialsjef",
       color: red[500],
-      image: Websjef,
+      image: Sosialsjef,
       phonenumber: "tlf: 415 68 433",
       email: "web@janus.org.ntnu.no",
     },
