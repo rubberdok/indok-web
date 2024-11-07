@@ -20,7 +20,7 @@ const JanusPage: NextPageWithLayout = () => {
   const responsibles = [
     {
       id: 1,
-      name: "Jenny Wæraas Temmerud",
+      name: "Thomas Kallasten Pedersen",
       position: "President",
       color: red[800],
       image: President,
@@ -29,7 +29,7 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 2,
-      name: "Philip Thomas Jenkins",
+      name: "Oscar Tegneby",
       position: "Økonomisjef/Nestleder",
       color: red[500],
       image: Nestleder,
@@ -38,8 +38,8 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 3,
-      name: "Mina Lindebø Myrstøl",
-      position: "Websjef",
+      name: "Julie Pape Bjørseth",
+      position: "Sosialsjef",
       color: red[500],
       image: Websjef,
       phonenumber: "tlf: 477 17 089",
@@ -47,7 +47,7 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 4,
-      name: "Camilla Toftum Hop",
+      name: "Arthur Brunborg",
       position: "Janu;Script-Redaktør",
       color: red[500],
       image: JanusScriptRedaktør,
@@ -56,7 +56,7 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 5,
-      name: "Elise Flovikholm",
+      name: "Simen Øvreås",
       position: "Hyttetursjef",
       color: red[500],
       image: Hyttetursjef,
@@ -65,7 +65,7 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 6,
-      name: "Silje Holm Johannesen",
+      name: "Herman Husebø",
       position: "Kjellersjef",
       color: red[500],
       image: Kjellersjef,
@@ -74,7 +74,7 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 7,
-      name: "Thomas Kallasten Pedersen",
+      name: "Kristina Lie",
       position: "Festsjef",
       color: red[500],
       image: Festsjef,
@@ -83,7 +83,7 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 8,
-      name: "Eva Marie Melbø",
+      name: "Brage Olsen Lind",
       position: "Eventsjef",
       color: red[500],
       image: Eventsjef,
@@ -92,7 +92,7 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 9,
-      name: "Minda Harms",
+      name: "Ida Grytaas Forsmo",
       position: "PR-sjef",
       color: red[500],
       image: PRsjef,
@@ -101,8 +101,17 @@ const JanusPage: NextPageWithLayout = () => {
     },
     {
       id: 10,
-      name: "Magnus Johansen Moldekleiv",
+      name: "Hedda Kvåle",
       position: "Sekretær",
+      color: red[500],
+      image: Sekretær,
+      phonenumber: "tlf: 928 17 970",
+      email: "sekretaer@janus.org.ntnu.no",
+    },
+    {
+      id: 11,
+      name: "Meimei Husemoen",
+      position: "Faddersjef",
       color: red[500],
       image: Sekretær,
       phonenumber: "tlf: 928 17 970",
