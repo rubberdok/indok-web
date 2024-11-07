@@ -14,6 +14,7 @@ import Kjellersjef from "~/public/img/JanusstyretsMedlemmer/Kjellersjef.jpg";
 import Nestleder from "~/public/img/JanusstyretsMedlemmer/Nestleder.jpg";
 import President from "~/public/img/JanusstyretsMedlemmer/President.jpg";
 import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpg";
+import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
 import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
 import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpg";
 const JanusPage: NextPageWithLayout = () => {
@@ -33,7 +34,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Økonomisjef/Nestleder",
       color: red[500],
       image: Nestleder,
-      phonenumber: "955 52 393",
+      phonenumber: "tlf: 404 83 638",
       email: "okonomi@janus.org.ntnu.no",
     },
     {
@@ -113,7 +114,7 @@ const JanusPage: NextPageWithLayout = () => {
       name: "Meimei Husemoen",
       position: "Faddersjef",
       color: red[500],
-      image: Sekretær,
+      image: Faddersjef,
       phonenumber: "tlf: 481 89 468",
       email: "sekretaer@janus.org.ntnu.no",
     },
