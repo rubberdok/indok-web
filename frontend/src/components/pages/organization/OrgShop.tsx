@@ -13,7 +13,7 @@ type Props = {
 };
 export const OrgProducts: React.FC<Props> = ({ organization }) => {
   const theme = useTheme();
-  const limit = 100;
+  const limit = 5;
   const [page, setPage] = useState(0);
 
   const handlePageChange = (newValue: number) => {
