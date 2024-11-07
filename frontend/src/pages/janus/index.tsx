@@ -24,7 +24,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "President",
       color: red[800],
       image: President,
-      phonenumber: "tlf: 41388 670",
+      phonenumber: "tlf: 472 73 906",
       email: "president@janus.org.ntnu.no",
     },
     {
@@ -42,7 +42,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Sosialsjef",
       color: red[500],
       image: Websjef,
-      phonenumber: "tlf: 477 17 089",
+      phonenumber: "tlf: 415 68 433",
       email: "web@janus.org.ntnu.no",
     },
     {
@@ -51,7 +51,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Janu;Script-Redaktør",
       color: red[500],
       image: JanusScriptRedaktør,
-      phonenumber: "tlf: 477 09 820",
+      phonenumber: "tlf: 923 45 672",
       email: "jsredaktor@janus.org.ntnu.no",
     },
     {
@@ -60,7 +60,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Hyttetursjef",
       color: red[500],
       image: Hyttetursjef,
-      phonenumber: "tlf: 413 40 153",
+      phonenumber: "tlf: 904 11 446",
       email: "hyttetursjef@janus.org.ntnu.no",
     },
     {
@@ -69,7 +69,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Kjellersjef",
       color: red[500],
       image: Kjellersjef,
-      phonenumber: "tlf: 974 27 813",
+      phonenumber: "tlf: 480 91 961",
       email: "kjellersjef@janus.org.ntnu.no",
     },
     {
@@ -78,7 +78,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Festsjef",
       color: red[500],
       image: Festsjef,
-      phonenumber: "tlf: 472 73 906",
+      phonenumber: "tlf: 959 66 786",
       email: "fest@janus.org.ntnu.no",
     },
     {
@@ -87,7 +87,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Eventsjef",
       color: red[500],
       image: Eventsjef,
-      phonenumber: "tlf: 960 43 668",
+      phonenumber: "tlf: 482 72 575",
       email: "event@janus.org.ntnu.no",
     },
     {
@@ -96,7 +96,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "PR-sjef",
       color: red[500],
       image: PRsjef,
-      phonenumber: "tlf: 407 61 475",
+      phonenumber: "tlf: 954 57 680",
       email: "pr@janus.org.ntnu.no",
     },
     {
@@ -105,7 +105,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Sekretær",
       color: red[500],
       image: Sekretær,
-      phonenumber: "tlf: 928 17 970",
+      phonenumber: "tlf: 942 59 253",
       email: "sekretaer@janus.org.ntnu.no",
     },
     {
@@ -114,7 +114,7 @@ const JanusPage: NextPageWithLayout = () => {
       position: "Faddersjef",
       color: red[500],
       image: Sekretær,
-      phonenumber: "tlf: 928 17 970",
+      phonenumber: "tlf: 481 89 468",
       email: "sekretaer@janus.org.ntnu.no",
     },
   ];
