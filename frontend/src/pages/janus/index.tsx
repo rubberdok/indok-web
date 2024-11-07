@@ -14,7 +14,7 @@ import Kjellersjef from "~/public/img/JanusstyretsMedlemmer/Kjellersjef.jpg";
 import Nestleder from "~/public/img/JanusstyretsMedlemmer/Nestleder.jpg";
 import President from "~/public/img/JanusstyretsMedlemmer/President.jpg";
 import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpg";
-import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
+import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Faddersjef.jpg";
 import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
 import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpg";
 const JanusPage: NextPageWithLayout = () => {
