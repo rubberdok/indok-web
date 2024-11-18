@@ -112,17 +112,17 @@ export const CabinInfoPicker: React.FC = () => {
         values={cabins}
         defaultValues={{
           oksen: {
-            internalPrice: 1100,
+            internalPrice: 500,
             internalPriceWeekend: 1100,
-            externalPrice: 3950,
-            externalPriceWeekend: 5400,
+            externalPrice: 2000,
+            externalPriceWeekend: 3000,
             maxGuests: 18,
           },
           bjornen: {
-            internalPrice: 1100,
+            internalPrice: 500,
             internalPriceWeekend: 1100,
-            externalPrice: 3950,
-            externalPriceWeekend: 5400,
+            externalPrice: 2000,
+            externalPriceWeekend: 3000,
             maxGuests: 18,
           },
         }}
