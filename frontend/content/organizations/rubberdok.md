@@ -5,14 +5,14 @@ logo: /img/rubberdok_logo_black.svg
 image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 board:
-  cto:
-    name: Magnus Hafstad
-    title: Prosjektleder
-    mail: magnus.hafstad@rubberdok.no
   ceo:
     name: Hannah Köberle
     title: Prosjektleder
-    mail: hannah.koeberle@rubberdok.no
+    mail: leder@rubberdok.no
+  cto:
+    name: Oda Fu Zhe Runde
+    title: Prosjektleder
+    mail: leder@rubberdok.no
 tag: annet
 ---
 
