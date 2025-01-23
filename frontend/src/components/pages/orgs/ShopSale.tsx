@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/client";
 import { Check, Clear } from "@mui/icons-material";
 import { Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
-
+import { useTheme } from "@mui/material/styles";
 import { DeliveredProductDocument } from "@/generated/graphql";
 
 type Props = {
@@ -15,15 +15,17 @@ type Props = {
 };
 
 export const ShopSale: React.FC<Props> = ({ name, product_name, quantity, has_paid, is_delivered, order_id }) => {
+  const theme = useTheme();
   const [delivered, setdelivered] = useState(is_delivered);
   const [deliverProduct] = useMutation(DeliveredProductDocument);
+
 
   function handle_click(bool: boolean) {
     setdelivered(bool);
     deliverProduct({ variables: { orderId: order_id } });
   }
   return (
-    <Stack direction={"row"} padding={1} spacing={0}>
+    <Stack direction={"row"} padding={1} spacing={0} sx={{color: theme.palette.text.primary}}>
       <Box display="flex" alignItems="left" justifyContent="left" width={"25%"} padding={1}>
         <Typography variant="body1">{name}</Typography>
       </Box>
