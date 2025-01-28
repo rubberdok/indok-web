@@ -23,7 +23,7 @@
     "url": "github.com/rubberdok/indok-web"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.8",
+    "@apollo/client": "^3.12.8",
     "@apollo/experimental-nextjs-app-support": "^0.4.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
