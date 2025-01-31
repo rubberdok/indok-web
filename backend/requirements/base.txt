@@ -23,6 +23,6 @@ psycopg2-binary==2.9.9
 PyJWT==2.8.0
 PyYAML==6.0.1
 typing-extensions==4.11.0
-WeasyPrint==62.2
+WeasyPrint==64.0
 whitenoise==6.7.0
 XlsxWriter==3.1.7
