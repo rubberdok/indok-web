@@ -59,6 +59,7 @@ export const CreateEvent: React.FC<Props> = ({ organizations }) => {
                 deadline: data.registration.details.deadline?.toISOString(),
                 availableSlots: data.registration.details.availableSeats,
                 slotsPerYear: data.registration.details.slotsPerYear,
+                isYearDivided: data.registration.details.isYearDivided,
                 hasExtraInformation: data.registration.details.requiresExtraInformation,
               }
             : {}),

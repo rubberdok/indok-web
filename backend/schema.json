@@ -2996,26 +2996,6 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "slotsPerYear",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
               "description": "",
               "isDeprecated": false,
               "name": "publisher",
@@ -3106,6 +3086,22 @@
               "deprecationReason": null,
               "description": "",
               "isDeprecated": false,
+              "name": "isYearDivided",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "",
+              "isDeprecated": false,
               "name": "contactEmail",
               "type": {
                 "kind": "NON_NULL",
@@ -3114,6 +3110,26 @@
                   "kind": "SCALAR",
                   "name": "String",
                   "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "slotsPerYear",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
                 }
               }
             },
@@ -9684,6 +9700,16 @@
             {
               "defaultValue": null,
               "description": null,
+              "name": "isYearDivided",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
               "name": "price",
               "type": {
                 "kind": "SCALAR",
@@ -9935,6 +9961,16 @@
                     "ofType": null
                   }
                 }
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "isYearDivided",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
               }
             },
             {

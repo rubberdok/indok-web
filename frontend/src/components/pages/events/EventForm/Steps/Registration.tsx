@@ -33,6 +33,7 @@ export const Registration: React.FC = () => {
 
   const disabled = watch("registration.variant") === "closed";
   const allowedGradeYears = watch("info.gradeYears");
+  const isYearDivided = watch("registration.details.isYearDivided");
 
   [1, 2, 3, 4, 5].forEach((year) => {
     if (!allowedGradeYears.includes(year)) {
@@ -99,6 +100,23 @@ export const Registration: React.FC = () => {
         />
         <FormControl fullWidth disabled={disabled}>
           <Controller
+            name="registration.details.isYearDivided"
+            control={control}
+            render={({ field }) => (
+              <>
+                <FormControlLabel
+                  label="Klassefordelte plasser"
+                  control={<Checkbox {...field} checked={field.value} />}
+                />
+                <FormHelperText error={Boolean(errors.registration?.details?.isYearDivided)}>
+                  {errors.registration?.details?.isYearDivided?.message || "Velg antall plasser per klasse"}
+                </FormHelperText>
+              </>
+            )}
+          />
+        </FormControl>
+        <FormControl fullWidth disabled={disabled}>
+          <Controller
             name="registration.details.requiresExtraInformation"
             control={control}
             render={({ field }) => (
@@ -122,7 +140,7 @@ export const Registration: React.FC = () => {
             label={`${year}. klasse plasser`}
             {...register(`registration.details.slotsPerYear.${year - 1}`)}
             type="number"
-            disabled={disabled}
+            disabled={disabled || !isYearDivided}
             error={Boolean(errors.registration?.details?.slotsPerYear)}
             helperText={errors.registration?.details?.slotsPerYear?.message}
             InputProps={{

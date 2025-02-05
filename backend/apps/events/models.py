@@ -30,7 +30,6 @@ class Event(models.Model, Sellable):
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
-    slots_per_year = models.JSONField(default=list)  # 0 slots for all classes
 
     # ------------------ Fully optional fields ------------------
     publisher = models.ForeignKey(
@@ -44,9 +43,13 @@ class Event(models.Model, Sellable):
     image = models.URLField(blank=True, null=True)
     short_description = models.CharField(max_length=100, blank=True, null=True)
     has_extra_information = models.BooleanField(default=False)
+    is_year_divided = models.BooleanField(default=False)
     contact_email = models.EmailField(blank=True, default="")
     GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
     allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default=[1, 2, 3, 4, 5])
+
+    # --------------- Required fields given is_year_divided == True ---------------
+    slots_per_year = models.JSONField(default=list)  # 0 slots for all classes
 
     # --------------- Required fields given is_attendable == True ---------------
     signup_open_date = models.DateTimeField(blank=True, null=True)  # When the signup should become available
@@ -100,7 +103,6 @@ class Event(models.Model, Sellable):
     def is_user_allowed_to_buy_product(self, user) -> bool:
         return user in self.signed_up_users
 
-    @property
     def available_year_slots(self, grade: int) -> int:
         try:
             return self.slots_per_year[grade - 1]

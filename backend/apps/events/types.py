@@ -89,6 +89,7 @@ class EventType(DjangoObjectType):
             "id",
             "title",
             "slots_per_year",
+            "is_year_divided",
             "start_time",
             "end_time",
             "location",

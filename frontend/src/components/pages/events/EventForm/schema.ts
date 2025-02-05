@@ -60,6 +60,7 @@ type RegistrationSchema = {
     deadline: Date;
     availableSeats: number | null;
     slotsPerYear: number[] | null;
+    isYearDivided: boolean;
   };
 };
 
@@ -85,6 +86,7 @@ const registrationSchema: yup.ObjectSchema<RegistrationSchema> = yup.object({
         .defined()
         .label("Plasser per klasse")
         .default([0, 0, 0, 0, 0]),
+      isYearDivided: yup.boolean().default(false).label("Klassefordelte plasser").required(),
     })
     .when("variant", {
       is: "closed",

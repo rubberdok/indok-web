@@ -27,6 +27,7 @@ class BaseEventInput:
     signup_open_date = graphene.DateTime(required=False)
     available_slots = graphene.Int(required=False)
     slots_per_year = graphene.List(NonNull(graphene.Int))
+    is_year_divided = graphene.Boolean(required=False)
     price = graphene.Float(required=False)
     short_description = graphene.String(required=False)
     has_extra_information = graphene.Boolean(required=False)
@@ -169,7 +170,7 @@ class EventSignUp(graphene.Mutation):
             )
 
         if (
-            event.slots_per_year[user.grade_year - 1]
+            event.available_year_slots(user.grade_year)
             - SignUp.objects.filter(event_id=event_id, is_attending=True, user_grade_year=user.grade_year).count()
             <= 0
         ):

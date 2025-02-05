@@ -283,6 +283,7 @@ export type CreateEventInput = {
   hasExtraInformation: InputMaybe<Scalars['Boolean']['input']>;
   image: InputMaybe<Scalars['String']['input']>;
   isAttendable: Scalars['Boolean']['input'];
+  isYearDivided: InputMaybe<Scalars['Boolean']['input']>;
   location: InputMaybe<Scalars['String']['input']>;
   organizationId: Scalars['ID']['input'];
   price: InputMaybe<Scalars['Float']['input']>;
@@ -501,6 +502,7 @@ export type EventType = {
   image: Maybe<Scalars['String']['output']>;
   isAttendable: Scalars['Boolean']['output'];
   isFull: Maybe<Scalars['Boolean']['output']>;
+  isYearDivided: Scalars['Boolean']['output'];
   location: Maybe<Scalars['String']['output']>;
   organization: OrganizationType;
   price: Maybe<Scalars['Float']['output']>;
@@ -1421,6 +1423,7 @@ export type UpdateEventInput = {
   hasExtraInformation: InputMaybe<Scalars['Boolean']['input']>;
   image: InputMaybe<Scalars['String']['input']>;
   isAttendable: InputMaybe<Scalars['Boolean']['input']>;
+  isYearDivided: InputMaybe<Scalars['Boolean']['input']>;
   location: InputMaybe<Scalars['String']['input']>;
   organizationId: InputMaybe<Scalars['ID']['input']>;
   price: InputMaybe<Scalars['Float']['input']>;
