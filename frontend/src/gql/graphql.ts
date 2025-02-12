@@ -1034,7 +1034,6 @@ export type Queries = {
   allCategories: Maybe<Array<CategoryType>>;
   allEvents: Maybe<Array<EventType>>;
   allOrganizations: Maybe<Array<OrganizationType>>;
-  allShopOrders: Maybe<Array<OrderType>>;
   allUserOrders: Maybe<Array<OrderType>>;
   allUsers: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
@@ -1061,6 +1060,7 @@ export type Queries = {
   order: Maybe<OrderType>;
   ordersByStatus: Maybe<OrdersByStatusType>;
   organization: Maybe<OrganizationType>;
+  paginatedShopOrders: Maybe<Array<OrderType>>;
   product: Maybe<ProductType>;
   products: Maybe<Array<ProductType>>;
   response: Maybe<ResponseType>;
@@ -1178,6 +1178,12 @@ export type QueriesOrdersByStatusArgs = {
 export type QueriesOrganizationArgs = {
   id: InputMaybe<Scalars['ID']['input']>;
   slug: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesPaginatedShopOrdersArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
 };
 
 
