@@ -24,6 +24,7 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.event = EventFactory(
             is_attendable=True,
             available_slots=1,
+            is_year_divided=False,
             binding_signup=False,
             signup_open_date=timezone.now() - timedelta(days=1),
         )

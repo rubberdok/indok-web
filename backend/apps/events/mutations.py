@@ -170,7 +170,8 @@ class EventSignUp(graphene.Mutation):
             )
 
         if (
-            event.available_year_slots(user.grade_year)
+            event.is_year_divided
+            and event.available_year_slots(user.grade_year)
             - SignUp.objects.filter(event_id=event_id, is_attending=True, user_grade_year=user.grade_year).count()
             <= 0
         ):
