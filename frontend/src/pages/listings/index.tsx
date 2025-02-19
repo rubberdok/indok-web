@@ -16,10 +16,10 @@ const ListingsPage: NextPageWithLayout = () => {
   return (
     <>
       <Title
-        title="Verv"
+        title="Ledige vervstillinger"
         breadcrumbs={[
           { name: "Hjem", href: "/" },
-          { name: "Verv", href: "/listings" },
+          { name: "Ledige vervstillinger", href: "/listings" },
         ]}
       />
       <Container>
