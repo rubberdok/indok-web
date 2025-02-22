@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Tune } from "@mui/icons-material";
-import { Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components";
@@ -104,7 +104,7 @@ export const AllEvents: React.FC = () => {
   });
 
   return (
-    <Grid container direction="row" spacing={2}>
+    <Grid container direction="row" spacing={4}>
       <PermissionRequired permission="events.add_event">
         <Grid xs={12}>
           <ManageEvents />
@@ -112,7 +112,7 @@ export const AllEvents: React.FC = () => {
       </PermissionRequired>
       <Grid xs display={{ xs: "block", md: "none" }}>
         <Button
-          variant="outlined"
+          variant="contained"
           color="secondary"
           fullWidth
           startIcon={<Tune />}
@@ -121,22 +121,17 @@ export const AllEvents: React.FC = () => {
           Filter
         </Button>
         <Drawer anchor="left" open={openFilterDrawer} onClose={() => setOpenFilterDrawer(false)}>
-          <FilterMenu
-            filters={filters}
-            onFiltersChange={handleFilterChange}
-            showDefaultEvents={showDefaultEvents}
-            onShowDefaultChange={setShowDefaultEvents}
-          />
+          <Box py={2} px={3}>
+            <FilterMenu
+              filters={filters}
+              onFiltersChange={handleFilterChange}
+              showDefaultEvents={showDefaultEvents}
+              onShowDefaultChange={setShowDefaultEvents}
+            />
+          </Box>
         </Drawer>
       </Grid>
-      <Grid display={{ xs: "none", md: "block" }} md={3}>
-        <FilterMenu
-          filters={filters}
-          onFiltersChange={handleFilterChange}
-          showDefaultEvents={showDefaultEvents}
-          onShowDefaultChange={setShowDefaultEvents}
-        />
-      </Grid>
+
       <Grid xs={12} md={9}>
         <Stack direction="column" spacing={4}>
           {loading && <EventSkeleton />}
@@ -176,6 +171,14 @@ export const AllEvents: React.FC = () => {
             </Stack>
           )}
         </Stack>
+      </Grid>
+      <Grid display={{ xs: "none", md: "block" }} md={3}>
+        <FilterMenu
+          filters={filters}
+          onFiltersChange={handleFilterChange}
+          showDefaultEvents={showDefaultEvents}
+          onShowDefaultChange={setShowDefaultEvents}
+        />
       </Grid>
     </Grid>
   );

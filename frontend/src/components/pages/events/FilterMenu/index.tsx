@@ -1,5 +1,5 @@
 import { Refresh, StarOutlineRounded, StarRounded } from "@mui/icons-material";
-import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import React from "react";
 
 import { FilterQuery } from "../AllEvents";
@@ -30,56 +30,54 @@ export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefa
     }
   };
   return (
-    <Card>
-      <CardContent>
-        <Grid container direction="column" spacing={3}>
-          <Grid container item direction="row" justifyContent="space-between" alignItems="center">
-            <Grid item>
-              <Typography variant="subtitle1">Filter</Typography>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Nullstill filter" arrow>
-                <IconButton onClick={() => onFiltersChange({})} aria-label="delete">
-                  <Refresh />
-                </IconButton>
-              </Tooltip>
-            </Grid>
+    <Box>
+      <Grid container direction="column" spacing={2}>
+        <Grid container item direction="row" justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography variant="subtitle1">Filter</Typography>
           </Grid>
           <Grid item>
-            <Divider />
-          </Grid>
-          <Grid container item direction="row" justifyContent="space-between" alignItems="center">
-            <Grid item>
-              <Typography variant="body1">Fremhevet</Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => onShowDefaultChange(!showDefaultEvents)} aria-label="delete">
-                {showDefaultEvents ? <StarRounded color="warning" /> : <StarOutlineRounded />}
+            <Tooltip title="Nullstill filter" arrow>
+              <IconButton onClick={() => onFiltersChange({})} aria-label="delete">
+                <Refresh />
               </IconButton>
-            </Grid>
+            </Tooltip>
           </Grid>
-          <Grid item>
-            <Divider />
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle2">Arrangør</Typography>
-          </Grid>
-          <OrganizationFilter filters={filters} handleChecked={handleChecked} />
-
-          <Grid item>
-            <Divider />
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle2">Kategori</Typography>
-          </Grid>
-          <CategoryFilter filters={filters} handleChecked={handleChecked} />
-
-          <Grid item>
-            <Divider />
-          </Grid>
-          <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
         </Grid>
-      </CardContent>
-    </Card>
+        <Grid item>
+          <Divider />
+        </Grid>
+        <Grid container item direction="row" justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography variant="body1">Fremhevet</Typography>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={() => onShowDefaultChange(!showDefaultEvents)} aria-label="delete">
+              {showDefaultEvents ? <StarRounded color="warning" /> : <StarOutlineRounded />}
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Divider />
+        </Grid>
+        <Grid item>
+          <Typography variant="subtitle2">Arrangør</Typography>
+        </Grid>
+        <OrganizationFilter filters={filters} handleChecked={handleChecked} />
+
+        <Grid item>
+          <Divider />
+        </Grid>
+        <Grid item>
+          <Typography variant="subtitle2">Kategori</Typography>
+        </Grid>
+        <CategoryFilter filters={filters} handleChecked={handleChecked} />
+
+        <Grid item>
+          <Divider />
+        </Grid>
+        <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
+      </Grid>
+    </Box>
   );
 };
