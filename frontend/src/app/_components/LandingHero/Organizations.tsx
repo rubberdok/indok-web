@@ -1,12 +1,12 @@
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
-import { FreeMode, Navigation } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel, Navigation } from "swiper";
 import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import { OrganizationLink, Organization } from "./OrganizationLink";
+import { ArrowLeft, ArrowRight } from "@mui/icons-material";
+import { Organization, OrganizationLink } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
   { name: "Janus", internalUrl: "/janus/info" },
@@ -55,28 +55,38 @@ type Props = {
   onActiveIndexChange: (index: number) => void;
 };
 
-export const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
+const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
   return (
     <>
-      <ArrowStyle className="arrow left" aria-label="Forrige">
-        <ArrowBack />
+      <ArrowStyle className="arrow left">
+        <ArrowLeft />
       </ArrowStyle>
       <Box
-        sx={{ "& .swiper-slide": { my: "auto" }, "& .swiper": { overflow: "visible" } }}
+        sx={{
+          "& .swiper-slide": { my: "auto" },
+          "& .swiper": { overflow: "visible" },
+          overscrollBehavior: "none",
+        }}
         position="absolute"
         right={0}
         width={`calc(100vw - ${offsetX}px)`}
       >
         <Swiper
-          modules={[Navigation, FreeMode]}
+          modules={[Navigation, FreeMode, Mousewheel]}
           onActiveIndexChange={(swiper) => onActiveIndexChange(swiper.activeIndex)}
           navigation={{ nextEl: ".arrow.right", prevEl: ".arrow.left" }}
           spaceBetween={16}
+          mousewheel={{
+            forceToAxis: true,
+          }}
           slidesPerView={0.8}
           freeMode={{
             enabled: true,
-            momentumRatio: 0.5,
-            momentumVelocityRatio: 0.5,
+            momentum: true,
+            momentumRatio: 0.25,
+            momentumVelocityRatio: 0.25,
+            minimumVelocity: 0.05,
+            momentumBounce: false,
           }}
           breakpoints={{
             930: {
@@ -98,16 +108,18 @@ export const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange })
           ))}
           <SwiperSlide>
             <Link passHref href="/about/organization">
-              <Button color="primary" variant="contained" size="large" endIcon={<ArrowForward />}>
+              <Button color="secondary" variant="contained" size="large" endIcon={<ArrowRight />}>
                 Alle organisasjoner
               </Button>
             </Link>
           </SwiperSlide>
         </Swiper>
       </Box>
-      <ArrowStyle className="arrow right" aria-label="Neste">
-        <ArrowForward />
+      <ArrowStyle className="arrow right">
+        <ArrowRight />
       </ArrowStyle>
     </>
   );
 };
+
+export default Organizations;

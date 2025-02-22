@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Link } from "@/app/components/Link";
 import Hero from "~/public/static/landing/hero.webp";
 
-import { OrganizationsSlider } from "./OrganizationsSlider";
+import OrganizationsSlider from "./OrganizationsSlider";
 
 export const LandingHero: React.FC = () => {
   return (

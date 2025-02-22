@@ -1,78 +1,67 @@
 "use client";
 
-import { ArrowForward } from "@mui/icons-material";
-import { Button, Container, NoSsr, Stack, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import Organizations from "./Organizations";
 
-// Import Swiper styles
-import "swiper/css";
+const OrganizationsSlider: React.FC = () => {
+  const orgsTitleEl = useRef<HTMLElement>();
 
-import { Link } from "@/app/components/Link";
+  const [sliderActiveIndex, setSliderActiveIndex] = useState(0);
+  const [sliderOffsetX, setSliderOffsetX] = useState(0);
 
-import { Organization, OrganizationLink } from "./OrganizationLink";
+  const onActiveIndexChange = (index: number) => {
+    setSliderActiveIndex(index);
+  };
 
-const organizations: Readonly<Organization[]> = [
-  { name: "Janus Sosial", internalUrl: "/janus" },
-  { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
-  { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
-  { name: "Janus Kultur", internalUrl: "/about/organization?category=kultur" },
-  { name: "Rubberdøk", internalUrl: "/about/organizations/rubberdok" },
-  { name: "Janushyttene", internalUrl: "/about/organizations/Janushyttene" },
-  { name: "Janus IF", internalUrl: "/about/organization?category=idrett" },
-] as const;
+  const updateSliderOffset = () => {
+    if (orgsTitleEl.current) {
+      setSliderOffsetX(orgsTitleEl.current.offsetWidth + orgsTitleEl.current.offsetLeft);
+    }
+  };
 
-export const OrganizationsSlider: React.FC = () => {
-  const theme = useTheme();
+  useEffect(() => {
+    updateSliderOffset();
+    window.addEventListener("resize", updateSliderOffset);
+    return () => {
+      window.removeEventListener("resize", updateSliderOffset);
+    };
+  }, []);
 
   return (
-    <Container maxWidth={false} disableGutters sx={{ bgcolor: "background.elevated" }}>
+    <Box
+      sx={{
+        width: "100%",
+        py: { xs: 4, md: 6 },
+        px: 1,
+        bgcolor: "background.elevated",
+        borderTop: "1px solid",
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        overflow: "hidden",
+        position: "relative",
+        overscrollBehavior: "none",
+      }}
+    >
       <Container>
-        <Stack
-          direction="row"
-          sx={{
-            "& .swiper-slide": {
-              width: "min-content",
-              display: "flex",
-              alignItems: "center",
-            },
-            minHeight: `calc(2rem + ${theme.spacing(15)})`,
-          }}
-        >
-          <NoSsr>
-            <Swiper cssMode spaceBetween={parseInt(theme.spacing(4))} slidesPerView="auto" direction="horizontal">
-              <SwiperSlide>
-                <Typography variant="h4" component="h2">
-                  Våre
-                  <br />
-                  foreninger
-                </Typography>
-              </SwiperSlide>
-              {organizations.map((org) => (
-                <SwiperSlide key={org.name} style={{ padding: theme.spacing(4, 0) }}>
-                  <OrganizationLink organization={org} />
-                </SwiperSlide>
-              ))}
-              <SwiperSlide>
-                <Button
-                  component={Link}
-                  noLinkStyle
-                  href="/about/organization"
-                  color="secondary"
-                  variant="contained"
-                  size="large"
-                  endIcon={<ArrowForward />}
-                >
-                  <Typography variant="inherit" noWrap>
-                    Alle organisasjoner
-                  </Typography>
-                </Button>
-              </SwiperSlide>
-            </Swiper>
-          </NoSsr>
+        <Stack direction="row" minWidth="max-content" alignItems="center">
+          <Box ref={orgsTitleEl}>
+            <Typography
+              variant="h4"
+              sx={{
+                opacity: sliderActiveIndex == 0 ? 1 : 0,
+                transition: (theme) => theme.transitions.create("opacity"),
+              }}
+            >
+              Våre <br />
+              Foreninger
+            </Typography>
+          </Box>
+          <Organizations onActiveIndexChange={onActiveIndexChange} offsetX={sliderOffsetX + 48} />
         </Stack>
       </Container>
-    </Container>
+    </Box>
   );
 };
+
+export default OrganizationsSlider;
