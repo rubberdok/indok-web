@@ -28,7 +28,7 @@ export const LandingHero: React.FC = () => {
             gridTemplateColumns: "repeat(12, 1fr)",
           }}
         >
-          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} display="flex" justifyContent="center">
+          <Box gridColumn={{ md: "auto", xs: "1 / -1" }} display="flex" justifyContent="center">
             <Grid
               container
               direction="column"
@@ -49,7 +49,7 @@ export const LandingHero: React.FC = () => {
                 </Typography>
               </Grid>
               <Grid>
-                <Typography variant="h1" textAlign={{ xs: "center", md: "left" }}>
+                <Typography variant="h1" textAlign={{ xs: "center", md: "left" }} letterSpacing={"-0.02em"}>
                   Industriell Økonomi & Teknologiledelse
                 </Typography>
               </Grid>
