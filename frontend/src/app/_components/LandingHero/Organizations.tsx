@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
@@ -5,7 +6,6 @@ import { FreeMode, Mousewheel, Navigation } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Organization, OrganizationLink } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [

@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Fade, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+
 import Organizations from "./Organizations";
 
 const OrganizationsSlider: React.FC = () => {
@@ -9,6 +10,7 @@ const OrganizationsSlider: React.FC = () => {
 
   const [sliderActiveIndex, setSliderActiveIndex] = useState(0);
   const [sliderOffsetX, setSliderOffsetX] = useState(0);
+  const [refInView, setRefInView] = useState(false);
 
   const onActiveIndexChange = (index: number) => {
     setSliderActiveIndex(index);
@@ -17,6 +19,7 @@ const OrganizationsSlider: React.FC = () => {
   const updateSliderOffset = () => {
     if (orgsTitleEl.current) {
       setSliderOffsetX(orgsTitleEl.current.offsetWidth + orgsTitleEl.current.offsetLeft);
+      setRefInView(true);
     }
   };
 
@@ -44,21 +47,23 @@ const OrganizationsSlider: React.FC = () => {
       }}
     >
       <Container>
-        <Stack direction="row" minWidth="max-content" alignItems="center">
-          <Box ref={orgsTitleEl}>
-            <Typography
-              variant="h4"
-              sx={{
-                opacity: sliderActiveIndex == 0 ? 1 : 0,
-                transition: (theme) => theme.transitions.create("opacity"),
-              }}
-            >
-              Våre <br />
-              Foreninger
-            </Typography>
-          </Box>
-          <Organizations onActiveIndexChange={onActiveIndexChange} offsetX={sliderOffsetX + 48} />
-        </Stack>
+        <Fade in={refInView}>
+          <Stack direction="row" minWidth="max-content" alignItems="center">
+            <Box ref={orgsTitleEl}>
+              <Typography
+                variant="h4"
+                sx={{
+                  opacity: sliderActiveIndex == 0 ? 1 : 0,
+                  transition: (theme) => theme.transitions.create("opacity"),
+                }}
+              >
+                Våre <br />
+                Foreninger
+              </Typography>
+            </Box>
+            <Organizations onActiveIndexChange={onActiveIndexChange} offsetX={sliderOffsetX + 48} />
+          </Stack>
+        </Fade>
       </Container>
     </Box>
   );
