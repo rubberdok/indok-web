@@ -21,6 +21,7 @@ const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServer
         <meta name="description" content={event.shortDescription ?? event.description} />
         {event.organization.logoUrl && <meta name="og:image" content={event.organization.logoUrl} />}
       </Head>
+
       <EventDetail event={data?.event ?? event} />
     </>
   );

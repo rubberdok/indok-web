@@ -2,14 +2,22 @@ import { LoadingButton } from "@mui/lab";
 import { Button, Dialog, DialogActions, DialogContent, Typography } from "@mui/material";
 import { useState } from "react";
 
+type Event = {
+  signupOpenDate: string;
+  isFull?: boolean | null;
+  allowedGradeYears?: Array<number> | null;
+  isAttendable: boolean;
+};
+
 type Props = {
   isSignedUp?: boolean | null;
   disabled?: boolean;
   onSignUp: () => void;
   onSignOff: () => void;
+  event: Event;
 };
 
-export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff, disabled }) => {
+export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff, disabled, event }) => {
   const [confirmSignOff, setConfirmSignOff] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +33,6 @@ export const SignUpButton: React.FC<Props> = ({ isSignedUp, onSignUp, onSignOff,
     setTimeout(() => setLoading(false), 1000);
     onSignOff();
   }
-
   return (
     <>
       <Dialog open={confirmSignOff}>
