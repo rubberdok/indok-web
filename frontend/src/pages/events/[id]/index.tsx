@@ -1,11 +1,23 @@
 import { useQuery } from "@apollo/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
+import React from "react";
 
 import { EventDetail } from "@/components/pages/events";
 import { EventDetailFieldsFragment, EventDetailsDocument } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
+
+interface User {
+  id: string;
+  gradeYear?: number | null;
+  organizations: Array<{
+    __typename?: "OrganizationType";
+    id: string;
+  }>;
+}
+
+export const UserContext = React.createContext<User | null>(null);
 
 /** Component for showing the detail page of an event. */
 const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ event }) => {
@@ -21,8 +33,9 @@ const EventInfo: NextPageWithLayout<InferGetServerSidePropsType<typeof getServer
         <meta name="description" content={event.shortDescription ?? event.description} />
         {event.organization.logoUrl && <meta name="og:image" content={event.organization.logoUrl} />}
       </Head>
-
-      <EventDetail event={data?.event ?? event} />
+      <UserContext.Provider value={data?.user ?? null}>
+        <EventDetail event={data?.event ?? event} />
+      </UserContext.Provider>
     </>
   );
 };
