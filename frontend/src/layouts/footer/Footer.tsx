@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { Link, LinkProps } from "@/components";
-import { Logo } from "@/components/Logo";
+import { LogoFull } from "@/components/LogoFull";
 import { Vercel } from "@/components/Vercel";
 import dayjs from "@/lib/date";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
@@ -14,13 +14,14 @@ import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 const HallOfFame = dynamic(() => import("./HallOfFame").then((mod) => mod.HallOfFame));
 
 const Watermark = styled("div")(({ theme }) => ({
-  background: "url('/nth.svg')",
-  backgroundSize: 500,
+  background: "url('/janus_new.svg')",
+  backgroundSize: 320,
   backgroundPosition: "right center",
   backgroundRepeat: "no-repeat",
   opacity: 0.1,
   [theme.getColorSchemeSelector("dark")]: {
-    opacity: 0.3,
+    opacity: 0.1,
+    filter: "invert(1)",
   },
   position: "absolute",
   width: "600px",
@@ -45,7 +46,7 @@ export const Footer: React.FC = () => {
           <Grid container spacing={3} justifyContent={{ md: "space-between" }}>
             <Grid item xs={12} md={3}>
               <Stack alignItems="flex-start" spacing={3}>
-                <Logo />
+                <LogoFull />
                 <Typography variant="caption">
                   Janus Linjeforening, NTNU Kolbjørn Hejes vei 1E, 7034 Trondheim Org.nr. 994 778 463
                 </Typography>
