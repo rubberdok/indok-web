@@ -16,6 +16,7 @@ type Event = {
   signupOpenDate: string;
   deadline: string;
   bindingSignup?: boolean | null;
+  isAttendable: boolean;
 } & Pick<EventDetailFieldsFragment, "userAttendance">;
 
 type Props = {
@@ -115,6 +116,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
                   onSignUp={handleSignUp}
                   onSignOff={handleSignOff}
                   isSignedUp={isSignedUp}
+                  event={event}
                 />
               </span>
             </Tooltip>
