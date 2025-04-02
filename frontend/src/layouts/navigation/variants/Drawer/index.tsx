@@ -1,5 +1,5 @@
 import { Menu } from "@mui/icons-material";
-import { Box, Divider, Drawer as MuiDrawer, IconButton, Stack } from "@mui/material";
+import { Box, Divider, IconButton, Drawer as MuiDrawer, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -42,7 +42,7 @@ export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
               {routes.map((route) => {
                 if (route.permission) {
                   return (
-                    <PermissionRequired permission={route.permission} key={route.title} optimistic>
+                    <PermissionRequired permission={route.permission} key={route.title}>
                       <NavigationLink route={route} active={pathname.includes(route.path)} />
                     </PermissionRequired>
                   );

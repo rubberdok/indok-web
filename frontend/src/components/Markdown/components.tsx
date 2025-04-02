@@ -1,13 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  List,
-  ListItemText,
-  ListItem as MuiListItem,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, Divider, List, ListItemText, ListItem as MuiListItem, Typography } from "@mui/material";
 import { listItemClasses } from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import { typographyClasses } from "@mui/material/Typography";
@@ -64,11 +55,7 @@ const H6: Components["h2"] = ({ children, id }) => {
 };
 
 const Image: Components["img"] = (props) => {
-  return (
-    <Box maxWidth="100%" height="auto">
-      <img {...props} style={{ objectFit: "contain" }} width="100%" />
-    </Box>
-  );
+  return <img {...props} style={{ objectFit: "contain" }} width="100%" />;
 };
 
 const UnorderedList: Components["ul"] = ({ children }) => {
