@@ -14,11 +14,14 @@ export const BookNow: React.FC = () => {
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ height: "100%" }}>
           <Stack direction="column">
             <Typography variant="h4" gutterBottom>
-              Priser
+              Priser per natt
             </Typography>
             <Typography variant="subtitle1">Hel hytte</Typography>
             <Divider />
-            <Typography variant="subtitle2">Intern: {data?.cabins?.[0]?.internalPrice} kr</Typography>
+            <Typography variant="subtitle2">Intern Ukedag: {data?.cabins?.[0]?.internalPrice} kr</Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Intern Helg: {data?.cabins?.[0]?.internalPriceWeekend} kr
+            </Typography>
             <Typography variant="subtitle2" gutterBottom>
               Ekstern Ukedag: {data?.cabins?.[0]?.externalPrice} kr
             </Typography>
