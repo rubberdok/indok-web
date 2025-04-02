@@ -18,6 +18,7 @@ query eventDetails($id: ID!) {
   }
   user {
     id
+    gradeYear
     organizations {
       id
     }

@@ -60,7 +60,7 @@ type StatusChipProps = {
 };
 
 function StatusChip({ event, user }: StatusChipProps): React.ReactElement | null {
-  if (user.isSignedUp) return <Chip label="Påmeldt" variant="outlined" color="primary" />;
+  if (user.isSignedUp) return <Chip label="Påmeldt" variant="filled" color="success" />;
   if (user.isOnWaitingList) return <Chip label="På venteliste" />;
 
   const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate) : undefined;

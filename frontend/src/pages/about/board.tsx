@@ -30,7 +30,7 @@ const BoardPage: NextPageWithLayout = () => {
       rank: 4,
       name: "Thomas Kallasten Pedersen",
       position: "President Janus Sosial",
-      email: "president@janulinjeforening.no",
+      email: "president@januslinjeforening.no",
     },
     {
       rank: 5,
@@ -42,7 +42,7 @@ const BoardPage: NextPageWithLayout = () => {
       rank: 6,
       name: "Ida Harneshaug",
       position: "Leder Bindeleddet",
-      email: "leder@bindeleddet.ntnu.no",
+      email: "leder@bindeleddet.no",
     },
     {
       rank: 7,

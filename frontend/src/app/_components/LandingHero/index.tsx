@@ -3,10 +3,10 @@
 import { Box, Button, Container, Unstable_Grid2 as Grid, Typography } from "@mui/material";
 import Image from "next/image";
 
-import { OrganizationsSlider } from "./OrganizationsSlider";
-
 import { Link } from "@/app/components/Link";
 import Hero from "~/public/static/landing/hero.webp";
+
+import OrganizationsSlider from "./OrganizationsSlider";
 
 export const LandingHero: React.FC = () => {
   return (
@@ -28,7 +28,7 @@ export const LandingHero: React.FC = () => {
             gridTemplateColumns: "repeat(12, 1fr)",
           }}
         >
-          <Box gridColumn={{ md: "1 / 8", xs: "1 / -1" }} display="flex" justifyContent="center">
+          <Box gridColumn={{ md: "auto", xs: "1 / -1" }} display="flex" justifyContent="center">
             <Grid
               container
               direction="column"
@@ -49,7 +49,7 @@ export const LandingHero: React.FC = () => {
                 </Typography>
               </Grid>
               <Grid>
-                <Typography variant="h1" textAlign={{ xs: "center", md: "left" }}>
+                <Typography variant="h1" textAlign={{ xs: "center", md: "left" }} letterSpacing={"-0.02em"}>
                   Industriell Økonomi & Teknologiledelse
                 </Typography>
               </Grid>

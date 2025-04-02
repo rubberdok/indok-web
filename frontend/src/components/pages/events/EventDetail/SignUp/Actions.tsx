@@ -2,13 +2,13 @@ import { useMutation } from "@apollo/client";
 import { Alert, Unstable_Grid2 as Grid, Snackbar, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 
-import { LoginRequired, PermissionRequired } from "@/components/Auth";
-import { EventDetailFieldsFragment, EventSignOffDocument, EventSignUpDocument } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import { CountdownStatusText } from "./Countdown";
 import { useCountdown } from "./hooks/useCountdown";
 import { SignUpButton } from "./SignUpButton";
+
+import { LoginRequired, PermissionRequired } from "@/components/Auth";
+import { EventDetailFieldsFragment, EventSignOffDocument, EventSignUpDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 type Event = {
   id: string;
@@ -16,6 +16,7 @@ type Event = {
   signupOpenDate: string;
   deadline: string;
   bindingSignup?: boolean | null;
+  isAttendable: boolean;
 } & Pick<EventDetailFieldsFragment, "userAttendance">;
 
 type Props = {
@@ -115,6 +116,7 @@ export const Actions: React.FC<Props> = ({ event }) => {
                   onSignUp={handleSignUp}
                   onSignOff={handleSignOff}
                   isSignedUp={isSignedUp}
+                  event={event}
                 />
               </span>
             </Tooltip>
