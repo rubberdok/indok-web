@@ -9,12 +9,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Organization, OrganizationLink } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
-  { name: "Janus", internalUrl: "/janus/info" },
+  { name: "Janus", internalUrl: "/about" },
   { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
   { name: "Janus Kultur", internalUrl: "/about/organization?category=kultur" },
   { name: "Rubberdøk", internalUrl: "/about/organizations/rubberdok" },
-  { name: "Janushyttene", internalUrl: "/about/organizations/Janushyttene" },
+  { name: "Janushyttene", internalUrl: "/about/organizations/hytteforeningen" },
   { name: "Janus IF", internalUrl: "/about/organization?category=idrett" },
 ] as const;
 
