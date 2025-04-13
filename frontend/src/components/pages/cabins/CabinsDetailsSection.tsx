@@ -1,10 +1,10 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { NextLinkComposed } from "@/components/Link";
-
 import { cabinImages } from "./ImageSlider/imageData";
 import { ImageSlider } from "./ImageSlider/ImageSlider";
+
+import { NextLinkComposed } from "@/components/Link";
 
 const RootStyle = styled("div")(({ theme }) => ({
   background: theme.vars.palette.background.elevated,
@@ -45,7 +45,7 @@ export const CabinsDetailsSection: React.FC = () => {
             <Grid item>
               <Button
                 component={NextLinkComposed}
-                to="/about/organizations/Janushyttene"
+                to="/about/organizations/hytteforeningen"
                 variant="outlined"
                 size="small"
                 fullWidth={false}
