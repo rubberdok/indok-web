@@ -6,11 +6,11 @@ image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 board:
   ceo:
-    name: Hannah Köberle
+    name: Oda Fu Zhe Runde
     title: Prosjektleder
     mail: leder@rubberdok.no
   cto:
-    name: Oda Fu Zhe Runde
+    name: Tien Quoc Tran
     title: Prosjektleder
     mail: leder@rubberdok.no
 tag: annet
