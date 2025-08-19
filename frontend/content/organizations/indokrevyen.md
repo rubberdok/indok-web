@@ -4,9 +4,18 @@ description: Norges beste studentrevy?
 logo: /img/indokrevylogo.jpg
 image: /img/indokrevyenbilde.jpg
 board:
-  leder:
-    name: Marte Fosen
-    title: Leder
+  leder1:
+    name: Ane Holm Grøneng
+    title: Revysjef
+    mail: martin.maele@indokrevyen.no
+  leder2:
+    name: Martin Mæle
+    title: Revysjef
+    mail: martin.maele@indokrevyen.no
+  leder3:
+    name: Nicolai Harvik
+    title: Revysjef
+    mail: nicolai.harvik@indokrevyen.no
 tag: kultur
 ---
 
