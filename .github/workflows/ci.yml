@@ -78,7 +78,7 @@ jobs:
 
       - name: Build backend image
         id: build-image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: backend
           file: backend/Dockerfile.prod
@@ -94,7 +94,7 @@ jobs:
         id: push-image
         # If this is run on the main branch, and is a production image, it should be pushed to ECR
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: backend
           file: backend/Dockerfile.prod
@@ -210,7 +210,7 @@ jobs:
 
       - name: Build frontend image
         id: build-image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: frontend
           file: frontend/Dockerfile.prod
