@@ -5,12 +5,14 @@ image: /img/ivibilde.jpg
 logo: /img/ivilogo.png
 board:
   leder:
-    name: Tone Gjelten Saastad
+    name: Synne Andersen Buen
     title: Leder
+    mail: synne.andersen.buen@gmail.com
 
   leder2:
-    name: Mina Malthe-Sørenssen
+    name: Hannah Dæhlin
     title: Leder
+    mail: hannahdaehlin@gmail.com
 
 tag: kultur
 ---
@@ -19,8 +21,8 @@ tag: kultur
 
 IVI koordinerer det veldige arbeidet på INDØK. I tillegg til å arrangere arrangementer, driver vi med intern skolering om nettopp veldedighet, veldedige organisasjoner og globale spørsmål. Hvert år samler vi inn penger til en ny veldedig organisasjon. Hovedarrangementene våre inkluderer Auksjonskvelden, en festfylt aften der Indøkere fra alle trinn samles og byr på både det ene og det andre til lommebøkene sier stopp. I tillegg arrangerer vi Charity Royale, en glamorøs og spenningsfylt spillkveld som gir deltakerne muligheten til å vise frem pokerferdighetene sine, utfordre hverandre i ulike casinospill, og nyte en kveld fylt med moro, konkurranse og god stemning. Vi ønsker også å spre så mye kunnskap og engasjement om veldedighet som mulig blant indøkere. Dette gjøres gjennom foredrag og andre arrangementer. Her er det kun IVI-medlemmenes kreativitet som setter grenser! Hvis du har en idé, vil vi mer enn gjerne høre om den!
 
-##### Mottakerorganisasjoner 23/24 – Malaria Consortium og Family Empowerment Media
+##### Mottakerorganisasjoner 24/25 – Family Empowerment Media og Helen Keller international
 
-Malaria Consortium var mottakerorganisasjonen for fjorårets auksjonskveld, i tillegg til årets Charity Royale. De jobber både med forebyggende arbeid og med kontroll og behandling av malaria - samt andre sykdommer, blant sårbare befolkninger i verden. I år ble Family Empowerment Media valgt som mottakerorganisasjon til Auksjonskvelden 2024. Her samlet vi inn hele 238 600 kr, som gikk til denne organisasjonen! Family Empowerment Media arbeider hovedsakelig med å eliminere mødredødelighet og barseldød i blant annet Nigeria, i tillegg til andre helserelaterte utfordringer knyttet til uønskede graviditeter.
+Family Empowerment Media var mottakerorganisasjonen for fjorårets auksjonskveld, i tillegg til årets Charity funfair. Organisasjonen arbeider hovedsakelig med å eliminere mødredødelighet og barseldød i blant annet Nigeria, i tillegg til andre helserelaterte utfordringer knyttet til uønskede graviditeter. På årets auksjonskveld samlet vi inn hele 359 388kr til Helen Keller International. Helen Keller International jobber med å forebygge mangelsykdommer hos barn ved å dele ut tilskudd av vitamin A. Vitamin A er nødvendig for syn, forplantningsevne, immunforsvar, regulering av arveanlegg, slimhinner og vekst. Stor mangel på vitamin A kan føre til infeksjon, redusert syn, blindhet og til slutt død.
 
 Følg med på IVI på både vår Facebook (Indøks Veldedige Initiativ) og Instagram (@veldedig.indok) for å holde deg oppdatert på det vi driver med gjennom skoleåret! Send oss gjerne en melding hvis du lurer på noe eller har en ide, vi slår gjerne av en prat.

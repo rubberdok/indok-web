@@ -77,6 +77,7 @@ export const ListingItem: React.FC<Props> = ({ listing }) => {
             <img
               src={listing.organization?.logoUrl || "/nth.svg"}
               alt=""
+              style={{ height: "100%", width: "100%" }}
               onError={(e) => (
                 ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
               )}
