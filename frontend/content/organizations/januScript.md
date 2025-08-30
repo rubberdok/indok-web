@@ -5,8 +5,9 @@ logo: /img/januscriptlogo.jpg
 image: /img/januscriptlogo.jpg
 board:
   redaktør:
-    name: Arthur Trandokken
+    name: Hannah Bjerke Lote
     title: Redaktør
+    mail: hannah.bjerke.lote@gmail.com
 tag: kultur
 ---
 
