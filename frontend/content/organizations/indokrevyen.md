@@ -7,7 +7,7 @@ board:
   leder1:
     name: Ane Holm Grøneng
     title: Revysjef
-    mail: martin.maele@indokrevyen.no
+    mail: anegroneng@indokrevyen.no
   leder2:
     name: Martin Mæle
     title: Revysjef
