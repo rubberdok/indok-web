@@ -5,33 +5,37 @@ logo: /static/cabins/logo.svg
 image: /img/hy1.jpg
 board:
   leder:
-    name: Brage Sømoen
-    phoneNumber: 918 68 493
-    title: Leder
-  øko_nestleder:
-    name: Hedda Raanes
-    phoneNumber: 971 84 326
-    title: Nestleder og økonomiansvarlig
-  pr:
     name: Jørgen Ekeland Bjurstrøm
     phoneNumber: 901 19 460
+    title: Leder
+  øko_nestleder:
+    name: Astrid Skrøvseth
+    phoneNumber: 957 28 185
+    title: Nestleder og økonomiansvarlig
+  pr:
+    name: Maria Vaagland
+    phoneNumber: 930 56 553
     title: PR- og sosialansvarlig
-  drift:
-    name: Christian Viken-Slotten
+  drift1:
+    name: Christian Viken-Slåtten
     phoneNumber: 955 25 788
     title: Driftsansvarlig
-  book:
-    name: Marit Hjerpseth Arvesen og Astrid Skrøvseth
-    phoneNumber: 481 49 233 og  957 28 185
+  drift2:
+    name: Andreas Kolderup Eidsvig
+    phoneNumber: 465 15 125
+    title: Driftsansvarlig
+  book1:
+    name: Magnus Thorstensen
+    phoneNumber: 467 64 166
+    title: Bookingansvarlig
+  book2:
+    name: Sander Haugen
+    phoneNumber: 905 81 561
     title: Bookingansvarlig
   log:
-    name: Frida Løken
-    phoneNumber: 465 43 556
+    name: Konrad Henry
+    phoneNumber: 454 75 151
     title: Logistikkansvarlig
-  altmulig:
-    name: Herman Husebø
-    phoneNumber: 480 91 961
-    title: Alt-mulig-mann
 
 tag: annet
 ---
