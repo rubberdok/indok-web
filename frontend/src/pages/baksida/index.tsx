@@ -12,15 +12,14 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { amber, green, red } from "@mui/material/colors";
+import { amber, red } from "@mui/material/colors";
 import Head from "next/head";
 import { useRef } from "react";
 
 import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import Amund from "~/public/img/Amund Norland.jpg";
-import Hilvi from "~/public/img/Hilvi Fjose.jpg";
+import Martin from "~/public/img/Martin Bore.jpg";
 import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
@@ -38,19 +37,11 @@ const ReportsPage: NextPageWithLayout = () => {
     },
     {
       id: 2,
-      name: "Hilvi Fjose ",
-      initials: "HF",
+      name: "Martin Bore",
+      initials: "MB",
       color: amber[500],
-      image: Hilvi,
-      email: "hilvif@stud.ntnu.no",
-    },
-    {
-      id: 3,
-      name: "Amund Norland",
-      initials: "AN",
-      color: green[500],
-      image: Amund,
-      email: "amundno@stud.ntnu.no",
+      image: Martin,
+      email: "martbore@stud.ntnu.no",
     },
   ];
 
