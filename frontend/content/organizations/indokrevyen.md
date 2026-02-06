@@ -5,14 +5,10 @@ logo: /img/indokrevylogo.jpg
 image: /img/indokrevyen2025.jpg
 board:
   leder1:
-    name: Ane Holm Grøneng
-    title: Revysjef
-    mail: anegroneng@indokrevyen.no
-  leder2:
     name: Martin Mæle
     title: Revysjef
     mail: martin.maele@indokrevyen.no
-  leder3:
+  leder2:
     name: Nicolai Harvik
     title: Revysjef
     mail: nicolai.harvik@indokrevyen.no
@@ -53,6 +49,7 @@ Revyen består av flere undergrupper, som alle jobber sammen for å skape en ufo
 - Event
 - PR
 - Band
+- Scene
 - Inspisient
 
 ![Indøkrevyen 2025](/img/indokrevyen2025.jpg)
