@@ -20,6 +20,9 @@ tag: kultur
 Indøkrevyen ble arrangert første gang i 2011, i forbindelse med feiringen av Indøk sitt 25 års-jubileum. Det hele var en stor suksess, og siden 2014 har det vært arrangert revy flere ganger. Som en del av revygjengen får man en unik mulighet til å bli kjent med Indøkere på tvers av klassetrinn samtidig som man setter opp tidenes forestilling!
 Revygjengen tas opp på høsten hvert år og revyen settes opp i februar/mars.
 
+#### Årets billetter er i salg!
+Billetter til årets revy er nå i salg! Kjøp billetter [her](https://www.eventim-light.com/no/a/6564b9a575a8ab6600ce84c3/).
+
 ##### Her er de tidligere revyene:
 
 - Indøkrevyen 2026 - Klostergata Borettslag
