@@ -6,11 +6,11 @@ image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 board:
   ceo:
-    name: Hannah Köberle
+    name: Jens Mathias Jenssen Richter
     title: Prosjektleder
     mail: leder@rubberdok.no
   cto:
-    name: Oda Fu Zhe Runde
+    name: Vedin Eljar Engmark Øyulvstad
     title: Prosjektleder
     mail: leder@rubberdok.no
 tag: annet
