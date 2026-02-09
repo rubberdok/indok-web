@@ -1,5 +1,4 @@
 import { Box, Divider, List, ListItem, ListItemText, Paper, Typography } from "@mui/material";
-import { listItemClasses } from "@mui/material/ListItem";
 
 import { Template } from "@/components/pages/about/Template";
 import { NextPageWithLayout } from "@/lib/next";
