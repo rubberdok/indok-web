@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { amber, red } from "@mui/material/colors";
 import Head from "next/head";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
 import { Layout, RootStyle } from "@/layouts/Layout";
@@ -26,10 +26,12 @@ const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
 
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+
   const responsibles = [
     {
       id: 1,
-      name: "Solveig Lund Christiansen",
+      name: "Solveig L. Christiansen",
       initials: "SLC",
       color: red[800],
       image: Solveig,
@@ -305,16 +307,32 @@ const ReportsPage: NextPageWithLayout = () => {
               </Card>
             </Grid>
 
-            <Grid style={{ width: "100%" }} item ref={formRef}>
+            <Grid style={{ width: "100%" }} item ref={formRef} sx={{ position: "relative" }}>
+              {!iframeLoaded && (
+                <Grid
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    bgcolor: "background.paper",
+                    zIndex: 1,
+                  }}
+                >
+                  <CircularProgress />
+                </Grid>
+              )}
+
               <iframe
                 title="Reports"
                 src="https://docs.google.com/forms/d/e/1FAIpQLSdXFXYU7O1_qcDbX3PONucYLDv3K6KrUIEQ6rtfcRiiR3DEzg/viewform?embedded=true"
                 width="100%"
                 height="2003px"
                 frameBorder="0"
-              >
-                <CircularProgress />
-              </iframe>
+                onLoad={() => setIframeLoaded(true)}
+                style={{ display: "block" }}
+              />
             </Grid>
           </Grid>
         </Grid>
