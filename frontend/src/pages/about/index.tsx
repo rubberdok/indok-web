@@ -1,5 +1,4 @@
-import { Box, List, ListItem, ListItemText, Paper, Typography } from "@mui/material";
-import { listItemClasses } from "@mui/material/ListItem";
+import { Box, Divider, List, ListItem, ListItemText, Paper, Typography } from "@mui/material";
 
 import { Template } from "@/components/pages/about/Template";
 import { NextPageWithLayout } from "@/lib/next";
@@ -75,68 +74,76 @@ const AboutPage: NextPageWithLayout = () => {
           Generalforsamlingen er Foreningens øverste organ og er studentenes mulighet til å direkte påvirke budsjetter
           og avgjørelser som blir fattet på linjen.
         </Typography>
+
         <Typography variant="body1" paragraph>
           Opp gjennom historien har Foreningen hatt følgende lederpar:{" "}
         </Typography>
-        <List
-          dense
+
+        <Paper
+          elevation={0}
           sx={{
-            listStyleType: "disc",
-            listStylePosition: "inside",
-            [`& .${listItemClasses.root}`]: {
-              display: "list-item",
-            },
+            border: (theme) => `1px solid ${theme.palette.divider}`,
+            borderRadius: 2,
+            overflow: "hidden",
+            my: 2,
           }}
         >
-          <ListItem>
-            <ListItemText primary="Ole Heliesen og Georg Øiesvold" secondary="2008-2009" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2009-2010" primary="Magnus Valmot og Ole-Christen Enger" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2010-2011" primary="Thomas Eide og Ole-Daniel Nitter" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2011-2012" primary="Michael Wiik og Iver Roen Velo" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2012-2013" primary="Anja Graff Nesse og Steinar H. Fretheim" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2013-2014" primary="Ove Mørch og Christian Fredrik Scheel" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2014-2015" primary="Lars Arild Wold og Marianne Engseth" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2015-2016" primary="Marius Lie Morken og Hanne Sandven" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2016-2017" primary="Simen Nygaard Hansen og Kristoffer Birkeland" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2017-2018" primary="Gard Rystad og Vemund Wøien" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2018-2019" primary="Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2019-2020" primary="Peder Gjerstad og Mette Liset" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2020-2021" primary="Andreas Johannesen og Lars Lien Ankile" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2021-2022" primary="Christian August Brask Rustad og Olaf Alexander Styrmoe" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2022-2023" primary="Morten Vinje og Erlend Heir" />
-          </ListItem>
-          <ListItem>
-            <ListItemText secondary="2023-2024" primary="Olav Bjørlykke, Tord Johan Espe og Arnas Tribusininas" />
-          </ListItem>
-        </List>
+          <Box sx={{ px: 3, py: 2 }}>
+            <Typography variant="overline" color="text.secondary">
+              Lederpar og ledertrio
+            </Typography>
+          </Box>
+
+          <Divider />
+
+          <List disablePadding>
+            {[
+              { year: "2008-2009", names: "Ole Heliesen og Georg Øiesvold" },
+              { year: "2009-2010", names: "Magnus Valmot og Ole-Christen Enger" },
+              { year: "2010-2011", names: "Thomas Eide og Ole-Daniel Nitter" },
+              { year: "2011-2012", names: "Michael Wiik og Iver Roen Velo" },
+              { year: "2012-2013", names: "Anja Graff Nesse og Steinar H. Fretheim" },
+              { year: "2013-2014", names: "Ove Mørch og Christian Fredrik Scheel" },
+              { year: "2014-2015", names: "Lars Arild Wold og Marianne Engseth" },
+              { year: "2015-2016", names: "Marius Lie Morken og Hanne Sandven" },
+              { year: "2016-2017", names: "Simen Nygaard Hansen og Kristoffer Birkeland" },
+              { year: "2017-2018", names: "Gard Rystad og Vemund Wøien" },
+              { year: "2018-2019", names: "Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland" },
+              { year: "2019-2020", names: "Peder Gjerstad og Mette Liset" },
+              { year: "2020-2021", names: "Andreas Johannesen og Lars Lien Ankile" },
+              { year: "2021-2022", names: "Christian August Brask Rustad og Olaf Alexander Styrmoe" },
+              { year: "2022-2023", names: "Morten Vinje og Erlend Heir" },
+              { year: "2023-2024", names: "Olav Bjørlykke, Tord Johan Espe og Arnas Tribusininas" },
+              { year: "2024-2025", names: "Kristoffer Grude, Branny Lin og Markus Kile Søyland" },
+              { year: "2025-2026", names: "Jens Eggen Skaug, Herman Hytta Gunnarsen og Simen Petersson" },
+            ].map((item, idx, arr) => (
+              <Box key={item.year}>
+                <ListItem
+                  sx={{
+                    px: 3,
+                    py: 1.5,
+                    display: "flex",
+                    gap: 2,
+                    alignItems: "baseline",
+                  }}
+                >
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {item.names}
+                      </Typography>
+                    }
+                  />
+                  <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "nowrap" }}>
+                    {item.year}
+                  </Typography>
+                </ListItem>
+
+                {idx !== arr.length - 1 && <Divider />}
+              </Box>
+            ))}
+          </List>
+        </Paper>
       </Template>
     </>
   );
