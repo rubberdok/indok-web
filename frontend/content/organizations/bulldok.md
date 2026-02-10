@@ -4,9 +4,10 @@ description: Indøks buldre- og klatregruppe
 logo: /img/bulldok.jpeg
 image: /img/bulldok.jpeg
 board:
-  ceo:
-    name: Morten Smedal Unstad
+  leder:
+    name: Håvard Navelsaker
     title: Leder
+    mail: havard.ott.nav@hotmail.com
 tag: idrett
 ---
 
