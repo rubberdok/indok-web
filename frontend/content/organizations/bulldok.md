@@ -7,7 +7,7 @@ board:
   leder:
     name: Håvard Navelsaker
     title: Leder
-    mail:  havard.navelsaker@outlook.com
+    mail: havard.navelsaker@outlook.com
 tag: idrett
 ---
 
