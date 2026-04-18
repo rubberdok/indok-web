@@ -591,7 +591,7 @@ export default function AdminEditPage() {
                   >
                     <ListItemText
                       primary={`${user.firstName} ${user.lastName} (${user.username})`}
-                      secondary={`ID: ${user.id} · Feide: ${user.feideUserid || user.feideEmail || "-"} · UID: ${user.nfcUidHex || "-"}`}
+                      secondary={`ID: ${user.id} ・ Epost/Feide: ${user.feideUserid || user.feideEmail || "-"} ・ UID: ${user.nfcUidHex || "-"}`}
                     />
                   </ListItemButton>
                 ))}

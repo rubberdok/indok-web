@@ -208,15 +208,16 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
       {feedbackSuccess && <Alert severity="success">{feedbackSuccess}</Alert>}
       <PermissionRequired permission="organizations.change_organization">
         <Grid container spacing={1}>
-          <Grid item xs={6} md={4} lg={2}>
+          <Grid item xs={12} md={6} lg={4}>
             <TextField
+              fullWidth
               variant="standard"
               placeholder="Skriv inn brukernavn, bruker-ID eller fullt navn"
               onChange={(e) => setUserInput(e.target.value)}
               value={userInput}
             />
           </Grid>
-          <Grid item xs={6} md={4} lg={2}>
+          <Grid item xs={12} md={6} lg={4}>
             <Button startIcon={<GroupAdd />} onClick={() => void addUser()} disabled={upsertingMembership}>
               Legg til
             </Button>
@@ -240,7 +241,9 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                 <TableCell>
                   {membership.user.firstName} {membership.user.lastName}
                 </TableCell>
-                <TableCell>{membership?.group?.name ?? "--"}</TableCell>
+                <TableCell>
+                  {membership?.group?.name === "HR" ? "Administrator" : membership?.group?.name ?? "--"}
+                </TableCell>
                 <PermissionRequired permission="organizations.change_organization">
                   <TableCell>
                     <Button
