@@ -3,6 +3,7 @@ from graphene import NonNull
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
 from decorators import login_required, get_resolver_parent, permission_required_or_none
+from apps.users.permissions import can_manage_user_nfc
 
 
 class UserType(DjangoObjectType):
@@ -50,7 +51,7 @@ class UserType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_nfc_uid_hex(parent, info):
-        if info.context.user.pk != parent.pk and not info.context.user.has_perm("nfc.manage_nfc"):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
             return None
 
         from apps.nfc.models import NfcCardAssignment
@@ -65,7 +66,7 @@ class UserType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_nfc_pin_code(parent, info):
-        if info.context.user.pk != parent.pk and not info.context.user.has_perm("nfc.manage_nfc"):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
             return None
 
         from apps.nfc.models import NfcCardAssignment

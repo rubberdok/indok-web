@@ -15,3 +15,40 @@ query userToEdit {
     ...UserToEdit
   }
 }
+
+query adminEditCapabilities {
+  canManageUserProfiles
+  canManageUserNfc
+}
+
+query nfcUserSearch($query: String!, $limit: Int) {
+  nfcUserSearch(query: $query, limit: $limit) {
+    id
+    username
+    firstName
+    lastName
+    feideEmail
+    nfcUidHex
+    nfcPinCode
+  }
+}
+
+query userSearch($query: String!, $limit: Int) {
+  userSearch(query: $query, limit: $limit) {
+    id
+    username
+    firstName
+    lastName
+    email
+    phoneNumber
+    allergies
+    graduationYear
+    gradeYear
+    dateJoined
+    lastLogin
+    feideUserid
+    feideEmail
+    nfcUidHex
+    nfcPinCode
+  }
+}

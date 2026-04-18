@@ -77,6 +77,31 @@ export type AdminEventSignOff = {
   event: Maybe<EventType>;
 };
 
+export type AdminUpdateUser = {
+  __typename?: 'AdminUpdateUser';
+  user: Maybe<UserType>;
+};
+
+export type AdminUpdateUserNfc = {
+  __typename?: 'AdminUpdateUserNfc';
+  user: Maybe<UserType>;
+};
+
+export type AdminUserInput = {
+  allergies: InputMaybe<Scalars['String']['input']>;
+  email: InputMaybe<Scalars['String']['input']>;
+  firstName: InputMaybe<Scalars['String']['input']>;
+  graduationYear: InputMaybe<Scalars['Int']['input']>;
+  lastName: InputMaybe<Scalars['String']['input']>;
+  phoneNumber: InputMaybe<Scalars['String']['input']>;
+  username: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AdminUserNfcInput = {
+  pinCode: InputMaybe<Scalars['String']['input']>;
+  uidHex: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Booking type for fields available for not logged in users */
 export type AllBookingsType = {
   __typename?: 'AllBookingsType';
@@ -634,9 +659,9 @@ export type Logout = {
 };
 
 export type MembershipInput = {
-  groupId: InputMaybe<Scalars['ID']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-  userId: InputMaybe<Scalars['ID']['input']>;
+  groupId: Scalars['ID']['input'];
+  organizationId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 export type MembershipType = {
@@ -656,6 +681,8 @@ export type Mutations = {
    *       when a user signs off an event
    */
   adminEventSignOff: Maybe<AdminEventSignOff>;
+  adminUpdateUser: Maybe<AdminUpdateUser>;
+  adminUpdateUserNfc: Maybe<AdminUpdateUserNfc>;
   assignMembership: Maybe<AssignMembership>;
   assignNfcCard: Maybe<AssignNfcCard>;
   attemptCapturePayment: Maybe<AttemptCapturePayment>;
@@ -709,6 +736,7 @@ export type Mutations = {
   initiateOrder: Maybe<InitiateOrder>;
   logNfcAccessEvent: Maybe<LogNfcAccessEvent>;
   logout: Maybe<Logout>;
+  removeMembership: Maybe<RemoveMembership>;
   revokeNfcAccessGrant: Maybe<RevokeNfcAccessGrant>;
   revokeNfcAssignment: Maybe<RevokeNfcAssignment>;
   /** Sends email to the user or an admin (or both) */
@@ -734,12 +762,25 @@ export type Mutations = {
   updateOrganization: Maybe<UpdateOrganization>;
   updateQuestion: Maybe<UpdateQuestion>;
   updateUser: Maybe<UpdateUser>;
+  upsertMembership: Maybe<UpsertMembership>;
   upsertNfcCard: Maybe<UpsertNfcCard>;
 };
 
 
 export type MutationsAdminEventSignOffArgs = {
   eventId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+};
+
+
+export type MutationsAdminUpdateUserArgs = {
+  userData: AdminUserInput;
+  userId: Scalars['ID']['input'];
+};
+
+
+export type MutationsAdminUpdateUserNfcArgs = {
+  nfcData: AdminUserNfcInput;
   userId: Scalars['ID']['input'];
 };
 
@@ -929,6 +970,11 @@ export type MutationsLogNfcAccessEventArgs = {
 };
 
 
+export type MutationsRemoveMembershipArgs = {
+  membershipId: Scalars['ID']['input'];
+};
+
+
 export type MutationsRevokeNfcAccessGrantArgs = {
   revokeData: RevokeNfcAccessGrantInput;
 };
@@ -1031,6 +1077,11 @@ export type MutationsUpdateQuestionArgs = {
 
 export type MutationsUpdateUserArgs = {
   userData: InputMaybe<UserInput>;
+};
+
+
+export type MutationsUpsertMembershipArgs = {
+  membershipData: MembershipInput;
 };
 
 
@@ -1198,6 +1249,7 @@ export type OrganizationType = {
   logoUrl: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   parent: Maybe<OrganizationType>;
+  permissionGroups: Maybe<Array<ResponsibleGroupType>>;
   primaryGroup: Maybe<ResponsibleGroupType>;
   slug: Scalars['String']['output'];
   users: Array<UserType>;
@@ -1245,6 +1297,8 @@ export type Queries = {
   blogPost: Maybe<BlogPostType>;
   bookingSemester: Maybe<UpdateBookingSemesterType>;
   cabins: Maybe<Array<CabinType>>;
+  canManageUserNfc: Scalars['Boolean']['output'];
+  canManageUserProfiles: Scalars['Boolean']['output'];
   category: Maybe<CategoryType>;
   defaultEvents: Maybe<Array<EventType>>;
   event: Maybe<EventType>;
@@ -1263,6 +1317,7 @@ export type Queries = {
   nfcCard: Maybe<NfcCardType>;
   nfcCardAssignments: Maybe<Array<NfcCardAssignmentType>>;
   nfcCards: Maybe<Array<NfcCardType>>;
+  nfcUserSearch: Maybe<Array<UserType>>;
   order: Maybe<OrderType>;
   ordersByStatus: Maybe<OrdersByStatusType>;
   organization: Maybe<OrganizationType>;
@@ -1275,6 +1330,7 @@ export type Queries = {
   signUps: Maybe<SignUpType>;
   user: Maybe<UserType>;
   userOrders: Maybe<Array<OrderType>>;
+  userSearch: Maybe<Array<UserType>>;
 };
 
 
@@ -1391,6 +1447,12 @@ export type QueriesNfcCardAssignmentsArgs = {
 };
 
 
+export type QueriesNfcUserSearchArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
+};
+
+
 export type QueriesOrderArgs = {
   orderId: Scalars['ID']['input'];
 };
@@ -1434,6 +1496,12 @@ export type QueriesSignUpsArgs = {
   eventId: Scalars['ID']['input'];
 };
 
+
+export type QueriesUserSearchArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
+};
+
 /** A question on a form. */
 export type QuestionType = {
   __typename?: 'QuestionType';
@@ -1462,6 +1530,12 @@ export enum QuestionTypeEnum {
   ShortAnswer = 'SHORT_ANSWER',
   Slider = 'SLIDER'
 }
+
+export type RemoveMembership = {
+  __typename?: 'RemoveMembership';
+  ok: Maybe<Scalars['Boolean']['output']>;
+  removedMember: Maybe<UserType>;
+};
 
 /** An enumeration. */
 export enum ResponseStatus {
@@ -1715,6 +1789,12 @@ export type UpdateUser = {
   user: Maybe<UserType>;
 };
 
+export type UpsertMembership = {
+  __typename?: 'UpsertMembership';
+  membership: Maybe<MembershipType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type UpsertNfcCard = {
   __typename?: 'UpsertNfcCard';
   card: Maybe<NfcCardType>;
@@ -1767,11 +1847,6 @@ export type UserType = {
   yearUpdatedAt: Maybe<Scalars['DateTime']['output']>;
 };
 
-export type AllUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AllUsersQuery = { __typename?: 'Queries', allUsers: Array<{ __typename?: 'UserType', id: string, username: string, email: string, phoneNumber: string, firstName: string, lastName: string, allergies: string | null, gradeYear: number | null, graduationYear: number | null, lastLogin: string | null, dateJoined: string, feideUserid: string, feideEmail: string, memberships: Array<{ __typename?: 'MembershipType', id: string, organization: { __typename?: 'OrganizationType', id: string, name: string }, group: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null }>, events: Array<{ __typename?: 'EventType', title: string }> | null }> | null };
-
 export type LoggedInUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1805,7 +1880,6 @@ export type CabinPermissionQueryVariables = Exact<{ [key: string]: never; }>;
 export type CabinPermissionQuery = { __typename?: 'Queries', hasPermission: boolean | null };
 
 
-export const AllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"lastLogin"}},{"kind":"Field","name":{"kind":"Name","value":"dateJoined"}},{"kind":"Field","name":{"kind":"Name","value":"feideUserid"}},{"kind":"Field","name":{"kind":"Name","value":"feideEmail"}},{"kind":"Field","name":{"kind":"Name","value":"memberships"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}}]} as unknown as DocumentNode<AllUsersQuery, AllUsersQueryVariables>;
 export const LoggedInUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoggedInUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]} as unknown as DocumentNode<LoggedInUserQuery, LoggedInUserQueryVariables>;
 export const UserWithIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserWithId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UserWithIdQuery, UserWithIdQueryVariables>;
 export const HasPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HasPermission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"permission"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"permission"},"value":{"kind":"Variable","name":{"kind":"Name","value":"permission"}}}]}]}}]} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;

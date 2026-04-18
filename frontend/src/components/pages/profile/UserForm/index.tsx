@@ -233,7 +233,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
             </Grid>
 
             <Grid item>
-              <Typography variant="subtitle2">NFC</Typography>
+              <Typography variant="subtitle2">Adgangskort</Typography>
             </Grid>
             <Grid container item direction="row" spacing={2}>
               <Grid item>
@@ -259,7 +259,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                     errors.nfcPinCode?.message ||
                     (hasActiveUid
                       ? "Denne PIN-koden brukes til å låse opp JanHus, når du skal ha tilgang."
-                      : "PIN-kode kan kun settes når bruker har aktiv UID.")
+                      : "PIN-kode kan kun settes når du har et aktivt kort.")
                   }
                   inputProps={{
                     inputMode: "numeric",

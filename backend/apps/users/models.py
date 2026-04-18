@@ -54,7 +54,11 @@ class User(AbstractUser):
         return not self.is_authenticated
 
     class Meta:
-        permissions = [("view_sensitive_info", "Can view sensitive information about a user")]
+        permissions = [
+            ("view_sensitive_info", "Can view sensitive information about a user"),
+            ("manage_user_profiles", "Can search and edit other users' profiles"),
+            ("manage_user_nfc", "Can edit NFC UID/PIN for users"),
+        ]
 
     def __str__(self):
         return f"User(name='{self.first_name} {self.last_name}')"

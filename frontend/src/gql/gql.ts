@@ -13,7 +13,6 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query allUsers {\n    allUsers {\n      id\n      username\n      email\n      phoneNumber\n      firstName\n      lastName\n      allergies\n      gradeYear\n      graduationYear\n      lastLogin\n      dateJoined\n      feideUserid\n      feideEmail\n      memberships {\n        id\n        organization {\n          id\n          name\n        }\n        group {\n          id\n          name\n          uuid\n        }\n      }\n      events {\n        title\n      }\n    }\n  }\n": types.AllUsersDocument,
     "\n  query LoggedInUser {\n    user {\n      id\n      firstName\n    }\n  }\n": types.LoggedInUserDocument,
     "\n  query UserWithId {\n    user {\n      id\n    }\n  }\n": types.UserWithIdDocument,
     "\n  query HasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n": types.HasPermissionDocument,
@@ -36,10 +35,6 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query allUsers {\n    allUsers {\n      id\n      username\n      email\n      phoneNumber\n      firstName\n      lastName\n      allergies\n      gradeYear\n      graduationYear\n      lastLogin\n      dateJoined\n      feideUserid\n      feideEmail\n      memberships {\n        id\n        organization {\n          id\n          name\n        }\n        group {\n          id\n          name\n          uuid\n        }\n      }\n      events {\n        title\n      }\n    }\n  }\n"): (typeof documents)["\n  query allUsers {\n    allUsers {\n      id\n      username\n      email\n      phoneNumber\n      firstName\n      lastName\n      allergies\n      gradeYear\n      graduationYear\n      lastLogin\n      dateJoined\n      feideUserid\n      feideEmail\n      memberships {\n        id\n        organization {\n          id\n          name\n        }\n        group {\n          id\n          name\n          uuid\n        }\n      }\n      events {\n        title\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

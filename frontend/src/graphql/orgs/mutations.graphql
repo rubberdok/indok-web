@@ -1,0 +1,35 @@
+mutation upsertMembership($membershipData: MembershipInput!) {
+  upsertMembership(membershipData: $membershipData) {
+    ok
+    membership {
+      id
+      user {
+        id
+        username
+        firstName
+        lastName
+      }
+      group {
+        id
+        name
+        uuid
+      }
+      organization {
+        id
+        name
+      }
+    }
+  }
+}
+
+mutation removeMembership($membershipId: ID!) {
+  removeMembership(membershipId: $membershipId) {
+    ok
+    removedMember {
+      id
+      username
+      firstName
+      lastName
+    }
+  }
+}

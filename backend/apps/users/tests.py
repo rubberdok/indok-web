@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import requests
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.utils import timezone
 from graphene.utils.str_converters import to_snake_case
 from utils.testing.base import ExtendedGraphQLTestCase
@@ -169,6 +170,68 @@ class UsersResolversTestCase(UsersBaseTestCase):
                 continue
             self.assertEqual(str(v), str(value))
 
+    def test_resolve_user_search(self):
+        query = """
+            query SearchUsers($query: String!) {
+                userSearch(query: $query) {
+                    id
+                    username
+                }
+            }
+        """
+
+        response = self.query(query, op_name="SearchUsers", variables={"query": self.indok_user.username})
+        self.assertResponseHasErrors(response)
+
+        response = self.query(
+            query,
+            user=self.super_user,
+            op_name="SearchUsers",
+            variables={"query": self.indok_user.username},
+        )
+        self.assertResponseNoErrors(response)
+        data = response.json()["data"]["userSearch"]
+        self.assertTrue(any(user["username"] == self.indok_user.username for user in data))
+
+        permission = Permission.objects.get(codename="manage_user_profiles")
+        self.indok_user.user_permissions.add(permission)
+
+        response = self.query(
+            query,
+            user=self.indok_user,
+            op_name="SearchUsers",
+            variables={"query": self.super_user.username},
+        )
+        self.assertResponseNoErrors(response)
+        data = response.json()["data"]["userSearch"]
+        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
+
+    def test_profile_permission_allows_nfc_user_search(self):
+        query = """
+            query SearchNfcUsers($query: String!) {
+                nfcUserSearch(query: $query) {
+                    id
+                    username
+                }
+            }
+        """
+
+        response = self.query(query, user=self.indok_user, op_name="SearchNfcUsers", variables={"query": "test"})
+        self.assertResponseHasErrors(response)
+
+        permission = Permission.objects.get(codename="manage_user_profiles")
+        self.indok_user.user_permissions.add(permission)
+
+        response = self.query(
+            query,
+            user=self.indok_user,
+            op_name="SearchNfcUsers",
+            variables={"query": self.super_user.username},
+        )
+        self.assertResponseNoErrors(response)
+        data = response.json()["data"]["nfcUserSearch"]
+        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
+
 
 class UsersMutationsTestCase(UsersBaseTestCase):
     """
@@ -314,7 +377,37 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertEqual(today + 2, get_user_model().objects.get(pk=newly_registered_user.id).graduation_year)
 
     def test_update_user(self):
-        pass
+        mutation = """
+            mutation AdminUpdateUser($userId: ID!, $userData: AdminUserInput!) {
+                adminUpdateUser(userId: $userId, userData: $userData) {
+                    user {
+                        id
+                        firstName
+                        lastName
+                        phoneNumber
+                    }
+                }
+            }
+        """
+
+        response = self.query(
+            mutation,
+            user=self.super_user,
+            op_name="AdminUpdateUser",
+            variables={
+                "userId": str(self.indok_user.id),
+                "userData": {
+                    "firstName": "Oppdatert",
+                    "lastName": "Bruker",
+                    "phoneNumber": "+4791234567",
+                },
+            },
+        )
+        self.assertResponseNoErrors(response)
+
+        self.indok_user.refresh_from_db()
+        self.assertEqual(self.indok_user.first_name, "Oppdatert")
+        self.assertEqual(self.indok_user.last_name, "Bruker")
 
     def test_invalid_update_user(self):
         pass
