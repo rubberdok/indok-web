@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM public.ecr.aws/docker/library/python:3.9-slim AS builder
+FROM public.ecr.aws/docker/library/python:3.12-slim AS builder
 
 # set work directory
 WORKDIR /usr/src/app
