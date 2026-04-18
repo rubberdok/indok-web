@@ -29,6 +29,13 @@ export type Scalars = {
   /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: { input: number; output: number; }
   /**
+   * Allows use of a JSON String for input / output from the GraphQL schema.
+   *
+   * Use of this type is *not recommended* as you lose the benefits of having a defined, static
+   * schema (one of the key benefits of GraphQL).
+   */
+  JSONString: { input: any; output: any; }
+  /**
    * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
@@ -51,6 +58,7 @@ export type AdminBookingType = {
   isInternalPrice: Maybe<Scalars['Int']['output']>;
   isTentative: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
+  nfcAccessGrants: Array<NfcAccessGrantType>;
   numberOfNights: Maybe<Scalars['Int']['output']>;
   phone: Scalars['String']['output'];
   price: Maybe<Scalars['Int']['output']>;
@@ -128,6 +136,22 @@ export type AssignMembership = {
   __typename?: 'AssignMembership';
   membership: Maybe<MembershipType>;
   ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type AssignNfcCard = {
+  __typename?: 'AssignNfcCard';
+  assignment: Maybe<NfcCardAssignmentType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type AssignNfcCardInput = {
+  accessEnd: InputMaybe<Scalars['DateTime']['input']>;
+  accessStart: InputMaybe<Scalars['DateTime']['input']>;
+  externalHolderName: InputMaybe<Scalars['String']['input']>;
+  metadata: InputMaybe<Scalars['JSONString']['input']>;
+  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
+  uidHex: Scalars['String']['input'];
+  userId: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type AttemptCapturePayment = {
@@ -324,6 +348,24 @@ export type CreateListingInput = {
   readMoreUrl: InputMaybe<Scalars['String']['input']>;
   startDatetime: InputMaybe<Scalars['DateTime']['input']>;
   title: Scalars['String']['input'];
+};
+
+export type CreateNfcAccessGrant = {
+  __typename?: 'CreateNfcAccessGrant';
+  accessGrant: Maybe<NfcAccessGrantType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type CreateNfcAccessGrantInput = {
+  accessEnd: InputMaybe<Scalars['DateTime']['input']>;
+  accessStart: InputMaybe<Scalars['DateTime']['input']>;
+  bookingId: InputMaybe<Scalars['ID']['input']>;
+  grantedToUidHex: InputMaybe<Scalars['String']['input']>;
+  grantedToUserId: InputMaybe<Scalars['ID']['input']>;
+  notes: InputMaybe<Scalars['String']['input']>;
+  participantPolicy: InputMaybe<Scalars['String']['input']>;
+  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
+  scope: Scalars['String']['input'];
 };
 
 export type CreateOrganization = {
@@ -570,6 +612,22 @@ export type ListingType = {
   viewCount: Scalars['Int']['output'];
 };
 
+export type LogNfcAccessEvent = {
+  __typename?: 'LogNfcAccessEvent';
+  event: Maybe<NfcAccessEventType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type LogNfcAccessEventInput = {
+  doorIdentifier: InputMaybe<Scalars['String']['input']>;
+  eventType: Scalars['String']['input'];
+  notes: InputMaybe<Scalars['String']['input']>;
+  rawPayload: InputMaybe<Scalars['JSONString']['input']>;
+  resolvedUserId: InputMaybe<Scalars['ID']['input']>;
+  source: InputMaybe<Scalars['String']['input']>;
+  uidHexReported: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Logout = {
   __typename?: 'Logout';
   idToken: Maybe<Scalars['String']['output']>;
@@ -599,6 +657,7 @@ export type Mutations = {
    */
   adminEventSignOff: Maybe<AdminEventSignOff>;
   assignMembership: Maybe<AssignMembership>;
+  assignNfcCard: Maybe<AssignNfcCard>;
   attemptCapturePayment: Maybe<AttemptCapturePayment>;
   authUser: AuthUser;
   createArchivedocument: Maybe<CreateArchiveDocument>;
@@ -613,6 +672,7 @@ export type Mutations = {
   createForm: Maybe<CreateForm>;
   /** Creates a new listing */
   createListing: Maybe<CreateListing>;
+  createNfcAccessGrant: Maybe<CreateNfcAccessGrant>;
   createOrganization: Maybe<CreateOrganization>;
   createProduct: Maybe<CreateProduct>;
   createQuestion: Maybe<CreateQuestion>;
@@ -647,7 +707,10 @@ export type Mutations = {
    */
   eventSignUp: Maybe<EventSignUp>;
   initiateOrder: Maybe<InitiateOrder>;
+  logNfcAccessEvent: Maybe<LogNfcAccessEvent>;
   logout: Maybe<Logout>;
+  revokeNfcAccessGrant: Maybe<RevokeNfcAccessGrant>;
+  revokeNfcAssignment: Maybe<RevokeNfcAssignment>;
   /** Sends email to the user or an admin (or both) */
   sendEmail: Maybe<SendEmail>;
   /** Send an email to all users signed up to an event */
@@ -671,6 +734,7 @@ export type Mutations = {
   updateOrganization: Maybe<UpdateOrganization>;
   updateQuestion: Maybe<UpdateQuestion>;
   updateUser: Maybe<UpdateUser>;
+  upsertNfcCard: Maybe<UpsertNfcCard>;
 };
 
 
@@ -682,6 +746,11 @@ export type MutationsAdminEventSignOffArgs = {
 
 export type MutationsAssignMembershipArgs = {
   membershipData: MembershipInput;
+};
+
+
+export type MutationsAssignNfcCardArgs = {
+  assignmentData: AssignNfcCardInput;
 };
 
 
@@ -742,6 +811,11 @@ export type MutationsCreateFormArgs = {
 
 export type MutationsCreateListingArgs = {
   listingData: CreateListingInput;
+};
+
+
+export type MutationsCreateNfcAccessGrantArgs = {
+  grantData: CreateNfcAccessGrantInput;
 };
 
 
@@ -850,6 +924,21 @@ export type MutationsInitiateOrderArgs = {
 };
 
 
+export type MutationsLogNfcAccessEventArgs = {
+  eventData: LogNfcAccessEventInput;
+};
+
+
+export type MutationsRevokeNfcAccessGrantArgs = {
+  revokeData: RevokeNfcAccessGrantInput;
+};
+
+
+export type MutationsRevokeNfcAssignmentArgs = {
+  revokeData: RevokeNfcAssignmentInput;
+};
+
+
 export type MutationsSendEmailArgs = {
   emailInput: InputMaybe<EmailInput>;
 };
@@ -942,6 +1031,121 @@ export type MutationsUpdateQuestionArgs = {
 
 export type MutationsUpdateUserArgs = {
   userData: InputMaybe<UserInput>;
+};
+
+
+export type MutationsUpsertNfcCardArgs = {
+  cardData: NfcCardInput;
+};
+
+/** An enumeration. */
+export enum NfcAccessEventEventType {
+  /** Access denied */
+  AccessDenied = 'ACCESS_DENIED',
+  /** Access granted */
+  AccessGranted = 'ACCESS_GRANTED',
+  /** Door opened */
+  DoorOpened = 'DOOR_OPENED'
+}
+
+/** An enumeration. */
+export enum NfcAccessEventSource {
+  /** Backend */
+  Backend = 'BACKEND',
+  /** Manual key */
+  ManualKey = 'MANUAL_KEY',
+  /** NFC reader */
+  NfcReader = 'NFC_READER',
+  /** Unknown */
+  Unknown = 'UNKNOWN'
+}
+
+export type NfcAccessEventType = {
+  __typename?: 'NfcAccessEventType';
+  card: Maybe<NfcCardType>;
+  cardAssignment: Maybe<NfcCardAssignmentType>;
+  doorIdentifier: Scalars['String']['output'];
+  eventType: NfcAccessEventEventType;
+  id: Scalars['ID']['output'];
+  notes: Scalars['String']['output'];
+  occurredAt: Scalars['DateTime']['output'];
+  rawPayload: Scalars['JSONString']['output'];
+  resolvedUser: Maybe<UserType>;
+  source: NfcAccessEventSource;
+  uidHexReported: Scalars['String']['output'];
+};
+
+/** An enumeration. */
+export enum NfcAccessGrantParticipantPolicy {
+  /** All participants */
+  AllParticipants = 'ALL_PARTICIPANTS',
+  /** Booker only */
+  BookerOnly = 'BOOKER_ONLY'
+}
+
+/** An enumeration. */
+export enum NfcAccessGrantScope {
+  /** Booking */
+  Booking = 'BOOKING',
+  /** Manual */
+  Manual = 'MANUAL'
+}
+
+export type NfcAccessGrantType = {
+  __typename?: 'NfcAccessGrantType';
+  accessEnd: Maybe<Scalars['DateTime']['output']>;
+  accessStart: Maybe<Scalars['DateTime']['output']>;
+  booking: Maybe<AdminBookingType>;
+  createdAt: Scalars['DateTime']['output'];
+  grantedBy: Maybe<UserType>;
+  grantedToCard: Maybe<NfcCardType>;
+  grantedToUser: Maybe<UserType>;
+  hasAccessNow: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['ID']['output'];
+  notes: Scalars['String']['output'];
+  participantPolicy: NfcAccessGrantParticipantPolicy;
+  permanentAccess: Scalars['Boolean']['output'];
+  revokedAt: Maybe<Scalars['DateTime']['output']>;
+  revokedBy: Maybe<UserType>;
+  scope: NfcAccessGrantScope;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type NfcCardAssignmentType = {
+  __typename?: 'NfcCardAssignmentType';
+  accessEnd: Maybe<Scalars['DateTime']['output']>;
+  accessStart: Maybe<Scalars['DateTime']['output']>;
+  assignedAt: Scalars['DateTime']['output'];
+  assignedBy: Maybe<UserType>;
+  card: NfcCardType;
+  externalHolderName: Scalars['String']['output'];
+  hasAccessNow: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['ID']['output'];
+  metadata: Scalars['JSONString']['output'];
+  permanentAccess: Scalars['Boolean']['output'];
+  revocationReason: Scalars['String']['output'];
+  revokedAt: Maybe<Scalars['DateTime']['output']>;
+  revokedBy: Maybe<UserType>;
+  user: Maybe<UserType>;
+};
+
+export type NfcCardInput = {
+  isEnabled: InputMaybe<Scalars['Boolean']['input']>;
+  label: InputMaybe<Scalars['String']['input']>;
+  notes: InputMaybe<Scalars['String']['input']>;
+  uidHex: Scalars['String']['input'];
+};
+
+export type NfcCardType = {
+  __typename?: 'NfcCardType';
+  activeAssignment: Maybe<NfcCardAssignmentType>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  isEnabled: Scalars['Boolean']['output'];
+  label: Scalars['String']['output'];
+  notes: Scalars['String']['output'];
+  uidHex: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type OptionInput = {
@@ -1053,6 +1257,12 @@ export type Queries = {
   listings: Maybe<Array<ListingType>>;
   logout: Scalars['String']['output'];
   memberships: Maybe<Array<MembershipType>>;
+  myNfcCardAssignment: Maybe<NfcCardAssignmentType>;
+  nfcAccessEvents: Maybe<Array<NfcAccessEventType>>;
+  nfcAccessGrants: Maybe<Array<NfcAccessGrantType>>;
+  nfcCard: Maybe<NfcCardType>;
+  nfcCardAssignments: Maybe<Array<NfcCardAssignmentType>>;
+  nfcCards: Maybe<Array<NfcCardType>>;
   order: Maybe<OrderType>;
   ordersByStatus: Maybe<OrdersByStatusType>;
   organization: Maybe<OrganizationType>;
@@ -1160,6 +1370,27 @@ export type QueriesMembershipsArgs = {
 };
 
 
+export type QueriesNfcAccessEventsArgs = {
+  doorIdentifier: InputMaybe<Scalars['String']['input']>;
+  limit: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueriesNfcAccessGrantsArgs = {
+  activeOnly: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueriesNfcCardArgs = {
+  uidHex: Scalars['String']['input'];
+};
+
+
+export type QueriesNfcCardAssignmentsArgs = {
+  activeOnly: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type QueriesOrderArgs = {
   orderId: Scalars['ID']['input'];
 };
@@ -1264,6 +1495,27 @@ export type ResponsibleGroupType = {
   name: Scalars['String']['output'];
   organization: OrganizationType;
   uuid: Scalars['UUID']['output'];
+};
+
+export type RevokeNfcAccessGrant = {
+  __typename?: 'RevokeNfcAccessGrant';
+  accessGrant: Maybe<NfcAccessGrantType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type RevokeNfcAccessGrantInput = {
+  accessGrantId: Scalars['ID']['input'];
+};
+
+export type RevokeNfcAssignment = {
+  __typename?: 'RevokeNfcAssignment';
+  assignment: Maybe<NfcCardAssignmentType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type RevokeNfcAssignmentInput = {
+  assignmentId: Scalars['ID']['input'];
+  reason: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Sends email to the user or an admin (or both) */
@@ -1463,6 +1715,12 @@ export type UpdateUser = {
   user: Maybe<UserType>;
 };
 
+export type UpsertNfcCard = {
+  __typename?: 'UpsertNfcCard';
+  card: Maybe<NfcCardType>;
+  ok: Scalars['Boolean']['output'];
+};
+
 export type UserAttendingType = {
   __typename?: 'UserAttendingType';
   hasBoughtTicket: Maybe<Scalars['Boolean']['output']>;
@@ -1477,6 +1735,7 @@ export type UserInput = {
   firstName: InputMaybe<Scalars['String']['input']>;
   graduationYear: InputMaybe<Scalars['Int']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
+  nfcPinCode: InputMaybe<Scalars['String']['input']>;
   phoneNumber: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1498,6 +1757,8 @@ export type UserType = {
   lastLogin: Maybe<Scalars['DateTime']['output']>;
   lastName: Scalars['String']['output'];
   memberships: Array<MembershipType>;
+  nfcPinCode: Maybe<Scalars['String']['output']>;
+  nfcUidHex: Maybe<Scalars['String']['output']>;
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars['String']['output'];
   responses: Array<ResponseType>;
@@ -1505,6 +1766,11 @@ export type UserType = {
   username: Scalars['String']['output'];
   yearUpdatedAt: Maybe<Scalars['DateTime']['output']>;
 };
+
+export type AllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllUsersQuery = { __typename?: 'Queries', allUsers: Array<{ __typename?: 'UserType', id: string, username: string, email: string, phoneNumber: string, firstName: string, lastName: string, allergies: string | null, gradeYear: number | null, graduationYear: number | null, lastLogin: string | null, dateJoined: string, feideUserid: string, feideEmail: string, memberships: Array<{ __typename?: 'MembershipType', id: string, organization: { __typename?: 'OrganizationType', id: string, name: string }, group: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null }>, events: Array<{ __typename?: 'EventType', title: string }> | null }> | null };
 
 export type LoggedInUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1539,6 +1805,7 @@ export type CabinPermissionQueryVariables = Exact<{ [key: string]: never; }>;
 export type CabinPermissionQuery = { __typename?: 'Queries', hasPermission: boolean | null };
 
 
+export const AllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"lastLogin"}},{"kind":"Field","name":{"kind":"Name","value":"dateJoined"}},{"kind":"Field","name":{"kind":"Name","value":"feideUserid"}},{"kind":"Field","name":{"kind":"Name","value":"feideEmail"}},{"kind":"Field","name":{"kind":"Name","value":"memberships"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}}]} as unknown as DocumentNode<AllUsersQuery, AllUsersQueryVariables>;
 export const LoggedInUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoggedInUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]} as unknown as DocumentNode<LoggedInUserQuery, LoggedInUserQueryVariables>;
 export const UserWithIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserWithId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UserWithIdQuery, UserWithIdQueryVariables>;
 export const HasPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HasPermission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"permission"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"permission"},"value":{"kind":"Variable","name":{"kind":"Name","value":"permission"}}}]}]}}]} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;

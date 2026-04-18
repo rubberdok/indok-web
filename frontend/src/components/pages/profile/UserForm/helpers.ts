@@ -29,6 +29,7 @@ export type IUserForm = {
   allergies: string;
   graduationYear: number;
   phoneNumber: string;
+  nfcPinCode?: string;
 };
 
 export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
@@ -43,6 +44,9 @@ export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
   phoneNumber: Yup.string()
     .matches(/^(0047|\+47|47)?[49]\d{7}$/, { message: "Må være et gyldig telefonnummer.", excludeEmptyString: true })
     .ensure(),
+  nfcPinCode: Yup.string()
+    .matches(/^\d{4}$/, { message: "PIN-kode må være nøyaktig 4 sifre.", excludeEmptyString: true })
+    .optional(),
 });
 
 export const suggestGraduationYear = () => {

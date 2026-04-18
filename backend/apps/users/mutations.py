@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Optional
+import re
 
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
@@ -35,6 +36,7 @@ class UserInput(graphene.InputObjectType):
     graduation_year = graphene.Int()
     phone_number = graphene.String()
     allergies = graphene.String()
+    nfc_pin_code = graphene.String()
 
 
 class UpdateUser(graphene.Mutation):
@@ -54,10 +56,25 @@ class UpdateUser(graphene.Mutation):
 
         user: "models.User" = info.context.user
 
+        from apps.nfc.models import NfcCardAssignment
+
         new_graduation_year = user_data.get("graduation_year")
+        new_nfc_pin_code = user_data.get("nfc_pin_code")
+
+        if new_nfc_pin_code is not None:
+            active_assignment = NfcCardAssignment.objects.filter(user=user, revoked_at__isnull=True).first()
+            if active_assignment is None:
+                raise ValueError("Kan ikke oppdatere PIN-kode uten aktivt NFC-kort")
+
+            if new_nfc_pin_code != "" and not re.match(r"^\d{4}$", new_nfc_pin_code):
+                raise ValueError("PIN-kode må være nøyaktig 4 sifre")
+
+            active_assignment.pin_code = new_nfc_pin_code
+            active_assignment.full_clean()
+            active_assignment.save(update_fields=["pin_code"])
 
         for k, v in user_data.items():
-            if k != "graduation_year":
+            if k not in ("graduation_year", "nfc_pin_code"):
                 setattr(user, k, v)
             elif k == "graduation_year":
                 update_graduation_year(user, new_graduation_year)

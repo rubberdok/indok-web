@@ -18,10 +18,6 @@ import range from "lodash/range";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-import { Link } from "@/components";
-import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-
 import {
   IUserForm,
   currentGradeYear,
@@ -30,6 +26,10 @@ import {
   suggestGraduationYear,
   validationSchema,
 } from "./helpers";
+
+import { Link } from "@/components";
+import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
 
 type Props = {
   kind: "register" | "update";
@@ -47,6 +47,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
   const router = useRouter();
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
+  const hasActiveUid = Boolean(data?.user?.nfcUidHex);
 
   const minimumGraduationYear = Math.min(currentYear, data?.user?.graduationYear ?? currentYear);
   const graduationYears = range(minimumGraduationYear, maxGraduationYear + 1, 1);
@@ -65,6 +66,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
+      nfcPinCode: data?.user?.nfcPinCode || "",
     },
     values: {
       firstName: data?.user?.firstName || "",
@@ -73,17 +75,24 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
+      nfcPinCode: data?.user?.nfcPinCode || "",
     },
     resolver: yupResolver(validationSchema),
   });
 
   return (
     <form
-      onSubmit={handleSubmit((values) =>
-        updateUser({
-          variables: { userData: values },
-        })
-      )}
+      onSubmit={handleSubmit((values) => {
+        const userData = { ...values };
+
+        if (!hasActiveUid) {
+          delete userData.nfcPinCode;
+        }
+
+        return updateUser({
+          variables: { userData },
+        });
+      })}
     >
       <Card sx={{ mt: 8, mb: 8 }} elevation={6}>
         <CardContent>
@@ -220,6 +229,46 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
               </Grid>
               <Grid item>
                 <Typography variant="body1">{isVegetarian(watch("allergies")) && "💚"}</Typography>
+              </Grid>
+            </Grid>
+
+            <Grid item>
+              <Typography variant="subtitle2">NFC</Typography>
+            </Grid>
+            <Grid container item direction="row" spacing={2}>
+              <Grid item>
+                <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label="UID"
+                  value={data?.user?.nfcUidHex || "Ingen kort tilknyttet"}
+                  inputProps={{ readOnly: true }}
+                  data-test-id={`${ID_PREFIX}nfcUidReadOnlyField`}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  {...register("nfcPinCode")}
+                  label="PIN-kode (4 sifre)"
+                  error={Boolean(errors.nfcPinCode)}
+                  helperText={
+                    errors.nfcPinCode?.message ||
+                    (hasActiveUid
+                      ? "Denne PIN-koden brukes til å låse opp JanHus, når du skal ha tilgang."
+                      : "PIN-kode kan kun settes når bruker har aktiv UID.")
+                  }
+                  inputProps={{
+                    inputMode: "numeric",
+                    maxLength: 4,
+                    pattern: "[0-9]{4}",
+                  }}
+                  disabled={!hasActiveUid}
+                  data-test-id={`${ID_PREFIX}nfcPinCodeTextField`}
+                />
               </Grid>
             </Grid>
           </Grid>
