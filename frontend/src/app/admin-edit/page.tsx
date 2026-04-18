@@ -550,17 +550,12 @@ export default function AdminEditPage() {
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Typography variant="h4">Adminbruker-redigering</Typography>
+      <Typography variant="h4">Generell bruker og Organisasjon administasjon</Typography>
       <Alert severity="info">
         {canManageProfiles
-          ? "Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon."
+          ? "Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon. "
           : "NFC-modus: Her kan du kun søke opp bruker og oppdatere UID/PIN."}
       </Alert>
-      {canManageProfiles && canManageNfc && (
-        <Alert severity="info">
-          Du har NFC-tilgang her fordi profilredigering automatisk gir tilgang til å redigere NFC UID/PIN.
-        </Alert>
-      )}
 
       <Card>
         <CardContent>
