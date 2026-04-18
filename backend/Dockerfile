@@ -1,5 +1,5 @@
 # pull official base image
-FROM --platform=linux/amd64 public.ecr.aws/docker/library/python:3.12-slim
+FROM --platform=linux/amd64 public.ecr.aws/docker/library/python:3.9-slim
 
 # set work directory
 WORKDIR /usr/src/app

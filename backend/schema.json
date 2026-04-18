@@ -51,59 +51,6 @@
             "INLINE_FRAGMENT"
           ],
           "name": "skip"
-        },
-        {
-          "args": [
-            {
-              "defaultValue": "\"No longer supported\"",
-              "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https://commonmark.org/).",
-              "name": "reason",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            }
-          ],
-          "description": "Marks an element of a GraphQL schema as no longer supported.",
-          "locations": [
-            "FIELD_DEFINITION",
-            "ARGUMENT_DEFINITION",
-            "INPUT_FIELD_DEFINITION",
-            "ENUM_VALUE"
-          ],
-          "name": "deprecated"
-        },
-        {
-          "args": [
-            {
-              "defaultValue": null,
-              "description": "The URL that specifies the behavior of this scalar.",
-              "name": "url",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            }
-          ],
-          "description": "Exposes a URL that specifies the behavior of this scalar.",
-          "locations": [
-            "SCALAR"
-          ],
-          "name": "specifiedBy"
-        },
-        {
-          "args": [],
-          "description": "Indicates an Input Object is a OneOf Input Object.",
-          "locations": [
-            "INPUT_OBJECT"
-          ],
-          "name": "oneOf"
         }
       ],
       "mutationType": {
@@ -1384,7 +1331,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -1400,7 +1347,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "organization",
               "type": {
@@ -1412,7 +1359,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "name",
               "type": {
@@ -1428,7 +1375,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -1444,7 +1391,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "blogPosts",
               "type": {
@@ -1489,7 +1436,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -1505,7 +1452,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "name",
               "type": {
@@ -1521,7 +1468,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "slug",
               "type": {
@@ -1537,7 +1484,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -1553,7 +1500,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "parent",
               "type": {
@@ -1565,7 +1512,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "logoUrl",
               "type": {
@@ -1577,7 +1524,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "color",
               "type": {
@@ -1589,7 +1536,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "users",
               "type": {
@@ -1613,7 +1560,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "children",
               "type": {
@@ -1637,7 +1584,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "events",
               "type": {
@@ -1728,7 +1675,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -1744,7 +1691,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "lastLogin",
               "type": {
@@ -1772,7 +1719,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "firstName",
               "type": {
@@ -1788,7 +1735,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "lastName",
               "type": {
@@ -1804,7 +1751,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "email",
               "type": {
@@ -1820,7 +1767,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "dateJoined",
               "type": {
@@ -1836,7 +1783,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "feideUserid",
               "type": {
@@ -1852,7 +1799,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "feideEmail",
               "type": {
@@ -1868,7 +1815,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "idToken",
               "type": {
@@ -1884,7 +1831,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "phoneNumber",
               "type": {
@@ -1900,7 +1847,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "firstLogin",
               "type": {
@@ -1916,7 +1863,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "graduationYear",
               "type": {
@@ -1928,7 +1875,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "yearUpdatedAt",
               "type": {
@@ -1940,7 +1887,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "organizations",
               "type": {
@@ -1964,7 +1911,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "memberships",
               "type": {
@@ -1988,7 +1935,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "responses",
               "type": {
@@ -2083,7 +2030,7 @@
           "possibleTypes": null
         },
         {
-          "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+          "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31 - 1) and 2^31 - 1 since represented in JSON as double-precision floating point numbers specifiedby [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).",
           "enumValues": null,
           "fields": null,
           "inputFields": null,
@@ -2099,7 +2046,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -2115,7 +2062,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "user",
               "type": {
@@ -2131,7 +2078,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "organization",
               "type": {
@@ -2147,7 +2094,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "group",
               "type": {
@@ -2170,7 +2117,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "uuid",
               "type": {
@@ -2186,7 +2133,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "name",
               "type": {
@@ -2202,7 +2149,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -2214,7 +2161,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "organization",
               "type": {
@@ -2230,7 +2177,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "groupType",
               "type": {
@@ -2267,7 +2214,7 @@
           "possibleTypes": null
         },
         {
-          "description": "Leverages the internal Python implementation of UUID (uuid.UUID) to provide native UUID objects\nin fields, resolvers and input.",
+          "description": "Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects\nin fields, resolvers and input.",
           "enumValues": null,
           "fields": null,
           "inputFields": null,
@@ -2283,7 +2230,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "uuid",
               "type": {
@@ -2299,7 +2246,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "respondent",
               "type": {
@@ -2315,7 +2262,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "form",
               "type": {
@@ -2331,19 +2278,19 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "status",
               "type": {
                 "kind": "ENUM",
-                "name": "FormsResponseStatusChoices",
+                "name": "ResponseStatus",
                 "ofType": null
               }
             },
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "answers",
               "type": {
@@ -2410,7 +2357,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -2426,7 +2373,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "organization",
               "type": {
@@ -2438,7 +2385,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "name",
               "type": {
@@ -2454,7 +2401,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -2470,7 +2417,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "questions",
               "type": {
@@ -2606,7 +2553,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -2622,7 +2569,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "question",
               "type": {
@@ -2638,7 +2585,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -2654,7 +2601,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "mandatory",
               "type": {
@@ -2756,7 +2703,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -2772,7 +2719,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "answer",
               "type": {
@@ -2788,7 +2735,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "question",
               "type": {
@@ -2815,7 +2762,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "uuid",
               "type": {
@@ -2831,7 +2778,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "question",
               "type": {
@@ -2847,7 +2794,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "answer",
               "type": {
@@ -2964,7 +2911,7 @@
           "inputFields": null,
           "interfaces": null,
           "kind": "ENUM",
-          "name": "FormsResponseStatusChoices",
+          "name": "ResponseStatus",
           "possibleTypes": null
         },
         {
@@ -2974,7 +2921,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -2990,7 +2937,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "title",
               "type": {
@@ -3006,7 +2953,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -3022,7 +2969,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "startTime",
               "type": {
@@ -3038,7 +2985,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "isAttendable",
               "type": {
@@ -3054,7 +3001,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "organization",
               "type": {
@@ -3070,7 +3017,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "publisher",
               "type": {
@@ -3082,7 +3029,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "endTime",
               "type": {
@@ -3094,7 +3041,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "location",
               "type": {
@@ -3106,7 +3053,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "category",
               "type": {
@@ -3118,7 +3065,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "image",
               "type": {
@@ -3130,7 +3077,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "shortDescription",
               "type": {
@@ -3142,7 +3089,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "hasExtraInformation",
               "type": {
@@ -3158,7 +3105,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "contactEmail",
               "type": {
@@ -3174,7 +3121,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "signupOpenDate",
               "type": {
@@ -3186,7 +3133,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "deadline",
               "type": {
@@ -3198,7 +3145,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "price",
               "type": {
@@ -3210,7 +3157,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "bindingSignup",
               "type": {
@@ -3345,7 +3292,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -3361,7 +3308,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "name",
               "type": {
@@ -3382,7 +3329,7 @@
           "possibleTypes": null
         },
         {
-          "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
+          "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
           "enumValues": null,
           "fields": null,
           "inputFields": null,
@@ -3457,7 +3404,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -3473,7 +3420,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "timestamp",
               "type": {
@@ -3489,7 +3436,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "isAttending",
               "type": {
@@ -3505,7 +3452,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "extraInformation",
               "type": {
@@ -3521,7 +3468,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "event",
               "type": {
@@ -3537,7 +3484,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "user",
               "type": {
@@ -3553,7 +3500,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "userEmail",
               "type": {
@@ -3569,7 +3516,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "userPhoneNumber",
               "type": {
@@ -3585,7 +3532,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "userGradeYear",
               "type": {
@@ -3636,7 +3583,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -3652,7 +3599,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "name",
               "type": {
@@ -3668,7 +3615,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "price",
               "type": {
@@ -3684,7 +3631,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -3700,7 +3647,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "maxBuyableQuantity",
               "type": {
@@ -3716,7 +3663,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "shopItem",
               "type": {
@@ -3753,7 +3700,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -3769,7 +3716,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "title",
               "type": {
@@ -3785,7 +3732,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "description",
               "type": {
@@ -3801,7 +3748,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "viewCount",
               "type": {
@@ -3817,7 +3764,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "startDatetime",
               "type": {
@@ -3833,7 +3780,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "endDatetime",
               "type": {
@@ -3849,7 +3796,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "deadline",
               "type": {
@@ -3865,7 +3812,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "applicationUrl",
               "type": {
@@ -3877,7 +3824,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "readMoreUrl",
               "type": {
@@ -3889,7 +3836,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "heroImageUrl",
               "type": {
@@ -3901,7 +3848,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "form",
               "type": {
@@ -3913,7 +3860,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "slug",
               "type": {
@@ -3929,7 +3876,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "organization",
               "type": {
@@ -3980,7 +3927,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -3996,7 +3943,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "title",
               "type": {
@@ -4012,7 +3959,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "text",
               "type": {
@@ -4028,7 +3975,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "publishDate",
               "type": {
@@ -4044,7 +3991,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "author",
               "type": {
@@ -4056,7 +4003,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "blog",
               "type": {
@@ -4079,7 +4026,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -4095,7 +4042,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "product",
               "type": {
@@ -4111,7 +4058,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "user",
               "type": {
@@ -4127,7 +4074,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "quantity",
               "type": {
@@ -4143,7 +4090,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "totalPrice",
               "type": {
@@ -4175,7 +4122,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "timestamp",
               "type": {
@@ -4191,7 +4138,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "deliveredProduct",
               "type": {
@@ -4314,7 +4261,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -4330,7 +4277,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "checkIn",
               "type": {
@@ -4346,7 +4293,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "checkOut",
               "type": {
@@ -4362,7 +4309,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "cabins",
               "type": {
@@ -4407,7 +4354,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -4423,7 +4370,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "name",
               "type": {
@@ -4439,7 +4386,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "maxGuests",
               "type": {
@@ -4455,7 +4402,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "internalPrice",
               "type": {
@@ -4471,7 +4418,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "internalPriceWeekend",
               "type": {
@@ -4487,7 +4434,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "externalPrice",
               "type": {
@@ -4503,7 +4450,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "externalPriceWeekend",
               "type": {
@@ -4530,7 +4477,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -4546,7 +4493,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "checkIn",
               "type": {
@@ -4562,7 +4509,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "checkOut",
               "type": {
@@ -4578,7 +4525,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "cabins",
               "type": {
@@ -4602,7 +4549,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "firstName",
               "type": {
@@ -4618,7 +4565,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "lastName",
               "type": {
@@ -4634,7 +4581,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "phone",
               "type": {
@@ -4650,7 +4597,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "receiverEmail",
               "type": {
@@ -4666,7 +4613,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "timestamp",
               "type": {
@@ -4682,7 +4629,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "internalParticipants",
               "type": {
@@ -4698,7 +4645,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "externalParticipants",
               "type": {
@@ -4714,7 +4661,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "isTentative",
               "type": {
@@ -4730,7 +4677,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "isDeclined",
               "type": {
@@ -4746,7 +4693,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "declineReason",
               "type": {
@@ -4762,7 +4709,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "extraInfo",
               "type": {
@@ -4825,7 +4772,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -4912,7 +4859,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -4928,7 +4875,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "fallStartDate",
               "type": {
@@ -4944,7 +4891,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "fallEndDate",
               "type": {
@@ -4960,7 +4907,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "springStartDate",
               "type": {
@@ -4976,7 +4923,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "springEndDate",
               "type": {
@@ -4992,7 +4939,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "fallSemesterActive",
               "type": {
@@ -5008,7 +4955,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "springSemesterActive",
               "type": {
@@ -5035,7 +4982,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "id",
               "type": {
@@ -5051,7 +4998,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "title",
               "type": {
@@ -5067,7 +5014,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "typeDoc",
               "type": {
@@ -5075,7 +5022,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "ENUM",
-                  "name": "ArchiveArchiveDocumentTypeDocChoices",
+                  "name": "ArchiveDocumentTypeDoc",
                   "ofType": null
                 }
               }
@@ -5083,7 +5030,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "fileLocation",
               "type": {
@@ -5099,7 +5046,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "featured",
               "type": {
@@ -5115,7 +5062,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "year",
               "type": {
@@ -5127,7 +5074,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": null,
+              "description": "",
               "isDeprecated": false,
               "name": "webLink",
               "type": {
@@ -5211,7 +5158,7 @@
           "inputFields": null,
           "interfaces": null,
           "kind": "ENUM",
-          "name": "ArchiveArchiveDocumentTypeDocChoices",
+          "name": "ArchiveDocumentTypeDoc",
           "possibleTypes": null
         },
         {
@@ -7375,7 +7322,7 @@
           "fields": null,
           "inputFields": [
             {
-              "defaultValue": "null",
+              "defaultValue": null,
               "description": null,
               "name": "questionType",
               "type": {
@@ -7465,7 +7412,7 @@
           "fields": null,
           "inputFields": [
             {
-              "defaultValue": "null",
+              "defaultValue": null,
               "description": null,
               "name": "questionType",
               "type": {
@@ -10338,21 +10285,9 @@
           "possibleTypes": null
         },
         {
-          "description": "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.",
+          "description": "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation and subscription operations.",
           "enumValues": null,
           "fields": [
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "description",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
             {
               "args": [],
               "deprecationReason": null,
@@ -10408,7 +10343,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": "If this server supports subscription, the type that subscription operations will be rooted at.",
+              "description": "If this server support subscription, the type that subscription operations will be rooted at.",
               "isDeprecated": false,
               "name": "subscriptionType",
               "type": {
@@ -10449,7 +10384,7 @@
           "possibleTypes": null
         },
         {
-          "description": "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name, description and optional `specifiedByURL`, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
+          "description": "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name and description, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
           "enumValues": null,
           "fields": [
             {
@@ -10486,18 +10421,6 @@
               "description": null,
               "isDeprecated": false,
               "name": "description",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "specifiedByURL",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
@@ -10607,18 +10530,7 @@
               }
             },
             {
-              "args": [
-                {
-                  "defaultValue": "false",
-                  "description": null,
-                  "name": "includeDeprecated",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  }
-                }
-              ],
+              "args": [],
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
@@ -10648,18 +10560,6 @@
                 "name": "__Type",
                 "ofType": null
               }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "isOneOf",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
             }
           ],
           "inputFields": null,
@@ -10669,7 +10569,7 @@
           "possibleTypes": null
         },
         {
-          "description": "An enum describing what kind of type a given `__Type` is.",
+          "description": "An enum describing what kind of type a given `__Type` is",
           "enumValues": [
             {
               "deprecationReason": null,
@@ -10685,7 +10585,7 @@
             },
             {
               "deprecationReason": null,
-              "description": "Indicates this type is an interface. `fields`, `interfaces`, and `possibleTypes` are valid fields.",
+              "description": "Indicates this type is an interface. `fields` and `possibleTypes` are valid fields.",
               "isDeprecated": false,
               "name": "INTERFACE"
             },
@@ -10760,18 +10660,7 @@
               }
             },
             {
-              "args": [
-                {
-                  "defaultValue": "false",
-                  "description": null,
-                  "name": "includeDeprecated",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  }
-                }
-              ],
+              "args": [],
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
@@ -10896,37 +10785,9 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": "A GraphQL-formatted string representing the default value for this input value.",
+              "description": null,
               "isDeprecated": false,
               "name": "defaultValue",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "isDeprecated",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "deprecationReason",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
@@ -11044,22 +10905,6 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
-              "name": "isRepeatable",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
               "name": "locations",
               "type": {
                 "kind": "NON_NULL",
@@ -11080,18 +10925,7 @@
               }
             },
             {
-              "args": [
-                {
-                  "defaultValue": "false",
-                  "description": null,
-                  "name": "includeDeprecated",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  }
-                }
-              ],
+              "args": [],
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
@@ -11111,6 +10945,54 @@
                       "ofType": null
                     }
                   }
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": "Use `locations`.",
+              "description": null,
+              "isDeprecated": true,
+              "name": "onOperation",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": "Use `locations`.",
+              "description": null,
+              "isDeprecated": true,
+              "name": "onFragment",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": "Use `locations`.",
+              "description": null,
+              "isDeprecated": true,
+              "name": "onField",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
                 }
               }
             }
@@ -11168,12 +11050,6 @@
             },
             {
               "deprecationReason": null,
-              "description": "Location adjacent to a variable definition.",
-              "isDeprecated": false,
-              "name": "VARIABLE_DEFINITION"
-            },
-            {
-              "deprecationReason": null,
               "description": "Location adjacent to a schema definition.",
               "isDeprecated": false,
               "name": "SCHEMA"
@@ -11186,7 +11062,7 @@
             },
             {
               "deprecationReason": null,
-              "description": "Location adjacent to an object type definition.",
+              "description": "Location adjacent to an object definition.",
               "isDeprecated": false,
               "name": "OBJECT"
             },
@@ -11228,7 +11104,7 @@
             },
             {
               "deprecationReason": null,
-              "description": "Location adjacent to an input object type definition.",
+              "description": "Location adjacent to an input object definition.",
               "isDeprecated": false,
               "name": "INPUT_OBJECT"
             },
