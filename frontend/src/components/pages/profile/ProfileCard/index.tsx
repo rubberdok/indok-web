@@ -1,4 +1,4 @@
-import { AdminPageCard } from "@/components/pages/profile/ProfileCard/variants/AdminPageCard";
+import { AdminPageCard } from "./variants/AdminPageCard";
 import { CabinsAdminCard } from "./variants/CabinsAdminCard";
 import { EventCard } from "./variants/EventCard";
 import { FormCard } from "./variants/FormCard";
