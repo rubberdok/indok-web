@@ -121,8 +121,6 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -159,9 +157,7 @@ jobs:
             --env GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }} \
             --env VIPPS_SECRET=${{ secrets.VIPPS_SECRET }} \
             --env VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }} \
-            --env DB_HOST=127.0.0.1 \
-            --env DB_PORT=${{ job.services.postgres.ports[5432] }} \
-            --network host \
+            --network ${{ job.services.postgres.network }} \
             --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
 
@@ -266,7 +262,7 @@ jobs:
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v6.7.8
+        uses: cypress-io/github-action@v7.1.9
         with:
           record: true
           parallel: true
@@ -274,8 +270,7 @@ jobs:
           working-directory: frontend
           browser: chrome
           ci-build-id: ${{ needs.prepare.outputs.uuid }}
-          wait-on: "http-get://localhost:8000/-/health, http-get://localhost:3000/api/health"
-          wait-on-timeout: 180
+          wait-on: "http://localhost:8000/-/health http://localhost:3000/api/health"
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
