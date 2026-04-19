@@ -66,7 +66,7 @@ export const Footer: React.FC = () => {
                 </Typography>
                 <LinkItem href="/baksida">Baksida</LinkItem>
                 <LinkItem href="/about">Om oss</LinkItem>
-                <LinkItem href="/ https://www.ok-studentrad.no/">ØK ITV</LinkItem>
+                <LinkItem href="https://www.ok-studentrad.no/">ØK ITV</LinkItem>
                 <LinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
                   IØT adferdskodeks
                 </LinkItem>
