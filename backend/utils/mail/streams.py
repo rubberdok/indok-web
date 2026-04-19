@@ -102,16 +102,14 @@ class PostmarkEmail(EmailMultiAlternatives):
 
         if template_variables is None:
             if to is not None and template_id is not None and len(to) > 1:
-                warnings.warn(
-                    """
+                warnings.warn("""
                     As template_variables is None,
                     the mail will be sent with several recipients in the to-field,
                     potentially leaking emails.
                     """)
         elif emails := list(template_variables.keys()):
             if "@" not in emails[0]:
-                warnings.warn(
-                    """template_variables should have the following structure:
+                warnings.warn("""template_variables should have the following structure:
                     {
                         first@example.com: {
                             ...
