@@ -29,7 +29,7 @@ export type Scalars = {
   /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: { input: number; output: number; }
   /**
-   * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
+   * Leverages the internal Python implementation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
   UUID: { input: string; output: string; }
@@ -92,20 +92,8 @@ export type AnswerType = {
   uuid: Scalars['UUID']['output'];
 };
 
-export type ArchiveDocumentType = {
-  __typename?: 'ArchiveDocumentType';
-  featured: Scalars['Boolean']['output'];
-  fileLocation: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  thumbnail: Maybe<Scalars['String']['output']>;
-  title: Scalars['String']['output'];
-  typeDoc: ArchiveDocumentTypeDoc;
-  webLink: Maybe<Scalars['String']['output']>;
-  year: Maybe<Scalars['Int']['output']>;
-};
-
 /** An enumeration. */
-export enum ArchiveDocumentTypeDoc {
+export enum ArchiveArchiveDocumentTypeDocChoices {
   /** Annet */
   Annet = 'ANNET',
   /** Årbøker */
@@ -123,6 +111,18 @@ export enum ArchiveDocumentTypeDoc {
   /** Utveksling */
   Utveksling = 'UTVEKSLING'
 }
+
+export type ArchiveDocumentType = {
+  __typename?: 'ArchiveDocumentType';
+  featured: Scalars['Boolean']['output'];
+  fileLocation: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  thumbnail: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  typeDoc: ArchiveArchiveDocumentTypeDocChoices;
+  webLink: Maybe<Scalars['String']['output']>;
+  year: Maybe<Scalars['Int']['output']>;
+};
 
 export type AssignMembership = {
   __typename?: 'AssignMembership';
@@ -545,6 +545,18 @@ export type FormTypeRespondersArgs = {
 export type FormTypeResponseArgs = {
   responsePk: InputMaybe<Scalars['UUID']['input']>;
 };
+
+/** An enumeration. */
+export enum FormsResponseStatusChoices {
+  /** Red */
+  A_0 = 'A_0',
+  /** Yellow */
+  A_1 = 'A_1',
+  /** Green */
+  A_2 = 'A_2',
+  /** Unknown */
+  None = 'NONE'
+}
 
 export type InitiateOrder = {
   __typename?: 'InitiateOrder';
@@ -1232,18 +1244,6 @@ export enum QuestionTypeEnum {
   Slider = 'SLIDER'
 }
 
-/** An enumeration. */
-export enum ResponseStatus {
-  /** Red */
-  A_0 = 'A_0',
-  /** Yellow */
-  A_1 = 'A_1',
-  /** Green */
-  A_2 = 'A_2',
-  /** Unknown */
-  None = 'NONE'
-}
-
 /** A response instance that contains information about a user's response to a form. */
 export type ResponseType = {
   __typename?: 'ResponseType';
@@ -1252,7 +1252,7 @@ export type ResponseType = {
   id: Maybe<Scalars['UUID']['output']>;
   questions: Maybe<Array<QuestionType>>;
   respondent: UserType;
-  status: Maybe<ResponseStatus>;
+  status: Maybe<FormsResponseStatusChoices>;
   uuid: Scalars['UUID']['output'];
 };
 
