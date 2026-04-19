@@ -270,7 +270,7 @@ jobs:
           working-directory: frontend
           browser: chrome
           ci-build-id: ${{ needs.prepare.outputs.uuid }}
-          wait-on: "http://localhost:8000/-/health,http://localhost:3000/api/health"
+          wait-on: "http://localhost:8000/health,http://localhost:3000/api/health"
           wait-on-timeout: 180
         env:
           # pass the Dashboard record key as an environment variable
@@ -278,6 +278,12 @@ jobs:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dump compose diagnostics on failure
+        if: ${{ failure() }}
+        run: |
+          docker compose -f docker-compose.integration.yml ps
+          docker compose -f docker-compose.integration.yml logs --tail=200 backend frontend postgres
 
   deploy:
     name: Deploy to ECS
