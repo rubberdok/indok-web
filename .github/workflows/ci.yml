@@ -121,6 +121,8 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -157,7 +159,9 @@ jobs:
             --env GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }} \
             --env VIPPS_SECRET=${{ secrets.VIPPS_SECRET }} \
             --env VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }} \
-            --network ${{ job.services.postgres.network }} \
+            --env DB_HOST=127.0.0.1 \
+            --env DB_PORT=5432 \
+            --network host \
             --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
 
