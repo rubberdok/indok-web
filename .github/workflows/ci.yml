@@ -270,7 +270,8 @@ jobs:
           working-directory: frontend
           browser: chrome
           ci-build-id: ${{ needs.prepare.outputs.uuid }}
-          wait-on: "http://localhost:8000/-/health, http://localhost:3000/api/health"
+          wait-on: "http-get://localhost:8000/-/health, http-get://localhost:3000/api/health"
+          wait-on-timeout: 180
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
