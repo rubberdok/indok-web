@@ -6850,7 +6850,7 @@
               "name": "ok",
               "type": {
                 "kind": "SCALAR",
-                "name": "Boolean",
+                "name": "ID",
                 "ofType": null
               }
             }

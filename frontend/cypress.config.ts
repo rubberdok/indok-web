@@ -11,6 +11,7 @@ export default defineConfig({
     chromeWebSecurity: false,
     projectId: "1fyogc",
     video: false,
+    experimentalSessionAndOrigin: true,
     defaultCommandTimeout: 60000,
     setupNodeEvents(on, config) {
       // implement node event listeners here

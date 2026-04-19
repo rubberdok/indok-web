@@ -76,8 +76,20 @@ export type AnswerType = {
   uuid: Scalars['UUID']['output'];
 };
 
+export type ArchiveDocumentType = {
+  __typename?: 'ArchiveDocumentType';
+  featured: Scalars['Boolean']['output'];
+  fileLocation: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  thumbnail?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  typeDoc: ArchiveDocumentTypeDoc;
+  webLink?: Maybe<Scalars['String']['output']>;
+  year?: Maybe<Scalars['Int']['output']>;
+};
+
 /** An enumeration. */
-export enum ArchiveArchiveDocumentTypeDocChoices {
+export enum ArchiveDocumentTypeDoc {
   /** Annet */
   Annet = 'ANNET',
   /** Årbøker */
@@ -95,18 +107,6 @@ export enum ArchiveArchiveDocumentTypeDocChoices {
   /** Utveksling */
   Utveksling = 'UTVEKSLING'
 }
-
-export type ArchiveDocumentType = {
-  __typename?: 'ArchiveDocumentType';
-  featured: Scalars['Boolean']['output'];
-  fileLocation: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  thumbnail?: Maybe<Scalars['String']['output']>;
-  title: Scalars['String']['output'];
-  typeDoc: ArchiveArchiveDocumentTypeDocChoices;
-  webLink?: Maybe<Scalars['String']['output']>;
-  year?: Maybe<Scalars['Int']['output']>;
-};
 
 export type AssignMembership = {
   __typename?: 'AssignMembership';
@@ -529,18 +529,6 @@ export type FormTypeRespondersArgs = {
 export type FormTypeResponseArgs = {
   responsePk?: InputMaybe<Scalars['UUID']['input']>;
 };
-
-/** An enumeration. */
-export enum FormsResponseStatusChoices {
-  /** Red */
-  A_0 = 'A_0',
-  /** Yellow */
-  A_1 = 'A_1',
-  /** Green */
-  A_2 = 'A_2',
-  /** Unknown */
-  None = 'NONE'
-}
 
 export type InitiateOrder = {
   __typename?: 'InitiateOrder';
@@ -1228,6 +1216,18 @@ export enum QuestionTypeEnum {
   Slider = 'SLIDER'
 }
 
+/** An enumeration. */
+export enum ResponseStatus {
+  /** Red */
+  A_0 = 'A_0',
+  /** Yellow */
+  A_1 = 'A_1',
+  /** Green */
+  A_2 = 'A_2',
+  /** Unknown */
+  None = 'NONE'
+}
+
 /** A response instance that contains information about a user's response to a form. */
 export type ResponseType = {
   __typename?: 'ResponseType';
@@ -1236,7 +1236,7 @@ export type ResponseType = {
   id?: Maybe<Scalars['UUID']['output']>;
   questions?: Maybe<Array<QuestionType>>;
   respondent: UserType;
-  status?: Maybe<FormsResponseStatusChoices>;
+  status?: Maybe<ResponseStatus>;
   uuid: Scalars['UUID']['output'];
 };
 
@@ -1497,19 +1497,19 @@ export type ArchiveByTypesQueryVariables = Exact<{
 }>;
 
 
-export type ArchiveByTypesQuery = { __typename?: 'Queries', archiveByTypes: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }> };
+export type ArchiveByTypesQuery = { __typename?: 'Queries', archiveByTypes: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveDocumentTypeDoc, year?: number | null, webLink?: string | null }> };
 
 export type FeaturedArchiveQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeaturedArchiveQuery = { __typename?: 'Queries', featuredArchive: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }> };
+export type FeaturedArchiveQuery = { __typename?: 'Queries', featuredArchive: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveDocumentTypeDoc, year?: number | null, webLink?: string | null }> };
 
 export type AvailableYearsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AvailableYearsQuery = { __typename?: 'Queries', availableYears: Array<string> };
 
-export type DocumentFragment = { __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null };
+export type DocumentFragment = { __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveDocumentTypeDoc, year?: number | null, webLink?: string | null };
 
 export type DocumentsQueryVariables = Exact<{
   documentTypes: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -1518,7 +1518,7 @@ export type DocumentsQueryVariables = Exact<{
 }>;
 
 
-export type DocumentsQuery = { __typename?: 'Queries', availableYears: Array<string>, hasPermission?: boolean | null, archiveByTypes: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }>, featuredArchive: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }> };
+export type DocumentsQuery = { __typename?: 'Queries', availableYears: Array<string>, hasPermission?: boolean | null, archiveByTypes: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveDocumentTypeDoc, year?: number | null, webLink?: string | null }>, featuredArchive: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveDocumentTypeDoc, year?: number | null, webLink?: string | null }> };
 
 export type CabinFragment = { __typename?: 'CabinType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number };
 
