@@ -1,3 +1,4 @@
+import { AdminPageCard } from "@/components/pages/profile/ProfileCard/variants/AdminPageCard";
 import { CabinsAdminCard } from "./variants/CabinsAdminCard";
 import { EventCard } from "./variants/EventCard";
 import { FormCard } from "./variants/FormCard";
@@ -13,3 +14,4 @@ export const Personal = PersonalCard;
 export const Report = ReportCard;
 export const Orders = OrdersCard;
 export const CabinsAdmin = CabinsAdminCard;
+export const AdminPage = AdminPageCard;

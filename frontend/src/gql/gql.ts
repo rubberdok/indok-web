@@ -19,6 +19,7 @@ const documents = {
     "\n  mutation Logout {\n    logout {\n      idToken\n    }\n  }\n": types.LogoutDocument,
     "\n  query Profile {\n    user {\n      id\n      feideEmail\n      email\n      username\n      firstName\n      lastName\n      dateJoined\n      graduationYear\n      gradeYear\n      allergies\n      phoneNumber\n      firstLogin\n    }\n  }\n": types.ProfileDocument,
     "\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n": types.CabinPermissionDocument,
+    "\n  query ProfileAdminEditCapabilities {\n    canManageUserProfiles\n    canManageUserNfc\n  }\n": types.ProfileAdminEditCapabilitiesDocument,
 };
 
 /**
@@ -59,6 +60,10 @@ export function graphql(source: "\n  query Profile {\n    user {\n      id\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n"): (typeof documents)["\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ProfileAdminEditCapabilities {\n    canManageUserProfiles\n    canManageUserNfc\n  }\n"): (typeof documents)["\n  query ProfileAdminEditCapabilities {\n    canManageUserProfiles\n    canManageUserNfc\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

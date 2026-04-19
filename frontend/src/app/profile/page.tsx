@@ -1,17 +1,17 @@
 "use client";
 
-import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client";
+import { useBackgroundQuery, useQuery, useSuspenseQuery } from "@apollo/client";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
-
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { graphql } from "@/gql";
-import { generateFeideLoginUrl } from "@/utils/auth";
 
 import { PermissionRequired } from "../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
-import { Event, Form, Orders, Organization, Personal, Report, CabinsAdmin } from "./components/ProfileCard";
+import { AdminPage, CabinsAdmin, Event, Form, Orders, Organization, Personal, Report } from "./components/ProfileCard";
+
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { graphql } from "@/gql";
+import { generateFeideLoginUrl } from "@/utils/auth";
 
 // Opt out of caching for all data requests in the route segment
 export const dynamic = "force-dynamic";
@@ -38,6 +38,13 @@ const profileDocument = graphql(/* GraphQL */ `
 const cabinPermissionDocument = graphql(/* GraphQL */ `
   query CabinPermission {
     hasPermission(permission: "cabins.manage_booking")
+  }
+`);
+
+const adminCapabilitiesDocument = graphql(/* GraphQL */ `
+  query ProfileAdminEditCapabilities {
+    canManageUserProfiles
+    canManageUserNfc
   }
 `);
 
@@ -71,6 +78,11 @@ export default function ProfilePage() {
    * in the PermissionRequired component.
    */
   const [queryRef] = useBackgroundQuery(cabinPermissionDocument);
+  const { data: adminCapabilities } = useQuery(adminCapabilitiesDocument, {
+    skip: data.user === null,
+  });
+  const hasAdminEditAccess =
+    Boolean(adminCapabilities?.canManageUserProfiles) || Boolean(adminCapabilities?.canManageUserNfc);
 
   // If the user is not logged in, redirect to the login page
   if (data.user === null) return redirect(generateFeideLoginUrl());
@@ -135,6 +147,11 @@ export default function ProfilePage() {
               <CabinsAdmin data-test-id={`${ID_PREFIX}cabin-`} />
             </PermissionRequired>
           </Grid>
+          {hasAdminEditAccess && (
+            <Grid item xs={12} md={6} lg={5}>
+              <AdminPage data-test-id={`${ID_PREFIX}admin-page-`} />
+            </Grid>
+          )}
         </Grid>
 
         <Grid item>
