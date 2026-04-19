@@ -457,6 +457,8 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
 class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
     def setUp(self):
+        super().setUp()
+
         # Create a staff user using the StaffUserFactory
         self.staff_user = StaffUserFactory(username="staffuser")
 
