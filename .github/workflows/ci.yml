@@ -157,7 +157,7 @@ jobs:
             --env GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }} \
             --env VIPPS_SECRET=${{ secrets.VIPPS_SECRET }} \
             --env VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }} \
-            --network ${{ job.container.network }} \
+            --network ${{ job.services.postgres.network }} \
             --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
 
