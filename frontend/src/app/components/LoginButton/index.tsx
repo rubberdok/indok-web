@@ -5,10 +5,10 @@ import { PersonOutlineRounded } from "@mui/icons-material";
 import { Button, Skeleton } from "@mui/material";
 import { useMemo } from "react";
 
+import { Link } from "../Link";
+
 import { graphql } from "@/gql";
 import { generateFeideLoginUrl } from "@/utils/auth";
-
-import { Link } from "../Link";
 
 type Props = {
   fullWidth?: boolean;

@@ -7,7 +7,9 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   CircularProgress,
+  FormControlLabel,
   Grid,
   List,
   ListItemButton,
@@ -49,6 +51,7 @@ type AdminEditableUser = {
   feideEmail?: string | null;
   nfcUidHex?: string | null;
   nfcPinCode?: string | null;
+  nfcPermanentAccess?: boolean | null;
 };
 
 function toErrorMessage(error: unknown, fallback: string): string {
@@ -100,6 +103,7 @@ export default function AdminEditPage() {
     graduationYear: "",
     nfcUidHex: "",
     nfcPinCode: "",
+    nfcPermanentAccess: false,
   });
 
   const {
@@ -230,6 +234,7 @@ export default function AdminEditPage() {
           feideEmail: u.feideEmail,
           nfcUidHex: u.nfcUidHex,
           nfcPinCode: u.nfcPinCode,
+          nfcPermanentAccess: u.nfcPermanentAccess,
         })) ?? []
       );
     }
@@ -243,6 +248,7 @@ export default function AdminEditPage() {
         feideEmail: u.feideEmail,
         nfcUidHex: u.nfcUidHex,
         nfcPinCode: u.nfcPinCode,
+        nfcPermanentAccess: u.nfcPermanentAccess,
       })) ?? []
     );
   }, [canManageProfiles, nfcUserSearchData?.nfcUserSearch, userSearchData?.userSearch]);
@@ -267,6 +273,7 @@ export default function AdminEditPage() {
       graduationYear: user.graduationYear?.toString() ?? "",
       nfcUidHex: user.nfcUidHex ?? "",
       nfcPinCode: user.nfcPinCode ?? "",
+      nfcPermanentAccess: Boolean(user.nfcPermanentAccess),
     });
   };
 
@@ -303,6 +310,7 @@ export default function AdminEditPage() {
       feideEmail: user.feideEmail,
       nfcUidHex: user.nfcUidHex,
       nfcPinCode: user.nfcPinCode,
+      nfcPermanentAccess: user.nfcPermanentAccess,
     });
   };
 
@@ -343,6 +351,7 @@ export default function AdminEditPage() {
             feideEmail: user.feideEmail,
             nfcUidHex: user.nfcUidHex,
             nfcPinCode: user.nfcPinCode,
+            nfcPermanentAccess: user.nfcPermanentAccess,
           };
         }
       } else if (canManageNfc) {
@@ -357,6 +366,7 @@ export default function AdminEditPage() {
             feideEmail: user.feideEmail,
             nfcUidHex: user.nfcUidHex,
             nfcPinCode: user.nfcPinCode,
+            nfcPermanentAccess: user.nfcPermanentAccess,
           };
         }
       }
@@ -457,6 +467,7 @@ export default function AdminEditPage() {
           nfcData: {
             uidHex: formData.nfcUidHex.trim() || null,
             pinCode: formData.nfcPinCode.trim(),
+            permanentAccess: formData.nfcPermanentAccess,
           },
         },
       });
@@ -483,6 +494,7 @@ export default function AdminEditPage() {
             feideEmail: updatedUser.feideEmail,
             nfcUidHex: updatedUser.nfcUidHex,
             nfcPinCode: updatedUser.nfcPinCode,
+            nfcPermanentAccess: updatedUser.nfcPermanentAccess,
           });
         }
       }
@@ -758,7 +770,24 @@ export default function AdminEditPage() {
                       />
                     </Grid>
                   </Grid>
-
+                  {canManageProfiles && (
+                    <Box>
+                      <Typography variant="subtitle1">Permanent tilgang</Typography>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={Boolean(formData.nfcPermanentAccess)}
+                            onChange={(_, checked) => {
+                              setSaveNfcError("");
+                              setSaveNfcSuccess("");
+                              setFormData((prev) => ({ ...prev, nfcPermanentAccess: checked }));
+                            }}
+                          />
+                        }
+                        label={formData.nfcPermanentAccess ? "Tilgang aktiv" : "Tilgang deaktivert"}
+                      />
+                    </Box>
+                  )}
                   {saveNfcError && <Alert severity="error">{saveNfcError}</Alert>}
                   {saveNfcSuccess && <Alert severity="success">{saveNfcSuccess}</Alert>}
 

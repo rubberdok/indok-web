@@ -54,6 +54,7 @@ class AdminUserInput(graphene.InputObjectType):
 class AdminUserNfcInput(graphene.InputObjectType):
     uid_hex = graphene.String(required=False)
     pin_code = graphene.String(required=False)
+    permanent_access = graphene.Boolean(required=False)
 
 
 def _apply_user_updates(target_user: "models.User", user_data: dict, allow_nfc_pin_code_update: bool = True) -> None:
@@ -161,9 +162,10 @@ class AdminUpdateUserNfc(graphene.Mutation):
 
         uid_hex = nfc_data.get("uid_hex")
         pin_code = nfc_data.get("pin_code")
+        permanent_access = nfc_data.get("permanent_access")
 
-        if uid_hex is None and pin_code is None:
-            raise GraphQLError("Du må sende inn UID og/eller PIN-kode")
+        if uid_hex is None and pin_code is None and permanent_access is None:
+            raise GraphQLError("Du må sende inn UID, PIN-kode og/eller permanent tilgang")
 
         try:
             with transaction.atomic():
@@ -216,6 +218,17 @@ class AdminUpdateUserNfc(graphene.Mutation):
                     assignment.pin_code = pin_code
                     assignment.full_clean()
                     assignment.save(update_fields=["pin_code"])
+
+                if permanent_access is not None:
+                    if assignment is None:
+                        assignment = NfcCardAssignment.objects.filter(user=target_user, revoked_at__isnull=True).first()
+
+                    if assignment is None:
+                        raise GraphQLError("Kan ikke oppdatere permanent tilgang uten aktivt NFC-kort")
+
+                    assignment.permanent_access = permanent_access
+                    assignment.full_clean()
+                    assignment.save(update_fields=["permanent_access"])
         except (ValidationError, IntegrityError) as e:
             raise GraphQLError(str(e))
 

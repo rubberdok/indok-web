@@ -30,6 +30,7 @@ query nfcUserSearch($query: String!, $limit: Int) {
     feideEmail
     nfcUidHex
     nfcPinCode
+    nfcPermanentAccess
   }
 }
 
@@ -50,5 +51,6 @@ query userSearch($query: String!, $limit: Int) {
     feideEmail
     nfcUidHex
     nfcPinCode
+    nfcPermanentAccess
   }
 }

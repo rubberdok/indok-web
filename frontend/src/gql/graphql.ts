@@ -98,6 +98,7 @@ export type AdminUserInput = {
 };
 
 export type AdminUserNfcInput = {
+  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
   pinCode: InputMaybe<Scalars['String']['input']>;
   uidHex: InputMaybe<Scalars['String']['input']>;
 };
@@ -1837,6 +1838,7 @@ export type UserType = {
   lastLogin: Maybe<Scalars['DateTime']['output']>;
   lastName: Scalars['String']['output'];
   memberships: Array<MembershipType>;
+  nfcPermanentAccess: Maybe<Scalars['Boolean']['output']>;
   nfcPinCode: Maybe<Scalars['String']['output']>;
   nfcUidHex: Maybe<Scalars['String']['output']>;
   organizations: Array<OrganizationType>;

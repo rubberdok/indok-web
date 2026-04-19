@@ -13,6 +13,7 @@ class UserType(DjangoObjectType):
     can_update_year = graphene.Boolean()
     nfc_uid_hex = graphene.String()
     nfc_pin_code = graphene.String()
+    nfc_permanent_access = graphene.Boolean()
 
     class Meta:
         model = get_user_model()
@@ -73,3 +74,14 @@ class UserType(DjangoObjectType):
 
         active_assignment = NfcCardAssignment.objects.filter(user=parent, revoked_at__isnull=True).first()
         return active_assignment.pin_code if active_assignment else None
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_permanent_access(parent, info):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
+            return None
+
+        from apps.nfc.models import NfcCardAssignment
+
+        active_assignment = NfcCardAssignment.objects.filter(user=parent, revoked_at__isnull=True).first()
+        return active_assignment.permanent_access if active_assignment else False

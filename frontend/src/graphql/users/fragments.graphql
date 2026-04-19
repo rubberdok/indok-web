@@ -39,4 +39,5 @@ fragment UserToEdit on UserType {
   yearUpdatedAt
   nfcUidHex
   nfcPinCode
+  nfcPermanentAccess
 }
