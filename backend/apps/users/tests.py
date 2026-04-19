@@ -239,8 +239,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
     """
 
     def setUp(self) -> None:
-        self.mutation = (
-            lambda year: f"""
+        self.mutation = lambda year: f"""
             mutation {{
                 updateUser(userData: {{
                     graduationYear: {year}
@@ -251,7 +250,6 @@ class UsersMutationsTestCase(UsersBaseTestCase):
                 }}
             }}
         """
-        )
         self.auth_user_mutation = """
             mutation auth {
                 authUser(code: "mocked") {
