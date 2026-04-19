@@ -433,7 +433,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         # Check that updated data is correct
         content = json.loads(response.content)
         updated_cabin = content["data"]["updateCabin"]["cabin"]
-        self.assertEquals(updated_cabin["maxGuests"], max_guests)
+        self.assertEqual(updated_cabin["maxGuests"], max_guests)
 
 
 class EmailTestCase(CabinsBaseTestCase):
@@ -568,7 +568,7 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         booking_semester = content["data"]["bookingSemester"]
 
         for key, value in self.booking_semester_dict.items():
-            self.assertEquals(value, booking_semester[snake_case_to_camel_case(key)])
+            self.assertEqual(value, booking_semester[snake_case_to_camel_case(key)])
 
     # Verify that the booking is inside a booking semester
     def test_booking_inside_booking_semester(self):
@@ -618,8 +618,8 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         content = json.loads(response.content)
         booking_semester = content["data"]["updateBookingSemester"]["bookingSemester"]
 
-        self.assertEquals(booking_semester["fallStartDate"], "2021-09-01")
-        self.assertEquals(booking_semester["fallSemesterActive"], False)
+        self.assertEqual(booking_semester["fallStartDate"], "2021-09-01")
+        self.assertEqual(booking_semester["fallSemesterActive"], False)
 
     # Verify that updating the booking semester creates a new booking semester if there are no booking
     # semesters in the database.
@@ -632,7 +632,7 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         self.assertResponseNoErrors(response)
 
         # Assert that a new booking semester has been created
-        self.assertEquals(len(BookingSemester.objects.all()), 1)
+        self.assertEqual(len(BookingSemester.objects.all()), 1)
 
     # Verify that a normal user cannot update a booking semester
     def test_update_booking_semester_without_permission(self):
