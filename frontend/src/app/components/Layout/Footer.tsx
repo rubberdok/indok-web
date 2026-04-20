@@ -5,14 +5,14 @@ import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import { useState } from "react";
 
+import { HallOfFame } from "@/layouts/footer/HallOfFame";
+import dayjs from "@/lib/date";
+import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
+
 import { Link, LinkProps } from "../Link";
 
 import { Logo } from "./Logo";
 import { Vercel } from "./Vercel";
-
-import { HallOfFame } from "@/layouts/footer/HallOfFame";
-import dayjs from "@/lib/date";
-import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
 
@@ -65,11 +65,10 @@ export const Footer: React.FC = () => {
                   Lenker
                 </Typography>
                 <LinkItem href="/baksida">Baksida</LinkItem>
-                <LinkItem href="/about">Om oss</LinkItem>
-                <LinkItem href="https://www.ok-studentrad.no/">ØK ITV</LinkItem>
                 <LinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
                   IØT adferdskodeks
                 </LinkItem>
+                <LinkItem href="/about">Om oss</LinkItem>
                 <LinkItem href="https://www.indøk.no">Studieside</LinkItem>
                 <LinkItem href="https://github.com/rubberdok/indok-web/issues/new/choose">Oppdaget en feil?</LinkItem>
                 <Box mt={2}>

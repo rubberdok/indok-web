@@ -1,7 +1,6 @@
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 
-import { Link } from "@/components";
 import { ItvCard } from "@/components/pages/about/ItvCard";
 import { ItvMember } from "@/components/pages/about/ItvCard/types";
 import { Template } from "@/components/pages/about/Template";
@@ -11,12 +10,12 @@ const ItvPage: NextPageWithLayout = () => {
   const itvMembers: ItvMember[] = [
     {
       rank: 1,
-      name: "Mina Lindebø Myrstøl",
+      name: "Marthe Kirkeby",
       email: "itv@iot.ntnu.no",
     },
     {
       rank: 2,
-      name: "Julie Holm Edvardsen",
+      name: "Vibeke Kjellevoll",
       email: "itv@iot.ntnu.no",
     },
   ];
@@ -42,8 +41,8 @@ const ItvPage: NextPageWithLayout = () => {
       </Typography>
       <Typography variant="body1" paragraph>
         Dersom du har noen saker du ønsker å løfte til instituttet, måtte det gjelde fagplan, det sosiale miljøet,
-        rettighetene dine som student eller andre ting, er det bare å ta kontakt på{" "}
-        <Link href="mailto:itv@iot.ntnu.no">itv@iot.ntnu.no</Link>. ITVene har taushetsplikt.
+        rettighetene dine som student eller andre ting, er det bare å ta kontakt på itv@iot.ntnu.no. ITVene har
+        taushetsplikt.
       </Typography>
       <Typography variant="h3" component="h2" gutterBottom>
         Medlemmer

@@ -20,14 +20,7 @@ class HealthcheckMiddleware:
         HttpResponse
             200 if all good, 503 if there are migrations pending.
         """
-        path = request.path.strip("/")
-
-        # Keep this early so health probes can pass even if Host header validation
-        # would fail later in Django's middleware chain.
-        if path == "ping":
-            return HttpResponse(status=200)
-
-        if path == "health":
+        if request.path.strip("/") == "health":
             executor = MigrationExecutor(connections[DEFAULT_DB_ALIAS])
             plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
             status = 503 if plan else 200

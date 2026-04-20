@@ -164,15 +164,18 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
                     }
                 }
                 """
-        self.INITIATE_ORDER_MUTATION = lambda quantity: f"""
+        self.INITIATE_ORDER_MUTATION = (
+            lambda quantity: f"""
         mutation InitiateOrder {{
             initiateOrder(productId: {self.product_1.id}, quantity: {quantity}) {{
                 redirect
             }}
         }}
         """
+        )
 
-        self.ATTEMPT_CAPTURE_PAYMENT_MUTATION = lambda order_id: f"""
+        self.ATTEMPT_CAPTURE_PAYMENT_MUTATION = (
+            lambda order_id: f"""
         mutation AttemptCapturePayment {{
             attemptCapturePayment(orderId: "{order_id}") {{
                 status
@@ -192,6 +195,7 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
             }}
         }}
         """
+        )
 
 
 class EcommerceResolversTestCase(EcommerceBaseTestCase):
@@ -457,8 +461,6 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
 class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
     def setUp(self):
-        super().setUp()
-
         # Create a staff user using the StaffUserFactory
         self.staff_user = StaffUserFactory(username="staffuser")
 
