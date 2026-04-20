@@ -1,5 +1,5 @@
 from ..listings.models import Listing
-from graphene.utils.dataloader import DataLoader
+from aiodataloader import DataLoader
 from asgiref.sync import sync_to_async
 from collections import defaultdict
 
