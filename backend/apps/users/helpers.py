@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Optional
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
+
 if TYPE_CHECKING:
     from apps.users.models import User
 

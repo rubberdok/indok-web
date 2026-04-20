@@ -1,15 +1,12 @@
+version: "3"
+
 services:
   postgres:
-    image: postgres:17
+    image: postgres
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
     ports:
       - "5432:5432"
     expose:
@@ -35,8 +32,7 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     expose:
       - 8000
 

@@ -3,6 +3,7 @@ from .permissions import permission_required, permission_required_or_none, get_r
 from .constants import LOGIN_REQUIRED_ERROR, PERMISSION_REQUIRED_ERROR
 from .errors import LoginRequiredError, PermissionDenied
 
+
 __all__ = [
     "login_required",
     "superuser_required",

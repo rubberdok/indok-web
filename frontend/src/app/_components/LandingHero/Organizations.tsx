@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
-import { FreeMode, Navigation } from "swiper";
+import { FreeMode, Mousewheel, Navigation } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -72,10 +72,13 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
         width={`calc(100vw - ${offsetX}px)`}
       >
         <Swiper
-          modules={[Navigation, FreeMode]}
+          modules={[Navigation, FreeMode, Mousewheel]}
           onActiveIndexChange={(swiper) => onActiveIndexChange(swiper.activeIndex)}
           navigation={{ nextEl: ".arrow.right", prevEl: ".arrow.left" }}
           spaceBetween={16}
+          mousewheel={{
+            forceToAxis: true,
+          }}
           slidesPerView={0.8}
           freeMode={{
             enabled: true,

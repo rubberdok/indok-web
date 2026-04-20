@@ -1,13 +1,12 @@
 "use client";
 
 import { Box, Button, Container, Unstable_Grid2 as Grid, Typography } from "@mui/material";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 
 import { Link } from "@/app/components/Link";
 import Hero from "~/public/static/landing/hero.webp";
 
-const OrganizationsSlider = dynamic(() => import("./OrganizationsSlider"), { ssr: false });
+import OrganizationsSlider from "./OrganizationsSlider";
 
 export const LandingHero: React.FC = () => {
   return (
