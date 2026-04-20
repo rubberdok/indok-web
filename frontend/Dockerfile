@@ -1,5 +1,5 @@
 # Larger base image for development
-FROM public.ecr.aws/docker/library/node:lts-alpine3.16
+FROM --platform=linux/amd64 public.ecr.aws/docker/library/node:lts-alpine3.16
 
 WORKDIR /app
 

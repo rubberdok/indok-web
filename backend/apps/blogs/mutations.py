@@ -38,7 +38,7 @@ class DeleteBlog(graphene.Mutation):
     class Arguments:
         blog_id = graphene.ID()
 
-    ok = graphene.Boolean()
+    ok = graphene.ID()
 
     @permission_required("blogs.delete_blog")
     def mutate(self, info, blog_id, **kwargs):

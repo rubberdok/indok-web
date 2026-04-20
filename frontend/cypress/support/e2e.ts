@@ -15,14 +15,3 @@
 
 // Import commands.js using ES2015 syntax:
 import "./commands";
-
-Cypress.on("uncaught:exception", (err) => {
-  const message = err?.message ?? "";
-  console.log("Uncaught exception: %o", err);
-
-  if (message.includes("publickey-credentials-get") && message.includes("feature is not enabled in this document")) {
-    return false;
-  }
-
-  return true;
-});

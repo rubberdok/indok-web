@@ -14,8 +14,8 @@ from .dataloader import ListingsByOrganizationIdLoader
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
     listings = graphene.List(NonNull(ListingType))
-    primary_group = graphene.Field(ResponsibleGroupType, source="primary_group")
-    hr_group = graphene.Field(ResponsibleGroupType, source="hr_group")
+    primary_group = graphene.Field(source="primary_group", type=ResponsibleGroupType)
+    hr_group = graphene.Field(source="hr_group", type=ResponsibleGroupType)
 
     class Meta:
         model = Organization
