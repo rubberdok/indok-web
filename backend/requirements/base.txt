@@ -25,3 +25,4 @@ typing-extensions==4.11.0
 WeasyPrint==64.1
 whitenoise==6.7.0
 XlsxWriter==3.1.7
+aiodataloader==0.4.3
