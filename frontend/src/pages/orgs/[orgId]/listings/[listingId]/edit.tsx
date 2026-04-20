@@ -23,8 +23,8 @@ const EditListingPage: NextPageWithLayout = () => {
       if (data.listing) {
         setListing({
           ...(data.listing as ListingInput),
-          startDatetime: dayjs(data.listing.startDatetime).utc().local().format("YYYY-MM-DDTHH:mm"),
-          deadline: dayjs(data.listing.deadline).utc().local().format("YYYY-MM-DDTHH:mm"),
+          startDatetime: dayjs(data.listing.startDatetime).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm"),
+          deadline: dayjs(data.listing.deadline).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm"),
           application: data.listing.chips.includes("application"),
           interview: data.listing.chips.includes("interview"),
           case: data.listing.chips.includes("case"),

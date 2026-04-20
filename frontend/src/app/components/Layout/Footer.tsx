@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
                   Janus Linjeforening, NTNU Kolbjørn Hejes vei 1E, 7034 Trondheim Org.nr. 994 778 463
                 </Typography>
                 <Typography variant="caption">
-                  {`Janus linjeforening ved Indøk © ${dayjs().format("YYYY")}`}
+                  {`Janus linjeforening ved Indøk © ${dayjs().tz("Europe/Oslo").format("YYYY")}`}
                 </Typography>
               </Stack>
             </Grid>

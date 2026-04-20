@@ -45,7 +45,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
     refetchQueries: [{ query: UserToEditDocument }],
   });
   const router = useRouter();
-  const currentYear = dayjs().year();
+  const currentYear = dayjs().tz("Europe/Oslo").year();
   const ID_PREFIX = `${dataTestId}`;
 
   const minimumGraduationYear = Math.min(currentYear, data?.user?.graduationYear ?? currentYear);
@@ -197,7 +197,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                 {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
                 {!data?.user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("L")}
+                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).tz("Europe/Oslo").add(1, "year").format("L")}
                   </FormHelperText>
                 )}
               </FormControl>

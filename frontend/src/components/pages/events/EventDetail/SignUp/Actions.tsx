@@ -68,7 +68,10 @@ export const Actions: React.FC<Props> = ({ event }) => {
   const isAttending = Boolean(event.userAttendance?.isSignedUp);
   const needsExtraInformation = !isSignedUp && Boolean(event.hasExtraInformation && !extraInformation);
   const isBindingSignup = isAttending && Boolean(event.bindingSignup);
-  const signUpOpen = dayjs().isBetween(event.signupOpenDate, event.deadline);
+  const now = dayjs().tz("Europe/Oslo");
+  const signUpOpenAt = dayjs(event.signupOpenDate).tz("Europe/Oslo");
+  const signUpDeadline = dayjs(event.deadline).tz("Europe/Oslo");
+  const signUpOpen = now.isBetween(signUpOpenAt, signUpDeadline);
   const disabled = needsExtraInformation || isBindingSignup || !signUpOpen;
 
   function handleSignUp() {

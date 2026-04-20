@@ -86,6 +86,7 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
   const { step } = router.query;
 
   const activeStep: StepIndex = parseQuery(step);
+  const now = dayjs().tz("Europe/Oslo");
 
   const methods = useForm<IEventForm>({
     resolver: yupResolver(schema),
@@ -102,8 +103,8 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
           contactEmail: "",
         },
         timeAndPlace: {
-          start: dayjs().add(1, "day").set("hour", 18).set("minute", 15).toDate(),
-          end: dayjs().add(1, "day").set("hour", 20).set("minute", 0).toDate(),
+          start: now.add(1, "day").set("hour", 18).set("minute", 15).toDate(),
+          end: now.add(1, "day").set("hour", 20).set("minute", 0).toDate(),
           location: "",
         },
         registration: {
@@ -111,8 +112,8 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
           details: {
             requiresExtraInformation: false,
             availableSeats: null,
-            deadline: dayjs().add(1, "day").set("hour", 18).set("minute", 15).toDate(),
-            signUpOpen: dayjs().toDate(),
+            deadline: now.add(1, "day").set("hour", 18).set("minute", 15).toDate(),
+            signUpOpen: now.toDate(),
           },
         },
       },

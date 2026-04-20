@@ -11,7 +11,7 @@ export const FooterSimple: React.FC = () => {
       <Logo sx={{ mb: 3 }} />
       <Stack direction="column" gap={2} alignContent="center" justifyContent="center">
         <Typography variant="caption" sx={{ color: "text.secondary" }}>
-          Janus linjeforening ved Indøk © ${dayjs().format("YYYY")}
+          Janus linjeforening ved Indøk © ${dayjs().tz("Europe/Oslo").format("YYYY")}
         </Typography>
         <Vercel />
       </Stack>

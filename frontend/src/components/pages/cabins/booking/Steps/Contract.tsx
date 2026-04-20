@@ -36,7 +36,7 @@ type Props = {
 
 /** Renders the contract of a booking. */
 export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate, endDate }) => {
-  const currentTime = dayjs().format("L");
+  const currentTime = dayjs().tz("Europe/Oslo").format("L");
   const price = calculatePrice(chosenCabins, contactInfo, startDate, endDate);
   const { nextStep } = useStepContext();
   const {

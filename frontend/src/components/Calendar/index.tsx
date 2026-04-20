@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDate, isDateDisabled }) => {
-  const [selectedMonth, setSelectedMonth] = useState(dayjs());
+  const [selectedMonth, setSelectedMonth] = useState(dayjs().tz("Europe/Oslo"));
 
   const isHidden = (date: dayjs.Dayjs, month: dayjs.Dayjs) => {
     return date.month() !== month.month();

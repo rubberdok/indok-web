@@ -11,6 +11,9 @@ type Props = { listing?: ListingWithFormIdFragment };
 
 /** Component for title and organization info on the listing detail page. */
 export const TitleCard: React.FC<Props> = ({ listing }) => {
+  const now = dayjs().tz("Europe/Oslo");
+  const listingDeadline = dayjs(listing?.deadline).tz("Europe/Oslo");
+
   let link: string | undefined = undefined;
   if (listing?.form) {
     link = `/forms/${listing.form.id}/`;
@@ -51,12 +54,12 @@ export const TitleCard: React.FC<Props> = ({ listing }) => {
             )}
             <Divider sx={{ my: 2, display: { xs: "none", sm: "block" } }} />
             <Typography variant="caption" component="h3" align="center" gutterBottom>
-              {`Frist ${dayjs(listing?.deadline).format("LLL")}`}
+              {`Frist ${listingDeadline.format("LLL")}`}
             </Typography>
             {link && (
               <Tooltip
                 title={
-                  dayjs(listing?.deadline).isBefore(dayjs())
+                  listingDeadline.isBefore(now)
                     ? "Fristen for dette vervet har gått ut. Hvis du tror dette er en feil sjekk årstallet på fristen. Hvis du fortsatt tror det er en feil ta kontakt med vervet."
                     : ""
                 }
@@ -67,7 +70,7 @@ export const TitleCard: React.FC<Props> = ({ listing }) => {
                     href={link}
                     noLinkStyle
                     variant="contained"
-                    disabled={dayjs(listing?.deadline).isBefore(dayjs())}
+                    disabled={listingDeadline.isBefore(now)}
                     color="primary"
                     endIcon={<ArrowForward />}
                   >
