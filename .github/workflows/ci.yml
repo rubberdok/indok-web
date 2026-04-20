@@ -282,7 +282,7 @@ jobs:
     name: Deploy to ECS
     runs-on: ubuntu-latest
 
-    needs: [api, e2e]
+    needs: [api]
     if: github.ref == 'refs/heads/main'
 
     environment: production
