@@ -263,3 +263,10 @@ web.code-workspace
 
 # Apollo VS Code extension
 apollo.config.js
+
+# Local AWS simulation
+aws-sim.ps1
+aws-sim.bat
+docker-compose.aws-sim.yml
+/frontend/.env.aws-sim
+.gitattributes
