@@ -25,8 +25,9 @@ type Props = {
 };
 
 function isWaitList(event: Event, user: User) {
-  const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate) : undefined;
-  const isSignUpOpen = signUpOpenDate && dayjs().isSameOrAfter(signUpOpenDate);
+  const now = dayjs().tz("Europe/Oslo");
+  const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate).tz("Europe/Oslo") : undefined;
+  const isSignUpOpen = signUpOpenDate && now.isSameOrAfter(signUpOpenDate);
 
   let canAttend = event.isAttendable && isSignUpOpen;
   if (user.gradeYear && event.allowedGradeYears) {

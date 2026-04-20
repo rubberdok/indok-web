@@ -12,9 +12,12 @@ type CountdownStatusTextProps = {
 
 export const CountdownStatusText: React.FC<CountdownStatusTextProps> = ({ signupOpenDate, countdown, deadline }) => {
   const { timeLeft, countdownText } = countdown;
+  const now = dayjs().tz("Europe/Oslo");
+  const signupOpen = dayjs(signupOpenDate).tz("Europe/Oslo");
+  const signUpDeadline = dayjs(deadline).tz("Europe/Oslo");
 
   if (dayjs.duration(timeLeft).asDays() > 1) {
-    return <Typography variant="overline">Påmelding åpner {dayjs(signupOpenDate).format("LLL")}</Typography>;
+    return <Typography variant="overline">Påmelding åpner {signupOpen.format("LLL")}</Typography>;
   } else if (timeLeft >= 0) {
     return (
       /**
@@ -25,11 +28,11 @@ export const CountdownStatusText: React.FC<CountdownStatusTextProps> = ({ signup
        * timestamps being one such example.
        */
       <Typography variant="overline" suppressHydrationWarning>
-        Påmelding åpner {countdownText}, {dayjs(signupOpenDate).format("[kl.] HH:mm")}
+        Påmelding åpner {countdownText}, {signupOpen.format("[kl.] HH:mm")}
       </Typography>
     );
-  } else if (dayjs().isBefore(deadline)) {
-    return <Typography variant="overline">Påmelding stenger {dayjs(deadline).format("LLL")}</Typography>;
+  } else if (now.isBefore(signUpDeadline)) {
+    return <Typography variant="overline">Påmelding stenger {signUpDeadline.format("LLL")}</Typography>;
   } else {
     return <Typography variant="overline">Påmeldingen er stengt</Typography>;
   }

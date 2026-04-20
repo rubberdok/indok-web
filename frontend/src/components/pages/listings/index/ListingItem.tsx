@@ -6,8 +6,8 @@ import dayjs from "@/lib/date";
 
 const timestamp = (datetime: string) => {
   // returns monday 23:59 if < 2 days remaining, 02. february 1999 otherwise
-  const now = dayjs();
-  const deadline = dayjs(datetime);
+  const now = dayjs().tz("Europe/Oslo");
+  const deadline = dayjs(datetime).tz("Europe/Oslo");
   if (now.add(2, "day").isSameOrAfter(deadline)) {
     return deadline.format("dddd HH:mm");
   } else {

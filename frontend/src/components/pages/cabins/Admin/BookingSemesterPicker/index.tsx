@@ -11,7 +11,7 @@ import { BookingForm, BookingSemesterForm } from "./BookingSemesterForm";
 const DATE_FORMAT = "YYYY-MM-DD";
 
 function formatDate(date: string | Date) {
-  return dayjs(date).format(DATE_FORMAT);
+  return dayjs(date).tz("Europe/Oslo").format(DATE_FORMAT);
 }
 
 const defaultBookingSemester: BookingForm = {

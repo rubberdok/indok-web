@@ -11,6 +11,8 @@ import { ReviewItem } from "./ReviewItem";
 
 export const Registration: React.FC = () => {
   const { watch } = useFormContext<IEventForm>();
+  const signUpOpen = dayjs(watch("registration.details.signUpOpen")).tz("Europe/Oslo");
+  const deadline = dayjs(watch("registration.details.deadline")).tz("Europe/Oslo");
 
   const registrationType = watch("registration.variant");
   let title: string;
@@ -34,19 +36,11 @@ export const Registration: React.FC = () => {
           <Typography variant="subtitle1">Tider for påmelding</Typography>
           <ReviewItem
             label="Påmelding åpner"
-            value={
-              dayjs(watch("registration.details.signUpOpen")).isValid()
-                ? dayjs(watch("registration.details.signUpOpen")).format("LLL")
-                : ""
-            }
+            value={signUpOpen.isValid() ? signUpOpen.format("LLL") : ""}
           />
           <ReviewItem
             label="Påmelding slutter"
-            value={
-              dayjs(watch("registration.details.deadline")).isValid()
-                ? dayjs(watch("registration.details.deadline")).format("LLL")
-                : ""
-            }
+            value={deadline.isValid() ? deadline.format("LLL") : ""}
           />
 
           <Typography variant="subtitle1">Plasser</Typography>

@@ -14,8 +14,9 @@ import { NextPageWithLayout } from "@/lib/next";
 
 /** Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings. */
 const AdminPage: NextPageWithLayout = () => {
+  const now = dayjs().tz("Europe/Oslo");
   const { data, refetch } = useQuery(AdminAllBookingsDocument, {
-    variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") },
+    variables: { after: now.subtract(1, "day").format("YYYY-MM-DD") },
   });
 
   const [tabValue, setTabValue] = useState<number>(0);
