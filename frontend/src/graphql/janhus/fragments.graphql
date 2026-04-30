@@ -31,8 +31,6 @@ fragment JanHusBooking on JanHusBookingType {
   depositAmount
   comment
   adminComment
-  bankidStatus
-  bankidReference
   totalPrice
   durationMinutes
   createdAt
@@ -81,7 +79,7 @@ fragment JanHusBookingSettings on JanHusBookingSettingsType {
   bufferMinutes
   organizationBookingOpensWeeksBefore
   generalBookingOpensWeeksBefore
-  bankidProvider
+  externalBookingsEnabled
 }
 
 fragment JanHusAreaConfiguration on JanHusAreaConfigurationType {

@@ -1,7 +1,4 @@
-from uuid import uuid4
-
 import graphene
-from django.conf import settings as django_settings
 from django.contrib.auth import get_user_model
 from graphql import GraphQLError
 
@@ -9,7 +6,6 @@ from apps.ecommerce.models import Product
 from apps.janhus.mail import send_pending_review_notification
 from apps.janhus.models import (
     JanHusAreaConfiguration,
-    JanHusBankIDStatus,
     JanHusBooking,
     JanHusBookingRequest,
     JanHusBookingSettings,
@@ -27,7 +23,6 @@ from apps.janhus.rules import (
 )
 from apps.janhus.types import (
     JanHusAreaConfigurationType,
-    JanHusBankIDSigningStubType,
     JanHusBookingRequestType,
     JanHusBookingSettingsType,
     JanHusBookingType,
@@ -183,6 +178,7 @@ class JanHusBookingSettingsInput(graphene.InputObjectType):
     general_booking_opens_weeks_before = graphene.Int(required=False)
 
     bankid_provider = graphene.String(required=False)
+    external_bookings_enabled = graphene.Boolean(required=False)
 
 
 class JanHusAreaConfigurationInput(graphene.InputObjectType):
@@ -384,6 +380,10 @@ class CreateJanHusBookingRequest(graphene.Mutation):
     def mutate(self, info, request_data):
         actor = _get_actor(info)
         settings = get_or_create_settings()
+
+        is_non_indok_user = not actor
+        if is_non_indok_user and not settings.external_bookings_enabled:
+            raise GraphQLError("Eksterne bookingforespørsler er midlertidig deaktivert")
 
         validate_time_rules(starts_at=request_data["starts_at"], ends_at=request_data["ends_at"], settings=settings)
 
@@ -596,61 +596,3 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
         booking.save(update_fields=["vipps_product", "updated_at"])
 
         return CreateJanHusPaymentProduct(ok=True, booking=booking, product_id=product.id)
-
-
-class StartJanHusBankIDSigning(graphene.Mutation):
-    class Arguments:
-        booking_id = graphene.ID(required=True)
-
-    ok = graphene.Boolean()
-    booking = graphene.Field(JanHusBookingType)
-    signing = graphene.Field(JanHusBankIDSigningStubType)
-
-    def mutate(self, info, booking_id):
-        actor = _get_actor(info)
-        if not actor:
-            raise GraphQLError("Authentication required")
-
-        try:
-            booking = JanHusBooking.objects.get(pk=booking_id)
-        except JanHusBooking.DoesNotExist:
-            raise GraphQLError("Booking not found")
-
-        if not (_has_manage_booking_permission(actor) or _is_owner(actor, booking)):
-            raise GraphQLError("You do not have permission to start signing for this booking")
-
-        reference = f"IDURA-STUB-{uuid4().hex}"
-        booking.bankid_status = JanHusBankIDStatus.PENDING
-        booking.bankid_reference = reference
-        booking.save(update_fields=["bankid_status", "bankid_reference", "updated_at"])
-
-        signing = JanHusBankIDSigningStubType(
-            provider=(JanHusBookingSettings.objects.first() or JanHusBookingSettings()).bankid_provider,
-            reference=reference,
-            signing_url=f"{django_settings.FRONTEND_BASE_URL}/janhus/sign/{reference}",
-        )
-
-        return StartJanHusBankIDSigning(ok=True, booking=booking, signing=signing)
-
-
-class MarkJanHusBankIDSigned(graphene.Mutation):
-    class Arguments:
-        booking_id = graphene.ID(required=True)
-
-    ok = graphene.Boolean()
-    booking = graphene.Field(JanHusBookingType)
-
-    def mutate(self, info, booking_id):
-        actor = _get_actor(info)
-        if not _has_manage_booking_permission(actor):
-            raise GraphQLError("JanHus booking admin permission required")
-
-        try:
-            booking = JanHusBooking.objects.get(pk=booking_id)
-        except JanHusBooking.DoesNotExist:
-            raise GraphQLError("Booking not found")
-
-        booking.bankid_status = JanHusBankIDStatus.SIGNED
-        booking.save(update_fields=["bankid_status", "updated_at"])
-
-        return MarkJanHusBankIDSigned(ok=True, booking=booking)

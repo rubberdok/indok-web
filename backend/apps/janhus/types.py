@@ -48,9 +48,3 @@ class JanHusBookingSettingsType(DjangoObjectType):
 class JanHusAreaConfigurationType(DjangoObjectType):
     class Meta:
         model = JanHusAreaConfiguration
-
-
-class JanHusBankIDSigningStubType(graphene.ObjectType):
-    provider = graphene.String(required=True)
-    reference = graphene.String(required=True)
-    signing_url = graphene.String(required=True)

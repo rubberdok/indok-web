@@ -4,9 +4,15 @@ import {
   Alert,
   Box,
   Button,
+  Card,
+  CardContent,
   Chip,
   Container,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   Tab,
   Table,
@@ -27,13 +33,105 @@ import {
   AdminJanHusBookingsDocument,
   CreateJanhusPaymentProductDocument,
   JanHusBookingRequestsDocument,
-  MarkJanhusBankIdSignedDocument,
   ReviewJanhusBookingDocument,
   ReviewJanhusBookingRequestDocument,
-  StartJanhusBankIdSigningDocument,
 } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
+
+type OwnerType = "PERSONAL" | "ORGANIZATION" | "EXTERNAL";
+type SortDirection = "asc" | "desc";
+
+const AREA_LABELS: Record<string, string> = {
+  FIRST_FLOOR: "1. etasje",
+  SECOND_FLOOR: "2. etasje",
+  ENTIRE_HOUSE: "Hele huset",
+};
+
+const REQUEST_STATUS_LABELS: Record<string, string> = {
+  PENDING: "Venter",
+  APPROVED: "Godkjent",
+  REJECTED: "Avslått",
+};
+
+const BOOKING_STATUS_LABELS: Record<string, string> = {
+  PROVISIONAL: "Foreløpig",
+  PENDING_ADMIN_REVIEW: "Venter behandling",
+  CONFIRMED: "Godkjent",
+  DECLINED: "Avslått",
+  CANCELLED: "Kansellert",
+  BLOCKED: "Blokkert",
+};
+
+const EVENT_TYPE_LABELS: Record<string, string> = {
+  INTERNAL: "Intern",
+  OPEN_FOR_INDOK: "Åpent for Indøk",
+  PRIVATE: "Privat",
+  EXTERNAL: "Ekstern",
+};
+
+const OWNER_TYPE_LABELS: Record<OwnerType, string> = {
+  PERSONAL: "Personlig",
+  ORGANIZATION: "Organisasjon",
+  EXTERNAL: "Ekstern",
+};
+
+const statusChipColor = (status: string): "default" | "success" | "warning" | "error" | "info" => {
+  if (status === "CONFIRMED" || status === "APPROVED") {
+    return "success";
+  }
+  if (status === "PENDING_ADMIN_REVIEW" || status === "PENDING" || status === "PROVISIONAL") {
+    return "warning";
+  }
+  if (status === "DECLINED" || status === "REJECTED" || status === "CANCELLED") {
+    return "error";
+  }
+  if (status === "BLOCKED") {
+    return "info";
+  }
+  return "default";
+};
+
+const toDateKey = (isoDate: string) => dayjs(isoDate).format("YYYY-MM-DD");
+const formatDate = (isoDate: string) => dayjs(isoDate).format("DD.MM.YYYY");
+const formatTime = (isoDate: string) => dayjs(isoDate).format("HH:mm");
+
+const requestOwnerType = (request: {
+  ownerOrganization?: { id: string; name: string } | null;
+  requesterUser?: { id: string } | null;
+}): OwnerType => {
+  if (request.ownerOrganization) {
+    return "ORGANIZATION";
+  }
+  if (request.requesterUser) {
+    return "PERSONAL";
+  }
+  return "EXTERNAL";
+};
+
+const bookingOwnerType = (booking: {
+  isExternalBooking: boolean;
+  ownerOrganization?: { id: string; name: string } | null;
+}): OwnerType => {
+  if (booking.isExternalBooking) {
+    return "EXTERNAL";
+  }
+  if (booking.ownerOrganization) {
+    return "ORGANIZATION";
+  }
+  return "PERSONAL";
+};
+
+const conflictingAreasFor = (area: string) => {
+  if (area === "ENTIRE_HOUSE") {
+    return ["ENTIRE_HOUSE", "FIRST_FLOOR", "SECOND_FLOOR"];
+  }
+  if (area === "FIRST_FLOOR") {
+    return ["FIRST_FLOOR", "ENTIRE_HOUSE"];
+  }
+  return ["SECOND_FLOOR", "ENTIRE_HOUSE"];
+};
 
 const JanHusAdminPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -45,6 +143,28 @@ const JanHusAdminPage: NextPageWithLayout = () => {
 
   const [requestComments, setRequestComments] = useState<Record<string, string>>({});
   const [bookingComments, setBookingComments] = useState<Record<string, string>>({});
+
+  const [requestDateFilter, setRequestDateFilter] = useState("");
+  const [requestAreaFilter, setRequestAreaFilter] = useState("ALL");
+  const [requestStatusFilter, setRequestStatusFilter] = useState("ALL");
+  const [requestEventTypeFilter, setRequestEventTypeFilter] = useState("ALL");
+  const [requestOwnerTypeFilter, setRequestOwnerTypeFilter] = useState<"ALL" | OwnerType>("ALL");
+  const [requestSortBy, setRequestSortBy] = useState<"startsAt" | "area" | "eventType" | "status" | "ownerType">(
+    "startsAt"
+  );
+  const [requestSortDirection, setRequestSortDirection] = useState<SortDirection>("asc");
+
+  const [bookingDateFilter, setBookingDateFilter] = useState("");
+  const [bookingAreaFilter, setBookingAreaFilter] = useState("ALL");
+  const [bookingStatusFilter, setBookingStatusFilter] = useState("ALL");
+  const [bookingEventTypeFilter, setBookingEventTypeFilter] = useState("ALL");
+  const [bookingOwnerTypeFilter, setBookingOwnerTypeFilter] = useState<"ALL" | OwnerType>("ALL");
+  const [bookingSortBy, setBookingSortBy] = useState<"startsAt" | "area" | "eventType" | "status" | "ownerType">(
+    "startsAt"
+  );
+  const [bookingSortDirection, setBookingSortDirection] = useState<SortDirection>("asc");
+
+  const [availabilityDate, setAvailabilityDate] = useState(dayjs().format("YYYY-MM-DD"));
 
   useEffect(() => {
     const requests = requestsData?.janhusBookingRequests;
@@ -110,33 +230,121 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     onError: (error) => setAlert({ severity: "error", message: error.message }),
   });
 
-  const [startBankIdSigning, { loading: startingBankIdSigning }] = useMutation(StartJanhusBankIdSigningDocument, {
-    onCompleted: async (result) => {
-      const signingUrl = result.startJanhusBankidSigning?.signing?.signingUrl;
-      setAlert({
-        severity: "success",
-        message: signingUrl ? `BankID-signering startet: ${signingUrl}` : "BankID-signering startet.",
-      });
-
-      if (signingUrl && typeof window !== "undefined") {
-        window.open(signingUrl, "_blank", "noopener,noreferrer");
-      }
-
-      await refetchBookings();
-    },
-    onError: (error) => setAlert({ severity: "error", message: error.message }),
-  });
-
-  const [markBankIdSigned, { loading: markingBankIdSigned }] = useMutation(MarkJanhusBankIdSignedDocument, {
-    onCompleted: async () => {
-      setAlert({ severity: "success", message: "Booking markert som signert." });
-      await refetchBookings();
-    },
-    onError: (error) => setAlert({ severity: "error", message: error.message }),
-  });
-
   const bookingRequests = useMemo(() => requestsData?.janhusBookingRequests ?? [], [requestsData]);
   const bookings = useMemo(() => bookingsData?.adminJanhusBookings ?? [], [bookingsData]);
+
+  const filteredRequests = useMemo(() => {
+    const sortFactor = requestSortDirection === "asc" ? 1 : -1;
+
+    return [...bookingRequests]
+      .filter((request) => {
+        if (requestDateFilter && toDateKey(request.startsAt) !== requestDateFilter) {
+          return false;
+        }
+        if (requestAreaFilter !== "ALL" && request.area !== requestAreaFilter) {
+          return false;
+        }
+        if (requestStatusFilter !== "ALL" && request.status !== requestStatusFilter) {
+          return false;
+        }
+        if (requestEventTypeFilter !== "ALL" && request.eventType !== requestEventTypeFilter) {
+          return false;
+        }
+        if (requestOwnerTypeFilter !== "ALL" && requestOwnerType(request) !== requestOwnerTypeFilter) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        if (requestSortBy === "startsAt") {
+          return (new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime()) * sortFactor;
+        }
+        if (requestSortBy === "area") {
+          return a.area.localeCompare(b.area) * sortFactor;
+        }
+        if (requestSortBy === "eventType") {
+          return a.eventType.localeCompare(b.eventType) * sortFactor;
+        }
+        if (requestSortBy === "status") {
+          return a.status.localeCompare(b.status) * sortFactor;
+        }
+        return requestOwnerType(a).localeCompare(requestOwnerType(b)) * sortFactor;
+      });
+  }, [
+    bookingRequests,
+    requestAreaFilter,
+    requestDateFilter,
+    requestEventTypeFilter,
+    requestOwnerTypeFilter,
+    requestSortBy,
+    requestSortDirection,
+    requestStatusFilter,
+  ]);
+
+  const filteredBookings = useMemo(() => {
+    const sortFactor = bookingSortDirection === "asc" ? 1 : -1;
+
+    return [...bookings]
+      .filter((booking) => {
+        if (bookingDateFilter && toDateKey(booking.startsAt) !== bookingDateFilter) {
+          return false;
+        }
+        if (bookingAreaFilter !== "ALL" && booking.area !== bookingAreaFilter) {
+          return false;
+        }
+        if (bookingStatusFilter !== "ALL" && booking.status !== bookingStatusFilter) {
+          return false;
+        }
+        if (bookingEventTypeFilter !== "ALL" && booking.eventType !== bookingEventTypeFilter) {
+          return false;
+        }
+        if (bookingOwnerTypeFilter !== "ALL" && bookingOwnerType(booking) !== bookingOwnerTypeFilter) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        if (bookingSortBy === "startsAt") {
+          return (new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime()) * sortFactor;
+        }
+        if (bookingSortBy === "area") {
+          return a.area.localeCompare(b.area) * sortFactor;
+        }
+        if (bookingSortBy === "eventType") {
+          return a.eventType.localeCompare(b.eventType) * sortFactor;
+        }
+        if (bookingSortBy === "status") {
+          return a.status.localeCompare(b.status) * sortFactor;
+        }
+        return bookingOwnerType(a).localeCompare(bookingOwnerType(b)) * sortFactor;
+      });
+  }, [
+    bookingAreaFilter,
+    bookingDateFilter,
+    bookingEventTypeFilter,
+    bookingOwnerTypeFilter,
+    bookingSortBy,
+    bookingSortDirection,
+    bookingStatusFilter,
+    bookings,
+  ]);
+
+  const availabilityByArea = useMemo(() => {
+    const areas = ["FIRST_FLOOR", "SECOND_FLOOR", "ENTIRE_HOUSE"];
+    const dayBookings = bookings.filter((booking) => {
+      if (toDateKey(booking.startsAt) !== availabilityDate) {
+        return false;
+      }
+      return booking.status !== "DECLINED" && booking.status !== "CANCELLED";
+    });
+
+    return areas.map((area) => {
+      const areaBookings = dayBookings
+        .filter((booking) => conflictingAreasFor(area).includes(booking.area))
+        .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime());
+      return { area, bookings: areaBookings };
+    });
+  }, [availabilityDate, bookings]);
 
   async function handleReviewRequest(id: string, status: "APPROVED" | "REJECTED", convertToBooking: boolean) {
     await reviewRequest({
@@ -168,22 +376,6 @@ const JanHusAdminPage: NextPageWithLayout = () => {
       variables: {
         bookingId,
         organizationId,
-      },
-    });
-  }
-
-  async function handleStartBankIdSigning(bookingId: string) {
-    await startBankIdSigning({
-      variables: {
-        bookingId,
-      },
-    });
-  }
-
-  async function handleMarkBankIdSigned(bookingId: string) {
-    await markBankIdSigned({
-      variables: {
-        bookingId,
       },
     });
   }
@@ -229,33 +421,155 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                   </Button>
                 </Stack>
 
+                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(4, 1fr)" }}>
+                  <TextField
+                    type="date"
+                    label="Dato"
+                    InputLabelProps={{ shrink: true }}
+                    value={requestDateFilter}
+                    onChange={(event) => setRequestDateFilter(event.target.value)}
+                  />
+                  <FormControl>
+                    <InputLabel>Område</InputLabel>
+                    <Select
+                      value={requestAreaFilter}
+                      label="Område"
+                      onChange={(event) => setRequestAreaFilter(event.target.value)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
+                      <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
+                      <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Eiertype</InputLabel>
+                    <Select
+                      value={requestOwnerTypeFilter}
+                      label="Eiertype"
+                      onChange={(event) => setRequestOwnerTypeFilter(event.target.value as "ALL" | OwnerType)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      <MenuItem value="PERSONAL">Personlig</MenuItem>
+                      <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
+                      <MenuItem value="EXTERNAL">Ekstern</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Arrangementstype</InputLabel>
+                    <Select
+                      value={requestEventTypeFilter}
+                      label="Arrangementstype"
+                      onChange={(event) => setRequestEventTypeFilter(event.target.value)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                        <MenuItem key={value} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}>
+                  <FormControl>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      value={requestStatusFilter}
+                      label="Status"
+                      onChange={(event) => setRequestStatusFilter(event.target.value)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      {Object.entries(REQUEST_STATUS_LABELS).map(([value, label]) => (
+                        <MenuItem key={value} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Sorter på</InputLabel>
+                    <Select
+                      value={requestSortBy}
+                      label="Sorter på"
+                      onChange={(event) =>
+                        setRequestSortBy(
+                          event.target.value as "startsAt" | "area" | "eventType" | "status" | "ownerType"
+                        )
+                      }
+                    >
+                      <MenuItem value="startsAt">Tid (fra)</MenuItem>
+                      <MenuItem value="area">Område</MenuItem>
+                      <MenuItem value="eventType">Arrangementstype</MenuItem>
+                      <MenuItem value="ownerType">Eiertype</MenuItem>
+                      <MenuItem value="status">Status</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Retning</InputLabel>
+                    <Select
+                      value={requestSortDirection}
+                      label="Retning"
+                      onChange={(event) => setRequestSortDirection(event.target.value as SortDirection)}
+                    >
+                      <MenuItem value="asc">Stigende</MenuItem>
+                      <MenuItem value="desc">Synkende</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+
                 <Table size="small">
                   <TableHead>
                     <TableRow>
                       <TableCell>ID</TableCell>
+                      <TableCell>Dato</TableCell>
                       <TableCell>Fra</TableCell>
                       <TableCell>Til</TableCell>
                       <TableCell>Område</TableCell>
-                      <TableCell>Bestiller</TableCell>
+                      <TableCell>Eiertype</TableCell>
+                      <TableCell>Organisasjon</TableCell>
+                      <TableCell>Arrangementstype</TableCell>
+                      <TableCell>Renhold</TableCell>
+                      <TableCell>Bestiller / Ansvarlig</TableCell>
+                      <TableCell>Telefon</TableCell>
                       <TableCell>Status</TableCell>
                       <TableCell>Handlinger</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {bookingRequests.map((request) => (
+                    {filteredRequests.map((request) => (
                       <TableRow key={request.id}>
                         <TableCell>{request.id}</TableCell>
-                        <TableCell>{new Date(request.startsAt).toLocaleString()}</TableCell>
-                        <TableCell>{new Date(request.endsAt).toLocaleString()}</TableCell>
-                        <TableCell>{request.area}</TableCell>
+                        <TableCell>{formatDate(request.startsAt)}</TableCell>
+                        <TableCell>{formatTime(request.startsAt)}</TableCell>
+                        <TableCell>{formatTime(request.endsAt)}</TableCell>
+                        <TableCell>{AREA_LABELS[request.area] ?? request.area}</TableCell>
+                        <TableCell>{OWNER_TYPE_LABELS[requestOwnerType(request)]}</TableCell>
+                        <TableCell>{request.ownerOrganization?.name ?? "-"}</TableCell>
+                        <TableCell>{EVENT_TYPE_LABELS[request.eventType] ?? request.eventType}</TableCell>
+                        <TableCell>{request.cleaningRequested ? "Ja" : "Nei"}</TableCell>
                         <TableCell>
                           {request.requesterName}
                           <Typography variant="caption" display="block" color="text.secondary">
                             {request.requesterEmail}
                           </Typography>
+                          <Typography variant="caption" display="block" color="text.secondary">
+                            Ansvarlig: {request.responsibleName} ({request.responsibleEmail})
+                          </Typography>
                         </TableCell>
                         <TableCell>
-                          <Chip size="small" label={request.status} />
+                          {request.requesterPhone}
+                          <Typography variant="caption" display="block" color="text.secondary">
+                            Ansvarlig: {request.responsiblePhone}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            color={statusChipColor(request.status)}
+                            label={REQUEST_STATUS_LABELS[request.status] ?? request.status}
+                          />
                         </TableCell>
                         <TableCell>
                           <Stack spacing={1}>
@@ -315,33 +629,189 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                   </Button>
                 </Stack>
 
+                <Card variant="outlined">
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <Typography variant="h6">Tilgjengelighet (fargekodet dagsoversikt)</Typography>
+                      <TextField
+                        type="date"
+                        label="Vis dato"
+                        InputLabelProps={{ shrink: true }}
+                        value={availabilityDate}
+                        onChange={(event) => setAvailabilityDate(event.target.value)}
+                        sx={{ maxWidth: 220 }}
+                      />
+
+                      <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}>
+                        {availabilityByArea.map((areaInfo) => (
+                          <Card key={areaInfo.area} variant="outlined">
+                            <CardContent>
+                              <Typography variant="subtitle1" gutterBottom>
+                                {AREA_LABELS[areaInfo.area] ?? areaInfo.area}
+                              </Typography>
+                              {areaInfo.bookings.length === 0 ? (
+                                <Chip label="Ledig" color="success" size="small" />
+                              ) : (
+                                <Stack spacing={1}>
+                                  {areaInfo.bookings.map((booking) => (
+                                    <Chip
+                                      key={booking.id}
+                                      size="small"
+                                      color={statusChipColor(booking.status)}
+                                      label={`${formatTime(booking.startsAt)}–${formatTime(booking.endsAt)} · ${BOOKING_STATUS_LABELS[booking.status] ?? booking.status} · ${booking.responsibleName}`}
+                                    />
+                                  ))}
+                                </Stack>
+                              )}
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </Box>
+                    </Stack>
+                  </CardContent>
+                </Card>
+
+                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(4, 1fr)" }}>
+                  <TextField
+                    type="date"
+                    label="Dato"
+                    InputLabelProps={{ shrink: true }}
+                    value={bookingDateFilter}
+                    onChange={(event) => setBookingDateFilter(event.target.value)}
+                  />
+                  <FormControl>
+                    <InputLabel>Område</InputLabel>
+                    <Select
+                      value={bookingAreaFilter}
+                      label="Område"
+                      onChange={(event) => setBookingAreaFilter(event.target.value)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
+                      <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
+                      <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Eiertype</InputLabel>
+                    <Select
+                      value={bookingOwnerTypeFilter}
+                      label="Eiertype"
+                      onChange={(event) => setBookingOwnerTypeFilter(event.target.value as "ALL" | OwnerType)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      <MenuItem value="PERSONAL">Personlig</MenuItem>
+                      <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
+                      <MenuItem value="EXTERNAL">Ekstern</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Arrangementstype</InputLabel>
+                    <Select
+                      value={bookingEventTypeFilter}
+                      label="Arrangementstype"
+                      onChange={(event) => setBookingEventTypeFilter(event.target.value)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                        <MenuItem key={value} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}>
+                  <FormControl>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      value={bookingStatusFilter}
+                      label="Status"
+                      onChange={(event) => setBookingStatusFilter(event.target.value)}
+                    >
+                      <MenuItem value="ALL">Alle</MenuItem>
+                      {Object.entries(BOOKING_STATUS_LABELS).map(([value, label]) => (
+                        <MenuItem key={value} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Sorter på</InputLabel>
+                    <Select
+                      value={bookingSortBy}
+                      label="Sorter på"
+                      onChange={(event) =>
+                        setBookingSortBy(
+                          event.target.value as "startsAt" | "area" | "eventType" | "status" | "ownerType"
+                        )
+                      }
+                    >
+                      <MenuItem value="startsAt">Tid (fra)</MenuItem>
+                      <MenuItem value="area">Område</MenuItem>
+                      <MenuItem value="eventType">Arrangementstype</MenuItem>
+                      <MenuItem value="ownerType">Eiertype</MenuItem>
+                      <MenuItem value="status">Status</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Retning</InputLabel>
+                    <Select
+                      value={bookingSortDirection}
+                      label="Retning"
+                      onChange={(event) => setBookingSortDirection(event.target.value as SortDirection)}
+                    >
+                      <MenuItem value="asc">Stigende</MenuItem>
+                      <MenuItem value="desc">Synkende</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+
                 <Table size="small">
                   <TableHead>
                     <TableRow>
                       <TableCell>ID</TableCell>
+                      <TableCell>Dato</TableCell>
                       <TableCell>Fra</TableCell>
                       <TableCell>Til</TableCell>
                       <TableCell>Område</TableCell>
                       <TableCell>Status</TableCell>
+                      <TableCell>Eiertype</TableCell>
+                      <TableCell>Organisasjon</TableCell>
+                      <TableCell>Arrangementstype</TableCell>
+                      <TableCell>Renhold</TableCell>
                       <TableCell>Ansvarlig</TableCell>
+                      <TableCell>Telefon</TableCell>
                       <TableCell>Depositum</TableCell>
                       <TableCell>Pris</TableCell>
                       <TableCell>Handlinger</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {bookings.map((booking) => (
+                    {filteredBookings.map((booking) => (
                       <TableRow key={booking.id}>
                         <TableCell>{booking.id}</TableCell>
-                        <TableCell>{new Date(booking.startsAt).toLocaleString()}</TableCell>
-                        <TableCell>{new Date(booking.endsAt).toLocaleString()}</TableCell>
-                        <TableCell>{booking.area}</TableCell>
+                        <TableCell>{formatDate(booking.startsAt)}</TableCell>
+                        <TableCell>{formatTime(booking.startsAt)}</TableCell>
+                        <TableCell>{formatTime(booking.endsAt)}</TableCell>
+                        <TableCell>{AREA_LABELS[booking.area] ?? booking.area}</TableCell>
                         <TableCell>
-                          <Chip size="small" label={booking.status} />
+                          <Chip
+                            size="small"
+                            color={statusChipColor(booking.status)}
+                            label={BOOKING_STATUS_LABELS[booking.status] ?? booking.status}
+                          />
                         </TableCell>
+                        <TableCell>{OWNER_TYPE_LABELS[bookingOwnerType(booking)]}</TableCell>
+                        <TableCell>{booking.ownerOrganization?.name ?? "-"}</TableCell>
+                        <TableCell>{EVENT_TYPE_LABELS[booking.eventType] ?? booking.eventType}</TableCell>
+                        <TableCell>{booking.cleaningRequested ? "Ja" : "Nei"}</TableCell>
                         <TableCell>{booking.responsibleName}</TableCell>
+                        <TableCell>{booking.responsiblePhone || "-"}</TableCell>
                         <TableCell>{booking.depositStatus}</TableCell>
-                        <TableCell>{booking.totalPrice}</TableCell>
+                        <TableCell>{booking.totalPrice ?? "-"}</TableCell>
                         <TableCell>
                           <Stack spacing={1}>
                             <TextField
@@ -388,22 +858,6 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                 disabled={creatingPaymentProduct || !booking.ownerOrganization}
                               >
                                 Opprett Vipps-produkt
-                              </Button>
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => handleStartBankIdSigning(booking.id)}
-                                disabled={startingBankIdSigning}
-                              >
-                                Start BankID
-                              </Button>
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => handleMarkBankIdSigned(booking.id)}
-                                disabled={markingBankIdSigned}
-                              >
-                                Marker signert
                               </Button>
                             </Stack>
                           </Stack>

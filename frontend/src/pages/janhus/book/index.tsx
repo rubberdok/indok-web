@@ -17,7 +17,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Calendar } from "@/components/Calendar";
 import { Title } from "@/components/Title";
@@ -53,6 +53,39 @@ const EVENT_TYPE_LABELS: Record<string, string> = {
   PRIVATE: "Privat",
 };
 
+const NORWEGIAN_PHONE_REGEX = /^(0047|\+47|47)?[49]\d{7}$/;
+
+const normalizePhoneNumber = (value: string) => value.replace(/\s/g, "");
+
+const formatSubmissionError = (rawMessage: string) => {
+  const fieldLabelMap: Record<string, string> = {
+    requester_email: "E-post bestiller",
+    responsible_email: "E-post ansvarlig",
+    requester_phone: "Telefon bestiller",
+    responsible_phone: "Telefon ansvarlig",
+  };
+
+  if (rawMessage.includes('null value in column "responsible_first_name"')) {
+    return "Kunne ikke sende forespørselen på grunn av en midlertidig serverfeil. Prøv igjen om noen sekunder.";
+  }
+
+  const parsedFieldErrors = Array.from(rawMessage.matchAll(/'([^']+)'\s*:\s*\['([^']+)'\]/g)).map(
+    ([, field, message]) => ({ field, message })
+  );
+
+  if (parsedFieldErrors.length > 0) {
+    return parsedFieldErrors
+      .map(({ field, message }) => {
+        const readableField = fieldLabelMap[field] ?? field;
+        const readableMessage = message === "Enter a valid email address." ? "Ugyldig e-postadresse." : message;
+        return `${readableField}: ${readableMessage}`;
+      })
+      .join(" ");
+  }
+
+  return rawMessage;
+};
+
 const getConflictingAreas = (area: string) => {
   if (area === "ENTIRE_HOUSE") {
     return ["ENTIRE_HOUSE", "FIRST_FLOOR", "SECOND_FLOOR"];
@@ -74,7 +107,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [endsAt, setEndsAt] = useState("");
   const [area, setArea] = useState("FIRST_FLOOR");
 
-  const [ownerType, setOwnerType] = useState<OwnerType>("PERSONAL");
+  const [ownerType, setOwnerType] = useState<OwnerType>("EXTERNAL");
   const [organizationId, setOrganizationId] = useState("");
 
   const [requesterName, setRequesterName] = useState("");
@@ -89,6 +122,8 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [eventType, setEventType] = useState("INTERNAL");
   const [cleaningRequested, setCleaningRequested] = useState(false);
   const [comment, setComment] = useState("");
+  const [acceptedGuidelines, setAcceptedGuidelines] = useState(false);
+  const [acceptedContractPlaceholder, setAcceptedContractPlaceholder] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [successMessage, setSuccessMessage] = useState<string | undefined>();
@@ -109,7 +144,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       setCleaningRequested(false);
     },
     onError: (error) => {
-      setErrorMessage(error.message);
+      setErrorMessage(formatSubmissionError(error.message));
       setSuccessMessage(undefined);
     },
   });
@@ -120,6 +155,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const areaConfigurations = areasData?.janhusAreaConfigurations ?? [];
 
   const bookingSettings = settingsData?.janhusBookingSettings ?? DEFAULT_SETTINGS;
+  const externalBookingsEnabled = settingsData?.janhusBookingSettings?.externalBookingsEnabled ?? true;
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
   const slotGranularityMinutes = Math.max(bookingSettings.slotGranularityMinutes, 1);
   const openingHour = bookingSettings.openingHour;
@@ -159,10 +195,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     fetchPolicy: "cache-and-network",
   });
 
-  const overlappingBookings = useMemo(
-    () => overlappingBookingsData?.janhusBookings ?? [],
-    [overlappingBookingsData]
-  );
+  const overlappingBookings = useMemo(() => overlappingBookingsData?.janhusBookings ?? [], [overlappingBookingsData]);
 
   const relevantBookings = useMemo(() => {
     const conflictingAreas = getConflictingAreas(area);
@@ -174,11 +207,12 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       }));
   }, [area, overlappingBookings]);
 
-  const hasOverlap = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
-    return relevantBookings.some(
-      (booking) => booking.startsAt.isBefore(end) && booking.endsAt.isAfter(start)
-    );
-  };
+  const hasOverlap = useCallback(
+    (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
+      return relevantBookings.some((booking) => booking.startsAt.isBefore(end) && booking.endsAt.isAfter(start));
+    },
+    [relevantBookings]
+  );
 
   const timeBoundaries = useMemo(() => {
     if (!bookingWindow) {
@@ -201,20 +235,23 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return boundaries;
   }, [bookingWindow, slotGranularityMinutes]);
 
-  const possibleEndOptionsFor = (start: dayjs.Dayjs) => {
-    return timeBoundaries
-      .filter(
-        (slot) =>
-          slot.isAfter(start) &&
-          slot.diff(start, "minute") >= minDurationMinutes &&
-          slot.diff(start, "minute") % slotGranularityMinutes === 0 &&
-          !hasOverlap(start, slot)
-      )
-      .map((slot) => ({
-        value: slot.toISOString(),
-        label: formatSlotLabel(slot, bookingDay),
-      }));
-  };
+  const possibleEndOptionsFor = useCallback(
+    (start: dayjs.Dayjs) => {
+      return timeBoundaries
+        .filter(
+          (slot) =>
+            slot.isAfter(start) &&
+            slot.diff(start, "minute") >= minDurationMinutes &&
+            slot.diff(start, "minute") % slotGranularityMinutes === 0 &&
+            !hasOverlap(start, slot)
+        )
+        .map((slot) => ({
+          value: slot.toISOString(),
+          label: formatSlotLabel(slot, bookingDay),
+        }));
+    },
+    [bookingDay, hasOverlap, minDurationMinutes, slotGranularityMinutes, timeBoundaries]
+  );
 
   const startOptions = useMemo(() => {
     return timeBoundaries
@@ -224,7 +261,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
         value: slot.toISOString(),
         label: formatSlotLabel(slot, bookingDay),
       }));
-  }, [bookingDay, timeBoundaries]);
+  }, [bookingDay, possibleEndOptionsFor, timeBoundaries]);
 
   const endOptions = useMemo(() => {
     if (!startsAt) {
@@ -234,7 +271,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     const selectedStart = dayjs(startsAt);
 
     return possibleEndOptionsFor(selectedStart);
-  }, [startsAt, timeBoundaries, minDurationMinutes, slotGranularityMinutes, relevantBookings]);
+  }, [startsAt, possibleEndOptionsFor]);
 
   const selectedDurationMinutes = useMemo(() => {
     if (!startsAt || !endsAt) {
@@ -245,8 +282,15 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   }, [endsAt, startsAt]);
 
   useEffect(() => {
-    if (hasResolvedUser && !isAuthenticated && ownerType !== "EXTERNAL") {
-      setOwnerType("EXTERNAL");
+    if (!hasResolvedUser) {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      if (ownerType !== "EXTERNAL") {
+        setOwnerType("EXTERNAL");
+      }
+      return;
     }
   }, [hasResolvedUser, isAuthenticated, ownerType]);
 
@@ -307,8 +351,23 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return;
     }
 
+    const normalizedRequesterPhone = normalizePhoneNumber(requesterPhone);
+    const normalizedResponsiblePhone = normalizePhoneNumber(
+      hasDifferentResponsible ? responsiblePhone : requesterPhone
+    );
+
+    if (!NORWEGIAN_PHONE_REGEX.test(normalizedRequesterPhone)) {
+      setErrorMessage("Telefon bestiller må være et gyldig norsk telefonnummer.");
+      return;
+    }
+
     if (hasDifferentResponsible && (!responsibleName || !responsibleEmail || !responsiblePhone)) {
       setErrorMessage("Fyll ut ansvarliginformasjon når ansvarlig er en annen person.");
+      return;
+    }
+
+    if (hasDifferentResponsible && !NORWEGIAN_PHONE_REGEX.test(normalizedResponsiblePhone)) {
+      setErrorMessage("Telefon ansvarlig må være et gyldig norsk telefonnummer.");
       return;
     }
 
@@ -317,14 +376,29 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return;
     }
 
+    if (!acceptedGuidelines) {
+      setErrorMessage("Du må bekrefte at du har lest JanHus retningslinjer.");
+      return;
+    }
+
+    if (!acceptedContractPlaceholder) {
+      setErrorMessage("Du må bekrefte kontraktsgrunnlaget før innsending.");
+      return;
+    }
+
     if (ownerType === "ORGANIZATION" && !organizationId) {
       setErrorMessage("Velg organisasjon for booking på vegne av organisasjon.");
       return;
     }
 
+    if (!isAuthenticated && !externalBookingsEnabled) {
+      setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
+      return;
+    }
+
     const resolvedResponsibleName = hasDifferentResponsible ? responsibleName : requesterName;
     const resolvedResponsibleEmail = hasDifferentResponsible ? responsibleEmail : requesterEmail;
-    const resolvedResponsiblePhone = hasDifferentResponsible ? responsiblePhone : requesterPhone;
+    const resolvedResponsiblePhone = normalizedResponsiblePhone;
 
     await createBookingRequest({
       variables: {
@@ -335,7 +409,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
           ...(ownerType === "ORGANIZATION" && organizationId ? { ownerOrganizationId: organizationId } : {}),
           requesterName,
           requesterEmail,
-          requesterPhone,
+          requesterPhone: normalizedRequesterPhone,
           responsibleName: resolvedResponsibleName,
           responsibleEmail: resolvedResponsibleEmail,
           responsiblePhone: resolvedResponsiblePhone,
@@ -385,7 +459,8 @@ const JanHusBookingPage: NextPageWithLayout = () => {
 
           {startsAt && endsAt && selectedDurationMinutes ? (
             <Alert severity="success">
-              Valgt tidsrom: {dayjs(startsAt).format("DD.MM.YYYY HH:mm")} – {dayjs(endsAt).format("DD.MM.YYYY HH:mm")} ({selectedDurationMinutes} min)
+              Valgt tidsrom: {dayjs(startsAt).format("DD.MM.YYYY HH:mm")} – {dayjs(endsAt).format("DD.MM.YYYY HH:mm")} (
+              {selectedDurationMinutes} min)
             </Alert>
           ) : null}
 
@@ -493,8 +568,15 @@ const JanHusBookingPage: NextPageWithLayout = () => {
                   {isAuthenticated && organizations.length > 0 ? (
                     <MenuItem value="ORGANIZATION">Booking på vegne av organisasjon</MenuItem>
                   ) : null}
-                  <MenuItem value="EXTERNAL">Ekstern forespørsel</MenuItem>
+                  {externalBookingsEnabled || !isAuthenticated ? (
+                    <MenuItem value="EXTERNAL" disabled={!isAuthenticated && !externalBookingsEnabled}>
+                      Ekstern forespørsel
+                    </MenuItem>
+                  ) : null}
                 </Select>
+                {!isAuthenticated && !externalBookingsEnabled ? (
+                  <FormHelperText>Eksterne forespørsler er midlertidig deaktivert i innstillinger.</FormHelperText>
+                ) : null}
               </FormControl>
 
               {ownerType === "ORGANIZATION" ? (
@@ -570,24 +652,29 @@ const JanHusBookingPage: NextPageWithLayout = () => {
                 </Box>
               ) : null}
 
-              <FormControl>
-                <InputLabel>Arrangementstype</InputLabel>
-                <Select
-                  value={ownerType === "EXTERNAL" ? "EXTERNAL" : eventType}
+              {ownerType === "EXTERNAL" ? (
+                <TextField
                   label="Arrangementstype"
-                  onChange={(event) => setEventType(event.target.value)}
-                  disabled={ownerType === "EXTERNAL"}
-                >
-                  {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
-                    <MenuItem key={value} value={value}>
-                      {label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {ownerType === "EXTERNAL" ? (
-                  <FormHelperText>Eksterne forespørsler settes alltid som ekstern hendelse.</FormHelperText>
-                ) : null}
-              </FormControl>
+                  value="Ekstern"
+                  disabled
+                  helperText="Eksterne forespørsler settes alltid som ekstern hendelse. Logg inn for interne/private valg."
+                />
+              ) : (
+                <FormControl>
+                  <InputLabel>Arrangementstype</InputLabel>
+                  <Select
+                    value={eventType}
+                    label="Arrangementstype"
+                    onChange={(event) => setEventType(event.target.value)}
+                  >
+                    {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                      <MenuItem key={value} value={value}>
+                        {label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
 
               <TextField
                 label="Kommentar"
@@ -596,7 +683,6 @@ const JanHusBookingPage: NextPageWithLayout = () => {
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
               />
-
               <FormControlLabel
                 control={
                   <Checkbox
@@ -605,6 +691,42 @@ const JanHusBookingPage: NextPageWithLayout = () => {
                   />
                 }
                 label="Ønsker renhold"
+              />
+
+              <Alert severity="info">
+                <Typography variant="subtitle2" gutterBottom>
+                  JanHus retningslinjer
+                </Typography>
+                Følg alltid gjeldende regler for bruk av JanHus. Endelig versjon av retningslinjene publiseres før
+                endelig bekreftelse av bookingen.
+              </Alert>
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={acceptedGuidelines}
+                    onChange={(event) => setAcceptedGuidelines(event.target.checked)}
+                  />
+                }
+                label="Jeg bekrefter at jeg har lest JanHus retningslinjer"
+              />
+
+              <Alert severity="warning">
+                <Typography variant="subtitle2" gutterBottom>
+                  Kontrakt (foreløpig)
+                </Typography>
+                Dette er en midlertidig plassholder for semikontrakt i bookingflyten. Endelig kontraktstekst legges inn
+                før produksjonssetting.
+              </Alert>
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={acceptedContractPlaceholder}
+                    onChange={(event) => setAcceptedContractPlaceholder(event.target.checked)}
+                  />
+                }
+                label="Jeg forstår kontraktsgrunnlaget (foreløpig versjon)"
               />
 
               <Box>

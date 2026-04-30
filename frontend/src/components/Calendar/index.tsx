@@ -1,6 +1,6 @@
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import dayjs from "@/lib/date";
 
@@ -74,7 +74,7 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
    * In addition, if there are fewer than 6 rows, which is the maximum number of rows for any given combination of
    * month and year, we add an extra row to avoid the calendar jumping around when changing month.
    */
-  const getRows = (month: dayjs.Dayjs): (dayjs.Dayjs | undefined)[][] => {
+  const getRows = useCallback((month: dayjs.Dayjs): (dayjs.Dayjs | undefined)[][] => {
     const days: dayjs.Dayjs[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
     let cells: dayjs.Dayjs[] = [];
     const rows = days.reduce((prev: dayjs.Dayjs[][], curr, index) => {
@@ -101,12 +101,16 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
       rows.push(new Array(7).fill(undefined));
     }
     return rows;
-  };
+  }, []);
 
   const onChangeMonth = (months: number) => {
     const newSelectedMonth = selectedMonth.add(months, "months");
     setSelectedMonth(newSelectedMonth);
   };
+
+  const selectedMonthRows = useMemo(() => getRows(selectedMonth), [getRows, selectedMonth]);
+  const nextMonth = useMemo(() => selectedMonth.add(1, "month"), [selectedMonth]);
+  const nextMonthRows = useMemo(() => getRows(nextMonth), [getRows, nextMonth]);
 
   return (
     <Stack spacing={2} width={1} justifyContent="center">
@@ -122,6 +126,10 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
          * The class names below are utilized by `CalendarDay`.
          */
         sx={{
+          "& .booking-singleDate": {
+            borderRadius: (theme) => `${theme.shape.borderRadius * 2}px`,
+            bgcolor: (theme) => theme.vars.palette.primary.light,
+          },
           "& .booking-fromDate": {
             borderRadius: (theme) => `${theme.shape.borderRadius * 2}px 0px 0px ${theme.shape.borderRadius * 2}px`,
             bgcolor: (theme) => theme.vars.palette.primary.light,
@@ -154,10 +162,12 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
             </Box>
           }
         >
-          {getRows(selectedMonth).map((row, index) => (
+          {selectedMonthRows.map((row, index) => (
             <CalendarRow key={`${selectedMonth}${index}`}>
-              {row.map((date) => (
-                <>
+              {row.map((date, dateIndex) => (
+                <React.Fragment
+                  key={date ? date.toISOString() : `placeholder-${selectedMonth.toISOString()}-${index}-${dateIndex}`}
+                >
                   {date && (
                     <CalendarDay
                       value={date.date()}
@@ -167,7 +177,6 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
                       isDisabled={isDateDisabled(date)}
                       isHidden={isHidden(date, selectedMonth)}
                       isInRange={startDate && endDate && date.isAfter(startDate) && date.isBefore(endDate)}
-                      key={date.toISOString()}
                     />
                   )}
                   {/*
@@ -175,14 +184,14 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
                     6 rows of days to avoid having the calendar jump when switching months
                   */}
                   {!date && <CalendarDay value=" " isDisabled={true} isHidden={true} />}
-                </>
+                </React.Fragment>
               ))}
             </CalendarRow>
           ))}
         </CalendarTable>
         <Box display={{ xs: "none", lg: "block" }} width={1}>
           <CalendarTable
-            month={selectedMonth.add(1, "month")}
+            month={nextMonth}
             previousMonthIcon={
               <Box visibility={{ xs: "visible", lg: "hidden" }}>
                 <IconButton onClick={() => onChangeMonth(-11)}>
@@ -196,10 +205,12 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
               </IconButton>
             }
           >
-            {getRows(selectedMonth.add(1, "month")).map((row, index) => (
+            {nextMonthRows.map((row, index) => (
               <CalendarRow key={`${selectedMonth}${index}2`}>
-                {row.map((date) => (
-                  <>
+                {row.map((date, dateIndex) => (
+                  <React.Fragment
+                    key={date ? date.toISOString() : `placeholder-${nextMonth.toISOString()}-${index}-${dateIndex}`}
+                  >
                     {date && (
                       <CalendarDay
                         value={date.date()}
@@ -207,9 +218,8 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
                         isToDate={endDate && date.isSame(endDate, "day")}
                         onClick={() => onDateClick(date)}
                         isDisabled={isDateDisabled(date)}
-                        isHidden={isHidden(date, selectedMonth.add(1, "month"))}
+                        isHidden={isHidden(date, nextMonth)}
                         isInRange={startDate && endDate && date.isAfter(startDate) && date.isBefore(endDate)}
-                        key={date.toISOString()}
                       />
                     )}
                     {/*
@@ -217,7 +227,7 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
                       6 rows of days to avoid having the calendar jump when switching months
                     */}
                     {!date && <CalendarDay value=" " isDisabled={true} isHidden={true} />}
-                  </>
+                  </React.Fragment>
                 ))}
               </CalendarRow>
             ))}

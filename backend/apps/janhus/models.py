@@ -132,6 +132,7 @@ class JanHusBookingSettings(models.Model):
     general_booking_opens_weeks_before = models.PositiveIntegerField(default=4)
 
     bankid_provider = models.CharField(max_length=100, default="IDURA_STUB")
+    external_bookings_enabled = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "JanHus booking settings"

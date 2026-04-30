@@ -24,7 +24,6 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "is_external_booking",
         "event_type",
         "deposit_status",
-        "bankid_status",
     )
     list_filter = (
         "area",
@@ -33,7 +32,6 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "deposit_status",
         "cleaning_requested",
         "is_external_booking",
-        "bankid_status",
     )
     search_fields = (
         "responsible_name",
@@ -114,7 +112,7 @@ class JanHusBookingSettingsAdmin(admin.ModelAdmin):
         "buffer_minutes",
         "organization_booking_opens_weeks_before",
         "general_booking_opens_weeks_before",
-        "bankid_provider",
+        "external_bookings_enabled",
     )
 
 

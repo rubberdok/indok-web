@@ -5,10 +5,8 @@ from apps.janhus.mutations import (
     CreateJanHusBooking,
     CreateJanHusBookingRequest,
     CreateJanHusPaymentProduct,
-    MarkJanHusBankIDSigned,
     ReviewJanHusBooking,
     ReviewJanHusBookingRequest,
-    StartJanHusBankIDSigning,
     UpdateJanHusAreaConfiguration,
     UpdateJanHusBooking,
     UpdateJanHusBookingSettings,
@@ -35,9 +33,6 @@ class JanHusMutations(graphene.ObjectType):
     update_janhus_area_configuration = UpdateJanHusAreaConfiguration.Field()
 
     create_janhus_payment_product = CreateJanHusPaymentProduct.Field()
-
-    start_janhus_bankid_signing = StartJanHusBankIDSigning.Field()
-    mark_janhus_bankid_signed = MarkJanHusBankIDSigned.Field()
 
 
 class JanHusQueries(graphene.ObjectType, JanHusResolvers):

@@ -73,26 +73,3 @@ mutation CreateJanhusPaymentProduct($bookingId: ID!, $organizationId: ID) {
     }
   }
 }
-
-mutation StartJanhusBankIdSigning($bookingId: ID!) {
-  startJanhusBankidSigning(bookingId: $bookingId) {
-    ok
-    booking {
-      ...JanHusBooking
-    }
-    signing {
-      provider
-      reference
-      signingUrl
-    }
-  }
-}
-
-mutation MarkJanhusBankIdSigned($bookingId: ID!) {
-  markJanhusBankidSigned(bookingId: $bookingId) {
-    ok
-    booking {
-      ...JanHusBooking
-    }
-  }
-}
