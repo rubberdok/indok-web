@@ -1,0 +1,625 @@
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+
+import { Calendar } from "@/components/Calendar";
+import { Title } from "@/components/Title";
+import {
+  CreateJanhusBookingRequestDocument,
+  JanHusAreaConfigurationsDocument,
+  JanHusBookingsDocument,
+  JanHusBookingSettingsDocument,
+  UserOrganizationsDocument,
+} from "@/generated/graphql";
+import { Layout } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
+import { NextPageWithLayout } from "@/lib/next";
+
+type OwnerType = "PERSONAL" | "ORGANIZATION" | "EXTERNAL";
+
+const DEFAULT_SETTINGS = {
+  minDurationMinutes: 60,
+  slotGranularityMinutes: 30,
+  openingHour: 8,
+  closingHour: 2,
+};
+
+const AREA_LABELS: Record<string, string> = {
+  FIRST_FLOOR: "1. etasje",
+  SECOND_FLOOR: "2. etasje",
+  ENTIRE_HOUSE: "Hele huset",
+};
+
+const EVENT_TYPE_LABELS: Record<string, string> = {
+  INTERNAL: "Intern",
+  OPEN_FOR_INDOK: "Åpent for Indøk-studenter",
+  PRIVATE: "Privat",
+};
+
+const getConflictingAreas = (area: string) => {
+  if (area === "ENTIRE_HOUSE") {
+    return ["ENTIRE_HOUSE", "FIRST_FLOOR", "SECOND_FLOOR"];
+  }
+  if (area === "FIRST_FLOOR") {
+    return ["FIRST_FLOOR", "ENTIRE_HOUSE"];
+  }
+  return ["SECOND_FLOOR", "ENTIRE_HOUSE"];
+};
+
+const formatSlotLabel = (slot: dayjs.Dayjs, baseDay?: dayjs.Dayjs) => {
+  const nextDay = baseDay ? !slot.isSame(baseDay, "day") : false;
+  return `${slot.format("HH:mm")}${nextDay ? " (+1 dag)" : ""}`;
+};
+
+const JanHusBookingPage: NextPageWithLayout = () => {
+  const [bookingDate, setBookingDate] = useState<dayjs.Dayjs | undefined>();
+  const [startsAt, setStartsAt] = useState("");
+  const [endsAt, setEndsAt] = useState("");
+  const [area, setArea] = useState("FIRST_FLOOR");
+
+  const [ownerType, setOwnerType] = useState<OwnerType>("PERSONAL");
+  const [organizationId, setOrganizationId] = useState("");
+
+  const [requesterName, setRequesterName] = useState("");
+  const [requesterEmail, setRequesterEmail] = useState("");
+  const [requesterPhone, setRequesterPhone] = useState("");
+  const [hasDifferentResponsible, setHasDifferentResponsible] = useState(false);
+
+  const [responsibleName, setResponsibleName] = useState("");
+  const [responsibleEmail, setResponsibleEmail] = useState("");
+  const [responsiblePhone, setResponsiblePhone] = useState("");
+
+  const [eventType, setEventType] = useState("INTERNAL");
+  const [cleaningRequested, setCleaningRequested] = useState(false);
+  const [comment, setComment] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [successMessage, setSuccessMessage] = useState<string | undefined>();
+
+  const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
+  const { data: areasData } = useQuery(JanHusAreaConfigurationsDocument);
+  const { data: orgData } = useQuery(UserOrganizationsDocument, {
+    fetchPolicy: "cache-and-network",
+  });
+
+  const [createBookingRequest, { loading }] = useMutation(CreateJanhusBookingRequestDocument, {
+    onCompleted: () => {
+      setSuccessMessage("Forespørsel sendt! JanHus-admin vil følge opp.");
+      setErrorMessage(undefined);
+
+      setEndsAt("");
+      setComment("");
+      setCleaningRequested(false);
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+      setSuccessMessage(undefined);
+    },
+  });
+
+  const hasResolvedUser = orgData !== undefined;
+  const isAuthenticated = Boolean(orgData?.user);
+  const organizations = useMemo(() => orgData?.user?.organizations ?? [], [orgData]);
+  const areaConfigurations = areasData?.janhusAreaConfigurations ?? [];
+
+  const bookingSettings = settingsData?.janhusBookingSettings ?? DEFAULT_SETTINGS;
+  const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
+  const slotGranularityMinutes = Math.max(bookingSettings.slotGranularityMinutes, 1);
+  const openingHour = bookingSettings.openingHour;
+  const closingHour = bookingSettings.closingHour;
+
+  const bookingDay = useMemo(() => {
+    if (!bookingDate) {
+      return undefined;
+    }
+
+    return bookingDate.tz("Europe/Oslo").startOf("day");
+  }, [bookingDate]);
+
+  const bookingWindow = useMemo(() => {
+    if (!bookingDay) {
+      return undefined;
+    }
+
+    const windowStart = bookingDay.hour(openingHour).minute(0).second(0).millisecond(0);
+    let windowEnd = bookingDay.hour(closingHour).minute(0).second(0).millisecond(0);
+
+    if (openingHour >= closingHour) {
+      windowEnd = windowEnd.add(1, "day");
+    }
+
+    return { windowStart, windowEnd };
+  }, [bookingDay, closingHour, openingHour]);
+
+  const { data: overlappingBookingsData } = useQuery(JanHusBookingsDocument, {
+    skip: !bookingWindow,
+    variables: bookingWindow
+      ? {
+          startsAt: bookingWindow.windowStart.toISOString(),
+          endsAt: bookingWindow.windowEnd.toISOString(),
+        }
+      : undefined,
+    fetchPolicy: "cache-and-network",
+  });
+
+  const overlappingBookings = useMemo(
+    () => overlappingBookingsData?.janhusBookings ?? [],
+    [overlappingBookingsData]
+  );
+
+  const relevantBookings = useMemo(() => {
+    const conflictingAreas = getConflictingAreas(area);
+    return overlappingBookings
+      .filter((booking) => conflictingAreas.includes(booking.area))
+      .map((booking) => ({
+        startsAt: dayjs(booking.startsAt),
+        endsAt: dayjs(booking.endsAt),
+      }));
+  }, [area, overlappingBookings]);
+
+  const hasOverlap = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
+    return relevantBookings.some(
+      (booking) => booking.startsAt.isBefore(end) && booking.endsAt.isAfter(start)
+    );
+  };
+
+  const timeBoundaries = useMemo(() => {
+    if (!bookingWindow) {
+      return [];
+    }
+
+    const boundaries = [bookingWindow.windowStart];
+    let current = bookingWindow.windowStart;
+
+    while (current.add(slotGranularityMinutes, "minute").isSameOrBefore(bookingWindow.windowEnd)) {
+      const next = current.add(slotGranularityMinutes, "minute");
+      boundaries.push(next);
+      current = next;
+    }
+
+    if (!boundaries[boundaries.length - 1].isSame(bookingWindow.windowEnd)) {
+      boundaries.push(bookingWindow.windowEnd);
+    }
+
+    return boundaries;
+  }, [bookingWindow, slotGranularityMinutes]);
+
+  const possibleEndOptionsFor = (start: dayjs.Dayjs) => {
+    return timeBoundaries
+      .filter(
+        (slot) =>
+          slot.isAfter(start) &&
+          slot.diff(start, "minute") >= minDurationMinutes &&
+          slot.diff(start, "minute") % slotGranularityMinutes === 0 &&
+          !hasOverlap(start, slot)
+      )
+      .map((slot) => ({
+        value: slot.toISOString(),
+        label: formatSlotLabel(slot, bookingDay),
+      }));
+  };
+
+  const startOptions = useMemo(() => {
+    return timeBoundaries
+      .slice(0, -1)
+      .filter((slot) => possibleEndOptionsFor(slot).length > 0)
+      .map((slot) => ({
+        value: slot.toISOString(),
+        label: formatSlotLabel(slot, bookingDay),
+      }));
+  }, [bookingDay, timeBoundaries]);
+
+  const endOptions = useMemo(() => {
+    if (!startsAt) {
+      return [];
+    }
+
+    const selectedStart = dayjs(startsAt);
+
+    return possibleEndOptionsFor(selectedStart);
+  }, [startsAt, timeBoundaries, minDurationMinutes, slotGranularityMinutes, relevantBookings]);
+
+  const selectedDurationMinutes = useMemo(() => {
+    if (!startsAt || !endsAt) {
+      return undefined;
+    }
+
+    return dayjs(endsAt).diff(dayjs(startsAt), "minute");
+  }, [endsAt, startsAt]);
+
+  useEffect(() => {
+    if (hasResolvedUser && !isAuthenticated && ownerType !== "EXTERNAL") {
+      setOwnerType("EXTERNAL");
+    }
+  }, [hasResolvedUser, isAuthenticated, ownerType]);
+
+  useEffect(() => {
+    if (ownerType === "ORGANIZATION" && organizations.length === 0) {
+      setOwnerType(isAuthenticated ? "PERSONAL" : "EXTERNAL");
+      return;
+    }
+
+    if (ownerType !== "ORGANIZATION" && organizationId) {
+      setOrganizationId("");
+    }
+  }, [isAuthenticated, organizationId, organizations, ownerType]);
+
+  useEffect(() => {
+    if (ownerType === "ORGANIZATION" && !organizationId && organizations.length > 0) {
+      setOrganizationId(organizations[0].id);
+    }
+  }, [organizationId, organizations, ownerType]);
+
+  useEffect(() => {
+    setStartsAt("");
+    setEndsAt("");
+  }, [bookingDate, area]);
+
+  useEffect(() => {
+    if (startsAt && !startOptions.some((option) => option.value === startsAt)) {
+      setStartsAt("");
+      setEndsAt("");
+    }
+  }, [startsAt, startOptions]);
+
+  useEffect(() => {
+    if (endsAt && !endOptions.some((option) => option.value === endsAt)) {
+      setEndsAt("");
+    }
+  }, [endsAt, endOptions]);
+
+  useEffect(() => {
+    if (!hasDifferentResponsible) {
+      setResponsibleName("");
+      setResponsibleEmail("");
+      setResponsiblePhone("");
+    }
+  }, [hasDifferentResponsible]);
+
+  async function handleSubmit() {
+    setErrorMessage(undefined);
+    setSuccessMessage(undefined);
+
+    if (!bookingDate || !startsAt || !endsAt) {
+      setErrorMessage("Velg område, dato og gyldig tidsrom.");
+      return;
+    }
+
+    if (!requesterName || !requesterEmail || !requesterPhone) {
+      setErrorMessage("Fyll ut bestillerinformasjon.");
+      return;
+    }
+
+    if (hasDifferentResponsible && (!responsibleName || !responsibleEmail || !responsiblePhone)) {
+      setErrorMessage("Fyll ut ansvarliginformasjon når ansvarlig er en annen person.");
+      return;
+    }
+
+    if (!dayjs(endsAt).isAfter(dayjs(startsAt))) {
+      setErrorMessage("Sluttid må være etter starttid.");
+      return;
+    }
+
+    if (ownerType === "ORGANIZATION" && !organizationId) {
+      setErrorMessage("Velg organisasjon for booking på vegne av organisasjon.");
+      return;
+    }
+
+    const resolvedResponsibleName = hasDifferentResponsible ? responsibleName : requesterName;
+    const resolvedResponsibleEmail = hasDifferentResponsible ? responsibleEmail : requesterEmail;
+    const resolvedResponsiblePhone = hasDifferentResponsible ? responsiblePhone : requesterPhone;
+
+    await createBookingRequest({
+      variables: {
+        requestData: {
+          startsAt,
+          endsAt,
+          area,
+          ...(ownerType === "ORGANIZATION" && organizationId ? { ownerOrganizationId: organizationId } : {}),
+          requesterName,
+          requesterEmail,
+          requesterPhone,
+          responsibleName: resolvedResponsibleName,
+          responsibleEmail: resolvedResponsibleEmail,
+          responsiblePhone: resolvedResponsiblePhone,
+          eventType: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
+          cleaningRequested,
+          comment,
+        },
+      },
+    });
+  }
+
+  return (
+    <>
+      <Title
+        title="JanHus booking"
+        overline="Booking"
+        variant="dark"
+        breadcrumbs={[
+          {
+            name: "Hjem",
+            href: "/",
+          },
+          {
+            name: "Booking",
+            href: "/booking",
+          },
+          {
+            name: "JanHus",
+            href: "/janhus",
+          },
+          {
+            name: "Book",
+            href: "/janhus/book",
+          },
+        ]}
+      />
+      <Container sx={{ py: 4 }}>
+        <Stack spacing={3}>
+          <Typography variant="body1" color="text.secondary">
+            Flyt: velg område, velg dato i kalender, velg ledig tidsrom, og fyll ut bestillerinformasjon.
+          </Typography>
+
+          <Alert severity="info">
+            Regler: minimum {minDurationMinutes} minutter, granularitet {slotGranularityMinutes} minutter, åpningstid{" "}
+            {openingHour}:00–{closingHour}:00.
+          </Alert>
+
+          {startsAt && endsAt && selectedDurationMinutes ? (
+            <Alert severity="success">
+              Valgt tidsrom: {dayjs(startsAt).format("DD.MM.YYYY HH:mm")} – {dayjs(endsAt).format("DD.MM.YYYY HH:mm")} ({selectedDurationMinutes} min)
+            </Alert>
+          ) : null}
+
+          {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
+          {successMessage ? <Alert severity="success">{successMessage}</Alert> : null}
+
+          <Paper sx={{ p: 3, bgcolor: "background.elevated" }} elevation={0}>
+            <Stack spacing={2}>
+              <Typography variant="h5">1) Velg område</Typography>
+              <FormControl fullWidth>
+                <InputLabel>Område</InputLabel>
+                <Select value={area} label="Område" onChange={(event) => setArea(event.target.value)}>
+                  {(areaConfigurations.length
+                    ? areaConfigurations.map((configuration) => ({
+                        value: configuration.area,
+                        label: AREA_LABELS[configuration.area] ?? configuration.area,
+                      }))
+                    : [
+                        { value: "FIRST_FLOOR", label: AREA_LABELS.FIRST_FLOOR },
+                        { value: "SECOND_FLOOR", label: AREA_LABELS.SECOND_FLOOR },
+                        { value: "ENTIRE_HOUSE", label: AREA_LABELS.ENTIRE_HOUSE },
+                      ]
+                  ).map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <Typography variant="h5">2) Velg dato</Typography>
+              <Calendar
+                title="Kalender"
+                onDateClick={(date) => setBookingDate(date.startOf("day"))}
+                startDate={bookingDate}
+                endDate={bookingDate}
+                isDateDisabled={(date) => date.isBefore(dayjs().tz("Europe/Oslo"), "day")}
+              />
+
+              <Divider />
+
+              <Typography variant="h5">3) Velg ledig tidsrom</Typography>
+              <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
+                <FormControl>
+                  <InputLabel>Starttid</InputLabel>
+                  <Select
+                    value={startsAt}
+                    label="Starttid"
+                    onChange={(event) => setStartsAt(event.target.value)}
+                    disabled={!bookingDate || startOptions.length === 0}
+                  >
+                    {startOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>
+                    {!bookingDate
+                      ? "Velg dato i kalenderen for å vise starttider."
+                      : startOptions.length === 0
+                        ? "Ingen ledige starttider på valgt dato/område."
+                        : "Viser kun tider som har minst én gyldig og ledig sluttid."}
+                  </FormHelperText>
+                </FormControl>
+
+                <FormControl>
+                  <InputLabel>Sluttid</InputLabel>
+                  <Select
+                    value={endsAt}
+                    label="Sluttid"
+                    onChange={(event) => setEndsAt(event.target.value)}
+                    disabled={!startsAt || endOptions.length === 0}
+                  >
+                    {endOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>
+                    {!startsAt
+                      ? `Velg starttid først (minst ${minDurationMinutes} min varighet).`
+                      : endOptions.length === 0
+                        ? "Ingen gyldige ledige sluttider for valgt starttid."
+                        : "Sluttid må følge granularitet og være ledig."}
+                  </FormHelperText>
+                </FormControl>
+              </Box>
+            </Stack>
+          </Paper>
+
+          <Paper sx={{ p: 3, bgcolor: "background.elevated" }} elevation={0}>
+            <Stack spacing={2}>
+              <Typography variant="h5">4) Fyll ut informasjon</Typography>
+
+              <FormControl>
+                <InputLabel>Eiertype</InputLabel>
+                <Select
+                  value={ownerType}
+                  label="Eiertype"
+                  onChange={(event) => setOwnerType(event.target.value as OwnerType)}
+                >
+                  {isAuthenticated ? <MenuItem value="PERSONAL">Personlig booking</MenuItem> : null}
+                  {isAuthenticated && organizations.length > 0 ? (
+                    <MenuItem value="ORGANIZATION">Booking på vegne av organisasjon</MenuItem>
+                  ) : null}
+                  <MenuItem value="EXTERNAL">Ekstern forespørsel</MenuItem>
+                </Select>
+              </FormControl>
+
+              {ownerType === "ORGANIZATION" ? (
+                <FormControl>
+                  <InputLabel>Organisasjon</InputLabel>
+                  <Select
+                    value={organizationId}
+                    label="Organisasjon"
+                    onChange={(event) => setOrganizationId(event.target.value)}
+                  >
+                    {organizations.map((organization) => (
+                      <MenuItem key={organization.id} value={organization.id}>
+                        {organization.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : null}
+
+              <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
+                <TextField
+                  label="Navn på bestiller"
+                  value={requesterName}
+                  onChange={(event) => setRequesterName(event.target.value)}
+                  required
+                />
+                <TextField
+                  label="E-post bestiller"
+                  type="email"
+                  value={requesterEmail}
+                  onChange={(event) => setRequesterEmail(event.target.value)}
+                  required
+                />
+                <TextField
+                  label="Telefon bestiller"
+                  value={requesterPhone}
+                  onChange={(event) => setRequesterPhone(event.target.value)}
+                  required
+                />
+              </Box>
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={hasDifferentResponsible}
+                    onChange={(event) => setHasDifferentResponsible(event.target.checked)}
+                  />
+                }
+                label="Ansvarlig person er en annen enn bestiller"
+              />
+
+              {hasDifferentResponsible ? (
+                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
+                  <TextField
+                    label="Ansvarlig navn"
+                    value={responsibleName}
+                    onChange={(event) => setResponsibleName(event.target.value)}
+                    required
+                  />
+                  <TextField
+                    label="Ansvarlig e-post"
+                    type="email"
+                    value={responsibleEmail}
+                    onChange={(event) => setResponsibleEmail(event.target.value)}
+                    required
+                  />
+                  <TextField
+                    label="Ansvarlig telefon"
+                    value={responsiblePhone}
+                    onChange={(event) => setResponsiblePhone(event.target.value)}
+                    required
+                  />
+                </Box>
+              ) : null}
+
+              <FormControl>
+                <InputLabel>Arrangementstype</InputLabel>
+                <Select
+                  value={ownerType === "EXTERNAL" ? "EXTERNAL" : eventType}
+                  label="Arrangementstype"
+                  onChange={(event) => setEventType(event.target.value)}
+                  disabled={ownerType === "EXTERNAL"}
+                >
+                  {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                    <MenuItem key={value} value={value}>
+                      {label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {ownerType === "EXTERNAL" ? (
+                  <FormHelperText>Eksterne forespørsler settes alltid som ekstern hendelse.</FormHelperText>
+                ) : null}
+              </FormControl>
+
+              <TextField
+                label="Kommentar"
+                multiline
+                minRows={3}
+                value={comment}
+                onChange={(event) => setComment(event.target.value)}
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={cleaningRequested}
+                    onChange={(event) => setCleaningRequested(event.target.checked)}
+                  />
+                }
+                label="Ønsker renhold"
+              />
+
+              <Box>
+                <Button variant="contained" onClick={handleSubmit} disabled={loading}>
+                  Send bookingforespørsel
+                </Button>
+              </Box>
+            </Stack>
+          </Paper>
+        </Stack>
+      </Container>
+    </>
+  );
+};
+
+JanHusBookingPage.getLayout = (page) => <Layout>{page}</Layout>;
+
+export default JanHusBookingPage;

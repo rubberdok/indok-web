@@ -288,6 +288,25 @@ export type CreateFormInput = {
   organizationId: Scalars['ID']['input'];
 };
 
+export type CreateJanHusBooking = {
+  __typename?: 'CreateJanHusBooking';
+  booking?: Maybe<JanHusBookingType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type CreateJanHusBookingRequest = {
+  __typename?: 'CreateJanHusBookingRequest';
+  bookingRequest?: Maybe<JanHusBookingRequestType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type CreateJanHusPaymentProduct = {
+  __typename?: 'CreateJanHusPaymentProduct';
+  booking?: Maybe<JanHusBookingType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+  productId?: Maybe<Scalars['ID']['output']>;
+};
+
 /** Creates a new listing */
 export type CreateListing = {
   __typename?: 'CreateListing';
@@ -536,6 +555,289 @@ export type InitiateOrder = {
   redirect?: Maybe<Scalars['String']['output']>;
 };
 
+/** An enumeration. */
+export enum JanHusAreaConfigurationArea {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+export type JanHusAreaConfigurationInput = {
+  area: Scalars['String']['input'];
+  cleaningFee?: InputMaybe<Scalars['Decimal']['input']>;
+  externalPricePerHour?: InputMaybe<Scalars['Decimal']['input']>;
+  internalPricePerHour?: InputMaybe<Scalars['Decimal']['input']>;
+};
+
+export type JanHusAreaConfigurationType = {
+  __typename?: 'JanHusAreaConfigurationType';
+  area: JanHusAreaConfigurationArea;
+  cleaningFee: Scalars['Decimal']['output'];
+  externalPricePerHour: Scalars['Decimal']['output'];
+  id: Scalars['ID']['output'];
+  internalPricePerHour: Scalars['Decimal']['output'];
+};
+
+export type JanHusBankIdSigningStubType = {
+  __typename?: 'JanHusBankIDSigningStubType';
+  provider: Scalars['String']['output'];
+  reference: Scalars['String']['output'];
+  signingUrl: Scalars['String']['output'];
+};
+
+/** An enumeration. */
+export enum JanHusBookingArea {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+/** An enumeration. */
+export enum JanHusBookingBankidStatus {
+  /** Failed */
+  Failed = 'FAILED',
+  /** Not started */
+  NotStarted = 'NOT_STARTED',
+  /** Pending */
+  Pending = 'PENDING',
+  /** Signed */
+  Signed = 'SIGNED'
+}
+
+/** An enumeration. */
+export enum JanHusBookingDepositStatus {
+  /** Not required */
+  NotRequired = 'NOT_REQUIRED',
+  /** Paid */
+  Paid = 'PAID',
+  /** Refunded */
+  Refunded = 'REFUNDED',
+  /** Requested */
+  Requested = 'REQUESTED',
+  /** Required */
+  Required = 'REQUIRED',
+  /** Withheld */
+  Withheld = 'WITHHELD'
+}
+
+/** An enumeration. */
+export enum JanHusBookingEventType {
+  /** External */
+  External = 'EXTERNAL',
+  /** Internal */
+  Internal = 'INTERNAL',
+  /** Open to all Indøk students */
+  OpenForIndok = 'OPEN_FOR_INDOK',
+  /** Private */
+  Private = 'PRIVATE'
+}
+
+export type JanHusBookingInput = {
+  area: Scalars['String']['input'];
+  bookerEmail?: InputMaybe<Scalars['String']['input']>;
+  bookerName?: InputMaybe<Scalars['String']['input']>;
+  bookerPhone?: InputMaybe<Scalars['String']['input']>;
+  cleaningRequested?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  depositAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  depositStatus?: InputMaybe<Scalars['String']['input']>;
+  endsAt: Scalars['DateTime']['input'];
+  eventType?: InputMaybe<Scalars['String']['input']>;
+  isExternalBooking?: InputMaybe<Scalars['Boolean']['input']>;
+  ownerOrganizationId?: InputMaybe<Scalars['ID']['input']>;
+  ownerUserId?: InputMaybe<Scalars['ID']['input']>;
+  responsibleEmail: Scalars['String']['input'];
+  responsibleName: Scalars['String']['input'];
+  responsiblePhone: Scalars['String']['input'];
+  startsAt: Scalars['DateTime']['input'];
+};
+
+export type JanHusBookingLevelType = {
+  __typename?: 'JanHusBookingLevelType';
+  /** If empty, the level can create bookings all year according to its flags. */
+  bookingOpensWeeksBefore?: Maybe<Scalars['Int']['output']>;
+  bookings: Array<JanHusBookingType>;
+  canBookAnytime: Scalars['Boolean']['output'];
+  canCreateConfirmed: Scalars['Boolean']['output'];
+  canCreateProvisional: Scalars['Boolean']['output'];
+  canEditAllBookings: Scalars['Boolean']['output'];
+  canEditOwnBookingsOnly: Scalars['Boolean']['output'];
+  canOverrideLowerLevels: Scalars['Boolean']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  organizationAssignments: Array<JanHusOrganizationBookingLevelType>;
+  priority: Scalars['Int']['output'];
+  userAssignments: Array<JanHusUserBookingLevelType>;
+};
+
+/** An enumeration. */
+export enum JanHusBookingRequestArea {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+/** An enumeration. */
+export enum JanHusBookingRequestEventType {
+  /** External */
+  External = 'EXTERNAL',
+  /** Internal */
+  Internal = 'INTERNAL',
+  /** Open to all Indøk students */
+  OpenForIndok = 'OPEN_FOR_INDOK',
+  /** Private */
+  Private = 'PRIVATE'
+}
+
+export type JanHusBookingRequestInput = {
+  area: Scalars['String']['input'];
+  cleaningRequested?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  endsAt: Scalars['DateTime']['input'];
+  eventType?: InputMaybe<Scalars['String']['input']>;
+  ownerOrganizationId?: InputMaybe<Scalars['ID']['input']>;
+  requesterEmail?: InputMaybe<Scalars['String']['input']>;
+  requesterName?: InputMaybe<Scalars['String']['input']>;
+  requesterPhone?: InputMaybe<Scalars['String']['input']>;
+  responsibleEmail: Scalars['String']['input'];
+  responsibleName: Scalars['String']['input'];
+  responsiblePhone: Scalars['String']['input'];
+  startsAt: Scalars['DateTime']['input'];
+};
+
+/** An enumeration. */
+export enum JanHusBookingRequestStatus {
+  /** Approved */
+  Approved = 'APPROVED',
+  /** Pending */
+  Pending = 'PENDING',
+  /** Rejected */
+  Rejected = 'REJECTED'
+}
+
+export type JanHusBookingRequestType = {
+  __typename?: 'JanHusBookingRequestType';
+  adminComment: Scalars['String']['output'];
+  area: JanHusBookingRequestArea;
+  cleaningRequested: Scalars['Boolean']['output'];
+  comment: Scalars['String']['output'];
+  convertedBooking?: Maybe<JanHusBookingType>;
+  createdAt: Scalars['DateTime']['output'];
+  endsAt: Scalars['DateTime']['output'];
+  eventType: JanHusBookingRequestEventType;
+  id: Scalars['ID']['output'];
+  ownerOrganization?: Maybe<OrganizationType>;
+  requesterEmail: Scalars['String']['output'];
+  requesterName: Scalars['String']['output'];
+  requesterPhone: Scalars['String']['output'];
+  requesterUser?: Maybe<UserType>;
+  responsibleEmail: Scalars['String']['output'];
+  responsibleName: Scalars['String']['output'];
+  responsiblePhone: Scalars['String']['output'];
+  startsAt: Scalars['DateTime']['output'];
+  status: JanHusBookingRequestStatus;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type JanHusBookingSettingsInput = {
+  bankidProvider?: InputMaybe<Scalars['String']['input']>;
+  bufferMinutes?: InputMaybe<Scalars['Int']['input']>;
+  closingHour?: InputMaybe<Scalars['Int']['input']>;
+  generalBookingOpensWeeksBefore?: InputMaybe<Scalars['Int']['input']>;
+  minDurationMinutes?: InputMaybe<Scalars['Int']['input']>;
+  openingHour?: InputMaybe<Scalars['Int']['input']>;
+  organizationBookingOpensWeeksBefore?: InputMaybe<Scalars['Int']['input']>;
+  slotGranularityMinutes?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type JanHusBookingSettingsType = {
+  __typename?: 'JanHusBookingSettingsType';
+  bankidProvider: Scalars['String']['output'];
+  bufferMinutes: Scalars['Int']['output'];
+  closingHour: Scalars['Int']['output'];
+  generalBookingOpensWeeksBefore: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  minDurationMinutes: Scalars['Int']['output'];
+  openingHour: Scalars['Int']['output'];
+  organizationBookingOpensWeeksBefore: Scalars['Int']['output'];
+  slotGranularityMinutes: Scalars['Int']['output'];
+};
+
+/** An enumeration. */
+export enum JanHusBookingStatus {
+  /** Blocked */
+  Blocked = 'BLOCKED',
+  /** Cancelled */
+  Cancelled = 'CANCELLED',
+  /** Confirmed */
+  Confirmed = 'CONFIRMED',
+  /** Declined */
+  Declined = 'DECLINED',
+  /** Pending admin review */
+  PendingAdminReview = 'PENDING_ADMIN_REVIEW',
+  /** Provisional */
+  Provisional = 'PROVISIONAL'
+}
+
+export type JanHusBookingType = {
+  __typename?: 'JanHusBookingType';
+  adminComment: Scalars['String']['output'];
+  area: JanHusBookingArea;
+  bankidReference: Scalars['String']['output'];
+  bankidStatus: JanHusBookingBankidStatus;
+  bookerEmail: Scalars['String']['output'];
+  bookerName: Scalars['String']['output'];
+  bookerPhone: Scalars['String']['output'];
+  bookingLevel?: Maybe<JanHusBookingLevelType>;
+  cleaningRequested: Scalars['Boolean']['output'];
+  comment: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdByUser?: Maybe<UserType>;
+  depositAmount: Scalars['Decimal']['output'];
+  depositStatus: JanHusBookingDepositStatus;
+  durationMinutes?: Maybe<Scalars['Int']['output']>;
+  endsAt: Scalars['DateTime']['output'];
+  eventType: JanHusBookingEventType;
+  id: Scalars['ID']['output'];
+  isExternalBooking: Scalars['Boolean']['output'];
+  ownerOrganization?: Maybe<OrganizationType>;
+  ownerUser?: Maybe<UserType>;
+  responsibleEmail: Scalars['String']['output'];
+  responsibleName: Scalars['String']['output'];
+  responsiblePhone: Scalars['String']['output'];
+  sourceRequests: Array<JanHusBookingRequestType>;
+  startsAt: Scalars['DateTime']['output'];
+  status: JanHusBookingStatus;
+  totalPrice?: Maybe<Scalars['Decimal']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  vippsOrder?: Maybe<OrderType>;
+  vippsProduct?: Maybe<ProductType>;
+};
+
+export type JanHusOrganizationBookingLevelType = {
+  __typename?: 'JanHusOrganizationBookingLevelType';
+  id: Scalars['ID']['output'];
+  level: JanHusBookingLevelType;
+  organization: OrganizationType;
+};
+
+export type JanHusUserBookingLevelType = {
+  __typename?: 'JanHusUserBookingLevelType';
+  id: Scalars['ID']['output'];
+  level: JanHusBookingLevelType;
+  user: UserType;
+};
+
 export type ListingType = {
   __typename?: 'ListingType';
   applicationUrl?: Maybe<Scalars['String']['output']>;
@@ -557,6 +859,12 @@ export type ListingType = {
 export type Logout = {
   __typename?: 'Logout';
   idToken?: Maybe<Scalars['String']['output']>;
+};
+
+export type MarkJanHusBankIdSigned = {
+  __typename?: 'MarkJanHusBankIDSigned';
+  booking?: Maybe<JanHusBookingType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type MembershipInput = {
@@ -595,6 +903,9 @@ export type Mutations = {
   /** Create a new event */
   createEvent?: Maybe<CreateEvent>;
   createForm?: Maybe<CreateForm>;
+  createJanhusBooking?: Maybe<CreateJanHusBooking>;
+  createJanhusBookingRequest?: Maybe<CreateJanHusBookingRequest>;
+  createJanhusPaymentProduct?: Maybe<CreateJanHusPaymentProduct>;
   /** Creates a new listing */
   createListing?: Maybe<CreateListing>;
   createOrganization?: Maybe<CreateOrganization>;
@@ -632,10 +943,14 @@ export type Mutations = {
   eventSignUp?: Maybe<EventSignUp>;
   initiateOrder?: Maybe<InitiateOrder>;
   logout?: Maybe<Logout>;
+  markJanhusBankidSigned?: Maybe<MarkJanHusBankIdSigned>;
+  reviewJanhusBooking?: Maybe<ReviewJanHusBooking>;
+  reviewJanhusBookingRequest?: Maybe<ReviewJanHusBookingRequest>;
   /** Sends email to the user or an admin (or both) */
   sendEmail?: Maybe<SendEmail>;
   /** Send an email to all users signed up to an event */
   sendEventMails?: Maybe<SendEventEmails>;
+  startJanhusBankidSigning?: Maybe<StartJanHusBankIdSigning>;
   submitAnswers?: Maybe<SubmitOrUpdateAnswers>;
   updateArchivedocument?: Maybe<UpdateArchiveDocument>;
   updateBlog?: Maybe<UpdateBlog>;
@@ -651,6 +966,9 @@ export type Mutations = {
   /** Updates the event with a given ID with the data in event_data */
   updateEvent?: Maybe<UpdateEvent>;
   updateForm?: Maybe<UpdateForm>;
+  updateJanhusAreaConfiguration?: Maybe<UpdateJanHusAreaConfiguration>;
+  updateJanhusBooking?: Maybe<UpdateJanHusBooking>;
+  updateJanhusBookingSettings?: Maybe<UpdateJanHusBookingSettings>;
   updateListing?: Maybe<UpdateListing>;
   updateOrganization?: Maybe<UpdateOrganization>;
   updateQuestion?: Maybe<UpdateQuestion>;
@@ -721,6 +1039,22 @@ export type MutationsCreateEventArgs = {
 export type MutationsCreateFormArgs = {
   formData: CreateFormInput;
   listingId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationsCreateJanhusBookingArgs = {
+  bookingData: JanHusBookingInput;
+};
+
+
+export type MutationsCreateJanhusBookingRequestArgs = {
+  requestData: JanHusBookingRequestInput;
+};
+
+
+export type MutationsCreateJanhusPaymentProductArgs = {
+  bookingId: Scalars['ID']['input'];
+  organizationId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -834,6 +1168,21 @@ export type MutationsInitiateOrderArgs = {
 };
 
 
+export type MutationsMarkJanhusBankidSignedArgs = {
+  bookingId: Scalars['ID']['input'];
+};
+
+
+export type MutationsReviewJanhusBookingArgs = {
+  reviewData: ReviewJanHusBookingInput;
+};
+
+
+export type MutationsReviewJanhusBookingRequestArgs = {
+  reviewData: ReviewJanHusBookingRequestInput;
+};
+
+
 export type MutationsSendEmailArgs = {
   emailInput?: InputMaybe<EmailInput>;
 };
@@ -844,6 +1193,11 @@ export type MutationsSendEventMailsArgs = {
   eventId: Scalars['ID']['input'];
   receiverEmails?: InputMaybe<Array<Scalars['String']['input']>>;
   subject: Scalars['String']['input'];
+};
+
+
+export type MutationsStartJanhusBankidSigningArgs = {
+  bookingId: Scalars['ID']['input'];
 };
 
 
@@ -903,6 +1257,21 @@ export type MutationsUpdateEventArgs = {
 export type MutationsUpdateFormArgs = {
   formData: BaseFormInput;
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationsUpdateJanhusAreaConfigurationArgs = {
+  areaData: JanHusAreaConfigurationInput;
+};
+
+
+export type MutationsUpdateJanhusBookingArgs = {
+  bookingData: UpdateJanHusBookingInput;
+};
+
+
+export type MutationsUpdateJanhusBookingSettingsArgs = {
+  settingsData: JanHusBookingSettingsInput;
 };
 
 
@@ -1008,6 +1377,7 @@ export type Queries = {
   __typename?: 'Queries';
   activeBookingResponsible?: Maybe<BookingResponsibleType>;
   adminAllBookings?: Maybe<Array<AdminBookingType>>;
+  adminJanhusBookings?: Maybe<Array<JanHusBookingType>>;
   allBlogPosts?: Maybe<Array<BlogPostType>>;
   allBlogs?: Maybe<Array<BlogType>>;
   allBookings?: Maybe<Array<AllBookingsType>>;
@@ -1033,6 +1403,12 @@ export type Queries = {
   form?: Maybe<FormType>;
   forms?: Maybe<Array<FormType>>;
   hasPermission?: Maybe<Scalars['Boolean']['output']>;
+  janhusAreaConfigurations?: Maybe<Array<JanHusAreaConfigurationType>>;
+  janhusBookingLevels?: Maybe<Array<JanHusBookingLevelType>>;
+  janhusBookingRequests?: Maybe<Array<JanHusBookingRequestType>>;
+  janhusBookingSettings?: Maybe<JanHusBookingSettingsType>;
+  janhusBookings?: Maybe<Array<JanHusBookingType>>;
+  janhusMyBookingLevel?: Maybe<JanHusBookingLevelType>;
   listing?: Maybe<ListingType>;
   listings?: Maybe<Array<ListingType>>;
   logout: Scalars['String']['output'];
@@ -1055,6 +1431,11 @@ export type Queries = {
 export type QueriesAdminAllBookingsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesAdminJanhusBookingsArgs = {
+  status?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1126,6 +1507,18 @@ export type QueriesFormArgs = {
 
 export type QueriesHasPermissionArgs = {
   permission: Scalars['String']['input'];
+};
+
+
+export type QueriesJanhusBookingRequestsArgs = {
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesJanhusBookingsArgs = {
+  area?: InputMaybe<Scalars['String']['input']>;
+  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  startsAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
@@ -1250,6 +1643,34 @@ export type ResponsibleGroupType = {
   uuid: Scalars['UUID']['output'];
 };
 
+export type ReviewJanHusBooking = {
+  __typename?: 'ReviewJanHusBooking';
+  booking?: Maybe<JanHusBookingType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type ReviewJanHusBookingInput = {
+  adminComment?: InputMaybe<Scalars['String']['input']>;
+  depositAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  depositStatus?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ReviewJanHusBookingRequest = {
+  __typename?: 'ReviewJanHusBookingRequest';
+  booking?: Maybe<JanHusBookingType>;
+  bookingRequest?: Maybe<JanHusBookingRequestType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type ReviewJanHusBookingRequestInput = {
+  adminComment?: InputMaybe<Scalars['String']['input']>;
+  convertToBooking?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['ID']['input'];
+  status: Scalars['String']['input'];
+};
+
 /** Sends email to the user or an admin (or both) */
 export type SendEmail = {
   __typename?: 'SendEmail';
@@ -1275,6 +1696,13 @@ export type SignUpType = {
   userEmail: Scalars['String']['output'];
   userGradeYear: Scalars['Int']['output'];
   userPhoneNumber: Scalars['String']['output'];
+};
+
+export type StartJanHusBankIdSigning = {
+  __typename?: 'StartJanHusBankIDSigning';
+  booking?: Maybe<JanHusBookingType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+  signing?: Maybe<JanHusBankIdSigningStubType>;
 };
 
 export type SubmitOrUpdateAnswers = {
@@ -1421,6 +1849,37 @@ export type UpdateEventInput = {
 export type UpdateForm = {
   __typename?: 'UpdateForm';
   form?: Maybe<FormType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateJanHusAreaConfiguration = {
+  __typename?: 'UpdateJanHusAreaConfiguration';
+  areaConfiguration?: Maybe<JanHusAreaConfigurationType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateJanHusBooking = {
+  __typename?: 'UpdateJanHusBooking';
+  booking?: Maybe<JanHusBookingType>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateJanHusBookingInput = {
+  area?: InputMaybe<Scalars['String']['input']>;
+  cleaningRequested?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  eventType?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  responsibleEmail?: InputMaybe<Scalars['String']['input']>;
+  responsibleName?: InputMaybe<Scalars['String']['input']>;
+  responsiblePhone?: InputMaybe<Scalars['String']['input']>;
+  startsAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type UpdateJanHusBookingSettings = {
+  __typename?: 'UpdateJanHusBookingSettings';
+  bookingSettings?: Maybe<JanHusBookingSettingsType>;
   ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -1875,6 +2334,130 @@ export type FormWithAnswersQueryVariables = Exact<{
 
 export type FormWithAnswersQuery = { __typename?: 'Queries', form?: { __typename?: 'FormType', id: string, name: string, description: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answer?: { __typename?: 'AnswerType', id?: string | null, answer: string } | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }> } | null };
 
+export type JanHusBookingFragment = { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null };
+
+export type JanHusBookingRequestFragment = { __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanHusBookingRequestArea, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingRequestEventType, cleaningRequested: boolean, comment: string, status: JanHusBookingRequestStatus, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanHusBookingStatus } | null };
+
+export type JanHusBookingSettingsFragment = { __typename?: 'JanHusBookingSettingsType', id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, bankidProvider: string };
+
+export type JanHusAreaConfigurationFragment = { __typename?: 'JanHusAreaConfigurationType', id: string, area: JanHusAreaConfigurationArea, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number };
+
+export type JanHusBookingLevelFragment = { __typename?: 'JanHusBookingLevelType', id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore?: number | null };
+
+export type CreateJanhusBookingMutationVariables = Exact<{
+  bookingData: JanHusBookingInput;
+}>;
+
+
+export type CreateJanhusBookingMutation = { __typename?: 'Mutations', createJanhusBooking?: { __typename?: 'CreateJanHusBooking', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null } | null } | null };
+
+export type UpdateJanhusBookingMutationVariables = Exact<{
+  bookingData: UpdateJanHusBookingInput;
+}>;
+
+
+export type UpdateJanhusBookingMutation = { __typename?: 'Mutations', updateJanhusBooking?: { __typename?: 'UpdateJanHusBooking', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null } | null } | null };
+
+export type ReviewJanhusBookingMutationVariables = Exact<{
+  reviewData: ReviewJanHusBookingInput;
+}>;
+
+
+export type ReviewJanhusBookingMutation = { __typename?: 'Mutations', reviewJanhusBooking?: { __typename?: 'ReviewJanHusBooking', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null } | null } | null };
+
+export type CreateJanhusBookingRequestMutationVariables = Exact<{
+  requestData: JanHusBookingRequestInput;
+}>;
+
+
+export type CreateJanhusBookingRequestMutation = { __typename?: 'Mutations', createJanhusBookingRequest?: { __typename?: 'CreateJanHusBookingRequest', ok?: boolean | null, bookingRequest?: { __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanHusBookingRequestArea, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingRequestEventType, cleaningRequested: boolean, comment: string, status: JanHusBookingRequestStatus, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanHusBookingStatus } | null } | null } | null };
+
+export type ReviewJanhusBookingRequestMutationVariables = Exact<{
+  reviewData: ReviewJanHusBookingRequestInput;
+}>;
+
+
+export type ReviewJanhusBookingRequestMutation = { __typename?: 'Mutations', reviewJanhusBookingRequest?: { __typename?: 'ReviewJanHusBookingRequest', ok?: boolean | null, bookingRequest?: { __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanHusBookingRequestArea, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingRequestEventType, cleaningRequested: boolean, comment: string, status: JanHusBookingRequestStatus, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanHusBookingStatus } | null } | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null } | null } | null };
+
+export type UpdateJanhusBookingSettingsMutationVariables = Exact<{
+  settingsData: JanHusBookingSettingsInput;
+}>;
+
+
+export type UpdateJanhusBookingSettingsMutation = { __typename?: 'Mutations', updateJanhusBookingSettings?: { __typename?: 'UpdateJanHusBookingSettings', ok?: boolean | null, bookingSettings?: { __typename?: 'JanHusBookingSettingsType', id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, bankidProvider: string } | null } | null };
+
+export type UpdateJanhusAreaConfigurationMutationVariables = Exact<{
+  areaData: JanHusAreaConfigurationInput;
+}>;
+
+
+export type UpdateJanhusAreaConfigurationMutation = { __typename?: 'Mutations', updateJanhusAreaConfiguration?: { __typename?: 'UpdateJanHusAreaConfiguration', ok?: boolean | null, areaConfiguration?: { __typename?: 'JanHusAreaConfigurationType', id: string, area: JanHusAreaConfigurationArea, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number } | null } | null };
+
+export type CreateJanhusPaymentProductMutationVariables = Exact<{
+  bookingId: Scalars['ID']['input'];
+  organizationId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type CreateJanhusPaymentProductMutation = { __typename?: 'Mutations', createJanhusPaymentProduct?: { __typename?: 'CreateJanHusPaymentProduct', ok?: boolean | null, productId?: string | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null } | null } | null };
+
+export type StartJanhusBankIdSigningMutationVariables = Exact<{
+  bookingId: Scalars['ID']['input'];
+}>;
+
+
+export type StartJanhusBankIdSigningMutation = { __typename?: 'Mutations', startJanhusBankidSigning?: { __typename?: 'StartJanHusBankIDSigning', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null } | null, signing?: { __typename?: 'JanHusBankIDSigningStubType', provider: string, reference: string, signingUrl: string } | null } | null };
+
+export type MarkJanhusBankIdSignedMutationVariables = Exact<{
+  bookingId: Scalars['ID']['input'];
+}>;
+
+
+export type MarkJanhusBankIdSignedMutation = { __typename?: 'Mutations', markJanhusBankidSigned?: { __typename?: 'MarkJanHusBankIDSigned', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null } | null } | null };
+
+export type JanHusBookingsQueryVariables = Exact<{
+  startsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
+  area?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type JanHusBookingsQuery = { __typename?: 'Queries', janhusBookings?: Array<{ __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null }> | null };
+
+export type AdminJanHusBookingsQueryVariables = Exact<{
+  status?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type AdminJanHusBookingsQuery = { __typename?: 'Queries', adminJanhusBookings?: Array<{ __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanHusBookingArea, status: JanHusBookingStatus, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingEventType, cleaningRequested: boolean, depositStatus: JanHusBookingDepositStatus, depositAmount: number, comment: string, adminComment: string, bankidStatus: JanHusBookingBankidStatus, bankidReference: string, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null }> | null };
+
+export type JanHusBookingSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JanHusBookingSettingsQuery = { __typename?: 'Queries', janhusBookingSettings?: { __typename?: 'JanHusBookingSettingsType', id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, bankidProvider: string } | null };
+
+export type JanHusAreaConfigurationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JanHusAreaConfigurationsQuery = { __typename?: 'Queries', janhusAreaConfigurations?: Array<{ __typename?: 'JanHusAreaConfigurationType', id: string, area: JanHusAreaConfigurationArea, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number }> | null };
+
+export type JanHusBookingLevelsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JanHusBookingLevelsQuery = { __typename?: 'Queries', janhusBookingLevels?: Array<{ __typename?: 'JanHusBookingLevelType', id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore?: number | null }> | null };
+
+export type JanHusMyBookingLevelQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JanHusMyBookingLevelQuery = { __typename?: 'Queries', janhusMyBookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore?: number | null } | null };
+
+export type JanHusBookingRequestsQueryVariables = Exact<{
+  status?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type JanHusBookingRequestsQuery = { __typename?: 'Queries', janhusBookingRequests?: Array<{ __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanHusBookingRequestArea, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanHusBookingRequestEventType, cleaningRequested: boolean, comment: string, status: JanHusBookingRequestStatus, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanHusBookingStatus } | null }> | null };
+
 export type ListingFragment = { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } };
 
 export type ListingOrganizationFragment = { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string };
@@ -2030,6 +2613,11 @@ export const QuestionFragmentDoc = {"kind":"Document","definitions":[{"kind":"Fr
 export const AnswerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Answer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnswerType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]} as unknown as DocumentNode<AnswerFragment, unknown>;
 export const QuestionWithAnswerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"QuestionWithAnswer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Question"}},{"kind":"Field","name":{"kind":"Name","value":"answer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Answer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Option"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OptionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Question"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"question"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questionType"}},{"kind":"Field","name":{"kind":"Name","value":"mandatory"}},{"kind":"Field","name":{"kind":"Name","value":"options"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Option"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Answer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnswerType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]} as unknown as DocumentNode<QuestionWithAnswerFragment, unknown>;
 export const FormWithAnswersFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FormWithAnswers"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FormType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"QuestionWithAnswer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Option"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OptionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Question"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"question"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questionType"}},{"kind":"Field","name":{"kind":"Name","value":"mandatory"}},{"kind":"Field","name":{"kind":"Name","value":"options"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Option"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Answer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnswerType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"QuestionWithAnswer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Question"}},{"kind":"Field","name":{"kind":"Name","value":"answer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Answer"}}]}}]}}]} as unknown as DocumentNode<FormWithAnswersFragment, unknown>;
+export const JanHusBookingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<JanHusBookingFragment, unknown>;
+export const JanHusBookingRequestFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingRequest"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingRequestType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"requesterUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterEmail"}},{"kind":"Field","name":{"kind":"Name","value":"requesterPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"convertedBooking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<JanHusBookingRequestFragment, unknown>;
+export const JanHusBookingSettingsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingSettings"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingSettingsType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"minDurationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"slotGranularityMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"openingHour"}},{"kind":"Field","name":{"kind":"Name","value":"closingHour"}},{"kind":"Field","name":{"kind":"Name","value":"bufferMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"organizationBookingOpensWeeksBefore"}},{"kind":"Field","name":{"kind":"Name","value":"generalBookingOpensWeeksBefore"}},{"kind":"Field","name":{"kind":"Name","value":"bankidProvider"}}]}}]} as unknown as DocumentNode<JanHusBookingSettingsFragment, unknown>;
+export const JanHusAreaConfigurationFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusAreaConfiguration"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusAreaConfigurationType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"internalPricePerHour"}},{"kind":"Field","name":{"kind":"Name","value":"externalPricePerHour"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningFee"}}]}}]} as unknown as DocumentNode<JanHusAreaConfigurationFragment, unknown>;
+export const JanHusBookingLevelFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingLevel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingLevelType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"canBookAnytime"}},{"kind":"Field","name":{"kind":"Name","value":"canCreateProvisional"}},{"kind":"Field","name":{"kind":"Name","value":"canCreateConfirmed"}},{"kind":"Field","name":{"kind":"Name","value":"canOverrideLowerLevels"}},{"kind":"Field","name":{"kind":"Name","value":"canEditOwnBookingsOnly"}},{"kind":"Field","name":{"kind":"Name","value":"canEditAllBookings"}},{"kind":"Field","name":{"kind":"Name","value":"bookingOpensWeeksBefore"}}]}}]} as unknown as DocumentNode<JanHusBookingLevelFragment, unknown>;
 export const ListingOrganizationFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingOrganization"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrganizationType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"color"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<ListingOrganizationFragment, unknown>;
 export const ListingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Listing"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"startDatetime"}},{"kind":"Field","name":{"kind":"Name","value":"deadline"}},{"kind":"Field","name":{"kind":"Name","value":"endDatetime"}},{"kind":"Field","name":{"kind":"Name","value":"applicationUrl"}},{"kind":"Field","name":{"kind":"Name","value":"chips"}},{"kind":"Field","name":{"kind":"Name","value":"readMoreUrl"}},{"kind":"Field","name":{"kind":"Name","value":"heroImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingOrganization"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingOrganization"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrganizationType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"color"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<ListingFragment, unknown>;
 export const ListingWithFormIdFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingWithFormId"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Listing"}},{"kind":"Field","name":{"kind":"Name","value":"form"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingOrganization"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrganizationType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"color"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Listing"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"startDatetime"}},{"kind":"Field","name":{"kind":"Name","value":"deadline"}},{"kind":"Field","name":{"kind":"Name","value":"endDatetime"}},{"kind":"Field","name":{"kind":"Name","value":"applicationUrl"}},{"kind":"Field","name":{"kind":"Name","value":"chips"}},{"kind":"Field","name":{"kind":"Name","value":"readMoreUrl"}},{"kind":"Field","name":{"kind":"Name","value":"heroImageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingOrganization"}}]}}]}}]} as unknown as DocumentNode<ListingWithFormIdFragment, unknown>;
@@ -2095,6 +2683,23 @@ export const DeleteQuestionDocument = {"kind":"Document","definitions":[{"kind":
 export const SubmitAnswersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"submitAnswers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"formId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"answersData"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AnswerInput"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitAnswers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"formId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"formId"}}},{"kind":"Argument","name":{"kind":"Name","value":"answersData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"answersData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<SubmitAnswersMutation, SubmitAnswersMutationVariables>;
 export const FormWithAllResponsesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"formWithAllResponses"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"formId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"form"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"formId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"formId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FormWithAllResponses"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Option"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OptionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Question"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"question"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questionType"}},{"kind":"Field","name":{"kind":"Name","value":"mandatory"}},{"kind":"Field","name":{"kind":"Name","value":"options"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Option"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"QuestionWithAnswerIds"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Question"}},{"kind":"Field","name":{"kind":"Name","value":"answers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Answer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnswerType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AnswerWithQuestionId"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnswerType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Answer"}},{"kind":"Field","name":{"kind":"Name","value":"question"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Response"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ResponseType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"respondent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"answers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AnswerWithQuestionId"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FormWithAllResponses"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FormType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"QuestionWithAnswerIds"}}]}},{"kind":"Field","name":{"kind":"Name","value":"responses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Response"}}]}}]}}]} as unknown as DocumentNode<FormWithAllResponsesQuery, FormWithAllResponsesQueryVariables>;
 export const FormWithAnswersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"formWithAnswers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"formId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"form"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"formId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"formId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FormWithAnswers"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Option"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OptionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Question"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"question"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questionType"}},{"kind":"Field","name":{"kind":"Name","value":"mandatory"}},{"kind":"Field","name":{"kind":"Name","value":"options"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Option"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Answer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnswerType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"QuestionWithAnswer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QuestionType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Question"}},{"kind":"Field","name":{"kind":"Name","value":"answer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Answer"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FormWithAnswers"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FormType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"QuestionWithAnswer"}}]}}]}}]} as unknown as DocumentNode<FormWithAnswersQuery, FormWithAnswersQueryVariables>;
+export const CreateJanhusBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateJanhusBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bookingData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createJanhusBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bookingData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bookingData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<CreateJanhusBookingMutation, CreateJanhusBookingMutationVariables>;
+export const UpdateJanhusBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateJanhusBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bookingData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateJanHusBookingInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateJanhusBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bookingData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bookingData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<UpdateJanhusBookingMutation, UpdateJanhusBookingMutationVariables>;
+export const ReviewJanhusBookingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ReviewJanhusBooking"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"reviewData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ReviewJanHusBookingInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reviewJanhusBooking"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"reviewData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"reviewData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<ReviewJanhusBookingMutation, ReviewJanhusBookingMutationVariables>;
+export const CreateJanhusBookingRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateJanhusBookingRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"requestData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createJanhusBookingRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"requestData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"requestData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"bookingRequest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBookingRequest"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingRequest"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingRequestType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"requesterUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterEmail"}},{"kind":"Field","name":{"kind":"Name","value":"requesterPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"convertedBooking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<CreateJanhusBookingRequestMutation, CreateJanhusBookingRequestMutationVariables>;
+export const ReviewJanhusBookingRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ReviewJanhusBookingRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"reviewData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ReviewJanHusBookingRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reviewJanhusBookingRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"reviewData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"reviewData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"bookingRequest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBookingRequest"}}]}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingRequest"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingRequestType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"requesterUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterEmail"}},{"kind":"Field","name":{"kind":"Name","value":"requesterPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"convertedBooking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<ReviewJanhusBookingRequestMutation, ReviewJanhusBookingRequestMutationVariables>;
+export const UpdateJanhusBookingSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateJanhusBookingSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"settingsData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingSettingsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateJanhusBookingSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"settingsData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"settingsData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"bookingSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBookingSettings"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingSettings"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingSettingsType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"minDurationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"slotGranularityMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"openingHour"}},{"kind":"Field","name":{"kind":"Name","value":"closingHour"}},{"kind":"Field","name":{"kind":"Name","value":"bufferMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"organizationBookingOpensWeeksBefore"}},{"kind":"Field","name":{"kind":"Name","value":"generalBookingOpensWeeksBefore"}},{"kind":"Field","name":{"kind":"Name","value":"bankidProvider"}}]}}]} as unknown as DocumentNode<UpdateJanhusBookingSettingsMutation, UpdateJanhusBookingSettingsMutationVariables>;
+export const UpdateJanhusAreaConfigurationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateJanhusAreaConfiguration"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"areaData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusAreaConfigurationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateJanhusAreaConfiguration"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"areaData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"areaData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"areaConfiguration"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusAreaConfiguration"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusAreaConfiguration"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusAreaConfigurationType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"internalPricePerHour"}},{"kind":"Field","name":{"kind":"Name","value":"externalPricePerHour"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningFee"}}]}}]} as unknown as DocumentNode<UpdateJanhusAreaConfigurationMutation, UpdateJanhusAreaConfigurationMutationVariables>;
+export const CreateJanhusPaymentProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateJanhusPaymentProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bookingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createJanhusPaymentProduct"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bookingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bookingId"}}},{"kind":"Argument","name":{"kind":"Name","value":"organizationId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"productId"}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<CreateJanhusPaymentProductMutation, CreateJanhusPaymentProductMutationVariables>;
+export const StartJanhusBankIdSigningDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StartJanhusBankIdSigning"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bookingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startJanhusBankidSigning"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bookingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bookingId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}},{"kind":"Field","name":{"kind":"Name","value":"signing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"provider"}},{"kind":"Field","name":{"kind":"Name","value":"reference"}},{"kind":"Field","name":{"kind":"Name","value":"signingUrl"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<StartJanhusBankIdSigningMutation, StartJanhusBankIdSigningMutationVariables>;
+export const MarkJanhusBankIdSignedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"MarkJanhusBankIdSigned"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bookingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"markJanhusBankidSigned"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bookingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bookingId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<MarkJanhusBankIdSignedMutation, MarkJanhusBankIdSignedMutationVariables>;
+export const JanHusBookingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"JanHusBookings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startsAt"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endsAt"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"area"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"janhusBookings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"startsAt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startsAt"}}},{"kind":"Argument","name":{"kind":"Name","value":"endsAt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endsAt"}}},{"kind":"Argument","name":{"kind":"Name","value":"area"},"value":{"kind":"Variable","name":{"kind":"Name","value":"area"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<JanHusBookingsQuery, JanHusBookingsQueryVariables>;
+export const AdminJanHusBookingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminJanHusBookings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminJanhusBookings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBooking"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBooking"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"ownerUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isExternalBooking"}},{"kind":"Field","name":{"kind":"Name","value":"bookerName"}},{"kind":"Field","name":{"kind":"Name","value":"bookerEmail"}},{"kind":"Field","name":{"kind":"Name","value":"bookerPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"depositStatus"}},{"kind":"Field","name":{"kind":"Name","value":"depositAmount"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"bankidStatus"}},{"kind":"Field","name":{"kind":"Name","value":"bankidReference"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"durationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<AdminJanHusBookingsQuery, AdminJanHusBookingsQueryVariables>;
+export const JanHusBookingSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"JanHusBookingSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"janhusBookingSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBookingSettings"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingSettings"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingSettingsType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"minDurationMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"slotGranularityMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"openingHour"}},{"kind":"Field","name":{"kind":"Name","value":"closingHour"}},{"kind":"Field","name":{"kind":"Name","value":"bufferMinutes"}},{"kind":"Field","name":{"kind":"Name","value":"organizationBookingOpensWeeksBefore"}},{"kind":"Field","name":{"kind":"Name","value":"generalBookingOpensWeeksBefore"}},{"kind":"Field","name":{"kind":"Name","value":"bankidProvider"}}]}}]} as unknown as DocumentNode<JanHusBookingSettingsQuery, JanHusBookingSettingsQueryVariables>;
+export const JanHusAreaConfigurationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"JanHusAreaConfigurations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"janhusAreaConfigurations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusAreaConfiguration"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusAreaConfiguration"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusAreaConfigurationType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"internalPricePerHour"}},{"kind":"Field","name":{"kind":"Name","value":"externalPricePerHour"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningFee"}}]}}]} as unknown as DocumentNode<JanHusAreaConfigurationsQuery, JanHusAreaConfigurationsQueryVariables>;
+export const JanHusBookingLevelsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"JanHusBookingLevels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"janhusBookingLevels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBookingLevel"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingLevel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingLevelType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"canBookAnytime"}},{"kind":"Field","name":{"kind":"Name","value":"canCreateProvisional"}},{"kind":"Field","name":{"kind":"Name","value":"canCreateConfirmed"}},{"kind":"Field","name":{"kind":"Name","value":"canOverrideLowerLevels"}},{"kind":"Field","name":{"kind":"Name","value":"canEditOwnBookingsOnly"}},{"kind":"Field","name":{"kind":"Name","value":"canEditAllBookings"}},{"kind":"Field","name":{"kind":"Name","value":"bookingOpensWeeksBefore"}}]}}]} as unknown as DocumentNode<JanHusBookingLevelsQuery, JanHusBookingLevelsQueryVariables>;
+export const JanHusMyBookingLevelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"JanHusMyBookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"janhusMyBookingLevel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBookingLevel"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingLevel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingLevelType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"priority"}},{"kind":"Field","name":{"kind":"Name","value":"canBookAnytime"}},{"kind":"Field","name":{"kind":"Name","value":"canCreateProvisional"}},{"kind":"Field","name":{"kind":"Name","value":"canCreateConfirmed"}},{"kind":"Field","name":{"kind":"Name","value":"canOverrideLowerLevels"}},{"kind":"Field","name":{"kind":"Name","value":"canEditOwnBookingsOnly"}},{"kind":"Field","name":{"kind":"Name","value":"canEditAllBookings"}},{"kind":"Field","name":{"kind":"Name","value":"bookingOpensWeeksBefore"}}]}}]} as unknown as DocumentNode<JanHusMyBookingLevelQuery, JanHusMyBookingLevelQueryVariables>;
+export const JanHusBookingRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"JanHusBookingRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"janhusBookingRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"JanHusBookingRequest"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"JanHusBookingRequest"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"JanHusBookingRequestType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"requesterUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ownerOrganization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterEmail"}},{"kind":"Field","name":{"kind":"Name","value":"requesterPhone"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleName"}},{"kind":"Field","name":{"kind":"Name","value":"responsibleEmail"}},{"kind":"Field","name":{"kind":"Name","value":"responsiblePhone"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"cleaningRequested"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"adminComment"}},{"kind":"Field","name":{"kind":"Name","value":"convertedBooking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<JanHusBookingRequestsQuery, JanHusBookingRequestsQueryVariables>;
 export const CreateListingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createListing"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateListingInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createListing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"listingData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<CreateListingMutation, CreateListingMutationVariables>;
 export const UpdateListingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateListing"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"BaseListingInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateListing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"listingData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<UpdateListingMutation, UpdateListingMutationVariables>;
 export const DeleteListingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteListing"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteListing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listingId"}},{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<DeleteListingMutation, DeleteListingMutationVariables>;

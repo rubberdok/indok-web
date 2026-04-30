@@ -1,0 +1,41 @@
+query JanHusBookings($startsAt: DateTime, $endsAt: DateTime, $area: String) {
+  janhusBookings(startsAt: $startsAt, endsAt: $endsAt, area: $area) {
+    ...JanHusBooking
+  }
+}
+
+query AdminJanHusBookings($status: String) {
+  adminJanhusBookings(status: $status) {
+    ...JanHusBooking
+  }
+}
+
+query JanHusBookingSettings {
+  janhusBookingSettings {
+    ...JanHusBookingSettings
+  }
+}
+
+query JanHusAreaConfigurations {
+  janhusAreaConfigurations {
+    ...JanHusAreaConfiguration
+  }
+}
+
+query JanHusBookingLevels {
+  janhusBookingLevels {
+    ...JanHusBookingLevel
+  }
+}
+
+query JanHusMyBookingLevel {
+  janhusMyBookingLevel {
+    ...JanHusBookingLevel
+  }
+}
+
+query JanHusBookingRequests($status: String) {
+  janhusBookingRequests(status: $status) {
+    ...JanHusBookingRequest
+  }
+}

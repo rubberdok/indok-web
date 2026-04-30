@@ -1,0 +1,107 @@
+fragment JanHusBooking on JanHusBookingType {
+  id
+  startsAt
+  endsAt
+  area
+  status
+  ownerUser {
+    id
+    firstName
+    lastName
+  }
+  ownerOrganization {
+    id
+    name
+  }
+  bookingLevel {
+    id
+    name
+    priority
+  }
+  isExternalBooking
+  bookerName
+  bookerEmail
+  bookerPhone
+  responsibleName
+  responsibleEmail
+  responsiblePhone
+  eventType
+  cleaningRequested
+  depositStatus
+  depositAmount
+  comment
+  adminComment
+  bankidStatus
+  bankidReference
+  totalPrice
+  durationMinutes
+  createdAt
+  updatedAt
+}
+
+fragment JanHusBookingRequest on JanHusBookingRequestType {
+  id
+  startsAt
+  endsAt
+  area
+  requesterUser {
+    id
+    firstName
+    lastName
+  }
+  ownerOrganization {
+    id
+    name
+  }
+  requesterName
+  requesterEmail
+  requesterPhone
+  responsibleName
+  responsibleEmail
+  responsiblePhone
+  eventType
+  cleaningRequested
+  comment
+  status
+  adminComment
+  convertedBooking {
+    id
+    status
+  }
+  createdAt
+  updatedAt
+}
+
+fragment JanHusBookingSettings on JanHusBookingSettingsType {
+  id
+  minDurationMinutes
+  slotGranularityMinutes
+  openingHour
+  closingHour
+  bufferMinutes
+  organizationBookingOpensWeeksBefore
+  generalBookingOpensWeeksBefore
+  bankidProvider
+}
+
+fragment JanHusAreaConfiguration on JanHusAreaConfigurationType {
+  id
+  area
+  internalPricePerHour
+  externalPricePerHour
+  cleaningFee
+}
+
+fragment JanHusBookingLevel on JanHusBookingLevelType {
+  id
+  name
+  description
+  priority
+  canBookAnytime
+  canCreateProvisional
+  canCreateConfirmed
+  canOverrideLowerLevels
+  canEditOwnBookingsOnly
+  canEditAllBookings
+  bookingOpensWeeksBefore
+}

@@ -1,0 +1,98 @@
+mutation CreateJanhusBooking($bookingData: JanHusBookingInput!) {
+  createJanhusBooking(bookingData: $bookingData) {
+    ok
+    booking {
+      ...JanHusBooking
+    }
+  }
+}
+
+mutation UpdateJanhusBooking($bookingData: UpdateJanHusBookingInput!) {
+  updateJanhusBooking(bookingData: $bookingData) {
+    ok
+    booking {
+      ...JanHusBooking
+    }
+  }
+}
+
+mutation ReviewJanhusBooking($reviewData: ReviewJanHusBookingInput!) {
+  reviewJanhusBooking(reviewData: $reviewData) {
+    ok
+    booking {
+      ...JanHusBooking
+    }
+  }
+}
+
+mutation CreateJanhusBookingRequest($requestData: JanHusBookingRequestInput!) {
+  createJanhusBookingRequest(requestData: $requestData) {
+    ok
+    bookingRequest {
+      ...JanHusBookingRequest
+    }
+  }
+}
+
+mutation ReviewJanhusBookingRequest($reviewData: ReviewJanHusBookingRequestInput!) {
+  reviewJanhusBookingRequest(reviewData: $reviewData) {
+    ok
+    bookingRequest {
+      ...JanHusBookingRequest
+    }
+    booking {
+      ...JanHusBooking
+    }
+  }
+}
+
+mutation UpdateJanhusBookingSettings($settingsData: JanHusBookingSettingsInput!) {
+  updateJanhusBookingSettings(settingsData: $settingsData) {
+    ok
+    bookingSettings {
+      ...JanHusBookingSettings
+    }
+  }
+}
+
+mutation UpdateJanhusAreaConfiguration($areaData: JanHusAreaConfigurationInput!) {
+  updateJanhusAreaConfiguration(areaData: $areaData) {
+    ok
+    areaConfiguration {
+      ...JanHusAreaConfiguration
+    }
+  }
+}
+
+mutation CreateJanhusPaymentProduct($bookingId: ID!, $organizationId: ID) {
+  createJanhusPaymentProduct(bookingId: $bookingId, organizationId: $organizationId) {
+    ok
+    productId
+    booking {
+      ...JanHusBooking
+    }
+  }
+}
+
+mutation StartJanhusBankIdSigning($bookingId: ID!) {
+  startJanhusBankidSigning(bookingId: $bookingId) {
+    ok
+    booking {
+      ...JanHusBooking
+    }
+    signing {
+      provider
+      reference
+      signingUrl
+    }
+  }
+}
+
+mutation MarkJanhusBankIdSigned($bookingId: ID!) {
+  markJanhusBankidSigned(bookingId: $bookingId) {
+    ok
+    booking {
+      ...JanHusBooking
+    }
+  }
+}

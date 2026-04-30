@@ -69,6 +69,7 @@ LOCAL_APPS = [
     "apps.archive",
     "apps.blogs",
     "apps.cabins",
+    "apps.janhus",
     "apps.events",
     "apps.organizations",
     "apps.users",
