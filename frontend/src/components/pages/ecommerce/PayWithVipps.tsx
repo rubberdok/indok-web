@@ -30,15 +30,19 @@ export const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, di
   return (
     <Card sx={{ maxWidth: 300, background: "inherit" }}>
       <CardActionArea
-        onClick={() =>
-          initiateOrder({
-            variables: {
-              productId,
-              quantity,
-              ...(fallbackRedirect && { fallbackRedirect }),
-            },
-          })
-        }
+        onClick={async () => {
+          try {
+            await initiateOrder({
+              variables: {
+                productId,
+                quantity,
+                ...(fallbackRedirect && { fallbackRedirect }),
+              },
+            });
+          } catch {
+            // onError handles state/UI; swallow promise rejection to avoid runtime crash
+          }
+        }}
         disableRipple
         disabled={disable}
       >

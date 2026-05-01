@@ -5,6 +5,8 @@ from apps.janhus.mutations import (
     CreateJanHusBooking,
     CreateJanHusBookingRequest,
     CreateJanHusPaymentProduct,
+    DeleteJanHusBooking,
+    DeleteJanHusBookingRequest,
     ReviewJanHusBooking,
     ReviewJanHusBookingRequest,
     UpdateJanHusAreaConfiguration,
@@ -18,6 +20,7 @@ from apps.janhus.types import (
     JanHusBookingRequestType,
     JanHusBookingSettingsType,
     JanHusBookingType,
+    JanHusGuestListEntryType,
 )
 
 
@@ -25,9 +28,11 @@ class JanHusMutations(graphene.ObjectType):
     create_janhus_booking = CreateJanHusBooking.Field()
     update_janhus_booking = UpdateJanHusBooking.Field()
     review_janhus_booking = ReviewJanHusBooking.Field()
+    delete_janhus_booking = DeleteJanHusBooking.Field()
 
     create_janhus_booking_request = CreateJanHusBookingRequest.Field()
     review_janhus_booking_request = ReviewJanHusBookingRequest.Field()
+    delete_janhus_booking_request = DeleteJanHusBookingRequest.Field()
 
     update_janhus_booking_settings = UpdateJanHusBookingSettings.Field()
     update_janhus_area_configuration = UpdateJanHusAreaConfiguration.Field()
@@ -41,6 +46,18 @@ class JanHusQueries(graphene.ObjectType, JanHusResolvers):
         starts_at=graphene.DateTime(required=False),
         ends_at=graphene.DateTime(required=False),
         area=graphene.String(required=False),
+    )
+    janhus_my_bookings = graphene.List(NonNull(JanHusBookingType))
+    janhus_guest_search = graphene.List(
+        NonNull(JanHusGuestListEntryType),
+        booking_id=graphene.ID(required=True),
+        query=graphene.String(required=True),
+        limit=graphene.Int(required=False),
+    )
+    janhus_guest_search_for_request = graphene.List(
+        NonNull(JanHusGuestListEntryType),
+        query=graphene.String(required=True),
+        limit=graphene.Int(required=False),
     )
     admin_janhus_bookings = graphene.List(
         NonNull(JanHusBookingType),

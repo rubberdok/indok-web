@@ -5,14 +5,18 @@ import {
   Button,
   Container,
   Divider,
+  FormControl,
   FormControlLabel,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Stack,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
 import { Title } from "@/components/Title";
@@ -60,8 +64,63 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
   });
 
   const [areaForms, setAreaForms] = useState<
-    Record<string, { internalPricePerHour: string; externalPricePerHour: string; cleaningFee: string }>
+    Record<
+      string,
+      {
+        internalPricePerHour: string;
+        externalPricePerHour: string;
+        cleaningFee: string;
+        defaultDepositAmount: string;
+      }
+    >
   >({});
+
+  const openingHourOptions = useMemo(() => {
+    const slotGranularityMinutes = Math.max(settingsForm.slotGranularityMinutes, 1);
+    const values: number[] = [];
+
+    for (let minutes = 0; minutes < 24 * 60; minutes += slotGranularityMinutes) {
+      if (minutes % 60 === 0) {
+        values.push(minutes / 60);
+      }
+    }
+
+    if (!values.includes(settingsForm.openingHour)) {
+      values.push(settingsForm.openingHour);
+    }
+
+    return Array.from(new Set(values)).sort((a, b) => a - b);
+  }, [settingsForm.openingHour, settingsForm.slotGranularityMinutes]);
+
+  const closingHourOptions = useMemo(() => {
+    const slotGranularityMinutes = Math.max(settingsForm.slotGranularityMinutes, 1);
+    const options: Array<{ value: number; label: string }> = [];
+
+    for (let offset = slotGranularityMinutes; offset <= 24 * 60; offset += slotGranularityMinutes) {
+      const minutesFromMidnight = settingsForm.openingHour * 60 + offset;
+      if (minutesFromMidnight % 60 !== 0) {
+        continue;
+      }
+
+      const value = Math.floor(minutesFromMidnight / 60) % 24;
+      const dayOffset = Math.floor(minutesFromMidnight / (24 * 60));
+      const label = `${value.toString().padStart(2, "0")}:00${dayOffset > 0 ? " (+1 dag)" : ""}`;
+
+      if (!options.some((option) => option.value === value)) {
+        options.push({ value, label });
+      }
+    }
+
+    if (!options.some((option) => option.value === settingsForm.closingHour)) {
+      const wrapsToNextDay = settingsForm.closingHour <= settingsForm.openingHour;
+      options.push({
+        value: settingsForm.closingHour,
+        label: `${settingsForm.closingHour.toString().padStart(2, "0")}:00${wrapsToNextDay ? " (+1 dag)" : ""}`,
+      });
+    }
+
+    return options;
+  }, [settingsForm.closingHour, settingsForm.openingHour, settingsForm.slotGranularityMinutes]);
 
   useEffect(() => {
     const settings = settingsData?.janhusBookingSettings;
@@ -91,6 +150,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
             internalPricePerHour: String(configuration.internalPricePerHour),
             externalPricePerHour: String(configuration.externalPricePerHour),
             cleaningFee: String(configuration.cleaningFee),
+            defaultDepositAmount: String(configuration.defaultDepositAmount ?? 0),
           },
         ])
       )
@@ -141,6 +201,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
           internalPricePerHour: Number(form.internalPricePerHour),
           externalPricePerHour: Number(form.externalPricePerHour),
           cleaningFee: Number(form.cleaningFee),
+          defaultDepositAmount: Number(form.defaultDepositAmount),
         },
       },
     });
@@ -211,22 +272,38 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                       setSettingsForm((prev) => ({ ...prev, bufferMinutes: Number(event.target.value) }))
                     }
                   />
-                  <TextField
-                    label="Åpningstime"
-                    type="number"
-                    value={settingsForm.openingHour}
-                    onChange={(event) =>
-                      setSettingsForm((prev) => ({ ...prev, openingHour: Number(event.target.value) }))
-                    }
-                  />
-                  <TextField
-                    label="Stengetime"
-                    type="number"
-                    value={settingsForm.closingHour}
-                    onChange={(event) =>
-                      setSettingsForm((prev) => ({ ...prev, closingHour: Number(event.target.value) }))
-                    }
-                  />
+                  <FormControl>
+                    <InputLabel>Åpningstime</InputLabel>
+                    <Select
+                      label="Åpningstime"
+                      value={settingsForm.openingHour}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({ ...prev, openingHour: Number(event.target.value) }))
+                      }
+                    >
+                      {openingHourOptions.map((value) => (
+                        <MenuItem key={value} value={value}>
+                          {value.toString().padStart(2, "0")}:00
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel>Stengetime</InputLabel>
+                    <Select
+                      label="Stengetime"
+                      value={settingsForm.closingHour}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({ ...prev, closingHour: Number(event.target.value) }))
+                      }
+                    >
+                      {closingHourOptions.map((option) => (
+                        <MenuItem key={`${option.value}-${option.label}`} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                   <TextField
                     label="Organisasjoner åpner (uker før)"
                     type="number"
@@ -278,9 +355,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                 <Typography variant="h4" component="h2">
                   Pris per område
                 </Typography>
-                <Typography>
-                  Her kan dere oppdatere intern-/eksternpris og rengjøringsgebyr for hvert område.
-                </Typography>
+                <Typography>Her kan dere oppdatere intern-/eksternpris og renholdsgebyr for hvert område.</Typography>
 
                 <Stack spacing={2}>
                   {(areaData?.janhusAreaConfigurations ?? []).map((configuration) => {
@@ -302,6 +377,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                                       internalPricePerHour: "0",
                                       externalPricePerHour: "0",
                                       cleaningFee: "0",
+                                      defaultDepositAmount: "0",
                                     }),
                                     internalPricePerHour: event.target.value,
                                   },
@@ -320,6 +396,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                                       internalPricePerHour: "0",
                                       externalPricePerHour: "0",
                                       cleaningFee: "0",
+                                      defaultDepositAmount: "0",
                                     }),
                                     externalPricePerHour: event.target.value,
                                   },
@@ -327,7 +404,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                               }
                             />
                             <TextField
-                              label="Rengjøringsgebyr"
+                              label="Renholdsgebyr"
                               type="number"
                               value={form?.cleaningFee ?? ""}
                               onChange={(event) =>
@@ -338,8 +415,28 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                                       internalPricePerHour: "0",
                                       externalPricePerHour: "0",
                                       cleaningFee: "0",
+                                      defaultDepositAmount: "0",
                                     }),
                                     cleaningFee: event.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                            <TextField
+                              label="Depositum"
+                              type="number"
+                              value={form?.defaultDepositAmount ?? ""}
+                              onChange={(event) =>
+                                setAreaForms((prev) => ({
+                                  ...prev,
+                                  [configuration.area]: {
+                                    ...(prev[configuration.area] ?? {
+                                      internalPricePerHour: "0",
+                                      externalPricePerHour: "0",
+                                      cleaningFee: "0",
+                                      defaultDepositAmount: "0",
+                                    }),
+                                    defaultDepositAmount: event.target.value,
                                   },
                                 }))
                               }

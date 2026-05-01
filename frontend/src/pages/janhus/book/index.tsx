@@ -20,6 +20,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Calendar } from "@/components/Calendar";
+import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
 import { Title } from "@/components/Title";
 import {
   CreateJanhusBookingRequestDocument,
@@ -56,6 +57,11 @@ const EVENT_TYPE_LABELS: Record<string, string> = {
 const NORWEGIAN_PHONE_REGEX = /^(0047|\+47|47)?[49]\d{7}$/;
 
 const normalizePhoneNumber = (value: string) => value.replace(/\s/g, "");
+
+const toManualGuestEntry = (displayName: string): JanHusGuestListEntry => ({
+  feideUserId: `manual:${displayName.trim().toLowerCase().replace(/\s+/g, "-")}`,
+  displayName: displayName.trim(),
+});
 
 const formatSubmissionError = (rawMessage: string) => {
   const fieldLabelMap: Record<string, string> = {
@@ -122,6 +128,8 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [eventType, setEventType] = useState("INTERNAL");
   const [cleaningRequested, setCleaningRequested] = useState(false);
   const [comment, setComment] = useState("");
+  const [guestList, setGuestList] = useState("");
+  const [isGuestListDialogOpen, setIsGuestListDialogOpen] = useState(false);
   const [acceptedGuidelines, setAcceptedGuidelines] = useState(false);
   const [acceptedContractPlaceholder, setAcceptedContractPlaceholder] = useState(false);
 
@@ -136,12 +144,13 @@ const JanHusBookingPage: NextPageWithLayout = () => {
 
   const [createBookingRequest, { loading }] = useMutation(CreateJanhusBookingRequestDocument, {
     onCompleted: () => {
-      setSuccessMessage("Forespørsel sendt! JanHus-admin vil følge opp.");
+      setSuccessMessage("Forespørsel sendt! Janus Eiendom vil følge opp.");
       setErrorMessage(undefined);
 
       setEndsAt("");
       setComment("");
       setCleaningRequested(false);
+      setGuestList("");
     },
     onError: (error) => {
       setErrorMessage(formatSubmissionError(error.message));
@@ -281,6 +290,61 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return dayjs(endsAt).diff(dayjs(startsAt), "minute");
   }, [endsAt, startsAt]);
 
+  const guestListEntries = useMemo(
+    () =>
+      guestList
+        .split(/\r?\n/)
+        .map((entry) => entry.trim())
+        .filter(Boolean),
+    [guestList]
+  );
+
+  const guestListDialogEntries = useMemo(() => {
+    const seenGuestNames = new Set<string>();
+
+    return guestListEntries
+      .filter((entry) => {
+        const normalizedEntry = entry.toLowerCase();
+        if (seenGuestNames.has(normalizedEntry)) {
+          return false;
+        }
+        seenGuestNames.add(normalizedEntry);
+        return true;
+      })
+      .map((entry) => toManualGuestEntry(entry));
+  }, [guestListEntries]);
+
+  const openGuestListDialog = useCallback(() => {
+    setIsGuestListDialogOpen(true);
+  }, []);
+
+  const closeGuestListDialog = useCallback(() => {
+    setIsGuestListDialogOpen(false);
+  }, []);
+
+  const saveGuestList = useCallback((selectedGuests: JanHusGuestListEntry[]) => {
+    const seenGuestNames = new Set<string>();
+    const normalizedGuestList = selectedGuests
+      .map((guest) => guest.displayName.trim())
+      .filter((guestName) => {
+        if (!guestName) {
+          return false;
+        }
+
+        const normalizedGuestName = guestName.toLowerCase();
+        if (seenGuestNames.has(normalizedGuestName)) {
+          return false;
+        }
+
+        seenGuestNames.add(normalizedGuestName);
+        return true;
+      })
+      .join("\n");
+
+    setGuestList(normalizedGuestList);
+    setIsGuestListDialogOpen(false);
+  }, []);
+
   useEffect(() => {
     if (!hasResolvedUser) {
       return;
@@ -416,6 +480,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
           eventType: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
           cleaningRequested,
           comment,
+          guestList,
         },
       },
     });
@@ -683,6 +748,26 @@ const JanHusBookingPage: NextPageWithLayout = () => {
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
               />
+
+              <Stack spacing={1}>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={1} alignItems={{ sm: "center" }}>
+                  <Button variant="outlined" onClick={openGuestListDialog}>
+                    Rediger gjesteliste
+                  </Button>
+                  <Typography variant="body2" color="text.secondary">
+                    {guestListEntries.length > 0
+                      ? `Registrerte gjester: ${guestListEntries.length}`
+                      : "Ingen gjester registrert ennå"}
+                  </Typography>
+                </Stack>
+
+                {guestListEntries.length > 0 ? (
+                  <Typography variant="body2" color="text.secondary">
+                    {guestListEntries.join(", ")}
+                  </Typography>
+                ) : null}
+              </Stack>
+
               <FormControlLabel
                 control={
                   <Checkbox
@@ -690,7 +775,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
                     onChange={(event) => setCleaningRequested(event.target.checked)}
                   />
                 }
-                label="Ønsker renhold"
+                label="Ønsker innleid renhold (kostnad kommer i etterkant)"
               />
 
               <Alert severity="info">
@@ -738,6 +823,16 @@ const JanHusBookingPage: NextPageWithLayout = () => {
           </Paper>
         </Stack>
       </Container>
+
+      <GuestListDialog
+        open={isGuestListDialogOpen}
+        searchMode="request"
+        isAuthenticated={isAuthenticated}
+        allowManualEntries
+        initialGuests={guestListDialogEntries}
+        onClose={closeGuestListDialog}
+        onSave={saveGuestList}
+      />
     </>
   );
 };

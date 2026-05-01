@@ -73,3 +73,15 @@ mutation CreateJanhusPaymentProduct($bookingId: ID!, $organizationId: ID) {
     }
   }
 }
+
+mutation DeleteJanhusBooking($bookingId: ID!) {
+  deleteJanhusBooking(bookingId: $bookingId) {
+    ok
+  }
+}
+
+mutation DeleteJanhusBookingRequest($requestId: ID!) {
+  deleteJanhusBookingRequest(requestId: $requestId) {
+    ok
+  }
+}

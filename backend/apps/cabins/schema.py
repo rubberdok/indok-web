@@ -30,6 +30,7 @@ class CabinMutations(graphene.ObjectType):
 
 class CabinQueries(graphene.ObjectType, CabinResolvers):
     all_bookings = graphene.List(NonNull(AllBookingsType))
+    my_cabin_bookings = graphene.List(NonNull(AdminBookingType))
     admin_all_bookings = graphene.List(
         NonNull(AdminBookingType),
         before=graphene.String(required=False),

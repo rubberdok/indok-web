@@ -1,5 +1,5 @@
 import { ArrowForward } from "@mui/icons-material";
-import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography, useTheme } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
 
 import { NextLinkComposed } from "@/components/Link";
 import { Title } from "@/components/Title";
@@ -7,8 +7,6 @@ import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 const BookingHubPage: NextPageWithLayout = () => {
-  const theme = useTheme();
-
   return (
     <>
       <Title
@@ -31,7 +29,7 @@ const BookingHubPage: NextPageWithLayout = () => {
           <Typography variant="h4">Velg bookingområde</Typography>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Card sx={{ height: "100%", border: `1px solid ${theme.palette.divider}` }}>
+              <Card sx={{ height: "100%", border: "1px solid", borderColor: "divider" }}>
                 <CardContent>
                   <Typography variant="h5" gutterBottom>
                     Hyttebooking
@@ -46,7 +44,7 @@ const BookingHubPage: NextPageWithLayout = () => {
               </Card>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Card sx={{ height: "100%", border: `1px solid ${theme.palette.divider}` }}>
+              <Card sx={{ height: "100%", border: "1px solid", borderColor: "divider" }}>
                 <CardContent>
                   <Typography variant="h5" gutterBottom>
                     JanHus booking
@@ -59,6 +57,27 @@ const BookingHubPage: NextPageWithLayout = () => {
                 <CardActions>
                   <Button component={NextLinkComposed} to={{ pathname: "/janhus" }} endIcon={<ArrowForward />}>
                     Gå til JanHus
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Card sx={{ height: "100%", border: "1px solid", borderColor: "divider" }}>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    Mine bookinger
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Se egne JanHus- og hyttebookinger samlet, og betal eventuelle JanHus Vipps-forespørsler.
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    component={NextLinkComposed}
+                    to={{ pathname: "/booking/own_bookings" }}
+                    endIcon={<ArrowForward />}
+                  >
+                    Gå til mine bookinger
                   </Button>
                 </CardActions>
               </Card>

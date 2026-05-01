@@ -38,11 +38,9 @@ class JanHusEventType(models.TextChoices):
     EXTERNAL = "EXTERNAL", "External"
 
 
-class JanHusBankIDStatus(models.TextChoices):
-    NOT_STARTED = "NOT_STARTED", "Not started"
-    PENDING = "PENDING", "Pending"
-    SIGNED = "SIGNED", "Signed"
-    FAILED = "FAILED", "Failed"
+class JanHusDoorAccessPolicy(models.TextChoices):
+    BOOKER_ONLY = "BOOKER_ONLY", "Booker only"
+    ALL_PARTICIPANTS = "ALL_PARTICIPANTS", "Booker and guest list"
 
 
 class JanHusBookingLevel(models.Model):
@@ -131,7 +129,6 @@ class JanHusBookingSettings(models.Model):
     organization_booking_opens_weeks_before = models.PositiveIntegerField(default=6)
     general_booking_opens_weeks_before = models.PositiveIntegerField(default=4)
 
-    bankid_provider = models.CharField(max_length=100, default="IDURA_STUB")
     external_bookings_enabled = models.BooleanField(default=True)
 
     class Meta:
@@ -158,6 +155,7 @@ class JanHusAreaConfiguration(models.Model):
     internal_price_per_hour = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
     external_price_per_hour = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
     cleaning_fee = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
+    default_deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
 
     class Meta:
         ordering = ["area"]
@@ -237,12 +235,12 @@ class JanHusBooking(models.Model):
     comment = models.TextField(blank=True, default="")
     admin_comment = models.TextField(blank=True, default="")
 
-    bankid_status = models.CharField(
+    guest_list = models.TextField(blank=True, default="")
+    door_access_policy = models.CharField(
         max_length=32,
-        choices=JanHusBankIDStatus.choices,
-        default=JanHusBankIDStatus.NOT_STARTED,
+        choices=JanHusDoorAccessPolicy.choices,
+        default=JanHusDoorAccessPolicy.BOOKER_ONLY,
     )
-    bankid_reference = models.CharField(max_length=255, blank=True, default="")
 
     vipps_product = models.ForeignKey(
         "ecommerce.Product",
@@ -304,6 +302,18 @@ class JanHusBooking(models.Model):
 
         return base_price
 
+    @property
+    def outstanding_deposit_amount(self) -> Decimal:
+        if self.deposit_status not in [JanHusDepositStatus.REQUIRED, JanHusDepositStatus.REQUESTED]:
+            return Decimal("0")
+        if self.deposit_amount <= 0:
+            return Decimal("0")
+        return self.deposit_amount
+
+    @property
+    def payment_total_price(self) -> Decimal:
+        return self.total_price + self.outstanding_deposit_amount
+
     def __str__(self):
         owner = self.owner_organization or self.owner_user or self.booker_name or "Unknown"
         return f"JanHus booking {self.id} ({owner})"
@@ -345,6 +355,7 @@ class JanHusBookingRequest(models.Model):
     event_type = models.CharField(max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL)
     cleaning_requested = models.BooleanField(default=False)
     comment = models.TextField(blank=True, default="")
+    guest_list = models.TextField(blank=True, default="")
 
     status = models.CharField(max_length=32, choices=RequestStatus.choices, default=RequestStatus.PENDING)
     admin_comment = models.TextField(blank=True, default="")

@@ -24,6 +24,7 @@ query listingWithResponses($id: ID!) {
 
 query userOrganizations {
   user {
+    id
     organizations {
       ...ListingOrganization
     }

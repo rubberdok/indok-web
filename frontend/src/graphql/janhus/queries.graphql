@@ -4,6 +4,24 @@ query JanHusBookings($startsAt: DateTime, $endsAt: DateTime, $area: String) {
   }
 }
 
+query JanHusMyBookings {
+  janhusMyBookings {
+    ...JanHusBooking
+  }
+}
+
+query JanHusGuestSearch($bookingId: ID!, $query: String!, $limit: Int) {
+  janhusGuestSearch(bookingId: $bookingId, query: $query, limit: $limit) {
+    ...JanHusGuestListEntry
+  }
+}
+
+query JanHusGuestSearchForRequest($query: String!, $limit: Int) {
+  janhusGuestSearchForRequest(query: $query, limit: $limit) {
+    ...JanHusGuestListEntry
+  }
+}
+
 query AdminJanHusBookings($status: String) {
   adminJanhusBookings(status: $status) {
     ...JanHusBooking

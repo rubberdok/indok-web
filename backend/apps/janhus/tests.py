@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 from datetime import datetime, time, timedelta
 from unittest.mock import patch
 
@@ -8,8 +9,16 @@ from django.test import TestCase
 from django.utils import timezone
 
 from apps.janhus.mail import send_pending_review_notification
-from apps.janhus.models import JanHusBooking, JanHusBookingRequest, JanHusBookingSettings, JanHusBookingStatus
+from apps.janhus.models import (
+  JanHusAreaConfiguration,
+  JanHusBooking,
+  JanHusBookingRequest,
+  JanHusBookingSettings,
+  JanHusBookingStatus,
+)
+from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.base import ExtendedGraphQLTestCase
+from utils.testing.factories.ecommerce import ProductFactory
 from utils.testing.factories.users import UserFactory
 
 
@@ -65,6 +74,76 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertTrue(content["data"]["createJanhusBookingRequest"]["ok"])
         self.assertEqual(1, JanHusBookingRequest.objects.count())
         self.assertEqual(JanHusBookingRequest.RequestStatus.PENDING, JanHusBookingRequest.objects.first().status)
+
+    def test_guest_list_is_preserved_when_request_is_converted(self):
+        self.add_booking_permission(self.user)
+
+        guest_list_value = "Ada Lovelace\nGrace Hopper"
+        guest_list_literal = guest_list_value.replace("\n", "\\n")
+
+        create_query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: \"{self.start_dt.isoformat()}\"
+                  endsAt: \"{self.end_dt.isoformat()}\"
+                  area: \"FIRST_FLOOR\"
+                  requesterName: \"Requester User\"
+                  requesterEmail: \"requester@example.com\"
+                  requesterPhone: \"41234567\"
+                  responsibleName: \"Responsible User\"
+                  responsibleEmail: \"responsible@example.com\"
+                  responsiblePhone: \"41234567\"
+                  eventType: \"INTERNAL\"
+                  guestList: "{guest_list_literal}"
+                }}
+              ) {{
+                ok
+                bookingRequest {{
+                  id
+                  guestList
+                }}
+              }}
+            }}
+        """
+
+        create_response = self.query(create_query, user=self.other_user)
+        self.assertResponseNoErrors(create_response)
+
+        create_content = json.loads(create_response.content)
+        request_id = create_content["data"]["createJanhusBookingRequest"]["bookingRequest"]["id"]
+        self.assertEqual(
+            guest_list_value,
+            create_content["data"]["createJanhusBookingRequest"]["bookingRequest"]["guestList"],
+        )
+
+        review_query = f"""
+            mutation {{
+              reviewJanhusBookingRequest(
+                reviewData: {{
+                  id: \"{request_id}\"
+                  status: \"APPROVED\"
+                  convertToBooking: true
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                  guestList
+                }}
+              }}
+            }}
+        """
+
+        review_response = self.query(review_query, user=self.user)
+        self.assertResponseNoErrors(review_response)
+
+        review_content = json.loads(review_response.content)
+        self.assertEqual(guest_list_value, review_content["data"]["reviewJanhusBookingRequest"]["booking"]["guestList"])
+
+        booking = JanHusBooking.objects.first()
+        self.assertIsNotNone(booking)
+        self.assertEqual(guest_list_value, booking.guest_list)
 
     def test_create_booking_and_block_overlap(self):
         create_booking_query = f"""
@@ -163,6 +242,267 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertIn("single booking day window", content["errors"][0]["message"])
 
+    def test_update_booking_syncs_existing_vipps_product_price(self):
+        self.add_booking_permission(self.user)
+
+        JanHusAreaConfiguration.objects.create(
+            area="FIRST_FLOOR",
+            internal_price_per_hour=Decimal("100"),
+            external_price_per_hour=Decimal("200"),
+            cleaning_fee=Decimal("0"),
+            default_deposit_amount=Decimal("0"),
+        )
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+            deposit_status="REQUIRED",
+            deposit_amount=Decimal("200"),
+        )
+
+        product = ProductFactory(price=Decimal("400"))
+        booking.vipps_product = product
+        booking.save(update_fields=["vipps_product", "updated_at"])
+
+        query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  depositStatus: "REQUIRED"
+                  depositAmount: "500"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        product.refresh_from_db()
+
+        self.assertEqual(Decimal("500"), booking.deposit_amount)
+        self.assertEqual(Decimal("500"), product.price)
+
+    def test_create_payment_product_rejects_organization_bookings(self):
+        self.add_booking_permission(self.user)
+
+        organization = OrganizationFactory()
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_organization=organization,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+            deposit_status="REQUIRED",
+            deposit_amount=Decimal("500"),
+        )
+
+        query = f"""
+            mutation {{
+              createJanhusPaymentProduct(bookingId: "{booking.id}") {{
+                ok
+                productId
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIn("handled internally", content["errors"][0]["message"])
+
+    def test_update_booking_guest_list_access_and_policy_admin_only(self):
+        guest_user = UserFactory(is_indok=True)
+        booker_user = UserFactory(is_indok=True, phone_number="41111111")
+        responsible_user = UserFactory(is_indok=True, phone_number="42222222")
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_user=self.user,
+            booker_name=f"{booker_user.first_name} {booker_user.last_name}",
+            booker_email=booker_user.email,
+            booker_phone=str(booker_user.phone_number),
+            responsible_name=f"{responsible_user.first_name} {responsible_user.last_name}",
+            responsible_email=responsible_user.email,
+            responsible_phone=str(responsible_user.phone_number),
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+
+        owner_update_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  guestListUserFeideIds: ["{guest_user.feide_userid}"]
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                  guestList
+                  guestListEntries {{
+                    feideUserid
+                    displayName
+                  }}
+                }}
+              }}
+            }}
+        """
+
+        owner_response = self.query(owner_update_query, user=self.user)
+        self.assertResponseNoErrors(owner_response)
+        booking.refresh_from_db()
+        self.assertEqual([guest_user.feide_userid], json.loads(booking.guest_list))
+
+        booker_update_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  guestListUserFeideIds: ["{self.other_user.feide_userid}"]
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                  guestList
+                }}
+              }}
+            }}
+        """
+
+        booker_response = self.query(booker_update_query, user=booker_user)
+        self.assertResponseNoErrors(booker_response)
+        booking.refresh_from_db()
+        self.assertEqual([self.other_user.feide_userid], json.loads(booking.guest_list))
+
+        responsible_comment_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  comment: "Nope"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        responsible_comment_response = self.query(responsible_comment_query, user=responsible_user)
+        self.assertResponseHasErrors(responsible_comment_response)
+
+        owner_policy_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  doorAccessPolicy: "ALL_PARTICIPANTS"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        owner_policy_response = self.query(owner_policy_query, user=self.user)
+        self.assertResponseHasErrors(owner_policy_response)
+
+        self.add_booking_permission(self.other_user)
+
+        admin_policy_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  doorAccessPolicy: "ALL_PARTICIPANTS"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                  doorAccessPolicy
+                }}
+              }}
+            }}
+        """
+
+        admin_policy_response = self.query(admin_policy_query, user=self.other_user)
+        self.assertResponseNoErrors(admin_policy_response)
+        booking.refresh_from_db()
+        self.assertEqual("ALL_PARTICIPANTS", booking.door_access_policy)
+
+    def test_org_leader_can_update_guest_list_by_feide_id(self):
+        organization = OrganizationFactory()
+        org_leader = UserFactory(is_indok=True)
+        guest_user = UserFactory(is_indok=True)
+
+        MembershipFactory(
+            organization=organization,
+            user=org_leader,
+            group=organization.hr_group,
+        )
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_organization=organization,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+
+        update_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  guestListUserFeideIds: ["{guest_user.feide_userid}"]
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                  guestList
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(update_query, user=org_leader)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        self.assertEqual([guest_user.feide_userid], json.loads(booking.guest_list))
+
 
 class JanHusResolversTestCase(JanHusBaseTestCase):
     def test_admin_query_requires_permission(self):
@@ -195,6 +535,170 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         content = json.loads(allowed_response.content)
         ids = [item["id"] for item in content["data"]["adminJanhusBookings"]]
         self.assertIn(str(booking.id), ids)
+
+    def test_org_bookings_visible_only_for_org_leaders(self):
+        organization = OrganizationFactory()
+        leader_user = UserFactory(is_indok=True)
+        member_user = UserFactory(is_indok=True)
+
+        MembershipFactory(
+            organization=organization,
+            user=leader_user,
+            group=organization.hr_group,
+        )
+        MembershipFactory(
+            organization=organization,
+            user=member_user,
+            group=organization.primary_group,
+        )
+
+        org_booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_organization=organization,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+        personal_booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt + timedelta(hours=4),
+            ends_at=self.end_dt + timedelta(hours=4),
+            area="SECOND_FLOOR",
+            owner_user=member_user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+
+        query = """
+            query {
+              janhusMyBookings {
+                id
+              }
+            }
+        """
+
+        member_response = self.query(query, user=member_user)
+        self.assertResponseNoErrors(member_response)
+        member_ids = [item["id"] for item in json.loads(member_response.content)["data"]["janhusMyBookings"]]
+        self.assertIn(str(personal_booking.id), member_ids)
+        self.assertNotIn(str(org_booking.id), member_ids)
+
+        leader_response = self.query(query, user=leader_user)
+        self.assertResponseNoErrors(leader_response)
+        leader_ids = [item["id"] for item in json.loads(leader_response.content)["data"]["janhusMyBookings"]]
+        self.assertIn(str(org_booking.id), leader_ids)
+
+    def test_my_bookings_include_booker_or_responsible_contacts(self):
+        booker_booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_user=self.user,
+            booker_name=f"{self.other_user.first_name} {self.other_user.last_name}",
+            booker_email=self.other_user.email,
+            booker_phone=str(self.other_user.phone_number),
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="40000000",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+        responsible_booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt + timedelta(hours=4),
+            ends_at=self.end_dt + timedelta(hours=4),
+            area="SECOND_FLOOR",
+            owner_user=self.user,
+            booker_name="Booker",
+            booker_email="booker@example.com",
+            booker_phone="45555555",
+            responsible_name=f"{self.other_user.first_name} {self.other_user.last_name}",
+            responsible_email=self.other_user.email,
+            responsible_phone=str(self.other_user.phone_number),
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+
+        query = """
+            query {
+              janhusMyBookings {
+                id
+              }
+            }
+        """
+
+        response = self.query(query, user=self.other_user)
+        self.assertResponseNoErrors(response)
+
+        booking_ids = [item["id"] for item in json.loads(response.content)["data"]["janhusMyBookings"]]
+        self.assertIn(str(booker_booking.id), booking_ids)
+        self.assertIn(str(responsible_booking.id), booking_ids)
+
+    def test_guest_search_requires_access_and_returns_name_and_feide(self):
+        searchable_user = UserFactory(
+            is_indok=True,
+            first_name="Siri",
+            last_name="Nordmann",
+            phone_number="43434343",
+        )
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+
+        query = f"""
+            query {{
+              janhusGuestSearch(bookingId: "{booking.id}", query: "4343") {{
+                feideUserid
+                displayName
+              }}
+            }}
+        """
+
+        denied_response = self.query(query, user=self.other_user)
+        self.assertResponseHasErrors(denied_response)
+
+        allowed_response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(allowed_response)
+
+        results = json.loads(allowed_response.content)["data"]["janhusGuestSearch"]
+        self.assertTrue(any(result["feideUserid"] == searchable_user.feide_userid for result in results))
+        self.assertTrue(any(result["displayName"] == "Siri Nordmann" for result in results))
+
+    def test_guest_search_for_request_requires_auth_and_returns_name_and_feide(self):
+        searchable_user = UserFactory(
+            is_indok=True,
+            first_name="ReqSearchUnique",
+            last_name="Nordmann",
+            phone_number="45454545",
+        )
+
+        query = """
+            query {
+              janhusGuestSearchForRequest(query: "ReqSearchUnique") {
+                feideUserid
+                displayName
+              }
+            }
+        """
+
+        denied_response = self.query(query)
+        self.assertResponseHasErrors(denied_response)
+
+        allowed_response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(allowed_response)
+
+        results = json.loads(allowed_response.content)["data"]["janhusGuestSearchForRequest"]
+        self.assertTrue(any(result["feideUserid"] == searchable_user.feide_userid for result in results))
+        self.assertTrue(any(result["displayName"] == "ReqSearchUnique Nordmann" for result in results))
 
 
 class JanHusMailTestCase(TestCase):

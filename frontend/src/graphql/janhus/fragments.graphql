@@ -1,3 +1,8 @@
+fragment JanHusGuestListEntry on JanHusGuestListEntryType {
+  feideUserid
+  displayName
+}
+
 fragment JanHusBooking on JanHusBookingType {
   id
   startsAt
@@ -29,10 +34,25 @@ fragment JanHusBooking on JanHusBookingType {
   cleaningRequested
   depositStatus
   depositAmount
+  outstandingDepositAmount
   comment
   adminComment
+  guestList
+  guestListEntries {
+    ...JanHusGuestListEntry
+  }
+  doorAccessPolicy
   totalPrice
   durationMinutes
+  vippsProduct {
+    id
+    name
+    price
+  }
+  vippsOrder {
+    id
+    paymentStatus
+  }
   createdAt
   updatedAt
 }
@@ -60,6 +80,7 @@ fragment JanHusBookingRequest on JanHusBookingRequestType {
   eventType
   cleaningRequested
   comment
+  guestList
   status
   adminComment
   convertedBooking {
@@ -88,6 +109,7 @@ fragment JanHusAreaConfiguration on JanHusAreaConfigurationType {
   internalPricePerHour
   externalPricePerHour
   cleaningFee
+  defaultDepositAmount
 }
 
 fragment JanHusBookingLevel on JanHusBookingLevelType {
