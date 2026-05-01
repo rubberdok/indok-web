@@ -500,6 +500,40 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertIn("handled internally", content["errors"][0]["message"])
 
+    def test_create_payment_product_uses_provider_fallback_for_user_without_org(self):
+        self.add_booking_permission(self.user)
+
+        provider_organization = OrganizationFactory(name="Hovedstyret", slug="hovedstyret")
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+            deposit_status="REQUIRED",
+            deposit_amount=Decimal("500"),
+        )
+
+        query = f"""
+            mutation {{
+              createJanhusPaymentProduct(bookingId: "{booking.id}") {{
+                ok
+                productId
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        self.assertIsNotNone(booking.vipps_product_id)
+        self.assertEqual(provider_organization.id, booking.vipps_product.organization_id)
+
     def test_update_booking_guest_list_access_and_policy_admin_only(self):
         guest_user = UserFactory(is_indok=True)
         booker_user = UserFactory(is_indok=True, phone_number="41111111")

@@ -50,6 +50,11 @@ SUCCESSFUL_PAYMENT_STATUSES = [
     Order.PaymentStatus.CAPTURED,
 ]
 
+JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG = "janus-eiendom"
+JANHUS_PAYMENT_PROVIDER_PRIMARY_NAME = "Janus Eiendom"
+JANHUS_PAYMENT_PROVIDER_FALLBACK_SLUG = "hovedstyret"
+JANHUS_PAYMENT_PROVIDER_FALLBACK_NAME = "Hovedstyret"
+
 
 def _get_actor(info):
     user = info.context.user
@@ -148,6 +153,39 @@ def _build_payment_product_data(booking: JanHusBooking) -> dict:
         ),
         "price": outstanding_amount,
     }
+
+# MÅ SJEKKES OVER - CHRISTIAN
+def _resolve_janhus_payment_provider_organization():
+    organization = Organization.objects.filter(slug=JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG).first()
+    if organization:
+        return organization
+
+    organization = Organization.objects.filter(name__iexact=JANHUS_PAYMENT_PROVIDER_PRIMARY_NAME).first()
+    if organization:
+        return organization
+
+    # TODO: Janus Eiendom is not present in current test fixtures. Replace this fallback when fixtures are updated.
+    organization = Organization.objects.filter(slug=JANHUS_PAYMENT_PROVIDER_FALLBACK_SLUG).first()
+    if organization:
+        return organization
+
+    return Organization.objects.filter(name__iexact=JANHUS_PAYMENT_PROVIDER_FALLBACK_NAME).first()
+
+
+def _resolve_payment_product_organization(*, organization_id=None):
+    if organization_id:
+        organization = Organization.objects.filter(id=organization_id).first()
+        if not organization:
+            raise GraphQLError("Organization not found")
+        return organization
+
+    provider_organization = _resolve_janhus_payment_provider_organization()
+    if provider_organization:
+        return provider_organization
+
+    raise GraphQLError(
+        "Could not find JanHus payment provider organization (Janus Eiendom, fallback Hovedstyret)"
+    )
 
 
 def _sync_existing_vipps_product(booking: JanHusBooking) -> None:
@@ -802,16 +840,7 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
             booking.vipps_product.save(update_fields=["name", "description", "price"])
             return CreateJanHusPaymentProduct(ok=True, booking=booking, product_id=booking.vipps_product_id)
 
-        organization = None
-        if organization_id:
-            organization = Organization.objects.filter(id=organization_id).first()
-        elif booking.owner_organization_id:
-            organization = booking.owner_organization
-        elif booking.owner_user_id:
-            organization = booking.owner_user.organizations.first()
-
-        if not organization:
-            raise GraphQLError("An organization is required to create a Vipps product")
+        organization = _resolve_payment_product_organization(organization_id=organization_id)
 
         product = Product.objects.create(
             name=product_data["name"],
