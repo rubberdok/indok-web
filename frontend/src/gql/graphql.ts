@@ -1979,6 +1979,7 @@ export type UserType = {
   graduationYear: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   idToken: Scalars['String']['output'];
+  isIndok: Scalars['Boolean']['output'];
   lastLogin: Maybe<Scalars['DateTime']['output']>;
   lastName: Scalars['String']['output'];
   memberships: Array<MembershipType>;

@@ -63,6 +63,18 @@ def _get_default_deposit_amount(area: str):
     return area_configuration.default_deposit_amount
 
 
+def _is_indok_user(actor) -> bool:
+    return bool(actor and getattr(actor, "is_indok", False))
+
+
+def _ensure_non_indok_external_only(*, actor, is_external_booking: bool, event_type: str, owner_organization) -> None:
+    if _is_indok_user(actor):
+        return
+
+    if owner_organization is not None or not is_external_booking or event_type != JanHusEventType.EXTERNAL:
+        raise GraphQLError("Only Indøk students can create non-external JanHus bookings")
+
+
 def _is_non_organization_booking(booking: JanHusBooking) -> bool:
     return booking.owner_organization_id is None
 
@@ -300,12 +312,23 @@ class CreateJanHusBooking(graphene.Mutation):
         settings = get_or_create_settings()
 
         is_external_booking = bool(booking_data.get("is_external_booking", False) or not actor)
+        resolved_event_type = booking_data.get(
+            "event_type",
+            JanHusEventType.EXTERNAL if is_external_booking else JanHusEventType.INTERNAL,
+        )
 
         owner_organization = None
         if booking_data.get("owner_organization_id"):
             owner_organization = Organization.objects.filter(id=booking_data.get("owner_organization_id")).first()
             if not owner_organization:
                 raise GraphQLError("Organization not found")
+
+        _ensure_non_indok_external_only(
+            actor=actor,
+            is_external_booking=is_external_booking,
+            event_type=resolved_event_type,
+            owner_organization=owner_organization,
+        )
 
         owner_user = None
         owner_user_id = booking_data.get("owner_user_id")
@@ -348,10 +371,7 @@ class CreateJanHusBooking(graphene.Mutation):
             responsible_name=booking_data["responsible_name"],
             responsible_email=booking_data["responsible_email"],
             responsible_phone=booking_data["responsible_phone"],
-            event_type=booking_data.get(
-                "event_type",
-                JanHusEventType.EXTERNAL if is_external_booking else JanHusEventType.INTERNAL,
-            ),
+            event_type=resolved_event_type,
             cleaning_requested=booking_data.get("cleaning_requested", False),
             deposit_status=booking_data.get("deposit_status", JanHusDepositStatus.REQUIRED),
             deposit_amount=booking_data.get("deposit_amount", _get_default_deposit_amount(booking_data["area"])),
@@ -557,17 +577,25 @@ class CreateJanHusBookingRequest(graphene.Mutation):
         actor = _get_actor(info)
         settings = get_or_create_settings()
 
-        is_non_indok_user = not actor
-        if is_non_indok_user and not settings.external_bookings_enabled:
-            raise GraphQLError("Eksterne bookingforespørsler er midlertidig deaktivert")
-
-        validate_time_rules(starts_at=request_data["starts_at"], ends_at=request_data["ends_at"], settings=settings)
-
         owner_organization = None
         if request_data.get("owner_organization_id"):
             owner_organization = Organization.objects.filter(id=request_data.get("owner_organization_id")).first()
             if not owner_organization:
                 raise GraphQLError("Organization not found")
+
+        resolved_event_type = request_data.get("event_type", JanHusEventType.INTERNAL)
+        non_indok_user = not _is_indok_user(actor)
+        if non_indok_user and not settings.external_bookings_enabled:
+            raise GraphQLError("Eksterne bookingforespørsler er midlertidig deaktivert")
+
+        _ensure_non_indok_external_only(
+            actor=actor,
+            is_external_booking=(resolved_event_type == JanHusEventType.EXTERNAL and owner_organization is None),
+            event_type=resolved_event_type,
+            owner_organization=owner_organization,
+        )
+
+        validate_time_rules(starts_at=request_data["starts_at"], ends_at=request_data["ends_at"], settings=settings)
 
         actor_phone = ""
         if actor:
@@ -585,7 +613,7 @@ class CreateJanHusBookingRequest(graphene.Mutation):
             responsible_name=request_data["responsible_name"],
             responsible_email=request_data["responsible_email"],
             responsible_phone=request_data["responsible_phone"],
-            event_type=request_data.get("event_type", JanHusEventType.INTERNAL),
+            event_type=resolved_event_type,
             cleaning_requested=request_data.get("cleaning_requested", False),
             comment=request_data.get("comment", ""),
             guest_list=request_data.get("guest_list", ""),

@@ -2198,6 +2198,22 @@
               "deprecationReason": null,
               "description": "",
               "isDeprecated": false,
+              "name": "isIndok",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "",
+              "isDeprecated": false,
               "name": "yearUpdatedAt",
               "type": {
                 "kind": "SCALAR",

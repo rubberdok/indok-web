@@ -24,6 +24,7 @@ class UserType(DjangoObjectType):
             "date_joined",
             "feide_userid",
             "feide_email",
+            "is_indok",
             "id_token",
             "phone_number",
             "first_login",

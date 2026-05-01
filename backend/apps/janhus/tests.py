@@ -77,6 +77,103 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertEqual(1, JanHusBookingRequest.objects.count())
         self.assertEqual(JanHusBookingRequest.RequestStatus.PENDING, JanHusBookingRequest.objects.first().status)
 
+    def test_non_indok_user_cannot_create_non_external_booking_request(self):
+        non_indok_user = UserFactory(is_indok=False)
+
+        query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "FIRST_FLOOR"
+                  requesterName: "Non Indok User"
+                  requesterEmail: "non-indok@example.com"
+                  requesterPhone: "41234567"
+                  responsibleName: "Responsible User"
+                  responsibleEmail: "responsible@example.com"
+                  responsiblePhone: "41234567"
+                  eventType: "INTERNAL"
+                }}
+              ) {{
+                ok
+                bookingRequest {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=non_indok_user)
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIn("Only Indøk students", content["errors"][0]["message"])
+
+    def test_non_indok_user_can_create_external_booking_request(self):
+        non_indok_user = UserFactory(is_indok=False)
+
+        query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "FIRST_FLOOR"
+                  requesterName: "Non Indok User"
+                  requesterEmail: "non-indok@example.com"
+                  requesterPhone: "41234567"
+                  responsibleName: "Responsible User"
+                  responsibleEmail: "responsible@example.com"
+                  responsiblePhone: "41234567"
+                  eventType: "EXTERNAL"
+                }}
+              ) {{
+                ok
+                bookingRequest {{
+                  id
+                  eventType
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=non_indok_user)
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        self.assertEqual("EXTERNAL", content["data"]["createJanhusBookingRequest"]["bookingRequest"]["eventType"])
+
+    def test_non_indok_user_cannot_create_non_external_booking(self):
+        non_indok_user = UserFactory(is_indok=False)
+
+        query = f"""
+            mutation {{
+              createJanhusBooking(
+                bookingData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "FIRST_FLOOR"
+                  responsibleName: "Non Indok User"
+                  responsibleEmail: "non-indok@example.com"
+                  responsiblePhone: "41234567"
+                  eventType: "INTERNAL"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=non_indok_user)
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIn("Only Indøk students", content["errors"][0]["message"])
+
     def test_guest_list_is_preserved_when_request_is_converted(self):
         self.add_booking_permission(self.user)
 

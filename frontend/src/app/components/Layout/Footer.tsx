@@ -5,14 +5,14 @@ import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import { useState } from "react";
 
+import { HallOfFame } from "@/layouts/footer/HallOfFame";
+import dayjs from "@/lib/date";
+import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
+
 import { Link, LinkProps } from "../Link";
 
 import { Logo } from "./Logo";
 import { Vercel } from "./Vercel";
-
-import { HallOfFame } from "@/layouts/footer/HallOfFame";
-import dayjs from "@/lib/date";
-import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
 // https://nextjs.org/docs/advanced-features/dynamic-import
 

@@ -160,6 +160,8 @@ const JanHusBookingPage: NextPageWithLayout = () => {
 
   const hasResolvedUser = orgData !== undefined;
   const isAuthenticated = Boolean(orgData?.user);
+  const isIndokStudent = orgData?.user?.isIndok ?? false;
+  const canCreateNonExternalBooking = isAuthenticated && isIndokStudent;
   const organizations = useMemo(() => orgData?.user?.organizations ?? [], [orgData]);
   const areaConfigurations = areasData?.janhusAreaConfigurations ?? [];
 
@@ -350,13 +352,13 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return;
     }
 
-    if (!isAuthenticated) {
+    if (!canCreateNonExternalBooking) {
       if (ownerType !== "EXTERNAL") {
         setOwnerType("EXTERNAL");
       }
       return;
     }
-  }, [hasResolvedUser, isAuthenticated, ownerType]);
+  }, [canCreateNonExternalBooking, hasResolvedUser, ownerType]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && organizations.length === 0) {
@@ -452,6 +454,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
 
     if (ownerType === "ORGANIZATION" && !organizationId) {
       setErrorMessage("Velg organisasjon for booking på vegne av organisasjon.");
+      return;
+    }
+
+    if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
+      setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
       return;
     }
 
@@ -629,18 +636,20 @@ const JanHusBookingPage: NextPageWithLayout = () => {
                   label="Eiertype"
                   onChange={(event) => setOwnerType(event.target.value as OwnerType)}
                 >
-                  {isAuthenticated ? <MenuItem value="PERSONAL">Personlig booking</MenuItem> : null}
-                  {isAuthenticated && organizations.length > 0 ? (
+                  {canCreateNonExternalBooking ? <MenuItem value="PERSONAL">Personlig booking</MenuItem> : null}
+                  {canCreateNonExternalBooking && organizations.length > 0 ? (
                     <MenuItem value="ORGANIZATION">Booking på vegne av organisasjon</MenuItem>
                   ) : null}
-                  {externalBookingsEnabled || !isAuthenticated ? (
-                    <MenuItem value="EXTERNAL" disabled={!isAuthenticated && !externalBookingsEnabled}>
+                  {externalBookingsEnabled || !isAuthenticated || !isIndokStudent ? (
+                    <MenuItem value="EXTERNAL" disabled={!externalBookingsEnabled}>
                       Ekstern forespørsel
                     </MenuItem>
                   ) : null}
                 </Select>
-                {!isAuthenticated && !externalBookingsEnabled ? (
+                {!externalBookingsEnabled ? (
                   <FormHelperText>Eksterne forespørsler er midlertidig deaktivert i innstillinger.</FormHelperText>
+                ) : !canCreateNonExternalBooking ? (
+                  <FormHelperText>Kun eksterne forespørsler er tilgjengelig for ikke Indøk studenter.</FormHelperText>
                 ) : null}
               </FormControl>
 

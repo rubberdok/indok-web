@@ -38,3 +38,12 @@ fragment UserToEdit on UserType {
   canUpdateYear
   yearUpdatedAt
 }
+
+fragment UserOrganization on OrganizationType {
+  id
+  name
+  slug
+  logoUrl
+  color
+  description
+}

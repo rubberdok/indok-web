@@ -34,14 +34,8 @@ export const Registration: React.FC = () => {
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
           <Typography variant="subtitle1">Tider for påmelding</Typography>
-          <ReviewItem
-            label="Påmelding åpner"
-            value={signUpOpen.isValid() ? signUpOpen.format("LLL") : ""}
-          />
-          <ReviewItem
-            label="Påmelding slutter"
-            value={deadline.isValid() ? deadline.format("LLL") : ""}
-          />
+          <ReviewItem label="Påmelding åpner" value={signUpOpen.isValid() ? signUpOpen.format("LLL") : ""} />
+          <ReviewItem label="Påmelding slutter" value={deadline.isValid() ? deadline.format("LLL") : ""} />
 
           <Typography variant="subtitle1">Plasser</Typography>
           <ReviewItem label="Antall plasser" value={watch("registration.details.availableSeats")} />

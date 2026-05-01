@@ -15,3 +15,13 @@ query userToEdit {
     ...UserToEdit
   }
 }
+
+query userOrganizations {
+  user {
+    id
+    isIndok
+    organizations {
+      ...UserOrganization
+    }
+  }
+}
