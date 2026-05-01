@@ -3,6 +3,7 @@ from typing import Optional
 from decorators import PermissionDenied
 from django.db.models import Count, Q
 from django.utils import timezone
+from apps.users.permissions import can_manage_user_profiles
 
 from .models import Membership, Organization
 
@@ -46,6 +47,6 @@ def _get_organization_from_slug(slug: str) -> Optional[Organization]:
 class MembershipResolvers:
     def resolve_memberships(self, info, organization_id):
         organization = Organization.objects.get(pk=organization_id)
-        if organization.users.filter(id=info.context.user.id).exists():
+        if organization.users.filter(id=info.context.user.id).exists() or can_manage_user_profiles(info.context.user):
             return Membership.objects.filter(organization=organization)
         raise PermissionDenied(f"Du må være medlem av {organization} for å gjøre dette kallet.")

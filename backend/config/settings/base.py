@@ -71,6 +71,7 @@ LOCAL_APPS = [
     "apps.cabins",
     "apps.janhus",
     "apps.events",
+    "apps.nfc",
     "apps.organizations",
     "apps.users",
     "apps.forms",

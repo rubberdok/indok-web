@@ -1,3 +1,4 @@
+import { AdminPageCard } from "./variants/AdminPageCard";
 import { CabinsAdminCard } from "./variants/CabinsAdminCard";
 import { EventCard } from "./variants/EventCard";
 import { FormCard } from "./variants/FormCard";
@@ -17,3 +18,4 @@ export const Orders = OrdersCard;
 export const CabinsAdmin = CabinsAdminCard;
 export const OwnBookings = OwnBookingsCard;
 export const JanHusAdmin = JanHusAdminCard;
+export const AdminPage = AdminPageCard;

@@ -1,17 +1,14 @@
 "use client";
 
-import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client";
+import { useBackgroundQuery, useQuery, useSuspenseQuery } from "@apollo/client";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
-
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { graphql } from "@/gql";
-import { generateFeideLoginUrl } from "@/utils/auth";
 
 import { PermissionRequired } from "../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
 import {
+  AdminPage,
   Event,
   Form,
   Orders,
@@ -22,6 +19,10 @@ import {
   OwnBookings,
   JanHusAdmin,
 } from "./components/ProfileCard";
+
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { graphql } from "@/gql";
+import { generateFeideLoginUrl } from "@/utils/auth";
 
 // Opt out of caching for all data requests in the route segment
 export const dynamic = "force-dynamic";
@@ -57,6 +58,13 @@ const janhusPermissionDocument = graphql(/* GraphQL */ `
   }
 `);
 
+const adminCapabilitiesDocument = graphql(/* GraphQL */ `
+  query ProfileAdminEditCapabilities {
+    canManageUserProfiles
+    canManageUserNfc
+  }
+`);
+
 // Returns a string with the first letter of the given first name,
 // and the first letter of the last space-separated part of lastName.
 function getUserInitials(firstName: string, lastName: string): string {
@@ -88,6 +96,12 @@ export default function ProfilePage() {
    */
   const [queryRef] = useBackgroundQuery(cabinPermissionDocument);
   const [janhusQueryRef] = useBackgroundQuery(janhusPermissionDocument);
+
+  const { data: adminCapabilities } = useQuery(adminCapabilitiesDocument, {
+    skip: data.user === null,
+  });
+  const hasAdminEditAccess =
+    Boolean(adminCapabilities?.canManageUserProfiles) || Boolean(adminCapabilities?.canManageUserNfc);
 
   // If the user is not logged in, redirect to the login page
   if (data.user === null) return redirect(generateFeideLoginUrl());
@@ -160,8 +174,12 @@ export default function ProfilePage() {
               <JanHusAdmin data-test-id={`${ID_PREFIX}janhus-admin-`} />
             </PermissionRequired>
           </Grid>
+          <Grid item xs={12} md={6} lg={5}>
+            <PermissionRequired queryRef={hasAdminEditAccess}>
+              <AdminPage data-test-id={`${ID_PREFIX}admin-page-`} />
+            </PermissionRequired>
+          </Grid>
         </Grid>
-
         <Grid item>
           <LogoutButton />
         </Grid>

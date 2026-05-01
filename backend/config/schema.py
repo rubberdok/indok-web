@@ -7,6 +7,7 @@ from apps.janhus.schema import JanHusMutations, JanHusQueries
 from apps.events.schema import EventMutations, EventQueries
 from apps.forms.schema import FormMutations, FormQueries
 from apps.listings.schema import ListingMutations, ListingQueries
+from apps.nfc.schema import NfcMutations, NfcQueries
 from apps.organizations.schema import OrganizationMutations, OrganizationQueries
 from apps.permissions.schema import PermissionQueries
 from apps.users.schema import UserMutations, UserQueries
@@ -22,6 +23,7 @@ class Queries(
     JanHusQueries,
     OrganizationQueries,
     ListingQueries,
+    NfcQueries,
     FormQueries,
     UtilQueries,
     EcommerceQueries,
@@ -39,6 +41,7 @@ class Mutations(
     JanHusMutations,
     OrganizationMutations,
     ListingMutations,
+    NfcMutations,
     FormMutations,
     EcommerceMutations,
     BlogMutations,

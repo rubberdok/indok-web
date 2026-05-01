@@ -6,13 +6,30 @@ query adminOrganization($orgId: ID!) {
 
 query memberships($organizationId: ID!) {
   memberships(organizationId: $organizationId) {
+    ...Membership
+  }
+}
+
+query allOrganizationsForAdminEdit($search: String) {
+  allOrganizations(search: $search) {
     id
-    user {
-      firstName
-      lastName
-    }
-    group {
+    name
+    slug
+    primaryGroup {
+      id
+      name
       uuid
+    }
+    hrGroup {
+      id
+      name
+      uuid
+    }
+    permissionGroups {
+      id
+      uuid
+      name
+      groupType
     }
   }
 }

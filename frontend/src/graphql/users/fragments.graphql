@@ -37,6 +37,9 @@ fragment UserToEdit on UserType {
   feideEmail
   canUpdateYear
   yearUpdatedAt
+  nfcUidHex
+  nfcPinCode
+  nfcPermanentAccess
 }
 
 fragment UserOrganization on OrganizationType {
