@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@mui/material";
 
-import Bug from "~/public/illustrations/Bug.svg";
-
 import { ProfileCardBase } from "./ProfileCardBase";
+
+import Bug from "~/public/illustrations/Bug.svg";
 
 export const AdminPageCard: React.VFC = ({ ...props }) => {
   return (

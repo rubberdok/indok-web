@@ -49,3 +49,11 @@ fragment Membership on MembershipType {
     uuid
   }
 }
+
+fragment MembershipWithOrganization on MembershipType {
+  ...Membership
+  organization {
+    id
+    name
+  }
+}

@@ -23,11 +23,7 @@ mutation updateUser($userData: UserInput) {
 mutation adminUpdateUser($userId: ID!, $userData: AdminUserInput!) {
   adminUpdateUser(userId: $userId, userData: $userData) {
     user {
-      ...UserToEdit
-      feideUserid
-      gradeYear
-      dateJoined
-      lastLogin
+      ...UserAdminEdit
     }
   }
 }
@@ -35,11 +31,7 @@ mutation adminUpdateUser($userId: ID!, $userData: AdminUserInput!) {
 mutation adminUpdateUserNfc($userId: ID!, $nfcData: AdminUserNfcInput!) {
   adminUpdateUserNfc(userId: $userId, nfcData: $nfcData) {
     user {
-      ...UserToEdit
-      feideUserid
-      gradeYear
-      dateJoined
-      lastLogin
+      ...UserAdminEdit
     }
   }
 }
