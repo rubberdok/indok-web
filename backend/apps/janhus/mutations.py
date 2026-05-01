@@ -1,8 +1,11 @@
+from decimal import Decimal
+
 import graphene
 from django.contrib.auth import get_user_model
+from django.db.models import Sum
 from graphql import GraphQLError
 
-from apps.ecommerce.models import Product
+from apps.ecommerce.models import Order, Product
 from apps.janhus.guest_list import (
     find_missing_guest_feide_ids,
     normalize_guest_list_user_feide_ids,
@@ -42,6 +45,12 @@ from apps.janhus.permissions import (
 from apps.organizations.models import Organization
 
 
+SUCCESSFUL_PAYMENT_STATUSES = [
+    Order.PaymentStatus.RESERVED,
+    Order.PaymentStatus.CAPTURED,
+]
+
+
 def _get_actor(info):
     user = info.context.user
     return user if user and user.is_authenticated else None
@@ -54,15 +63,78 @@ def _get_default_deposit_amount(area: str):
     return area_configuration.default_deposit_amount
 
 
+def _is_non_organization_booking(booking: JanHusBooking) -> bool:
+    return booking.owner_organization_id is None
+
+
+def _required_payment_amount_for_non_org_booking(booking: JanHusBooking) -> Decimal:
+    required_deposit = max(booking.deposit_amount or Decimal("0"), Decimal("0"))
+    return booking.total_price + required_deposit
+
+
+def _successful_payment_orders_for_booking(booking: JanHusBooking):
+    if not booking.vipps_product_id:
+        return Order.objects.none()
+
+    return Order.objects.filter(
+        product_id=booking.vipps_product_id,
+        payment_status__in=SUCCESSFUL_PAYMENT_STATUSES,
+    )
+
+
+def _paid_amount_for_booking(booking: JanHusBooking) -> Decimal:
+    paid_amount = _successful_payment_orders_for_booking(booking).aggregate(total_paid=Sum("total_price"))["total_paid"]
+    return paid_amount or Decimal("0")
+
+
+def _outstanding_payment_amount_for_booking(booking: JanHusBooking) -> Decimal:
+    if not _is_non_organization_booking(booking):
+        return Decimal("0")
+
+    outstanding_amount = _required_payment_amount_for_non_org_booking(booking) - _paid_amount_for_booking(booking)
+    return max(outstanding_amount, Decimal("0"))
+
+
+def _attach_latest_successful_order(booking: JanHusBooking) -> None:
+    latest_successful_order = _successful_payment_orders_for_booking(booking).order_by("-timestamp").first()
+    if latest_successful_order and booking.vipps_order_id != latest_successful_order.id:
+        booking.vipps_order = latest_successful_order
+
+
+def _ensure_non_org_booking_paid_before_confirmation(booking: JanHusBooking) -> None:
+    if not _is_non_organization_booking(booking):
+        return
+
+    required_payment = _required_payment_amount_for_non_org_booking(booking)
+    if required_payment <= 0:
+        return
+
+    paid_amount = _paid_amount_for_booking(booking)
+    if paid_amount < required_payment:
+        missing_amount = required_payment - paid_amount
+        raise GraphQLError(
+            f"Non-organization bookings must be fully paid before being confirmed. Missing amount: {missing_amount} NOK"
+        )
+
+    _attach_latest_successful_order(booking)
+
+    if booking.deposit_amount > 0 and booking.deposit_status in [
+        JanHusDepositStatus.REQUIRED,
+        JanHusDepositStatus.REQUESTED,
+    ]:
+        booking.deposit_status = JanHusDepositStatus.PAID
+
+
 def _build_payment_product_data(booking: JanHusBooking) -> dict:
-    deposit_amount = booking.outstanding_deposit_amount
+    outstanding_amount = _outstanding_payment_amount_for_booking(booking)
     return {
-        "name": f"JanHus deposit booking #{booking.id}",
+        "name": f"JanHus payment booking #{booking.id}",
         "description": (
-            f"JanHus deposit for {booking.get_area_display()} from {booking.starts_at.isoformat()}"
+            f"JanHus booking payment (rent + cleaning + deposit) for {booking.get_area_display()}"
+            f" from {booking.starts_at.isoformat()}"
             f" to {booking.ends_at.isoformat()}"
         ),
-        "price": deposit_amount,
+        "price": outstanding_amount,
     }
 
 
@@ -320,6 +392,8 @@ class UpdateJanHusBooking(graphene.Mutation):
         except JanHusBooking.DoesNotExist:
             raise GraphQLError("Booking not found")
 
+        previous_status = booking.status
+
         is_admin = _has_manage_booking_permission(actor)
         is_owner = _is_owner(actor, booking)
         can_edit_guest_list = _can_edit_guest_list(actor, booking)
@@ -396,6 +470,12 @@ class UpdateJanHusBooking(graphene.Mutation):
                 raise GraphQLError("Invalid door access policy")
             booking.door_access_policy = booking_data.get("door_access_policy")
 
+        if (
+            previous_status != JanHusBookingStatus.CONFIRMED
+            and booking.status == JanHusBookingStatus.CONFIRMED
+        ):
+            _ensure_non_org_booking_paid_before_confirmation(booking)
+
         settings = get_or_create_settings()
         displaced = _apply_overlap_rules(
             booking=booking,
@@ -432,6 +512,8 @@ class ReviewJanHusBooking(graphene.Mutation):
         except JanHusBooking.DoesNotExist:
             raise GraphQLError("Booking not found")
 
+        previous_status = booking.status
+
         status = review_data.get("status")
         if status:
             valid_statuses = {choice[0] for choice in JanHusBookingStatus.choices}
@@ -450,6 +532,12 @@ class ReviewJanHusBooking(graphene.Mutation):
 
         if review_data.get("deposit_amount") is not None:
             booking.deposit_amount = review_data.get("deposit_amount")
+
+        if (
+            previous_status != JanHusBookingStatus.CONFIRMED
+            and booking.status == JanHusBookingStatus.CONFIRMED
+        ):
+            _ensure_non_org_booking_paid_before_confirmation(booking)
 
         booking.full_clean()
         booking.save()
@@ -555,6 +643,9 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 is_external_booking=is_external_booking,
                 settings=settings,
             )
+
+            if _is_non_organization_booking(booking_request):
+                initial_status = JanHusBookingStatus.PROVISIONAL
 
             created_booking = JanHusBooking(
                 starts_at=booking_request.starts_at,
@@ -674,7 +765,7 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
         product_data = _build_payment_product_data(booking)
 
         if product_data["price"] <= 0:
-            raise GraphQLError("Deposit amount must be greater than 0 to create a Vipps payment")
+            raise GraphQLError("Booking is already fully paid")
 
         if booking.vipps_product_id and booking.vipps_product:
             booking.vipps_product.name = product_data["name"]

@@ -8,11 +8,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
 
+from apps.ecommerce.models import Order
 from apps.janhus.mail import send_pending_review_notification
 from apps.janhus.models import (
   JanHusAreaConfiguration,
   JanHusBooking,
   JanHusBookingRequest,
+  JanHusDepositStatus,
   JanHusBookingSettings,
   JanHusBookingStatus,
 )
@@ -129,6 +131,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 ok
                 booking {{
                   id
+                  status
                   guestList
                 }}
               }}
@@ -140,10 +143,81 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         review_content = json.loads(review_response.content)
         self.assertEqual(guest_list_value, review_content["data"]["reviewJanhusBookingRequest"]["booking"]["guestList"])
+        self.assertEqual(
+            JanHusBookingStatus.PROVISIONAL,
+            review_content["data"]["reviewJanhusBookingRequest"]["booking"]["status"],
+        )
 
         booking = JanHusBooking.objects.first()
         self.assertIsNotNone(booking)
         self.assertEqual(guest_list_value, booking.guest_list)
+        self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
+
+    def test_non_org_booking_requires_full_payment_before_confirmed(self):
+        self.add_booking_permission(self.user)
+
+        JanHusAreaConfiguration.objects.create(
+            area="FIRST_FLOOR",
+            internal_price_per_hour=Decimal("100"),
+            external_price_per_hour=Decimal("200"),
+            cleaning_fee=Decimal("50"),
+            default_deposit_amount=Decimal("0"),
+        )
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area="FIRST_FLOOR",
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+            cleaning_requested=True,
+            deposit_status=JanHusDepositStatus.REQUIRED,
+            deposit_amount=Decimal("300"),
+        )
+
+        confirm_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  status: "CONFIRMED"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                  status
+                }}
+              }}
+            }}
+        """
+
+        denied_response = self.query(confirm_query, user=self.user)
+        self.assertResponseHasErrors(denied_response)
+
+        required_payment_amount = booking.total_price + booking.deposit_amount
+        product = ProductFactory(price=required_payment_amount)
+        booking.vipps_product = product
+        booking.save(update_fields=["vipps_product", "updated_at"])
+
+        paid_order = Order.objects.create(
+            product=product,
+            user=self.user,
+            quantity=1,
+            total_price=required_payment_amount,
+            payment_status=Order.PaymentStatus.CAPTURED,
+        )
+
+        allowed_response = self.query(confirm_query, user=self.user)
+        self.assertResponseNoErrors(allowed_response)
+
+        booking.refresh_from_db()
+        self.assertEqual(JanHusBookingStatus.CONFIRMED, booking.status)
+        self.assertEqual(JanHusDepositStatus.PAID, booking.deposit_status)
+        self.assertEqual(paid_order.id, booking.vipps_order_id)
 
     def test_create_booking_and_block_overlap(self):
         create_booking_query = f"""
@@ -294,7 +368,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         product.refresh_from_db()
 
         self.assertEqual(Decimal("500"), booking.deposit_amount)
-        self.assertEqual(Decimal("500"), product.price)
+        self.assertEqual(Decimal("700"), product.price)
 
     def test_create_payment_product_rejects_organization_bookings(self):
         self.add_booking_permission(self.user)

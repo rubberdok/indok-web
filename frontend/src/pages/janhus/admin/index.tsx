@@ -1,6 +1,9 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Settings } from "@mui/icons-material";
+import { ExpandMore, Settings } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   Box,
   Button,
@@ -204,6 +207,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     >
   >({});
   const [activeGuestListBookingId, setActiveGuestListBookingId] = useState<string | undefined>();
+  const [expandedBookingIds, setExpandedBookingIds] = useState<Record<string, boolean>>({});
 
   const [requestDateFilter, setRequestDateFilter] = useState("");
   const [requestAreaFilter, setRequestAreaFilter] = useState("ALL");
@@ -529,20 +533,18 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   }
 
   return (
-    <Container>
+    <Container sx={{ py: 4 }}>
       <PermissionRequired permission="janhus.manage_booking">
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <Box p={3}>
-              <Typography variant="h3" align="center">
-                JanHus adminside
-              </Typography>
-              <Button startIcon={<Settings />} onClick={() => router.push("/janhus/admin/settings")}>
-                Innstillinger
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
+        <Stack spacing={0.75} mb={3}>
+          <Typography variant="h3" align="center">
+            JanHus adminside
+          </Typography>
+          <Box>
+            <Button startIcon={<Settings />} onClick={() => router.push("/janhus/admin/settings")}>
+              Innstillinger
+            </Button>
+          </Box>
+        </Stack>
 
         {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}
 
@@ -667,10 +669,22 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                   </FormControl>
                 </Box>
 
-                <Grid container spacing={2}>
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="center"
+                  alignItems="flex-start"
+                  sx={{ width: "100%", m: 0 }}
+                >
                   {filteredRequests.map((request) => (
-                    <Grid item xs={12} md={6} key={request.id}>
-                      <Card variant="outlined" elevation={0}>
+                    <Grid
+                      item
+                      xs={12}
+                      md={6}
+                      key={request.id}
+                      sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
+                    >
+                      <Card variant="outlined" elevation={0} sx={{ width: "100%" }}>
                         <CardContent>
                           <Stack spacing={1.5}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -717,7 +731,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                 onClick={() => handleReviewRequest(request.id, "APPROVED", true)}
                                 disabled={requestReviewing}
                               >
-                                Godkjenn + booking
+                                Godkjenn + booking (Foreløpig)
                               </Button>
                               <Button
                                 size="small"
@@ -802,7 +816,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                 <Typography variant="subtitle1" gutterBottom>
                                   {AREA_LABELS[areaInfo.area] ?? areaInfo.area}
                                 </Typography>
-                                <Stack spacing={0.75}>
+                                <Stack spacing={0.5}>
                                   {areaInfo.bookingsByDay.map((day) => (
                                     <Box key={`${areaInfo.area}-${day.key}`}>
                                       <Typography variant="caption" color="text.secondary">
@@ -934,18 +948,57 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                   </FormControl>
                 </Box>
 
-                <Grid container spacing={2}>
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="center"
+                  alignItems="flex-start"
+                  sx={{ width: "100%", m: 0 }}
+                >
                   {filteredBookings.map((booking) => {
                     const edit = bookingEdits[booking.id];
                     if (!edit) return null;
 
                     const depositPaid = edit.depositStatus === JanHusBookingDepositStatus.Paid;
+                    const isExpanded = Boolean(expandedBookingIds[booking.id]);
 
                     return (
-                      <Grid item xs={12} md={6} key={booking.id}>
-                        <Card variant="outlined" elevation={0}>
-                          <CardContent>
-                            <Stack spacing={1.5}>
+                      <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        key={booking.id}
+                        sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
+                      >
+                        <Accordion
+                          expanded={isExpanded}
+                          onChange={(_event, expanded) =>
+                            setExpandedBookingIds((current) => ({
+                              ...current,
+                              [booking.id]: expanded,
+                            }))
+                          }
+                          disableGutters
+                          elevation={0}
+                          sx={{
+                            width: "100%",
+                            border: "1px solid",
+                            borderColor: "divider",
+                            borderRadius: 1,
+                            overflow: "hidden",
+                            "&:before": { display: "none" },
+                          }}
+                        >
+                          <AccordionSummary
+                            expandIcon={<ExpandMore />}
+                            sx={{
+                              px: 2,
+                              "& .MuiAccordionSummary-content": {
+                                my: 1,
+                              },
+                            }}
+                          >
+                            <Stack spacing={0.5} width="100%" pr={1}>
                               <Stack direction="row" justifyContent="space-between" alignItems="center">
                                 <Typography variant="h6">Booking #{booking.id}</Typography>
                                 <Chip
@@ -954,12 +1007,15 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                   label={BOOKING_STATUS_LABELS[edit.status] ?? edit.status}
                                 />
                               </Stack>
-
                               <Typography variant="body2" color="text.secondary">
-                                {formatDate(booking.startsAt)} · {AREA_LABELS[booking.area] ?? booking.area} ·{" "}
+                                {formatDate(booking.startsAt)} kl. {formatTime(booking.startsAt)}–
+                                {formatTime(booking.endsAt)} · {AREA_LABELS[booking.area] ?? booking.area} ·{" "}
                                 {OWNER_TYPE_LABELS[bookingOwnerType(booking)]}
                               </Typography>
-
+                            </Stack>
+                          </AccordionSummary>
+                          <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
+                            <Stack spacing={1.5}>
                               <Box display="grid" gap={1.5} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
                                 <TextField
                                   label="Fra"
@@ -1269,8 +1325,8 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                 Prisberegning nå: {booking.totalPrice ?? "-"}
                               </Typography>
                             </Stack>
-                          </CardContent>
-                        </Card>
+                          </AccordionDetails>
+                        </Accordion>
                       </Grid>
                     );
                   })}

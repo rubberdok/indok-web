@@ -102,8 +102,6 @@ const serializeGuestListForUpdate = (guests: JanHusGuestListEntry[]) => {
   return JSON.stringify(normalizedGuests);
 };
 
-const isDepositPayable = (depositStatus: string) => depositStatus === "REQUIRED" || depositStatus === "REQUESTED";
-
 const statusChipColor = (status: string): "default" | "success" | "warning" | "error" | "info" => {
   if (status === "CONFIRMED") {
     return "success";
@@ -218,7 +216,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
         {!isLoading ? (
           <>
             <Card variant="outlined" elevation={0}>
-              <CardContent>
+              <CardContent sx={{ p: 3, "&:last-child": { pb: 3 } }}>
                 <Stack spacing={2.5}>
                   <Box>
                     <Typography variant="h5" gutterBottom>
@@ -238,7 +236,13 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                   {janhusBookings.length === 0 ? (
                     <Typography color="text.secondary">Ingen JanHus-bookinger funnet.</Typography>
                   ) : (
-                    <Grid container spacing={2}>
+                    <Grid
+                      container
+                      spacing={2}
+                      justifyContent="center"
+                      alignItems="flex-start"
+                      sx={{ width: "100%", m: 0 }}
+                    >
                       {janhusBookings.map((booking) => {
                         const productId = booking.vippsProduct?.id;
                         const linkedOrder =
@@ -252,9 +256,13 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                         const rentalPrice = Number(booking.totalPrice ?? 0);
                         const registeredDeposit = Number(booking.depositAmount ?? 0);
                         const outstandingDeposit = Number(booking.outstandingDepositAmount ?? 0);
-                        const depositToPay = isDepositPayable(booking.depositStatus) ? outstandingDeposit : 0;
-                        const payableAmount = isOrganizationBooking ? 0 : depositToPay;
                         const configuredVippsAmount = Number(booking.vippsProduct?.price ?? 0);
+                        const fullPaymentAmount = rentalPrice + registeredDeposit;
+                        const payableAmount = isOrganizationBooking
+                          ? 0
+                          : configuredVippsAmount > 0
+                            ? configuredVippsAmount
+                            : fullPaymentAmount;
                         const guestEntries = guestListEdits[booking.id] ?? [];
 
                         const bookerName =
@@ -268,9 +276,19 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                           responsibleSignature.toLowerCase() !== bookerSignature.toLowerCase();
 
                         return (
-                          <Grid item xs={12} md={6} key={booking.id}>
-                            <Card variant="outlined" elevation={0} sx={{ height: "100%" }}>
-                              <CardContent>
+                          <Grid
+                            item
+                            xs={12}
+                            md={6}
+                            key={booking.id}
+                            sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
+                          >
+                            <Card
+                              variant="outlined"
+                              elevation={0}
+                              sx={{ width: "100%", display: "flex", flexDirection: "column" }}
+                            >
+                              <CardContent sx={{ width: "100%", p: 2.5, "&:last-child": { pb: 2.5 } }}>
                                 <Stack spacing={1.5}>
                                   <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                                     <Box>
@@ -426,7 +444,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
             </Card>
 
             <Card variant="outlined" elevation={0}>
-              <CardContent>
+              <CardContent sx={{ p: 3, "&:last-child": { pb: 3 } }}>
                 <Typography variant="h5" gutterBottom>
                   Hytte
                 </Typography>
