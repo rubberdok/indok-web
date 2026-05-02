@@ -6,8 +6,7 @@ def can_manage_user_profiles(user: User) -> bool:
         return False
 
     return (
-        user.is_staff
-        or user.is_superuser
+        user.is_superuser
         or user.has_perm("users.manage_user_profiles")
         or user.has_perm("auth.change_user")
     )
@@ -19,7 +18,6 @@ def can_manage_user_nfc(user: User) -> bool:
 
     return (
         can_manage_user_profiles(user)
-        or user.is_staff
         or user.is_superuser
         or user.has_perm("users.manage_user_nfc")
         or user.has_perm("nfc.manage_nfc")

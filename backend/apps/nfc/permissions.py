@@ -1,18 +1,18 @@
 from apps.organizations.models import Membership
 
 
-JANUS_HYTTEFORENINGEN_SLUG = "janus-hyttene"
+JANUS_EIENDOM_FORENINGEN_SLUG = "janus-eiendom"
 
 
 def can_manage_booking_access(user) -> bool:
     """
     Future-facing permission hook used for booking-driven NFC grants.
-    Allows staff/superusers and members of Janus-hyttene.
+    Allows superusers and members of Janus-eiendom.
     """
     if not user.is_authenticated:
         return False
 
-    if user.is_staff or user.is_superuser:
+    if user.is_superuser:
         return True
 
-    return Membership.objects.filter(user=user, organization__slug=JANUS_HYTTEFORENINGEN_SLUG).exists()
+    return Membership.objects.filter(user=user, organization__slug=JANUS_EIENDOM_FORENINGEN_SLUG).exists()

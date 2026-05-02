@@ -47,4 +47,4 @@ def user_passes_test(
 
 login_required = user_passes_test(lambda user: user.is_authenticated)
 superuser_required = user_passes_test(lambda user: user.is_superuser)
-staff_member_required = user_passes_test(lambda user: user.is_staff)
+staff_member_required = user_passes_test(lambda user: user.is_superuser)
