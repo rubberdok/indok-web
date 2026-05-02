@@ -58,7 +58,11 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
 
         # Create default booking responsible
         self.booking_responsible = BookingResponsible(
-            first_name="Ellie", last_name="Berglund", phone="94258380", email="booking@indokhyttene.no", active=True
+            first_name="Ellie",
+            last_name="Berglund",
+            phone="94258380",
+            email="booking@indokhyttene.no",
+            active=True,
         )
         self.booking_responsible.save()
 
@@ -77,7 +81,9 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
 
     def add_booking_permission(self, codename):
         content_type = ContentType.objects.get_for_model(Booking)
-        self.user.user_permissions.add(Permission.objects.get(codename=codename, content_type=content_type))
+        self.user.user_permissions.add(
+            Permission.objects.get(codename=codename, content_type=content_type)
+        )
 
     def create_booking(self, booking, cabins_field, user=None):
         query = f"""
@@ -125,7 +131,10 @@ class PricingTestCase(ExtendedGraphQLTestCase):
         check_out = datetime.date(2023, 11, 14)  # Tuesday
         cabin_queryset = Cabin.objects.filter(name="Bjørnen")
         people = 12
-        self.assertEqual(price(cabin_queryset, check_in, check_out, people, 0), self.bjornen_cabin.internal_price)
+        self.assertEqual(
+            price(cabin_queryset, check_in, check_out, people, 0),
+            self.bjornen_cabin.internal_price,
+        )
 
     def test_internal_price_one_weekend(self):
         check_in = datetime.date(2023, 11, 17)  # Friday
@@ -137,24 +146,40 @@ class PricingTestCase(ExtendedGraphQLTestCase):
         expected = self.bjornen_cabin.internal_price_weekend * nights
         self.assertEqual(calculated, expected, f"Expected {expected}, got {calculated}")
 
-    def test_uses_internal_price_when_internal_participants_are_more_than_external(self):
+    def test_uses_internal_price_when_internal_participants_are_more_than_external(
+        self,
+    ):
         check_in = datetime.date(2023, 11, 13)  # Monday
         check_out = datetime.date(2023, 11, 14)  # Tuesday
         cabin_queryset = Cabin.objects.filter(name="Bjørnen")
         internal_participants = 8
         external_participants = 5
-        calculated = price(cabin_queryset, check_in, check_out, internal_participants, external_participants)
+        calculated = price(
+            cabin_queryset,
+            check_in,
+            check_out,
+            internal_participants,
+            external_participants,
+        )
         expected = self.bjornen_cabin.internal_price
         self.assertEqual(calculated, expected, f"Expected {expected}, got {calculated}")
 
-    def test_uses_external_price_when_external_participants_are_more_than_internal(self):
+    def test_uses_external_price_when_external_participants_are_more_than_internal(
+        self,
+    ):
         check_in = datetime.date(2023, 11, 13)
         check_out = datetime.date(2023, 11, 14)
         cabin_queryset = Cabin.objects.filter(name="Bjørnen")
         internal_participants = 5
         external_participants = 8
         self.assertEqual(
-            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
+            price(
+                cabin_queryset,
+                check_in,
+                check_out,
+                internal_participants,
+                external_participants,
+            ),
             (self.bjornen_cabin.external_price),
         )
 
@@ -165,7 +190,13 @@ class PricingTestCase(ExtendedGraphQLTestCase):
         internal_participants = 5
         external_participants = 5
         self.assertEqual(
-            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
+            price(
+                cabin_queryset,
+                check_in,
+                check_out,
+                internal_participants,
+                external_participants,
+            ),
             (self.bjornen_cabin.internal_price),
         )
 
@@ -176,8 +207,17 @@ class PricingTestCase(ExtendedGraphQLTestCase):
         internal_participants = 0
         external_participants = 9
         self.assertEqual(
-            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
-            (+self.bjornen_cabin.external_price + self.bjornen_cabin.external_price_weekend),
+            price(
+                cabin_queryset,
+                check_in,
+                check_out,
+                internal_participants,
+                external_participants,
+            ),
+            (
+                +self.bjornen_cabin.external_price
+                + self.bjornen_cabin.external_price_weekend
+            ),
         )
 
     def test_multiple_cabins(self):
@@ -188,8 +228,18 @@ class PricingTestCase(ExtendedGraphQLTestCase):
         nights = (check_out - check_in).days
         cabin_queryset = Cabin.objects.filter(name__in=["Bjørnen", "Fancy"])
         self.assertEqual(
-            price(cabin_queryset, check_in, check_out, internal_participants, external_participants),
-            (self.bjornen_cabin.external_price_weekend + self.fancy_cabin.external_price_weekend) * nights,
+            price(
+                cabin_queryset,
+                check_in,
+                check_out,
+                internal_participants,
+                external_participants,
+            ),
+            (
+                self.bjornen_cabin.external_price_weekend
+                + self.fancy_cabin.external_price_weekend
+            )
+            * nights,
         )
 
 
@@ -288,7 +338,9 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assertEqual(3, len(Booking.objects.all()))
 
     def test_create_booking(self):
-        response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}", user=self.user)
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.bjornen_cabin.id}", user=self.user
+        )
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(
@@ -318,37 +370,49 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
 
     def test_invalid_email(self):
         self.no_conflict_booking.receiver_email = "oda.norwegian123.no"
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
         self.check_create_with_error(response)
 
     def test_empty_first_name(self):
         # Try to add a booking with no first name variable
         self.no_conflict_booking.first_name = ""
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
         self.check_create_with_error(response)
 
     def test_empty_last_name(self):
         # Try to add a booking with no last name variable
         self.no_conflict_booking.last_name = ""
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
         self.check_create_with_error(response)
 
     def test_phone_number(self):
         # Try to make cabin with invalid phone number
         self.no_conflict_booking.phone = "26832732"
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
         self.check_create_with_error(response)
 
     def test_sum_of_participants_cannot_exceed_limit(self):
         # Try to add a booking with more participants than total capacity of cabin
         self.no_conflict_booking.internal_participants = 15
         self.no_conflict_booking.external_participants = 7
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
         self.check_create_with_error(response)
         # Try to add a booking with more participants than total capacity of cabins
         self.no_conflict_booking.internal_participants = 19
         self.no_conflict_booking.external_participants = 21
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin.id}")
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin.id}"
+        )
         self.check_create_with_error(response)
 
     def test_no_checkin_and_checkout_on_same_day(self):
@@ -397,7 +461,9 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         try:
             Booking.objects.get(pk=self.first_booking.id)
         except Booking.DoesNotExist:
-            self.assertTrue(True, "The booking was deleted after unauthorized user tried to delete")
+            self.assertTrue(
+                True, "The booking was deleted after unauthorized user tried to delete"
+            )
         self.add_booking_permission("manage_booking")
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
@@ -468,13 +534,17 @@ class EmailTestCase(CabinsBaseTestCase):
 
     def test_outbox_size_reservation(self):
         # Check outbox size when sending reservation mails to both admin and user
-        response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
+        response = self.send_email(
+            self.first_booking, "reserve_booking", user=self.super_user
+        )
         self.assertResponseNoErrors(resp=response)
         self.assertEqual(len(mail.outbox), 2)
 
     def test_outbox_size_decision(self):
         # Check outbox size when sending the decision (approve or disapprove) mail to the user
-        response = self.send_email(self.first_booking, "approve_booking", user=self.super_user)
+        response = self.send_email(
+            self.first_booking, "approve_booking", user=self.super_user
+        )
         self.assertResponseNoErrors(resp=response)
         self.assertEqual(len(mail.outbox), 1)
 
@@ -483,17 +553,26 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the subject of the first message is correct.
-        self.assertEqual(mail.outbox[0].subject, "Bekreftelse på mottatt søknad om booking av Oksen")
+        self.assertEqual(
+            mail.outbox[0].subject, "Bekreftelse på mottatt søknad om booking av Oksen"
+        )
 
     def test_subject_approval(self):
-        response = self.send_email(self.first_booking, "approve_booking", user=self.super_user)
+        response = self.send_email(
+            self.first_booking, "approve_booking", user=self.super_user
+        )
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the subject of the first message is correct.
-        self.assertTrue("Janushyttene har tatt stilling til søknaden din om booking av" in mail.outbox[0].subject)
+        self.assertTrue(
+            "Janushyttene har tatt stilling til søknaden din om booking av"
+            in mail.outbox[0].subject
+        )
 
     def test_reservation_mail_content(self):
-        response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
+        response = self.send_email(
+            self.first_booking, "reserve_booking", user=self.super_user
+        )
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the mails contain the price
@@ -505,15 +584,29 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertTrue(self.first_booking.last_name in mail.outbox[1].body)
         self.assertTrue(self.first_booking.first_name in mail.outbox[1].body)
         self.assertTrue(str(self.first_booking.phone) in mail.outbox[1].body)
-        self.assertTrue(f"Antall indøkere: {self.first_booking.internal_participants}" in mail.outbox[1].body)
-        self.assertTrue(f"Antall eksterne: {self.first_booking.external_participants}" in mail.outbox[1].body)
+        self.assertTrue(
+            f"Antall indøkere: {self.first_booking.internal_participants}"
+            in mail.outbox[1].body
+        )
+        self.assertTrue(
+            f"Antall eksterne: {self.first_booking.external_participants}"
+            in mail.outbox[1].body
+        )
 
         # Verify that the checkin and checkout for admin and user email is correct
         date_fmt = "%d-%m-%Y"
-        self.assertTrue(self.first_booking.check_in.strftime(date_fmt) in mail.outbox[0].body)
-        self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[0].body)
-        self.assertTrue(self.first_booking.check_in.strftime(date_fmt) in mail.outbox[1].body)
-        self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[1].body)
+        self.assertTrue(
+            self.first_booking.check_in.strftime(date_fmt) in mail.outbox[0].body
+        )
+        self.assertTrue(
+            self.first_booking.check_out.strftime(date_fmt) in mail.outbox[0].body
+        )
+        self.assertTrue(
+            self.first_booking.check_in.strftime(date_fmt) in mail.outbox[1].body
+        )
+        self.assertTrue(
+            self.first_booking.check_out.strftime(date_fmt) in mail.outbox[1].body
+        )
 
         # Verify that the email contains the correct question provided by the user
         self.assertTrue(self.test_question in mail.outbox[0].body)
@@ -579,7 +672,11 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
             self.booking_semester_dict["fall_start_date"], self.date_fmt
         ) + datetime.timedelta(days=3)
 
-        response = self.create_booking(self.first_booking, cabins_field=f"{self.oksen_cabin.id}", user=self.super_user)
+        response = self.create_booking(
+            self.first_booking,
+            cabins_field=f"{self.oksen_cabin.id}",
+            user=self.super_user,
+        )
         self.assertResponseNoErrors(response)
 
     # Verify that a booking outside of booking semester is invalid
@@ -592,7 +689,9 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         ) + datetime.timedelta(days=3)
 
         response = self.create_booking(
-            self.first_booking, cabins_field=f"{self.bjornen_cabin.id}", user=self.super_user
+            self.first_booking,
+            cabins_field=f"{self.bjornen_cabin.id}",
+            user=self.super_user,
         )
         self.assertResponseHasErrors(response)
 
@@ -606,7 +705,9 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         ) + datetime.timedelta(days=3)
 
         response = self.create_booking(
-            self.first_booking, cabins_field=f"{self.bjornen_cabin.id}", user=self.super_user
+            self.first_booking,
+            cabins_field=f"{self.bjornen_cabin.id}",
+            user=self.super_user,
         )
         self.assertResponseHasErrors(response)
 
@@ -642,7 +743,9 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
 
         # Add permission
         content_type = ContentType.objects.get_for_model(BookingSemester)
-        permission = Permission.objects.get(codename="change_bookingsemester", content_type=content_type)
+        permission = Permission.objects.get(
+            codename="change_bookingsemester", content_type=content_type
+        )
         self.user.user_permissions.add(permission)
 
         # Assert no error when updating booking semester with permission

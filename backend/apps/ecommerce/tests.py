@@ -42,7 +42,13 @@ class AccessToken(TypedDict):
 class MockResponse:
     def __init__(
         self,
-        json_data: Union[GetPaymentStatus, CapturePayment, InitiatePayment, CancelTransaction, AccessToken],
+        json_data: Union[
+            GetPaymentStatus,
+            CapturePayment,
+            InitiatePayment,
+            CancelTransaction,
+            AccessToken,
+        ],
         status_code: int,
     ) -> None:
         self.json_data = json_data
@@ -58,7 +64,12 @@ class MockResponse:
 
 def setup_mock_get(
     get_payment_status: MockResponse = MockResponse(
-        {"transactionLogHistory": [{"operation": "INITIATE", "operationSuccess": "SUCCESS"}]}, 200
+        {
+            "transactionLogHistory": [
+                {"operation": "INITIATE", "operationSuccess": "SUCCESS"}
+            ]
+        },
+        200,
     ),
 ):
     def mock_get(*args, **kwargs):
@@ -70,10 +81,16 @@ def setup_mock_get(
 
 def setup_mock_post(
     access_token: MockResponse = MockResponse(
-        {"access_token": "test_access_token", "expires_on": (datetime.now() + timedelta(days=1)).timestamp()}, 200
+        {
+            "access_token": "test_access_token",
+            "expires_on": (datetime.now() + timedelta(days=1)).timestamp(),
+        },
+        200,
     ),
     capture_payment: MockResponse = MockResponse({"status": "SUCCESS"}, 200),
-    initiate_payment: MockResponse = MockResponse({"url": "https://www.example.com"}, 200),
+    initiate_payment: MockResponse = MockResponse(
+        {"url": "https://www.example.com"}, 200
+    ),
 ):
     def mock_post(*args, **kwargs):
         if args[0].endswith("/accessToken/get"):
@@ -88,7 +105,9 @@ def setup_mock_post(
     return mock_post
 
 
-def setup_mock_put(cancel_transaction: MockResponse = MockResponse({"status": "SUCCESS"}, 200)):
+def setup_mock_put(
+    cancel_transaction: MockResponse = MockResponse({"status": "SUCCESS"}, 200)
+):
     def mock_put(*args, **kwargs):
         if args[0].endswith("/cancel"):
             return cancel_transaction
@@ -96,10 +115,18 @@ def setup_mock_put(cancel_transaction: MockResponse = MockResponse({"status": "S
     return mock_put
 
 
-PAYMENT_STATUS_PATH = lambda mutation: f"apps.ecommerce.mutations.{mutation}.vipps_api.get_payment_status"  # noqa
-CANCEL_TRANSACTION_PATH = "apps.ecommerce.mutations.InitiateOrder.vipps_api.cancel_transaction"
-INITIATE_PAYMENT_PATH = "apps.ecommerce.mutations.InitiateOrder.vipps_api.initiate_payment"
-CAPTURE_PAYMENT_PATH = "apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.capture_payment"
+PAYMENT_STATUS_PATH = (
+    lambda mutation: f"apps.ecommerce.mutations.{mutation}.vipps_api.get_payment_status"
+)  # noqa
+CANCEL_TRANSACTION_PATH = (
+    "apps.ecommerce.mutations.InitiateOrder.vipps_api.cancel_transaction"
+)
+INITIATE_PAYMENT_PATH = (
+    "apps.ecommerce.mutations.InitiateOrder.vipps_api.initiate_payment"
+)
+CAPTURE_PAYMENT_PATH = (
+    "apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.capture_payment"
+)
 
 
 class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
@@ -117,7 +144,8 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         self.total_quantity = 5
         self.max_buyable_quantity = 2
         self.product_1 = ProductFactory(
-            total_quantity=self.total_quantity, max_buyable_quantity=self.max_buyable_quantity
+            total_quantity=self.total_quantity,
+            max_buyable_quantity=self.max_buyable_quantity,
         )
         self.product_2 = ProductFactory()
         self.initiated_order = OrderFactory(
@@ -303,15 +331,23 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     @patch("requests.put", side_effect=setup_mock_put())
     def test_authorized_user_initiate_order(self, *args, **kwargs) -> None:
         # Scenario 1: Requesting more than available is not allowed
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.total_quantity + 1), user=self.indok_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.total_quantity + 1), user=self.indok_user
+        )
         self.assertResponseHasErrors(response)
 
         # Scenario 2: Requesting more than one user can buy is not allowed
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity + 1), user=self.indok_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity + 1),
+            user=self.indok_user,
+        )
         self.assertResponseHasErrors(response)
 
         # Max is 2 per user so should be allowed to buy this
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=self.indok_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity),
+            user=self.indok_user,
+        )
         self.assertResponseNoErrors(response)
 
         data = json.loads(response.content)["data"]
@@ -323,41 +359,67 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     @patch("requests.put", side_effect=setup_mock_put())
     def test_initate_after_reserved_callback(self, *args, **kwargs):
         unique_user = IndokUserFactory()
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user
+        )
         self.assertResponseNoErrors(response)
         order: Order = Order.objects.get(user=unique_user)
         # callback from Vipps sets the order to RESERVED
         order.payment_status = order.PaymentStatus.RESERVED
         order.save()
 
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user
+        )
         self.assertResponseHasErrors(response)
 
     @patch(
         "requests.get",
         side_effect=setup_mock_get(
             get_payment_status=MockResponse(
-                {"transactionLogHistory": [{"operation": "INITIATE", "operationSuccess": "SUCCESS"}]}, 200
+                {
+                    "transactionLogHistory": [
+                        {"operation": "INITIATE", "operationSuccess": "SUCCESS"}
+                    ]
+                },
+                200,
             )
         ),
     )
     @patch("requests.post", side_effect=setup_mock_post())
     @patch("requests.put", side_effect=setup_mock_put())
-    def test_cancel_initiated_orders_on_reattempt(self, mock_put: MagicMock, *args, **kwargs):
+    def test_cancel_initiated_orders_on_reattempt(
+        self, mock_put: MagicMock, *args, **kwargs
+    ):
         unique_user = IndokUserFactory()
-        self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
-        self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user
+        )
+        self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user
+        )
         order: Order = Order.objects.get(user=unique_user, product=self.product_1)
         # Ensure that the previous payment attempt is cancelled
-        self.assertTrue(mock_put.call_args.args[0].endswith(f"{order.id}-{order.payment_attempt - 1}/cancel"))
+        self.assertTrue(
+            mock_put.call_args.args[0].endswith(
+                f"{order.id}-{order.payment_attempt - 1}/cancel"
+            )
+        )
 
     @patch("requests.get", side_effect=setup_mock_get())
-    @patch("requests.post", side_effect=setup_mock_post(initiate_payment=MockResponse({"url": "test"}, 500)))
+    @patch(
+        "requests.post",
+        side_effect=setup_mock_post(
+            initiate_payment=MockResponse({"url": "test"}, 500)
+        ),
+    )
     @patch("requests.put", side_effect=setup_mock_put())
     def test_handle_vipps_errors_on_initiate(self, *args, **kwargs):
         unique_user = IndokUserFactory()
         prev_quantity = self.product_1.current_quantity
-        self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user
+        )
         product: Product = Product.objects.get(pk=self.product_1.id)
         self.assertEqual(prev_quantity, product.current_quantity)
         self.assertFalse(Order.objects.filter(user=unique_user).exists())
@@ -366,12 +428,22 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         "requests.get",
         side_effect=setup_mock_get(
             get_payment_status=MockResponse(
-                {"transactionLogHistory": [{"operation": "RESERVE", "operationSuccess": "SUCCESS"}]}, 200
+                {
+                    "transactionLogHistory": [
+                        {"operation": "RESERVE", "operationSuccess": "SUCCESS"}
+                    ]
+                },
+                200,
             )
         ),
     )
     @patch("requests.put", side_effect=setup_mock_put())
-    @patch("requests.post", side_effect=setup_mock_post(capture_payment=MockResponse({"status": "SUCCESS"}, 200)))
+    @patch(
+        "requests.post",
+        side_effect=setup_mock_post(
+            capture_payment=MockResponse({"status": "SUCCESS"}, 200)
+        ),
+    )
     def do_attempt_capture_order_test(
         self,
         post_mock: MagicMock,
@@ -382,7 +454,9 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         """
         If an order is INITIATED in the DB and Vipps status returns RESERVE, it should be captured and set to CAPTURED.
         """
-        response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user)
+        response = self.query(
+            self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user
+        )
         data = json.loads(response.content)["data"]
         self.assertResponseNoErrors(response)
         # Reserved orders are immediately tried to captured:
@@ -409,15 +483,29 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         "requests.get",
         side_effect=setup_mock_get(
             get_payment_status=MockResponse(
-                {"transactionLogHistory": [{"operation": "CANCEL", "operationSuccess": "SUCCESS"}]}, 200
+                {
+                    "transactionLogHistory": [
+                        {"operation": "CANCEL", "operationSuccess": "SUCCESS"}
+                    ]
+                },
+                200,
             )
         ),
     )
-    @patch("requests.post", side_effect=setup_mock_post(capture_payment=MockResponse({"status": "SUCCESS"}, 200)))
+    @patch(
+        "requests.post",
+        side_effect=setup_mock_post(
+            capture_payment=MockResponse({"status": "SUCCESS"}, 200)
+        ),
+    )
     @patch("requests.put", side_effect=setup_mock_put())
-    def do_attempt_capture_cancelled_order_test(self, *args, user: Optional[IndokUserFactory] = None, **kwargs):
+    def do_attempt_capture_cancelled_order_test(
+        self, *args, user: Optional[IndokUserFactory] = None, **kwargs
+    ):
         # If an order is INITIATED in the DB and Vipps status returns CANCEL, it should be set to CANCELLED in the DB
-        response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user)
+        response = self.query(
+            self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user
+        )
         data = json.loads(response.content)["data"]
         self.assertResponseNoErrors(response)
         self.assertEqual(data["attemptCapturePayment"]["status"], "CANCELLED")
@@ -520,7 +608,9 @@ class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
         """
 
         # Execute the query using the query method from ExtendedGraphQLTestCase
-        response = self.query(query, variables={"limit": 5, "offset": 2}, user=self.staff_user)  # Use staff user
+        response = self.query(
+            query, variables={"limit": 5, "offset": 2}, user=self.staff_user
+        )  # Use staff user
         data = json.loads(response.content)
 
         # Check if the response data matches expectations
@@ -532,7 +622,9 @@ class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
         first_order = data["data"]["paginatedShopOrders"][0]
         self.assertIn("product", first_order)
         self.assertEqual(first_order["product"]["name"], "Test Product")
-        self.assertEqual(first_order["product"]["price"], "1000.00")  # Adjusted for consistency
+        self.assertEqual(
+            first_order["product"]["price"], "1000.00"
+        )  # Adjusted for consistency
         self.assertTrue(first_order["product"]["shopItem"])
 
         # Additional checks for other fields

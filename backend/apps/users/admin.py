@@ -55,68 +55,116 @@ class UserAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["user_permissions"].queryset = Permission.objects.order_by("content_type__app_label", "name")
+        self.fields["user_permissions"].queryset = Permission.objects.order_by(
+            "content_type__app_label", "name"
+        )
 
-        nfc_permission = Permission.objects.filter(codename="manage_user_nfc", content_type__app_label="users").first()
+        nfc_permission = Permission.objects.filter(
+            codename="manage_user_nfc", content_type__app_label="users"
+        ).first()
         self._nfc_permission = nfc_permission
 
         if self.instance and self.instance.pk and nfc_permission:
-            self.fields["can_edit_nfc_cards"].initial = self.instance.user_permissions.filter(pk=nfc_permission.pk).exists()
+            self.fields["can_edit_nfc_cards"].initial = (
+                self.instance.user_permissions.filter(pk=nfc_permission.pk).exists()
+            )
         else:
             self.fields["can_edit_nfc_cards"].initial = False
 
-        view_info = Permission.objects.filter(codename="view_sensitive_info", content_type__app_label="users").first()
+        view_info = Permission.objects.filter(
+            codename="view_sensitive_info", content_type__app_label="users"
+        ).first()
         self._view_info_permission = view_info
 
         if self.instance and self.instance.pk and view_info:
-            self.fields["can_view_sensitive_info"].initial = self.instance.user_permissions.filter(pk=view_info.pk).exists()
+            self.fields["can_view_sensitive_info"].initial = (
+                self.instance.user_permissions.filter(pk=view_info.pk).exists()
+            )
         else:
             self.fields["can_view_sensitive_info"].initial = False
 
-        manage_profiles = Permission.objects.filter(codename="manage_user_profiles", content_type__app_label="users").first()
+        manage_profiles = Permission.objects.filter(
+            codename="manage_user_profiles", content_type__app_label="users"
+        ).first()
         self._manage_profiles_permission = manage_profiles
 
         if self.instance and self.instance.pk and manage_profiles:
-            self.fields["can_manage_user_profiles"].initial = self.instance.user_permissions.filter(pk=manage_profiles.pk).exists()
+            self.fields["can_manage_user_profiles"].initial = (
+                self.instance.user_permissions.filter(pk=manage_profiles.pk).exists()
+            )
         else:
             self.fields["can_manage_user_profiles"].initial = False
-        
-        manage_janhus_booking = Permission.objects.filter(codename="manage_booking", content_type__app_label="janhus").first()
+
+        manage_janhus_booking = Permission.objects.filter(
+            codename="manage_booking", content_type__app_label="janhus"
+        ).first()
 
         if self.instance and self.instance.pk and manage_janhus_booking:
-            self.fields["can_manage_janhus_booking"].initial = self.instance.user_permissions.filter(pk=manage_janhus_booking.pk).exists()
+            self.fields["can_manage_janhus_booking"].initial = (
+                self.instance.user_permissions.filter(
+                    pk=manage_janhus_booking.pk
+                ).exists()
+            )
         else:
             self.fields["can_manage_janhus_booking"].initial = False
 
-        manage_janhus_settings = Permission.objects.filter(codename="manage_settings", content_type__app_label="janhus").first()
+        manage_janhus_settings = Permission.objects.filter(
+            codename="manage_settings", content_type__app_label="janhus"
+        ).first()
         self._manage_settings_permission = manage_janhus_settings
 
         if self.instance and self.instance.pk and manage_janhus_settings:
-            self.fields["can_manage_janhus_settings"].initial = self.instance.user_permissions.filter(pk=manage_janhus_settings.pk).exists()
+            self.fields["can_manage_janhus_settings"].initial = (
+                self.instance.user_permissions.filter(
+                    pk=manage_janhus_settings.pk
+                ).exists()
+            )
         else:
             self.fields["can_manage_janhus_settings"].initial = False
-        
-        manage_cabins_booking = Permission.objects.filter(codename="manage_booking", content_type__app_label="cabins").first()
-        change_cabin_permission = Permission.objects.filter(codename="change_cabin", content_type__app_label="cabins").first()
 
-        if self.instance and self.instance.pk and manage_cabins_booking and change_cabin_permission:
-            has_manage_booking = self.instance.user_permissions.filter(pk=manage_cabins_booking.pk).exists()
-            has_change_cabin = self.instance.user_permissions.filter(pk=change_cabin_permission.pk).exists()
-            self.fields["can_manage_cabins_booking"].initial = has_manage_booking and has_change_cabin
+        manage_cabins_booking = Permission.objects.filter(
+            codename="manage_booking", content_type__app_label="cabins"
+        ).first()
+        change_cabin_permission = Permission.objects.filter(
+            codename="change_cabin", content_type__app_label="cabins"
+        ).first()
+
+        if (
+            self.instance
+            and self.instance.pk
+            and manage_cabins_booking
+            and change_cabin_permission
+        ):
+            has_manage_booking = self.instance.user_permissions.filter(
+                pk=manage_cabins_booking.pk
+            ).exists()
+            has_change_cabin = self.instance.user_permissions.filter(
+                pk=change_cabin_permission.pk
+            ).exists()
+            self.fields["can_manage_cabins_booking"].initial = (
+                has_manage_booking and has_change_cabin
+            )
         else:
             self.fields["can_manage_cabins_booking"].initial = False
-        
-        manage_cabins_settings = Permission.objects.filter(codename="change_bookingsemester", content_type__app_label="cabins").first()
+
+        manage_cabins_settings = Permission.objects.filter(
+            codename="change_bookingsemester", content_type__app_label="cabins"
+        ).first()
         self._manage_cabins_settings_permission = manage_cabins_settings
 
         if self.instance and self.instance.pk and manage_cabins_settings:
-            self.fields["can_manage_cabins_settings"].initial = self.instance.user_permissions.filter(pk=manage_cabins_settings.pk).exists()
+            self.fields["can_manage_cabins_settings"].initial = (
+                self.instance.user_permissions.filter(
+                    pk=manage_cabins_settings.pk
+                ).exists()
+            )
         else:
             self.fields["can_manage_cabins_settings"].initial = False
-        
-        is_indok_norwegian = self.instance.is_indok if self.instance and self.instance.pk else False
-        self.fields["is_indok_norwegian"].initial = is_indok_norwegian
 
+        is_indok_norwegian = (
+            self.instance.is_indok if self.instance and self.instance.pk else False
+        )
+        self.fields["is_indok_norwegian"].initial = is_indok_norwegian
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -181,10 +229,14 @@ class UserAdmin(admin.ModelAdmin):
 
     @staticmethod
     def _get_nfc_permission() -> Optional[Permission]:
-        return Permission.objects.filter(codename="manage_user_nfc", content_type__app_label="users").first()
+        return Permission.objects.filter(
+            codename="manage_user_nfc", content_type__app_label="users"
+        ).first()
 
     @staticmethod
-    def _sync_direct_permission(user: User, should_have: bool, permission: Optional[Permission]) -> None:
+    def _sync_direct_permission(
+        user: User, should_have: bool, permission: Optional[Permission]
+    ) -> None:
         if permission is None:
             return
 
@@ -195,14 +247,20 @@ class UserAdmin(admin.ModelAdmin):
             user.user_permissions.remove(permission)
 
     @staticmethod
-    def _sync_multiple_direct_permissions(user: User, should_have: bool, permissions) -> None:
-        existing_permissions = [permission for permission in permissions if permission is not None]
+    def _sync_multiple_direct_permissions(
+        user: User, should_have: bool, permissions
+    ) -> None:
+        existing_permissions = [
+            permission for permission in permissions if permission is not None
+        ]
         if not existing_permissions:
             return
 
         existing_permission_ids = [permission.pk for permission in existing_permissions]
         has_any = user.user_permissions.filter(pk__in=existing_permission_ids).exists()
-        has_all = user.user_permissions.filter(pk__in=existing_permission_ids).count() == len(existing_permission_ids)
+        has_all = user.user_permissions.filter(
+            pk__in=existing_permission_ids
+        ).count() == len(existing_permission_ids)
 
         if should_have and not has_all:
             user.user_permissions.add(*existing_permissions)
@@ -216,33 +274,77 @@ class UserAdmin(admin.ModelAdmin):
 
         nfc_permission = self._get_nfc_permission()
         should_have_direct_perm = form.cleaned_data.get("can_edit_nfc_cards", False)
-        self._sync_direct_permission(user=user, should_have=should_have_direct_perm, permission=nfc_permission)
+        self._sync_direct_permission(
+            user=user, should_have=should_have_direct_perm, permission=nfc_permission
+        )
 
-        view_info = Permission.objects.filter(codename="view_sensitive_info", content_type__app_label="users").first()
-        should_have_direct_perm = form.cleaned_data.get("can_view_sensitive_info", False)
-        self._sync_direct_permission(user=user, should_have=should_have_direct_perm, permission=view_info)
+        view_info = Permission.objects.filter(
+            codename="view_sensitive_info", content_type__app_label="users"
+        ).first()
+        should_have_direct_perm = form.cleaned_data.get(
+            "can_view_sensitive_info", False
+        )
+        self._sync_direct_permission(
+            user=user, should_have=should_have_direct_perm, permission=view_info
+        )
 
-        manage_profiles = Permission.objects.filter(codename="manage_user_profiles", content_type__app_label="users").first()
-        should_have_direct_perm = form.cleaned_data.get("can_manage_user_profiles", False)
-        self._sync_direct_permission(user=user, should_have=should_have_direct_perm, permission=manage_profiles)
+        manage_profiles = Permission.objects.filter(
+            codename="manage_user_profiles", content_type__app_label="users"
+        ).first()
+        should_have_direct_perm = form.cleaned_data.get(
+            "can_manage_user_profiles", False
+        )
+        self._sync_direct_permission(
+            user=user, should_have=should_have_direct_perm, permission=manage_profiles
+        )
 
-        manage_janhus_booking = Permission.objects.filter(codename="manage_booking", content_type__app_label="janhus").first()
-        should_have_direct_perm = form.cleaned_data.get("can_manage_janhus_booking", False)
-        self._sync_direct_permission(user=user, should_have=should_have_direct_perm, permission=manage_janhus_booking)
+        manage_janhus_booking = Permission.objects.filter(
+            codename="manage_booking", content_type__app_label="janhus"
+        ).first()
+        should_have_direct_perm = form.cleaned_data.get(
+            "can_manage_janhus_booking", False
+        )
+        self._sync_direct_permission(
+            user=user,
+            should_have=should_have_direct_perm,
+            permission=manage_janhus_booking,
+        )
 
-        manage_janhus_settings = Permission.objects.filter(codename="manage_settings", content_type__app_label="janhus").first()
-        should_have_direct_perm = form.cleaned_data.get("can_manage_janhus_settings", False)
-        self._sync_direct_permission(user=user, should_have=should_have_direct_perm, permission=manage_janhus_settings)
+        manage_janhus_settings = Permission.objects.filter(
+            codename="manage_settings", content_type__app_label="janhus"
+        ).first()
+        should_have_direct_perm = form.cleaned_data.get(
+            "can_manage_janhus_settings", False
+        )
+        self._sync_direct_permission(
+            user=user,
+            should_have=should_have_direct_perm,
+            permission=manage_janhus_settings,
+        )
 
-        manage_cabins_booking = Permission.objects.filter(codename="manage_booking", content_type__app_label="cabins").first()
-        change_cabin_permission = Permission.objects.filter(codename="change_cabin", content_type__app_label="cabins").first()
-        should_have_direct_perm = form.cleaned_data.get("can_manage_cabins_booking", False)
+        manage_cabins_booking = Permission.objects.filter(
+            codename="manage_booking", content_type__app_label="cabins"
+        ).first()
+        change_cabin_permission = Permission.objects.filter(
+            codename="change_cabin", content_type__app_label="cabins"
+        ).first()
+        should_have_direct_perm = form.cleaned_data.get(
+            "can_manage_cabins_booking", False
+        )
         self._sync_multiple_direct_permissions(
             user=user,
             should_have=should_have_direct_perm,
             permissions=[manage_cabins_booking, change_cabin_permission],
         )
 
-        manage_cabins_settings = Permission.objects.filter(codename="change_bookingsemester", content_type__app_label="cabins").first()
-        should_have_direct_perm = form.cleaned_data.get("can_manage_cabins_settings", False)
-        self._sync_direct_permission(user=user, should_have=should_have_direct_perm, permission=manage_cabins_settings)
+        manage_cabins_settings = Permission.objects.filter(
+            codename="change_bookingsemester", content_type__app_label="cabins"
+        ).first()
+        should_have_direct_perm = form.cleaned_data.get(
+            "can_manage_cabins_settings", False
+        )
+        self._sync_direct_permission(
+            user=user,
+            should_have=should_have_direct_perm,
+            permission=manage_cabins_settings,
+        )

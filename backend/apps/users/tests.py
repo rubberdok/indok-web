@@ -15,7 +15,10 @@ User = get_user_model()
 
 
 def setup_mock_requests(
-    first_name: str = "Test", last_name: str = "Testesen", indok: bool = True, id: str = "123123"
+    first_name: str = "Test",
+    last_name: str = "Testesen",
+    indok: bool = True,
+    id: str = "123123",
 ) -> Callable:
     def mocked_feide_requests(*args, **kwargs):
         class MockResponse:
@@ -52,7 +55,10 @@ def setup_mock_requests(
                 200,
             )
 
-        if args[0] == "https://groups-api.dataporten.no/groups/me/groups/fc:fs:fs:prg:ntnu.no:MTIØT":
+        if (
+            args[0]
+            == "https://groups-api.dataporten.no/groups/me/groups/fc:fs:fs:prg:ntnu.no:MTIØT"
+        ):
             if indok:
                 return MockResponse(
                     {
@@ -180,7 +186,9 @@ class UsersResolversTestCase(UsersBaseTestCase):
             }
         """
 
-        response = self.query(query, op_name="SearchUsers", variables={"query": self.indok_user.username})
+        response = self.query(
+            query, op_name="SearchUsers", variables={"query": self.indok_user.username}
+        )
         self.assertResponseHasErrors(response)
 
         response = self.query(
@@ -191,7 +199,9 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["userSearch"]
-        self.assertTrue(any(user["username"] == self.indok_user.username for user in data))
+        self.assertTrue(
+            any(user["username"] == self.indok_user.username for user in data)
+        )
 
         permission = Permission.objects.get(codename="manage_user_profiles")
         self.indok_user.user_permissions.add(permission)
@@ -204,7 +214,9 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["userSearch"]
-        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
+        self.assertTrue(
+            any(user["username"] == self.super_user.username for user in data)
+        )
 
     def test_profile_permission_allows_nfc_user_search(self):
         query = """
@@ -216,7 +228,12 @@ class UsersResolversTestCase(UsersBaseTestCase):
             }
         """
 
-        response = self.query(query, user=self.indok_user, op_name="SearchNfcUsers", variables={"query": "test"})
+        response = self.query(
+            query,
+            user=self.indok_user,
+            op_name="SearchNfcUsers",
+            variables={"query": "test"},
+        )
         self.assertResponseHasErrors(response)
 
         permission = Permission.objects.get(codename="manage_user_profiles")
@@ -230,7 +247,9 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["nfcUserSearch"]
-        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
+        self.assertTrue(
+            any(user["username"] == self.super_user.username for user in data)
+        )
 
 
 class UsersMutationsTestCase(UsersBaseTestCase):
@@ -269,12 +288,16 @@ class UsersMutationsTestCase(UsersBaseTestCase):
                 }
             }
         """
-        self.registered_indok_user = IndokUserFactory(feide_userid="a random ID", first_login=False)
+        self.registered_indok_user = IndokUserFactory(
+            feide_userid="a random ID", first_login=False
+        )
         return super().setUp()
 
     @patch("requests.get", side_effect=setup_mock_requests())
     @patch("requests.post", side_effect=setup_mock_requests())
-    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
+    @patch(
+        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
+    )
     def test_register_new_indok_user(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -296,7 +319,9 @@ class UsersMutationsTestCase(UsersBaseTestCase):
 
     @patch("requests.get", side_effect=setup_mock_requests(indok=False))
     @patch("requests.post", side_effect=setup_mock_requests(indok=False))
-    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
+    @patch(
+        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
+    )
     def test_register_new_non_indok_user(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -318,7 +343,9 @@ class UsersMutationsTestCase(UsersBaseTestCase):
 
     @patch("requests.get", side_effect=setup_mock_requests(id="a random ID"))
     @patch("requests.post", side_effect=setup_mock_requests(id="a random ID"))
-    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
+    @patch(
+        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
+    )
     def test_registered_user_authentication(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -349,32 +376,49 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         query = self.mutation(today + 1)
         res = self.query(query, user=self.indok_user)
         self.assertResponseNoErrors(res)
-        self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
+        self.assertEqual(
+            today + 1,
+            get_user_model().objects.get(pk=self.indok_user.id).graduation_year,
+        )
 
     def test_prevent_graduation_year_update(self):
         today = timezone.now().year
         query = self.mutation(today + 1)
         res = self.query(query, user=self.indok_user)
         self.assertResponseNoErrors(res)
-        self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
+        self.assertEqual(
+            today + 1,
+            get_user_model().objects.get(pk=self.indok_user.id).graduation_year,
+        )
 
         query = self.mutation(today + 2)
         res = self.query(query, user=self.indok_user)
         self.assertResponseNoErrors(res)
-        self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
+        self.assertEqual(
+            today + 1,
+            get_user_model().objects.get(pk=self.indok_user.id).graduation_year,
+        )
 
     def test_update_graduation_year_after_registering(self):
-        newly_registered_user = IndokUserFactory(first_login=True, graduation_year=timezone.now().year + 3)
+        newly_registered_user = IndokUserFactory(
+            first_login=True, graduation_year=timezone.now().year + 3
+        )
         today = timezone.now().year
         query = self.mutation(today + 1)
         res = self.query(query, user=newly_registered_user)
         self.assertResponseNoErrors(res)
-        self.assertEqual(today + 1, get_user_model().objects.get(pk=newly_registered_user.id).graduation_year)
+        self.assertEqual(
+            today + 1,
+            get_user_model().objects.get(pk=newly_registered_user.id).graduation_year,
+        )
 
         query = self.mutation(today + 2)
         res = self.query(query, user=newly_registered_user)
         self.assertResponseNoErrors(res)
-        self.assertEqual(today + 2, get_user_model().objects.get(pk=newly_registered_user.id).graduation_year)
+        self.assertEqual(
+            today + 2,
+            get_user_model().objects.get(pk=newly_registered_user.id).graduation_year,
+        )
 
     def test_update_user(self):
         mutation = """

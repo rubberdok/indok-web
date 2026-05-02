@@ -36,7 +36,9 @@ def ensure_area_configurations() -> QuerySet[JanHusAreaConfiguration]:
     return JanHusAreaConfiguration.objects.all()
 
 
-def ensure_default_levels(settings: Optional[JanHusBookingSettings] = None) -> dict[str, JanHusBookingLevel]:
+def ensure_default_levels(
+    settings: Optional[JanHusBookingSettings] = None,
+) -> dict[str, JanHusBookingLevel]:
     settings = settings or get_or_create_settings()
 
     default_levels = [
@@ -100,13 +102,17 @@ def ensure_default_levels(settings: Optional[JanHusBookingSettings] = None) -> d
 
     levels: dict[str, JanHusBookingLevel] = {}
     for level in default_levels:
-        obj, _ = JanHusBookingLevel.objects.get_or_create(name=level["name"], defaults=level["defaults"])
+        obj, _ = JanHusBookingLevel.objects.get_or_create(
+            name=level["name"], defaults=level["defaults"]
+        )
         levels[obj.name] = obj
 
     return levels
 
 
-def resolve_booking_level(*, user, owner_organization, is_external_booking: bool) -> JanHusBookingLevel:
+def resolve_booking_level(
+    *, user, owner_organization, is_external_booking: bool
+) -> JanHusBookingLevel:
     settings = get_or_create_settings()
     levels = ensure_default_levels(settings)
 
@@ -122,7 +128,11 @@ def resolve_booking_level(*, user, owner_organization, is_external_booking: bool
         return assignment.level if assignment else levels[ORGANIZATION_LEVEL]
 
     if user and user.is_authenticated:
-        assignment = JanHusUserBookingLevel.objects.select_related("level").filter(user=user).first()
+        assignment = (
+            JanHusUserBookingLevel.objects.select_related("level")
+            .filter(user=user)
+            .first()
+        )
         return assignment.level if assignment else levels[GENERAL_LEVEL]
 
     raise GraphQLError("Could not determine booking level")
@@ -178,13 +188,19 @@ def can_override_provisionals(
 
 def get_conflicting_areas(area: str) -> list[str]:
     if area == JanHusArea.ENTIRE_HOUSE:
-        return [JanHusArea.ENTIRE_HOUSE, JanHusArea.FIRST_FLOOR, JanHusArea.SECOND_FLOOR]
+        return [
+            JanHusArea.ENTIRE_HOUSE,
+            JanHusArea.FIRST_FLOOR,
+            JanHusArea.SECOND_FLOOR,
+        ]
     if area == JanHusArea.FIRST_FLOOR:
         return [JanHusArea.FIRST_FLOOR, JanHusArea.ENTIRE_HOUSE]
     return [JanHusArea.SECOND_FLOOR, JanHusArea.ENTIRE_HOUSE]
 
 
-def get_overlapping_bookings(*, starts_at, ends_at, area: str, exclude_booking_id: Optional[int] = None):
+def get_overlapping_bookings(
+    *, starts_at, ends_at, area: str, exclude_booking_id: Optional[int] = None
+):
     query = JanHusBooking.objects.filter(
         starts_at__lt=ends_at,
         ends_at__gt=starts_at,
@@ -202,7 +218,14 @@ def get_overlapping_bookings(*, starts_at, ends_at, area: str, exclude_booking_i
     return query
 
 
-def _is_allowed_boundary(hour: int, minute: int, *, opening_hour: int, closing_hour: int, allow_exact_closing: bool):
+def _is_allowed_boundary(
+    hour: int,
+    minute: int,
+    *,
+    opening_hour: int,
+    closing_hour: int,
+    allow_exact_closing: bool,
+):
     if allow_exact_closing and hour == closing_hour and minute == 0:
         return True
 
@@ -234,14 +257,20 @@ def validate_time_rules(*, starts_at, ends_at, settings: JanHusBookingSettings):
     if duration_minutes % settings.slot_granularity_minutes != 0:
         raise GraphQLError("Booking duration must align with slot granularity")
 
-    start_local = timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
+    start_local = (
+        timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
+    )
     end_local = timezone.localtime(ends_at) if timezone.is_aware(ends_at) else ends_at
 
-    window_start = start_local.replace(hour=settings.opening_hour, minute=0, second=0, microsecond=0)
+    window_start = start_local.replace(
+        hour=settings.opening_hour, minute=0, second=0, microsecond=0
+    )
     if settings.opening_hour == settings.closing_hour:
         window_end = window_start + timedelta(days=1)
     else:
-        window_end = start_local.replace(hour=settings.closing_hour, minute=0, second=0, microsecond=0)
+        window_end = start_local.replace(
+            hour=settings.closing_hour, minute=0, second=0, microsecond=0
+        )
         if settings.opening_hour >= settings.closing_hour:
             window_end += timedelta(days=1)
 
@@ -276,7 +305,9 @@ def validate_time_rules(*, starts_at, ends_at, settings: JanHusBookingSettings):
 
     current = starts_at
     while current < ends_at:
-        current_local = timezone.localtime(current) if timezone.is_aware(current) else current
+        current_local = (
+            timezone.localtime(current) if timezone.is_aware(current) else current
+        )
         if not _is_allowed_boundary(
             current_local.hour,
             current_local.minute,

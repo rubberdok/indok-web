@@ -14,7 +14,9 @@ def _table_columns(connection, table_name):
             return set()
         return {
             column.name
-            for column in connection.introspection.get_table_description(cursor, table_name)
+            for column in connection.introspection.get_table_description(
+                cursor, table_name
+            )
         }
 
 
@@ -27,7 +29,9 @@ def _rename_if_exists(schema_editor, table_name, old_name, new_name, columns):
         columns.add(new_name)
 
 
-def _add_column_if_missing(schema_editor, table_name, column_name, sql_type, default_sql, columns):
+def _add_column_if_missing(
+    schema_editor, table_name, column_name, sql_type, default_sql, columns
+):
     if column_name in columns:
         return
     schema_editor.execute(
@@ -36,7 +40,9 @@ def _add_column_if_missing(schema_editor, table_name, column_name, sql_type, def
     columns.add(column_name)
 
 
-def _add_nullable_column_if_missing(schema_editor, table_name, column_name, sql_type, columns):
+def _add_nullable_column_if_missing(
+    schema_editor, table_name, column_name, sql_type, columns
+):
     if column_name in columns:
         return
     schema_editor.execute(
@@ -50,26 +56,114 @@ def repair_legacy_booking_columns(apps, schema_editor):
 
     booking_columns = _table_columns(connection, BOOKING_TABLE)
     if booking_columns:
-        _rename_if_exists(schema_editor, BOOKING_TABLE, "start_time", "starts_at", booking_columns)
-        _rename_if_exists(schema_editor, BOOKING_TABLE, "end_time", "ends_at", booking_columns)
-        _rename_if_exists(schema_editor, BOOKING_TABLE, "created_by_id", "created_by_user_id", booking_columns)
-        _rename_if_exists(schema_editor, BOOKING_TABLE, "cleaning_selected", "cleaning_requested", booking_columns)
+        _rename_if_exists(
+            schema_editor, BOOKING_TABLE, "start_time", "starts_at", booking_columns
+        )
+        _rename_if_exists(
+            schema_editor, BOOKING_TABLE, "end_time", "ends_at", booking_columns
+        )
+        _rename_if_exists(
+            schema_editor,
+            BOOKING_TABLE,
+            "created_by_id",
+            "created_by_user_id",
+            booking_columns,
+        )
+        _rename_if_exists(
+            schema_editor,
+            BOOKING_TABLE,
+            "cleaning_selected",
+            "cleaning_requested",
+            booking_columns,
+        )
 
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "area", "varchar(32)", "'FIRST_FLOOR'", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "is_external_booking", "boolean", "false", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "booker_name", "varchar(200)", "''", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "booker_email", "varchar(254)", "''", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "booker_phone", "varchar(32)", "''", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "responsible_name", "varchar(200)", "''", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "responsible_email", "varchar(254)", "''", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "responsible_phone", "varchar(32)", "''", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "deposit_amount", "numeric(10,2)", "0", booking_columns)
-        _add_column_if_missing(schema_editor, BOOKING_TABLE, "admin_comment", "text", "''", booking_columns)
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "area",
+            "varchar(32)",
+            "'FIRST_FLOOR'",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "is_external_booking",
+            "boolean",
+            "false",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "booker_name",
+            "varchar(200)",
+            "''",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "booker_email",
+            "varchar(254)",
+            "''",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "booker_phone",
+            "varchar(32)",
+            "''",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "responsible_name",
+            "varchar(200)",
+            "''",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "responsible_email",
+            "varchar(254)",
+            "''",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "responsible_phone",
+            "varchar(32)",
+            "''",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_TABLE,
+            "deposit_amount",
+            "numeric(10,2)",
+            "0",
+            booking_columns,
+        )
+        _add_column_if_missing(
+            schema_editor, BOOKING_TABLE, "admin_comment", "text", "''", booking_columns
+        )
 
-        _add_nullable_column_if_missing(schema_editor, BOOKING_TABLE, "vipps_product_id", "bigint", booking_columns)
-        _add_nullable_column_if_missing(schema_editor, BOOKING_TABLE, "vipps_order_id", "bigint", booking_columns)
+        _add_nullable_column_if_missing(
+            schema_editor, BOOKING_TABLE, "vipps_product_id", "bigint", booking_columns
+        )
+        _add_nullable_column_if_missing(
+            schema_editor, BOOKING_TABLE, "vipps_order_id", "bigint", booking_columns
+        )
 
-        if "responsible_first_name" in booking_columns or "responsible_last_name" in booking_columns:
+        if (
+            "responsible_first_name" in booking_columns
+            or "responsible_last_name" in booking_columns
+        ):
             schema_editor.execute(
                 f"""
                 UPDATE {BOOKING_TABLE}
@@ -101,7 +195,9 @@ def repair_legacy_booking_columns(apps, schema_editor):
                 """
             )
 
-        if "area_id" in booking_columns and LEGACY_AREA_TABLE in _table_columns(connection, LEGACY_AREA_TABLE):
+        if "area_id" in booking_columns and LEGACY_AREA_TABLE in _table_columns(
+            connection, LEGACY_AREA_TABLE
+        ):
             schema_editor.execute(
                 f"""
                 UPDATE {BOOKING_TABLE} booking
@@ -118,22 +214,97 @@ def repair_legacy_booking_columns(apps, schema_editor):
 
     request_columns = _table_columns(connection, REQUEST_TABLE)
     if request_columns:
-        _rename_if_exists(schema_editor, REQUEST_TABLE, "requested_start_time", "starts_at", request_columns)
-        _rename_if_exists(schema_editor, REQUEST_TABLE, "requested_end_time", "ends_at", request_columns)
-        _rename_if_exists(schema_editor, REQUEST_TABLE, "organization_id", "owner_organization_id", request_columns)
-        _rename_if_exists(schema_editor, REQUEST_TABLE, "review_comment", "admin_comment", request_columns)
-        _rename_if_exists(schema_editor, REQUEST_TABLE, "cleaning_selected", "cleaning_requested", request_columns)
+        _rename_if_exists(
+            schema_editor,
+            REQUEST_TABLE,
+            "requested_start_time",
+            "starts_at",
+            request_columns,
+        )
+        _rename_if_exists(
+            schema_editor,
+            REQUEST_TABLE,
+            "requested_end_time",
+            "ends_at",
+            request_columns,
+        )
+        _rename_if_exists(
+            schema_editor,
+            REQUEST_TABLE,
+            "organization_id",
+            "owner_organization_id",
+            request_columns,
+        )
+        _rename_if_exists(
+            schema_editor,
+            REQUEST_TABLE,
+            "review_comment",
+            "admin_comment",
+            request_columns,
+        )
+        _rename_if_exists(
+            schema_editor,
+            REQUEST_TABLE,
+            "cleaning_selected",
+            "cleaning_requested",
+            request_columns,
+        )
 
-        _add_column_if_missing(schema_editor, REQUEST_TABLE, "area", "varchar(32)", "'FIRST_FLOOR'", request_columns)
-        _add_column_if_missing(schema_editor, REQUEST_TABLE, "responsible_name", "varchar(200)", "''", request_columns)
-        _add_column_if_missing(schema_editor, REQUEST_TABLE, "responsible_email", "varchar(254)", "''", request_columns)
-        _add_column_if_missing(schema_editor, REQUEST_TABLE, "responsible_phone", "varchar(32)", "''", request_columns)
-        _add_column_if_missing(schema_editor, REQUEST_TABLE, "admin_comment", "text", "''", request_columns)
+        _add_column_if_missing(
+            schema_editor,
+            REQUEST_TABLE,
+            "area",
+            "varchar(32)",
+            "'FIRST_FLOOR'",
+            request_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            REQUEST_TABLE,
+            "responsible_name",
+            "varchar(200)",
+            "''",
+            request_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            REQUEST_TABLE,
+            "responsible_email",
+            "varchar(254)",
+            "''",
+            request_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            REQUEST_TABLE,
+            "responsible_phone",
+            "varchar(32)",
+            "''",
+            request_columns,
+        )
+        _add_column_if_missing(
+            schema_editor, REQUEST_TABLE, "admin_comment", "text", "''", request_columns
+        )
 
-        _add_nullable_column_if_missing(schema_editor, REQUEST_TABLE, "converted_booking_id", "bigint", request_columns)
-        _add_nullable_column_if_missing(schema_editor, REQUEST_TABLE, "requester_user_id", "integer", request_columns)
+        _add_nullable_column_if_missing(
+            schema_editor,
+            REQUEST_TABLE,
+            "converted_booking_id",
+            "bigint",
+            request_columns,
+        )
+        _add_nullable_column_if_missing(
+            schema_editor,
+            REQUEST_TABLE,
+            "requester_user_id",
+            "integer",
+            request_columns,
+        )
 
-        if "created_by_id" in request_columns and "requester_user_id" in request_columns:
+        if (
+            "created_by_id" in request_columns
+            and "requester_user_id" in request_columns
+        ):
             schema_editor.execute(
                 f"""
                 UPDATE {REQUEST_TABLE}
@@ -142,7 +313,10 @@ def repair_legacy_booking_columns(apps, schema_editor):
                 """
             )
 
-        if "responsible_first_name" in request_columns or "responsible_last_name" in request_columns:
+        if (
+            "responsible_first_name" in request_columns
+            or "responsible_last_name" in request_columns
+        ):
             schema_editor.execute(
                 f"""
                 UPDATE {REQUEST_TABLE}
@@ -156,7 +330,9 @@ def repair_legacy_booking_columns(apps, schema_editor):
                 """
             )
 
-        if "area_id" in request_columns and LEGACY_AREA_TABLE in _table_columns(connection, LEGACY_AREA_TABLE):
+        if "area_id" in request_columns and LEGACY_AREA_TABLE in _table_columns(
+            connection, LEGACY_AREA_TABLE
+        ):
             schema_editor.execute(
                 f"""
                 UPDATE {REQUEST_TABLE} request
@@ -179,8 +355,22 @@ def repair_legacy_booking_columns(apps, schema_editor):
 
     booking_level_columns = _table_columns(connection, BOOKING_LEVEL_TABLE)
     if booking_level_columns:
-        _add_column_if_missing(schema_editor, BOOKING_LEVEL_TABLE, "description", "text", "''", booking_level_columns)
-        _add_column_if_missing(schema_editor, BOOKING_LEVEL_TABLE, "can_book_anytime", "boolean", "false", booking_level_columns)
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_LEVEL_TABLE,
+            "description",
+            "text",
+            "''",
+            booking_level_columns,
+        )
+        _add_column_if_missing(
+            schema_editor,
+            BOOKING_LEVEL_TABLE,
+            "can_book_anytime",
+            "boolean",
+            "false",
+            booking_level_columns,
+        )
         _add_column_if_missing(
             schema_editor,
             BOOKING_LEVEL_TABLE,

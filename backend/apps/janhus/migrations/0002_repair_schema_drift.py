@@ -68,14 +68,20 @@ def repair_janhus_schema_drift(apps, schema_editor):
         with connection.cursor() as cursor:
             existing_columns = {
                 column.name
-                for column in connection.introspection.get_table_description(cursor, SETTINGS_TABLE)
+                for column in connection.introspection.get_table_description(
+                    cursor, SETTINGS_TABLE
+                )
             }
         _repair_settings_columns(schema_editor, existing_columns)
 
     # Optional data migration from legacy assignment table.
     if LEGACY_ASSIGNMENT_TABLE in existing_tables:
-        user_level_table = apps.get_model("janhus", "JanHusUserBookingLevel")._meta.db_table
-        org_level_table = apps.get_model("janhus", "JanHusOrganizationBookingLevel")._meta.db_table
+        user_level_table = apps.get_model(
+            "janhus", "JanHusUserBookingLevel"
+        )._meta.db_table
+        org_level_table = apps.get_model(
+            "janhus", "JanHusOrganizationBookingLevel"
+        )._meta.db_table
 
         schema_editor.execute(
             f"""

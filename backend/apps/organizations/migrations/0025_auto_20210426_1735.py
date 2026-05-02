@@ -21,4 +21,6 @@ class Migration(migrations.Migration):
         ("organizations", "0024_auto_20210422_2020"),
     ]
 
-    operations = [migrations.RunPython(set_primary_groups, lambda apps, schema_editor: None)]
+    operations = [
+        migrations.RunPython(set_primary_groups, lambda apps, schema_editor: None)
+    ]

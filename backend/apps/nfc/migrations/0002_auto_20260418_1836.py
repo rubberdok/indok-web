@@ -6,80 +6,103 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nfc', '0001_initial'),
+        ("nfc", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name='nfcaccessevent',
-            name='nfc_nfc_acc_occurre_65ac6b_idx',
+            model_name="nfcaccessevent",
+            name="nfc_nfc_acc_occurre_65ac6b_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfcaccessevent',
-            name='nfc_nfc_acc_door_id_9f0803_idx',
+            model_name="nfcaccessevent",
+            name="nfc_nfc_acc_door_id_9f0803_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfcaccessevent',
-            name='nfc_nfc_acc_uid_hex_6ce890_idx',
+            model_name="nfcaccessevent",
+            name="nfc_nfc_acc_uid_hex_6ce890_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfcaccessgrant',
-            name='nfc_nfc_acc_scope_b_06bf8c_idx',
+            model_name="nfcaccessgrant",
+            name="nfc_nfc_acc_scope_b_06bf8c_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfcaccessgrant',
-            name='nfc_nfc_acc_granted_0ba9ef_idx',
+            model_name="nfcaccessgrant",
+            name="nfc_nfc_acc_granted_0ba9ef_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfcaccessgrant',
-            name='nfc_nfc_acc_granted_b8d108_idx',
+            model_name="nfcaccessgrant",
+            name="nfc_nfc_acc_granted_b8d108_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfccardassignment',
-            name='nfc_nfc_card_user_id_8c98dc_idx',
+            model_name="nfccardassignment",
+            name="nfc_nfc_card_user_id_8c98dc_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfccardassignment',
-            name='nfc_nfc_card_card_id_e57ac2_idx',
+            model_name="nfccardassignment",
+            name="nfc_nfc_card_card_id_e57ac2_idx",
         ),
         migrations.RemoveIndex(
-            model_name='nfccardassignment',
-            name='nfc_nfc_car_access__4e2f09_idx',
+            model_name="nfccardassignment",
+            name="nfc_nfc_car_access__4e2f09_idx",
         ),
         migrations.AddIndex(
-            model_name='nfcaccessevent',
-            index=models.Index(fields=['occurred_at'], name='nfc_nfcacce_occurre_ffbf67_idx'),
+            model_name="nfcaccessevent",
+            index=models.Index(
+                fields=["occurred_at"], name="nfc_nfcacce_occurre_ffbf67_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfcaccessevent',
-            index=models.Index(fields=['door_identifier', 'occurred_at'], name='nfc_nfcacce_door_id_d04bae_idx'),
+            model_name="nfcaccessevent",
+            index=models.Index(
+                fields=["door_identifier", "occurred_at"],
+                name="nfc_nfcacce_door_id_d04bae_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfcaccessevent',
-            index=models.Index(fields=['uid_hex_reported', 'occurred_at'], name='nfc_nfcacce_uid_hex_66e904_idx'),
+            model_name="nfcaccessevent",
+            index=models.Index(
+                fields=["uid_hex_reported", "occurred_at"],
+                name="nfc_nfcacce_uid_hex_66e904_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfcaccessgrant',
-            index=models.Index(fields=['scope', 'booking'], name='nfc_nfcacce_scope_ae8337_idx'),
+            model_name="nfcaccessgrant",
+            index=models.Index(
+                fields=["scope", "booking"], name="nfc_nfcacce_scope_ae8337_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfcaccessgrant',
-            index=models.Index(fields=['granted_to_user', 'revoked_at'], name='nfc_nfcacce_granted_a5653f_idx'),
+            model_name="nfcaccessgrant",
+            index=models.Index(
+                fields=["granted_to_user", "revoked_at"],
+                name="nfc_nfcacce_granted_a5653f_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfcaccessgrant',
-            index=models.Index(fields=['granted_to_card', 'revoked_at'], name='nfc_nfcacce_granted_58c401_idx'),
+            model_name="nfcaccessgrant",
+            index=models.Index(
+                fields=["granted_to_card", "revoked_at"],
+                name="nfc_nfcacce_granted_58c401_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfccardassignment',
-            index=models.Index(fields=['user', 'revoked_at'], name='nfc_nfccard_user_id_2a679a_idx'),
+            model_name="nfccardassignment",
+            index=models.Index(
+                fields=["user", "revoked_at"], name="nfc_nfccard_user_id_2a679a_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfccardassignment',
-            index=models.Index(fields=['card', 'revoked_at'], name='nfc_nfccard_card_id_8d89a0_idx'),
+            model_name="nfccardassignment",
+            index=models.Index(
+                fields=["card", "revoked_at"], name="nfc_nfccard_card_id_8d89a0_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='nfccardassignment',
-            index=models.Index(fields=['access_start', 'access_end'], name='nfc_nfccard_access__c9cd69_idx'),
+            model_name="nfccardassignment",
+            index=models.Index(
+                fields=["access_start", "access_end"],
+                name="nfc_nfccard_access__c9cd69_idx",
+            ),
         ),
     ]

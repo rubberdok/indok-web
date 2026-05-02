@@ -141,7 +141,9 @@ class JanHusBookingSettings(models.Model):
         if self.slot_granularity_minutes == 0:
             raise ValidationError("Slot granularity must be greater than 0 minutes")
         if self.min_duration_minutes % self.slot_granularity_minutes != 0:
-            raise ValidationError("Minimum duration must be divisible by slot granularity")
+            raise ValidationError(
+                "Minimum duration must be divisible by slot granularity"
+            )
         if self.opening_hour > 23 or self.closing_hour > 23:
             raise ValidationError("Opening and closing hour must be between 0 and 23")
 
@@ -152,10 +154,18 @@ class JanHusBookingSettings(models.Model):
 class JanHusAreaConfiguration(models.Model):
     area = models.CharField(max_length=32, choices=JanHusArea.choices, unique=True)
 
-    internal_price_per_hour = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
-    external_price_per_hour = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
-    cleaning_fee = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
-    default_deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
+    internal_price_per_hour = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
+    external_price_per_hour = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
+    cleaning_fee = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
+    default_deposit_amount = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
 
     class Meta:
         ordering = ["area"]
@@ -222,7 +232,9 @@ class JanHusBooking(models.Model):
     responsible_email = models.EmailField()
     responsible_phone = models.CharField(max_length=32)
 
-    event_type = models.CharField(max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL)
+    event_type = models.CharField(
+        max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL
+    )
     cleaning_requested = models.BooleanField(default=False)
 
     deposit_status = models.CharField(
@@ -230,7 +242,9 @@ class JanHusBooking(models.Model):
         choices=JanHusDepositStatus.choices,
         default=JanHusDepositStatus.REQUIRED,
     )
-    deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
+    deposit_amount = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
 
     comment = models.TextField(blank=True, default="")
     admin_comment = models.TextField(blank=True, default="")
@@ -264,12 +278,18 @@ class JanHusBooking(models.Model):
         if self.starts_at and self.ends_at and self.starts_at >= self.ends_at:
             raise ValidationError("Booking end must be after booking start")
 
-        owners_selected = int(self.owner_user is not None) + int(self.owner_organization is not None)
+        owners_selected = int(self.owner_user is not None) + int(
+            self.owner_organization is not None
+        )
         if owners_selected > 1:
-            raise ValidationError("A booking can have max one owner type: user OR organization")
+            raise ValidationError(
+                "A booking can have max one owner type: user OR organization"
+            )
 
         if not self.is_external_booking and owners_selected == 0:
-            raise ValidationError("A non-external booking must have a user or organization owner")
+            raise ValidationError(
+                "A non-external booking must have a user or organization owner"
+            )
 
         if self.is_external_booking and owners_selected > 0:
             raise ValidationError("External bookings cannot have internal owners")
@@ -294,7 +314,11 @@ class JanHusBooking(models.Model):
             return Decimal("0")
 
         duration = Decimal(self.duration_minutes)
-        hourly_price = config.external_price_per_hour if self.uses_external_pricing else config.internal_price_per_hour
+        hourly_price = (
+            config.external_price_per_hour
+            if self.uses_external_pricing
+            else config.internal_price_per_hour
+        )
         base_price = (hourly_price * duration) / Decimal("60")
 
         if self.cleaning_requested:
@@ -304,7 +328,10 @@ class JanHusBooking(models.Model):
 
     @property
     def outstanding_deposit_amount(self) -> Decimal:
-        if self.deposit_status not in [JanHusDepositStatus.REQUIRED, JanHusDepositStatus.REQUESTED]:
+        if self.deposit_status not in [
+            JanHusDepositStatus.REQUIRED,
+            JanHusDepositStatus.REQUESTED,
+        ]:
             return Decimal("0")
         if self.deposit_amount <= 0:
             return Decimal("0")
@@ -315,7 +342,9 @@ class JanHusBooking(models.Model):
         return self.total_price + self.outstanding_deposit_amount
 
     def __str__(self):
-        owner = self.owner_organization or self.owner_user or self.booker_name or "Unknown"
+        owner = (
+            self.owner_organization or self.owner_user or self.booker_name or "Unknown"
+        )
         return f"JanHus booking {self.id} ({owner})"
 
 
@@ -352,12 +381,16 @@ class JanHusBookingRequest(models.Model):
     responsible_email = models.EmailField()
     responsible_phone = models.CharField(max_length=32)
 
-    event_type = models.CharField(max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL)
+    event_type = models.CharField(
+        max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL
+    )
     cleaning_requested = models.BooleanField(default=False)
     comment = models.TextField(blank=True, default="")
     guest_list = models.TextField(blank=True, default="")
 
-    status = models.CharField(max_length=32, choices=RequestStatus.choices, default=RequestStatus.PENDING)
+    status = models.CharField(
+        max_length=32, choices=RequestStatus.choices, default=RequestStatus.PENDING
+    )
     admin_comment = models.TextField(blank=True, default="")
 
     converted_booking = models.ForeignKey(

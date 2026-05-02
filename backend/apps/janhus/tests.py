@@ -11,12 +11,12 @@ from django.utils import timezone
 from apps.ecommerce.models import Order
 from apps.janhus.mail import send_pending_review_notification
 from apps.janhus.models import (
-  JanHusAreaConfiguration,
-  JanHusBooking,
-  JanHusBookingRequest,
-  JanHusDepositStatus,
-  JanHusBookingSettings,
-  JanHusBookingStatus,
+    JanHusAreaConfiguration,
+    JanHusBooking,
+    JanHusBookingRequest,
+    JanHusDepositStatus,
+    JanHusBookingSettings,
+    JanHusBookingStatus,
 )
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.base import ExtendedGraphQLTestCase
@@ -31,13 +31,17 @@ class JanHusBaseTestCase(ExtendedGraphQLTestCase):
         self.other_user = UserFactory(is_indok=True)
 
         self.start_dt = timezone.make_aware(
-            datetime.combine((timezone.now() + timedelta(days=14)).date(), time(hour=10, minute=0))
+            datetime.combine(
+                (timezone.now() + timedelta(days=14)).date(), time(hour=10, minute=0)
+            )
         )
         self.end_dt = self.start_dt + timedelta(hours=2)
 
     def add_booking_permission(self, user):
         content_type = ContentType.objects.get_for_model(JanHusBooking)
-        user.user_permissions.add(Permission.objects.get(codename="manage_booking", content_type=content_type))
+        user.user_permissions.add(
+            Permission.objects.get(codename="manage_booking", content_type=content_type)
+        )
 
 
 class JanHusMutationsTestCase(JanHusBaseTestCase):
@@ -75,7 +79,10 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertTrue(content["data"]["createJanhusBookingRequest"]["ok"])
         self.assertEqual(1, JanHusBookingRequest.objects.count())
-        self.assertEqual(JanHusBookingRequest.RequestStatus.PENDING, JanHusBookingRequest.objects.first().status)
+        self.assertEqual(
+            JanHusBookingRequest.RequestStatus.PENDING,
+            JanHusBookingRequest.objects.first().status,
+        )
 
     def test_non_indok_user_cannot_create_non_external_booking_request(self):
         non_indok_user = UserFactory(is_indok=False)
@@ -142,7 +149,12 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(response)
 
         content = json.loads(response.content)
-        self.assertEqual("EXTERNAL", content["data"]["createJanhusBookingRequest"]["bookingRequest"]["eventType"])
+        self.assertEqual(
+            "EXTERNAL",
+            content["data"]["createJanhusBookingRequest"]["bookingRequest"][
+                "eventType"
+            ],
+        )
 
     def test_non_indok_user_cannot_create_non_external_booking(self):
         non_indok_user = UserFactory(is_indok=False)
@@ -210,10 +222,14 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(create_response)
 
         create_content = json.loads(create_response.content)
-        request_id = create_content["data"]["createJanhusBookingRequest"]["bookingRequest"]["id"]
+        request_id = create_content["data"]["createJanhusBookingRequest"][
+            "bookingRequest"
+        ]["id"]
         self.assertEqual(
             guest_list_value,
-            create_content["data"]["createJanhusBookingRequest"]["bookingRequest"]["guestList"],
+            create_content["data"]["createJanhusBookingRequest"]["bookingRequest"][
+                "guestList"
+            ],
         )
 
         review_query = f"""
@@ -239,7 +255,12 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(review_response)
 
         review_content = json.loads(review_response.content)
-        self.assertEqual(guest_list_value, review_content["data"]["reviewJanhusBookingRequest"]["booking"]["guestList"])
+        self.assertEqual(
+            guest_list_value,
+            review_content["data"]["reviewJanhusBookingRequest"]["booking"][
+                "guestList"
+            ],
+        )
         self.assertEqual(
             JanHusBookingStatus.PROVISIONAL,
             review_content["data"]["reviewJanhusBookingRequest"]["booking"]["status"],
@@ -503,7 +524,9 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
     def test_create_payment_product_uses_provider_fallback_for_user_without_org(self):
         self.add_booking_permission(self.user)
 
-        provider_organization = OrganizationFactory(name="Hovedstyret", slug="hovedstyret")
+        provider_organization = OrganizationFactory(
+            name="Hovedstyret", slug="hovedstyret"
+        )
 
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
@@ -532,7 +555,9 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         booking.refresh_from_db()
         self.assertIsNotNone(booking.vipps_product_id)
-        self.assertEqual(provider_organization.id, booking.vipps_product.organization_id)
+        self.assertEqual(
+            provider_organization.id, booking.vipps_product.organization_id
+        )
 
     def test_update_booking_guest_list_access_and_policy_admin_only(self):
         guest_user = UserFactory(is_indok=True)
@@ -617,7 +642,9 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             }}
         """
 
-        responsible_comment_response = self.query(responsible_comment_query, user=responsible_user)
+        responsible_comment_response = self.query(
+            responsible_comment_query, user=responsible_user
+        )
         self.assertResponseHasErrors(responsible_comment_response)
 
         owner_policy_query = f"""
@@ -788,13 +815,19 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
 
         member_response = self.query(query, user=member_user)
         self.assertResponseNoErrors(member_response)
-        member_ids = [item["id"] for item in json.loads(member_response.content)["data"]["janhusMyBookings"]]
+        member_ids = [
+            item["id"]
+            for item in json.loads(member_response.content)["data"]["janhusMyBookings"]
+        ]
         self.assertIn(str(personal_booking.id), member_ids)
         self.assertNotIn(str(org_booking.id), member_ids)
 
         leader_response = self.query(query, user=leader_user)
         self.assertResponseNoErrors(leader_response)
-        leader_ids = [item["id"] for item in json.loads(leader_response.content)["data"]["janhusMyBookings"]]
+        leader_ids = [
+            item["id"]
+            for item in json.loads(leader_response.content)["data"]["janhusMyBookings"]
+        ]
         self.assertIn(str(org_booking.id), leader_ids)
 
     def test_my_bookings_include_booker_or_responsible_contacts(self):
@@ -836,7 +869,10 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         response = self.query(query, user=self.other_user)
         self.assertResponseNoErrors(response)
 
-        booking_ids = [item["id"] for item in json.loads(response.content)["data"]["janhusMyBookings"]]
+        booking_ids = [
+            item["id"]
+            for item in json.loads(response.content)["data"]["janhusMyBookings"]
+        ]
         self.assertIn(str(booker_booking.id), booking_ids)
         self.assertIn(str(responsible_booking.id), booking_ids)
 
@@ -875,8 +911,15 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(allowed_response)
 
         results = json.loads(allowed_response.content)["data"]["janhusGuestSearch"]
-        self.assertTrue(any(result["feideUserid"] == searchable_user.feide_userid for result in results))
-        self.assertTrue(any(result["displayName"] == "Siri Nordmann" for result in results))
+        self.assertTrue(
+            any(
+                result["feideUserid"] == searchable_user.feide_userid
+                for result in results
+            )
+        )
+        self.assertTrue(
+            any(result["displayName"] == "Siri Nordmann" for result in results)
+        )
 
     def test_guest_search_for_request_requires_auth_and_returns_name_and_feide(self):
         searchable_user = UserFactory(
@@ -901,14 +944,28 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         allowed_response = self.query(query, user=self.user)
         self.assertResponseNoErrors(allowed_response)
 
-        results = json.loads(allowed_response.content)["data"]["janhusGuestSearchForRequest"]
-        self.assertTrue(any(result["feideUserid"] == searchable_user.feide_userid for result in results))
-        self.assertTrue(any(result["displayName"] == "ReqSearchUnique Nordmann" for result in results))
+        results = json.loads(allowed_response.content)["data"][
+            "janhusGuestSearchForRequest"
+        ]
+        self.assertTrue(
+            any(
+                result["feideUserid"] == searchable_user.feide_userid
+                for result in results
+            )
+        )
+        self.assertTrue(
+            any(
+                result["displayName"] == "ReqSearchUnique Nordmann"
+                for result in results
+            )
+        )
 
 
 class JanHusMailTestCase(TestCase):
     def test_pending_review_notification_includes_booker_and_responsible(self):
-        start_dt = timezone.make_aware(datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0)))
+        start_dt = timezone.make_aware(
+            datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
+        )
         booking = JanHusBooking.objects.create(
             starts_at=start_dt,
             ends_at=start_dt + timedelta(hours=1),
@@ -925,4 +982,6 @@ class JanHusMailTestCase(TestCase):
 
         mocked_send_mail.assert_called_once()
         recipient_list = mocked_send_mail.call_args.kwargs["recipient_list"]
-        self.assertCountEqual(["responsible@example.com", "booker@example.com"], recipient_list)
+        self.assertCountEqual(
+            ["responsible@example.com", "booker@example.com"], recipient_list
+        )

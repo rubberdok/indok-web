@@ -7,13 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nfc', '0002_auto_20260418_1836'),
+        ("nfc", "0002_auto_20260418_1836"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='nfccardassignment',
-            name='pin_code',
-            field=models.CharField(blank=True, default='', max_length=4, validators=[django.core.validators.RegexValidator('^\\d{4}$', 'PIN code must be exactly 4 digits (0-9)')]),
+            model_name="nfccardassignment",
+            name="pin_code",
+            field=models.CharField(
+                blank=True,
+                default="",
+                max_length=4,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^\\d{4}$", "PIN code must be exactly 4 digits (0-9)"
+                    )
+                ],
+            ),
         ),
     ]

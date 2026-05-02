@@ -6,30 +6,37 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('janhus', '0004_add_area_default_deposit_amount'),
+        ("janhus", "0004_add_area_default_deposit_amount"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='janhusbooking',
-            name='bankid_reference',
+            model_name="janhusbooking",
+            name="bankid_reference",
         ),
         migrations.RemoveField(
-            model_name='janhusbooking',
-            name='bankid_status',
+            model_name="janhusbooking",
+            name="bankid_status",
         ),
         migrations.RemoveField(
-            model_name='janhusbookingsettings',
-            name='bankid_provider',
+            model_name="janhusbookingsettings",
+            name="bankid_provider",
         ),
         migrations.AddField(
-            model_name='janhusbooking',
-            name='door_access_policy',
-            field=models.CharField(choices=[('BOOKER_ONLY', 'Booker only'), ('ALL_PARTICIPANTS', 'Booker and guest list')], default='BOOKER_ONLY', max_length=32),
+            model_name="janhusbooking",
+            name="door_access_policy",
+            field=models.CharField(
+                choices=[
+                    ("BOOKER_ONLY", "Booker only"),
+                    ("ALL_PARTICIPANTS", "Booker and guest list"),
+                ],
+                default="BOOKER_ONLY",
+                max_length=32,
+            ),
         ),
         migrations.AddField(
-            model_name='janhusbooking',
-            name='guest_list',
-            field=models.TextField(blank=True, default=''),
+            model_name="janhusbooking",
+            name="guest_list",
+            field=models.TextField(blank=True, default=""),
         ),
     ]

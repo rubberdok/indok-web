@@ -40,7 +40,12 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "booker_email",
         "owner_organization__name",
     )
-    raw_id_fields = ("owner_user", "owner_organization", "booking_level", "created_by_user")
+    raw_id_fields = (
+        "owner_user",
+        "owner_organization",
+        "booking_level",
+        "created_by_user",
+    )
 
 
 @admin.register(JanHusBookingRequest)
@@ -90,7 +95,12 @@ class JanHusBookingLevelAdmin(admin.ModelAdmin):
 @admin.register(JanHusUserBookingLevel)
 class JanHusUserBookingLevelAdmin(admin.ModelAdmin):
     list_display = ("user", "level")
-    search_fields = ("user__username", "user__first_name", "user__last_name", "level__name")
+    search_fields = (
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+        "level__name",
+    )
     raw_id_fields = ("user", "level")
 
 

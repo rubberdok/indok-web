@@ -20,6 +20,8 @@ class Command(BaseCommand):
         interactive = options["interactive"]
 
         # Create a test database.
-        connection.creation.create_test_db(verbosity=verbosity, autoclobber=not interactive, serialize=False)
+        connection.creation.create_test_db(
+            verbosity=verbosity, autoclobber=not interactive, serialize=False
+        )
 
         call_command("loadfactories", **{"verbosity": verbosity})

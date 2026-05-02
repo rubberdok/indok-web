@@ -19,13 +19,17 @@ class NfcCardAssignmentModelTests(TestCase):
         assignment = NfcCardAssignment.objects.create(card=card1, user=self.user)
         assignment.revoke(reason="Card replaced")
 
-        replacement_assignment = NfcCardAssignment.objects.create(card=card2, user=self.user)
+        replacement_assignment = NfcCardAssignment.objects.create(
+            card=card2, user=self.user
+        )
 
         self.assertIsNotNone(replacement_assignment.pk)
 
     def test_external_holder_assignment_without_user(self):
         card = NfcCard.objects.create(uid_hex="04A1B2C3D4E5F8")
-        assignment = NfcCardAssignment.objects.create(card=card, external_holder_name="Guest Lecturer")
+        assignment = NfcCardAssignment.objects.create(
+            card=card, external_holder_name="Guest Lecturer"
+        )
 
         self.assertIsNone(assignment.user)
         self.assertEqual(assignment.external_holder_name, "Guest Lecturer")

@@ -18,6 +18,10 @@ import range from "lodash/range";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
+import { Link } from "@/components";
+import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+
 import {
   IUserForm,
   currentGradeYear,
@@ -26,10 +30,6 @@ import {
   suggestGraduationYear,
   validationSchema,
 } from "./helpers";
-
-import { Link } from "@/components";
-import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
-import dayjs from "@/lib/date";
 
 type Props = {
   kind: "register" | "update";

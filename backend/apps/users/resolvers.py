@@ -7,7 +7,10 @@ from .permissions import can_manage_user_nfc, can_manage_user_profiles
 
 class UserResolvers:
     def resolve_user(self, info):
-        if isinstance(info.context.user, get_user_model()) and not info.context.user.is_anonymous:
+        if (
+            isinstance(info.context.user, get_user_model())
+            and not info.context.user.is_anonymous
+        ):
             return info.context.user
         else:
             return None
@@ -28,7 +31,9 @@ class UserResolvers:
     def resolve_nfc_user_search(self, info, query: str, limit: int = 25):
         user = info.context.user
         if not can_manage_user_nfc(user):
-            raise PermissionError("Du har ikke tilgang til å søke brukere for NFC-redigering")
+            raise PermissionError(
+                "Du har ikke tilgang til å søke brukere for NFC-redigering"
+            )
 
         return _search_users(query=query, limit=limit)
 
@@ -72,4 +77,9 @@ def _search_users(query: str, limit: int = 25):
         last = " ".join(name_parts[1:])
         q |= Q(first_name__icontains=first, last_name__icontains=last)
 
-    return get_user_model().objects.filter(q).distinct().order_by("first_name", "last_name", "username")[:safe_limit]
+    return (
+        get_user_model()
+        .objects.filter(q)
+        .distinct()
+        .order_by("first_name", "last_name", "username")[:safe_limit]
+    )

@@ -17,8 +17,12 @@ class UserMutations(graphene.ObjectType):
 
 class UserQueries(graphene.ObjectType, UserResolvers):
     all_users = graphene.List(NonNull(UserType))
-    user_search = graphene.List(NonNull(UserType), query=graphene.String(required=True), limit=graphene.Int())
-    nfc_user_search = graphene.List(NonNull(UserType), query=graphene.String(required=True), limit=graphene.Int())
+    user_search = graphene.List(
+        NonNull(UserType), query=graphene.String(required=True), limit=graphene.Int()
+    )
+    nfc_user_search = graphene.List(
+        NonNull(UserType), query=graphene.String(required=True), limit=graphene.Int()
+    )
     can_manage_user_profiles = graphene.Boolean(required=True)
     can_manage_user_nfc = graphene.Boolean(required=True)
     user = graphene.Field(UserType)

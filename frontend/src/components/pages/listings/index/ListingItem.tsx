@@ -74,6 +74,7 @@ export const ListingItem: React.FC<Props> = ({ listing }) => {
               },
             })}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={listing.organization?.logoUrl || "/nth.svg"}
               alt=""

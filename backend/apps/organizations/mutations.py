@@ -15,7 +15,11 @@ def get_organization_from_data(*_, membership_data, **kwargs) -> Organization:
 
 
 def get_organization_from_membership(*_, membership_id, **kwargs) -> Organization:
-    membership = Membership.objects.select_related("organization").filter(pk=membership_id).first()
+    membership = (
+        Membership.objects.select_related("organization")
+        .filter(pk=membership_id)
+        .first()
+    )
     return membership.organization if membership else None
 
 
@@ -96,14 +100,18 @@ class AssignMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required("organizations.manage_organization", fn=get_organization_from_data)
+    @permission_required(
+        "organizations.manage_organization", fn=get_organization_from_data
+    )
     def mutate(self, _, membership_data):
         organization = Organization.objects.prefetch_related("permission_groups").get(
             pk=membership_data["organization_id"]
         )
 
         try:
-            group = organization.permission_groups.get(pk=membership_data.get("group_id"))
+            group = organization.permission_groups.get(
+                pk=membership_data.get("group_id")
+            )
         except ResponsibleGroup.DoesNotExist:
             return AssignMembership(membership=None, ok=False)
 
@@ -123,14 +131,18 @@ class UpsertMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required("organizations.manage_organization", fn=get_organization_from_data)
+    @permission_required(
+        "organizations.manage_organization", fn=get_organization_from_data
+    )
     def mutate(self, _, membership_data):
         organization = Organization.objects.prefetch_related("permission_groups").get(
             pk=membership_data["organization_id"]
         )
 
         try:
-            group = organization.permission_groups.get(pk=membership_data.get("group_id"))
+            group = organization.permission_groups.get(
+                pk=membership_data.get("group_id")
+            )
         except ResponsibleGroup.DoesNotExist:
             return UpsertMembership(membership=None, ok=False)
 
@@ -149,9 +161,13 @@ class RemoveMembership(graphene.Mutation):
     class Arguments:
         membership_id = graphene.ID(required=True)
 
-    @permission_required("organizations.manage_organization", fn=get_organization_from_membership)
+    @permission_required(
+        "organizations.manage_organization", fn=get_organization_from_membership
+    )
     def mutate(self, info, membership_id):
-        membership = Membership.objects.select_related("user").filter(pk=membership_id).first()
+        membership = (
+            Membership.objects.select_related("user").filter(pk=membership_id).first()
+        )
         if membership is None:
             return RemoveMembership(removed_member=None, ok=False)
 

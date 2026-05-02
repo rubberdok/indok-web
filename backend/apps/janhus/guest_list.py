@@ -43,7 +43,9 @@ def parse_guest_list_user_feide_ids(raw_guest_list: str) -> list[str]:
 
 
 def serialize_guest_list_user_feide_ids(feide_ids: Iterable[str]) -> str:
-    return json.dumps(normalize_guest_list_user_feide_ids(feide_ids), ensure_ascii=False)
+    return json.dumps(
+        normalize_guest_list_user_feide_ids(feide_ids), ensure_ascii=False
+    )
 
 
 def find_missing_guest_feide_ids(feide_ids: Iterable[str]) -> list[str]:
@@ -53,11 +55,16 @@ def find_missing_guest_feide_ids(feide_ids: Iterable[str]) -> list[str]:
 
     user_model = get_user_model()
     existing_feide_ids = set(
-        user_model.objects.filter(feide_userid__in=normalized_feide_ids)
-        .values_list("feide_userid", flat=True)
+        user_model.objects.filter(feide_userid__in=normalized_feide_ids).values_list(
+            "feide_userid", flat=True
+        )
     )
 
-    return [feide_id for feide_id in normalized_feide_ids if feide_id not in existing_feide_ids]
+    return [
+        feide_id
+        for feide_id in normalized_feide_ids
+        if feide_id not in existing_feide_ids
+    ]
 
 
 def build_guest_list_entries(raw_guest_list: str) -> list[dict[str, str]]:
@@ -82,16 +89,22 @@ def build_guest_list_entries(raw_guest_list: str) -> list[dict[str, str]]:
     for feide_id in feide_ids:
         user = user_by_feide_id.get(feide_id)
         if user is None:
-            entries.append({
-                "feide_userid": feide_id,
-                "display_name": feide_id,
-            })
+            entries.append(
+                {
+                    "feide_userid": feide_id,
+                    "display_name": feide_id,
+                }
+            )
             continue
 
-        display_name = f"{user.first_name} {user.last_name}".strip() or user.username or feide_id
-        entries.append({
-            "feide_userid": feide_id,
-            "display_name": display_name,
-        })
+        display_name = (
+            f"{user.first_name} {user.last_name}".strip() or user.username or feide_id
+        )
+        entries.append(
+            {
+                "feide_userid": feide_id,
+                "display_name": display_name,
+            }
+        )
 
     return entries

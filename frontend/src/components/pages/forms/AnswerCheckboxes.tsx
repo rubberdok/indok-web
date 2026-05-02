@@ -32,7 +32,7 @@ export const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerCh
   */
   useEffect(() => {
     onAnswerChange(selectedOptions.map((option) => option.answer).join("|||"));
-  }, [selectedOptions]);
+  }, [onAnswerChange, selectedOptions]);
 
   return (
     <FormGroup>

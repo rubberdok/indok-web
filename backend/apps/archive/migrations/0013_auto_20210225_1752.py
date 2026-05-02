@@ -12,6 +12,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="archivedocument",
             name="web_link",
-            field=models.CharField(blank=True, default=None, max_length=2050, null=True),
+            field=models.CharField(
+                blank=True, default=None, max_length=2050, null=True
+            ),
         ),
     ]

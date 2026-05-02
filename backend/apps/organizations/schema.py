@@ -23,8 +23,12 @@ class OrganizationMutations(graphene.ObjectType):
     remove_membership = RemoveMembership.Field()
 
 
-class OrganizationQueries(graphene.ObjectType, OrganizationResolvers, MembershipResolvers):
-    all_organizations = graphene.List(NonNull(OrganizationType), search=graphene.String())
+class OrganizationQueries(
+    graphene.ObjectType, OrganizationResolvers, MembershipResolvers
+):
+    all_organizations = graphene.List(
+        NonNull(OrganizationType), search=graphene.String()
+    )
     organization = graphene.Field(
         OrganizationType,
         id=graphene.ID(required=False),

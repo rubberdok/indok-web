@@ -50,9 +50,9 @@ class OrganizationType(DjangoObjectType):
         @staticmethod
         def is_in_organization(resolver):
             def wrapper(organization: Organization, info):
-                if organization.users.filter(pk=info.context.user.id).exists() or can_manage_user_profiles(
-                    info.context.user
-                ):
+                if organization.users.filter(
+                    pk=info.context.user.id
+                ).exists() or can_manage_user_profiles(info.context.user):
                     return resolver(organization, info)
                 else:
                     raise PermissionDenied(
@@ -65,7 +65,9 @@ class OrganizationType(DjangoObjectType):
     def resolve_absolute_slug(organization: Optional[Organization], _):
         if organization:
             slug_list = [organization.slug]
-            while (organization := organization.parent) and organization.parent != organization:
+            while (
+                organization := organization.parent
+            ) and organization.parent != organization:
                 slug_list.insert(0, organization.slug)
             return "/".join(slug_list)
 
@@ -91,9 +93,9 @@ class MembershipType(DjangoObjectType):
         @staticmethod
         def is_in_organization(resolver):
             def wrapper(membership: Membership, info):
-                if membership.organization.users.filter(pk=info.context.user.id).exists() or can_manage_user_profiles(
-                    info.context.user
-                ):
+                if membership.organization.users.filter(
+                    pk=info.context.user.id
+                ).exists() or can_manage_user_profiles(info.context.user):
                     return resolver(membership, info)
                 else:
                     raise PermissionDenied(

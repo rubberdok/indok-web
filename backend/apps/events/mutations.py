@@ -61,7 +61,9 @@ class CreateEvent(graphene.Mutation):
     @permission_required("events.add_event")
     def mutate(self, info, event_data):
         try:
-            organization = Organization.objects.get(id=event_data.get("organization_id"))
+            organization = Organization.objects.get(
+                id=event_data.get("organization_id")
+            )
         except Organization.DoesNotExist:
             raise ValueError("Ugyldig forening oppgitt")
 
@@ -168,7 +170,9 @@ class EventSignUp(graphene.Mutation):
                 event.allowed_grade_years,
             )
 
-        if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
+        if SignUp.objects.filter(
+            event_id=event_id, is_attending=True, user_id=info.context.user.id
+        ).exists():
             raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")
 
         sign_up = SignUp()
@@ -212,7 +216,9 @@ class EventSignOff(graphene.Mutation):
         user = info.context.user
 
         if event.binding_signup and user in event.users_attending:
-            raise Exception("Du kan ikke melde deg av et arrangement med bindende påmelding.")
+            raise Exception(
+                "Du kan ikke melde deg av et arrangement med bindende påmelding."
+            )
 
         try:
             sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
@@ -344,7 +350,9 @@ class SendEventEmails(graphene.Mutation):
     ok = graphene.Boolean()
 
     @login_required
-    def mutate(self, info, event_id, receiver_emails: list[str], content: str, subject: str):
+    def mutate(
+        self, info, event_id, receiver_emails: list[str], content: str, subject: str
+    ):
         try:
             event = Event.objects.get(pk=event_id)
         except Event.DoesNotExist:
@@ -355,7 +363,10 @@ class SendEventEmails(graphene.Mutation):
 
         for i in range(0, len(receiver_emails), settings.EMAIL_MAX_RECIPIENTS):
             EventEmail.send_event_emails(
-                receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject, event
+                receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS],
+                content,
+                subject,
+                event,
             )
 
         ok = True

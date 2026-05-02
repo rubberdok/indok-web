@@ -9,9 +9,20 @@ from django.utils import timezone
 from decorators import login_required, permission_required
 from graphql import GraphQLError
 
-from .models import NfcAccessEvent, NfcAccessGrant, NfcCard, NfcCardAssignment, normalize_uid_hex
+from .models import (
+    NfcAccessEvent,
+    NfcAccessGrant,
+    NfcCard,
+    NfcCardAssignment,
+    normalize_uid_hex,
+)
 from .permissions import can_manage_booking_access
-from .types import NfcAccessEventType, NfcAccessGrantType, NfcCardAssignmentType, NfcCardType
+from .types import (
+    NfcAccessEventType,
+    NfcAccessGrantType,
+    NfcCardAssignmentType,
+    NfcCardType,
+)
 
 User = get_user_model()
 
@@ -107,7 +118,9 @@ class AssignNfcCard(graphene.Mutation):
         with transaction.atomic():
             card, _ = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
 
-            card_active_assignment = card.assignments.filter(revoked_at__isnull=True).first()
+            card_active_assignment = card.assignments.filter(
+                revoked_at__isnull=True
+            ).first()
             if card_active_assignment:
                 card_active_assignment.revoke(
                     revoked_by=info.context.user,
@@ -115,7 +128,9 @@ class AssignNfcCard(graphene.Mutation):
                 )
 
             if user is not None:
-                user_active_assignment = NfcCardAssignment.objects.filter(user=user, revoked_at__isnull=True).first()
+                user_active_assignment = NfcCardAssignment.objects.filter(
+                    user=user, revoked_at__isnull=True
+                ).first()
                 if user_active_assignment:
                     user_active_assignment.revoke(
                         revoked_by=info.context.user,
@@ -150,12 +165,16 @@ class RevokeNfcAssignment(graphene.Mutation):
 
     @permission_required("nfc.manage_nfc")
     def mutate(self, info, revoke_data):
-        assignment = get_object_or_404(NfcCardAssignment, pk=revoke_data["assignment_id"])
+        assignment = get_object_or_404(
+            NfcCardAssignment, pk=revoke_data["assignment_id"]
+        )
         if assignment.revoked_at is None:
             assignment.revoked_at = timezone.now()
             assignment.revoked_by = info.context.user
             assignment.revocation_reason = revoke_data.get("reason", "")
-            assignment.save(update_fields=["revoked_at", "revoked_by", "revocation_reason"])
+            assignment.save(
+                update_fields=["revoked_at", "revoked_by", "revocation_reason"]
+            )
         return RevokeNfcAssignment(ok=True, assignment=assignment)
 
 
@@ -171,19 +190,29 @@ class CreateNfcAccessGrant(graphene.Mutation):
         user = info.context.user
         scope = grant_data["scope"]
 
-        if scope == NfcAccessGrant.Scope.BOOKING and not can_manage_booking_access(user):
-            raise GraphQLError("You do not have permission to manage booking NFC access")
+        if scope == NfcAccessGrant.Scope.BOOKING and not can_manage_booking_access(
+            user
+        ):
+            raise GraphQLError(
+                "You do not have permission to manage booking NFC access"
+            )
 
-        if scope != NfcAccessGrant.Scope.BOOKING and not user.has_perm("nfc.manage_nfc"):
+        if scope != NfcAccessGrant.Scope.BOOKING and not user.has_perm(
+            "nfc.manage_nfc"
+        ):
             raise GraphQLError("You do not have permission to create NFC access grants")
 
         granted_to_user = None
         if grant_data.get("granted_to_user_id"):
-            granted_to_user = get_object_or_404(User, pk=grant_data["granted_to_user_id"])
+            granted_to_user = get_object_or_404(
+                User, pk=grant_data["granted_to_user_id"]
+            )
 
         granted_to_card = None
         if grant_data.get("granted_to_uid_hex"):
-            granted_to_card = get_object_or_404(NfcCard, uid_hex=normalize_uid_hex(grant_data["granted_to_uid_hex"]))
+            granted_to_card = get_object_or_404(
+                NfcCard, uid_hex=normalize_uid_hex(grant_data["granted_to_uid_hex"])
+            )
 
         booking = None
         if grant_data.get("booking_id"):
@@ -193,7 +222,9 @@ class CreateNfcAccessGrant(graphene.Mutation):
 
         access_grant = NfcAccessGrant(
             scope=scope,
-            participant_policy=grant_data.get("participant_policy", NfcAccessGrant.ParticipantPolicy.BOOKER_ONLY),
+            participant_policy=grant_data.get(
+                "participant_policy", NfcAccessGrant.ParticipantPolicy.BOOKER_ONLY
+            ),
             booking=booking,
             granted_to_user=granted_to_user,
             granted_to_card=granted_to_card,
@@ -221,7 +252,9 @@ class RevokeNfcAccessGrant(graphene.Mutation):
 
     @permission_required("nfc.manage_nfc")
     def mutate(self, info, revoke_data):
-        access_grant = get_object_or_404(NfcAccessGrant, pk=revoke_data["access_grant_id"])
+        access_grant = get_object_or_404(
+            NfcAccessGrant, pk=revoke_data["access_grant_id"]
+        )
 
         if access_grant.revoked_at is None:
             access_grant.revoked_at = timezone.now()
@@ -249,7 +282,11 @@ class LogNfcAccessEvent(graphene.Mutation):
         if normalized_uid:
             card = NfcCard.objects.filter(uid_hex=normalized_uid).first()
             if card:
-                assignment = card.assignments.filter(revoked_at__isnull=True).select_related("user").first()
+                assignment = (
+                    card.assignments.filter(revoked_at__isnull=True)
+                    .select_related("user")
+                    .first()
+                )
 
         resolved_user = None
         if event_data.get("resolved_user_id"):

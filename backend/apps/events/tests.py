@@ -46,7 +46,9 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.query(event_signup_query, user=self.user4)
 
     @patch("apps.events.mail.EventEmail.send_waitlist_notification_email")
-    def test_send_mail_on_user_bumped_from_waiting_list_by_admin(self, send_mail_mock: MagicMock):
+    def test_send_mail_on_user_bumped_from_waiting_list_by_admin(
+        self, send_mail_mock: MagicMock
+    ):
         admin_event_signoff_query = f"""
                 mutation AdminEventSignOff {{
                     adminEventSignOff(
@@ -70,7 +72,9 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.assertEqual(send_mail_mock.call_args.args[1], self.event)
 
     @patch("apps.events.mail.EventEmail.send_waitlist_notification_email")
-    def test_send_mail_on_user_bumped_from_waiting_list(self, send_mail_mock: MagicMock):
+    def test_send_mail_on_user_bumped_from_waiting_list(
+        self, send_mail_mock: MagicMock
+    ):
         event_signoff_query = f"""
                 mutation EventSignOff {{
                     eventSignOff(

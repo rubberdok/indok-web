@@ -43,7 +43,9 @@ DATABASES = {
 ROOT_URLCONF = env("ROOT_URLCONF", default="config.urls.production")
 
 # EMAIL
-EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="anymail.backends.postmark.EmailBackend")
+EMAIL_BACKEND = env(
+    "DJANGO_EMAIL_BACKEND", default="anymail.backends.postmark.EmailBackend"
+)
 
 
 AWS_SES_REGION_NAME = env("AWS_SES_REGION_NAME")
@@ -55,7 +57,12 @@ AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
-    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"}},
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s "
+            "%(process)d %(thread)d %(message)s"
+        }
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
@@ -90,7 +97,9 @@ CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", True)
 
 # SENTRY
 SENTRY_DSN: Optional[str] = env("SENTRY_DSN", default=None)
-SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
+SENTRY_LOG_LEVEL: int = cast(
+    int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO)
+)
 SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 
 sentry_logging = LoggingIntegration(

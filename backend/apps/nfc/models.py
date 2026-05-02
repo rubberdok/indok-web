@@ -9,7 +9,10 @@ from django.db.models import Q
 from django.utils import timezone
 
 
-UID_7_BYTE_HEX_RE = re.compile(r"^[0-9A-F]{14}$") # 7 bytes = 14 hex characters, DENNE MÅ Å PASSE TIL KORTENE NTNU BRUKER, CHRISTIAN R. MÅ SJEKKE DETTE VED NY KORT ENDRING
+UID_7_BYTE_HEX_RE = re.compile(r"^[0-9A-F]{14}$")
+#
+# 7 bytes = 14 hex characters, DENNE MÅ Å PASSE TIL KORTENE NTNU BRUKER,
+# CHRISTIAN R. MÅ SJEKKE DETTE VED NY KORT ENDRING
 PIN_CODE_RE = re.compile(r"^\d{4}$")
 
 
@@ -57,7 +60,9 @@ class NfcCard(models.Model):
 
 
 class NfcCardAssignment(models.Model):
-    card = models.ForeignKey(NfcCard, on_delete=models.CASCADE, related_name="assignments")
+    card = models.ForeignKey(
+        NfcCard, on_delete=models.CASCADE, related_name="assignments"
+    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -83,7 +88,9 @@ class NfcCardAssignment(models.Model):
         max_length=4,
         blank=True,
         default="",
-        validators=[RegexValidator(r"^\d{4}$", "PIN code must be exactly 4 digits (0-9)")],
+        validators=[
+            RegexValidator(r"^\d{4}$", "PIN code must be exactly 4 digits (0-9)")
+        ],
     )
 
     revoked_at = models.DateTimeField(null=True, blank=True)
@@ -125,9 +132,15 @@ class NfcCardAssignment(models.Model):
 
     def clean(self):
         if self.user is None and not self.external_holder_name:
-            raise ValidationError("Assignment must have either a user or an external_holder_name")
+            raise ValidationError(
+                "Assignment must have either a user or an external_holder_name"
+            )
 
-        if self.access_start and self.access_end and self.access_end < self.access_start:
+        if (
+            self.access_start
+            and self.access_end
+            and self.access_end < self.access_start
+        ):
             raise ValidationError("access_end must be later than access_start")
 
         if self.revoked_at and self.revoked_at < self.assigned_at:
@@ -253,7 +266,11 @@ class NfcAccessGrant(models.Model):
         if self.granted_to_user is not None and self.granted_to_card is not None:
             raise ValidationError("Grant can target either user or card, not both")
 
-        if self.access_start and self.access_end and self.access_end < self.access_start:
+        if (
+            self.access_start
+            and self.access_end
+            and self.access_end < self.access_start
+        ):
             raise ValidationError("access_end must be later than access_start")
 
         if self.scope == self.Scope.BOOKING and self.booking is None:
@@ -298,7 +315,9 @@ class NfcAccessEvent(models.Model):
         UNKNOWN = "UNKNOWN", "Unknown"
 
     event_type = models.CharField(max_length=30, choices=EventType.choices)
-    source = models.CharField(max_length=20, choices=Source.choices, default=Source.UNKNOWN)
+    source = models.CharField(
+        max_length=20, choices=Source.choices, default=Source.UNKNOWN
+    )
 
     door_identifier = models.CharField(max_length=120, blank=True, default="")
     uid_hex_reported = models.CharField(max_length=14, blank=True, default="")
@@ -346,4 +365,5 @@ class NfcAccessEvent(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return f"NfcAccessEvent(type={self.event_type}, source={self.source}, occurred_at={self.occurred_at.isoformat()})"
+        return f"""NfcAccessEvent(type={self.event_type},
+        source={self.source}, occurred_at={self.occurred_at.isoformat()})"""

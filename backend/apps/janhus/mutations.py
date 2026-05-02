@@ -72,12 +72,20 @@ def _is_indok_user(actor) -> bool:
     return bool(actor and getattr(actor, "is_indok", False))
 
 
-def _ensure_non_indok_external_only(*, actor, is_external_booking: bool, event_type: str, owner_organization) -> None:
+def _ensure_non_indok_external_only(
+    *, actor, is_external_booking: bool, event_type: str, owner_organization
+) -> None:
     if _is_indok_user(actor):
         return
 
-    if owner_organization is not None or not is_external_booking or event_type != JanHusEventType.EXTERNAL:
-        raise GraphQLError("Only Indøk students can create non-external JanHus bookings")
+    if (
+        owner_organization is not None
+        or not is_external_booking
+        or event_type != JanHusEventType.EXTERNAL
+    ):
+        raise GraphQLError(
+            "Only Indøk students can create non-external JanHus bookings"
+        )
 
 
 def _is_non_organization_booking(booking: JanHusBooking) -> bool:
@@ -100,7 +108,9 @@ def _successful_payment_orders_for_booking(booking: JanHusBooking):
 
 
 def _paid_amount_for_booking(booking: JanHusBooking) -> Decimal:
-    paid_amount = _successful_payment_orders_for_booking(booking).aggregate(total_paid=Sum("total_price"))["total_paid"]
+    paid_amount = _successful_payment_orders_for_booking(booking).aggregate(
+        total_paid=Sum("total_price")
+    )["total_paid"]
     return paid_amount or Decimal("0")
 
 
@@ -108,12 +118,16 @@ def _outstanding_payment_amount_for_booking(booking: JanHusBooking) -> Decimal:
     if not _is_non_organization_booking(booking):
         return Decimal("0")
 
-    outstanding_amount = _required_payment_amount_for_non_org_booking(booking) - _paid_amount_for_booking(booking)
+    outstanding_amount = _required_payment_amount_for_non_org_booking(
+        booking
+    ) - _paid_amount_for_booking(booking)
     return max(outstanding_amount, Decimal("0"))
 
 
 def _attach_latest_successful_order(booking: JanHusBooking) -> None:
-    latest_successful_order = _successful_payment_orders_for_booking(booking).order_by("-timestamp").first()
+    latest_successful_order = (
+        _successful_payment_orders_for_booking(booking).order_by("-timestamp").first()
+    )
     if latest_successful_order and booking.vipps_order_id != latest_successful_order.id:
         booking.vipps_order = latest_successful_order
 
@@ -154,22 +168,31 @@ def _build_payment_product_data(booking: JanHusBooking) -> dict:
         "price": outstanding_amount,
     }
 
+
 # MÅ SJEKKES OVER - CHRISTIAN
 def _resolve_janhus_payment_provider_organization():
-    organization = Organization.objects.filter(slug=JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG).first()
+    organization = Organization.objects.filter(
+        slug=JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG
+    ).first()
     if organization:
         return organization
 
-    organization = Organization.objects.filter(name__iexact=JANHUS_PAYMENT_PROVIDER_PRIMARY_NAME).first()
+    organization = Organization.objects.filter(
+        name__iexact=JANHUS_PAYMENT_PROVIDER_PRIMARY_NAME
+    ).first()
     if organization:
         return organization
 
     # TODO: Janus Eiendom is not present in current test fixtures. Replace this fallback when fixtures are updated.
-    organization = Organization.objects.filter(slug=JANHUS_PAYMENT_PROVIDER_FALLBACK_SLUG).first()
+    organization = Organization.objects.filter(
+        slug=JANHUS_PAYMENT_PROVIDER_FALLBACK_SLUG
+    ).first()
     if organization:
         return organization
 
-    return Organization.objects.filter(name__iexact=JANHUS_PAYMENT_PROVIDER_FALLBACK_NAME).first()
+    return Organization.objects.filter(
+        name__iexact=JANHUS_PAYMENT_PROVIDER_FALLBACK_NAME
+    ).first()
 
 
 def _resolve_payment_product_organization(*, organization_id=None):
@@ -199,8 +222,12 @@ def _sync_existing_vipps_product(booking: JanHusBooking) -> None:
     booking.vipps_product.save(update_fields=["name", "description", "price"])
 
 
-def _apply_overlap_rules(*, booking: JanHusBooking, booking_level, actor, settings, exclude_booking_id=None):
-    validate_time_rules(starts_at=booking.starts_at, ends_at=booking.ends_at, settings=settings)
+def _apply_overlap_rules(
+    *, booking: JanHusBooking, booking_level, actor, settings, exclude_booking_id=None
+):
+    validate_time_rules(
+        starts_at=booking.starts_at, ends_at=booking.ends_at, settings=settings
+    )
 
     overlaps = get_overlapping_bookings(
         starts_at=booking.starts_at,
@@ -218,10 +245,16 @@ def _apply_overlap_rules(*, booking: JanHusBooking, booking_level, actor, settin
 
     blocking = overlaps.exclude(status=JanHusBookingStatus.PROVISIONAL)
     if blocking.exists():
-        raise GraphQLError("The selected timeslot overlaps with an existing non-provisional booking")
+        raise GraphQLError(
+            "The selected timeslot overlaps with an existing non-provisional booking"
+        )
 
-    if not can_override_provisionals(booking_level=booking_level, starts_at=booking.starts_at, settings=settings):
-        raise GraphQLError("Your booking level cannot override provisional reservations in this period")
+    if not can_override_provisionals(
+        booking_level=booking_level, starts_at=booking.starts_at, settings=settings
+    ):
+        raise GraphQLError(
+            "Your booking level cannot override provisional reservations in this period"
+        )
 
     displaced = list(overlaps)
     overlaps.update(status=JanHusBookingStatus.PENDING_ADMIN_REVIEW)
@@ -274,7 +307,9 @@ class UpdateJanHusBookingInput(graphene.InputObjectType):
     deposit_status = graphene.String(required=False)
     deposit_amount = graphene.Decimal(required=False)
     guest_list = graphene.String(required=False)
-    guest_list_user_feide_ids = graphene.List(graphene.NonNull(graphene.String), required=False)
+    guest_list_user_feide_ids = graphene.List(
+        graphene.NonNull(graphene.String), required=False
+    )
     door_access_policy = graphene.String(required=False)
     comment = graphene.String(required=False)
     admin_comment = graphene.String(required=False)
@@ -349,15 +384,23 @@ class CreateJanHusBooking(graphene.Mutation):
         actor = _get_actor(info)
         settings = get_or_create_settings()
 
-        is_external_booking = bool(booking_data.get("is_external_booking", False) or not actor)
+        is_external_booking = bool(
+            booking_data.get("is_external_booking", False) or not actor
+        )
         resolved_event_type = booking_data.get(
             "event_type",
-            JanHusEventType.EXTERNAL if is_external_booking else JanHusEventType.INTERNAL,
+            (
+                JanHusEventType.EXTERNAL
+                if is_external_booking
+                else JanHusEventType.INTERNAL
+            ),
         )
 
         owner_organization = None
         if booking_data.get("owner_organization_id"):
-            owner_organization = Organization.objects.filter(id=booking_data.get("owner_organization_id")).first()
+            owner_organization = Organization.objects.filter(
+                id=booking_data.get("owner_organization_id")
+            ).first()
             if not owner_organization:
                 raise GraphQLError("Organization not found")
 
@@ -372,12 +415,19 @@ class CreateJanHusBooking(graphene.Mutation):
         owner_user_id = booking_data.get("owner_user_id")
         if owner_user_id:
             if not _has_manage_booking_permission(actor):
-                raise GraphQLError("Only JanHus booking admins may set owner_user explicitly")
+                raise GraphQLError(
+                    "Only JanHus booking admins may set owner_user explicitly"
+                )
             owner_user = get_user_model().objects.filter(id=owner_user_id).first()
             if not owner_user:
                 raise GraphQLError("Owner user not found")
 
-        if actor and not owner_user and not owner_organization and not is_external_booking:
+        if (
+            actor
+            and not owner_user
+            and not owner_organization
+            and not is_external_booking
+        ):
             owner_user = actor
 
         booking_level = resolve_booking_level(
@@ -411,8 +461,12 @@ class CreateJanHusBooking(graphene.Mutation):
             responsible_phone=booking_data["responsible_phone"],
             event_type=resolved_event_type,
             cleaning_requested=booking_data.get("cleaning_requested", False),
-            deposit_status=booking_data.get("deposit_status", JanHusDepositStatus.REQUIRED),
-            deposit_amount=booking_data.get("deposit_amount", _get_default_deposit_amount(booking_data["area"])),
+            deposit_status=booking_data.get(
+                "deposit_status", JanHusDepositStatus.REQUIRED
+            ),
+            deposit_amount=booking_data.get(
+                "deposit_amount", _get_default_deposit_amount(booking_data["area"])
+            ),
             comment=booking_data.get("comment", ""),
         )
 
@@ -462,9 +516,14 @@ class UpdateJanHusBooking(graphene.Mutation):
         if not is_admin:
             if not is_owner:
                 for field, value in booking_data.items():
-                    if field in ["id", "guest_list", "guest_list_user_feide_ids"] or value is None:
+                    if (
+                        field in ["id", "guest_list", "guest_list_user_feide_ids"]
+                        or value is None
+                    ):
                         continue
-                    raise GraphQLError("You may only update `guest_list` for this booking")
+                    raise GraphQLError(
+                        "You may only update `guest_list` for this booking"
+                    )
 
             owner_restricted_fields = {
                 "starts_at",
@@ -478,14 +537,20 @@ class UpdateJanHusBooking(graphene.Mutation):
             }
             for field in owner_restricted_fields:
                 if field in booking_data and booking_data.get(field) is not None:
-                    raise GraphQLError(f"Only JanHus booking admins may update `{field}`")
+                    raise GraphQLError(
+                        f"Only JanHus booking admins may update `{field}`"
+                    )
 
         if booking_data.get("guest_list_user_feide_ids") is not None:
-            normalized_feide_ids = normalize_guest_list_user_feide_ids(booking_data.get("guest_list_user_feide_ids"))
+            normalized_feide_ids = normalize_guest_list_user_feide_ids(
+                booking_data.get("guest_list_user_feide_ids")
+            )
             missing_feide_ids = find_missing_guest_feide_ids(normalized_feide_ids)
             if missing_feide_ids:
                 raise GraphQLError("One or more guests could not be found by Feide ID")
-            booking.guest_list = serialize_guest_list_user_feide_ids(normalized_feide_ids)
+            booking.guest_list = serialize_guest_list_user_feide_ids(
+                normalized_feide_ids
+            )
         elif booking_data.get("guest_list") is not None:
             booking.guest_list = booking_data.get("guest_list")
 
@@ -514,7 +579,9 @@ class UpdateJanHusBooking(graphene.Mutation):
             booking.status = booking_data.get("status")
 
         if booking_data.get("deposit_status") is not None:
-            valid_deposit_statuses = {choice[0] for choice in JanHusDepositStatus.choices}
+            valid_deposit_statuses = {
+                choice[0] for choice in JanHusDepositStatus.choices
+            }
             if booking_data.get("deposit_status") not in valid_deposit_statuses:
                 raise GraphQLError("Invalid deposit status")
             booking.deposit_status = booking_data.get("deposit_status")
@@ -583,7 +650,9 @@ class ReviewJanHusBooking(graphene.Mutation):
             booking.admin_comment = review_data.get("admin_comment")
 
         if review_data.get("deposit_status"):
-            valid_deposit_statuses = {choice[0] for choice in JanHusDepositStatus.choices}
+            valid_deposit_statuses = {
+                choice[0] for choice in JanHusDepositStatus.choices
+            }
             if review_data.get("deposit_status") not in valid_deposit_statuses:
                 raise GraphQLError("Invalid deposit status")
             booking.deposit_status = review_data.get("deposit_status")
@@ -617,7 +686,9 @@ class CreateJanHusBookingRequest(graphene.Mutation):
 
         owner_organization = None
         if request_data.get("owner_organization_id"):
-            owner_organization = Organization.objects.filter(id=request_data.get("owner_organization_id")).first()
+            owner_organization = Organization.objects.filter(
+                id=request_data.get("owner_organization_id")
+            ).first()
             if not owner_organization:
                 raise GraphQLError("Organization not found")
 
@@ -628,12 +699,19 @@ class CreateJanHusBookingRequest(graphene.Mutation):
 
         _ensure_non_indok_external_only(
             actor=actor,
-            is_external_booking=(resolved_event_type == JanHusEventType.EXTERNAL and owner_organization is None),
+            is_external_booking=(
+                resolved_event_type == JanHusEventType.EXTERNAL
+                and owner_organization is None
+            ),
             event_type=resolved_event_type,
             owner_organization=owner_organization,
         )
 
-        validate_time_rules(starts_at=request_data["starts_at"], ends_at=request_data["ends_at"], settings=settings)
+        validate_time_rules(
+            starts_at=request_data["starts_at"],
+            ends_at=request_data["ends_at"],
+            settings=settings,
+        )
 
         actor_phone = ""
         if actor:
@@ -645,8 +723,12 @@ class CreateJanHusBookingRequest(graphene.Mutation):
             area=request_data["area"],
             requester_user=actor,
             owner_organization=owner_organization,
-            requester_name=request_data.get("requester_name", actor.get_full_name() if actor else ""),
-            requester_email=request_data.get("requester_email", actor.email if actor else ""),
+            requester_name=request_data.get(
+                "requester_name", actor.get_full_name() if actor else ""
+            ),
+            requester_email=request_data.get(
+                "requester_email", actor.email if actor else ""
+            ),
             requester_phone=request_data.get("requester_phone", actor_phone),
             responsible_name=request_data["responsible_name"],
             responsible_email=request_data["responsible_email"],
@@ -680,7 +762,9 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
         except JanHusBookingRequest.DoesNotExist:
             raise GraphQLError("Booking request not found")
 
-        valid_statuses = {choice[0] for choice in JanHusBookingRequest.RequestStatus.choices}
+        valid_statuses = {
+            choice[0] for choice in JanHusBookingRequest.RequestStatus.choices
+        }
         status = review_data["status"]
         if status not in valid_statuses:
             raise GraphQLError("Invalid request status")
@@ -690,7 +774,9 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
             booking_request.admin_comment = review_data.get("admin_comment")
 
         created_booking = None
-        if status == JanHusBookingRequest.RequestStatus.APPROVED and review_data.get("convert_to_booking", False):
+        if status == JanHusBookingRequest.RequestStatus.APPROVED and review_data.get(
+            "convert_to_booking", False
+        ):
             if booking_request.converted_booking_id:
                 raise GraphQLError("Booking request has already been converted")
 
@@ -717,7 +803,11 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 starts_at=booking_request.starts_at,
                 ends_at=booking_request.ends_at,
                 area=booking_request.area,
-                owner_user=booking_request.requester_user if not booking_request.owner_organization else None,
+                owner_user=(
+                    booking_request.requester_user
+                    if not booking_request.owner_organization
+                    else None
+                ),
                 owner_organization=booking_request.owner_organization,
                 booking_level=booking_level,
                 created_by_user=actor,
@@ -750,11 +840,15 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 send_pending_review_notification([*displaced, created_booking])
 
             booking_request.delete()
-            return ReviewJanHusBookingRequest(ok=True, booking_request=None, booking=created_booking)
+            return ReviewJanHusBookingRequest(
+                ok=True, booking_request=None, booking=created_booking
+            )
 
         booking_request.save()
 
-        return ReviewJanHusBookingRequest(ok=True, booking_request=booking_request, booking=created_booking)
+        return ReviewJanHusBookingRequest(
+            ok=True, booking_request=booking_request, booking=created_booking
+        )
 
 
 class UpdateJanHusBookingSettings(graphene.Mutation):
@@ -769,7 +863,9 @@ class UpdateJanHusBookingSettings(graphene.Mutation):
         if not _has_manage_settings_permission(actor):
             raise GraphQLError("JanHus settings admin permission required")
 
-        booking_settings = JanHusBookingSettings.objects.first() or JanHusBookingSettings()
+        booking_settings = (
+            JanHusBookingSettings.objects.first() or JanHusBookingSettings()
+        )
 
         for field, value in settings_data.items():
             setattr(booking_settings, field, value)
@@ -792,16 +888,25 @@ class UpdateJanHusAreaConfiguration(graphene.Mutation):
         if not _has_manage_settings_permission(actor):
             raise GraphQLError("JanHus settings admin permission required")
 
-        area_configuration, _ = JanHusAreaConfiguration.objects.get_or_create(area=area_data["area"])
+        area_configuration, _ = JanHusAreaConfiguration.objects.get_or_create(
+            area=area_data["area"]
+        )
 
-        for field in ["internal_price_per_hour", "external_price_per_hour", "cleaning_fee", "default_deposit_amount"]:
+        for field in [
+            "internal_price_per_hour",
+            "external_price_per_hour",
+            "cleaning_fee",
+            "default_deposit_amount",
+        ]:
             if area_data.get(field) is not None:
                 setattr(area_configuration, field, area_data.get(field))
 
         area_configuration.full_clean()
         area_configuration.save()
 
-        return UpdateJanHusAreaConfiguration(ok=True, area_configuration=area_configuration)
+        return UpdateJanHusAreaConfiguration(
+            ok=True, area_configuration=area_configuration
+        )
 
 
 class CreateJanHusPaymentProduct(graphene.Mutation):
@@ -838,9 +943,13 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
             booking.vipps_product.description = product_data["description"]
             booking.vipps_product.price = product_data["price"]
             booking.vipps_product.save(update_fields=["name", "description", "price"])
-            return CreateJanHusPaymentProduct(ok=True, booking=booking, product_id=booking.vipps_product_id)
+            return CreateJanHusPaymentProduct(
+                ok=True, booking=booking, product_id=booking.vipps_product_id
+            )
 
-        organization = _resolve_payment_product_organization(organization_id=organization_id)
+        organization = _resolve_payment_product_organization(
+            organization_id=organization_id
+        )
 
         product = Product.objects.create(
             name=product_data["name"],
@@ -855,7 +964,9 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
         booking.vipps_product = product
         booking.save(update_fields=["vipps_product", "updated_at"])
 
-        return CreateJanHusPaymentProduct(ok=True, booking=booking, product_id=product.id)
+        return CreateJanHusPaymentProduct(
+            ok=True, booking=booking, product_id=product.id
+        )
 
 
 class DeleteJanHusBooking(graphene.Mutation):

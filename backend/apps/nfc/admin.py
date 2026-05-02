@@ -42,6 +42,12 @@ class NfcAccessGrantAdmin(admin.ModelAdmin):
 
 @admin.register(NfcAccessEvent)
 class NfcAccessEventAdmin(admin.ModelAdmin):
-    list_display = ("event_type", "source", "door_identifier", "uid_hex_reported", "occurred_at")
+    list_display = (
+        "event_type",
+        "source",
+        "door_identifier",
+        "uid_hex_reported",
+        "occurred_at",
+    )
     search_fields = ("door_identifier", "uid_hex_reported", "resolved_user__username")
     list_filter = ("event_type", "source")

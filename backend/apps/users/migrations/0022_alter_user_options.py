@@ -14,8 +14,14 @@ class Migration(migrations.Migration):
             name="user",
             options={
                 "permissions": [
-                    ("view_sensitive_info", "Can view sensitive information about a user"),
-                    ("manage_user_profiles", "Can search and edit other users' profiles"),
+                    (
+                        "view_sensitive_info",
+                        "Can view sensitive information about a user",
+                    ),
+                    (
+                        "manage_user_profiles",
+                        "Can search and edit other users' profiles",
+                    ),
                     ("manage_user_nfc", "Can edit NFC UID/PIN for users"),
                 ]
             },

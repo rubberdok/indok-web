@@ -6,12 +6,23 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0020_auto_20220128_1632'),
+        ("users", "0020_auto_20220128_1632"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='user',
-            options={'permissions': [('view_sensitive_info', 'Can view sensitive information about a user'), ('manage_user_profiles', "Can search and edit other users' profiles")]},
+            name="user",
+            options={
+                "permissions": [
+                    (
+                        "view_sensitive_info",
+                        "Can view sensitive information about a user",
+                    ),
+                    (
+                        "manage_user_profiles",
+                        "Can search and edit other users' profiles",
+                    ),
+                ]
+            },
         ),
     ]

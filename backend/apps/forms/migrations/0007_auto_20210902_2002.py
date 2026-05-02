@@ -11,6 +11,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddConstraint(
             model_name="answer",
-            constraint=models.UniqueConstraint(fields=("response", "question"), name="unique_answer_per_response"),
+            constraint=models.UniqueConstraint(
+                fields=("response", "question"), name="unique_answer_per_response"
+            ),
         ),
     ]

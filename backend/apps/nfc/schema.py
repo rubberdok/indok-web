@@ -10,7 +10,12 @@ from .mutations import (
     UpsertNfcCard,
 )
 from .resolvers import NfcResolvers
-from .types import NfcAccessEventType, NfcAccessGrantType, NfcCardAssignmentType, NfcCardType
+from .types import (
+    NfcAccessEventType,
+    NfcAccessGrantType,
+    NfcCardAssignmentType,
+    NfcCardType,
+)
 
 
 class NfcMutations(graphene.ObjectType):
@@ -28,10 +33,14 @@ class NfcQueries(graphene.ObjectType, NfcResolvers):
     nfc_cards = graphene.List(NonNull(NfcCardType))
     nfc_card = graphene.Field(NfcCardType, uid_hex=graphene.String(required=True))
 
-    nfc_card_assignments = graphene.List(NonNull(NfcCardAssignmentType), active_only=graphene.Boolean(required=False))
+    nfc_card_assignments = graphene.List(
+        NonNull(NfcCardAssignmentType), active_only=graphene.Boolean(required=False)
+    )
     my_nfc_card_assignment = graphene.Field(NfcCardAssignmentType)
 
-    nfc_access_grants = graphene.List(NonNull(NfcAccessGrantType), active_only=graphene.Boolean(required=False))
+    nfc_access_grants = graphene.List(
+        NonNull(NfcAccessGrantType), active_only=graphene.Boolean(required=False)
+    )
 
     nfc_access_events = graphene.List(
         NonNull(NfcAccessEventType),

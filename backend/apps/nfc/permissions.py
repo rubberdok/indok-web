@@ -15,4 +15,6 @@ def can_manage_booking_access(user) -> bool:
     if user.is_superuser:
         return True
 
-    return Membership.objects.filter(user=user, organization__slug=JANUS_EIENDOM_FORENINGEN_SLUG).exists()
+    return Membership.objects.filter(
+        user=user, organization__slug=JANUS_EIENDOM_FORENINGEN_SLUG
+    ).exists()

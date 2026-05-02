@@ -53,7 +53,9 @@ class UserType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_nfc_uid_hex(parent, info):
-        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(
+            info.context.user
+        ):
             return None
 
         from apps.nfc.models import NfcCardAssignment
@@ -68,21 +70,29 @@ class UserType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_nfc_pin_code(parent, info):
-        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(
+            info.context.user
+        ):
             return None
 
         from apps.nfc.models import NfcCardAssignment
 
-        active_assignment = NfcCardAssignment.objects.filter(user=parent, revoked_at__isnull=True).first()
+        active_assignment = NfcCardAssignment.objects.filter(
+            user=parent, revoked_at__isnull=True
+        ).first()
         return active_assignment.pin_code if active_assignment else None
 
     @staticmethod
     @login_required
     def resolve_nfc_permanent_access(parent, info):
-        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(
+            info.context.user
+        ):
             return None
 
         from apps.nfc.models import NfcCardAssignment
 
-        active_assignment = NfcCardAssignment.objects.filter(user=parent, revoked_at__isnull=True).first()
+        active_assignment = NfcCardAssignment.objects.filter(
+            user=parent, revoked_at__isnull=True
+        ).first()
         return active_assignment.permanent_access if active_assignment else False

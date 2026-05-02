@@ -54,8 +54,9 @@ const H6: Components["h2"] = ({ children, id }) => {
   );
 };
 
-const Image: Components["img"] = (props) => {
-  return <img {...props} style={{ objectFit: "contain" }} width="100%" />;
+const Image: Components["img"] = ({ alt = "", ...props }) => {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img {...props} alt={alt} style={{ objectFit: "contain" }} width="100%" />;
 };
 
 const UnorderedList: Components["ul"] = ({ children }) => {

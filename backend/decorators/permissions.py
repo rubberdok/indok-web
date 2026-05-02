@@ -1,7 +1,17 @@
 from __future__ import annotations
 
 from functools import wraps
-from typing import TYPE_CHECKING, Callable, Literal, Optional, Type, TypeVar, Union, cast, overload
+from typing import (
+    TYPE_CHECKING,
+    Callable,
+    Literal,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 
 from django.apps import apps
 from django.db import models
@@ -90,7 +100,9 @@ def permission_required(
     if isinstance(perms, str):
         perms = [perms]
 
-    def decorator(resolver: ResolverSignature[P, R]) -> Callable[P, Union[Optional[R], R]]:
+    def decorator(
+        resolver: ResolverSignature[P, R],
+    ) -> Callable[P, Union[Optional[R], R]]:
         @wraps(resolver)
         @context
         def wrapper(context: Context, *args: P.args, **kwargs: P.kwargs) -> Optional[R]:
@@ -102,10 +114,14 @@ def permission_required(
                 model, lookups = lookup_variables
 
                 if isinstance(model, str):
-                    model = cast(Type[models.Model], apps.get_model(model, require_ready=True))
+                    model = cast(
+                        Type[models.Model], apps.get_model(model, require_ready=True)
+                    )
 
                 elif not isinstance(model, (Model, ModelBase)):
-                    raise TypeError(f"{model} should be of the type str, Model, or ModelBase, got {type(model)}")
+                    raise TypeError(
+                        f"{model} should be of the type str, Model, or ModelBase, got {type(model)}"
+                    )
 
                 lookup_dict = {}
 
@@ -116,7 +132,9 @@ def permission_required(
 
                 for lookup, resolver_arg in zip(lookups[::2], lookups[1::2]):
                     if resolver_arg not in kwargs:
-                        raise KeyError(f"The argument {resolver_arg} was not passed in the resolver function.")
+                        raise KeyError(
+                            f"The argument {resolver_arg} was not passed in the resolver function."
+                        )
                     lookup_dict[lookup] = kwargs[resolver_arg]
 
                 obj = model.objects.get(**lookup_dict)

@@ -1,4 +1,9 @@
-from apps.cabins.models import Booking as BookingModel, Cabin, BookingResponsible, BookingSemester
+from apps.cabins.models import (
+    Booking as BookingModel,
+    Cabin,
+    BookingResponsible,
+    BookingSemester,
+)
 from decorators import permission_required
 from django.db.models import Q
 

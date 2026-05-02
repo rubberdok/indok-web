@@ -57,7 +57,9 @@ class AdminUserNfcInput(graphene.InputObjectType):
     permanent_access = graphene.Boolean(required=False)
 
 
-def _apply_user_updates(target_user: "models.User", user_data: dict, allow_nfc_pin_code_update: bool = True) -> None:
+def _apply_user_updates(
+    target_user: "models.User", user_data: dict, allow_nfc_pin_code_update: bool = True
+) -> None:
     from apps.nfc.models import NfcCardAssignment
 
     new_graduation_year = user_data.get("graduation_year")
@@ -67,7 +69,9 @@ def _apply_user_updates(target_user: "models.User", user_data: dict, allow_nfc_p
         if not allow_nfc_pin_code_update:
             raise ValueError("PIN-kode kan ikke oppdateres i dette kallet")
 
-        active_assignment = NfcCardAssignment.objects.filter(user=target_user, revoked_at__isnull=True).first()
+        active_assignment = NfcCardAssignment.objects.filter(
+            user=target_user, revoked_at__isnull=True
+        ).first()
         if active_assignment is None:
             raise ValueError("Kan ikke oppdatere PIN-kode uten aktivt NFC-kort")
 
@@ -92,7 +96,9 @@ class UpdateUser(graphene.Mutation):
     user = graphene.Field(UserType)
 
     @login_required
-    def mutate(self, info: ResolveInfo, user_data: Optional[dict] = None) -> Optional["UpdateUser"]:
+    def mutate(
+        self, info: ResolveInfo, user_data: Optional[dict] = None
+    ) -> Optional["UpdateUser"]:
         if user_data is None:
             return None
 
@@ -119,7 +125,9 @@ class AdminUpdateUser(graphene.Mutation):
         user_data = AdminUserInput(required=True)
 
     @login_required
-    def mutate(self, info: ResolveInfo, user_id: str, user_data: dict) -> "AdminUpdateUser":
+    def mutate(
+        self, info: ResolveInfo, user_id: str, user_data: dict
+    ) -> "AdminUpdateUser":
         acting_user: "models.User" = info.context.user
 
         if not can_manage_user_profiles(acting_user):
@@ -148,11 +156,15 @@ class AdminUpdateUserNfc(graphene.Mutation):
         nfc_data = AdminUserNfcInput(required=True)
 
     @login_required
-    def mutate(self, info: ResolveInfo, user_id: str, nfc_data: dict) -> "AdminUpdateUserNfc":
+    def mutate(
+        self, info: ResolveInfo, user_id: str, nfc_data: dict
+    ) -> "AdminUpdateUserNfc":
         acting_user: "models.User" = info.context.user
 
         if not can_manage_user_nfc(acting_user):
-            raise GraphQLError("Du har ikke tilgang til å redigere NFC-data for brukere")
+            raise GraphQLError(
+                "Du har ikke tilgang til å redigere NFC-data for brukere"
+            )
 
         target_user = get_user_model().objects.filter(pk=user_id).first()
         if target_user is None:
@@ -165,7 +177,9 @@ class AdminUpdateUserNfc(graphene.Mutation):
         permanent_access = nfc_data.get("permanent_access")
 
         if uid_hex is None and pin_code is None and permanent_access is None:
-            raise GraphQLError("Du må sende inn UID, PIN-kode og/eller permanent tilgang")
+            raise GraphQLError(
+                "Du må sende inn UID, PIN-kode og/eller permanent tilgang"
+            )
 
         try:
             with transaction.atomic():
@@ -183,8 +197,13 @@ class AdminUpdateUserNfc(graphene.Mutation):
 
                     card, _ = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
 
-                    card_active_assignment = NfcCardAssignment.objects.filter(card=card, revoked_at__isnull=True).first()
-                    if card_active_assignment and card_active_assignment.user_id != target_user.id:
+                    card_active_assignment = NfcCardAssignment.objects.filter(
+                        card=card, revoked_at__isnull=True
+                    ).first()
+                    if (
+                        card_active_assignment
+                        and card_active_assignment.user_id != target_user.id
+                    ):
                         card_active_assignment.revoke(
                             revoked_by=acting_user,
                             reason="Auto-revoked due to reassignment",
@@ -207,10 +226,14 @@ class AdminUpdateUserNfc(graphene.Mutation):
 
                 if pin_code is not None:
                     if assignment is None:
-                        assignment = NfcCardAssignment.objects.filter(user=target_user, revoked_at__isnull=True).first()
+                        assignment = NfcCardAssignment.objects.filter(
+                            user=target_user, revoked_at__isnull=True
+                        ).first()
 
                     if assignment is None:
-                        raise GraphQLError("Kan ikke oppdatere PIN-kode uten aktivt NFC-kort")
+                        raise GraphQLError(
+                            "Kan ikke oppdatere PIN-kode uten aktivt NFC-kort"
+                        )
 
                     if pin_code != "" and not re.match(r"^\d{4}$", pin_code):
                         raise GraphQLError("PIN-kode må være nøyaktig 4 sifre")
@@ -221,10 +244,14 @@ class AdminUpdateUserNfc(graphene.Mutation):
 
                 if permanent_access is not None:
                     if assignment is None:
-                        assignment = NfcCardAssignment.objects.filter(user=target_user, revoked_at__isnull=True).first()
+                        assignment = NfcCardAssignment.objects.filter(
+                            user=target_user, revoked_at__isnull=True
+                        ).first()
 
                     if assignment is None:
-                        raise GraphQLError("Kan ikke oppdatere permanent tilgang uten aktivt NFC-kort")
+                        raise GraphQLError(
+                            "Kan ikke oppdatere permanent tilgang uten aktivt NFC-kort"
+                        )
 
                     assignment.permanent_access = permanent_access
                     assignment.full_clean()

@@ -23,7 +23,9 @@ class FormQueries(
     form = graphene.Field(FormType, form_id=graphene.ID())
     forms = graphene.List(NonNull(FormType))
 
-    response = graphene.Field(ResponseType, form_id=graphene.ID(required=True), response_id=graphene.ID())
+    response = graphene.Field(
+        ResponseType, form_id=graphene.ID(required=True), response_id=graphene.ID()
+    )
     responses = graphene.List(NonNull(ResponseType), form_id=graphene.ID(required=True))
 
 

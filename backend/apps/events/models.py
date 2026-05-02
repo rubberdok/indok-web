@@ -29,7 +29,9 @@ class Event(models.Model, Sellable):
     description = models.TextField()
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="events"
+    )
 
     # ------------------ Fully optional fields ------------------
     publisher = models.ForeignKey(
@@ -39,16 +41,22 @@ class Event(models.Model, Sellable):
     )
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, blank=True, null=True
+    )
     image = models.URLField(blank=True, null=True)
     short_description = models.CharField(max_length=100, blank=True, null=True)
     has_extra_information = models.BooleanField(default=False)
     contact_email = models.EmailField(blank=True, default="")
     GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
-    allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default=[1, 2, 3, 4, 5])
+    allowed_grade_years = MultiSelectField(
+        choices=GRADE_CHOICES, default=[1, 2, 3, 4, 5]
+    )
 
     # --------------- Required fields given is_attendable == True ---------------
-    signup_open_date = models.DateTimeField(blank=True, null=True)  # When the signup should become available
+    signup_open_date = models.DateTimeField(
+        blank=True, null=True
+    )  # When the signup should become available
     available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
         blank=True,
         null=True,  # TODO: Make this field conditionally required when is_attendable is True!
