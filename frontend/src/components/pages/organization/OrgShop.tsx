@@ -27,7 +27,7 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
       offset: page * limit, // The starting index (e.g., 0 for the first set of results)
     },
   });
-  if (error) return <p>Error</p>;
+  if (error) return <p>Error, med melding: &quot;{error.message}&quot;</p>;
 
   if (organization.name.toLowerCase() !== "janus linjeforening") {
     return (

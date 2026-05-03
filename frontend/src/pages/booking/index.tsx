@@ -34,7 +34,7 @@ const BookingHubPage: NextPageWithLayout = () => {
                   <Typography variant="h5" gutterBottom>
                     Hyttebooking
                   </Typography>
-                  <Typography color="text.secondary">Gå til eksisterende bookingflyt for Oksen og Bjørnen.</Typography>
+                  <Typography color="text.secondary">Gå til informasjon og booking av Oksen og Bjørnen.</Typography>
                 </CardContent>
                 <CardActions>
                   <Button component={NextLinkComposed} to={{ pathname: "/cabins" }} endIcon={<ArrowForward />}>
@@ -49,14 +49,11 @@ const BookingHubPage: NextPageWithLayout = () => {
                   <Typography variant="h5" gutterBottom>
                     JanHus booking
                   </Typography>
-                  <Typography color="text.secondary">
-                    Book 1. etasje, 2. etasje eller hele huset med nye regler for nivåer, provisjonell booking og
-                    admin-håndtering.
-                  </Typography>
+                  <Typography color="text.secondary">Gå til informasjon og booking av JanHus.</Typography>
                 </CardContent>
                 <CardActions>
                   <Button component={NextLinkComposed} to={{ pathname: "/janhus" }} endIcon={<ArrowForward />}>
-                    Gå til JanHus
+                    Gå til JanHus booking
                   </Button>
                 </CardActions>
               </Card>
@@ -68,7 +65,7 @@ const BookingHubPage: NextPageWithLayout = () => {
                     Mine bookinger
                   </Typography>
                   <Typography color="text.secondary">
-                    Se egne JanHus- og hyttebookinger samlet, og betal eventuelle JanHus Vipps-forespørsler.
+                    Se dine egne JanHus- og hyttebookinger, og betal eventuelle Vipps-forespørsler.
                   </Typography>
                 </CardContent>
                 <CardActions>

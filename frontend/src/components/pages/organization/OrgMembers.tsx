@@ -230,7 +230,8 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             <TableRow>
               <TableCell>Navn</TableCell>
               <TableCell>Gruppe</TableCell>
-              <PermissionRequired permission="organizations.change_organization">
+              <PermissionRequired permission="organizations.change_organization"> 
+                {/* Denne må endres, er feil tillatelse, skal være for de med HR, må sjekkes, CHRISTIAN R */}
                 <TableCell>Rediger</TableCell>
               </PermissionRequired>
             </TableRow>
