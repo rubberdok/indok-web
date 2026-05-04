@@ -66,6 +66,8 @@
     door_access_policy: BOOKER_ONLY
     vipps_product: null
     vipps_order: null
+    created_at: 2026-05-20 10:00:00+00:00
+    updated_at: 2026-05-20 10:00:00+00:00
 
 # OPEN_FOR_INDOK (forenings booking)
 - model: janhus.janhusbooking
@@ -96,6 +98,8 @@
     door_access_policy: ALL_PARTICIPANTS
     vipps_product: null
     vipps_order: null
+    created_at: 2026-05-21 10:00:00+00:00
+    updated_at: 2026-05-21 10:00:00+00:00
 
 # PRIVATE (personlig provisjonert/forbeholdt booking)
 - model: janhus.janhusbooking
@@ -126,6 +130,8 @@
     door_access_policy: ALL_PARTICIPANTS
     vipps_product: null
     vipps_order: null
+    created_at: 2026-05-22 10:00:00+00:00
+    updated_at: 2026-05-22 10:00:00+00:00
 
 # EXTERNAL (ekstern venter admin kontroll)
 - model: janhus.janhusbooking
@@ -156,3 +162,5 @@
     door_access_policy: BOOKER_ONLY
     vipps_product: null
     vipps_order: null
+    created_at: 2026-05-23 10:00:00+00:00
+    updated_at: 2026-05-23 10:00:00+00:00
