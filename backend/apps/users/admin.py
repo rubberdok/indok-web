@@ -42,6 +42,14 @@ class UserAdminForm(forms.ModelForm):
         label="Kan administrere hyttebooking innstillinger",
         help_text="cabins.change_bookingsemester",
     )
+    can_archive_documents = forms.BooleanField(
+        required=False,
+        label="Kan arkivere dokumenter",
+        help_text=(
+            "archive.add_archivedocument + archive.change_archivedocument + "
+            "archive.delete_archivedocument + archive.view_archivedocument"
+        ),
+    )
     is_indok_norwegian = forms.BooleanField(
         required=False,
         label="Er Indøk student",
@@ -161,6 +169,28 @@ class UserAdminForm(forms.ModelForm):
         else:
             self.fields["can_manage_cabins_settings"].initial = False
 
+        archive_permissions = list(
+            Permission.objects.filter(
+                content_type__app_label="archive",
+                codename__in=[
+                    "add_archivedocument",
+                    "change_archivedocument",
+                    "delete_archivedocument",
+                    "view_archivedocument",
+                ],
+            )
+        )
+        self._archive_permissions = archive_permissions
+
+        if self.instance and self.instance.pk and archive_permissions:
+            archive_permission_ids = [permission.pk for permission in archive_permissions]
+            self.fields["can_archive_documents"].initial = (
+                self.instance.user_permissions.filter(pk__in=archive_permission_ids).count()
+                == len(archive_permissions)
+            )
+        else:
+            self.fields["can_archive_documents"].initial = False
+
         is_indok_norwegian = (
             self.instance.is_indok if self.instance and self.instance.pk else False
         )
@@ -175,6 +205,18 @@ class UserAdminForm(forms.ModelForm):
             self.save_m2m()
 
         return instance
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Hvis en bruker har "is_superuser" eller "can_archive_documents",
+        # bør de også ha "is_staff" for å kunne logge inn på admin, dette fikser dette.
+        if cleaned_data.get("is_superuser") or cleaned_data.get(
+            "can_archive_documents"
+        ):
+            cleaned_data["is_staff"] = True
+
+        return cleaned_data
 
 
 @admin.register(User)
@@ -208,7 +250,7 @@ class UserAdmin(admin.ModelAdmin):
                     ("can_manage_janhus_booking", "can_manage_janhus_settings"),
                     ("can_manage_cabins_booking", "can_manage_cabins_settings"),
                     ("can_view_sensitive_info", "can_manage_user_profiles"),
-                    "can_edit_nfc_cards",
+                    ("can_edit_nfc_cards", "can_archive_documents"),
                     "groups",
                     "user_permissions",
                 ),
@@ -347,4 +389,22 @@ class UserAdmin(admin.ModelAdmin):
             user=user,
             should_have=should_have_direct_perm,
             permission=manage_cabins_settings,
+        )
+
+        archive_permissions = list(
+            Permission.objects.filter(
+                content_type__app_label="archive",
+                codename__in=[
+                    "add_archivedocument",
+                    "change_archivedocument",
+                    "delete_archivedocument",
+                    "view_archivedocument",
+                ],
+            )
+        )
+        should_have_direct_perm = form.cleaned_data.get("can_archive_documents", False)
+        self._sync_multiple_direct_permissions(
+            user=user,
+            should_have=should_have_direct_perm,
+            permissions=archive_permissions,
         )
