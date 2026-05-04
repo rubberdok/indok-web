@@ -1,0 +1,173 @@
+- model: nfc.nfccard
+  pk: 1
+  fields:
+    uid_hex: 04A1B2C3D4E5F6
+    label: "Eva sitt kort"
+    notes: "Primærkort for testbruker"
+    is_enabled: true
+
+- model: nfc.nfccard
+  pk: 2
+  fields:
+    uid_hex: 04A1B2C3D4E5F7
+    label: "Gjestekort A"
+    notes: "Midlertidig gjestekort"
+    is_enabled: true
+
+- model: nfc.nfccard
+  pk: 3
+  fields:
+    uid_hex: 04A1B2C3D4E5F8
+    label: "Asbjørn sitt kort"
+    notes: "Reservekort"
+    is_enabled: true
+
+- model: nfc.nfccardassignment
+  pk: 1
+  fields:
+    card: 1
+    user: 3
+    external_holder_name: ""
+    assigned_by: 4
+    access_start: 2026-05-01 08:00:00+00:00
+    access_end: null
+    permanent_access: true
+    pin_code: "1234"
+    revoked_at: null
+    revoked_by: null
+    revocation_reason: ""
+    metadata:
+      source: "fixtures"
+      role: "student"
+
+- model: nfc.nfccardassignment
+  pk: 2
+  fields:
+    card: 2
+    user: null
+    external_holder_name: "Bedpres Gjest"
+    assigned_by: 4
+    access_start: 2026-04-20 10:00:00+00:00
+    access_end: 2026-04-22 16:00:00+00:00
+    permanent_access: false
+    pin_code: ""
+    revoked_at: 2026-04-22 17:00:00+00:00
+    revoked_by: 4
+    revocation_reason: "Besøk avsluttet"
+    metadata:
+      source: "fixtures"
+      purpose: "guest-access"
+
+- model: nfc.nfccardassignment
+  pk: 3
+  fields:
+    card: 3
+    user: 2
+    external_holder_name: ""
+    assigned_by: 4
+    access_start: 2026-05-03 09:00:00+00:00
+    access_end: 2026-06-03 09:00:00+00:00
+    permanent_access: false
+    pin_code: "5678"
+    revoked_at: null
+    revoked_by: null
+    revocation_reason: ""
+    metadata:
+      source: "fixtures"
+      role: "member"
+
+- model: nfc.nfcaccessgrant
+  pk: 1
+  fields:
+    scope: MANUAL
+    participant_policy: BOOKER_ONLY
+    booking: null
+    granted_to_user: 3
+    granted_to_card: null
+    granted_by: 4
+    access_start: 2026-05-01 08:00:00+00:00
+    access_end: 2026-07-01 08:00:00+00:00
+    permanent_access: false
+    revoked_at: null
+    revoked_by: null
+    notes: "Manuell tilgang til hoveddør"
+
+- model: nfc.nfcaccessgrant
+  pk: 2
+  fields:
+    scope: MANUAL
+    participant_policy: ALL_PARTICIPANTS
+    booking: null
+    granted_to_user: null
+    granted_to_card: 1
+    granted_by: 4
+    access_start: null
+    access_end: null
+    permanent_access: true
+    revoked_at: null
+    revoked_by: null
+    notes: "Permanent tilgang knyttet til kort"
+
+- model: nfc.nfcaccessgrant
+  pk: 3
+  fields:
+    scope: MANUAL
+    participant_policy: BOOKER_ONLY
+    booking: null
+    granted_to_user: 2
+    granted_to_card: null
+    granted_by: 4
+    access_start: 2026-04-15 08:00:00+00:00
+    access_end: 2026-04-30 20:00:00+00:00
+    permanent_access: false
+    revoked_at: 2026-04-28 12:00:00+00:00
+    revoked_by: 4
+    notes: "Tilgang trukket tilbake før slutt"
+
+- model: nfc.nfcaccessevent
+  pk: 1
+  fields:
+    event_type: DOOR_OPENED
+    source: NFC_READER
+    door_identifier: janus-main-door
+    uid_hex_reported: 04A1B2C3D4E5F6
+    card: 1
+    card_assignment: 1
+    resolved_user: 3
+    occurred_at: 2026-05-04 08:12:00+00:00
+    notes: "Dør åpnet med aktivt studentkort"
+    raw_payload:
+      reader_id: "reader-main-1"
+      result: "ok"
+
+- model: nfc.nfcaccessevent
+  pk: 2
+  fields:
+    event_type: ACCESS_DENIED
+    source: NFC_READER
+    door_identifier: janus-main-door
+    uid_hex_reported: 04FFFFFFFFFFFF
+    card: null
+    card_assignment: null
+    resolved_user: null
+    occurred_at: 2026-05-04 08:20:00+00:00
+    notes: "Ukjent kort"
+    raw_payload:
+      reader_id: "reader-main-1"
+      reason: "unknown_uid"
+
+- model: nfc.nfcaccessevent
+  pk: 3
+  fields:
+    event_type: ACCESS_GRANTED
+    source: MANUAL_KEY
+    door_identifier: janus-main-door
+    uid_hex_reported: ""
+    card: null
+    card_assignment: null
+    resolved_user: 2
+    occurred_at: 2026-05-04 09:05:00+00:00
+    notes: "Manuell åpning registrert"
+    raw_payload:
+      actor: "physical_key"
+      method: "manual_override"

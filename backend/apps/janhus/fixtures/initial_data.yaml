@@ -1,0 +1,158 @@
+- model: janhus.janhusareaconfiguration
+  pk: 1
+  fields:
+    area: FIRST_FLOOR
+    internal_price_per_hour: 0.00
+    external_price_per_hour: 100.00
+    cleaning_fee: 600.00
+    default_deposit_amount: 1000.00
+
+- model: janhus.janhusareaconfiguration
+  pk: 2
+  fields:
+    area: SECOND_FLOOR
+    internal_price_per_hour: 0.00
+    external_price_per_hour: 100.00
+    cleaning_fee: 500.00
+    default_deposit_amount: 750.00
+
+- model: janhus.janhusareaconfiguration
+  pk: 3
+  fields:
+    area: ENTIRE_HOUSE
+    internal_price_per_hour: 0.00
+    external_price_per_hour: 200.00
+    cleaning_fee: 1100.00
+    default_deposit_amount: 2000.00
+
+- model: janhus.janhusbookingsettings
+  pk: 1
+  fields:
+    min_duration_minutes: 60
+    slot_granularity_minutes: 20
+    opening_hour: 8
+    closing_hour: 2
+    buffer_minutes: 140
+    organization_booking_opens_weeks_before: 6
+    general_booking_opens_weeks_before: 4
+    external_bookings_enabled: true
+
+# INTERNAL (personlig booking)
+- model: janhus.janhusbooking
+  pk: 1
+  fields:
+    starts_at: 2026-06-01 17:00:00+00:00
+    ends_at: 2026-06-01 21:00:00+00:00
+    area: FIRST_FLOOR
+    status: CONFIRMED
+    owner_user: 3
+    owner_organization: null
+    booking_level: null
+    created_by_user: 3
+    is_external_booking: false
+    booker_name: Eva Student Åsen
+    booker_email: eva_student@feide.no
+    booker_phone: "40000000"
+    responsible_name: Eva Student Åsen
+    responsible_email: eva_student@feide.no
+    responsible_phone: "40000000"
+    event_type: INTERNAL
+    cleaning_requested: false
+    deposit_status: REQUIRED
+    deposit_amount: 1000.00
+    comment: Intern testbooking
+    admin_comment: ""
+    guest_list: ""
+    door_access_policy: BOOKER_ONLY
+    vipps_product: null
+    vipps_order: null
+
+# OPEN_FOR_INDOK (forenings booking)
+- model: janhus.janhusbooking
+  pk: 2
+  fields:
+    starts_at: 2026-06-05 16:00:00+00:00
+    ends_at: 2026-06-05 23:00:00+00:00
+    area: ENTIRE_HOUSE
+    status: CONFIRMED
+    owner_user: null
+    owner_organization: 19
+    booking_level: null
+    created_by_user: 4
+    is_external_booking: false
+    booker_name: Bindeleddet
+    booker_email: kontakt@bindeleddet.no
+    booker_phone: "41000000"
+    responsible_name: Arrangementskomiteen
+    responsible_email: arrangement@bindeleddet.no
+    responsible_phone: "41000001"
+    event_type: OPEN_FOR_INDOK
+    cleaning_requested: true
+    deposit_status: NOT_REQUIRED
+    deposit_amount: 0.00
+    comment: Åpent arrangement for alle Indøk-studenter
+    admin_comment: ""
+    guest_list: ""
+    door_access_policy: ALL_PARTICIPANTS
+    vipps_product: null
+    vipps_order: null
+
+# PRIVATE (personlig provisjonert/forbeholdt booking)
+- model: janhus.janhusbooking
+  pk: 3
+  fields:
+    starts_at: 2026-06-10 18:00:00+00:00
+    ends_at: 2026-06-11 00:30:00+00:00
+    area: SECOND_FLOOR
+    status: PROVISIONAL
+    owner_user: 2
+    owner_organization: null
+    booking_level: null
+    created_by_user: 2
+    is_external_booking: false
+    booker_name: Asbjørn ElevG Hansen
+    booker_email: noreply@feide.no
+    booker_phone: "42000000"
+    responsible_name: Asbjørn ElevG Hansen
+    responsible_email: noreply@feide.no
+    responsible_phone: "42000000"
+    event_type: PRIVATE
+    cleaning_requested: true
+    deposit_status: REQUESTED
+    deposit_amount: 750.00
+    comment: Privat feiring
+    admin_comment: ""
+    guest_list: '["guest-feide-1", "guest-feide-2"]'
+    door_access_policy: ALL_PARTICIPANTS
+    vipps_product: null
+    vipps_order: null
+
+# EXTERNAL (ekstern venter admin kontroll)
+- model: janhus.janhusbooking
+  pk: 4
+  fields:
+    starts_at: 2026-06-15 12:00:00+00:00
+    ends_at: 2026-06-15 17:00:00+00:00
+    area: FIRST_FLOOR
+    status: PENDING_ADMIN_REVIEW
+    owner_user: null
+    owner_organization: null
+    booking_level: null
+    created_by_user: null
+    is_external_booking: true
+    booker_name: External Booker
+    booker_email: external.booker@example.com
+    booker_phone: "43000000"
+    responsible_name: External Responsible
+    responsible_email: external.responsible@example.com
+    responsible_phone: "43000001"
+    event_type: EXTERNAL
+    cleaning_requested: true
+    deposit_status: REQUIRED
+    deposit_amount: 1000.00
+    comment: Ekstern booking for konferanse
+    admin_comment: Avventer manuell kontroll
+    guest_list: ""
+    door_access_policy: BOOKER_ONLY
+    vipps_product: null
+    vipps_order: null

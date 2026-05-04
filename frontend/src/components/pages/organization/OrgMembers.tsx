@@ -18,12 +18,13 @@ import {
 import { orderBy } from "lodash";
 import { useState } from "react";
 
-import { PermissionRequired } from "@/components/Auth";
 import {
   AdminOrganizationFragment,
+  HasPermissionDocument,
   MembershipsDocument,
   RemoveMembershipDocument,
   UpsertMembershipDocument,
+  UserDocument,
   UserSearchDocument,
 } from "@/generated/graphql";
 
@@ -34,6 +35,10 @@ type Props = {
 export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const { data, loading, error, refetch } = useQuery(MembershipsDocument, {
     variables: { organizationId: organization.id },
+  });
+  const { data: currentUserData } = useQuery(UserDocument);
+  const { data: manageOrganizationPermissionData } = useQuery(HasPermissionDocument, {
+    variables: { permission: "organizations.manage_organization" },
   });
 
   const { refetch: refetchUserSearch } = useQuery(UserSearchDocument, {
@@ -54,6 +59,15 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
 
   //Sorterer medlemmer alfabetisk
   const memberships = orderBy(data?.memberships, "user.firstName", "asc");
+  const currentUserId = currentUserData?.user?.id;
+  const isHrMember = Boolean(
+    currentUserId &&
+      memberships.some(
+        (membership) =>
+          membership.user.id === currentUserId && membership?.group?.uuid === organization.hrGroup?.uuid
+      )
+  );
+  const canEditMemberships = isHrMember || Boolean(manageOrganizationPermissionData?.hasPermission);
 
   const toErrorMessage = (err: unknown, fallback: string): string => {
     if (err instanceof ApolloError) {
@@ -206,7 +220,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
       <Typography variant="h3">Oversikt over medlemmer</Typography>
       {feedbackError && <Alert severity="error">{feedbackError}</Alert>}
       {feedbackSuccess && <Alert severity="success">{feedbackSuccess}</Alert>}
-      <PermissionRequired permission="organizations.change_organization">
+      {canEditMemberships ? (
         <Grid container spacing={1}>
           <Grid item xs={12} md={6} lg={4}>
             <TextField
@@ -223,17 +237,14 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             </Button>
           </Grid>
         </Grid>
-      </PermissionRequired>
+      ) : null}
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>Navn</TableCell>
               <TableCell>Gruppe</TableCell>
-              <PermissionRequired permission="organizations.change_organization"> 
-                {/* Denne må endres, er feil tillatelse, skal være for de med HR, må sjekkes, CHRISTIAN R */}
-                <TableCell>Rediger</TableCell>
-              </PermissionRequired>
+              {canEditMemberships ? <TableCell>Rediger</TableCell> : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -245,7 +256,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                 <TableCell>
                   {membership?.group?.name === "HR" ? "Administrator" : membership?.group?.name ?? "--"}
                 </TableCell>
-                <PermissionRequired permission="organizations.change_organization">
+                {canEditMemberships ? (
                   <TableCell>
                     <Button
                       variant="contained"
@@ -269,7 +280,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                       Fjern
                     </Button>
                   </TableCell>
-                </PermissionRequired>
+                ) : null}
               </TableRow>
             ))}
           </TableBody>

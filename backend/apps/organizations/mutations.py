@@ -1,6 +1,6 @@
 import graphene
 from django.utils.text import slugify
-from decorators import permission_required
+from decorators import login_required, permission_required
 
 from apps.users.types import UserType
 from apps.permissions.models import ResponsibleGroup
@@ -100,13 +100,12 @@ class AssignMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required(
-        "organizations.manage_organization", fn=get_organization_from_data
-    )
-    def mutate(self, _, membership_data):
+    @login_required
+    def mutate(self, info, membership_data):
         organization = Organization.objects.prefetch_related("permission_groups").get(
             pk=membership_data["organization_id"]
         )
+        perms.require_manage_memberships(info.context.user, organization)
 
         try:
             group = organization.permission_groups.get(
@@ -131,13 +130,12 @@ class UpsertMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required(
-        "organizations.manage_organization", fn=get_organization_from_data
-    )
-    def mutate(self, _, membership_data):
+    @login_required
+    def mutate(self, info, membership_data):
         organization = Organization.objects.prefetch_related("permission_groups").get(
             pk=membership_data["organization_id"]
         )
+        perms.require_manage_memberships(info.context.user, organization)
 
         try:
             group = organization.permission_groups.get(
@@ -161,15 +159,15 @@ class RemoveMembership(graphene.Mutation):
     class Arguments:
         membership_id = graphene.ID(required=True)
 
-    @permission_required(
-        "organizations.manage_organization", fn=get_organization_from_membership
-    )
+    @login_required
     def mutate(self, info, membership_id):
-        membership = (
-            Membership.objects.select_related("user").filter(pk=membership_id).first()
-        )
+        membership = Membership.objects.select_related("user", "organization").filter(
+            pk=membership_id
+        ).first()
         if membership is None:
             return RemoveMembership(removed_member=None, ok=False)
+
+        perms.require_manage_memberships(info.context.user, membership.organization)
 
         removed_member = membership.user
         membership.delete()

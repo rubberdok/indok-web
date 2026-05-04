@@ -169,7 +169,7 @@ def _build_payment_product_data(booking: JanHusBooking) -> dict:
     }
 
 
-# MÅ SJEKKES OVER - CHRISTIAN
+# MÅ SJEKKES OVER - CHRISTIAN R
 def _resolve_janhus_payment_provider_organization():
     organization = Organization.objects.filter(
         slug=JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG
