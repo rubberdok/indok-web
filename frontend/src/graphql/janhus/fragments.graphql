@@ -100,6 +100,12 @@ fragment JanHusBookingSettings on JanHusBookingSettingsType {
   bufferMinutes
   organizationBookingOpensWeeksBefore
   generalBookingOpensWeeksBefore
+  fallStartDate
+  fallEndDate
+  springStartDate
+  springEndDate
+  fallSemesterActive
+  springSemesterActive
   externalBookingsEnabled
 }
 

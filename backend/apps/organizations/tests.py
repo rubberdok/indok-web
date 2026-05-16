@@ -32,7 +32,7 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
                 upsertMembership(membershipData: {{
                     userId: \"{self.target_user.id}\"
                     organizationId: \"{self.organization.id}\"
-                    groupId: \"{self.organization.primary_group.id}\"
+                    groupId: \"{self.organization.primary_group.pk}\"
                 }}) {{
                     ok
                     membership {{
@@ -62,7 +62,7 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
                 upsertMembership(membershipData: {{
                     userId: \"{self.target_user.id}\"
                     organizationId: \"{self.organization.id}\"
-                    groupId: \"{self.organization.primary_group.id}\"
+                    groupId: \"{self.organization.primary_group.pk}\"
                 }}) {{
                     ok
                     membership {{

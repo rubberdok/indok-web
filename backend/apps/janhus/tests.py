@@ -434,6 +434,52 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertIn("single booking day window", content["errors"][0]["message"])
 
+    def test_create_booking_request_rejects_outside_active_booking_semesters(self):
+        JanHusBookingSettings.objects.create(
+            min_duration_minutes=60,
+            slot_granularity_minutes=30,
+            opening_hour=8,
+            closing_hour=2,
+            fall_start_date=(timezone.now() + timedelta(days=60)).date(),
+            fall_end_date=(timezone.now() + timedelta(days=90)).date(),
+            spring_start_date=(timezone.now() + timedelta(days=120)).date(),
+            spring_end_date=(timezone.now() + timedelta(days=160)).date(),
+            fall_semester_active=True,
+            spring_semester_active=False,
+        )
+
+        query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: \"{self.start_dt.isoformat()}\"
+                  endsAt: \"{self.end_dt.isoformat()}\"
+                  area: \"FIRST_FLOOR\"
+                  requesterName: \"Internal User\"
+                  requesterEmail: \"internal@example.com\"
+                  requesterPhone: \"41234567\"
+                  responsibleName: \"Responsible User\"
+                  responsibleEmail: \"responsible@example.com\"
+                  responsiblePhone: \"41234567\"
+                  eventType: \"INTERNAL\"
+                }}
+              ) {{
+                ok
+                bookingRequest {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIn(
+            "outside of active booking semesters", content["errors"][0]["message"]
+        )
+
     def test_update_booking_syncs_existing_vipps_product_price(self):
         self.add_booking_permission(self.user)
 

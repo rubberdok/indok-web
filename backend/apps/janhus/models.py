@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 
 from django.conf import settings
@@ -129,6 +130,13 @@ class JanHusBookingSettings(models.Model):
     organization_booking_opens_weeks_before = models.PositiveIntegerField(default=6)
     general_booking_opens_weeks_before = models.PositiveIntegerField(default=4)
 
+    fall_start_date = models.DateField(default=date(1970, 1, 1))
+    fall_end_date = models.DateField(default=date(2100, 12, 31))
+    spring_start_date = models.DateField(default=date(1970, 1, 1))
+    spring_end_date = models.DateField(default=date(2100, 12, 31))
+    fall_semester_active = models.BooleanField(default=True)
+    spring_semester_active = models.BooleanField(default=True)
+
     external_bookings_enabled = models.BooleanField(default=True)
 
     class Meta:
@@ -146,6 +154,10 @@ class JanHusBookingSettings(models.Model):
             )
         if self.opening_hour > 23 or self.closing_hour > 23:
             raise ValidationError("Opening and closing hour must be between 0 and 23")
+        if self.fall_end_date < self.fall_start_date:
+            raise ValidationError("Fall semester end date must be after start date")
+        if self.spring_end_date < self.spring_start_date:
+            raise ValidationError("Spring semester end date must be after start date")
 
     def __str__(self):
         return "JanHus booking settings"

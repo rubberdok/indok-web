@@ -28,6 +28,7 @@ from apps.janhus.rules import (
     get_or_create_settings,
     get_overlapping_bookings,
     resolve_booking_level,
+    validate_booking_semester_rules,
     validate_time_rules,
 )
 from apps.janhus.types import (
@@ -362,6 +363,13 @@ class JanHusBookingSettingsInput(graphene.InputObjectType):
     organization_booking_opens_weeks_before = graphene.Int(required=False)
     general_booking_opens_weeks_before = graphene.Int(required=False)
 
+    fall_start_date = graphene.Date(required=False)
+    fall_end_date = graphene.Date(required=False)
+    spring_start_date = graphene.Date(required=False)
+    spring_end_date = graphene.Date(required=False)
+    fall_semester_active = graphene.Boolean(required=False)
+    spring_semester_active = graphene.Boolean(required=False)
+
     external_bookings_enabled = graphene.Boolean(required=False)
 
 
@@ -468,6 +476,12 @@ class CreateJanHusBooking(graphene.Mutation):
                 "deposit_amount", _get_default_deposit_amount(booking_data["area"])
             ),
             comment=booking_data.get("comment", ""),
+        )
+
+        validate_booking_semester_rules(
+            starts_at=booking.starts_at,
+            ends_at=booking.ends_at,
+            settings=settings,
         )
 
         booking.full_clean()
@@ -708,6 +722,11 @@ class CreateJanHusBookingRequest(graphene.Mutation):
         )
 
         validate_time_rules(
+            starts_at=request_data["starts_at"],
+            ends_at=request_data["ends_at"],
+            settings=settings,
+        )
+        validate_booking_semester_rules(
             starts_at=request_data["starts_at"],
             ends_at=request_data["ends_at"],
             settings=settings,

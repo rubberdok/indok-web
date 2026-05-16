@@ -27,7 +27,14 @@ import {
   UpdateJanhusBookingSettingsDocument,
 } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
+import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
+
+const DATE_FORMAT = "YYYY-MM-DD";
+
+function formatDate(date: string) {
+  return dayjs(date).tz("Europe/Oslo").format(DATE_FORMAT);
+}
 
 type SettingsForm = {
   minDurationMinutes: number;
@@ -37,6 +44,12 @@ type SettingsForm = {
   bufferMinutes: number;
   organizationBookingOpensWeeksBefore: number;
   generalBookingOpensWeeksBefore: number;
+  fallStartDate: string;
+  fallEndDate: string;
+  springStartDate: string;
+  springEndDate: string;
+  fallSemesterActive: boolean;
+  springSemesterActive: boolean;
   externalBookingsEnabled: boolean;
 };
 
@@ -60,6 +73,12 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
     bufferMinutes: 0,
     organizationBookingOpensWeeksBefore: 6,
     generalBookingOpensWeeksBefore: 4,
+    fallStartDate: formatDate(new Date().toISOString()),
+    fallEndDate: formatDate(new Date().toISOString()),
+    springStartDate: formatDate(new Date().toISOString()),
+    springEndDate: formatDate(new Date().toISOString()),
+    fallSemesterActive: true,
+    springSemesterActive: true,
     externalBookingsEnabled: true,
   });
 
@@ -134,6 +153,12 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
       bufferMinutes: settings.bufferMinutes,
       organizationBookingOpensWeeksBefore: settings.organizationBookingOpensWeeksBefore,
       generalBookingOpensWeeksBefore: settings.generalBookingOpensWeeksBefore,
+      fallStartDate: formatDate(settings.fallStartDate),
+      fallEndDate: formatDate(settings.fallEndDate),
+      springStartDate: formatDate(settings.springStartDate),
+      springEndDate: formatDate(settings.springEndDate),
+      fallSemesterActive: settings.fallSemesterActive,
+      springSemesterActive: settings.springSemesterActive,
       externalBookingsEnabled: settings.externalBookingsEnabled ?? true,
     });
   }, [settingsData]);
@@ -184,6 +209,12 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
           bufferMinutes: settingsForm.bufferMinutes,
           organizationBookingOpensWeeksBefore: settingsForm.organizationBookingOpensWeeksBefore,
           generalBookingOpensWeeksBefore: settingsForm.generalBookingOpensWeeksBefore,
+          fallStartDate: settingsForm.fallStartDate,
+          fallEndDate: settingsForm.fallEndDate,
+          springStartDate: settingsForm.springStartDate,
+          springEndDate: settingsForm.springEndDate,
+          fallSemesterActive: settingsForm.fallSemesterActive,
+          springSemesterActive: settingsForm.springSemesterActive,
           externalBookingsEnabled: settingsForm.externalBookingsEnabled,
         },
       },
@@ -237,6 +268,109 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
         <PermissionRequired permission="janhus.manage_settings">
           <Stack direction="column" spacing={4}>
             {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}
+
+            <Paper sx={{ p: 3 }} elevation={0}>
+              <Stack direction="column" spacing={2}>
+                <Typography variant="h4" component="h2">
+                  Start- og sluttdato for høst- og vårsemester
+                </Typography>
+                <Typography>Det vil kun være mulig for brukere å søke om bookinger i disse periodene.</Typography>
+
+                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
+                  <Stack spacing={2}>
+                    <Typography variant="h6">Høstsemester</Typography>
+                    <TextField
+                      label="Start"
+                      type="date"
+                      value={settingsForm.fallStartDate}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({
+                          ...prev,
+                          fallStartDate: event.target.value,
+                        }))
+                      }
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <TextField
+                      label="Slutt"
+                      type="date"
+                      value={settingsForm.fallEndDate}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({
+                          ...prev,
+                          fallEndDate: event.target.value,
+                        }))
+                      }
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settingsForm.fallSemesterActive}
+                          onChange={(event) =>
+                            setSettingsForm((prev) => ({
+                              ...prev,
+                              fallSemesterActive: event.target.checked,
+                            }))
+                          }
+                        />
+                      }
+                      label="Åpent for bestillinger"
+                    />
+                  </Stack>
+
+                  <Stack spacing={2}>
+                    <Typography variant="h6">Vårsemester</Typography>
+                    <TextField
+                      label="Start"
+                      type="date"
+                      value={settingsForm.springStartDate}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({
+                          ...prev,
+                          springStartDate: event.target.value,
+                        }))
+                      }
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <TextField
+                      label="Slutt"
+                      type="date"
+                      value={settingsForm.springEndDate}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({
+                          ...prev,
+                          springEndDate: event.target.value,
+                        }))
+                      }
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={settingsForm.springSemesterActive}
+                          onChange={(event) =>
+                            setSettingsForm((prev) => ({
+                              ...prev,
+                              springSemesterActive: event.target.checked,
+                            }))
+                          }
+                        />
+                      }
+                      label="Åpent for bestillinger"
+                    />
+                  </Stack>
+                </Box>
+
+                <Box>
+                  <Button variant="contained" onClick={saveSettings} disabled={settingsSaving}>
+                    Lagre semestre og regler
+                  </Button>
+                </Box>
+              </Stack>
+            </Paper>
+
+            <Divider />
 
             <Paper sx={{ p: 3 }} elevation={0}>
               <Stack direction="column" spacing={2}>
