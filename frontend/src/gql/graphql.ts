@@ -840,11 +840,17 @@ export type JanHusBookingSettingsInput = {
   bufferMinutes: InputMaybe<Scalars['Int']['input']>;
   closingHour: InputMaybe<Scalars['Int']['input']>;
   externalBookingsEnabled: InputMaybe<Scalars['Boolean']['input']>;
+  fallEndDate: InputMaybe<Scalars['Date']['input']>;
+  fallSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
+  fallStartDate: InputMaybe<Scalars['Date']['input']>;
   generalBookingOpensWeeksBefore: InputMaybe<Scalars['Int']['input']>;
   minDurationMinutes: InputMaybe<Scalars['Int']['input']>;
   openingHour: InputMaybe<Scalars['Int']['input']>;
   organizationBookingOpensWeeksBefore: InputMaybe<Scalars['Int']['input']>;
   slotGranularityMinutes: InputMaybe<Scalars['Int']['input']>;
+  springEndDate: InputMaybe<Scalars['Date']['input']>;
+  springSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
+  springStartDate: InputMaybe<Scalars['Date']['input']>;
 };
 
 export type JanHusBookingSettingsType = {
@@ -852,12 +858,18 @@ export type JanHusBookingSettingsType = {
   bufferMinutes: Scalars['Int']['output'];
   closingHour: Scalars['Int']['output'];
   externalBookingsEnabled: Scalars['Boolean']['output'];
+  fallEndDate: Scalars['Date']['output'];
+  fallSemesterActive: Scalars['Boolean']['output'];
+  fallStartDate: Scalars['Date']['output'];
   generalBookingOpensWeeksBefore: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   minDurationMinutes: Scalars['Int']['output'];
   openingHour: Scalars['Int']['output'];
   organizationBookingOpensWeeksBefore: Scalars['Int']['output'];
   slotGranularityMinutes: Scalars['Int']['output'];
+  springEndDate: Scalars['Date']['output'];
+  springSemesterActive: Scalars['Boolean']['output'];
+  springStartDate: Scalars['Date']['output'];
 };
 
 /** An enumeration. */
