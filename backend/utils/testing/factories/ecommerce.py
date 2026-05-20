@@ -6,7 +6,6 @@ from faker import Factory
 
 from utils.testing.factories.organizations import OrganizationFactory
 
-
 fake = Factory.create()
 cars = [
     "Luna",

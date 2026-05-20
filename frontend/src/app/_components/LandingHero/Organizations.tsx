@@ -76,7 +76,10 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
           onActiveIndexChange={(swiper) => onActiveIndexChange(swiper.activeIndex)}
           navigation={{ nextEl: ".arrow.right", prevEl: ".arrow.left" }}
           spaceBetween={16}
+<<<<<<< HEAD
           passiveListeners
+=======
+>>>>>>> parent of 45a0ecfaa (Revert "Merge main into feature-muligAdminSide-TEST")
           slidesPerView={0.8}
           freeMode={{
             enabled: true,
