@@ -28,10 +28,10 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.9.7"
 
@@ -50,10 +50,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -74,11 +74,11 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build backend image
         id: build-image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: backend
           file: backend/Dockerfile.prod
@@ -94,7 +94,7 @@ jobs:
         id: push-image
         # If this is run on the main branch, and is a production image, it should be pushed to ECR
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: backend
           file: backend/Dockerfile.prod
@@ -104,7 +104,7 @@ jobs:
             APP_ENV=production
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.dockerfile }}
           path: /tmp/${{ env.dockerfile }}.tar
@@ -128,10 +128,10 @@ jobs:
           --health-retries 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download image from previous job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: backend-production
           path: /tmp
@@ -141,7 +141,7 @@ jobs:
           docker load --input /tmp/backend-production.tar
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -162,7 +162,7 @@ jobs:
             backend:production
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           files: coverage.xml
@@ -190,10 +190,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -206,11 +206,11 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build frontend image
         id: build-image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: frontend
           file: frontend/Dockerfile.prod
@@ -222,7 +222,7 @@ jobs:
             APP_ENV=test
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.dockerfile }}
           path: /tmp/${{ env.dockerfile }}.tar
@@ -241,10 +241,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download image from previous job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: /tmp
 
@@ -262,7 +262,7 @@ jobs:
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v6.7.8
+        uses: cypress-io/github-action@v7
         with:
           record: true
           parallel: true
@@ -299,10 +299,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
@@ -323,7 +323,7 @@ jobs:
 
       - name: Update task definition
         id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@master
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
@@ -340,7 +340,7 @@ jobs:
           wait-for-service-stability: true
 
       - name: Sentry release
-        uses: getsentry/action-release@v1.7.0
+        uses: getsentry/action-release@v3
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ env.SENTRY_ORG }}
@@ -348,4 +348,4 @@ jobs:
         with:
           environment: production
           finalize: true
-          version: ${{ github.sha }}
+          release: ${{ github.sha }}
