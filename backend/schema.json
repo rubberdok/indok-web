@@ -1413,6 +1413,54 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
+              "name": "nfcSelfServiceEnabled",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "nfcAccepts4ByteUid",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "nfcAccepts7ByteUid",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
               "name": "user",
               "type": {
                 "kind": "OBJECT",
@@ -10871,7 +10919,7 @@
               "name": "ok",
               "type": {
                 "kind": "SCALAR",
-                "name": "ID",
+                "name": "Boolean",
                 "ofType": null
               }
             }

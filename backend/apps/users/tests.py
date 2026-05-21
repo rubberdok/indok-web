@@ -460,6 +460,18 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         pass
 
     def test_update_user_nfc_uid_requires_self_service_flag(self):
+        settings_obj = NfcSettings.objects.create()
+        settings_obj.allow_user_uid_self_service = False
+        settings_obj.allow_7_byte_uid = True
+        settings_obj.allow_4_byte_uid = False
+        settings_obj.save(
+            update_fields=[
+                "allow_user_uid_self_service",
+                "allow_7_byte_uid",
+                "allow_4_byte_uid",
+            ]
+        )
+
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
                 updateUser(userData: $userData) {
@@ -481,6 +493,11 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             },
         )
         self.assertResponseHasErrors(response)
+        content = response.json()
+        self.assertIn(
+            "Egenregistrering av UID er deaktivert",
+            content["errors"][0]["message"],
+        )
         self.assertFalse(
             NfcCardAssignment.objects.filter(
                 user=self.indok_user, revoked_at__isnull=True
