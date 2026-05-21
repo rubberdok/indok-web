@@ -15,8 +15,8 @@ from .dataloader import ListingsByOrganizationIdLoader
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
     listings = graphene.List(NonNull(ListingType))
-    primary_group = graphene.Field(source="primary_group", type_=ResponsibleGroupType)
-    hr_group = graphene.Field(source="hr_group", type_=ResponsibleGroupType)
+    primary_group = graphene.Field(source="primary_group", type=ResponsibleGroupType)
+    hr_group = graphene.Field(source="hr_group", type=ResponsibleGroupType)
     permission_groups = graphene.List(NonNull(ResponsibleGroupType))
 
     class Meta:
