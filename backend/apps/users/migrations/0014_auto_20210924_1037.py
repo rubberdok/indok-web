@@ -26,4 +26,6 @@ class Migration(migrations.Migration):
         ("users", "0013_auto_20210923_1805"),
     ]
 
-    operations = [migrations.RunPython(set_current_users_to_indok, set_all_users_to_not_indok)]
+    operations = [
+        migrations.RunPython(set_current_users_to_indok, set_all_users_to_not_indok)
+    ]

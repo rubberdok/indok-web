@@ -11,6 +11,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name="organization",
-            options={"permissions": [("manage_organization", "Can manage organizations, used for admins")]},
+            options={
+                "permissions": [
+                    ("manage_organization", "Can manage organizations, used for admins")
+                ]
+            },
         ),
     ]

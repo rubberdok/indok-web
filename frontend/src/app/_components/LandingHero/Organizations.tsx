@@ -1,8 +1,8 @@
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { FreeMode, Mousewheel, Navigation } from "swiper";
+import { FreeMode, Navigation } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -24,7 +24,7 @@ const ArrowStyle = styled(IconButton)(({ theme }) => ({
   cursor: "pointer",
   display: "none",
   position: "absolute",
-  backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[600],
+  backgroundColor: theme.vars?.palette.grey[800] ?? theme.palette.grey[800],
   color: theme.palette.common.white,
   opacity: 0.88,
   zIndex: 1000,
@@ -72,13 +72,10 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
         width={`calc(100vw - ${offsetX}px)`}
       >
         <Swiper
-          modules={[Navigation, FreeMode, Mousewheel]}
+          modules={[Navigation, FreeMode]}
           onActiveIndexChange={(swiper) => onActiveIndexChange(swiper.activeIndex)}
           navigation={{ nextEl: ".arrow.right", prevEl: ".arrow.left" }}
           spaceBetween={16}
-          mousewheel={{
-            forceToAxis: true,
-          }}
           slidesPerView={0.8}
           freeMode={{
             enabled: true,

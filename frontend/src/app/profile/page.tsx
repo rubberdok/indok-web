@@ -4,14 +4,25 @@ import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
 
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { graphql } from "@/gql";
-import { generateFeideLoginUrl } from "@/utils/auth";
-
 import { PermissionRequired } from "../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
-import { Event, Form, Orders, Organization, Personal, Report, CabinsAdmin } from "./components/ProfileCard";
+import {
+  AdminPage,
+  Event,
+  Form,
+  Orders,
+  Organization,
+  Personal,
+  Report,
+  CabinsAdmin,
+  OwnBookings,
+  JanHusAdmin,
+} from "./components/ProfileCard";
+
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { graphql } from "@/gql";
+import { generateFeideLoginUrl } from "@/utils/auth";
 
 // Opt out of caching for all data requests in the route segment
 export const dynamic = "force-dynamic";
@@ -38,6 +49,19 @@ const profileDocument = graphql(/* GraphQL */ `
 const cabinPermissionDocument = graphql(/* GraphQL */ `
   query CabinPermission {
     hasPermission(permission: "cabins.manage_booking")
+  }
+`);
+
+const janhusPermissionDocument = graphql(/* GraphQL */ `
+  query JanHusPermission {
+    hasPermission(permission: "janhus.manage_booking")
+  }
+`);
+
+const adminCapabilitiesDocument = graphql(/* GraphQL */ `
+  query ProfileAdminEditCapabilities {
+    canManageUserProfiles
+    canManageUserNfc
   }
 `);
 
@@ -71,6 +95,8 @@ export default function ProfilePage() {
    * in the PermissionRequired component.
    */
   const [queryRef] = useBackgroundQuery(cabinPermissionDocument);
+  const [janhusQueryRef] = useBackgroundQuery(janhusPermissionDocument);
+  const [adminCapabilitiesQueryRef] = useBackgroundQuery(adminCapabilitiesDocument);
 
   // If the user is not logged in, redirect to the login page
   if (data.user === null) return redirect(generateFeideLoginUrl());
@@ -131,12 +157,27 @@ export default function ProfilePage() {
             <Orders data-test-id={`${ID_PREFIX}orders-`} />
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
+            <OwnBookings data-test-id={`${ID_PREFIX}own-bookings-`} />
+          </Grid>
+          <Grid item xs={12} md={6} lg={5}>
             <PermissionRequired queryRef={queryRef}>
               <CabinsAdmin data-test-id={`${ID_PREFIX}cabin-`} />
             </PermissionRequired>
           </Grid>
+          <Grid item xs={12} md={6} lg={5}>
+            <PermissionRequired queryRef={janhusQueryRef}>
+              <JanHusAdmin data-test-id={`${ID_PREFIX}janhus-admin-`} />
+            </PermissionRequired>
+          </Grid>
+          <Grid item xs={12} md={6} lg={5}>
+            <PermissionRequired
+              queryRef={adminCapabilitiesQueryRef}
+              isAllowed={(capabilities) => capabilities.canManageUserProfiles || capabilities.canManageUserNfc}
+            >
+              <AdminPage data-test-id={`${ID_PREFIX}admin-page-`} />
+            </PermissionRequired>
+          </Grid>
         </Grid>
-
         <Grid item>
           <LogoutButton />
         </Grid>

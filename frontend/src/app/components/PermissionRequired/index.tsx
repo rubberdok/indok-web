@@ -10,7 +10,7 @@ import { HasPermissionQuery } from "@/gql/graphql";
  * from @apollo/client. Using the latter can result in better performance, as the permission check can
  * be done in the background while the rest of the page is rendered.
  */
-export function PermissionRequired<T extends HasPermissionQuery>(
+export function PermissionRequired<T>(
   props: React.PropsWithChildren<BackgroundQueryProps<T> | PermissionRequiredProps>
 ) {
   if ("queryRef" in props) {
@@ -19,17 +19,18 @@ export function PermissionRequired<T extends HasPermissionQuery>(
   return <QueryPermissionRequired {...props} />;
 }
 
-type BackgroundQueryProps<T extends HasPermissionQuery> = {
+type BackgroundQueryProps<T> = {
   queryRef: QueryReference<T>;
+  isAllowed?: (data: T) => boolean;
 };
 
-function BackgroundQueryPermissionRequired<T extends HasPermissionQuery>(
-  props: PropsWithChildren<BackgroundQueryProps<T>>
-) {
-  const { queryRef, children } = props;
+function BackgroundQueryPermissionRequired<T>(props: PropsWithChildren<BackgroundQueryProps<T>>) {
+  const { queryRef, isAllowed, children } = props;
   const { data } = useReadQuery(queryRef);
 
-  if (data.hasPermission) return <>{children}</>;
+  const allowed = isAllowed ? isAllowed(data) : (data as HasPermissionQuery | null | undefined)?.hasPermission === true;
+
+  if (allowed) return <>{children}</>;
   return null;
 }
 

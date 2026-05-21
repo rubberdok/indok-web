@@ -5,7 +5,12 @@ from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
 from apps.cabins.models import BookingResponsible
-from apps.cabins.types import BookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
+from apps.cabins.types import (
+    BookingInfoType,
+    AdminTemplateType,
+    UserTemplateType,
+    EmailTypes,
+)
 
 from weasyprint import HTML
 from datetime import datetime
@@ -30,13 +35,17 @@ def get_email_subject(chosen_cabins_string: str, email_type: str, admin: bool) -
         subject = admin_templates["reserve_subject"]
     else:
         subject = (
-            user_templates["reserve_subject"] if email_type == "reserve_booking" else user_templates["decision_subject"]
+            user_templates["reserve_subject"]
+            if email_type == "reserve_booking"
+            else user_templates["decision_subject"]
         )
 
     return subject + chosen_cabins_string
 
 
-def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool) -> None:
+def send_mail(
+    booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
+) -> None:
     if admin:
         template = admin_templates["reserve_booking"]
     else:
@@ -45,9 +54,9 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     chosen_cabins_names = booking_info["cabins"].values_list("name", flat=True)
     chosen_cabins_string = " og ".join(chosen_cabins_names)
     subject = get_email_subject(chosen_cabins_string, email_type, admin)
-    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(
-        active=True
-    ).first()  # From testing this is not at all optional...
+    booking_responsible: Optional[BookingResponsible] = (
+        BookingResponsible.objects.filter(active=True).first()
+    )  # From testing this is not at all optional...
 
     # Display dates with given format in the mail, get booking responsible contact info
     content = {

@@ -11,6 +11,8 @@ import { ReviewItem } from "./ReviewItem";
 
 export const TimeAndPlace: React.FC = () => {
   const { watch } = useFormContext<IEventForm>();
+  const startTime = dayjs(watch("timeAndPlace.start")).tz("Europe/Oslo");
+  const endTime = dayjs(watch("timeAndPlace.end")).tz("Europe/Oslo");
 
   return (
     <Accordion>
@@ -23,14 +25,8 @@ export const TimeAndPlace: React.FC = () => {
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
           <Typography variant="subtitle1">Tid</Typography>
-          <ReviewItem
-            label="Starttid"
-            value={dayjs(watch("timeAndPlace.start")).isValid() ? dayjs(watch("timeAndPlace.start")).format("LLL") : ""}
-          />
-          <ReviewItem
-            label="Sluttid"
-            value={dayjs(watch("timeAndPlace.start")).isValid() ? dayjs(watch("timeAndPlace.start")).format("LLL") : ""}
-          />
+          <ReviewItem label="Starttid" value={startTime.isValid() ? startTime.format("LLL") : ""} />
+          <ReviewItem label="Sluttid" value={endTime.isValid() ? endTime.format("LLL") : ""} />
 
           <Typography variant="subtitle1">Sted</Typography>
           <ReviewItem label="Lokasjon" value={watch("timeAndPlace.location")} />

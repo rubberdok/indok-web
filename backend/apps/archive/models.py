@@ -19,7 +19,9 @@ class FileType(models.TextChoices):
 
 class ArchiveDocument(models.Model):
     title = models.CharField(max_length=128)
-    type_doc = models.CharField(max_length=20, choices=[(tag, tag.value) for tag in FileType])
+    type_doc = models.CharField(
+        max_length=20, choices=[(tag, tag.value) for tag in FileType]
+    )
     file_location = models.CharField(max_length=2000, default=None, null=False)
     uploaded_date = datetime.now()
     featured = models.BooleanField(default=False)

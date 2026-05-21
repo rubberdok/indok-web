@@ -1,8 +1,11 @@
+import { AdminPageCard } from "./variants/AdminPageCard";
 import { CabinsAdminCard } from "./variants/CabinsAdminCard";
 import { EventCard } from "./variants/EventCard";
 import { FormCard } from "./variants/FormCard";
+import { JanHusAdminCard } from "./variants/JanHusAdminCard";
 import { OrdersCard } from "./variants/OrdersCard";
 import { OrganizationCard } from "./variants/OrganizationCard";
+import { OwnBookingsCard } from "./variants/OwnBookingsCard";
 import { PersonalCard } from "./variants/PersonalCard";
 import { ReportCard } from "./variants/ReportCard";
 
@@ -13,3 +16,6 @@ export const Personal = PersonalCard;
 export const Report = ReportCard;
 export const Orders = OrdersCard;
 export const CabinsAdmin = CabinsAdminCard;
+export const OwnBookings = OwnBookingsCard;
+export const JanHusAdmin = JanHusAdminCard;
+export const AdminPage = AdminPageCard;

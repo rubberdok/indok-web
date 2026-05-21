@@ -1,0 +1,133 @@
+fragment JanHusGuestListEntry on JanHusGuestListEntryType {
+  feideUserid
+  displayName
+}
+
+fragment JanHusBooking on JanHusBookingType {
+  id
+  startsAt
+  endsAt
+  area
+  status
+  ownerUser {
+    id
+    firstName
+    lastName
+  }
+  ownerOrganization {
+    id
+    name
+  }
+  bookingLevel {
+    id
+    name
+    priority
+  }
+  isExternalBooking
+  bookerName
+  bookerEmail
+  bookerPhone
+  responsibleName
+  responsibleEmail
+  responsiblePhone
+  eventType
+  cleaningRequested
+  depositStatus
+  depositAmount
+  outstandingDepositAmount
+  comment
+  adminComment
+  guestList
+  guestListEntries {
+    ...JanHusGuestListEntry
+  }
+  doorAccessPolicy
+  totalPrice
+  durationMinutes
+  vippsProduct {
+    id
+    name
+    price
+  }
+  vippsOrder {
+    id
+    paymentStatus
+  }
+  createdAt
+  updatedAt
+}
+
+fragment JanHusBookingRequest on JanHusBookingRequestType {
+  id
+  startsAt
+  endsAt
+  area
+  requesterUser {
+    id
+    firstName
+    lastName
+  }
+  ownerOrganization {
+    id
+    name
+  }
+  requesterName
+  requesterEmail
+  requesterPhone
+  responsibleName
+  responsibleEmail
+  responsiblePhone
+  eventType
+  cleaningRequested
+  comment
+  guestList
+  status
+  adminComment
+  convertedBooking {
+    id
+    status
+  }
+  createdAt
+  updatedAt
+}
+
+fragment JanHusBookingSettings on JanHusBookingSettingsType {
+  id
+  minDurationMinutes
+  slotGranularityMinutes
+  openingHour
+  closingHour
+  bufferMinutes
+  organizationBookingOpensWeeksBefore
+  generalBookingOpensWeeksBefore
+  fallStartDate
+  fallEndDate
+  springStartDate
+  springEndDate
+  fallSemesterActive
+  springSemesterActive
+  externalBookingsEnabled
+}
+
+fragment JanHusAreaConfiguration on JanHusAreaConfigurationType {
+  id
+  area
+  internalPricePerHour
+  externalPricePerHour
+  cleaningFee
+  defaultDepositAmount
+}
+
+fragment JanHusBookingLevel on JanHusBookingLevelType {
+  id
+  name
+  description
+  priority
+  canBookAnytime
+  canCreateProvisional
+  canCreateConfirmed
+  canOverrideLowerLevels
+  canEditOwnBookingsOnly
+  canEditAllBookings
+  bookingOpensWeeksBefore
+}

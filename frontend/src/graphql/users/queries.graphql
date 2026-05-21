@@ -15,3 +15,30 @@ query userToEdit {
     ...UserToEdit
   }
 }
+
+query userOrganizations {
+  user {
+    id
+    isIndok
+    organizations {
+      ...UserOrganization
+    }
+  }
+}
+
+query adminEditCapabilities {
+  canManageUserProfiles
+  canManageUserNfc
+}
+
+query nfcUserSearch($query: String!, $limit: Int) {
+  nfcUserSearch(query: $query, limit: $limit) {
+    ...UserNfcSearch
+  }
+}
+
+query userSearch($query: String!, $limit: Int) {
+  userSearch(query: $query, limit: $limit) {
+    ...UserAdminSearch
+  }
+}

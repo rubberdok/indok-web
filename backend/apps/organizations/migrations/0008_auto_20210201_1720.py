@@ -15,14 +15,30 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Role",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.TextField(default="Medlem", max_length=50)),
             ],
         ),
         migrations.CreateModel(
             name="Member",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "member",
                     models.ForeignKey(
@@ -39,11 +55,19 @@ class Migration(migrations.Migration):
                         to="organizations.organization",
                     ),
                 ),
-                ("role", models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to="organizations.role")),
+                (
+                    "role",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="organizations.role",
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
             model_name="member",
-            constraint=models.UniqueConstraint(fields=("member", "organization"), name="unique_member_in_organization"),
+            constraint=models.UniqueConstraint(
+                fields=("member", "organization"), name="unique_member_in_organization"
+            ),
         ),
     ]

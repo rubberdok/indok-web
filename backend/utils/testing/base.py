@@ -25,15 +25,21 @@ model = Union[models.Model, factory.Factory]
 class ExtendedGraphQLTestCase(GraphQLTestCase):
     def setUp(self) -> None:
         self.GRAPHQL_URL = (
-            f"/{settings.GRAPHQL_URL}" if not settings.GRAPHQL_URL.startswith("/") else settings.GRAPHQL_URL
+            f"/{settings.GRAPHQL_URL}"
+            if not settings.GRAPHQL_URL.startswith("/")
+            else settings.GRAPHQL_URL
         )
         return super().setUp()
 
-    def query(self, query: str, user: Optional[Union[UserFactory, "User"]] = None, **kwargs) -> HttpResponse:
+    def query(
+        self, query: str, user: Optional[Union[UserFactory, "User"]] = None, **kwargs
+    ) -> HttpResponse:
         headers = {}
         if user is not None:
             user = cast("User", user)
-            self.client.force_login(user, backend="django.contrib.auth.backends.ModelBackend")
+            self.client.force_login(
+                user, backend="django.contrib.auth.backends.ModelBackend"
+            )
         return super().query(query, headers=headers, **kwargs)
 
     def assert_permission_error(self, response: HttpResponse) -> None:
@@ -41,7 +47,8 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         content = json.loads(response.content)
         self.assertTrue(
             any(
-                PERMISSION_ERROR_MESSAGE in error["message"] or ALTERNATE_PERMISSION in error["message"]
+                PERMISSION_ERROR_MESSAGE in error["message"]
+                or ALTERNATE_PERMISSION in error["message"]
                 for error in content["errors"]
             ),
             msg=f"Permission error not found in {content.items()}",
@@ -51,7 +58,9 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
             msg=f"Found data in {content['data'].items()}, expected {None}",
         )
 
-    def assert_null_fields(self, data: Union[dict[str, Any], list], fields: list[str]) -> None:
+    def assert_null_fields(
+        self, data: Union[dict[str, Any], list], fields: list[str]
+    ) -> None:
         if isinstance(data, dict):
             for k, v in data.items():
                 if k in fields:
@@ -65,7 +74,11 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
                 elif isinstance(value, (list, dict)):
                     self.assert_null_fields(value, fields)
 
-    def _assert_list_equal(self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]) -> None:
+    def _assert_list_equal(
+        self,
+        data: list[dict[str, Any]],
+        obj: Union[QuerySet[models.Model], list[model]],
+    ) -> None:
         for data_item, obj_item in zip(data, obj):
             self.deep_assert_equal(data_item, obj_item)
 
@@ -83,7 +96,11 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
                 elif isinstance(value, (models.Model, factory.Factory)):
                     # Foreign key or a related instance, recursively check the values.
                     self.deep_assert_equal(v, value)
-                elif hasattr(value, "all") and callable(value.all) and isinstance(v, list):
+                elif (
+                    hasattr(value, "all")
+                    and callable(value.all)
+                    and isinstance(v, list)
+                ):
                     # Likely a related manager, fetch the objects prior to continuing
                     self.deep_assert_equal(v, value.all())
                 else:
@@ -98,7 +115,9 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
 
     @overload
     def deep_assert_equal(
-        self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]
+        self,
+        data: list[dict[str, Any]],
+        obj: Union[QuerySet[models.Model], list[model]],
     ) -> None: ...
 
     def deep_assert_equal(
@@ -129,7 +148,9 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
             """
             self._assert_list_equal(data, obj)
 
-        elif isinstance(data, dict) and isinstance(obj, (models.Model, factory.Factory)):
+        elif isinstance(data, dict) and isinstance(
+            obj, (models.Model, factory.Factory)
+        ):
             """
             Comparing a dictionary to an instance of the model. Compare each attribute in the provided dictionary
             to the corresponding value for the instance.
@@ -137,4 +158,6 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
             self._assert_dict_equal(data, obj)
 
         else:
-            raise AssertionError(f"Unexpected types, got {type(data)=} and {type(obj)=}")
+            raise AssertionError(
+                f"Unexpected types, got {type(data)=} and {type(obj)=}"
+            )

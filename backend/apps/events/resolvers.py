@@ -44,7 +44,9 @@ filetype_specs = {
 
 
 class EventResolvers:
-    def resolve_all_events(self, info, category=None, organization=None, start_time=None, end_time=None):
+    def resolve_all_events(
+        self, info, category=None, organization=None, start_time=None, end_time=None
+    ):
         """
         Get all events that fit the given filters
         """
@@ -52,7 +54,9 @@ class EventResolvers:
             filteredEvents = Event.objects
 
             if start_time and end_time:
-                filteredEvents = filteredEvents.filter(start_time__range=(start_time, end_time))
+                filteredEvents = filteredEvents.filter(
+                    start_time__range=(start_time, end_time)
+                )
 
             elif start_time:
                 filteredEvents = filteredEvents.filter(start_time__gte=(start_time))
@@ -69,7 +73,9 @@ class EventResolvers:
             new_kwargs = {f"{k}__icontains": v for k, v in kwargs.items()}
             queries = [Q(**{k: v}) for k, v in new_kwargs.items()]
 
-            if organization:  # for organizations, check if the organization argument corresponds to either
+            if (
+                organization
+            ):  # for organizations, check if the organization argument corresponds to either
                 queries.append(  # the organization of the event itself and the parent organization (if it exists)
                     Q(organization__name__icontains=organization)
                     | Q(organization__parent__name__icontains=organization)
@@ -77,7 +83,9 @@ class EventResolvers:
 
             return (
                 filteredEvents.filter(*queries)
-                .filter(start_time__gte=date.today())  # Only show events that have yet to pass
+                .filter(
+                    start_time__gte=date.today()
+                )  # Only show events that have yet to pass
                 .order_by("start_time")
             )
         return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
@@ -86,7 +94,9 @@ class EventResolvers:
         """
         For each organization, get the most recent (future) event
         """
-        return Event.objects.filter(start_time__gte=date.today()).distinct("organization")
+        return Event.objects.filter(start_time__gte=date.today()).distinct(
+            "organization"
+        )
 
     def resolve_event(self, info, id):
         try:
@@ -123,7 +133,9 @@ class EventResolvers:
             check_user_membership(info.context.user, event.organization)
 
         df = create_attendee_report(event_ids, fields)
-        file_basename = f"attendee_report__eventid_{'|'.join(str(id_) for id_ in event_ids)}"
+        file_basename = (
+            f"attendee_report__eventid_{'|'.join(str(id_) for id_ in event_ids)}"
+        )
         return wrap_attendee_report_as_json(df, file_basename, filetype)
 
     def resolve_attendee_report_org(self, info, org_id, fields=None, filetype="xlsx"):
@@ -133,7 +145,9 @@ class EventResolvers:
             return None
         check_user_membership(info.context.user, org)
 
-        event_ids = Organization.objects.get(id=org_id).events.values_list("id", flat=True)
+        event_ids = Organization.objects.get(id=org_id).events.values_list(
+            "id", flat=True
+        )
         df = create_attendee_report(event_ids, fields)
         file_basename = f"attendee_report__orgid_{org_id}"
         return wrap_attendee_report_as_json(df, file_basename, filetype)
@@ -149,7 +163,9 @@ class EventResolvers:
         return SignUp.objects.filter(event=event)
 
 
-def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd.DataFrame:
+def export_single_event(
+    event_id: int, fields: Union[list[str], set[str]]
+) -> pd.DataFrame:
     event: Event = Event.objects.get(pk=event_id)
     attending_users = event.signed_up_users[: event.available_slots]
     wait_list = event.signed_up_users[event.available_slots :]
@@ -164,12 +180,16 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
     )
 
     if attending_users.exists():
-        df_users_attending = pd.DataFrame(attending_users.values()).set_index("id").add_prefix("user_")
+        df_users_attending = (
+            pd.DataFrame(attending_users.values()).set_index("id").add_prefix("user_")
+        )
         df_users_attending["attendance_status"] = "ATTENDING"
         df_users = pd.concat([df_users, df_users_attending])
 
     if wait_list.exists():
-        df_users_wait_list = pd.DataFrame(wait_list.values()).set_index("id").add_prefix("user_")
+        df_users_wait_list = (
+            pd.DataFrame(wait_list.values()).set_index("id").add_prefix("user_")
+        )
         df_users_wait_list["attendance_status"] = "WAIT LIST"
 
         df_users = pd.concat([df_users, df_users_wait_list])
@@ -177,9 +197,13 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
     if event.products.exists():
         product = event.products.first()
         orders = Order.objects.filter(product=product)
-        df_orders = pd.DataFrame(orders.values()).set_index("user_id").add_prefix("order_")
+        df_orders = (
+            pd.DataFrame(orders.values()).set_index("user_id").add_prefix("order_")
+        )
         df_users = df_users.join(df_orders)
-        payment_successful = df_users["order_payment_status"] == Order.PaymentStatus.CAPTURED
+        payment_successful = (
+            df_users["order_payment_status"] == Order.PaymentStatus.CAPTURED
+        )
         df_users["has_paid"] = payment_successful
 
     df_sign_ups = (
@@ -188,16 +212,24 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
         .rename(columns={"signup_event_id": "event_id", "signup_user_id": "user_id"})
     )
 
-    df_joined = df_sign_ups.join(df_users, on="user_id").sort_values(["event_id", "user_id"])
+    df_joined = df_sign_ups.join(df_users, on="user_id").sort_values(
+        ["event_id", "user_id"]
+    )
     df_joined["event_title"] = event.title
 
     if df_joined.empty:
         return pd.DataFrame()
 
     report_fields = list(DEFAULT_REPORT_FIELDS.intersection(df_joined.columns))
-    fields = set(fields).intersection(report_fields) if fields is not None else report_fields
+    fields = (
+        set(fields).intersection(report_fields) if fields is not None else report_fields
+    )
 
-    return df_joined.loc[:, report_fields].drop("password", errors="ignore", axis=1).loc[:, fields]
+    return (
+        df_joined.loc[:, report_fields]
+        .drop("password", errors="ignore", axis=1)
+        .loc[:, fields]
+    )
 
 
 def create_attendee_report(event_ids, fields):
@@ -212,11 +244,17 @@ def wrap_attendee_report_as_json(df, file_basename, filetype):
     # Handle different content types
     if filetype == "xlsx":
         if "signup_timestamp" in df:
-            df["signup_timestamp"] = df["signup_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
+            df["signup_timestamp"] = df["signup_timestamp"].apply(
+                lambda a: pd.to_datetime(a).tz_localize(None)
+            )
         if "order_timestamp" in df:
-            df["order_timestamp"] = df["order_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
+            df["order_timestamp"] = df["order_timestamp"].apply(
+                lambda a: pd.to_datetime(a).tz_localize(None)
+            )
         buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine="xlsxwriter", options={"remove_timezone": True}) as writer:
+        with pd.ExcelWriter(
+            buffer, engine="xlsxwriter", options={"remove_timezone": True}
+        ) as writer:
             df.to_excel(writer, index=False)
         data = base64.b64encode(buffer.getvalue()).decode("utf-8")
     elif filetype == "csv":

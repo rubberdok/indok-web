@@ -18,7 +18,7 @@ export const suggestNames = (name: string | undefined): { firstName: string; las
 };
 
 export const isVegetarian = (allergies: string | null): boolean => {
-  const options = ["veggis", "vegetar", "plantebasert", "vegan"];
+  const options = ["veggis", "vegetar", "plantebasert", "vegan", "vegansk", "plant based", "vegetarian", "veggie"];
   return options.some((option) => allergies?.toLowerCase().includes(option));
 };
 
@@ -29,6 +29,8 @@ export type IUserForm = {
   allergies: string;
   graduationYear: number;
   phoneNumber: string;
+  nfcUidHex?: string;
+  nfcPinCode?: string;
 };
 
 export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
@@ -43,6 +45,15 @@ export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
   phoneNumber: Yup.string()
     .matches(/^(0047|\+47|47)?[49]\d{7}$/, { message: "Må være et gyldig telefonnummer.", excludeEmptyString: true })
     .ensure(),
+  nfcUidHex: Yup.string()
+    .matches(/^[0-9a-fA-F\s:-]*$/, {
+      message: "UID kan kun inneholde hex-tegn (0-9, A-F) og skilletegn.",
+      excludeEmptyString: true,
+    })
+    .optional(),
+  nfcPinCode: Yup.string()
+    .matches(/^\d{4}$/, { message: "PIN-kode må være nøyaktig 4 sifre.", excludeEmptyString: true })
+    .optional(),
 });
 
 export const suggestGraduationYear = () => {

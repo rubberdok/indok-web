@@ -50,7 +50,6 @@ RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
 COPY entrypoints ./entrypoints
-RUN chmod +x  ./entrypoints/*.sh
 
 # copy env files
 COPY .env.production ./.env.production
@@ -58,6 +57,10 @@ COPY .env.test ./.env.test
 
 # copy project
 COPY . .
+
+# Ensure shell scripts are Unix-formatted in the final image layers.
+# (Windows CRLF checkouts otherwise break script execution in Linux containers.)
+RUN sed -i 's/\r$//' ./entrypoints/*.sh && chmod +x ./entrypoints/*.sh
 
 # chown all the files to the app user
 RUN chown -R django:python /usr/src/app

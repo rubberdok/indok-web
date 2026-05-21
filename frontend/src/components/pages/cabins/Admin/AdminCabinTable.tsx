@@ -43,7 +43,8 @@ export const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, cu
   });
   const [sendEmail] = useMutation(SendEmailDocument);
 
-  const isExpired = (booking: AdminBookingFragment) => dayjs().isAfter(booking.checkIn);
+  const isExpired = (booking: AdminBookingFragment) =>
+    dayjs().tz("Europe/Oslo").isAfter(dayjs(booking.checkIn).tz("Europe/Oslo"));
   const isDeclinedTab = currentTab === "declined";
 
   return (
@@ -119,7 +120,7 @@ export const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, cu
                   </Box>
                 </Tooltip>
               </InlineTableCell>
-              <InlineTableCell>{dayjs(booking.timestamp).format("HH:mm DD-MM-YYYY")}</InlineTableCell>
+              <InlineTableCell>{dayjs(booking.timestamp).tz("Europe/Oslo").format("HH:mm DD-MM-YYYY")}</InlineTableCell>
               <InlineTableCell>{booking.internalParticipants}</InlineTableCell>
               <InlineTableCell>{booking.externalParticipants}</InlineTableCell>
               <InlineTableCell>{booking.extraInfo}</InlineTableCell>

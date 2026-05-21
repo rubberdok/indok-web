@@ -38,7 +38,9 @@ def create_default_groups(apps, **kwargs):
         if len(permissions) > 0:
             query: Q = Q()
             for permission in permissions:
-                query |= Q(codename=permission[1], content_type__app_label=permission[0])
+                query |= Q(
+                    codename=permission[1], content_type__app_label=permission[0]
+                )
             group.permissions.add(*Permission.objects.filter(query))
 
 

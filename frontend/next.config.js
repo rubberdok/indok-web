@@ -77,35 +77,37 @@ const moduleExports = {
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withBundleAnalyzer(moduleExports);
+const bundleAnalyzedConfig = withBundleAnalyzer(moduleExports);
 
 // Injected content via Sentry wizard below
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
-module.exports = withSentryConfig(
-  module.exports,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
+module.exports = process.env.SENTRY_AUTH_TOKEN
+  ? withSentryConfig(
+      bundleAnalyzedConfig,
+      {
+        // For all available options, see:
+        // https://github.com/getsentry/sentry-webpack-plugin#options
 
-    // Suppresses source map uploading logs during build
-    silent: true,
+        // Suppresses source map uploading logs during build
+        silent: true,
 
-    org: "rbberdk",
-    project: "indokweb-frontend",
-  },
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+        org: "rbberdk",
+        project: "indokweb-frontend",
+      },
+      {
+        // For all available options, see:
+        // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
+        // Upload a larger set of source maps for prettier stack traces (increases build time)
+        widenClientFileUpload: true,
 
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
+        // Hides source maps from generated client bundles
+        hideSourceMaps: true,
 
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-  }
-);
+        // Automatically tree-shake Sentry logger statements to reduce bundle size
+        disableLogger: true,
+      }
+    )
+  : bundleAnalyzedConfig;

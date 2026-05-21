@@ -19,7 +19,10 @@ def send_order_confirmation_mail(order: Order) -> None:
     user: User = order.user
 
     receipt_details: list[TemplateVariables] = [
-        {"description": order.product.description, "amount": f"{order.product.price} NOK"}
+        {
+            "description": order.product.description,
+            "amount": f"{order.product.price} NOK",
+        }
         for _ in range(order.quantity)
     ]
     template_variables: TemplateVariables = {

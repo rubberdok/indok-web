@@ -29,6 +29,13 @@ export type Scalars = {
   /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: { input: number; output: number; }
   /**
+   * Allows use of a JSON String for input / output from the GraphQL schema.
+   *
+   * Use of this type is *not recommended* as you lose the benefits of having a defined, static
+   * schema (one of the key benefits of GraphQL).
+   */
+  JSONString: { input: unknown; output: unknown; }
+  /**
    * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
@@ -51,6 +58,7 @@ export type AdminBookingType = {
   isInternalPrice: Maybe<Scalars['Int']['output']>;
   isTentative: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
+  nfcAccessGrants: Array<NfcAccessGrantType>;
   numberOfNights: Maybe<Scalars['Int']['output']>;
   phone: Scalars['String']['output'];
   price: Maybe<Scalars['Int']['output']>;
@@ -67,6 +75,32 @@ export type AdminBookingType = {
 export type AdminEventSignOff = {
   __typename?: 'AdminEventSignOff';
   event: Maybe<EventType>;
+};
+
+export type AdminUpdateUser = {
+  __typename?: 'AdminUpdateUser';
+  user: Maybe<UserType>;
+};
+
+export type AdminUpdateUserNfc = {
+  __typename?: 'AdminUpdateUserNfc';
+  user: Maybe<UserType>;
+};
+
+export type AdminUserInput = {
+  allergies: InputMaybe<Scalars['String']['input']>;
+  email: InputMaybe<Scalars['String']['input']>;
+  firstName: InputMaybe<Scalars['String']['input']>;
+  graduationYear: InputMaybe<Scalars['Int']['input']>;
+  lastName: InputMaybe<Scalars['String']['input']>;
+  phoneNumber: InputMaybe<Scalars['String']['input']>;
+  username: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AdminUserNfcInput = {
+  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
+  pinCode: InputMaybe<Scalars['String']['input']>;
+  uidHex: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Booking type for fields available for not logged in users */
@@ -128,6 +162,22 @@ export type AssignMembership = {
   __typename?: 'AssignMembership';
   membership: Maybe<MembershipType>;
   ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type AssignNfcCard = {
+  __typename?: 'AssignNfcCard';
+  assignment: Maybe<NfcCardAssignmentType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type AssignNfcCardInput = {
+  accessEnd: InputMaybe<Scalars['DateTime']['input']>;
+  accessStart: InputMaybe<Scalars['DateTime']['input']>;
+  externalHolderName: InputMaybe<Scalars['String']['input']>;
+  metadata: InputMaybe<Scalars['JSONString']['input']>;
+  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
+  uidHex: Scalars['String']['input'];
+  userId: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type AttemptCapturePayment = {
@@ -304,6 +354,25 @@ export type CreateFormInput = {
   organizationId: Scalars['ID']['input'];
 };
 
+export type CreateJanHusBooking = {
+  __typename?: 'CreateJanHusBooking';
+  booking: Maybe<JanHusBookingType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type CreateJanHusBookingRequest = {
+  __typename?: 'CreateJanHusBookingRequest';
+  bookingRequest: Maybe<JanHusBookingRequestType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type CreateJanHusPaymentProduct = {
+  __typename?: 'CreateJanHusPaymentProduct';
+  booking: Maybe<JanHusBookingType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+  productId: Maybe<Scalars['ID']['output']>;
+};
+
 /** Creates a new listing */
 export type CreateListing = {
   __typename?: 'CreateListing';
@@ -324,6 +393,24 @@ export type CreateListingInput = {
   readMoreUrl: InputMaybe<Scalars['String']['input']>;
   startDatetime: InputMaybe<Scalars['DateTime']['input']>;
   title: Scalars['String']['input'];
+};
+
+export type CreateNfcAccessGrant = {
+  __typename?: 'CreateNfcAccessGrant';
+  accessGrant: Maybe<NfcAccessGrantType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type CreateNfcAccessGrantInput = {
+  accessEnd: InputMaybe<Scalars['DateTime']['input']>;
+  accessStart: InputMaybe<Scalars['DateTime']['input']>;
+  bookingId: InputMaybe<Scalars['ID']['input']>;
+  grantedToUidHex: InputMaybe<Scalars['String']['input']>;
+  grantedToUserId: InputMaybe<Scalars['ID']['input']>;
+  notes: InputMaybe<Scalars['String']['input']>;
+  participantPolicy: InputMaybe<Scalars['String']['input']>;
+  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
+  scope: Scalars['String']['input'];
 };
 
 export type CreateOrganization = {
@@ -417,6 +504,16 @@ export type DeleteEvent = {
 export type DeleteForm = {
   __typename?: 'DeleteForm';
   deletedId: Maybe<Scalars['ID']['output']>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type DeleteJanHusBooking = {
+  __typename?: 'DeleteJanHusBooking';
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type DeleteJanHusBookingRequest = {
+  __typename?: 'DeleteJanHusBookingRequest';
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -552,6 +649,302 @@ export type InitiateOrder = {
   redirect: Maybe<Scalars['String']['output']>;
 };
 
+/** An enumeration. */
+export enum JanHusAreaConfigurationArea {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+export type JanHusAreaConfigurationInput = {
+  area: Scalars['String']['input'];
+  cleaningFee: InputMaybe<Scalars['Decimal']['input']>;
+  defaultDepositAmount: InputMaybe<Scalars['Decimal']['input']>;
+  externalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
+  internalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
+};
+
+export type JanHusAreaConfigurationType = {
+  __typename?: 'JanHusAreaConfigurationType';
+  area: JanHusAreaConfigurationArea;
+  cleaningFee: Scalars['Decimal']['output'];
+  defaultDepositAmount: Scalars['Decimal']['output'];
+  externalPricePerHour: Scalars['Decimal']['output'];
+  id: Scalars['ID']['output'];
+  internalPricePerHour: Scalars['Decimal']['output'];
+};
+
+/** An enumeration. */
+export enum JanHusBookingArea {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+/** An enumeration. */
+export enum JanHusBookingDepositStatus {
+  /** Not required */
+  NotRequired = 'NOT_REQUIRED',
+  /** Paid */
+  Paid = 'PAID',
+  /** Refunded */
+  Refunded = 'REFUNDED',
+  /** Requested */
+  Requested = 'REQUESTED',
+  /** Required */
+  Required = 'REQUIRED',
+  /** Withheld */
+  Withheld = 'WITHHELD'
+}
+
+/** An enumeration. */
+export enum JanHusBookingDoorAccessPolicy {
+  /** Booker and guest list */
+  AllParticipants = 'ALL_PARTICIPANTS',
+  /** Booker only */
+  BookerOnly = 'BOOKER_ONLY'
+}
+
+/** An enumeration. */
+export enum JanHusBookingEventType {
+  /** External */
+  External = 'EXTERNAL',
+  /** Internal */
+  Internal = 'INTERNAL',
+  /** Open to all Indøk students */
+  OpenForIndok = 'OPEN_FOR_INDOK',
+  /** Private */
+  Private = 'PRIVATE'
+}
+
+export type JanHusBookingInput = {
+  area: Scalars['String']['input'];
+  bookerEmail: InputMaybe<Scalars['String']['input']>;
+  bookerName: InputMaybe<Scalars['String']['input']>;
+  bookerPhone: InputMaybe<Scalars['String']['input']>;
+  cleaningRequested: InputMaybe<Scalars['Boolean']['input']>;
+  comment: InputMaybe<Scalars['String']['input']>;
+  depositAmount: InputMaybe<Scalars['Decimal']['input']>;
+  depositStatus: InputMaybe<Scalars['String']['input']>;
+  endsAt: Scalars['DateTime']['input'];
+  eventType: InputMaybe<Scalars['String']['input']>;
+  isExternalBooking: InputMaybe<Scalars['Boolean']['input']>;
+  ownerOrganizationId: InputMaybe<Scalars['ID']['input']>;
+  ownerUserId: InputMaybe<Scalars['ID']['input']>;
+  responsibleEmail: Scalars['String']['input'];
+  responsibleName: Scalars['String']['input'];
+  responsiblePhone: Scalars['String']['input'];
+  startsAt: Scalars['DateTime']['input'];
+};
+
+export type JanHusBookingLevelType = {
+  __typename?: 'JanHusBookingLevelType';
+  /** If empty, the level can create bookings all year according to its flags. */
+  bookingOpensWeeksBefore: Maybe<Scalars['Int']['output']>;
+  bookings: Array<JanHusBookingType>;
+  canBookAnytime: Scalars['Boolean']['output'];
+  canCreateConfirmed: Scalars['Boolean']['output'];
+  canCreateProvisional: Scalars['Boolean']['output'];
+  canEditAllBookings: Scalars['Boolean']['output'];
+  canEditOwnBookingsOnly: Scalars['Boolean']['output'];
+  canOverrideLowerLevels: Scalars['Boolean']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  organizationAssignments: Array<JanHusOrganizationBookingLevelType>;
+  priority: Scalars['Int']['output'];
+  userAssignments: Array<JanHusUserBookingLevelType>;
+};
+
+/** An enumeration. */
+export enum JanHusBookingRequestArea {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+/** An enumeration. */
+export enum JanHusBookingRequestEventType {
+  /** External */
+  External = 'EXTERNAL',
+  /** Internal */
+  Internal = 'INTERNAL',
+  /** Open to all Indøk students */
+  OpenForIndok = 'OPEN_FOR_INDOK',
+  /** Private */
+  Private = 'PRIVATE'
+}
+
+export type JanHusBookingRequestInput = {
+  area: Scalars['String']['input'];
+  cleaningRequested: InputMaybe<Scalars['Boolean']['input']>;
+  comment: InputMaybe<Scalars['String']['input']>;
+  endsAt: Scalars['DateTime']['input'];
+  eventType: InputMaybe<Scalars['String']['input']>;
+  guestList: InputMaybe<Scalars['String']['input']>;
+  ownerOrganizationId: InputMaybe<Scalars['ID']['input']>;
+  requesterEmail: InputMaybe<Scalars['String']['input']>;
+  requesterName: InputMaybe<Scalars['String']['input']>;
+  requesterPhone: InputMaybe<Scalars['String']['input']>;
+  responsibleEmail: Scalars['String']['input'];
+  responsibleName: Scalars['String']['input'];
+  responsiblePhone: Scalars['String']['input'];
+  startsAt: Scalars['DateTime']['input'];
+};
+
+/** An enumeration. */
+export enum JanHusBookingRequestStatus {
+  /** Approved */
+  Approved = 'APPROVED',
+  /** Pending */
+  Pending = 'PENDING',
+  /** Rejected */
+  Rejected = 'REJECTED'
+}
+
+export type JanHusBookingRequestType = {
+  __typename?: 'JanHusBookingRequestType';
+  adminComment: Scalars['String']['output'];
+  area: JanHusBookingRequestArea;
+  cleaningRequested: Scalars['Boolean']['output'];
+  comment: Scalars['String']['output'];
+  convertedBooking: Maybe<JanHusBookingType>;
+  createdAt: Scalars['DateTime']['output'];
+  endsAt: Scalars['DateTime']['output'];
+  eventType: JanHusBookingRequestEventType;
+  guestList: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  ownerOrganization: Maybe<OrganizationType>;
+  requesterEmail: Scalars['String']['output'];
+  requesterName: Scalars['String']['output'];
+  requesterPhone: Scalars['String']['output'];
+  requesterUser: Maybe<UserType>;
+  responsibleEmail: Scalars['String']['output'];
+  responsibleName: Scalars['String']['output'];
+  responsiblePhone: Scalars['String']['output'];
+  startsAt: Scalars['DateTime']['output'];
+  status: JanHusBookingRequestStatus;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type JanHusBookingSettingsInput = {
+  bufferMinutes: InputMaybe<Scalars['Int']['input']>;
+  closingHour: InputMaybe<Scalars['Int']['input']>;
+  externalBookingsEnabled: InputMaybe<Scalars['Boolean']['input']>;
+  fallEndDate: InputMaybe<Scalars['Date']['input']>;
+  fallSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
+  fallStartDate: InputMaybe<Scalars['Date']['input']>;
+  generalBookingOpensWeeksBefore: InputMaybe<Scalars['Int']['input']>;
+  minDurationMinutes: InputMaybe<Scalars['Int']['input']>;
+  openingHour: InputMaybe<Scalars['Int']['input']>;
+  organizationBookingOpensWeeksBefore: InputMaybe<Scalars['Int']['input']>;
+  slotGranularityMinutes: InputMaybe<Scalars['Int']['input']>;
+  springEndDate: InputMaybe<Scalars['Date']['input']>;
+  springSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
+  springStartDate: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type JanHusBookingSettingsType = {
+  __typename?: 'JanHusBookingSettingsType';
+  bufferMinutes: Scalars['Int']['output'];
+  closingHour: Scalars['Int']['output'];
+  externalBookingsEnabled: Scalars['Boolean']['output'];
+  fallEndDate: Scalars['Date']['output'];
+  fallSemesterActive: Scalars['Boolean']['output'];
+  fallStartDate: Scalars['Date']['output'];
+  generalBookingOpensWeeksBefore: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  minDurationMinutes: Scalars['Int']['output'];
+  openingHour: Scalars['Int']['output'];
+  organizationBookingOpensWeeksBefore: Scalars['Int']['output'];
+  slotGranularityMinutes: Scalars['Int']['output'];
+  springEndDate: Scalars['Date']['output'];
+  springSemesterActive: Scalars['Boolean']['output'];
+  springStartDate: Scalars['Date']['output'];
+};
+
+/** An enumeration. */
+export enum JanHusBookingStatus {
+  /** Blocked */
+  Blocked = 'BLOCKED',
+  /** Cancelled */
+  Cancelled = 'CANCELLED',
+  /** Confirmed */
+  Confirmed = 'CONFIRMED',
+  /** Declined */
+  Declined = 'DECLINED',
+  /** Pending admin review */
+  PendingAdminReview = 'PENDING_ADMIN_REVIEW',
+  /** Provisional */
+  Provisional = 'PROVISIONAL'
+}
+
+export type JanHusBookingType = {
+  __typename?: 'JanHusBookingType';
+  adminComment: Scalars['String']['output'];
+  area: JanHusBookingArea;
+  bookerEmail: Scalars['String']['output'];
+  bookerName: Scalars['String']['output'];
+  bookerPhone: Scalars['String']['output'];
+  bookingLevel: Maybe<JanHusBookingLevelType>;
+  cleaningRequested: Scalars['Boolean']['output'];
+  comment: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdByUser: Maybe<UserType>;
+  depositAmount: Scalars['Decimal']['output'];
+  depositStatus: JanHusBookingDepositStatus;
+  doorAccessPolicy: JanHusBookingDoorAccessPolicy;
+  durationMinutes: Maybe<Scalars['Int']['output']>;
+  endsAt: Scalars['DateTime']['output'];
+  eventType: JanHusBookingEventType;
+  guestList: Scalars['String']['output'];
+  guestListEntries: Maybe<Array<JanHusGuestListEntryType>>;
+  id: Scalars['ID']['output'];
+  isExternalBooking: Scalars['Boolean']['output'];
+  outstandingDepositAmount: Maybe<Scalars['Decimal']['output']>;
+  ownerOrganization: Maybe<OrganizationType>;
+  ownerUser: Maybe<UserType>;
+  responsibleEmail: Scalars['String']['output'];
+  responsibleName: Scalars['String']['output'];
+  responsiblePhone: Scalars['String']['output'];
+  sourceRequests: Array<JanHusBookingRequestType>;
+  startsAt: Scalars['DateTime']['output'];
+  status: JanHusBookingStatus;
+  totalPrice: Maybe<Scalars['Decimal']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  vippsOrder: Maybe<OrderType>;
+  vippsProduct: Maybe<ProductType>;
+};
+
+export type JanHusGuestListEntryType = {
+  __typename?: 'JanHusGuestListEntryType';
+  displayName: Scalars['String']['output'];
+  feideUserid: Scalars['String']['output'];
+};
+
+export type JanHusOrganizationBookingLevelType = {
+  __typename?: 'JanHusOrganizationBookingLevelType';
+  id: Scalars['ID']['output'];
+  level: JanHusBookingLevelType;
+  organization: OrganizationType;
+};
+
+export type JanHusUserBookingLevelType = {
+  __typename?: 'JanHusUserBookingLevelType';
+  id: Scalars['ID']['output'];
+  level: JanHusBookingLevelType;
+  user: UserType;
+};
+
 export type ListingType = {
   __typename?: 'ListingType';
   applicationUrl: Maybe<Scalars['String']['output']>;
@@ -570,15 +963,31 @@ export type ListingType = {
   viewCount: Scalars['Int']['output'];
 };
 
+export type LogNfcAccessEvent = {
+  __typename?: 'LogNfcAccessEvent';
+  event: Maybe<NfcAccessEventType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type LogNfcAccessEventInput = {
+  doorIdentifier: InputMaybe<Scalars['String']['input']>;
+  eventType: Scalars['String']['input'];
+  notes: InputMaybe<Scalars['String']['input']>;
+  rawPayload: InputMaybe<Scalars['JSONString']['input']>;
+  resolvedUserId: InputMaybe<Scalars['ID']['input']>;
+  source: InputMaybe<Scalars['String']['input']>;
+  uidHexReported: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Logout = {
   __typename?: 'Logout';
   idToken: Maybe<Scalars['String']['output']>;
 };
 
 export type MembershipInput = {
-  groupId: InputMaybe<Scalars['ID']['input']>;
-  organizationId: InputMaybe<Scalars['ID']['input']>;
-  userId: InputMaybe<Scalars['ID']['input']>;
+  groupId: Scalars['ID']['input'];
+  organizationId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 export type MembershipType = {
@@ -598,7 +1007,10 @@ export type Mutations = {
    *       when a user signs off an event
    */
   adminEventSignOff: Maybe<AdminEventSignOff>;
+  adminUpdateUser: Maybe<AdminUpdateUser>;
+  adminUpdateUserNfc: Maybe<AdminUpdateUserNfc>;
   assignMembership: Maybe<AssignMembership>;
+  assignNfcCard: Maybe<AssignNfcCard>;
   attemptCapturePayment: Maybe<AttemptCapturePayment>;
   authUser: AuthUser;
   createArchivedocument: Maybe<CreateArchiveDocument>;
@@ -611,8 +1023,12 @@ export type Mutations = {
   /** Create a new event */
   createEvent: Maybe<CreateEvent>;
   createForm: Maybe<CreateForm>;
+  createJanhusBooking: Maybe<CreateJanHusBooking>;
+  createJanhusBookingRequest: Maybe<CreateJanHusBookingRequest>;
+  createJanhusPaymentProduct: Maybe<CreateJanHusPaymentProduct>;
   /** Creates a new listing */
   createListing: Maybe<CreateListing>;
+  createNfcAccessGrant: Maybe<CreateNfcAccessGrant>;
   createOrganization: Maybe<CreateOrganization>;
   createProduct: Maybe<CreateProduct>;
   createQuestion: Maybe<CreateQuestion>;
@@ -629,6 +1045,8 @@ export type Mutations = {
   /** Deletes the event with the given ID */
   deleteEvent: Maybe<DeleteEvent>;
   deleteForm: Maybe<DeleteForm>;
+  deleteJanhusBooking: Maybe<DeleteJanHusBooking>;
+  deleteJanhusBookingRequest: Maybe<DeleteJanHusBookingRequest>;
   /** Deletes the listing with the given ID */
   deleteListing: Maybe<DeleteListing>;
   deleteOrganization: Maybe<DeleteOrganization>;
@@ -647,7 +1065,13 @@ export type Mutations = {
    */
   eventSignUp: Maybe<EventSignUp>;
   initiateOrder: Maybe<InitiateOrder>;
+  logNfcAccessEvent: Maybe<LogNfcAccessEvent>;
   logout: Maybe<Logout>;
+  removeMembership: Maybe<RemoveMembership>;
+  reviewJanhusBooking: Maybe<ReviewJanHusBooking>;
+  reviewJanhusBookingRequest: Maybe<ReviewJanHusBookingRequest>;
+  revokeNfcAccessGrant: Maybe<RevokeNfcAccessGrant>;
+  revokeNfcAssignment: Maybe<RevokeNfcAssignment>;
   /** Sends email to the user or an admin (or both) */
   sendEmail: Maybe<SendEmail>;
   /** Send an email to all users signed up to an event */
@@ -667,10 +1091,15 @@ export type Mutations = {
   /** Updates the event with a given ID with the data in event_data */
   updateEvent: Maybe<UpdateEvent>;
   updateForm: Maybe<UpdateForm>;
+  updateJanhusAreaConfiguration: Maybe<UpdateJanHusAreaConfiguration>;
+  updateJanhusBooking: Maybe<UpdateJanHusBooking>;
+  updateJanhusBookingSettings: Maybe<UpdateJanHusBookingSettings>;
   updateListing: Maybe<UpdateListing>;
   updateOrganization: Maybe<UpdateOrganization>;
   updateQuestion: Maybe<UpdateQuestion>;
   updateUser: Maybe<UpdateUser>;
+  upsertMembership: Maybe<UpsertMembership>;
+  upsertNfcCard: Maybe<UpsertNfcCard>;
 };
 
 
@@ -680,8 +1109,25 @@ export type MutationsAdminEventSignOffArgs = {
 };
 
 
+export type MutationsAdminUpdateUserArgs = {
+  userData: AdminUserInput;
+  userId: Scalars['ID']['input'];
+};
+
+
+export type MutationsAdminUpdateUserNfcArgs = {
+  nfcData: AdminUserNfcInput;
+  userId: Scalars['ID']['input'];
+};
+
+
 export type MutationsAssignMembershipArgs = {
   membershipData: MembershipInput;
+};
+
+
+export type MutationsAssignNfcCardArgs = {
+  assignmentData: AssignNfcCardInput;
 };
 
 
@@ -740,8 +1186,29 @@ export type MutationsCreateFormArgs = {
 };
 
 
+export type MutationsCreateJanhusBookingArgs = {
+  bookingData: JanHusBookingInput;
+};
+
+
+export type MutationsCreateJanhusBookingRequestArgs = {
+  requestData: JanHusBookingRequestInput;
+};
+
+
+export type MutationsCreateJanhusPaymentProductArgs = {
+  bookingId: Scalars['ID']['input'];
+  organizationId: InputMaybe<Scalars['ID']['input']>;
+};
+
+
 export type MutationsCreateListingArgs = {
   listingData: CreateListingInput;
+};
+
+
+export type MutationsCreateNfcAccessGrantArgs = {
+  grantData: CreateNfcAccessGrantInput;
 };
 
 
@@ -812,6 +1279,16 @@ export type MutationsDeleteFormArgs = {
 };
 
 
+export type MutationsDeleteJanhusBookingArgs = {
+  bookingId: Scalars['ID']['input'];
+};
+
+
+export type MutationsDeleteJanhusBookingRequestArgs = {
+  requestId: Scalars['ID']['input'];
+};
+
+
 export type MutationsDeleteListingArgs = {
   id: InputMaybe<Scalars['ID']['input']>;
 };
@@ -847,6 +1324,36 @@ export type MutationsInitiateOrderArgs = {
   fallbackRedirect: InputMaybe<Scalars['String']['input']>;
   productId: Scalars['ID']['input'];
   quantity: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationsLogNfcAccessEventArgs = {
+  eventData: LogNfcAccessEventInput;
+};
+
+
+export type MutationsRemoveMembershipArgs = {
+  membershipId: Scalars['ID']['input'];
+};
+
+
+export type MutationsReviewJanhusBookingArgs = {
+  reviewData: ReviewJanHusBookingInput;
+};
+
+
+export type MutationsReviewJanhusBookingRequestArgs = {
+  reviewData: ReviewJanHusBookingRequestInput;
+};
+
+
+export type MutationsRevokeNfcAccessGrantArgs = {
+  revokeData: RevokeNfcAccessGrantInput;
+};
+
+
+export type MutationsRevokeNfcAssignmentArgs = {
+  revokeData: RevokeNfcAssignmentInput;
 };
 
 
@@ -922,6 +1429,21 @@ export type MutationsUpdateFormArgs = {
 };
 
 
+export type MutationsUpdateJanhusAreaConfigurationArgs = {
+  areaData: JanHusAreaConfigurationInput;
+};
+
+
+export type MutationsUpdateJanhusBookingArgs = {
+  bookingData: UpdateJanHusBookingInput;
+};
+
+
+export type MutationsUpdateJanhusBookingSettingsArgs = {
+  settingsData: JanHusBookingSettingsInput;
+};
+
+
 export type MutationsUpdateListingArgs = {
   id: Scalars['ID']['input'];
   listingData: InputMaybe<BaseListingInput>;
@@ -942,6 +1464,126 @@ export type MutationsUpdateQuestionArgs = {
 
 export type MutationsUpdateUserArgs = {
   userData: InputMaybe<UserInput>;
+};
+
+
+export type MutationsUpsertMembershipArgs = {
+  membershipData: MembershipInput;
+};
+
+
+export type MutationsUpsertNfcCardArgs = {
+  cardData: NfcCardInput;
+};
+
+/** An enumeration. */
+export enum NfcAccessEventEventType {
+  /** Access denied */
+  AccessDenied = 'ACCESS_DENIED',
+  /** Access granted */
+  AccessGranted = 'ACCESS_GRANTED',
+  /** Door opened */
+  DoorOpened = 'DOOR_OPENED'
+}
+
+/** An enumeration. */
+export enum NfcAccessEventSource {
+  /** Backend */
+  Backend = 'BACKEND',
+  /** Manual key */
+  ManualKey = 'MANUAL_KEY',
+  /** NFC reader */
+  NfcReader = 'NFC_READER',
+  /** Unknown */
+  Unknown = 'UNKNOWN'
+}
+
+export type NfcAccessEventType = {
+  __typename?: 'NfcAccessEventType';
+  card: Maybe<NfcCardType>;
+  cardAssignment: Maybe<NfcCardAssignmentType>;
+  doorIdentifier: Scalars['String']['output'];
+  eventType: NfcAccessEventEventType;
+  id: Scalars['ID']['output'];
+  notes: Scalars['String']['output'];
+  occurredAt: Scalars['DateTime']['output'];
+  rawPayload: Scalars['JSONString']['output'];
+  resolvedUser: Maybe<UserType>;
+  source: NfcAccessEventSource;
+  uidHexReported: Scalars['String']['output'];
+};
+
+/** An enumeration. */
+export enum NfcAccessGrantParticipantPolicy {
+  /** All participants */
+  AllParticipants = 'ALL_PARTICIPANTS',
+  /** Booker only */
+  BookerOnly = 'BOOKER_ONLY'
+}
+
+/** An enumeration. */
+export enum NfcAccessGrantScope {
+  /** Booking */
+  Booking = 'BOOKING',
+  /** Manual */
+  Manual = 'MANUAL'
+}
+
+export type NfcAccessGrantType = {
+  __typename?: 'NfcAccessGrantType';
+  accessEnd: Maybe<Scalars['DateTime']['output']>;
+  accessStart: Maybe<Scalars['DateTime']['output']>;
+  booking: Maybe<AdminBookingType>;
+  createdAt: Scalars['DateTime']['output'];
+  grantedBy: Maybe<UserType>;
+  grantedToCard: Maybe<NfcCardType>;
+  grantedToUser: Maybe<UserType>;
+  hasAccessNow: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['ID']['output'];
+  notes: Scalars['String']['output'];
+  participantPolicy: NfcAccessGrantParticipantPolicy;
+  permanentAccess: Scalars['Boolean']['output'];
+  revokedAt: Maybe<Scalars['DateTime']['output']>;
+  revokedBy: Maybe<UserType>;
+  scope: NfcAccessGrantScope;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type NfcCardAssignmentType = {
+  __typename?: 'NfcCardAssignmentType';
+  accessEnd: Maybe<Scalars['DateTime']['output']>;
+  accessStart: Maybe<Scalars['DateTime']['output']>;
+  assignedAt: Scalars['DateTime']['output'];
+  assignedBy: Maybe<UserType>;
+  card: NfcCardType;
+  externalHolderName: Scalars['String']['output'];
+  hasAccessNow: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['ID']['output'];
+  metadata: Scalars['JSONString']['output'];
+  permanentAccess: Scalars['Boolean']['output'];
+  revocationReason: Scalars['String']['output'];
+  revokedAt: Maybe<Scalars['DateTime']['output']>;
+  revokedBy: Maybe<UserType>;
+  user: Maybe<UserType>;
+};
+
+export type NfcCardInput = {
+  isEnabled: InputMaybe<Scalars['Boolean']['input']>;
+  label: InputMaybe<Scalars['String']['input']>;
+  notes: InputMaybe<Scalars['String']['input']>;
+  uidHex: Scalars['String']['input'];
+};
+
+export type NfcCardType = {
+  __typename?: 'NfcCardType';
+  activeAssignment: Maybe<NfcCardAssignmentType>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  isEnabled: Scalars['Boolean']['output'];
+  label: Scalars['String']['output'];
+  notes: Scalars['String']['output'];
+  uidHex: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type OptionInput = {
@@ -994,6 +1636,7 @@ export type OrganizationType = {
   logoUrl: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   parent: Maybe<OrganizationType>;
+  permissionGroups: Maybe<Array<ResponsibleGroupType>>;
   primaryGroup: Maybe<ResponsibleGroupType>;
   slug: Scalars['String']['output'];
   users: Array<UserType>;
@@ -1024,6 +1667,7 @@ export type Queries = {
   __typename?: 'Queries';
   activeBookingResponsible: Maybe<BookingResponsibleType>;
   adminAllBookings: Maybe<Array<AdminBookingType>>;
+  adminJanhusBookings: Maybe<Array<JanHusBookingType>>;
   allBlogPosts: Maybe<Array<BlogPostType>>;
   allBlogs: Maybe<Array<BlogType>>;
   allBookings: Maybe<Array<AllBookingsType>>;
@@ -1041,6 +1685,8 @@ export type Queries = {
   blogPost: Maybe<BlogPostType>;
   bookingSemester: Maybe<UpdateBookingSemesterType>;
   cabins: Maybe<Array<CabinType>>;
+  canManageUserNfc: Scalars['Boolean']['output'];
+  canManageUserProfiles: Scalars['Boolean']['output'];
   category: Maybe<CategoryType>;
   defaultEvents: Maybe<Array<EventType>>;
   event: Maybe<EventType>;
@@ -1049,10 +1695,27 @@ export type Queries = {
   form: Maybe<FormType>;
   forms: Maybe<Array<FormType>>;
   hasPermission: Maybe<Scalars['Boolean']['output']>;
+  janhusAreaConfigurations: Maybe<Array<JanHusAreaConfigurationType>>;
+  janhusBookingLevels: Maybe<Array<JanHusBookingLevelType>>;
+  janhusBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
+  janhusBookingSettings: Maybe<JanHusBookingSettingsType>;
+  janhusBookings: Maybe<Array<JanHusBookingType>>;
+  janhusGuestSearch: Maybe<Array<JanHusGuestListEntryType>>;
+  janhusGuestSearchForRequest: Maybe<Array<JanHusGuestListEntryType>>;
+  janhusMyBookingLevel: Maybe<JanHusBookingLevelType>;
+  janhusMyBookings: Maybe<Array<JanHusBookingType>>;
   listing: Maybe<ListingType>;
   listings: Maybe<Array<ListingType>>;
   logout: Scalars['String']['output'];
   memberships: Maybe<Array<MembershipType>>;
+  myCabinBookings: Maybe<Array<AdminBookingType>>;
+  myNfcCardAssignment: Maybe<NfcCardAssignmentType>;
+  nfcAccessEvents: Maybe<Array<NfcAccessEventType>>;
+  nfcAccessGrants: Maybe<Array<NfcAccessGrantType>>;
+  nfcCard: Maybe<NfcCardType>;
+  nfcCardAssignments: Maybe<Array<NfcCardAssignmentType>>;
+  nfcCards: Maybe<Array<NfcCardType>>;
+  nfcUserSearch: Maybe<Array<UserType>>;
   order: Maybe<OrderType>;
   ordersByStatus: Maybe<OrdersByStatusType>;
   organization: Maybe<OrganizationType>;
@@ -1065,12 +1728,18 @@ export type Queries = {
   signUps: Maybe<SignUpType>;
   user: Maybe<UserType>;
   userOrders: Maybe<Array<OrderType>>;
+  userSearch: Maybe<Array<UserType>>;
 };
 
 
 export type QueriesAdminAllBookingsArgs = {
   after: InputMaybe<Scalars['String']['input']>;
   before: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesAdminJanhusBookingsArgs = {
+  status: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1145,6 +1814,31 @@ export type QueriesHasPermissionArgs = {
 };
 
 
+export type QueriesJanhusBookingRequestsArgs = {
+  status: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesJanhusBookingsArgs = {
+  area: InputMaybe<Scalars['String']['input']>;
+  endsAt: InputMaybe<Scalars['DateTime']['input']>;
+  startsAt: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+
+export type QueriesJanhusGuestSearchArgs = {
+  bookingId: Scalars['ID']['input'];
+  limit: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
+};
+
+
+export type QueriesJanhusGuestSearchForRequestArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
+};
+
+
 export type QueriesListingArgs = {
   id: InputMaybe<Scalars['ID']['input']>;
 };
@@ -1157,6 +1851,33 @@ export type QueriesListingsArgs = {
 
 export type QueriesMembershipsArgs = {
   organizationId: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueriesNfcAccessEventsArgs = {
+  doorIdentifier: InputMaybe<Scalars['String']['input']>;
+  limit: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueriesNfcAccessGrantsArgs = {
+  activeOnly: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueriesNfcCardArgs = {
+  uidHex: Scalars['String']['input'];
+};
+
+
+export type QueriesNfcCardAssignmentsArgs = {
+  activeOnly: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueriesNfcUserSearchArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
 };
 
 
@@ -1203,6 +1924,12 @@ export type QueriesSignUpsArgs = {
   eventId: Scalars['ID']['input'];
 };
 
+
+export type QueriesUserSearchArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
+};
+
 /** A question on a form. */
 export type QuestionType = {
   __typename?: 'QuestionType';
@@ -1231,6 +1958,12 @@ export enum QuestionTypeEnum {
   ShortAnswer = 'SHORT_ANSWER',
   Slider = 'SLIDER'
 }
+
+export type RemoveMembership = {
+  __typename?: 'RemoveMembership';
+  ok: Maybe<Scalars['Boolean']['output']>;
+  removedMember: Maybe<UserType>;
+};
 
 /** An enumeration. */
 export enum ResponseStatus {
@@ -1264,6 +1997,55 @@ export type ResponsibleGroupType = {
   name: Scalars['String']['output'];
   organization: OrganizationType;
   uuid: Scalars['UUID']['output'];
+};
+
+export type ReviewJanHusBooking = {
+  __typename?: 'ReviewJanHusBooking';
+  booking: Maybe<JanHusBookingType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type ReviewJanHusBookingInput = {
+  adminComment: InputMaybe<Scalars['String']['input']>;
+  depositAmount: InputMaybe<Scalars['Decimal']['input']>;
+  depositStatus: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  status: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ReviewJanHusBookingRequest = {
+  __typename?: 'ReviewJanHusBookingRequest';
+  booking: Maybe<JanHusBookingType>;
+  bookingRequest: Maybe<JanHusBookingRequestType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type ReviewJanHusBookingRequestInput = {
+  adminComment: InputMaybe<Scalars['String']['input']>;
+  convertToBooking: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['ID']['input'];
+  status: Scalars['String']['input'];
+};
+
+export type RevokeNfcAccessGrant = {
+  __typename?: 'RevokeNfcAccessGrant';
+  accessGrant: Maybe<NfcAccessGrantType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type RevokeNfcAccessGrantInput = {
+  accessGrantId: Scalars['ID']['input'];
+};
+
+export type RevokeNfcAssignment = {
+  __typename?: 'RevokeNfcAssignment';
+  assignment: Maybe<NfcCardAssignmentType>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type RevokeNfcAssignmentInput = {
+  assignmentId: Scalars['ID']['input'];
+  reason: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Sends email to the user or an admin (or both) */
@@ -1440,6 +2222,47 @@ export type UpdateForm = {
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type UpdateJanHusAreaConfiguration = {
+  __typename?: 'UpdateJanHusAreaConfiguration';
+  areaConfiguration: Maybe<JanHusAreaConfigurationType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateJanHusBooking = {
+  __typename?: 'UpdateJanHusBooking';
+  booking: Maybe<JanHusBookingType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateJanHusBookingInput = {
+  adminComment: InputMaybe<Scalars['String']['input']>;
+  area: InputMaybe<Scalars['String']['input']>;
+  bookerEmail: InputMaybe<Scalars['String']['input']>;
+  bookerName: InputMaybe<Scalars['String']['input']>;
+  bookerPhone: InputMaybe<Scalars['String']['input']>;
+  cleaningRequested: InputMaybe<Scalars['Boolean']['input']>;
+  comment: InputMaybe<Scalars['String']['input']>;
+  depositAmount: InputMaybe<Scalars['Decimal']['input']>;
+  depositStatus: InputMaybe<Scalars['String']['input']>;
+  doorAccessPolicy: InputMaybe<Scalars['String']['input']>;
+  endsAt: InputMaybe<Scalars['DateTime']['input']>;
+  eventType: InputMaybe<Scalars['String']['input']>;
+  guestList: InputMaybe<Scalars['String']['input']>;
+  guestListUserFeideIds: InputMaybe<Array<Scalars['String']['input']>>;
+  id: Scalars['ID']['input'];
+  responsibleEmail: InputMaybe<Scalars['String']['input']>;
+  responsibleName: InputMaybe<Scalars['String']['input']>;
+  responsiblePhone: InputMaybe<Scalars['String']['input']>;
+  startsAt: InputMaybe<Scalars['DateTime']['input']>;
+  status: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateJanHusBookingSettings = {
+  __typename?: 'UpdateJanHusBookingSettings';
+  bookingSettings: Maybe<JanHusBookingSettingsType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type UpdateListing = {
   __typename?: 'UpdateListing';
   listing: Maybe<ListingType>;
@@ -1463,6 +2286,18 @@ export type UpdateUser = {
   user: Maybe<UserType>;
 };
 
+export type UpsertMembership = {
+  __typename?: 'UpsertMembership';
+  membership: Maybe<MembershipType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpsertNfcCard = {
+  __typename?: 'UpsertNfcCard';
+  card: Maybe<NfcCardType>;
+  ok: Scalars['Boolean']['output'];
+};
+
 export type UserAttendingType = {
   __typename?: 'UserAttendingType';
   hasBoughtTicket: Maybe<Scalars['Boolean']['output']>;
@@ -1477,6 +2312,8 @@ export type UserInput = {
   firstName: InputMaybe<Scalars['String']['input']>;
   graduationYear: InputMaybe<Scalars['Int']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
+  nfcPinCode: InputMaybe<Scalars['String']['input']>;
+  nfcUidHex: InputMaybe<Scalars['String']['input']>;
   phoneNumber: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1495,9 +2332,13 @@ export type UserType = {
   graduationYear: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   idToken: Scalars['String']['output'];
+  isIndok: Scalars['Boolean']['output'];
   lastLogin: Maybe<Scalars['DateTime']['output']>;
   lastName: Scalars['String']['output'];
   memberships: Array<MembershipType>;
+  nfcPermanentAccess: Maybe<Scalars['Boolean']['output']>;
+  nfcPinCode: Maybe<Scalars['String']['output']>;
+  nfcUidHex: Maybe<Scalars['String']['output']>;
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars['String']['output'];
   responses: Array<ResponseType>;
@@ -1538,6 +2379,16 @@ export type CabinPermissionQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CabinPermissionQuery = { __typename?: 'Queries', hasPermission: boolean | null };
 
+export type JanHusPermissionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JanHusPermissionQuery = { __typename?: 'Queries', hasPermission: boolean | null };
+
+export type ProfileAdminEditCapabilitiesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProfileAdminEditCapabilitiesQuery = { __typename?: 'Queries', canManageUserProfiles: boolean, canManageUserNfc: boolean };
+
 
 export const LoggedInUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoggedInUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}}]}}]}}]} as unknown as DocumentNode<LoggedInUserQuery, LoggedInUserQueryVariables>;
 export const UserWithIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserWithId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UserWithIdQuery, UserWithIdQueryVariables>;
@@ -1545,3 +2396,5 @@ export const HasPermissionDocument = {"kind":"Document","definitions":[{"kind":"
 export const LogoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"idToken"}}]}}]}}]} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
 export const ProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feideEmail"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"dateJoined"}},{"kind":"Field","name":{"kind":"Name","value":"graduationYear"}},{"kind":"Field","name":{"kind":"Name","value":"gradeYear"}},{"kind":"Field","name":{"kind":"Name","value":"allergies"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"firstLogin"}}]}}]}}]} as unknown as DocumentNode<ProfileQuery, ProfileQueryVariables>;
 export const CabinPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CabinPermission"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"permission"},"value":{"kind":"StringValue","value":"cabins.manage_booking","block":false}}]}]}}]} as unknown as DocumentNode<CabinPermissionQuery, CabinPermissionQueryVariables>;
+export const JanHusPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"JanHusPermission"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasPermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"permission"},"value":{"kind":"StringValue","value":"janhus.manage_booking","block":false}}]}]}}]} as unknown as DocumentNode<JanHusPermissionQuery, JanHusPermissionQueryVariables>;
+export const ProfileAdminEditCapabilitiesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProfileAdminEditCapabilities"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"canManageUserProfiles"}},{"kind":"Field","name":{"kind":"Name","value":"canManageUserNfc"}}]}}]} as unknown as DocumentNode<ProfileAdminEditCapabilitiesQuery, ProfileAdminEditCapabilitiesQueryVariables>;

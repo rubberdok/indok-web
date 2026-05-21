@@ -34,7 +34,9 @@ export function useOverlappingBookings() {
     if (!bookings) {
       return false;
     }
-    return bookings.some((booking) => date.isBetween(booking.start, booking.end, "day", "[]"));
+    return bookings.some((booking) =>
+      date.isBetween(dayjs(booking.start).tz("Europe/Oslo"), dayjs(booking.end).tz("Europe/Oslo"), "day", "[]")
+    );
   }
 
   function hasOverlapWithOtherBookings(dates: { start: dayjs.Dayjs; end: dayjs.Dayjs }, cabins: { id: string }[]) {
@@ -47,8 +49,8 @@ export function useOverlappingBookings() {
       return false;
     }
     return bookings.some((booking) => {
-      const bookingStart = dayjs(booking.start);
-      const bookingEnd = dayjs(booking.end);
+      const bookingStart = dayjs(booking.start).tz("Europe/Oslo");
+      const bookingEnd = dayjs(booking.end).tz("Europe/Oslo");
 
       return dates.start.isSameOrBefore(bookingEnd, "day") && dates.end.isSameOrAfter(bookingStart, "day");
     });

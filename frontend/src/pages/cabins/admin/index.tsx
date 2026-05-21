@@ -7,6 +7,7 @@ import { useState } from "react";
 import { PermissionRequired } from "@/components/Auth";
 import { TabPanel } from "@/components/pages/about/TabPanel";
 import { AdminCabinTable } from "@/components/pages/cabins/Admin/AdminCabinTable";
+import { Title } from "@/components/Title";
 import { AdminAllBookingsDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
@@ -14,8 +15,9 @@ import { NextPageWithLayout } from "@/lib/next";
 
 /** Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings. */
 const AdminPage: NextPageWithLayout = () => {
+  const now = dayjs().tz("Europe/Oslo");
   const { data, refetch } = useQuery(AdminAllBookingsDocument, {
-    variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") },
+    variables: { after: now.subtract(1, "day").format("YYYY-MM-DD") },
   });
 
   const [tabValue, setTabValue] = useState<number>(0);
@@ -28,48 +30,69 @@ const AdminPage: NextPageWithLayout = () => {
   const tentative = data?.adminAllBookings?.filter((booking) => booking.isTentative);
 
   return (
-    <Container>
-      <PermissionRequired permission="cabins.manage_booking">
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <Box p={3}>
-              <Typography variant="h3" align="center">
-                Booking adminside
-              </Typography>
-              <Button startIcon={<Settings />} onClick={() => router.push("admin/settings")}>
-                Innstillinger
-              </Button>
-            </Box>
+    <>
+      <Title
+        title="Booking adminside"
+        overline="Bookinger"
+        variant="dark"
+        breadcrumbs={[
+          {
+            name: "Hjem",
+            href: "/",
+          },
+          {
+            name: "Hytter",
+            href: "/cabins",
+          },
+          {
+            name: "Adminside",
+            href: "/cabins/admin",
+          },
+        ]}
+      />
+      <Container>
+        <PermissionRequired permission="cabins.manage_booking">
+          <Grid container direction="column" spacing={3}>
+            <Grid item>
+              <Box p={3}>
+                <Typography variant="h3" align="center">
+                  Booking adminside
+                </Typography>
+                <Button startIcon={<Settings />} onClick={() => router.push("admin/settings")}>
+                  Innstillinger
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
 
-        <Box sx={(theme) => ({ width: "100%", overflowX: "auto", mb: theme.spacing(4) })} component="div">
-          <Box sx={{ width: "100%" }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                onChange={(_e, newValue) => handleTabChange(newValue)}
-                value={tabValue}
-                indicatorColor="primary"
-                variant="fullWidth"
-              >
-                <Tab label="Nye søknader" />
-                <Tab label="Godkjente søknader" />
-                <Tab label="Underkjente søknader" />
-              </Tabs>
+          <Box sx={(theme) => ({ width: "100%", overflowX: "auto", mb: theme.spacing(4) })} component="div">
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  onChange={(_e, newValue) => handleTabChange(newValue)}
+                  value={tabValue}
+                  indicatorColor="primary"
+                  variant="fullWidth"
+                >
+                  <Tab label="Nye søknader" />
+                  <Tab label="Godkjente søknader" />
+                  <Tab label="Underkjente søknader" />
+                </Tabs>
+              </Box>
+              <TabPanel value={tabValue} index={0}>
+                <AdminCabinTable bookings={tentative} refetchBookings={refetch} currentTab="tentative" />
+              </TabPanel>
+              <TabPanel value={tabValue} index={1}>
+                <AdminCabinTable bookings={accepted} refetchBookings={refetch} currentTab="accepted" />
+              </TabPanel>
+              <TabPanel value={tabValue} index={2}>
+                <AdminCabinTable bookings={declined} refetchBookings={refetch} currentTab="declined" />
+              </TabPanel>
             </Box>
-            <TabPanel value={tabValue} index={0}>
-              <AdminCabinTable bookings={tentative} refetchBookings={refetch} currentTab="tentative" />
-            </TabPanel>
-            <TabPanel value={tabValue} index={1}>
-              <AdminCabinTable bookings={accepted} refetchBookings={refetch} currentTab="accepted" />
-            </TabPanel>
-            <TabPanel value={tabValue} index={2}>
-              <AdminCabinTable bookings={declined} refetchBookings={refetch} currentTab="declined" />
-            </TabPanel>
           </Box>
-        </Box>
-      </PermissionRequired>
-    </Container>
+        </PermissionRequired>
+      </Container>
+    </>
   );
 };
 

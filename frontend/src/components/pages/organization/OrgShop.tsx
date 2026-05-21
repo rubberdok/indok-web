@@ -2,10 +2,12 @@ import { useQuery } from "@apollo/client";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
+
 import { AdminOrganizationFragment, PaginatedShopOrdersDocument } from "@/generated/graphql";
+import { HEADER_DESKTOP_HEIGHT } from "@/lib/mui/theme/constants";
+
 import { ShopSale } from "../orgs/ShopSale";
 import { TableStepper } from "../orgs/TableStepper";
-import { HEADER_DESKTOP_HEIGHT} from "@/lib/mui/theme/constants";
 
 type Props = {
   organization: AdminOrganizationFragment;
@@ -25,7 +27,7 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
       offset: page * limit, // The starting index (e.g., 0 for the first set of results)
     },
   });
-  if (error) return <p>Error</p>;
+  if (error) return <p>Error, med melding: &quot;{error.message}&quot;</p>;
 
   if (organization.name.toLowerCase() !== "janus linjeforening") {
     return (
@@ -50,25 +52,40 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
         padding={1}
         borderBottom={1}
         position={"sticky"}
-        sx={{ bgcolor: theme.palette.background.elevated, color: theme.palette.text.primary, top: HEADER_DESKTOP_HEIGHT - 20, zIndex:1}}
+        sx={{
+          bgcolor: theme.palette.background.elevated,
+          color: theme.palette.text.primary,
+          top: HEADER_DESKTOP_HEIGHT - 20,
+          zIndex: 1,
+        }}
       >
         <Box display="flex" alignItems="left" justifyContent="left" width={"25%"} padding={1}>
-          <Typography variant="body1" fontWeight={"bold"}>Navn på kunde</Typography>
+          <Typography variant="body1" fontWeight={"bold"}>
+            Navn på kunde
+          </Typography>
         </Box>
         <Box display="flex" alignItems="left" justifyContent="left" width={"15%"} padding={1}>
-          <Typography variant="body1" fontWeight={"bold"}>Kjøpt produkt</Typography>
+          <Typography variant="body1" fontWeight={"bold"}>
+            Kjøpt produkt
+          </Typography>
         </Box>
         <Box display="flex" alignItems="left" justifyContent="left" width={"15%"} padding={1}>
-          <Typography variant="body1" fontWeight={"bold"}>Antall bestilt</Typography>
+          <Typography variant="body1" fontWeight={"bold"}>
+            Antall bestilt
+          </Typography>
         </Box>
         <Box display="flex" alignItems="left" justifyContent="left" width={"15%"} padding={1}>
-          <Typography variant="body1" fontWeight={"bold"}>Betalt status</Typography>
+          <Typography variant="body1" fontWeight={"bold"}>
+            Betalt status
+          </Typography>
         </Box>
         <Box display="flex" alignItems="left" justifyContent="left" width={"15%"} padding={1}>
           <Typography fontWeight={"bold"}>Mulige handlinger</Typography>
         </Box>
         <Box display="flex" alignItems="left" justifyContent="left" width={"15%"} padding={1}>
-          <Typography variant="body1" fontWeight={"bold"}>Har vi levert varen</Typography>
+          <Typography variant="body1" fontWeight={"bold"}>
+            Har vi levert varen
+          </Typography>
         </Box>
       </Stack>
 
@@ -82,11 +99,11 @@ export const OrgProducts: React.FC<Props> = ({ organization }) => {
                 return (
                   <Grid key={order.id} item xs={12} sm={12} md={12}>
                     <Stack
-                    borderBottom={1}
-                    borderColor={"gray"}
-                    sx={{
-                      bgcolor: index % 2 === 0 ? theme.palette.background.paper : theme.palette.background.elevated,
-                    }}
+                      borderBottom={1}
+                      borderColor={"gray"}
+                      sx={{
+                        bgcolor: index % 2 === 0 ? theme.palette.background.paper : theme.palette.background.elevated,
+                      }}
                     >
                       <ShopSale
                         name={order.user.firstName + " " + order.user.lastName}

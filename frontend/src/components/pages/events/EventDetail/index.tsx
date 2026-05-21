@@ -164,5 +164,5 @@ export const EventDetail: React.FC<Props> = ({ event }) => {
 };
 
 function formatDate(date: string) {
-  return dayjs(date).format("LLL");
+  return dayjs(date).tz("Europe/Oslo").format("LLL");
 }

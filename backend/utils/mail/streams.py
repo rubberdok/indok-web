@@ -1,7 +1,17 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Any, Literal, Optional, Sequence, Tuple, TypedDict, Union, get_args
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Literal,
+    Optional,
+    Sequence,
+    Tuple,
+    TypedDict,
+    Union,
+    get_args,
+)
 
 from django.conf import settings
 
@@ -11,11 +21,19 @@ if TYPE_CHECKING:
 from django.core.mail import EmailMultiAlternatives
 
 TransactionalStream = Literal[
-    "order-confirmations", "cabin-booking-confirmations", "wait-list-notifications", "event-updates"
+    "order-confirmations",
+    "cabin-booking-confirmations",
+    "wait-list-notifications",
+    "event-updates",
 ]
 BroadcastStream = Literal["event-notifications"]
 TemplateVariables = dict[
-    str, Union[dict[str, Union["TemplateVariables", str, list["TemplateVariables"]]], str, list["TemplateVariables"]]
+    str,
+    Union[
+        dict[str, Union["TemplateVariables", str, list["TemplateVariables"]]],
+        str,
+        list["TemplateVariables"],
+    ],
 ]
 
 TRANSACTIONAL_STREAMS: tuple[TransactionalStream, ...] = get_args(TransactionalStream)
@@ -98,21 +116,20 @@ class PostmarkEmail(EmailMultiAlternatives):
             If an appropriate stream is not set
         """
         if stream not in TRANSACTIONAL_STREAMS + BROADCAST_STREAMS:
-            raise ValueError(f"Stream must be one of {TRANSACTIONAL_STREAMS}, or {BROADCAST_STREAMS}")
+            raise ValueError(
+                f"Stream must be one of {TRANSACTIONAL_STREAMS}, or {BROADCAST_STREAMS}"
+            )
 
         if template_variables is None:
             if to is not None and template_id is not None and len(to) > 1:
-                warnings.warn(
-                    """
+                warnings.warn("""
                     As template_variables is None,
                     the mail will be sent with several recipients in the to-field,
                     potentially leaking emails.
-                    """
-                )
+                    """)
         elif emails := list(template_variables.keys()):
             if "@" not in emails[0]:
-                warnings.warn(
-                    """template_variables should have the following structure:
+                warnings.warn("""template_variables should have the following structure:
                     {
                         first@example.com: {
                             ...
@@ -121,8 +138,7 @@ class PostmarkEmail(EmailMultiAlternatives):
                             ...
                         }
                     }
-                    """
-                )
+                    """)
 
         default_template_variables: TemplateVariables = {
             "company_name": "Rubberdøk",
@@ -143,7 +159,17 @@ class PostmarkEmail(EmailMultiAlternatives):
         self.merge_data = template_variables
 
         super().__init__(
-            subject, body, from_email, to, bcc, connection, attachments, headers, alternatives, cc, reply_to
+            subject,
+            body,
+            from_email,
+            to,
+            bcc,
+            connection,
+            attachments,
+            headers,
+            alternatives,
+            cc,
+            reply_to,
         )
 
 

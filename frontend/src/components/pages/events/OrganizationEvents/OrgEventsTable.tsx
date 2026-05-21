@@ -31,7 +31,7 @@ export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
                 query: { organizationId: organization.id, eventId: event.id },
               }}
             >
-              <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
+              <TableCell>{dayjs(event.startTime).tz("Europe/Oslo").format("HH:mm DD-MM-YYYY")}</TableCell>
               <TableCell>{event.title}</TableCell>
               <TableCell>{event.availableSlots}</TableCell>
               <TableCell>{event.usersAttending?.length}</TableCell>

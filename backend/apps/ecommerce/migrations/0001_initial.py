@@ -20,14 +20,27 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="VippsAccessToken",
             fields=[
-                ("token", models.CharField(max_length=2048, primary_key=True, serialize=False)),
+                (
+                    "token",
+                    models.CharField(
+                        max_length=2048, primary_key=True, serialize=False
+                    ),
+                ),
                 ("expires_on", models.DateTimeField()),
             ],
         ),
         migrations.CreateModel(
             name="Product",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=200)),
                 ("price", models.DecimalField(decimal_places=2, max_digits=11)),
                 ("description", models.TextField()),
@@ -38,7 +51,9 @@ class Migration(migrations.Migration):
                 (
                     "content_type",
                     models.ForeignKey(
-                        null=True, on_delete=django.db.models.deletion.CASCADE, to="contenttypes.contenttype"
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contenttypes.contenttype",
                     ),
                 ),
                 (
@@ -57,7 +72,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Order",
             fields=[
-                ("id", models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
+                    ),
+                ),
                 ("quantity", models.PositiveIntegerField(default=1)),
                 ("total_price", models.DecimalField(decimal_places=2, max_digits=11)),
                 (
@@ -77,18 +97,27 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("timestamp", models.DateTimeField(auto_now_add=True)),
-                ("auth_token", models.CharField(default=apps.ecommerce.models.get_auth_token, max_length=32)),
+                (
+                    "auth_token",
+                    models.CharField(
+                        default=apps.ecommerce.models.get_auth_token, max_length=32
+                    ),
+                ),
                 ("payment_attempt", models.PositiveIntegerField(default=1)),
                 (
                     "product",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="orders", to="ecommerce.product"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="orders",
+                        to="ecommerce.product",
                     ),
                 ),
                 (
                     "user",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="orders", to=settings.AUTH_USER_MODEL
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="orders",
+                        to=settings.AUTH_USER_MODEL,
                     ),
                 ),
             ],

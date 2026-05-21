@@ -39,7 +39,8 @@ export const DeclineBookingDialog: React.FC<DialogProps> = ({
       {bookingToBeDeclined !== undefined && (
         <DialogTitle>
           Underkjenning av booking fra {bookingToBeDeclined?.firstName} {bookingToBeDeclined?.lastName} fra{" "}
-          {dayjs(bookingToBeDeclined.checkIn).format("L")} til {dayjs(bookingToBeDeclined.checkOut).format("L")} av{" "}
+          {dayjs(bookingToBeDeclined.checkIn).tz("Europe/Oslo").format("L")} til{" "}
+          {dayjs(bookingToBeDeclined.checkOut).tz("Europe/Oslo").format("L")} av{" "}
           {bookingToBeDeclined.cabins.map((cabin) => cabin.name).join(" og ")}
         </DialogTitle>
       )}

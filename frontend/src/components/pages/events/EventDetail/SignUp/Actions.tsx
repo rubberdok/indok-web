@@ -2,13 +2,13 @@ import { useMutation } from "@apollo/client";
 import { Alert, Unstable_Grid2 as Grid, Snackbar, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 
-import { CountdownStatusText } from "./Countdown";
-import { useCountdown } from "./hooks/useCountdown";
-import { SignUpButton } from "./SignUpButton";
-
 import { LoginRequired, PermissionRequired } from "@/components/Auth";
 import { EventDetailFieldsFragment, EventSignOffDocument, EventSignUpDocument } from "@/generated/graphql";
 import dayjs from "@/lib/date";
+
+import { CountdownStatusText } from "./Countdown";
+import { useCountdown } from "./hooks/useCountdown";
+import { SignUpButton } from "./SignUpButton";
 
 type Event = {
   id: string;
@@ -68,7 +68,10 @@ export const Actions: React.FC<Props> = ({ event }) => {
   const isAttending = Boolean(event.userAttendance?.isSignedUp);
   const needsExtraInformation = !isSignedUp && Boolean(event.hasExtraInformation && !extraInformation);
   const isBindingSignup = isAttending && Boolean(event.bindingSignup);
-  const signUpOpen = dayjs().isBetween(event.signupOpenDate, event.deadline);
+  const now = dayjs().tz("Europe/Oslo");
+  const signUpOpenAt = dayjs(event.signupOpenDate).tz("Europe/Oslo");
+  const signUpDeadline = dayjs(event.deadline).tz("Europe/Oslo");
+  const signUpOpen = now.isBetween(signUpOpenAt, signUpDeadline);
   const disabled = needsExtraInformation || isBindingSignup || !signUpOpen;
 
   function handleSignUp() {

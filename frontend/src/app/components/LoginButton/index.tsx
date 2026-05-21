@@ -1,14 +1,14 @@
 "use client";
 
-import { useSuspenseQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { PersonOutlineRounded } from "@mui/icons-material";
 import { Button, Skeleton } from "@mui/material";
-import { Suspense } from "react";
+import { useMemo } from "react";
 
 import { graphql } from "@/gql";
+import { generateFeideLoginUrl } from "@/utils/auth";
 
 import { Link } from "../Link";
-import { LoginRequired } from "../LoginRequired";
 
 type Props = {
   fullWidth?: boolean;
@@ -25,45 +25,62 @@ const loggedInUserDocument = graphql(/* GraphQL */ `
 `);
 
 export const InnerLoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
-  const { data } = useSuspenseQuery(loggedInUserDocument);
+  const url = useMemo<string>(() => generateFeideLoginUrl(), []);
+  const { data, loading } = useQuery(loggedInUserDocument, {
+    ssr: false,
+    errorPolicy: "all",
+  });
 
-  return (
-    <LoginRequired size="medium" color="secondary" data-test-id={dataTestId} fullWidth={fullWidth} variant="text">
+  if (loading) {
+    return (
+      <Skeleton>
+        <Button
+          component={Link}
+          href="/profile"
+          noLinkStyle
+          endIcon={<PersonOutlineRounded fontSize="small" />}
+          variant="text"
+          color="secondary"
+          size="medium"
+        >
+          Laster...
+        </Button>
+      </Skeleton>
+    );
+  }
+
+  if (!data?.user) {
+    return (
       <Button
         component={Link}
-        href="/profile"
+        href={url}
         noLinkStyle
-        endIcon={<PersonOutlineRounded fontSize="small" />}
         variant="text"
         color="secondary"
         size="medium"
+        data-test-id={dataTestId}
+        fullWidth={fullWidth}
       >
-        {data?.user?.firstName}
+        Logg inn
       </Button>
-    </LoginRequired>
+    );
+  }
+
+  return (
+    <Button
+      component={Link}
+      href="/profile"
+      noLinkStyle
+      endIcon={<PersonOutlineRounded fontSize="small" />}
+      variant="text"
+      color="secondary"
+      size="medium"
+    >
+      {data.user.firstName}
+    </Button>
   );
 };
 
 export function LoginButton(props: Props) {
-  return (
-    <Suspense
-      fallback={
-        <Skeleton>
-          <Button
-            component={Link}
-            href="/profile"
-            noLinkStyle
-            endIcon={<PersonOutlineRounded fontSize="small" />}
-            variant="text"
-            color="secondary"
-            size="medium"
-          >
-            Laster...
-          </Button>
-        </Skeleton>
-      }
-    >
-      <InnerLoginButton {...props} />
-    </Suspense>
-  );
+  return <InnerLoginButton {...props} />;
 }

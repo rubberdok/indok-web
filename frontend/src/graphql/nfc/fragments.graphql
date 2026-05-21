@@ -1,0 +1,107 @@
+fragment NfcUserLite on UserType {
+	id
+	username
+	firstName
+	lastName
+}
+
+fragment NfcCardLite on NfcCardType {
+	id
+	uidHex
+	label
+	isEnabled
+}
+
+fragment NfcCardAssignment on NfcCardAssignmentType {
+	id
+	externalHolderName
+	assignedAt
+	accessStart
+	accessEnd
+	permanentAccess
+	revokedAt
+	revocationReason
+	hasAccessNow
+	metadata
+	card {
+		...NfcCardLite
+	}
+	user {
+		...NfcUserLite
+	}
+	assignedBy {
+		...NfcUserLite
+	}
+	revokedBy {
+		...NfcUserLite
+	}
+}
+
+fragment NfcCard on NfcCardType {
+	id
+	uidHex
+	label
+	notes
+	isEnabled
+	createdAt
+	updatedAt
+	activeAssignment {
+		...NfcCardAssignment
+	}
+}
+
+fragment NfcAccessGrant on NfcAccessGrantType {
+	id
+	scope
+	participantPolicy
+	accessStart
+	accessEnd
+	permanentAccess
+	revokedAt
+	notes
+	hasAccessNow
+	createdAt
+	updatedAt
+	booking {
+		id
+		checkIn
+		checkOut
+	}
+	grantedToUser {
+		...NfcUserLite
+	}
+	grantedToCard {
+		...NfcCardLite
+	}
+	grantedBy {
+		...NfcUserLite
+	}
+	revokedBy {
+		...NfcUserLite
+	}
+}
+
+fragment NfcAccessEvent on NfcAccessEventType {
+	id
+	eventType
+	source
+	doorIdentifier
+	uidHexReported
+	occurredAt
+	notes
+	rawPayload
+	card {
+		...NfcCardLite
+	}
+	cardAssignment {
+		id
+		externalHolderName
+		permanentAccess
+		accessStart
+		accessEnd
+		revokedAt
+	}
+	resolvedUser {
+		...NfcUserLite
+	}
+}

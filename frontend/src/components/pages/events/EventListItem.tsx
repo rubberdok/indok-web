@@ -12,6 +12,8 @@ type Props = {
 };
 
 export const EventListItem: React.FC<Props> = ({ event, user }) => {
+  const eventStartTime = dayjs(event.startTime).tz("Europe/Oslo");
+
   return (
     <Card
       sx={{
@@ -33,7 +35,7 @@ export const EventListItem: React.FC<Props> = ({ event, user }) => {
                 {event.title}
               </Typography>
 
-              <Typography variant="body2">Dato: {dayjs(event.startTime).format("LLL")}</Typography>
+              <Typography variant="body2">Dato: {eventStartTime.format("LLL")}</Typography>
 
               <Typography variant="body2">{event.shortDescription || "Trykk for å lese mer"}</Typography>
             </Stack>
@@ -63,10 +65,11 @@ function StatusChip({ event, user }: StatusChipProps): React.ReactElement | null
   if (user.isSignedUp) return <Chip label="Påmeldt" variant="filled" color="success" />;
   if (user.isOnWaitingList) return <Chip label="På venteliste" />;
 
-  const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate) : undefined;
-  const isSignUpOpen = signUpOpenDate && dayjs().isSameOrAfter(signUpOpenDate);
+  const now = dayjs().tz("Europe/Oslo");
+  const signUpOpenDate = event.signupOpenDate ? dayjs(event.signupOpenDate).tz("Europe/Oslo") : undefined;
+  const isSignUpOpen = signUpOpenDate && now.isSameOrAfter(signUpOpenDate);
 
-  if (signUpOpenDate && dayjs().isBefore(signUpOpenDate)) {
+  if (signUpOpenDate && now.isBefore(signUpOpenDate)) {
     return <Chip label={`Påmelding åpner ${signUpOpenDate?.format("DD. MMMM [kl.] HH:mm")}`} />;
   }
 

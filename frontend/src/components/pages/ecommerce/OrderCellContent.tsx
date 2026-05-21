@@ -30,7 +30,7 @@ export const OrderCellContent: React.FC<Props> = ({ order, field }) => {
       content = `${order.totalPrice} kr`;
       break;
     case "Tidspunkt":
-      content = dayjs(order.timestamp).format("DD/MM/YYYY, HH:mm");
+      content = dayjs(order.timestamp).tz("Europe/Oslo").format("DD/MM/YYYY, HH:mm");
       break;
     case "Status":
       switch (order.paymentStatus) {

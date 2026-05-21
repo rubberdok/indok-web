@@ -9,7 +9,13 @@ from apps.cabins.models import Cabin as CabinModel
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .helpers import price
 from .mail import send_mail
-from .types import AllBookingsType, BookingInfoType, CabinType, EmailInputType, UpdateBookingSemesterType
+from .types import (
+    AllBookingsType,
+    BookingInfoType,
+    CabinType,
+    EmailInputType,
+    UpdateBookingSemesterType,
+)
 from .validators import create_booking_validation
 
 
@@ -120,7 +126,9 @@ class UpdateBooking(graphene.Mutation):
                     setattr(booking, input_field, input_value)
             booking.save()
             if booking_data.cabins:
-                booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
+                booking.cabins.set(
+                    CabinModel.objects.filter(id__in=booking_data.cabins)
+                )
                 booking.save()
             return UpdateBooking(booking=booking, ok=ok)
         except BookingModel.DoesNotExist:
@@ -189,11 +197,17 @@ class SendEmail(graphene.Mutation):
         }
 
         # Sends an email to the user
-        send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=False)
+        send_mail(
+            booking_info=booking_info, email_type=email_input["email_type"], admin=False
+        )
 
         # Don't send mail to admin when approving or disapproving.
         if email_input["email_type"] not in [APPROVE_BOOKING, DISAPPROVE_BOOKING]:
-            send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=True)
+            send_mail(
+                booking_info=booking_info,
+                email_type=email_input["email_type"],
+                admin=True,
+            )
 
         return SendEmail(ok=True)
 

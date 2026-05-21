@@ -6,9 +6,18 @@ from faker import Factory
 
 from utils.testing.factories.organizations import OrganizationFactory
 
-
 fake = Factory.create()
-cars = ["Luna", "Nova", "Atmos", "Eld", "Gnist", "Vilje", "Arctos", "Aquilo", "Borealis"]  # Atmos <3
+cars = [
+    "Luna",
+    "Nova",
+    "Atmos",
+    "Eld",
+    "Gnist",
+    "Vilje",
+    "Arctos",
+    "Aquilo",
+    "Borealis",
+]  # Atmos <3
 
 
 class ProductFactory(DjangoModelFactory):

@@ -41,6 +41,7 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const { isInActiveBookingSemester } = useIsInActiveBookingSemester();
   const { hasOverlapWithOtherBookings, isDateWithOverlappingBooking } = useOverlappingBookings();
+  const now = dayjs().tz("Europe/Oslo");
 
   /**
    * Validate that at least one cabin has been chosen, and that the
@@ -86,7 +87,7 @@ export const CheckInOut: React.FC<React.PropsWithChildren<Props>> = ({
     if (cabinNotSelected) return true;
     if (!isInActiveBookingSemester(date)) return true;
     if (isDateWithOverlappingBooking(date, chosenCabins)) return true;
-    if (date.isBefore(dayjs(), "day")) return true;
+    if (date.isBefore(now, "day")) return true;
     return false;
   }
 
