@@ -9,11 +9,66 @@ from django.db.models import Q
 from django.utils import timezone
 
 
-UID_7_BYTE_HEX_RE = re.compile(r"^[0-9A-F]{14}$")
-#
-# 7 bytes = 14 hex characters, DENNE MÅ Å PASSE TIL KORTENE NTNU BRUKER,
-# CHRISTIAN R. MÅ SJEKKE DETTE VED NY KORT ENDRING
+# UID_7_BYTE_HEX_RE = re.compile(r"^[0-9A-F]{14}$")
+# # 4 bytes = 8 hex chars, 7 bytes = 14 hex chars
+# UID_4_BYTE_HEX_RE = re.compile(r"^[0-9A-F]{8}$")
+# #
+# # 7 bytes = 14 hex characters, DENNE MÅ Å PASSE TIL KORTENE NTNU BRUKER,
+# # CHRISTIAN R. MÅ SJEKKE DETTE VED NY KORT ENDRING
 PIN_CODE_RE = re.compile(r"^\d{4}$")
+
+
+class NfcSettings(models.Model):
+    SINGLETON_PK = 1
+
+    allow_user_uid_self_service = models.BooleanField(default=True)
+    allow_7_byte_uid = models.BooleanField(default=True)
+    allow_4_byte_uid = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "NFC settings"
+        verbose_name_plural = "NFC settings"
+
+    def clean(self):
+        if not self.allow_7_byte_uid and not self.allow_4_byte_uid:
+            raise ValidationError(
+                "Minst én UID-lengde må være aktivert (4 byte og/eller 7 byte)"
+            )
+
+    def save(self, *args, **kwargs):
+        self.pk = self.SINGLETON_PK
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return "NFC settings"
+
+
+def get_or_create_nfc_settings() -> NfcSettings:
+    settings_obj, _created = NfcSettings.objects.get_or_create(
+        pk=NfcSettings.SINGLETON_PK,
+        defaults={
+            "allow_user_uid_self_service": True,
+            "allow_7_byte_uid": True,
+            "allow_4_byte_uid": False,
+        },
+    )
+    NfcSettings.objects.exclude(pk=NfcSettings.SINGLETON_PK).delete()
+    return settings_obj
+
+
+def get_allowed_uid_hex_lengths() -> tuple[int, ...]:
+    settings_obj = get_or_create_nfc_settings()
+    allowed_lengths: list[int] = []
+    if settings_obj.allow_4_byte_uid:
+        allowed_lengths.append(8)
+    if settings_obj.allow_7_byte_uid:
+        allowed_lengths.append(14)
+    return tuple(allowed_lengths)
+
+
+def is_user_uid_self_service_enabled() -> bool:
+    return get_or_create_nfc_settings().allow_user_uid_self_service
 
 
 def normalize_uid_hex(uid_hex: str) -> str:
@@ -25,8 +80,30 @@ def normalize_uid_hex(uid_hex: str) -> str:
 
 
 def validate_uid_hex(uid_hex: str) -> None:
-    if not UID_7_BYTE_HEX_RE.match(uid_hex):
-        raise ValidationError("UID must be exactly 7 bytes (14 hex characters)")
+    if not re.fullmatch(r"[0-9A-F]+", uid_hex):
+        raise ValidationError("UID must contain only hex characters (0-9, A-F)")
+
+    allowed_lengths = get_allowed_uid_hex_lengths()
+    if not allowed_lengths:
+        raise ValidationError(
+            "UID-registrering er deaktivert fordi ingen UID-lengder er aktivert"
+        )
+
+    if len(uid_hex) not in allowed_lengths:
+        allowed_byte_lengths = [length // 2 for length in allowed_lengths]
+        if len(allowed_byte_lengths) == 1:
+            raise ValidationError(
+                f"UID must be exactly {allowed_byte_lengths[0]} bytes ({allowed_lengths[0]} hex characters)"
+            )
+
+        sorted_lengths = sorted(allowed_byte_lengths)
+        raise ValidationError(
+            "UID must be one of: "
+            + ", ".join(
+                f"{byte_length} bytes ({byte_length * 2} hex characters)"
+                for byte_length in sorted_lengths
+            )
+        )
 
 
 def validate_pin_code(pin_code: str) -> None:

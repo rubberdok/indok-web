@@ -6,7 +6,7 @@ import { BookingSteps } from "@/components/pages/cabins/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cabins/booking/Steps/ContactInfo";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -174,6 +174,10 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 };
 
-CabinBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
+CabinBookingPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default CabinBookingPage;

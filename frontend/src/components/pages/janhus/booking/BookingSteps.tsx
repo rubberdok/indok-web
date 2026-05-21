@@ -26,7 +26,7 @@ import { useStepContext } from "@/components/pages/cabins/booking/StepContext";
 import { Stepper as BookingStepNavigation } from "@/components/pages/cabins/booking/Steps/Stepper";
 import dayjs from "@/lib/date";
 
-export type JanHusOwnerType = "PERSONAL" | "ORGANIZATION" | "EXTERNAL";
+export type JanHusOwnerType = "PERSONAL" | "ORGANIZATION"; // | "EXTERNAL";
 
 type SelectOption = {
   value: string;
@@ -121,7 +121,7 @@ export const BookingSteps: React.FC<Props> = ({
   startOptions,
   endOptions,
   minDurationMinutes,
-  slotGranularityMinutes,
+  //slotGranularityMinutes,
   openingHour,
   closingHour,
   selectedDurationMinutes,
@@ -129,9 +129,9 @@ export const BookingSteps: React.FC<Props> = ({
   organizationId,
   organizations,
   canCreateNonExternalBooking,
-  externalBookingsEnabled,
-  isAuthenticated,
-  isIndokStudent,
+  //externalBookingsEnabled,
+  //isAuthenticated,
+  //isIndokStudent,
   requesterName,
   requesterEmail,
   requesterPhone,
@@ -143,7 +143,7 @@ export const BookingSteps: React.FC<Props> = ({
   eventTypeOptions,
   comment,
   guestListEntries,
-  cleaningRequested,
+  //cleaningRequested,
   acceptedGuidelines,
   acceptedContractPlaceholder,
   selectedAreaLabel,
@@ -165,7 +165,7 @@ export const BookingSteps: React.FC<Props> = ({
   onResponsiblePhoneChange,
   onEventTypeChange,
   onCommentChange,
-  onCleaningRequestedChange,
+  //onCleaningRequestedChange,
   onAcceptedGuidelinesChange,
   onAcceptedContractPlaceholderChange,
   onOpenGuestListDialog,
@@ -185,11 +185,14 @@ export const BookingSteps: React.FC<Props> = ({
             <Typography variant="body1" color="text.secondary">
               Flyt: velg område, velg dato i kalender, og velg et ledig tidsrom.
             </Typography>
-
-            <Alert severity="info">
+            <Typography variant="body1" color="text.secondary">
+              Minimum {minDurationMinutes / 60} time per booking, kan kun bookes mellom {openingHour}:00–{closingHour}
+              :00.
+            </Typography>
+            {/* <Alert severity="info">
               Regler: minimum {minDurationMinutes} minutter, granularitet {slotGranularityMinutes} minutter, åpningstid{" "}
               {openingHour}:00–{closingHour}:00.
-            </Alert>
+            </Alert> */}
 
             {startsAt && endsAt && selectedDurationMinutes ? (
               <Alert severity="success">
@@ -298,17 +301,17 @@ export const BookingSteps: React.FC<Props> = ({
                 {canCreateNonExternalBooking && organizations.length > 0 ? (
                   <MenuItem value="ORGANIZATION">Booking på vegne av organisasjon</MenuItem>
                 ) : null}
-                {externalBookingsEnabled || !isAuthenticated || !isIndokStudent ? (
+                {/* {externalBookingsEnabled || !isAuthenticated || !isIndokStudent ? (
                   <MenuItem value="EXTERNAL" disabled={!externalBookingsEnabled}>
                     Ekstern forespørsel
                   </MenuItem>
-                ) : null}
+                ) : null} */}
               </Select>
-              {!externalBookingsEnabled ? (
+              {/* {!externalBookingsEnabled ? (
                 <FormHelperText>Eksterne forespørsler er midlertidig deaktivert i innstillinger.</FormHelperText>
               ) : !canCreateNonExternalBooking ? (
                 <FormHelperText>Kun eksterne forespørsler er tilgjengelig for ikke Indøk studenter.</FormHelperText>
-              ) : null}
+              ) : null} */}
             </FormControl>
 
             {ownerType === "ORGANIZATION" ? (
@@ -384,29 +387,29 @@ export const BookingSteps: React.FC<Props> = ({
               </Box>
             ) : null}
 
-            {ownerType === "EXTERNAL" ? (
+            {/* {ownerType === "EXTERNAL" ? (
               <TextField
                 label="Arrangementstype"
                 value="Ekstern"
                 disabled
                 helperText="Eksterne forespørsler settes alltid som ekstern hendelse. Logg inn for interne/private valg."
               />
-            ) : (
-              <FormControl>
-                <InputLabel>Arrangementstype</InputLabel>
-                <Select
-                  value={eventType}
-                  label="Arrangementstype"
-                  onChange={(event) => onEventTypeChange(event.target.value)}
-                >
-                  {eventTypeOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
+            ) : ( */}
+            <FormControl>
+              <InputLabel>Arrangementstype</InputLabel>
+              <Select
+                value={eventType}
+                label="Arrangementstype"
+                onChange={(event) => onEventTypeChange(event.target.value)}
+              >
+                {eventTypeOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {/* )} */}
 
             <BookingStepNavigation
               nextButton={
@@ -452,7 +455,7 @@ export const BookingSteps: React.FC<Props> = ({
               ) : null}
             </Stack>
 
-            <FormControlLabel
+            {/* <FormControlLabel
               control={
                 <Checkbox
                   checked={cleaningRequested}
@@ -460,7 +463,7 @@ export const BookingSteps: React.FC<Props> = ({
                 />
               }
               label="Ønsker innleid renhold (kostnad kommer i etterkant)"
-            />
+            /> */}
 
             <BookingStepNavigation />
           </Stack>
@@ -477,8 +480,7 @@ export const BookingSteps: React.FC<Props> = ({
               <Typography variant="subtitle2" gutterBottom>
                 JanHus retningslinjer
               </Typography>
-              Følg alltid gjeldende regler for bruk av JanHus. Endelig versjon av retningslinjene publiseres før endelig
-              bekreftelse av bookingen.
+              HER KOMMER RETTNINGSLINJENE FOR BRUK OG BOOKING AV JANHUS.
             </Alert>
 
             <FormControlLabel
@@ -493,10 +495,9 @@ export const BookingSteps: React.FC<Props> = ({
 
             <Alert severity="warning">
               <Typography variant="subtitle2" gutterBottom>
-                Kontrakt (foreløpig)
+                Kontrakt
               </Typography>
-              Dette er en midlertidig plassholder for semikontrakt i bookingflyten. Endelig kontraktstekst legges inn
-              før produksjonssetting.
+              HER KOMMER KONTRAKTEN.
             </Alert>
 
             <FormControlLabel
@@ -506,7 +507,7 @@ export const BookingSteps: React.FC<Props> = ({
                   onChange={(event) => onAcceptedContractPlaceholderChange(event.target.checked)}
                 />
               }
-              label="Jeg forstår kontraktsgrunnlaget (foreløpig versjon)"
+              label="Jeg forstår og aksepterer kontraktsvilkårene"
             />
 
             <BookingStepNavigation
@@ -564,13 +565,15 @@ export const BookingSteps: React.FC<Props> = ({
               </Typography>
               <Typography variant="body1">
                 <strong>Eiertype:</strong> {ownerType}
+                {/* TODO: bedre håndtering av eiertype slik den oversettes */}
               </Typography>
               <Typography variant="body1">
-                <strong>Arrangementstype:</strong> {ownerType === "EXTERNAL" ? "EXTERNAL" : eventType}
+                <strong>Arrangementstype:</strong> {eventType} {/* ownerType === "EXTERNAL" ? "EKSTERN" : eventType */}
+                {/* TODO: bedre håndtering av arrangementstype slik den oversettes */}
               </Typography>
-              <Typography variant="body1">
+              {/* <Typography variant="body1">
                 <strong>Renhold:</strong> {cleaningRequested ? "Ja" : "Nei"}
-              </Typography>
+              </Typography> */}
               <Typography variant="body1">
                 <strong>Gjesteliste:</strong>{" "}
                 {guestListEntries.length > 0 ? `${guestListEntries.length} registrerte` : "Ingen"}

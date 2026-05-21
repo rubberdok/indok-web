@@ -25,6 +25,9 @@ class UserQueries(graphene.ObjectType, UserResolvers):
     )
     can_manage_user_profiles = graphene.Boolean(required=True)
     can_manage_user_nfc = graphene.Boolean(required=True)
+    nfc_self_service_enabled = graphene.Boolean(required=True)
+    nfc_accepts_4_byte_uid = graphene.Boolean(required=True)
+    nfc_accepts_7_byte_uid = graphene.Boolean(required=True)
     user = graphene.Field(UserType)
     logout = graphene.String(required=True)
 

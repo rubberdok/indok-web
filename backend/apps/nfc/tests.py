@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from utils.testing.factories.users import UserFactory
 
-from .models import NfcAccessEvent, NfcCard, NfcCardAssignment
+from .models import NfcAccessEvent, NfcCard, NfcCardAssignment, NfcSettings, get_or_create_nfc_settings
 
 User = get_user_model()
 
@@ -45,3 +45,20 @@ class NfcAccessEventModelTests(TestCase):
         )
 
         self.assertEqual(event.source, NfcAccessEvent.Source.MANUAL_KEY)
+
+
+class NfcSettingsModelTests(TestCase):
+    def test_get_or_create_returns_singleton(self):
+        first = get_or_create_nfc_settings()
+        second = get_or_create_nfc_settings()
+
+        self.assertEqual(first.pk, NfcSettings.SINGLETON_PK)
+        self.assertEqual(second.pk, NfcSettings.SINGLETON_PK)
+        self.assertEqual(NfcSettings.objects.count(), 1)
+
+    def test_default_values_are_yes_yes_no(self):
+        settings_obj = get_or_create_nfc_settings()
+
+        self.assertTrue(settings_obj.allow_user_uid_self_service)
+        self.assertTrue(settings_obj.allow_7_byte_uid)
+        self.assertFalse(settings_obj.allow_4_byte_uid)

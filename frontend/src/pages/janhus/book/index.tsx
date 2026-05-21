@@ -129,7 +129,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [endsAt, setEndsAt] = useState("");
   const [area, setArea] = useState("FIRST_FLOOR");
 
-  const [ownerType, setOwnerType] = useState<JanHusOwnerType>("EXTERNAL");
+  const [ownerType, setOwnerType] = useState<JanHusOwnerType>("PERSONAL"); //("EXTERNAL");
   const [organizationId, setOrganizationId] = useState("");
 
   const [requesterName, setRequesterName] = useState("");
@@ -379,17 +379,18 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return;
     }
 
-    if (!canCreateNonExternalBooking) {
-      if (ownerType !== "EXTERNAL") {
-        setOwnerType("EXTERNAL");
-      }
-      return;
-    }
+    // if (!canCreateNonExternalBooking) {
+    //   if (ownerType !== "EXTERNAL") {
+    //     setOwnerType("EXTERNAL");
+    //   }
+    //   return;
+    // }
   }, [canCreateNonExternalBooking, hasResolvedUser, ownerType]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && organizations.length === 0) {
-      setOwnerType(isAuthenticated ? "PERSONAL" : "EXTERNAL");
+      setOwnerType("PERSONAL");
+      //setOwnerType(isAuthenticated ? "PERSONAL" : "EXTERNAL");
       return;
     }
 
@@ -496,20 +497,20 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
-    if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
-      setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
-      return false;
-    }
+    // if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
+    //   setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
+    //   return false;
+    // }
 
-    if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
-      setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
-      return false;
-    }
+    // if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
+    //   setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
+    //   return false;
+    // }
 
     return true;
   }, [
-    canCreateNonExternalBooking,
-    externalBookingsEnabled,
+    // canCreateNonExternalBooking,
+    // externalBookingsEnabled,
     hasDifferentResponsible,
     organizationId,
     ownerType,
@@ -528,7 +529,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     }
 
     if (!acceptedContractPlaceholder) {
-      setErrorMessage("Du må bekrefte kontraktsgrunnlaget før innsending.");
+      setErrorMessage("Du må bekrefte kontraktsvilkårene før innsending.");
       return false;
     }
 
@@ -571,7 +572,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
           responsibleName: resolvedResponsibleName,
           responsibleEmail: resolvedResponsibleEmail,
           responsiblePhone: normalizedResponsiblePhone,
-          eventType: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
+          eventType, //: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
           cleaningRequested,
           comment,
           guestList,

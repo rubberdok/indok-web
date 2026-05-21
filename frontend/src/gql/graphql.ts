@@ -2313,6 +2313,7 @@ export type UserInput = {
   graduationYear: InputMaybe<Scalars['Int']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
   nfcPinCode: InputMaybe<Scalars['String']['input']>;
+  nfcUidHex: InputMaybe<Scalars['String']['input']>;
   phoneNumber: InputMaybe<Scalars['String']['input']>;
 };
 

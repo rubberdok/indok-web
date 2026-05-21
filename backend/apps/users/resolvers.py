@@ -45,6 +45,24 @@ class UserResolvers:
     def resolve_can_manage_user_nfc(self, info):
         return can_manage_user_nfc(info.context.user)
 
+    @login_required
+    def resolve_nfc_self_service_enabled(self, info):
+        from apps.nfc.models import get_or_create_nfc_settings
+
+        return get_or_create_nfc_settings().allow_user_uid_self_service
+
+    @login_required
+    def resolve_nfc_accepts_4_byte_uid(self, info):
+        from apps.nfc.models import get_or_create_nfc_settings
+
+        return get_or_create_nfc_settings().allow_4_byte_uid
+
+    @login_required
+    def resolve_nfc_accepts_7_byte_uid(self, info):
+        from apps.nfc.models import get_or_create_nfc_settings
+
+        return get_or_create_nfc_settings().allow_7_byte_uid
+
     def resolve_logout(self, info):
         user = info.context.user
         logout(info.context)
