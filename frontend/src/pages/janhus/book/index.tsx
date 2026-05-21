@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Alert, Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -12,7 +12,7 @@ import {
   JanHusBookingSettingsDocument,
   UserOrganizationsDocument,
 } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -747,6 +747,10 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   );
 };
 
-JanHusBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
+JanHusBookingPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default JanHusBookingPage;

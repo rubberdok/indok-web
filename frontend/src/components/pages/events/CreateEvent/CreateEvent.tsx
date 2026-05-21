@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Alert, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";

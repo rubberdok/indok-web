@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Add, FormatListBulleted } from "@mui/icons-material";
 import { Button } from "@mui/material";
 

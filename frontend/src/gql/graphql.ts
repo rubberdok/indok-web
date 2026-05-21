@@ -36,7 +36,7 @@ export type Scalars = {
    */
   JSONString: { input: unknown; output: unknown; }
   /**
-   * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
+   * Leverages the internal Python implementation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
   UUID: { input: string; output: string; }
@@ -126,20 +126,8 @@ export type AnswerType = {
   uuid: Scalars['UUID']['output'];
 };
 
-export type ArchiveDocumentType = {
-  __typename?: 'ArchiveDocumentType';
-  featured: Scalars['Boolean']['output'];
-  fileLocation: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  thumbnail: Maybe<Scalars['String']['output']>;
-  title: Scalars['String']['output'];
-  typeDoc: ArchiveDocumentTypeDoc;
-  webLink: Maybe<Scalars['String']['output']>;
-  year: Maybe<Scalars['Int']['output']>;
-};
-
 /** An enumeration. */
-export enum ArchiveDocumentTypeDoc {
+export enum ArchiveArchiveDocumentTypeDocChoices {
   /** Annet */
   Annet = 'ANNET',
   /** Årbøker */
@@ -157,6 +145,18 @@ export enum ArchiveDocumentTypeDoc {
   /** Utveksling */
   Utveksling = 'UTVEKSLING'
 }
+
+export type ArchiveDocumentType = {
+  __typename?: 'ArchiveDocumentType';
+  featured: Scalars['Boolean']['output'];
+  fileLocation: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  thumbnail: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  typeDoc: ArchiveArchiveDocumentTypeDocChoices;
+  webLink: Maybe<Scalars['String']['output']>;
+  year: Maybe<Scalars['Int']['output']>;
+};
 
 export type AssignMembership = {
   __typename?: 'AssignMembership';
@@ -472,7 +472,7 @@ export type DeleteArchiveDocument = {
 
 export type DeleteBlog = {
   __typename?: 'DeleteBlog';
-  ok: Maybe<Scalars['ID']['output']>;
+  ok: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type DeleteBlogPost = {
@@ -643,21 +643,23 @@ export type FormTypeResponseArgs = {
   responsePk: InputMaybe<Scalars['UUID']['input']>;
 };
 
+/** An enumeration. */
+export enum FormsResponseStatusChoices {
+  /** Red */
+  A_0 = 'A_0',
+  /** Yellow */
+  A_1 = 'A_1',
+  /** Green */
+  A_2 = 'A_2',
+  /** Unknown */
+  None = 'NONE'
+}
+
 export type InitiateOrder = {
   __typename?: 'InitiateOrder';
   orderId: Maybe<Scalars['UUID']['output']>;
   redirect: Maybe<Scalars['String']['output']>;
 };
-
-/** An enumeration. */
-export enum JanHusAreaConfigurationArea {
-  /** Entire house */
-  EntireHouse = 'ENTIRE_HOUSE',
-  /** 1st floor */
-  FirstFloor = 'FIRST_FLOOR',
-  /** 2nd floor */
-  SecondFloor = 'SECOND_FLOOR'
-}
 
 export type JanHusAreaConfigurationInput = {
   area: Scalars['String']['input'];
@@ -669,59 +671,13 @@ export type JanHusAreaConfigurationInput = {
 
 export type JanHusAreaConfigurationType = {
   __typename?: 'JanHusAreaConfigurationType';
-  area: JanHusAreaConfigurationArea;
+  area: JanhusJanHusAreaConfigurationAreaChoices;
   cleaningFee: Scalars['Decimal']['output'];
   defaultDepositAmount: Scalars['Decimal']['output'];
   externalPricePerHour: Scalars['Decimal']['output'];
   id: Scalars['ID']['output'];
   internalPricePerHour: Scalars['Decimal']['output'];
 };
-
-/** An enumeration. */
-export enum JanHusBookingArea {
-  /** Entire house */
-  EntireHouse = 'ENTIRE_HOUSE',
-  /** 1st floor */
-  FirstFloor = 'FIRST_FLOOR',
-  /** 2nd floor */
-  SecondFloor = 'SECOND_FLOOR'
-}
-
-/** An enumeration. */
-export enum JanHusBookingDepositStatus {
-  /** Not required */
-  NotRequired = 'NOT_REQUIRED',
-  /** Paid */
-  Paid = 'PAID',
-  /** Refunded */
-  Refunded = 'REFUNDED',
-  /** Requested */
-  Requested = 'REQUESTED',
-  /** Required */
-  Required = 'REQUIRED',
-  /** Withheld */
-  Withheld = 'WITHHELD'
-}
-
-/** An enumeration. */
-export enum JanHusBookingDoorAccessPolicy {
-  /** Booker and guest list */
-  AllParticipants = 'ALL_PARTICIPANTS',
-  /** Booker only */
-  BookerOnly = 'BOOKER_ONLY'
-}
-
-/** An enumeration. */
-export enum JanHusBookingEventType {
-  /** External */
-  External = 'EXTERNAL',
-  /** Internal */
-  Internal = 'INTERNAL',
-  /** Open to all Indøk students */
-  OpenForIndok = 'OPEN_FOR_INDOK',
-  /** Private */
-  Private = 'PRIVATE'
-}
 
 export type JanHusBookingInput = {
   area: Scalars['String']['input'];
@@ -762,28 +718,6 @@ export type JanHusBookingLevelType = {
   userAssignments: Array<JanHusUserBookingLevelType>;
 };
 
-/** An enumeration. */
-export enum JanHusBookingRequestArea {
-  /** Entire house */
-  EntireHouse = 'ENTIRE_HOUSE',
-  /** 1st floor */
-  FirstFloor = 'FIRST_FLOOR',
-  /** 2nd floor */
-  SecondFloor = 'SECOND_FLOOR'
-}
-
-/** An enumeration. */
-export enum JanHusBookingRequestEventType {
-  /** External */
-  External = 'EXTERNAL',
-  /** Internal */
-  Internal = 'INTERNAL',
-  /** Open to all Indøk students */
-  OpenForIndok = 'OPEN_FOR_INDOK',
-  /** Private */
-  Private = 'PRIVATE'
-}
-
 export type JanHusBookingRequestInput = {
   area: Scalars['String']['input'];
   cleaningRequested: InputMaybe<Scalars['Boolean']['input']>;
@@ -801,26 +735,16 @@ export type JanHusBookingRequestInput = {
   startsAt: Scalars['DateTime']['input'];
 };
 
-/** An enumeration. */
-export enum JanHusBookingRequestStatus {
-  /** Approved */
-  Approved = 'APPROVED',
-  /** Pending */
-  Pending = 'PENDING',
-  /** Rejected */
-  Rejected = 'REJECTED'
-}
-
 export type JanHusBookingRequestType = {
   __typename?: 'JanHusBookingRequestType';
   adminComment: Scalars['String']['output'];
-  area: JanHusBookingRequestArea;
+  area: JanhusJanHusBookingRequestAreaChoices;
   cleaningRequested: Scalars['Boolean']['output'];
   comment: Scalars['String']['output'];
   convertedBooking: Maybe<JanHusBookingType>;
   createdAt: Scalars['DateTime']['output'];
   endsAt: Scalars['DateTime']['output'];
-  eventType: JanHusBookingRequestEventType;
+  eventType: JanhusJanHusBookingRequestEventTypeChoices;
   guestList: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   ownerOrganization: Maybe<OrganizationType>;
@@ -832,7 +756,7 @@ export type JanHusBookingRequestType = {
   responsibleName: Scalars['String']['output'];
   responsiblePhone: Scalars['String']['output'];
   startsAt: Scalars['DateTime']['output'];
-  status: JanHusBookingRequestStatus;
+  status: JanhusJanHusBookingRequestStatusChoices;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -872,26 +796,10 @@ export type JanHusBookingSettingsType = {
   springStartDate: Scalars['Date']['output'];
 };
 
-/** An enumeration. */
-export enum JanHusBookingStatus {
-  /** Blocked */
-  Blocked = 'BLOCKED',
-  /** Cancelled */
-  Cancelled = 'CANCELLED',
-  /** Confirmed */
-  Confirmed = 'CONFIRMED',
-  /** Declined */
-  Declined = 'DECLINED',
-  /** Pending admin review */
-  PendingAdminReview = 'PENDING_ADMIN_REVIEW',
-  /** Provisional */
-  Provisional = 'PROVISIONAL'
-}
-
 export type JanHusBookingType = {
   __typename?: 'JanHusBookingType';
   adminComment: Scalars['String']['output'];
-  area: JanHusBookingArea;
+  area: JanhusJanHusBookingAreaChoices;
   bookerEmail: Scalars['String']['output'];
   bookerName: Scalars['String']['output'];
   bookerPhone: Scalars['String']['output'];
@@ -901,11 +809,11 @@ export type JanHusBookingType = {
   createdAt: Scalars['DateTime']['output'];
   createdByUser: Maybe<UserType>;
   depositAmount: Scalars['Decimal']['output'];
-  depositStatus: JanHusBookingDepositStatus;
-  doorAccessPolicy: JanHusBookingDoorAccessPolicy;
+  depositStatus: JanhusJanHusBookingDepositStatusChoices;
+  doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices;
   durationMinutes: Maybe<Scalars['Int']['output']>;
   endsAt: Scalars['DateTime']['output'];
-  eventType: JanHusBookingEventType;
+  eventType: JanhusJanHusBookingEventTypeChoices;
   guestList: Scalars['String']['output'];
   guestListEntries: Maybe<Array<JanHusGuestListEntryType>>;
   id: Scalars['ID']['output'];
@@ -918,7 +826,7 @@ export type JanHusBookingType = {
   responsiblePhone: Scalars['String']['output'];
   sourceRequests: Array<JanHusBookingRequestType>;
   startsAt: Scalars['DateTime']['output'];
-  status: JanHusBookingStatus;
+  status: JanhusJanHusBookingStatusChoices;
   totalPrice: Maybe<Scalars['Decimal']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   vippsOrder: Maybe<OrderType>;
@@ -944,6 +852,110 @@ export type JanHusUserBookingLevelType = {
   level: JanHusBookingLevelType;
   user: UserType;
 };
+
+/** An enumeration. */
+export enum JanhusJanHusAreaConfigurationAreaChoices {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingAreaChoices {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingDepositStatusChoices {
+  /** Not required */
+  NotRequired = 'NOT_REQUIRED',
+  /** Paid */
+  Paid = 'PAID',
+  /** Refunded */
+  Refunded = 'REFUNDED',
+  /** Requested */
+  Requested = 'REQUESTED',
+  /** Required */
+  Required = 'REQUIRED',
+  /** Withheld */
+  Withheld = 'WITHHELD'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingDoorAccessPolicyChoices {
+  /** Booker and guest list */
+  AllParticipants = 'ALL_PARTICIPANTS',
+  /** Booker only */
+  BookerOnly = 'BOOKER_ONLY'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingEventTypeChoices {
+  /** External */
+  External = 'EXTERNAL',
+  /** Internal */
+  Internal = 'INTERNAL',
+  /** Open to all Indøk students */
+  OpenForIndok = 'OPEN_FOR_INDOK',
+  /** Private */
+  Private = 'PRIVATE'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingRequestAreaChoices {
+  /** Entire house */
+  EntireHouse = 'ENTIRE_HOUSE',
+  /** 1st floor */
+  FirstFloor = 'FIRST_FLOOR',
+  /** 2nd floor */
+  SecondFloor = 'SECOND_FLOOR'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingRequestEventTypeChoices {
+  /** External */
+  External = 'EXTERNAL',
+  /** Internal */
+  Internal = 'INTERNAL',
+  /** Open to all Indøk students */
+  OpenForIndok = 'OPEN_FOR_INDOK',
+  /** Private */
+  Private = 'PRIVATE'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingRequestStatusChoices {
+  /** Approved */
+  Approved = 'APPROVED',
+  /** Pending */
+  Pending = 'PENDING',
+  /** Rejected */
+  Rejected = 'REJECTED'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingStatusChoices {
+  /** Blocked */
+  Blocked = 'BLOCKED',
+  /** Cancelled */
+  Cancelled = 'CANCELLED',
+  /** Confirmed */
+  Confirmed = 'CONFIRMED',
+  /** Declined */
+  Declined = 'DECLINED',
+  /** Pending admin review */
+  PendingAdminReview = 'PENDING_ADMIN_REVIEW',
+  /** Provisional */
+  Provisional = 'PROVISIONAL'
+}
 
 export type ListingType = {
   __typename?: 'ListingType';
@@ -1476,58 +1488,20 @@ export type MutationsUpsertNfcCardArgs = {
   cardData: NfcCardInput;
 };
 
-/** An enumeration. */
-export enum NfcAccessEventEventType {
-  /** Access denied */
-  AccessDenied = 'ACCESS_DENIED',
-  /** Access granted */
-  AccessGranted = 'ACCESS_GRANTED',
-  /** Door opened */
-  DoorOpened = 'DOOR_OPENED'
-}
-
-/** An enumeration. */
-export enum NfcAccessEventSource {
-  /** Backend */
-  Backend = 'BACKEND',
-  /** Manual key */
-  ManualKey = 'MANUAL_KEY',
-  /** NFC reader */
-  NfcReader = 'NFC_READER',
-  /** Unknown */
-  Unknown = 'UNKNOWN'
-}
-
 export type NfcAccessEventType = {
   __typename?: 'NfcAccessEventType';
   card: Maybe<NfcCardType>;
   cardAssignment: Maybe<NfcCardAssignmentType>;
   doorIdentifier: Scalars['String']['output'];
-  eventType: NfcAccessEventEventType;
+  eventType: NfcNfcAccessEventEventTypeChoices;
   id: Scalars['ID']['output'];
   notes: Scalars['String']['output'];
   occurredAt: Scalars['DateTime']['output'];
   rawPayload: Scalars['JSONString']['output'];
   resolvedUser: Maybe<UserType>;
-  source: NfcAccessEventSource;
+  source: NfcNfcAccessEventSourceChoices;
   uidHexReported: Scalars['String']['output'];
 };
-
-/** An enumeration. */
-export enum NfcAccessGrantParticipantPolicy {
-  /** All participants */
-  AllParticipants = 'ALL_PARTICIPANTS',
-  /** Booker only */
-  BookerOnly = 'BOOKER_ONLY'
-}
-
-/** An enumeration. */
-export enum NfcAccessGrantScope {
-  /** Booking */
-  Booking = 'BOOKING',
-  /** Manual */
-  Manual = 'MANUAL'
-}
 
 export type NfcAccessGrantType = {
   __typename?: 'NfcAccessGrantType';
@@ -1541,11 +1515,11 @@ export type NfcAccessGrantType = {
   hasAccessNow: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['ID']['output'];
   notes: Scalars['String']['output'];
-  participantPolicy: NfcAccessGrantParticipantPolicy;
+  participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices;
   permanentAccess: Scalars['Boolean']['output'];
   revokedAt: Maybe<Scalars['DateTime']['output']>;
   revokedBy: Maybe<UserType>;
-  scope: NfcAccessGrantScope;
+  scope: NfcNfcAccessGrantScopeChoices;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -1585,6 +1559,44 @@ export type NfcCardType = {
   uidHex: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
+
+/** An enumeration. */
+export enum NfcNfcAccessEventEventTypeChoices {
+  /** Access denied */
+  AccessDenied = 'ACCESS_DENIED',
+  /** Access granted */
+  AccessGranted = 'ACCESS_GRANTED',
+  /** Door opened */
+  DoorOpened = 'DOOR_OPENED'
+}
+
+/** An enumeration. */
+export enum NfcNfcAccessEventSourceChoices {
+  /** Backend */
+  Backend = 'BACKEND',
+  /** Manual key */
+  ManualKey = 'MANUAL_KEY',
+  /** NFC reader */
+  NfcReader = 'NFC_READER',
+  /** Unknown */
+  Unknown = 'UNKNOWN'
+}
+
+/** An enumeration. */
+export enum NfcNfcAccessGrantParticipantPolicyChoices {
+  /** All participants */
+  AllParticipants = 'ALL_PARTICIPANTS',
+  /** Booker only */
+  BookerOnly = 'BOOKER_ONLY'
+}
+
+/** An enumeration. */
+export enum NfcNfcAccessGrantScopeChoices {
+  /** Booking */
+  Booking = 'BOOKING',
+  /** Manual */
+  Manual = 'MANUAL'
+}
 
 export type OptionInput = {
   answer: Scalars['String']['input'];
@@ -1710,11 +1722,14 @@ export type Queries = {
   memberships: Maybe<Array<MembershipType>>;
   myCabinBookings: Maybe<Array<AdminBookingType>>;
   myNfcCardAssignment: Maybe<NfcCardAssignmentType>;
+  nfcAccepts4ByteUid: Scalars['Boolean']['output'];
+  nfcAccepts7ByteUid: Scalars['Boolean']['output'];
   nfcAccessEvents: Maybe<Array<NfcAccessEventType>>;
   nfcAccessGrants: Maybe<Array<NfcAccessGrantType>>;
   nfcCard: Maybe<NfcCardType>;
   nfcCardAssignments: Maybe<Array<NfcCardAssignmentType>>;
   nfcCards: Maybe<Array<NfcCardType>>;
+  nfcSelfServiceEnabled: Scalars['Boolean']['output'];
   nfcUserSearch: Maybe<Array<UserType>>;
   order: Maybe<OrderType>;
   ordersByStatus: Maybe<OrdersByStatusType>;
@@ -1965,18 +1980,6 @@ export type RemoveMembership = {
   removedMember: Maybe<UserType>;
 };
 
-/** An enumeration. */
-export enum ResponseStatus {
-  /** Red */
-  A_0 = 'A_0',
-  /** Yellow */
-  A_1 = 'A_1',
-  /** Green */
-  A_2 = 'A_2',
-  /** Unknown */
-  None = 'NONE'
-}
-
 /** A response instance that contains information about a user's response to a form. */
 export type ResponseType = {
   __typename?: 'ResponseType';
@@ -1985,7 +1988,7 @@ export type ResponseType = {
   id: Maybe<Scalars['UUID']['output']>;
   questions: Maybe<Array<QuestionType>>;
   respondent: UserType;
-  status: Maybe<ResponseStatus>;
+  status: Maybe<FormsResponseStatusChoices>;
   uuid: Scalars['UUID']['output'];
 };
 

@@ -3,7 +3,13 @@ from django.test import TestCase
 
 from utils.testing.factories.users import UserFactory
 
-from .models import NfcAccessEvent, NfcCard, NfcCardAssignment, NfcSettings, get_or_create_nfc_settings
+from .models import (
+    NfcAccessEvent,
+    NfcCard,
+    NfcCardAssignment,
+    NfcSettings,
+    get_or_create_nfc_settings,
+)
 
 User = get_user_model()
 

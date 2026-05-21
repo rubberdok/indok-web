@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { UserDocument, UserFragment } from "@/generated/graphql";
@@ -19,10 +19,8 @@ const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSidePr
 
 export const getServerSideProps: GetServerSideProps<{ user?: UserFragment | null }> = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const {
-    data: { user },
-    error,
-  } = await client.query({ query: UserDocument });
+  const { data, error } = await client.query({ query: UserDocument });
+  const user = data?.user ?? null;
 
   if (error) {
     return { notFound: true };

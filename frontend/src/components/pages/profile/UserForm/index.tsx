@@ -1,4 +1,7 @@
-import { ApolloError, gql, useMutation, useQuery } from "@apollo/client";
+import type { ErrorLike } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ArrowBack } from "@mui/icons-material";
 import {
@@ -48,10 +51,17 @@ type Props = {
   "data-test-id"?: string;
 };
 
+type UserNfcSettingsQuery = {
+  nfcSelfServiceEnabled?: boolean | null;
+  nfcAccepts4ByteUid?: boolean | null;
+  nfcAccepts7ByteUid?: boolean | null;
+};
+
 export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
   const [submitError, setSubmitError] = useState<string | undefined>();
 
-  const { data: nfcSettingsData } = useQuery(UserNfcSettingsDocument);
+  const { data: nfcSettingsDataRaw } = useQuery(UserNfcSettingsDocument);
+  const nfcSettingsData = nfcSettingsDataRaw as UserNfcSettingsQuery | undefined;
 
   const nfcSelfServiceEnabled = nfcSettingsData?.nfcSelfServiceEnabled ?? true;
   const accepts4ByteUid = nfcSettingsData?.nfcAccepts4ByteUid ?? false;
@@ -87,8 +97,9 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
     return "UID har feil lengde. Bruk riktig kortlengde som er satt i systemet.";
   };
 
-  const toUserFriendlyError = (error: ApolloError) => {
-    const rawMessage = error.graphQLErrors[0]?.message || error.message || "";
+  const toUserFriendlyError = (error: ErrorLike) => {
+    const rawMessage =
+      (error instanceof CombinedGraphQLErrors ? error.errors[0]?.message : undefined) || error.message || "";
 
     if (rawMessage.includes("Egenregistrering av UID er deaktivert")) {
       return "Du kan ikke registrere UID akkurat nå. Ta kontakt med Rubberdøk.";
@@ -108,7 +119,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
     if (rawMessage.includes("PIN-kode må være nøyaktig 4 sifre")) {
       return "PIN-kode må være nøyaktig 4 sifre.";
     }
-    if (error.networkError) {
+    if (error.name === "ServerError" || error.name === "ServerParseError" || error.name === "CombinedProtocolErrors") {
       return "Kunne ikke lagre nå på grunn av en feil. Prøv igjen om litt.";
     }
 

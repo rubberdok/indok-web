@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Container, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ListingForm } from "@/components/pages/listings/organization/ListingForm";
 import { ListingDocument, UpdateListingDocument } from "@/generated/graphql";
@@ -17,21 +17,24 @@ const EditListingPage: NextPageWithLayout = () => {
   const [listing, setListing] = useState<ListingInput | undefined>(undefined);
 
   // Load the listing and set the state on completion
-  const { loading, error } = useQuery(ListingDocument, {
+  const { loading, error, data } = useQuery(ListingDocument, {
     variables: { id: listingId as string },
-    onCompleted: (data) => {
-      if (data.listing) {
-        setListing({
-          ...(data.listing as ListingInput),
-          startDatetime: dayjs(data.listing.startDatetime).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm"),
-          deadline: dayjs(data.listing.deadline).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm"),
-          application: data.listing.chips.includes("application"),
-          interview: data.listing.chips.includes("interview"),
-          case: data.listing.chips.includes("case"),
-        });
-      }
-    },
   });
+
+  useEffect(() => {
+    if (!data?.listing) {
+      return;
+    }
+
+    setListing({
+      ...(data.listing as ListingInput),
+      startDatetime: dayjs(data.listing.startDatetime).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm"),
+      deadline: dayjs(data.listing.deadline).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm"),
+      application: data.listing.chips.includes("application"),
+      interview: data.listing.chips.includes("interview"),
+      case: data.listing.chips.includes("case"),
+    });
+  }, [data?.listing]);
 
   // Return to the previous page after updating.
   const [updateListing] = useMutation(UpdateListingDocument, { onCompleted: () => router.back() });

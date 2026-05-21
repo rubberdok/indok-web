@@ -189,14 +189,16 @@ class UsersResolversTestCase(UsersBaseTestCase):
         """
 
         response = self.query(
-            query, op_name="SearchUsers", variables={"query": self.indok_user.username}
+            query,
+            operation_name="SearchUsers",
+            variables={"query": self.indok_user.username},
         )
         self.assertResponseHasErrors(response)
 
         response = self.query(
             query,
             user=self.super_user,
-            op_name="SearchUsers",
+            operation_name="SearchUsers",
             variables={"query": self.indok_user.username},
         )
         self.assertResponseNoErrors(response)
@@ -211,7 +213,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         response = self.query(
             query,
             user=self.indok_user,
-            op_name="SearchUsers",
+            operation_name="SearchUsers",
             variables={"query": self.super_user.username},
         )
         self.assertResponseNoErrors(response)
@@ -233,7 +235,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         response = self.query(
             query,
             user=self.indok_user,
-            op_name="SearchNfcUsers",
+            operation_name="SearchNfcUsers",
             variables={"query": "test"},
         )
         self.assertResponseHasErrors(response)
@@ -244,7 +246,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         response = self.query(
             query,
             user=self.indok_user,
-            op_name="SearchNfcUsers",
+            operation_name="SearchNfcUsers",
             variables={"query": self.super_user.username},
         )
         self.assertResponseNoErrors(response)
@@ -260,7 +262,8 @@ class UsersMutationsTestCase(UsersBaseTestCase):
     """
 
     def setUp(self) -> None:
-        self.mutation = lambda year: f"""
+        self.mutation = (
+            lambda year: f"""
             mutation {{
                 updateUser(userData: {{
                     graduationYear: {year}
@@ -271,6 +274,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
                 }}
             }}
         """
+        )
         self.auth_user_mutation = """
             mutation auth {
                 authUser(code: "mocked") {
@@ -437,7 +441,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         response = self.query(
             mutation,
             user=self.super_user,
-            op_name="AdminUpdateUser",
+            operation_name="AdminUpdateUser",
             variables={
                 "userId": str(self.indok_user.id),
                 "userData": {
@@ -485,7 +489,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         response = self.query(
             mutation,
             user=self.indok_user,
-            op_name="UpdateOwnUserNfc",
+            operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
                     "nfcUidHex": "04 A1 B2 C3 D4 E5 F6",
@@ -513,7 +517,13 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         settings_obj.allow_user_uid_self_service = True
         settings_obj.allow_7_byte_uid = True
         settings_obj.allow_4_byte_uid = False
-        settings_obj.save(update_fields=["allow_user_uid_self_service", "allow_7_byte_uid", "allow_4_byte_uid"])
+        settings_obj.save(
+            update_fields=[
+                "allow_user_uid_self_service",
+                "allow_7_byte_uid",
+                "allow_4_byte_uid",
+            ]
+        )
 
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
@@ -528,7 +538,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         response = self.query(
             mutation,
             user=self.indok_user,
-            op_name="UpdateOwnUserNfc",
+            operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
                     "nfcUidHex": "04 A1 B2 C3 D4 E5 F6",
@@ -537,10 +547,14 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
 
-        assignment = NfcCardAssignment.objects.filter(
-            user=self.indok_user,
-            revoked_at__isnull=True,
-        ).select_related("card").first()
+        assignment = (
+            NfcCardAssignment.objects.filter(
+                user=self.indok_user,
+                revoked_at__isnull=True,
+            )
+            .select_related("card")
+            .first()
+        )
         if assignment is None:
             self.fail("Expected active NFC assignment after self-service UID update")
         assignment = cast(NfcCardAssignment, assignment)
@@ -552,7 +566,13 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         settings_obj.allow_user_uid_self_service = True
         settings_obj.allow_7_byte_uid = False
         settings_obj.allow_4_byte_uid = True
-        settings_obj.save(update_fields=["allow_user_uid_self_service", "allow_7_byte_uid", "allow_4_byte_uid"])
+        settings_obj.save(
+            update_fields=[
+                "allow_user_uid_self_service",
+                "allow_7_byte_uid",
+                "allow_4_byte_uid",
+            ]
+        )
 
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
@@ -567,7 +587,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         response = self.query(
             mutation,
             user=self.indok_user,
-            op_name="UpdateOwnUserNfc",
+            operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
                     "nfcUidHex": "A1-B2-C3-D4",
@@ -576,10 +596,14 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
 
-        assignment = NfcCardAssignment.objects.filter(
-            user=self.indok_user,
-            revoked_at__isnull=True,
-        ).select_related("card").first()
+        assignment = (
+            NfcCardAssignment.objects.filter(
+                user=self.indok_user,
+                revoked_at__isnull=True,
+            )
+            .select_related("card")
+            .first()
+        )
         if assignment is None:
             self.fail("Expected active NFC assignment for 4-byte UID policy")
         assignment = cast(NfcCardAssignment, assignment)
@@ -590,7 +614,13 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         settings_obj.allow_user_uid_self_service = True
         settings_obj.allow_7_byte_uid = True
         settings_obj.allow_4_byte_uid = False
-        settings_obj.save(update_fields=["allow_user_uid_self_service", "allow_7_byte_uid", "allow_4_byte_uid"])
+        settings_obj.save(
+            update_fields=[
+                "allow_user_uid_self_service",
+                "allow_7_byte_uid",
+                "allow_4_byte_uid",
+            ]
+        )
 
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
@@ -605,7 +635,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         first_response = self.query(
             mutation,
             user=self.indok_user,
-            op_name="UpdateOwnUserNfc",
+            operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
                     "nfcUidHex": "04A1B2C3D4E5F6",
@@ -617,7 +647,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         second_response = self.query(
             mutation,
             user=self.indok_user,
-            op_name="UpdateOwnUserNfc",
+            operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
                     "nfcUidHex": "04A1B2C3D4E5F7",

@@ -1,4 +1,5 @@
-import { ApolloError, useMutation, useQuery } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Delete, GroupAdd, AdminPanelSettings } from "@mui/icons-material";
 import {
   Alert,
@@ -63,19 +64,15 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const isHrMember = Boolean(
     currentUserId &&
       memberships.some(
-        (membership) =>
-          membership.user.id === currentUserId && membership?.group?.uuid === organization.hrGroup?.uuid
+        (membership) => membership.user.id === currentUserId && membership?.group?.uuid === organization.hrGroup?.uuid
       )
   );
   const canEditMemberships = isHrMember || Boolean(manageOrganizationPermissionData?.hasPermission);
 
   const toErrorMessage = (err: unknown, fallback: string): string => {
-    if (err instanceof ApolloError) {
-      if (err.graphQLErrors.length > 0) {
-        return err.graphQLErrors.map((graphQLError) => graphQLError.message).join(" · ");
-      }
-      if (err.networkError) {
-        return `Nettverksfeil: ${err.networkError.message}`;
+    if (err instanceof CombinedGraphQLErrors) {
+      if (err.errors.length > 0) {
+        return err.errors.map((graphQLError) => graphQLError.message).join(" · ");
       }
     }
 

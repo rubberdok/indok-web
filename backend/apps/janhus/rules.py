@@ -232,19 +232,23 @@ def is_in_active_booking_semester(
     return in_fall_semester or in_spring_semester
 
 
-def validate_booking_semester_rules(*, starts_at, ends_at, settings: JanHusBookingSettings):
+def validate_booking_semester_rules(
+    *, starts_at, ends_at, settings: JanHusBookingSettings
+):
     if not settings.fall_semester_active and not settings.spring_semester_active:
         raise GraphQLError("None of the booking semesters are active.")
 
-    start_local = timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
+    start_local = (
+        timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
+    )
     end_local = timezone.localtime(ends_at) if timezone.is_aware(ends_at) else ends_at
 
     start_date = start_local.date()
     end_date = end_local.date()
 
-    if not is_in_active_booking_semester(target_date=start_date, settings=settings) or not is_in_active_booking_semester(
-        target_date=end_date, settings=settings
-    ):
+    if not is_in_active_booking_semester(
+        target_date=start_date, settings=settings
+    ) or not is_in_active_booking_semester(target_date=end_date, settings=settings):
         raise GraphQLError("Dates are outside of active booking semesters.")
 
 

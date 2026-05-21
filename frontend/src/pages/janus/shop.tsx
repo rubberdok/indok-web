@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 
 import { ShopItem } from "@/components/pages/Janus/Shop/ShopItem";

@@ -2,14 +2,14 @@ import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { FreeMode, Navigation } from "swiper";
+import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { Organization, OrganizationLink } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
-  { name: "Janus", internalUrl: "/about" },
+  { name: "Janus", internalUrl: "/janus" },
   { name: "Bindeleddet", externalUrl: "https://www.bindeleddet.no" },
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
   { name: "Janus Kultur", internalUrl: "/about/organization?category=kultur" },

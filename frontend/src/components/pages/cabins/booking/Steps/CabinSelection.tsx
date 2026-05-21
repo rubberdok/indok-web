@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Checkbox, Divider, FormControlLabel, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import React from "react";

@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { CalendarToday, Class, CreditCard, Email, Label, Place } from "@mui/icons-material";
 import {
   Alert,

@@ -1,14 +1,17 @@
 import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 
-import { ApolloWrapper } from "@/lib/apollo";
-import { ThemeRegistry } from "@/lib/mui";
-
 import { AppBar } from "./components/Layout/AppBar";
 import { Footer } from "./components/Layout/Footer";
 
+import { ApolloWrapper } from "@/lib/apollo";
+import { ThemeRegistry } from "@/lib/mui";
+
+const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URI ?? "https://www.indokntnu.no";
+
 export const metadata: Metadata = {
   title: "Indøk NTNU | Janus Linjeforening",
+  metadataBase: new URL(frontendUrl),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

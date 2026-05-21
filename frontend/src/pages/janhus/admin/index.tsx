@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { ExpandMore, Settings } from "@mui/icons-material";
 import {
   Accordion,
@@ -37,7 +37,7 @@ import {
   DeleteJanhusBookingDocument,
   DeleteJanhusBookingRequestDocument,
   JanHusBookingRequestsDocument,
-  JanHusBookingDepositStatus,
+  JanhusJanHusBookingDepositStatusChoices,
   ReviewJanhusBookingRequestDocument,
   UpdateJanhusBookingDocument,
 } from "@/generated/graphql";
@@ -981,7 +981,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                       const edit = bookingEdits[booking.id];
                       if (!edit) return null;
 
-                      const depositPaid = edit.depositStatus === JanHusBookingDepositStatus.Paid;
+                      const depositPaid = edit.depositStatus === JanhusJanHusBookingDepositStatusChoices.Paid;
                       const isExpanded = Boolean(expandedBookingIds[booking.id]);
 
                       return (
@@ -1197,8 +1197,8 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                             [booking.id]: {
                                               ...prev[booking.id],
                                               depositStatus: event.target.checked
-                                                ? JanHusBookingDepositStatus.Paid
-                                                : JanHusBookingDepositStatus.Required,
+                                                ? JanhusJanHusBookingDepositStatusChoices.Paid
+                                                : JanhusJanHusBookingDepositStatusChoices.Required,
                                             },
                                           }))
                                         }

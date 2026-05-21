@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Check, Clear } from "@mui/icons-material";
 import {
   Alert,

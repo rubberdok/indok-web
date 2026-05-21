@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useState } from "react";
 

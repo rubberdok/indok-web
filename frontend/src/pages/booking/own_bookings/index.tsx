@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   Alert,
   Box,
@@ -519,11 +519,12 @@ export default OwnBookingsPage;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
   const { data, error } = await client.query({ query: UserDocument });
+  const user = data?.user;
 
   if (error) return { notFound: true };
-  if (!data.user) {
+  if (!user) {
     return { notFound: true };
   }
 
-  return addApolloState(client, { props: { user: data.user } });
+  return addApolloState(client, { props: { user } });
 };

@@ -17,7 +17,9 @@ class WebsiteUser(HttpUser):
 
     def on_start(self):
         self.client.post(
-            "/graphql/", data=json.dumps({"query": "query {authToken}"}), headers={"content-type": "application/json"}
+            "/graphql/",
+            data=json.dumps({"query": "query {authToken}"}),
+            headers={"content-type": "application/json"},
         )
 
     @task

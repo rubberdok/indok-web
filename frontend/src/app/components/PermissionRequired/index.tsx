@@ -1,4 +1,4 @@
-import { QueryReference, useQuery, useReadQuery } from "@apollo/client";
+import { QueryRef, useQuery, useReadQuery } from "@apollo/client/react";
 import { PropsWithChildren } from "react";
 
 import { graphql } from "@/gql";
@@ -20,7 +20,7 @@ export function PermissionRequired<T>(
 }
 
 type BackgroundQueryProps<T> = {
-  queryRef: QueryReference<T>;
+  queryRef: QueryRef<T>;
   isAllowed?: (data: T) => boolean;
 };
 

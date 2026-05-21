@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KeyboardArrowRight } from "@mui/icons-material";
 import {
@@ -16,16 +16,16 @@ import {
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
-import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-import * as yup from "@/lib/validation";
-import Janushyttene from "~/public/static/cabins/logo.svg";
-
 import { useStepContext } from "../StepContext";
 
 import { calculatePrice } from "./calculatePrice";
 import { ContactInfo } from "./ContactInfo";
 import { Stepper } from "./Stepper";
+
+import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+import * as yup from "@/lib/validation";
+import Janushyttene from "~/public/static/cabins/logo.svg";
 
 type Props = {
   chosenCabins: CabinFragment[];
@@ -46,7 +46,10 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate
   } = useForm<{ approved: boolean }>({
     resolver: yupResolver(
       yup.object({
-        approved: yup.boolean().required("Du må godkjenne leieavtalen").isTrue("Du må godkjenne leieavtalen"),
+        approved: yup
+          .boolean()
+          .required("Du må godkjenne leieavtalen")
+          .test("approved", "Du må godkjenne leieavtalen", (value) => value === true),
       })
     ),
     defaultValues: {

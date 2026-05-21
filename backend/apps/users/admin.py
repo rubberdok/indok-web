@@ -183,9 +183,13 @@ class UserAdminForm(forms.ModelForm):
         self._archive_permissions = archive_permissions
 
         if self.instance and self.instance.pk and archive_permissions:
-            archive_permission_ids = [permission.pk for permission in archive_permissions]
+            archive_permission_ids = [
+                permission.pk for permission in archive_permissions
+            ]
             self.fields["can_archive_documents"].initial = (
-                self.instance.user_permissions.filter(pk__in=archive_permission_ids).count()
+                self.instance.user_permissions.filter(
+                    pk__in=archive_permission_ids
+                ).count()
                 == len(archive_permissions)
             )
         else:

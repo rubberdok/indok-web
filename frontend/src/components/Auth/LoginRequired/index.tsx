@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
