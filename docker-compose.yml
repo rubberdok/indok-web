@@ -32,8 +32,10 @@ services:
 
   frontend:
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
-      - INTERNAL_API_URL=http://backend:8000
+      - NEXT_PUBLIC_BASE_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_INTERNAL_API_URL=http://backend:8000
+      - NEXT_PUBLIC_GRAPHQL_BACKEND_URI=http://localhost:8000/graphql/
+      - NEXT_PUBLIC_INTERNAL_GRAPHQL_BACKEND_URI=http://backend:8000/graphql/
       - WATCHPACK_POLLING=true
       - WATCHPACK_POLLING_INTERVAL=500
     build:

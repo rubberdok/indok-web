@@ -76,7 +76,6 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
           onActiveIndexChange={(swiper) => onActiveIndexChange(swiper.activeIndex)}
           navigation={{ nextEl: ".arrow.right", prevEl: ".arrow.left" }}
           spaceBetween={16}
-          passiveListeners
           slidesPerView={0.8}
           freeMode={{
             enabled: true,

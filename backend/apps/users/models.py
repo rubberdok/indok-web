@@ -7,7 +7,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from guardian.conf import settings as guardian_settings
 from django.utils import timezone
 
-
 # Create your models here.
 from apps.events.models import Event, SignUp
 
