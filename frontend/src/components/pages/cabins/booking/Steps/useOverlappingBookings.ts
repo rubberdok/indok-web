@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 
 import { AllBookingsDocument } from "@/generated/graphql";
 import dayjs from "@/lib/date";

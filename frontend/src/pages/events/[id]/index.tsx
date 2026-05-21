@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import React from "react";
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<{ event: EventDetailFieldsFr
     throw new Error(error.message);
   }
 
-  const event = data.event;
+  const event = data?.event;
 
   if (!event) {
     return {

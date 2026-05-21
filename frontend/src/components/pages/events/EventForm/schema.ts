@@ -89,7 +89,7 @@ export type IEventForm = {
   info: InfoSchema;
   timeAndPlace: TimeAndPlaceSchema;
   registration: RegistrationSchema;
-  review: Record<string, never> | undefined;
+  review?: Record<string, never>;
 };
 /**
  * Combined validation schema of the above schemas

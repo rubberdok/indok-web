@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Box, Button, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { FreeMode, Navigation } from "swiper";
+import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 

@@ -62,7 +62,7 @@ class EventsMailTestCase(EventsBaseTestCase):
                     }}
                 """
         # Sign off a user from the event
-        self.query(admin_event_signoff_query, self.org_user)
+        self.query(admin_event_signoff_query, user=self.org_user)
 
         # Check that we only attempt to send one email
         self.assertEqual(len(send_mail_mock.call_args_list), 1)
@@ -85,7 +85,7 @@ class EventsMailTestCase(EventsBaseTestCase):
                     }}
                 """
         # A user signs off an event "by themselves"
-        self.query(event_signoff_query, self.user1)
+        self.query(event_signoff_query, user=self.user1)
 
         # Check that we only attempt to send one email
         self.assertEqual(len(send_mail_mock.call_args_list), 1)
@@ -104,7 +104,7 @@ class EventsMailTestCase(EventsBaseTestCase):
             }}
             """
         # Increase available slots to 3
-        self.query(expand_slots_mutation, self.org_user)
+        self.query(expand_slots_mutation, user=self.org_user)
 
         # Check that we attempt to send an email to two users
         self.assertEqual(len(send_mail_mock.call_args_list), 2)

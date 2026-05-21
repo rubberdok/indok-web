@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
 import Image from "next/image";
 

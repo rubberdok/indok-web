@@ -1,4 +1,4 @@
-import { ApolloProvider } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client/react";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 
 import { PageProps, useApollo } from "@/lib/apolloClient";

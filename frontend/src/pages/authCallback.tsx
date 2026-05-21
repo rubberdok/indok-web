@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Button, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";

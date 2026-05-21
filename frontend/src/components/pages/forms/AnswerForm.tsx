@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Send } from "@mui/icons-material";
 import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";

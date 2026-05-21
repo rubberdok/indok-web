@@ -19,29 +19,56 @@ export type BookingForm = {
 
 type ValidationSchema = {
   fall: {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
     active: boolean;
   };
   spring: {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
     active: boolean;
   };
+};
+
+const isValidDateString = (value?: string) => {
+  if (!value) {
+    return false;
+  }
+  return !Number.isNaN(Date.parse(value));
+};
+
+const hasValidDateOrder = (startDate?: string, endDate?: string) => {
+  if (!startDate || !endDate) {
+    return true;
+  }
+
+  return Date.parse(endDate) >= Date.parse(startDate);
 };
 
 const validationSchema: yup.ObjectSchema<ValidationSchema> = yup.object({
   fall: yup
     .object({
-      start: yup.date().required(),
-      end: yup.date().required().min(yup.ref("start"), "Sluttdato må være etter startdato"),
+      start: yup.string().required().test("valid-fall-start", "Start må være en gyldig dato", isValidDateString),
+      end: yup
+        .string()
+        .required()
+        .test("valid-fall-end", "Slutt må være en gyldig dato", isValidDateString)
+        .test("fall-end-after-start", "Sluttdato må være etter startdato", function (value) {
+          return hasValidDateOrder(this.parent.start, value);
+        }),
       active: yup.boolean().required(),
     })
     .required(),
   spring: yup
     .object({
-      start: yup.date().required(),
-      end: yup.date().required().min(yup.ref("start"), "Sluttdato må være etter startdato"),
+      start: yup.string().required().test("valid-spring-start", "Start må være en gyldig dato", isValidDateString),
+      end: yup
+        .string()
+        .required()
+        .test("valid-spring-end", "Slutt må være en gyldig dato", isValidDateString)
+        .test("spring-end-after-start", "Sluttdato må være etter startdato", function (value) {
+          return hasValidDateOrder(this.parent.start, value);
+        }),
       active: yup.boolean().required(),
     })
     .required(),

@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Alert, Unstable_Grid2 as Grid, Snackbar, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 

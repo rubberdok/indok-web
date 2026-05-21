@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@apollo/client";
+import { useSuspenseQuery } from "@apollo/client/react";
 import { Button, ButtonProps } from "@mui/material";
 import React, { useMemo } from "react";
 

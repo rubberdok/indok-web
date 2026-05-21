@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 

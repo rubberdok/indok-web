@@ -1,6 +1,6 @@
 "use client";
 
-import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client";
+import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client/react";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
 

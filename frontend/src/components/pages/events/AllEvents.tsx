@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Tune } from "@mui/icons-material";
 import { Box, Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Stack, Typography } from "@mui/material";

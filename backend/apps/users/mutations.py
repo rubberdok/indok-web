@@ -97,7 +97,9 @@ def _apply_user_updates(
             update_graduation_year(target_user, new_graduation_year)
 
 
-def _apply_user_nfc_uid_update(acting_user: "models.User", target_user: "models.User", uid_hex: str) -> None:
+def _apply_user_nfc_uid_update(
+    acting_user: "models.User", target_user: "models.User", uid_hex: str
+) -> None:
     from apps.nfc.models import (
         NfcCard,
         NfcCardAssignment,
@@ -124,11 +126,17 @@ def _apply_user_nfc_uid_update(acting_user: "models.User", target_user: "models.
     if active_assignment is not None:
         if active_assignment.card.uid_hex == normalized_uid:
             return
-        raise ValueError("Du kan bare registrere UID én gang. Kontakt admin for endringer.")
+        raise ValueError(
+            "Du kan bare registrere UID én gang. Kontakt admin for endringer."
+        )
 
-    has_any_previous_assignment = NfcCardAssignment.objects.filter(user=target_user).exists()
+    has_any_previous_assignment = NfcCardAssignment.objects.filter(
+        user=target_user
+    ).exists()
     if has_any_previous_assignment:
-        raise ValueError("Du kan bare registrere UID én gang. Kontakt admin for endringer.")
+        raise ValueError(
+            "Du kan bare registrere UID én gang. Kontakt admin for endringer."
+        )
 
     card, created = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
     if created:

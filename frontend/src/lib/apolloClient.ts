@@ -17,9 +17,9 @@ export type PageProps = {
   props: AppProps<ApolloStateProps>["pageProps"];
 } & ApolloStateProps;
 
-let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
+let apolloClient: ApolloClient | undefined;
 
-function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<NormalizedCacheObject> {
+function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient {
   const uri = typeof window === "undefined" ? config.INTERNAL_GRAPHQL_ENDPOINT : config.GRAPHQL_ENDPOINT;
   const httpLink = new HttpLink({
     uri: uri, // Server URL (must be absolute)
@@ -36,25 +36,23 @@ function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<Norma
   });
 
   return new ApolloClient({
-    credentials: "include",
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
-    connectToDevTools: true,
   });
 }
 
 export function initializeApollo(
   initialState: NormalizedCacheObject = {},
   ctx?: GetServerSidePropsContext
-): ApolloClient<NormalizedCacheObject> {
+): ApolloClient {
   const _apolloClient = apolloClient ?? createApolloClient(ctx);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here
   if (initialState) {
     // Get existing cache, loaded during client side data fetching
-    const existingCache = _apolloClient.extract();
+    const existingCache = _apolloClient.extract() as NormalizedCacheObject;
 
     // Merge the initialState from getStaticProps/getServerSideProps in the existing cache
     const data = merge(existingCache, initialState, {
@@ -76,10 +74,7 @@ export function initializeApollo(
   return _apolloClient;
 }
 
-export function addApolloState<T extends { props: Record<string, unknown> }>(
-  client: ApolloClient<NormalizedCacheObject>,
-  pageProps: T
-): T {
+export function addApolloState<T extends { props: Record<string, unknown> }>(client: ApolloClient, pageProps: T): T {
   if (pageProps?.props) {
     pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
   }
@@ -87,7 +82,7 @@ export function addApolloState<T extends { props: Record<string, unknown> }>(
   return pageProps;
 }
 
-export function useApollo(pageProps: PageProps): ApolloClient<NormalizedCacheObject> {
+export function useApollo(pageProps: PageProps): ApolloClient {
   const state = pageProps[APOLLO_STATE_PROP_NAME];
   const store = useMemo(() => initializeApollo(state), [state]);
   return store;

@@ -32,15 +32,46 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         return super().setUp()
 
     def query(
-        self, query: str, user: Optional[Union[UserFactory, "User"]] = None, **kwargs
+        self,
+        query: str,
+        op_name: Optional[Union[str, UserFactory, "User"]] = None,
+        input_data: Optional[dict[str, Any]] = None,
+        variables: Optional[dict[str, Any]] = None,
+        headers: Optional[dict[str, str]] = None,
+        *,
+        user: Optional[Union[UserFactory, "User"]] = None,
+        **kwargs: Any,
     ) -> HttpResponse:
-        headers = {}
+        positional_user: Optional[Union[UserFactory, "User"]] = None
+        if op_name is not None and not isinstance(op_name, str):
+            positional_user = op_name
+            op_name = None
+
+        if user is None and positional_user is not None:
+            user = positional_user
+
+        resolved_operation_name = kwargs.pop("operation_name", None)
+        resolved_op_name = kwargs.pop("op_name", None)
+        if resolved_operation_name is not None:
+            op_name = resolved_operation_name
+        elif resolved_op_name is not None:
+            op_name = resolved_op_name
+
+        request_headers = headers or {}
         if user is not None:
             user = cast("User", user)
             self.client.force_login(
                 user, backend="django.contrib.auth.backends.ModelBackend"
             )
-        return super().query(query, headers=headers, **kwargs)
+
+        return super().query(
+            query,
+            op_name,
+            input_data=input_data,
+            variables=variables,
+            headers=request_headers,
+            **kwargs,
+        )
 
     def assert_permission_error(self, response: HttpResponse) -> None:
         self.assertResponseHasErrors(response)

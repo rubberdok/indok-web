@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client/react";
 import { GetApp } from "@mui/icons-material";
 import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@mui/material";
 import { useState } from "react";
@@ -11,24 +11,27 @@ type Props = { organization: AdminOrganizationFragment };
 export const EventsExport: React.FC<Props> = ({ organization }) => {
   const [selectedEvents, setSelectedEvents] = useState(["1", "2", "3"]);
 
-  const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(AttendeeReportOrgDocument, {
-    onCompleted: (data) => {
-      if (data.attendeeReportOrg) promptDownloadFromPayload(JSON.parse(data.attendeeReportOrg));
-    },
-  });
+  const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(AttendeeReportOrgDocument);
 
-  const [getAttendeeReports, { loading: loadingReports }] = useLazyQuery(AttendeeReportsDocument, {
-    onCompleted: (data) => {
-      if (data.attendeeReports) promptDownloadFromPayload(JSON.parse(data.attendeeReports));
-    },
-  });
+  const [getAttendeeReports, { loading: loadingReports }] = useLazyQuery(AttendeeReportsDocument);
+
+  const downloadAttendeeReportOrg = async (orgId: string, filetype: string) => {
+    const { data } = await getAttendeeReportOrg({ variables: { orgId, filetype } });
+    if (data?.attendeeReportOrg) {
+      promptDownloadFromPayload(JSON.parse(data.attendeeReportOrg));
+    }
+  };
+
+  const downloadAttendeeReports = async (filetype: string) => {
+    const { data } = await getAttendeeReports({ variables: { eventIds: selectedEvents, filetype } });
+    if (data?.attendeeReports) {
+      promptDownloadFromPayload(JSON.parse(data.attendeeReports));
+    }
+  };
 
   const wrapDownloadButtonReportOrg = (orgId: string, filetype: string) => {
     return (
-      <Button
-        startIcon={<GetApp fontSize="small" />}
-        onClick={() => getAttendeeReportOrg({ variables: { orgId: orgId, filetype: filetype } })}
-      >
+      <Button startIcon={<GetApp fontSize="small" />} onClick={() => void downloadAttendeeReportOrg(orgId, filetype)}>
         {filetype}
       </Button>
     );
@@ -40,13 +43,7 @@ export const EventsExport: React.FC<Props> = ({ organization }) => {
 
   const wrapDownloadButtonReports = (filetype: string) => {
     return (
-      <Button
-        startIcon={<GetApp fontSize="small" />}
-        disabled
-        onClick={() => {
-          return getAttendeeReports({ variables: { eventIds: selectedEvents, filetype: filetype } });
-        }}
-      >
+      <Button startIcon={<GetApp fontSize="small" />} disabled onClick={() => void downloadAttendeeReports(filetype)}>
         {filetype}
       </Button>
     );

@@ -1,4 +1,5 @@
-import { ApolloError, useMutation } from "@apollo/client";
+import type { ErrorLike } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Card, CardActionArea, CardMedia } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
@@ -8,7 +9,7 @@ import { InitiateOrderDocument } from "@/generated/graphql";
 type Props = {
   productId: string;
   quantity: number;
-  onError?: (e?: ApolloError) => void;
+  onError?: (e?: ErrorLike) => void;
   disabled: boolean;
   fallbackRedirect: string | undefined;
 };

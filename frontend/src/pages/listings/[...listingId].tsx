@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Container, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   if (error) return { notFound: true };
 
-  const { listing } = data;
+  const listing = data?.listing;
   if (!listing) return { notFound: true };
 
   return addApolloState(client, { props: { listing } });

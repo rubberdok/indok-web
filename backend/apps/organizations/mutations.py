@@ -161,9 +161,11 @@ class RemoveMembership(graphene.Mutation):
 
     @login_required
     def mutate(self, info, membership_id):
-        membership = Membership.objects.select_related("user", "organization").filter(
-            pk=membership_id
-        ).first()
+        membership = (
+            Membership.objects.select_related("user", "organization")
+            .filter(pk=membership_id)
+            .first()
+        )
         if membership is None:
             return RemoveMembership(removed_member=None, ok=False)
 

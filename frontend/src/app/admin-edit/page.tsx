@@ -1,6 +1,7 @@
 "use client";
 
-import { ApolloError, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
 import {
   Alert,
   Box,
@@ -55,12 +56,9 @@ type AdminEditableUser = {
 };
 
 function toErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof ApolloError) {
-    if (error.graphQLErrors.length > 0) {
-      return error.graphQLErrors.map((e) => e.message).join(" · ");
-    }
-    if (error.networkError) {
-      return `Nettverksfeil: ${error.networkError.message}`;
+  if (error instanceof CombinedGraphQLErrors) {
+    if (error.errors.length > 0) {
+      return error.errors.map((e) => e.message).join(" · ");
     }
   }
 

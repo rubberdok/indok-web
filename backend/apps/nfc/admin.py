@@ -2,7 +2,13 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models import NfcAccessEvent, NfcAccessGrant, NfcCard, NfcCardAssignment, NfcSettings
+from .models import (
+    NfcAccessEvent,
+    NfcAccessGrant,
+    NfcCard,
+    NfcCardAssignment,
+    NfcSettings,
+)
 
 
 @admin.register(NfcCard)
