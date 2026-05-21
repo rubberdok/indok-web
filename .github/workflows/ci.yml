@@ -241,7 +241,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download image from previous job
         uses: actions/download-artifact@v8
