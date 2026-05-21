@@ -9,11 +9,11 @@ RUN yarn install --frozen-lockfile --network-timeout 300000
 
 COPY . .
 
-ENV NEXT_PUBLIC_APP_ENV development
+ENV NEXT_PUBLIC_APP_ENV=development
 
 EXPOSE 3000
 
 # Disable NextJS telemetry
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 CMD ["yarn", "dev"]

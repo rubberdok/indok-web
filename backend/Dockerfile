@@ -12,8 +12,8 @@ RUN apt-get update && \
     dos2unix
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # install dependencies
 RUN pip install --upgrade pip
