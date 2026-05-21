@@ -1,7 +1,8 @@
-import { useQuery } from "@apollo/client";
+//import { useQuery } from "@apollo/client";
 import { ArrowForward } from "@mui/icons-material";
-import { Alert, Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
+//import { Alert } from "@/mui/material";
 
 import { PermissionRequired } from "@/components/Auth";
 import { NextLinkComposed } from "@/components/Link";
@@ -12,11 +13,11 @@ import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
-  const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
-  const { data: areaData } = useQuery(JanHusAreaConfigurationsDocument);
+  // const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
+  // const { data: areaData } = useQuery(JanHusAreaConfigurationsDocument);
 
-  const settings = settingsData?.janhusBookingSettings;
-  const configuredAreaCount = areaData?.janhusAreaConfigurations?.length ?? 0;
+  // const settings = settingsData?.janhusBookingSettings;
+  // const configuredAreaCount = areaData?.janhusAreaConfigurations?.length ?? 0;
 
   return (
     <>

@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Callable
+from typing import Callable, cast
 from unittest.mock import patch
 
 import requests
@@ -10,6 +10,8 @@ from django.utils import timezone
 from graphene.utils.str_converters import to_snake_case
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.users import IndokUserFactory, UserFactory
+
+from apps.nfc.models import NfcCardAssignment, NfcSettings
 
 User = get_user_model()
 
@@ -458,3 +460,153 @@ class UsersMutationsTestCase(UsersBaseTestCase):
 
     def test_get_id_token(self):
         pass
+
+    def test_update_user_nfc_uid_requires_self_service_flag(self):
+        mutation = """
+            mutation UpdateOwnUserNfc($userData: UserInput) {
+                updateUser(userData: $userData) {
+                    user {
+                        id
+                    }
+                }
+            }
+        """
+
+        response = self.query(
+            mutation,
+            user=self.indok_user,
+            op_name="UpdateOwnUserNfc",
+            variables={
+                "userData": {
+                    "nfcUidHex": "04 A1 B2 C3 D4 E5 F6",
+                },
+            },
+        )
+        self.assertResponseHasErrors(response)
+        self.assertFalse(
+            NfcCardAssignment.objects.filter(
+                user=self.indok_user, revoked_at__isnull=True
+            ).exists()
+        )
+
+    def test_update_user_nfc_uid_when_self_service_enabled(self):
+        self.indok_user.first_name = "Ola"
+        self.indok_user.last_name = "Nordmann"
+        self.indok_user.save(update_fields=["first_name", "last_name"])
+
+        settings_obj = NfcSettings.objects.create()
+        settings_obj.allow_user_uid_self_service = True
+        settings_obj.allow_7_byte_uid = True
+        settings_obj.allow_4_byte_uid = False
+        settings_obj.save(update_fields=["allow_user_uid_self_service", "allow_7_byte_uid", "allow_4_byte_uid"])
+
+        mutation = """
+            mutation UpdateOwnUserNfc($userData: UserInput) {
+                updateUser(userData: $userData) {
+                    user {
+                        id
+                    }
+                }
+            }
+        """
+
+        response = self.query(
+            mutation,
+            user=self.indok_user,
+            op_name="UpdateOwnUserNfc",
+            variables={
+                "userData": {
+                    "nfcUidHex": "04 A1 B2 C3 D4 E5 F6",
+                },
+            },
+        )
+        self.assertResponseNoErrors(response)
+
+        assignment = NfcCardAssignment.objects.filter(
+            user=self.indok_user,
+            revoked_at__isnull=True,
+        ).select_related("card").first()
+        if assignment is None:
+            self.fail("Expected active NFC assignment after self-service UID update")
+        assignment = cast(NfcCardAssignment, assignment)
+        self.assertEqual(assignment.card.uid_hex, "04A1B2C3D4E5F6")
+        self.assertEqual(assignment.card.label, "Ola Nordmann sitt kort (E)")
+
+    def test_update_user_nfc_uid_with_4_byte_policy(self):
+        settings_obj = NfcSettings.objects.create()
+        settings_obj.allow_user_uid_self_service = True
+        settings_obj.allow_7_byte_uid = False
+        settings_obj.allow_4_byte_uid = True
+        settings_obj.save(update_fields=["allow_user_uid_self_service", "allow_7_byte_uid", "allow_4_byte_uid"])
+
+        mutation = """
+            mutation UpdateOwnUserNfc($userData: UserInput) {
+                updateUser(userData: $userData) {
+                    user {
+                        id
+                    }
+                }
+            }
+        """
+
+        response = self.query(
+            mutation,
+            user=self.indok_user,
+            op_name="UpdateOwnUserNfc",
+            variables={
+                "userData": {
+                    "nfcUidHex": "A1-B2-C3-D4",
+                },
+            },
+        )
+        self.assertResponseNoErrors(response)
+
+        assignment = NfcCardAssignment.objects.filter(
+            user=self.indok_user,
+            revoked_at__isnull=True,
+        ).select_related("card").first()
+        if assignment is None:
+            self.fail("Expected active NFC assignment for 4-byte UID policy")
+        assignment = cast(NfcCardAssignment, assignment)
+        self.assertEqual(assignment.card.uid_hex, "A1B2C3D4")
+
+    def test_update_user_nfc_uid_can_only_be_set_once(self):
+        settings_obj = NfcSettings.objects.create()
+        settings_obj.allow_user_uid_self_service = True
+        settings_obj.allow_7_byte_uid = True
+        settings_obj.allow_4_byte_uid = False
+        settings_obj.save(update_fields=["allow_user_uid_self_service", "allow_7_byte_uid", "allow_4_byte_uid"])
+
+        mutation = """
+            mutation UpdateOwnUserNfc($userData: UserInput) {
+                updateUser(userData: $userData) {
+                    user {
+                        id
+                    }
+                }
+            }
+        """
+
+        first_response = self.query(
+            mutation,
+            user=self.indok_user,
+            op_name="UpdateOwnUserNfc",
+            variables={
+                "userData": {
+                    "nfcUidHex": "04A1B2C3D4E5F6",
+                },
+            },
+        )
+        self.assertResponseNoErrors(first_response)
+
+        second_response = self.query(
+            mutation,
+            user=self.indok_user,
+            op_name="UpdateOwnUserNfc",
+            variables={
+                "userData": {
+                    "nfcUidHex": "04A1B2C3D4E5F7",
+                },
+            },
+        )
+        self.assertResponseHasErrors(second_response)

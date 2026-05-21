@@ -121,7 +121,7 @@ export const BookingSteps: React.FC<Props> = ({
   startOptions,
   endOptions,
   minDurationMinutes,
-  slotGranularityMinutes,
+  //slotGranularityMinutes,
   openingHour,
   closingHour,
   selectedDurationMinutes,
@@ -129,9 +129,9 @@ export const BookingSteps: React.FC<Props> = ({
   organizationId,
   organizations,
   canCreateNonExternalBooking,
-  externalBookingsEnabled,
-  isAuthenticated,
-  isIndokStudent,
+  //externalBookingsEnabled,
+  //isAuthenticated,
+  //isIndokStudent,
   requesterName,
   requesterEmail,
   requesterPhone,
@@ -143,7 +143,7 @@ export const BookingSteps: React.FC<Props> = ({
   eventTypeOptions,
   comment,
   guestListEntries,
-  cleaningRequested,
+  //cleaningRequested,
   acceptedGuidelines,
   acceptedContractPlaceholder,
   selectedAreaLabel,
@@ -165,7 +165,7 @@ export const BookingSteps: React.FC<Props> = ({
   onResponsiblePhoneChange,
   onEventTypeChange,
   onCommentChange,
-  onCleaningRequestedChange,
+  //onCleaningRequestedChange,
   onAcceptedGuidelinesChange,
   onAcceptedContractPlaceholderChange,
   onOpenGuestListDialog,
@@ -185,7 +185,10 @@ export const BookingSteps: React.FC<Props> = ({
             <Typography variant="body1" color="text.secondary">
               Flyt: velg område, velg dato i kalender, og velg et ledig tidsrom.
             </Typography>
-
+            <Typography variant="body1" color="text.secondary">
+              Minimum {minDurationMinutes / 60} time per booking, kan kun bookes mellom {openingHour}:00–{closingHour}
+              :00.
+            </Typography>
             {/* <Alert severity="info">
               Regler: minimum {minDurationMinutes} minutter, granularitet {slotGranularityMinutes} minutter, åpningstid{" "}
               {openingHour}:00–{closingHour}:00.
@@ -384,29 +387,29 @@ export const BookingSteps: React.FC<Props> = ({
               </Box>
             ) : null}
 
-            {ownerType === "EXTERNAL" ? (
+            {/* {ownerType === "EXTERNAL" ? (
               <TextField
                 label="Arrangementstype"
                 value="Ekstern"
                 disabled
                 helperText="Eksterne forespørsler settes alltid som ekstern hendelse. Logg inn for interne/private valg."
               />
-            ) : (
-              <FormControl>
-                <InputLabel>Arrangementstype</InputLabel>
-                <Select
-                  value={eventType}
-                  label="Arrangementstype"
-                  onChange={(event) => onEventTypeChange(event.target.value)}
-                >
-                  {eventTypeOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
+            ) : ( */}
+            <FormControl>
+              <InputLabel>Arrangementstype</InputLabel>
+              <Select
+                value={eventType}
+                label="Arrangementstype"
+                onChange={(event) => onEventTypeChange(event.target.value)}
+              >
+                {eventTypeOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {/* )} */}
 
             <BookingStepNavigation
               nextButton={
@@ -565,7 +568,7 @@ export const BookingSteps: React.FC<Props> = ({
                 {/* TODO: bedre håndtering av eiertype slik den oversettes */}
               </Typography>
               <Typography variant="body1">
-                <strong>Arrangementstype:</strong> {ownerType === "EXTERNAL" ? "EKSTERN" : eventType}
+                <strong>Arrangementstype:</strong> {eventType} {/* ownerType === "EXTERNAL" ? "EKSTERN" : eventType */}
                 {/* TODO: bedre håndtering av arrangementstype slik den oversettes */}
               </Typography>
               {/* <Typography variant="body1">

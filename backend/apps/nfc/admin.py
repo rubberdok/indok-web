@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
-from .models import NfcAccessEvent, NfcAccessGrant, NfcCard, NfcCardAssignment
+from .models import NfcAccessEvent, NfcAccessGrant, NfcCard, NfcCardAssignment, NfcSettings
 
 
 @admin.register(NfcCard)
@@ -51,3 +53,30 @@ class NfcAccessEventAdmin(admin.ModelAdmin):
     )
     search_fields = ("door_identifier", "uid_hex_reported", "resolved_user__username")
     list_filter = ("event_type", "source")
+
+
+@admin.register(NfcSettings)
+class NfcSettingsAdmin(admin.ModelAdmin):
+    list_display = (
+        "allow_user_uid_self_service",
+        "allow_7_byte_uid",
+        "allow_4_byte_uid",
+    )
+
+    def has_add_permission(self, request):
+        return not NfcSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        settings_obj, _created = NfcSettings.objects.get_or_create(
+            pk=NfcSettings.SINGLETON_PK,
+            defaults={
+                "allow_user_uid_self_service": True,
+                "allow_7_byte_uid": True,
+                "allow_4_byte_uid": False,
+            },
+        )
+        url = reverse("admin:nfc_nfcsettings_change", args=(settings_obj.pk,))
+        return HttpResponseRedirect(url)

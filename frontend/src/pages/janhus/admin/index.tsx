@@ -30,6 +30,7 @@ import { useEffect, useMemo, useState } from "react";
 import { PermissionRequired } from "@/components/Auth";
 import { TabPanel } from "@/components/pages/about/TabPanel";
 import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
+import { Title } from "@/components/Title";
 import {
   AdminJanHusBookingsDocument,
   CreateJanhusPaymentProductDocument,
@@ -44,7 +45,7 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
-type OwnerType = "PERSONAL" | "ORGANIZATION" | "EXTERNAL";
+type OwnerType = "PERSONAL" | "ORGANIZATION"; // | "EXTERNAL";
 type SortDirection = "asc" | "desc";
 
 const AREA_LABELS: Record<string, string> = {
@@ -94,7 +95,7 @@ const MANUAL_ENTRY_PREFIX = "manual:";
 const OWNER_TYPE_LABELS: Record<OwnerType, string> = {
   PERSONAL: "Personlig",
   ORGANIZATION: "Organisasjon",
-  EXTERNAL: "Ekstern",
+  // EXTERNAL: "Ekstern",
 };
 
 const statusChipColor = (status: string): "default" | "success" | "warning" | "error" | "info" => {
@@ -146,16 +147,17 @@ const requestOwnerType = (request: {
   if (request.requesterUser) {
     return "PERSONAL";
   }
-  return "EXTERNAL";
+  // return "EXTERNAL";
+  return "PERSONAL";
 };
 
 const bookingOwnerType = (booking: {
   isExternalBooking: boolean;
   ownerOrganization?: { id: string; name: string } | null;
 }): OwnerType => {
-  if (booking.isExternalBooking) {
-    return "EXTERNAL";
-  }
+  // if (booking.isExternalBooking) {
+  //   return "EXTERNAL";
+  // }
   if (booking.ownerOrganization) {
     return "ORGANIZATION";
   }
@@ -533,622 +535,642 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   }
 
   return (
-    <Container sx={{ py: 4 }}>
-      <PermissionRequired permission="janhus.manage_booking">
-        <Stack spacing={0.75} mb={3}>
-          <Typography variant="h3" align="center">
-            JanHus adminside
-          </Typography>
-          <Box>
-            <Button startIcon={<Settings />} onClick={() => router.push("/janhus/admin/settings")}>
-              Innstillinger
-            </Button>
-          </Box>
-        </Stack>
-
-        {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}
-
-        <Box sx={(theme) => ({ width: "100%", overflowX: "auto", mb: theme.spacing(4) })} component="div">
-          <Box sx={{ width: "100%" }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                onChange={(_e, newValue) => setTabValue(newValue)}
-                value={tabValue}
-                indicatorColor="primary"
-                variant="fullWidth"
-              >
-                <Tab label="Forespørsler" />
-                <Tab label="Bookinger" />
-              </Tabs>
+    <>
+      <Title
+        title="Booking adminside"
+        overline="Bookinger"
+        variant="dark"
+        breadcrumbs={[
+          {
+            name: "Hjem",
+            href: "/",
+          },
+          {
+            name: "JanHus",
+            href: "/janhus",
+          },
+          {
+            name: "Adminside",
+            href: "/janhus/admin",
+          },
+        ]}
+      />
+      <Container sx={{ py: 4 }}>
+        <PermissionRequired permission="janhus.manage_booking">
+          <Stack spacing={0.75} mb={3}>
+            <Box>
+              <Button startIcon={<Settings />} onClick={() => router.push("/janhus/admin/settings")}>
+                Innstillinger
+              </Button>
             </Box>
+          </Stack>
 
-            <TabPanel value={tabValue} index={0}>
-              <Stack spacing={2} mt={2}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h5">Bookingforespørsler</Typography>
-                  <Button variant="text" onClick={() => refetchRequests()}>
-                    Oppdater
-                  </Button>
-                </Stack>
+          {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}
 
-                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(4, 1fr)" }}>
-                  <TextField
-                    type="date"
-                    label="Dato"
-                    InputLabelProps={{ shrink: true }}
-                    value={requestDateFilter}
-                    onChange={(event) => setRequestDateFilter(event.target.value)}
-                  />
-                  <FormControl>
-                    <InputLabel>Område</InputLabel>
-                    <Select
-                      value={requestAreaFilter}
-                      label="Område"
-                      onChange={(event) => setRequestAreaFilter(event.target.value)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
-                      <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
-                      <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Eiertype</InputLabel>
-                    <Select
-                      value={requestOwnerTypeFilter}
-                      label="Eiertype"
-                      onChange={(event) => setRequestOwnerTypeFilter(event.target.value as "ALL" | OwnerType)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      <MenuItem value="PERSONAL">Personlig</MenuItem>
-                      <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
-                      <MenuItem value="EXTERNAL">Ekstern</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Arrangementstype</InputLabel>
-                    <Select
-                      value={requestEventTypeFilter}
-                      label="Arrangementstype"
-                      onChange={(event) => setRequestEventTypeFilter(event.target.value)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
-                        <MenuItem key={value} value={value}>
-                          {label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-
-                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}>
-                  <FormControl>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      value={requestStatusFilter}
-                      label="Status"
-                      onChange={(event) => setRequestStatusFilter(event.target.value)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      {Object.entries(REQUEST_STATUS_LABELS).map(([value, label]) => (
-                        <MenuItem key={value} value={value}>
-                          {label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Sorter på</InputLabel>
-                    <Select
-                      value={requestSortBy}
-                      label="Sorter på"
-                      onChange={(event) =>
-                        setRequestSortBy(
-                          event.target.value as "startsAt" | "area" | "eventType" | "status" | "ownerType"
-                        )
-                      }
-                    >
-                      <MenuItem value="startsAt">Tid (fra)</MenuItem>
-                      <MenuItem value="area">Område</MenuItem>
-                      <MenuItem value="eventType">Arrangementstype</MenuItem>
-                      <MenuItem value="ownerType">Eiertype</MenuItem>
-                      <MenuItem value="status">Status</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Retning</InputLabel>
-                    <Select
-                      value={requestSortDirection}
-                      label="Retning"
-                      onChange={(event) => setRequestSortDirection(event.target.value as SortDirection)}
-                    >
-                      <MenuItem value="asc">Stigende</MenuItem>
-                      <MenuItem value="desc">Synkende</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-
-                <Grid
-                  container
-                  spacing={2}
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  sx={{ width: "100%", m: 0 }}
+          <Box sx={(theme) => ({ width: "100%", overflowX: "auto", mb: theme.spacing(4) })} component="div">
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  onChange={(_e, newValue) => setTabValue(newValue)}
+                  value={tabValue}
+                  indicatorColor="primary"
+                  variant="fullWidth"
                 >
-                  {filteredRequests.map((request) => (
-                    <Grid
-                      item
-                      xs={12}
-                      md={6}
-                      key={request.id}
-                      sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
-                    >
-                      <Card variant="outlined" elevation={0} sx={{ width: "100%" }}>
-                        <CardContent>
-                          <Stack spacing={1.5}>
-                            <Stack direction="row" justifyContent="space-between" alignItems="center">
-                              <Typography variant="h6">Forespørsel #{request.id}</Typography>
-                              <Chip
-                                size="small"
-                                color={statusChipColor(request.status)}
-                                label={REQUEST_STATUS_LABELS[request.status] ?? request.status}
-                              />
-                            </Stack>
-                            <Typography variant="body2" color="text.secondary">
-                              {formatDate(request.startsAt)} kl. {formatTime(request.startsAt)}–
-                              {formatTime(request.endsAt)} · {AREA_LABELS[request.area] ?? request.area}
-                            </Typography>
-                            <Typography variant="body2">
-                              Eiertype: {OWNER_TYPE_LABELS[requestOwnerType(request)]}
-                              {request.ownerOrganization?.name ? ` · ${request.ownerOrganization.name}` : ""}
-                            </Typography>
-                            <Typography variant="body2">
-                              Arrangement: {EVENT_TYPE_LABELS[request.eventType] ?? request.eventType} · Innleid
-                              renhold: {request.cleaningRequested ? "Ja" : "Nei"}
-                            </Typography>
-                            <Typography variant="body2">
-                              Bestiller: {request.requesterName} ({request.requesterEmail || "-"})
-                            </Typography>
-                            <Typography variant="body2">
-                              Ansvarlig: {request.responsibleName} ({request.responsibleEmail})
-                            </Typography>
-                            <TextField
-                              size="small"
-                              label="Adminkommentar"
-                              value={requestComments[request.id] ?? ""}
-                              onChange={(event) =>
-                                setRequestComments((prev) => ({
-                                  ...prev,
-                                  [request.id]: event.target.value,
-                                }))
-                              }
-                            />
-                            <Stack direction="row" spacing={1} flexWrap="wrap">
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => handleReviewRequest(request.id, "APPROVED", true)}
-                                disabled={requestReviewing}
-                              >
-                                Godkjenn + booking (Foreløpig)
-                              </Button>
-                              <Button
-                                size="small"
-                                color="error"
-                                variant="outlined"
-                                onClick={() => handleReviewRequest(request.id, "REJECTED", false)}
-                                disabled={requestReviewing}
-                              >
-                                Avvis
-                              </Button>
-                              <Button
-                                size="small"
-                                color="error"
-                                variant="text"
-                                onClick={() => handleDeleteRequest(request.id)}
-                                disabled={deletingRequest}
-                              >
-                                Slett
-                              </Button>
-                            </Stack>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Stack>
-            </TabPanel>
+                  <Tab label="Forespørsler" />
+                  <Tab label="Bookinger" />
+                </Tabs>
+              </Box>
 
-            <TabPanel value={tabValue} index={1}>
-              <Stack spacing={2} mt={2}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h5">Bookinger</Typography>
-                  <Button variant="text" onClick={() => refetchBookings()}>
-                    Oppdater
-                  </Button>
-                </Stack>
+              <TabPanel value={tabValue} index={0}>
+                <Stack spacing={2} mt={2}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h5">Bookingforespørsler</Typography>
+                    <Button variant="text" onClick={() => refetchRequests()}>
+                      Oppdater
+                    </Button>
+                  </Stack>
 
-                <Card variant="outlined" elevation={0}>
-                  <CardContent>
-                    <Stack spacing={2}>
-                      <Typography variant="h6">Tilgjengelighet (kompakt ukevisning)</Typography>
-                      <Stack direction={{ xs: "column", md: "row" }} spacing={1} alignItems={{ md: "center" }}>
-                        <TextField
-                          type="date"
-                          label="Uke (ankerdato)"
-                          InputLabelProps={{ shrink: true }}
-                          value={availabilityWeekAnchor}
-                          onChange={(event) => setAvailabilityWeekAnchor(event.target.value)}
-                          sx={{ maxWidth: 220 }}
-                        />
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          onClick={() =>
-                            setAvailabilityWeekAnchor(
-                              dayjs(availabilityWeekAnchor).subtract(7, "day").format("YYYY-MM-DD")
-                            )
-                          }
-                        >
-                          Forrige uke
-                        </Button>
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          onClick={() =>
-                            setAvailabilityWeekAnchor(dayjs(availabilityWeekAnchor).add(7, "day").format("YYYY-MM-DD"))
-                          }
-                        >
-                          Neste uke
-                        </Button>
-                        <Typography variant="body2" color="text.secondary">
-                          Uke starter {weekStartLabel}
-                        </Typography>
-                      </Stack>
-
-                      <Grid container spacing={1}>
-                        {availabilityByArea.map((areaInfo) => (
-                          <Grid item xs={12} md={4} key={areaInfo.area}>
-                            <Card variant="outlined" elevation={0}>
-                              <CardContent>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  {AREA_LABELS[areaInfo.area] ?? areaInfo.area}
-                                </Typography>
-                                <Stack spacing={0.5}>
-                                  {areaInfo.bookingsByDay.map((day) => (
-                                    <Box key={`${areaInfo.area}-${day.key}`}>
-                                      <Typography variant="caption" color="text.secondary">
-                                        {day.label}
-                                      </Typography>
-                                      {day.bookings.length ? (
-                                        <Typography variant="body2">
-                                          {day.bookings
-                                            .slice(0, 2)
-                                            .map(
-                                              (booking) =>
-                                                `${formatTime(booking.startsAt)}–${formatTime(booking.endsAt)}`
-                                            )
-                                            .join(", ")}
-                                          {day.bookings.length > 2 ? ` (+${day.bookings.length - 2})` : ""}
-                                        </Typography>
-                                      ) : (
-                                        <Typography variant="body2" color="success.main">
-                                          Ledig
-                                        </Typography>
-                                      )}
-                                    </Box>
-                                  ))}
-                                </Stack>
-                              </CardContent>
-                            </Card>
-                          </Grid>
+                  <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(4, 1fr)" }}>
+                    <TextField
+                      type="date"
+                      label="Dato"
+                      InputLabelProps={{ shrink: true }}
+                      value={requestDateFilter}
+                      onChange={(event) => setRequestDateFilter(event.target.value)}
+                    />
+                    <FormControl>
+                      <InputLabel>Område</InputLabel>
+                      <Select
+                        value={requestAreaFilter}
+                        label="Område"
+                        onChange={(event) => setRequestAreaFilter(event.target.value)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
+                        <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
+                        <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Eiertype</InputLabel>
+                      <Select
+                        value={requestOwnerTypeFilter}
+                        label="Eiertype"
+                        onChange={(event) => setRequestOwnerTypeFilter(event.target.value as "ALL" | OwnerType)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        <MenuItem value="PERSONAL">Personlig</MenuItem>
+                        <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
+                        <MenuItem value="EXTERNAL">Ekstern</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Arrangementstype</InputLabel>
+                      <Select
+                        value={requestEventTypeFilter}
+                        label="Arrangementstype"
+                        onChange={(event) => setRequestEventTypeFilter(event.target.value)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                          <MenuItem key={value} value={value}>
+                            {label}
+                          </MenuItem>
                         ))}
-                      </Grid>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                      </Select>
+                    </FormControl>
+                  </Box>
 
-                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(4, 1fr)" }}>
-                  <TextField
-                    type="date"
-                    label="Dato"
-                    InputLabelProps={{ shrink: true }}
-                    value={bookingDateFilter}
-                    onChange={(event) => setBookingDateFilter(event.target.value)}
-                  />
-                  <FormControl>
-                    <InputLabel>Område</InputLabel>
-                    <Select
-                      value={bookingAreaFilter}
-                      label="Område"
-                      onChange={(event) => setBookingAreaFilter(event.target.value)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
-                      <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
-                      <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Eiertype</InputLabel>
-                    <Select
-                      value={bookingOwnerTypeFilter}
-                      label="Eiertype"
-                      onChange={(event) => setBookingOwnerTypeFilter(event.target.value as "ALL" | OwnerType)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      <MenuItem value="PERSONAL">Personlig</MenuItem>
-                      <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
-                      <MenuItem value="EXTERNAL">Ekstern</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Arrangementstype</InputLabel>
-                    <Select
-                      value={bookingEventTypeFilter}
-                      label="Arrangementstype"
-                      onChange={(event) => setBookingEventTypeFilter(event.target.value)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
-                        <MenuItem key={value} value={value}>
-                          {label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
+                  <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}>
+                    <FormControl>
+                      <InputLabel>Status</InputLabel>
+                      <Select
+                        value={requestStatusFilter}
+                        label="Status"
+                        onChange={(event) => setRequestStatusFilter(event.target.value)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        {Object.entries(REQUEST_STATUS_LABELS).map(([value, label]) => (
+                          <MenuItem key={value} value={value}>
+                            {label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Sorter på</InputLabel>
+                      <Select
+                        value={requestSortBy}
+                        label="Sorter på"
+                        onChange={(event) =>
+                          setRequestSortBy(
+                            event.target.value as "startsAt" | "area" | "eventType" | "status" | "ownerType"
+                          )
+                        }
+                      >
+                        <MenuItem value="startsAt">Tid (fra)</MenuItem>
+                        <MenuItem value="area">Område</MenuItem>
+                        <MenuItem value="eventType">Arrangementstype</MenuItem>
+                        <MenuItem value="ownerType">Eiertype</MenuItem>
+                        <MenuItem value="status">Status</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Retning</InputLabel>
+                      <Select
+                        value={requestSortDirection}
+                        label="Retning"
+                        onChange={(event) => setRequestSortDirection(event.target.value as SortDirection)}
+                      >
+                        <MenuItem value="asc">Stigende</MenuItem>
+                        <MenuItem value="desc">Synkende</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
 
-                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}>
-                  <FormControl>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      value={bookingStatusFilter}
-                      label="Status"
-                      onChange={(event) => setBookingStatusFilter(event.target.value)}
-                    >
-                      <MenuItem value="ALL">Alle</MenuItem>
-                      {Object.entries(BOOKING_STATUS_LABELS).map(([value, label]) => (
-                        <MenuItem key={value} value={value}>
-                          {label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Sorter på</InputLabel>
-                    <Select
-                      value={bookingSortBy}
-                      label="Sorter på"
-                      onChange={(event) =>
-                        setBookingSortBy(
-                          event.target.value as "startsAt" | "area" | "eventType" | "status" | "ownerType"
-                        )
-                      }
-                    >
-                      <MenuItem value="startsAt">Tid (fra)</MenuItem>
-                      <MenuItem value="area">Område</MenuItem>
-                      <MenuItem value="eventType">Arrangementstype</MenuItem>
-                      <MenuItem value="ownerType">Eiertype</MenuItem>
-                      <MenuItem value="status">Status</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Retning</InputLabel>
-                    <Select
-                      value={bookingSortDirection}
-                      label="Retning"
-                      onChange={(event) => setBookingSortDirection(event.target.value as SortDirection)}
-                    >
-                      <MenuItem value="asc">Stigende</MenuItem>
-                      <MenuItem value="desc">Synkende</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-
-                <Grid
-                  container
-                  spacing={2}
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  sx={{ width: "100%", m: 0 }}
-                >
-                  {filteredBookings.map((booking) => {
-                    const edit = bookingEdits[booking.id];
-                    if (!edit) return null;
-
-                    const depositPaid = edit.depositStatus === JanHusBookingDepositStatus.Paid;
-                    const isExpanded = Boolean(expandedBookingIds[booking.id]);
-
-                    return (
+                  <Grid
+                    container
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="flex-start"
+                    sx={{ width: "100%", m: 0 }}
+                  >
+                    {filteredRequests.map((request) => (
                       <Grid
                         item
                         xs={12}
                         md={6}
-                        key={booking.id}
+                        key={request.id}
                         sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
                       >
-                        <Accordion
-                          expanded={isExpanded}
-                          onChange={(_event, expanded) =>
-                            setExpandedBookingIds((current) => ({
-                              ...current,
-                              [booking.id]: expanded,
-                            }))
-                          }
-                          disableGutters
-                          elevation={0}
-                          sx={{
-                            width: "100%",
-                            border: "1px solid",
-                            borderColor: "divider",
-                            borderRadius: 1,
-                            overflow: "hidden",
-                            "&:before": { display: "none" },
-                          }}
-                        >
-                          <AccordionSummary
-                            expandIcon={<ExpandMore />}
-                            sx={{
-                              px: 2,
-                              "& .MuiAccordionSummary-content": {
-                                my: 1,
-                              },
-                            }}
-                          >
-                            <Stack spacing={0.5} width="100%" pr={1}>
+                        <Card variant="outlined" elevation={0} sx={{ width: "100%" }}>
+                          <CardContent>
+                            <Stack spacing={1.5}>
                               <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                <Typography variant="h6">Booking #{booking.id}</Typography>
+                                <Typography variant="h6">Forespørsel #{request.id}</Typography>
                                 <Chip
                                   size="small"
-                                  color={statusChipColor(edit.status)}
-                                  label={BOOKING_STATUS_LABELS[edit.status] ?? edit.status}
+                                  color={statusChipColor(request.status)}
+                                  label={REQUEST_STATUS_LABELS[request.status] ?? request.status}
                                 />
                               </Stack>
                               <Typography variant="body2" color="text.secondary">
-                                {formatDate(booking.startsAt)} kl. {formatTime(booking.startsAt)}–
-                                {formatTime(booking.endsAt)} · {AREA_LABELS[booking.area] ?? booking.area} ·{" "}
-                                {OWNER_TYPE_LABELS[bookingOwnerType(booking)]}
+                                {formatDate(request.startsAt)} kl. {formatTime(request.startsAt)}–
+                                {formatTime(request.endsAt)} · {AREA_LABELS[request.area] ?? request.area}
                               </Typography>
+                              <Typography variant="body2">
+                                Eiertype: {OWNER_TYPE_LABELS[requestOwnerType(request)]}
+                                {request.ownerOrganization?.name ? ` · ${request.ownerOrganization.name}` : ""}
+                              </Typography>
+                              <Typography variant="body2">
+                                Arrangement: {EVENT_TYPE_LABELS[request.eventType] ?? request.eventType}
+                                {/* · Innleid
+                              renhold: {request.cleaningRequested ? "Ja" : "Nei"} */}
+                              </Typography>
+                              <Typography variant="body2">
+                                Bestiller: {request.requesterName} ({request.requesterEmail || "-"})
+                              </Typography>
+                              <Typography variant="body2">
+                                Ansvarlig: {request.responsibleName} ({request.responsibleEmail})
+                              </Typography>
+                              <TextField
+                                size="small"
+                                label="Adminkommentar"
+                                value={requestComments[request.id] ?? ""}
+                                onChange={(event) =>
+                                  setRequestComments((prev) => ({
+                                    ...prev,
+                                    [request.id]: event.target.value,
+                                  }))
+                                }
+                              />
+                              <Stack direction="row" spacing={1} flexWrap="wrap">
+                                <Button
+                                  size="small"
+                                  variant="outlined"
+                                  onClick={() => handleReviewRequest(request.id, "APPROVED", true)}
+                                  disabled={requestReviewing}
+                                >
+                                  Godkjenn + booking (Foreløpig)
+                                </Button>
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  variant="outlined"
+                                  onClick={() => handleReviewRequest(request.id, "REJECTED", false)}
+                                  disabled={requestReviewing}
+                                >
+                                  Avvis
+                                </Button>
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  variant="text"
+                                  onClick={() => handleDeleteRequest(request.id)}
+                                  disabled={deletingRequest}
+                                >
+                                  Slett
+                                </Button>
+                              </Stack>
                             </Stack>
-                          </AccordionSummary>
-                          <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
-                            <Stack spacing={1.5}>
-                              <Box display="grid" gap={1.5} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
-                                <TextField
-                                  label="Fra"
-                                  type="datetime-local"
-                                  InputLabelProps={{ shrink: true }}
-                                  value={edit.startsAt}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], startsAt: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <TextField
-                                  label="Til"
-                                  type="datetime-local"
-                                  InputLabelProps={{ shrink: true }}
-                                  value={edit.endsAt}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], endsAt: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <FormControl>
-                                  <InputLabel>Område</InputLabel>
-                                  <Select
-                                    label="Område"
-                                    value={edit.area}
-                                    onChange={(event) =>
-                                      setBookingEdits((prev) => ({
-                                        ...prev,
-                                        [booking.id]: { ...prev[booking.id], area: event.target.value },
-                                      }))
-                                    }
-                                  >
-                                    <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
-                                    <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
-                                    <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
-                                  </Select>
-                                </FormControl>
-                                <FormControl>
-                                  <InputLabel>Status</InputLabel>
-                                  <Select
-                                    label="Status"
-                                    value={edit.status}
-                                    onChange={(event) =>
-                                      setBookingEdits((prev) => ({
-                                        ...prev,
-                                        [booking.id]: { ...prev[booking.id], status: event.target.value },
-                                      }))
-                                    }
-                                  >
-                                    {Object.entries(BOOKING_STATUS_LABELS).map(([value, label]) => (
-                                      <MenuItem key={value} value={value}>
-                                        {label}
-                                      </MenuItem>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Stack>
+              </TabPanel>
+
+              <TabPanel value={tabValue} index={1}>
+                <Stack spacing={2} mt={2}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h5">Bookinger</Typography>
+                    <Button variant="text" onClick={() => refetchBookings()}>
+                      Oppdater
+                    </Button>
+                  </Stack>
+
+                  <Card variant="outlined" elevation={0}>
+                    <CardContent>
+                      <Stack spacing={2}>
+                        <Typography variant="h6">Tilgjengelighet (kompakt ukevisning)</Typography>
+                        <Stack direction={{ xs: "column", md: "row" }} spacing={1} alignItems={{ md: "center" }}>
+                          <TextField
+                            type="date"
+                            label="Uke (ankerdato)"
+                            InputLabelProps={{ shrink: true }}
+                            value={availabilityWeekAnchor}
+                            onChange={(event) => setAvailabilityWeekAnchor(event.target.value)}
+                            sx={{ maxWidth: 220 }}
+                          />
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() =>
+                              setAvailabilityWeekAnchor(
+                                dayjs(availabilityWeekAnchor).subtract(7, "day").format("YYYY-MM-DD")
+                              )
+                            }
+                          >
+                            Forrige uke
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() =>
+                              setAvailabilityWeekAnchor(
+                                dayjs(availabilityWeekAnchor).add(7, "day").format("YYYY-MM-DD")
+                              )
+                            }
+                          >
+                            Neste uke
+                          </Button>
+                          <Typography variant="body2" color="text.secondary">
+                            Uke starter {weekStartLabel}
+                          </Typography>
+                        </Stack>
+
+                        <Grid container spacing={1}>
+                          {availabilityByArea.map((areaInfo) => (
+                            <Grid item xs={12} md={4} key={areaInfo.area}>
+                              <Card variant="outlined" elevation={0}>
+                                <CardContent>
+                                  <Typography variant="subtitle1" gutterBottom>
+                                    {AREA_LABELS[areaInfo.area] ?? areaInfo.area}
+                                  </Typography>
+                                  <Stack spacing={0.5}>
+                                    {areaInfo.bookingsByDay.map((day) => (
+                                      <Box key={`${areaInfo.area}-${day.key}`}>
+                                        <Typography variant="caption" color="text.secondary">
+                                          {day.label}
+                                        </Typography>
+                                        {day.bookings.length ? (
+                                          <Typography variant="body2">
+                                            {day.bookings
+                                              .slice(0, 2)
+                                              .map(
+                                                (booking) =>
+                                                  `${formatTime(booking.startsAt)}–${formatTime(booking.endsAt)}`
+                                              )
+                                              .join(", ")}
+                                            {day.bookings.length > 2 ? ` (+${day.bookings.length - 2})` : ""}
+                                          </Typography>
+                                        ) : (
+                                          <Typography variant="body2" color="success.main">
+                                            Ledig
+                                          </Typography>
+                                        )}
+                                      </Box>
                                     ))}
-                                  </Select>
-                                </FormControl>
-                                <FormControl>
-                                  <InputLabel>Arrangementstype</InputLabel>
-                                  <Select
-                                    label="Arrangementstype"
-                                    value={edit.eventType}
+                                  </Stack>
+                                </CardContent>
+                              </Card>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+
+                  <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(4, 1fr)" }}>
+                    <TextField
+                      type="date"
+                      label="Dato"
+                      InputLabelProps={{ shrink: true }}
+                      value={bookingDateFilter}
+                      onChange={(event) => setBookingDateFilter(event.target.value)}
+                    />
+                    <FormControl>
+                      <InputLabel>Område</InputLabel>
+                      <Select
+                        value={bookingAreaFilter}
+                        label="Område"
+                        onChange={(event) => setBookingAreaFilter(event.target.value)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
+                        <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
+                        <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Eiertype</InputLabel>
+                      <Select
+                        value={bookingOwnerTypeFilter}
+                        label="Eiertype"
+                        onChange={(event) => setBookingOwnerTypeFilter(event.target.value as "ALL" | OwnerType)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        <MenuItem value="PERSONAL">Personlig</MenuItem>
+                        <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
+                        <MenuItem value="EXTERNAL">Ekstern</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Arrangementstype</InputLabel>
+                      <Select
+                        value={bookingEventTypeFilter}
+                        label="Arrangementstype"
+                        onChange={(event) => setBookingEventTypeFilter(event.target.value)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                          <MenuItem key={value} value={value}>
+                            {label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+
+                  <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}>
+                    <FormControl>
+                      <InputLabel>Status</InputLabel>
+                      <Select
+                        value={bookingStatusFilter}
+                        label="Status"
+                        onChange={(event) => setBookingStatusFilter(event.target.value)}
+                      >
+                        <MenuItem value="ALL">Alle</MenuItem>
+                        {Object.entries(BOOKING_STATUS_LABELS).map(([value, label]) => (
+                          <MenuItem key={value} value={value}>
+                            {label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Sorter på</InputLabel>
+                      <Select
+                        value={bookingSortBy}
+                        label="Sorter på"
+                        onChange={(event) =>
+                          setBookingSortBy(
+                            event.target.value as "startsAt" | "area" | "eventType" | "status" | "ownerType"
+                          )
+                        }
+                      >
+                        <MenuItem value="startsAt">Tid (fra)</MenuItem>
+                        <MenuItem value="area">Område</MenuItem>
+                        <MenuItem value="eventType">Arrangementstype</MenuItem>
+                        <MenuItem value="ownerType">Eiertype</MenuItem>
+                        <MenuItem value="status">Status</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel>Retning</InputLabel>
+                      <Select
+                        value={bookingSortDirection}
+                        label="Retning"
+                        onChange={(event) => setBookingSortDirection(event.target.value as SortDirection)}
+                      >
+                        <MenuItem value="asc">Stigende</MenuItem>
+                        <MenuItem value="desc">Synkende</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+
+                  <Grid
+                    container
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="flex-start"
+                    sx={{ width: "100%", m: 0 }}
+                  >
+                    {filteredBookings.map((booking) => {
+                      const edit = bookingEdits[booking.id];
+                      if (!edit) return null;
+
+                      const depositPaid = edit.depositStatus === JanHusBookingDepositStatus.Paid;
+                      const isExpanded = Boolean(expandedBookingIds[booking.id]);
+
+                      return (
+                        <Grid
+                          item
+                          xs={12}
+                          md={6}
+                          key={booking.id}
+                          sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
+                        >
+                          <Accordion
+                            expanded={isExpanded}
+                            onChange={(_event, expanded) =>
+                              setExpandedBookingIds((current) => ({
+                                ...current,
+                                [booking.id]: expanded,
+                              }))
+                            }
+                            disableGutters
+                            elevation={0}
+                            sx={{
+                              width: "100%",
+                              border: "1px solid",
+                              borderColor: "divider",
+                              borderRadius: 1,
+                              overflow: "hidden",
+                              "&:before": { display: "none" },
+                            }}
+                          >
+                            <AccordionSummary
+                              expandIcon={<ExpandMore />}
+                              sx={{
+                                px: 2,
+                                "& .MuiAccordionSummary-content": {
+                                  my: 1,
+                                },
+                              }}
+                            >
+                              <Stack spacing={0.5} width="100%" pr={1}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                  <Typography variant="h6">Booking #{booking.id}</Typography>
+                                  <Chip
+                                    size="small"
+                                    color={statusChipColor(edit.status)}
+                                    label={BOOKING_STATUS_LABELS[edit.status] ?? edit.status}
+                                  />
+                                </Stack>
+                                <Typography variant="body2" color="text.secondary">
+                                  {formatDate(booking.startsAt)} kl. {formatTime(booking.startsAt)}–
+                                  {formatTime(booking.endsAt)} · {AREA_LABELS[booking.area] ?? booking.area} ·{" "}
+                                  {OWNER_TYPE_LABELS[bookingOwnerType(booking)]}
+                                </Typography>
+                              </Stack>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
+                              <Stack spacing={1.5}>
+                                <Box display="grid" gap={1.5} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
+                                  <TextField
+                                    label="Fra"
+                                    type="datetime-local"
+                                    InputLabelProps={{ shrink: true }}
+                                    value={edit.startsAt}
                                     onChange={(event) =>
                                       setBookingEdits((prev) => ({
                                         ...prev,
-                                        [booking.id]: { ...prev[booking.id], eventType: event.target.value },
+                                        [booking.id]: { ...prev[booking.id], startsAt: event.target.value },
                                       }))
                                     }
-                                  >
-                                    {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
-                                      <MenuItem key={value} value={value}>
-                                        {label}
-                                      </MenuItem>
-                                    ))}
-                                  </Select>
-                                </FormControl>
-                                <FormControl>
-                                  <InputLabel>Depositumstatus</InputLabel>
-                                  <Select
-                                    label="Depositumstatus"
-                                    value={edit.depositStatus}
+                                  />
+                                  <TextField
+                                    label="Til"
+                                    type="datetime-local"
+                                    InputLabelProps={{ shrink: true }}
+                                    value={edit.endsAt}
                                     onChange={(event) =>
                                       setBookingEdits((prev) => ({
                                         ...prev,
-                                        [booking.id]: { ...prev[booking.id], depositStatus: event.target.value },
+                                        [booking.id]: { ...prev[booking.id], endsAt: event.target.value },
                                       }))
                                     }
-                                  >
-                                    {Object.entries(DEPOSIT_STATUS_LABELS).map(([value, label]) => (
-                                      <MenuItem key={value} value={value}>
-                                        {label}
-                                      </MenuItem>
-                                    ))}
-                                  </Select>
-                                </FormControl>
-                                <TextField
-                                  label="Depositum"
-                                  type="number"
-                                  value={edit.depositAmount}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], depositAmount: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <FormControl>
-                                  <InputLabel>Åpningspolicy</InputLabel>
-                                  <Select
-                                    label="Åpningspolicy"
-                                    value={edit.doorAccessPolicy}
+                                  />
+                                  <FormControl>
+                                    <InputLabel>Område</InputLabel>
+                                    <Select
+                                      label="Område"
+                                      value={edit.area}
+                                      onChange={(event) =>
+                                        setBookingEdits((prev) => ({
+                                          ...prev,
+                                          [booking.id]: { ...prev[booking.id], area: event.target.value },
+                                        }))
+                                      }
+                                    >
+                                      <MenuItem value="FIRST_FLOOR">1. etasje</MenuItem>
+                                      <MenuItem value="SECOND_FLOOR">2. etasje</MenuItem>
+                                      <MenuItem value="ENTIRE_HOUSE">Hele huset</MenuItem>
+                                    </Select>
+                                  </FormControl>
+                                  <FormControl>
+                                    <InputLabel>Status</InputLabel>
+                                    <Select
+                                      label="Status"
+                                      value={edit.status}
+                                      onChange={(event) =>
+                                        setBookingEdits((prev) => ({
+                                          ...prev,
+                                          [booking.id]: { ...prev[booking.id], status: event.target.value },
+                                        }))
+                                      }
+                                    >
+                                      {Object.entries(BOOKING_STATUS_LABELS).map(([value, label]) => (
+                                        <MenuItem key={value} value={value}>
+                                          {label}
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                  <FormControl>
+                                    <InputLabel>Arrangementstype</InputLabel>
+                                    <Select
+                                      label="Arrangementstype"
+                                      value={edit.eventType}
+                                      onChange={(event) =>
+                                        setBookingEdits((prev) => ({
+                                          ...prev,
+                                          [booking.id]: { ...prev[booking.id], eventType: event.target.value },
+                                        }))
+                                      }
+                                    >
+                                      {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                                        <MenuItem key={value} value={value}>
+                                          {label}
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                  <FormControl>
+                                    <InputLabel>Depositumstatus</InputLabel>
+                                    <Select
+                                      label="Depositumstatus"
+                                      value={edit.depositStatus}
+                                      onChange={(event) =>
+                                        setBookingEdits((prev) => ({
+                                          ...prev,
+                                          [booking.id]: { ...prev[booking.id], depositStatus: event.target.value },
+                                        }))
+                                      }
+                                    >
+                                      {Object.entries(DEPOSIT_STATUS_LABELS).map(([value, label]) => (
+                                        <MenuItem key={value} value={value}>
+                                          {label}
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                  <TextField
+                                    label="Depositum"
+                                    type="number"
+                                    value={edit.depositAmount}
                                     onChange={(event) =>
                                       setBookingEdits((prev) => ({
                                         ...prev,
-                                        [booking.id]: {
-                                          ...prev[booking.id],
-                                          doorAccessPolicy: event.target.value,
-                                        },
+                                        [booking.id]: { ...prev[booking.id], depositAmount: event.target.value },
                                       }))
                                     }
-                                  >
-                                    {Object.entries(DOOR_ACCESS_POLICY_LABELS).map(([value, label]) => (
-                                      <MenuItem key={value} value={value}>
-                                        {label}
-                                      </MenuItem>
-                                    ))}
-                                  </Select>
-                                </FormControl>
-                                <FormControlLabel
+                                  />
+                                  <FormControl>
+                                    <InputLabel>Åpningspolicy</InputLabel>
+                                    <Select
+                                      label="Åpningspolicy"
+                                      value={edit.doorAccessPolicy}
+                                      onChange={(event) =>
+                                        setBookingEdits((prev) => ({
+                                          ...prev,
+                                          [booking.id]: {
+                                            ...prev[booking.id],
+                                            doorAccessPolicy: event.target.value,
+                                          },
+                                        }))
+                                      }
+                                    >
+                                      {Object.entries(DOOR_ACCESS_POLICY_LABELS).map(([value, label]) => (
+                                        <MenuItem key={value} value={value}>
+                                          {label}
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                  {/* <FormControlLabel
                                   control={
                                     <Switch
                                       checked={edit.cleaningRequested}
@@ -1164,207 +1186,210 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                     />
                                   }
                                   label="Innleid renhold"
-                                />
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={depositPaid}
-                                      onChange={(event) =>
-                                        setBookingEdits((prev) => ({
-                                          ...prev,
-                                          [booking.id]: {
-                                            ...prev[booking.id],
-                                            depositStatus: event.target.checked
-                                              ? JanHusBookingDepositStatus.Paid
-                                              : JanHusBookingDepositStatus.Required,
-                                          },
-                                        }))
-                                      }
-                                    />
-                                  }
-                                  label="Depositum betalt"
-                                />
-                                <TextField
-                                  label="Bestiller navn"
-                                  value={edit.bookerName}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], bookerName: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <TextField
-                                  label="Ansvarlig navn"
-                                  value={edit.responsibleName}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], responsibleName: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <TextField
-                                  label="Bestiller e-post"
-                                  value={edit.bookerEmail}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], bookerEmail: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <TextField
-                                  label="Ansvarlig e-post"
-                                  value={edit.responsibleEmail}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], responsibleEmail: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <TextField
-                                  label="Bestiller telefon"
-                                  value={edit.bookerPhone}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], bookerPhone: event.target.value },
-                                    }))
-                                  }
-                                />
-                                <TextField
-                                  label="Ansvarlig telefon"
-                                  value={edit.responsiblePhone}
-                                  onChange={(event) =>
-                                    setBookingEdits((prev) => ({
-                                      ...prev,
-                                      [booking.id]: { ...prev[booking.id], responsiblePhone: event.target.value },
-                                    }))
-                                  }
-                                />
-                              </Box>
+                                /> */}
+                                  <FormControlLabel
+                                    control={
+                                      <Switch
+                                        checked={depositPaid}
+                                        onChange={(event) =>
+                                          setBookingEdits((prev) => ({
+                                            ...prev,
+                                            [booking.id]: {
+                                              ...prev[booking.id],
+                                              depositStatus: event.target.checked
+                                                ? JanHusBookingDepositStatus.Paid
+                                                : JanHusBookingDepositStatus.Required,
+                                            },
+                                          }))
+                                        }
+                                      />
+                                    }
+                                    label="Depositum betalt"
+                                  />
+                                  <TextField
+                                    label="Bestiller navn"
+                                    value={edit.bookerName}
+                                    onChange={(event) =>
+                                      setBookingEdits((prev) => ({
+                                        ...prev,
+                                        [booking.id]: { ...prev[booking.id], bookerName: event.target.value },
+                                      }))
+                                    }
+                                  />
+                                  <TextField
+                                    label="Ansvarlig navn"
+                                    value={edit.responsibleName}
+                                    onChange={(event) =>
+                                      setBookingEdits((prev) => ({
+                                        ...prev,
+                                        [booking.id]: { ...prev[booking.id], responsibleName: event.target.value },
+                                      }))
+                                    }
+                                  />
+                                  <TextField
+                                    label="Bestiller e-post"
+                                    value={edit.bookerEmail}
+                                    onChange={(event) =>
+                                      setBookingEdits((prev) => ({
+                                        ...prev,
+                                        [booking.id]: { ...prev[booking.id], bookerEmail: event.target.value },
+                                      }))
+                                    }
+                                  />
+                                  <TextField
+                                    label="Ansvarlig e-post"
+                                    value={edit.responsibleEmail}
+                                    onChange={(event) =>
+                                      setBookingEdits((prev) => ({
+                                        ...prev,
+                                        [booking.id]: { ...prev[booking.id], responsibleEmail: event.target.value },
+                                      }))
+                                    }
+                                  />
+                                  <TextField
+                                    label="Bestiller telefon"
+                                    value={edit.bookerPhone}
+                                    onChange={(event) =>
+                                      setBookingEdits((prev) => ({
+                                        ...prev,
+                                        [booking.id]: { ...prev[booking.id], bookerPhone: event.target.value },
+                                      }))
+                                    }
+                                  />
+                                  <TextField
+                                    label="Ansvarlig telefon"
+                                    value={edit.responsiblePhone}
+                                    onChange={(event) =>
+                                      setBookingEdits((prev) => ({
+                                        ...prev,
+                                        [booking.id]: { ...prev[booking.id], responsiblePhone: event.target.value },
+                                      }))
+                                    }
+                                  />
+                                </Box>
 
-                              <TextField
-                                label="Kommentar"
-                                multiline
-                                minRows={2}
-                                value={edit.comment}
-                                onChange={(event) =>
-                                  setBookingEdits((prev) => ({
-                                    ...prev,
-                                    [booking.id]: { ...prev[booking.id], comment: event.target.value },
-                                  }))
-                                }
-                              />
-                              <Box>
-                                <Typography variant="body2" color="text.secondary" gutterBottom>
-                                  Gjesteliste: {edit.guestListEntries.length} registrert
-                                </Typography>
-                                {edit.guestListEntries.length ? (
-                                  <Typography variant="caption" color="text.secondary" display="block" mb={1}>
-                                    {edit.guestListEntries.map((guest) => guest.displayName).join(", ")}
+                                <TextField
+                                  label="Kommentar"
+                                  multiline
+                                  minRows={2}
+                                  value={edit.comment}
+                                  onChange={(event) =>
+                                    setBookingEdits((prev) => ({
+                                      ...prev,
+                                      [booking.id]: { ...prev[booking.id], comment: event.target.value },
+                                    }))
+                                  }
+                                />
+                                <Box>
+                                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                                    Gjesteliste: {edit.guestListEntries.length} registrert
                                   </Typography>
-                                ) : null}
-                                <Button
-                                  size="small"
-                                  variant="outlined"
-                                  onClick={() => setActiveGuestListBookingId(booking.id)}
-                                >
-                                  Rediger gjesteliste
-                                </Button>
-                                <Typography variant="caption" color="text.secondary" display="block" mt={0.5}>
-                                  Endringen lagres når du klikker «Lagre endringer».
+                                  {edit.guestListEntries.length ? (
+                                    <Typography variant="caption" color="text.secondary" display="block" mb={1}>
+                                      {edit.guestListEntries.map((guest) => guest.displayName).join(", ")}
+                                    </Typography>
+                                  ) : null}
+                                  <Button
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={() => setActiveGuestListBookingId(booking.id)}
+                                  >
+                                    Rediger gjesteliste
+                                  </Button>
+                                  <Typography variant="caption" color="text.secondary" display="block" mt={0.5}>
+                                    Endringen lagres når du klikker «Lagre endringer».
+                                  </Typography>
+                                </Box>
+                                <TextField
+                                  label="Adminkommentar"
+                                  multiline
+                                  minRows={2}
+                                  value={edit.adminComment}
+                                  onChange={(event) =>
+                                    setBookingEdits((prev) => ({
+                                      ...prev,
+                                      [booking.id]: { ...prev[booking.id], adminComment: event.target.value },
+                                    }))
+                                  }
+                                />
+
+                                <Stack direction="row" spacing={1} flexWrap="wrap">
+                                  <Button
+                                    size="small"
+                                    variant="contained"
+                                    onClick={() => handleSaveBooking(booking.id)}
+                                    disabled={bookingUpdating}
+                                  >
+                                    Lagre endringer
+                                  </Button>
+                                  <Button
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={() =>
+                                      handleCreatePaymentProduct(booking.id, booking.ownerOrganization?.id)
+                                    }
+                                    disabled={creatingPaymentProduct || Boolean(booking.ownerOrganization)}
+                                  >
+                                    {booking.ownerOrganization
+                                      ? "Intern håndtering (ingen Vipps)"
+                                      : "Opprett Vipps-betaling"}
+                                  </Button>
+                                  <Button
+                                    size="small"
+                                    color="error"
+                                    variant="outlined"
+                                    onClick={() => handleDeleteBooking(booking.id)}
+                                    disabled={deletingBooking}
+                                  >
+                                    Slett booking
+                                  </Button>
+                                </Stack>
+
+                                <Typography variant="caption" color="text.secondary">
+                                  Prisberegning nå: {booking.totalPrice ?? "-"}
                                 </Typography>
-                              </Box>
-                              <TextField
-                                label="Adminkommentar"
-                                multiline
-                                minRows={2}
-                                value={edit.adminComment}
-                                onChange={(event) =>
-                                  setBookingEdits((prev) => ({
-                                    ...prev,
-                                    [booking.id]: { ...prev[booking.id], adminComment: event.target.value },
-                                  }))
-                                }
-                              />
-
-                              <Stack direction="row" spacing={1} flexWrap="wrap">
-                                <Button
-                                  size="small"
-                                  variant="contained"
-                                  onClick={() => handleSaveBooking(booking.id)}
-                                  disabled={bookingUpdating}
-                                >
-                                  Lagre endringer
-                                </Button>
-                                <Button
-                                  size="small"
-                                  variant="outlined"
-                                  onClick={() => handleCreatePaymentProduct(booking.id, booking.ownerOrganization?.id)}
-                                  disabled={creatingPaymentProduct || Boolean(booking.ownerOrganization)}
-                                >
-                                  {booking.ownerOrganization
-                                    ? "Intern håndtering (ingen Vipps)"
-                                    : "Opprett Vipps-betaling"}
-                                </Button>
-                                <Button
-                                  size="small"
-                                  color="error"
-                                  variant="outlined"
-                                  onClick={() => handleDeleteBooking(booking.id)}
-                                  disabled={deletingBooking}
-                                >
-                                  Slett booking
-                                </Button>
                               </Stack>
-
-                              <Typography variant="caption" color="text.secondary">
-                                Prisberegning nå: {booking.totalPrice ?? "-"}
-                              </Typography>
-                            </Stack>
-                          </AccordionDetails>
-                        </Accordion>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </Stack>
-            </TabPanel>
+                            </AccordionDetails>
+                          </Accordion>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Stack>
+              </TabPanel>
+            </Box>
           </Box>
-        </Box>
 
-        {activeGuestListBooking ? (
-          <GuestListDialog
-            bookingId={activeGuestListBooking.id}
-            open={Boolean(activeGuestListBooking)}
-            allowManualEntries
-            initialGuests={bookingEdits[activeGuestListBooking.id]?.guestListEntries ?? []}
-            saving={bookingUpdating}
-            onClose={() => setActiveGuestListBookingId(undefined)}
-            onSave={(guests) => {
-              setBookingEdits((current) => {
-                const currentBookingEdit = current[activeGuestListBooking.id];
-                if (!currentBookingEdit) {
-                  return current;
-                }
+          {activeGuestListBooking ? (
+            <GuestListDialog
+              bookingId={activeGuestListBooking.id}
+              open={Boolean(activeGuestListBooking)}
+              allowManualEntries
+              initialGuests={bookingEdits[activeGuestListBooking.id]?.guestListEntries ?? []}
+              saving={bookingUpdating}
+              onClose={() => setActiveGuestListBookingId(undefined)}
+              onSave={(guests) => {
+                setBookingEdits((current) => {
+                  const currentBookingEdit = current[activeGuestListBooking.id];
+                  if (!currentBookingEdit) {
+                    return current;
+                  }
 
-                return {
-                  ...current,
-                  [activeGuestListBooking.id]: {
-                    ...currentBookingEdit,
-                    guestListEntries: guests,
-                  },
-                };
-              });
-              setActiveGuestListBookingId(undefined);
-            }}
-          />
-        ) : null}
-      </PermissionRequired>
-    </Container>
+                  return {
+                    ...current,
+                    [activeGuestListBooking.id]: {
+                      ...currentBookingEdit,
+                      guestListEntries: guests,
+                    },
+                  };
+                });
+                setActiveGuestListBookingId(undefined);
+              }}
+            />
+          ) : null}
+        </PermissionRequired>
+      </Container>
+    </>
   );
 };
 

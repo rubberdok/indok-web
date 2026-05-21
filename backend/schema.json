@@ -15440,6 +15440,16 @@
             {
               "defaultValue": null,
               "description": null,
+              "name": "nfcUidHex",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
               "name": "nfcPinCode",
               "type": {
                 "kind": "SCALAR",

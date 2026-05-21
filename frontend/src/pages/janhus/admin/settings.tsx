@@ -537,7 +537,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                                 }))
                               }
                             />
-                            <TextField
+                            {/* <TextField
                               label="Renholdsgebyr"
                               type="number"
                               value={form?.cleaningFee ?? ""}
@@ -555,7 +555,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                                   },
                                 }))
                               }
-                            />
+                            /> */}
                             <TextField
                               label="Depositum"
                               type="number"

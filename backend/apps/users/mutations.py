@@ -38,6 +38,7 @@ class UserInput(graphene.InputObjectType):
     graduation_year = graphene.Int()
     phone_number = graphene.String()
     allergies = graphene.String()
+    nfc_uid_hex = graphene.String()
     nfc_pin_code = graphene.String()
 
 
@@ -55,6 +56,13 @@ class AdminUserNfcInput(graphene.InputObjectType):
     uid_hex = graphene.String(required=False)
     pin_code = graphene.String(required=False)
     permanent_access = graphene.Boolean(required=False)
+
+
+def _get_self_registered_card_label(user: "models.User") -> str:
+    full_name = user.get_full_name().strip()
+    if not full_name:
+        full_name = user.username
+    return f"{full_name} sitt kort (E)"
 
 
 def _apply_user_updates(
@@ -83,10 +91,62 @@ def _apply_user_updates(
         active_assignment.save(update_fields=["pin_code"])
 
     for k, v in user_data.items():
-        if k not in ("graduation_year", "nfc_pin_code"):
+        if k not in ("graduation_year", "nfc_pin_code", "nfc_uid_hex"):
             setattr(target_user, k, v)
         elif k == "graduation_year":
             update_graduation_year(target_user, new_graduation_year)
+
+
+def _apply_user_nfc_uid_update(acting_user: "models.User", target_user: "models.User", uid_hex: str) -> None:
+    from apps.nfc.models import (
+        NfcCard,
+        NfcCardAssignment,
+        is_user_uid_self_service_enabled,
+        normalize_uid_hex,
+        validate_uid_hex,
+    )
+
+    if not is_user_uid_self_service_enabled():
+        raise ValueError("Egenregistrering av UID er deaktivert")
+
+    normalized_uid = normalize_uid_hex(uid_hex)
+    if normalized_uid == "":
+        raise ValueError("UID kan ikke være tom")
+
+    validate_uid_hex(normalized_uid)
+
+    active_assignment = (
+        NfcCardAssignment.objects.select_related("card")
+        .filter(user=target_user, revoked_at__isnull=True)
+        .first()
+    )
+
+    if active_assignment is not None:
+        if active_assignment.card.uid_hex == normalized_uid:
+            return
+        raise ValueError("Du kan bare registrere UID én gang. Kontakt admin for endringer.")
+
+    has_any_previous_assignment = NfcCardAssignment.objects.filter(user=target_user).exists()
+    if has_any_previous_assignment:
+        raise ValueError("Du kan bare registrere UID én gang. Kontakt admin for endringer.")
+
+    card, created = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
+    if created:
+        card.label = _get_self_registered_card_label(target_user)
+        card.save(update_fields=["label"])
+
+    card_active_assignment = NfcCardAssignment.objects.filter(
+        card=card, revoked_at__isnull=True
+    ).first()
+    if card_active_assignment and card_active_assignment.user_id != target_user.id:
+        raise ValueError("UID er allerede i bruk av en annen bruker")
+
+    assignment = NfcCardAssignment(
+        card=card,
+        user=target_user,
+        assigned_by=acting_user,
+    )
+    assignment.save()
 
 
 class UpdateUser(graphene.Mutation):
@@ -103,16 +163,27 @@ class UpdateUser(graphene.Mutation):
             return None
 
         user: "models.User" = info.context.user
-        _apply_user_updates(user, user_data)
 
-        if not user.email and not user_data.get("email"):
-            user.email = user.feide_email
+        user_data = dict(user_data)
+        nfc_uid_hex = user_data.pop("nfc_uid_hex", None)
 
-        if user.first_login:
-            user.first_login = False
+        try:
+            with transaction.atomic():
+                if nfc_uid_hex is not None:
+                    _apply_user_nfc_uid_update(user, user, nfc_uid_hex)
 
-        user.full_clean(exclude=["password"])
-        user.save()
+                _apply_user_updates(user, user_data)
+
+                if not user.email and not user_data.get("email"):
+                    user.email = user.feide_email
+
+                if user.first_login:
+                    user.first_login = False
+
+                user.full_clean(exclude=["password"])
+                user.save()
+        except (ValidationError, IntegrityError, ValueError) as e:
+            raise GraphQLError(str(e))
 
         return UpdateUser(user=user)
 
