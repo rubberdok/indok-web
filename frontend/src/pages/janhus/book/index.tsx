@@ -528,7 +528,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     }
 
     if (!acceptedContractPlaceholder) {
-      setErrorMessage("Du må bekrefte kontraktsgrunnlaget før innsending.");
+      setErrorMessage("Du må bekrefte kontraktsvilkårene før innsending.");
       return false;
     }
 

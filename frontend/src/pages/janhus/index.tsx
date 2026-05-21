@@ -47,18 +47,18 @@ const JanHusPage: NextPageWithLayout = () => {
             Her kan du sende bookingforespørsler for 1. etasje, 2. etasje eller hele huset.
           </Typography>
 
-          <Alert severity="info">
+          {/* <Alert severity="info">
             Booking gjøres via eget skjema med dato og tidsintervall, mens admin håndterer godkjenning, priser og
             oppsett.
-          </Alert>
+          </Alert> */}
 
-          {settings ? (
+          {/* {settings ? (
             <Alert severity="success">
               Bookingvindu: {settings.openingHour}:00–{settings.closingHour}:00, minimum varighet{" "}
               {settings.minDurationMinutes} minutter og intervaller på {settings.slotGranularityMinutes} minutter.
               {configuredAreaCount > 0 ? ` Konfigurerte områder: ${configuredAreaCount}.` : ""}
             </Alert>
-          ) : null}
+          ) : null} */}
 
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
