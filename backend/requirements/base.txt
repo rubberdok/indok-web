@@ -3,7 +3,7 @@ cryptography==42.0.8
 django-alive==1.2.1
 django-anymail[postmark]==10.3
 django-cors-headers==4.4.0
-django-environ==0.11.2
+django-environ==0.13.0
 django-guardian==2.4.0
 django-multiselectfield==0.1.12
 django-phonenumber-field==7.3.0
