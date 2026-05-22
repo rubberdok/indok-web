@@ -1,11 +1,16 @@
+import base64
+import json
 from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
+import pandas as pd
 from django.utils import timezone
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.events import EventFactory
 from utils.testing.factories.organizations import MembershipFactory
 from utils.testing.factories.users import IndokUserFactory
+
+from .resolvers import wrap_attendee_report_as_json
 
 
 class EventsBaseTestCase(ExtendedGraphQLTestCase):
@@ -113,3 +118,30 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.assertEqual(send_mail_mock.call_args_list[0].args[1], self.event)
         self.assertEqual(send_mail_mock.call_args_list[1].args[0], self.user3)
         self.assertEqual(send_mail_mock.call_args_list[1].args[1], self.event)
+
+
+class AttendeeReportExportTestCase(EventsBaseTestCase):
+    def test_wrap_attendee_report_as_json_supports_xlsx(self):
+        dataframe = pd.DataFrame(
+            {
+                "signup_timestamp": [pd.Timestamp("2026-05-22T10:00:00+00:00")],
+                "order_timestamp": [pd.Timestamp("2026-05-22T11:00:00+00:00")],
+                "event_title": ["Test event"],
+            }
+        )
+
+        payload = wrap_attendee_report_as_json(
+            dataframe, "attendee_report__eventid_1", "xlsx"
+        )
+        parsed_payload = json.loads(payload)
+
+        self.assertEqual(
+            parsed_payload["filename"], "attendee_report__eventid_1.xlsx"
+        )
+        self.assertEqual(
+            parsed_payload["contentType"],
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+        decoded_data = base64.b64decode(parsed_payload["data"])
+        self.assertGreater(len(decoded_data), 0)

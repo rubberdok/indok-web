@@ -252,10 +252,22 @@ def wrap_attendee_report_as_json(df, file_basename, filetype):
                 lambda a: pd.to_datetime(a).tz_localize(None)
             )
         buffer = io.BytesIO()
-        with pd.ExcelWriter(
-            buffer, engine="xlsxwriter", options={"remove_timezone": True}
-        ) as writer:
-            df.to_excel(writer, index=False)
+        try:
+            # pandas>=2 uses engine_kwargs for engine-specific options.
+            with pd.ExcelWriter(
+                buffer,
+                engine="xlsxwriter",
+                engine_kwargs={"options": {"remove_timezone": True}},
+            ) as writer:
+                df.to_excel(writer, index=False)
+        except TypeError:
+            # Backward compatibility for older pandas call signature.
+            with pd.ExcelWriter(
+                buffer,
+                engine="xlsxwriter",
+                options={"remove_timezone": True},  # type: ignore[call-overload]
+            ) as writer:
+                df.to_excel(writer, index=False)
         data = base64.b64encode(buffer.getvalue()).decode("utf-8")
     elif filetype == "csv":
         data = df.to_csv(index=False)

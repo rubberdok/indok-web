@@ -2,6 +2,7 @@ import json
 
 from apps.organizations.models import Membership
 from utils.testing.base import ExtendedGraphQLTestCase
+from utils.testing.factories.listings import ListingFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import UserFactory
 
@@ -101,3 +102,33 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
         content = json.loads(response.content)
         self.assertTrue(content["data"]["removeMembership"]["ok"])
         self.assertFalse(Membership.objects.filter(id=membership.id).exists())
+
+
+class OrganizationListingsResolverTests(ExtendedGraphQLTestCase):
+    def test_organization_listings_query_returns_data_without_errors(self):
+        organization = OrganizationFactory()
+        listing = ListingFactory(organization=organization)
+
+        response = self.query(
+            """
+            query($organizationId: ID!) {
+                organization(id: $organizationId) {
+                    id
+                    listings {
+                        id
+                        title
+                    }
+                }
+            }
+            """,
+            variables={"organizationId": str(organization.id)},
+        )
+
+        self.assertResponseNoErrors(response)
+        content = json.loads(response.content)
+
+        returned_organization = content["data"]["organization"]
+        self.assertEqual(returned_organization["id"], str(organization.id))
+
+        listing_ids = {item["id"] for item in returned_organization["listings"]}
+        self.assertIn(str(listing.id), listing_ids)
