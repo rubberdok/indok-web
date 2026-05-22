@@ -8,8 +8,8 @@ from graphene_django import DjangoObjectType
 from decorators import login_required, PermissionDenied
 from apps.users.permissions import can_manage_user_profiles
 
+from ..listings.models import Listing
 from ..listings.types import ListingType
-from .dataloader import ListingsByOrganizationIdLoader
 
 
 class OrganizationType(DjangoObjectType):
@@ -39,8 +39,7 @@ class OrganizationType(DjangoObjectType):
 
     @staticmethod
     def resolve_listings(root: Organization, info):
-        listing_loader = ListingsByOrganizationIdLoader()
-        return listing_loader.load(root.id)
+        return Listing.objects.filter(organization_id=root.id)
 
     @staticmethod
     def resolve_permission_groups(root: Organization, info):
