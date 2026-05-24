@@ -33,6 +33,9 @@
     "@mui/icons-material": "^5.18.0",
     "@mui/lab": "^5.0.0-alpha.148",
     "@mui/material": "^5.14.13",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/core": "^2.7.1",
+    "@opentelemetry/sdk-trace-base": "^2.6.1",
     "@sentry/nextjs": "^10.53.1",
     "@vercel/analytics": "^1.1.1",
     "dayjs": "^1.11.10",
@@ -87,6 +90,7 @@
     "prettier": "^3.3.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.1.6",
+    "webpack": "^5.0.0",
     "wait-on": "^7.2.0"
   }
 }
