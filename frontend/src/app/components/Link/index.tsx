@@ -13,7 +13,7 @@ const Anchor = styled("a")({});
 
 interface NextLinkComposedProps<T extends string>
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">,
-    Omit<NextLinkProps, "href" | "as" | "passHref" | "onMouseEnter" | "onClick" | "onTouchStart"> {
+    Omit<NextLinkProps, "href" | "as" | "legacyBehavior" | "passHref" | "onMouseEnter" | "onClick" | "onTouchStart"> {
   to: Route<T> | URL;
   linkAs?: NextLinkProps["as"];
 }
@@ -22,22 +22,20 @@ function NextLinkComposedInner<T extends string>(
   props: NextLinkComposedProps<T>,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
-  const { to, linkAs, replace, scroll, shallow, prefetch, legacyBehavior = true, locale, ...other } = props;
+  const { to, linkAs, replace, scroll, shallow, prefetch, locale, ...other } = props;
 
   return (
     <NextLink
+      ref={ref}
       href={to}
       prefetch={prefetch}
       as={linkAs}
       replace={replace}
       scroll={scroll}
       shallow={shallow}
-      passHref
       locale={locale}
-      legacyBehavior={legacyBehavior}
-    >
-      <Anchor ref={ref} {...other} />
-    </NextLink>
+      {...other}
+    />
   );
 }
 
@@ -60,7 +58,6 @@ function LinkInner<T extends string>(props: LinkProps<T>, ref: React.ForwardedRe
     as,
     className: classNameProps,
     href,
-    legacyBehavior,
     linkAs: linkAsProp,
     locale,
     noLinkStyle,
@@ -97,7 +94,6 @@ function LinkInner<T extends string>(props: LinkProps<T>, ref: React.ForwardedRe
     scroll,
     shallow,
     prefetch,
-    legacyBehavior,
     locale,
   };
 

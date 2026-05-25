@@ -16,16 +16,16 @@ import {
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
+import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+import yup from "@/lib/validation";
+import Janushyttene from "~/public/static/cabins/logo.svg";
+
 import { useStepContext } from "../StepContext";
 
 import { calculatePrice } from "./calculatePrice";
 import { ContactInfo } from "./ContactInfo";
 import { Stepper } from "./Stepper";
-
-import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
-import dayjs from "@/lib/date";
-import * as yup from "@/lib/validation";
-import Janushyttene from "~/public/static/cabins/logo.svg";
 
 type Props = {
   chosenCabins: CabinFragment[];

@@ -4,6 +4,10 @@ import { useBackgroundQuery, useSuspenseQuery } from "@apollo/client/react";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
 
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { graphql } from "@/gql";
+import { generateFeideLoginUrl } from "@/utils/auth";
+
 import { PermissionRequired } from "../components/PermissionRequired";
 
 import { LogoutButton } from "./components/LogoutButton";
@@ -19,10 +23,6 @@ import {
   OwnBookings,
   JanHusAdmin,
 } from "./components/ProfileCard";
-
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { graphql } from "@/gql";
-import { generateFeideLoginUrl } from "@/utils/auth";
 
 // Opt out of caching for all data requests in the route segment
 export const dynamic = "force-dynamic";

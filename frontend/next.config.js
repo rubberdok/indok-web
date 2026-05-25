@@ -42,8 +42,6 @@ const moduleExports = {
     /* https://nextjs.org/docs/advanced-features/compiler#emotion */
     emotion: true,
   },
-  /* https://nextjs.org/docs/advanced-features/compiler#minification */
-  swcMinify: true,
   /* https://nextjs.org/docs/advanced-features/output-file-tracing */
   output: "standalone",
   /**
@@ -67,11 +65,18 @@ const moduleExports = {
       transform: "lodash/{{member}}",
     },
   },
-  experimental: {
-    typedRoutes: true,
+  typedRoutes: true,
+  turbopack: {
+    root: __dirname,
   },
   images: {
-    domains: ["indokweb-assets.s3.eu-north-1.amazonaws.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "indokweb-assets.s3.eu-north-1.amazonaws.com",
+        pathname: "/**",
+      },
+    ],
   },
 };
 

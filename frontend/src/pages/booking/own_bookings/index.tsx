@@ -340,7 +340,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                       size="small"
                                       variant="outlined"
                                       color={isPaid ? "success" : "default"}
-                                      label={`Betaling: ${isPaid ? "Betalt" : linkedOrder?.paymentStatus ?? "Ikke betalt"}`}
+                                      label={`Betaling: ${isPaid ? "Betalt" : (linkedOrder?.paymentStatus ?? "Ikke betalt")}`}
                                     />
                                     <Chip
                                       size="small"

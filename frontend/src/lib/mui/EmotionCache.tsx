@@ -57,7 +57,7 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
     inserted.forEach(({ name, isGlobal }) => {
       const style = registry.cache.inserted[name];
 
-      if (typeof style !== "boolean") {
+      if (typeof style === "string") {
         if (isGlobal) {
           globals.push({ name, style });
         } else {
@@ -73,17 +73,10 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
           <style
             key={name}
             data-emotion={`${registry.cache.key}-global ${name}`}
-            // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: style }}
           />
         ))}
-        {styles && (
-          <style
-            data-emotion={dataEmotionAttribute}
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: styles }}
-          />
-        )}
+        {styles && <style data-emotion={dataEmotionAttribute} dangerouslySetInnerHTML={{ __html: styles }} />}
       </React.Fragment>
     );
   });

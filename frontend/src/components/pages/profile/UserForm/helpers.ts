@@ -1,5 +1,5 @@
 import dayjs from "@/lib/date";
-import * as Yup from "@/lib/validation";
+import Yup from "@/lib/validation";
 
 const today = dayjs();
 export const maxGraduationYear = today.month() > 6 ? today.year() + 5 : today.year() + 4;

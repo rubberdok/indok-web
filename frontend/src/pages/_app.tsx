@@ -1,14 +1,12 @@
 import { EmotionCache } from "@emotion/react";
 import { Analytics } from "@vercel/analytics/react";
 import { AppProps } from "next/app";
-import dynamic from "next/dynamic";
 import Head from "next/head";
 
+import { Layout } from "@/layouts/Layout";
 import { PageProps } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 import { AppProvider } from "@/providers";
-
-const Layout = dynamic(() => import("@/layouts/Layout").then((mod) => mod.Layout));
 
 export interface CustomAppProps extends AppProps<PageProps> {
   err: Error;
