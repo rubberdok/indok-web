@@ -5,7 +5,7 @@
  * worrying about configuring yup in every file that uses it, or
  * running the configuration code on initial page load.
  */
-import { setLocale } from "yup";
+import * as yup from "yup";
 
 const yupTypes: Record<
   string,
@@ -28,7 +28,7 @@ const yupTypes: Record<
   },
 };
 
-setLocale({
+yup.setLocale({
   mixed: {
     required: ({ label, path }) => `${label ?? path} er påkrevd`,
     notType: ({ label, path, type }) => {
@@ -51,4 +51,4 @@ setLocale({
   },
 });
 
-export * from "yup";
+export default yup;

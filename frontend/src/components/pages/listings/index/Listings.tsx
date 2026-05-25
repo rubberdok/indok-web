@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Link } from "@/components";
 import { ListingItem } from "@/components/pages/listings/index/ListingItem";
 import { ListingsDocument } from "@/generated/graphql";
-import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 
 type Props = {
   /** Reload function to reload the page on error. */
@@ -63,7 +62,12 @@ export const Listings: React.FC<Props> = ({ reload }) => {
               <Box
                 sx={{ overflow: "hidden", borderRadius: "50%", width: "100%", aspectRatio: "1", position: "relative" }}
               >
-                <Image src={EmptyStreet} alt="" fill style={{ objectFit: "contain", objectPosition: "center" }} />
+                <Image
+                  src="/illustrations/EmptyStreet.svg"
+                  alt=""
+                  fill
+                  style={{ objectFit: "contain", objectPosition: "center" }}
+                />
               </Box>
             </Grid>
           </Grid>

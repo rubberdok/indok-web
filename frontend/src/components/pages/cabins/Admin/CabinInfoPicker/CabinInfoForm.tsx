@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Unstable_Grid2 as Grid, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 
-import * as yup from "@/lib/validation";
+import yup from "@/lib/validation";
 
 export type CabinInfoForm = {
   oksen?: {

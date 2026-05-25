@@ -23,6 +23,10 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { Link } from "@/components";
+import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
+import dayjs from "@/lib/date";
+
 import {
   IUserForm,
   currentGradeYear,
@@ -31,10 +35,6 @@ import {
   suggestGraduationYear,
   validationSchema,
 } from "./helpers";
-
-import { Link } from "@/components";
-import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
-import dayjs from "@/lib/date";
 
 const UserNfcSettingsDocument = gql`
   query userNfcSettings {

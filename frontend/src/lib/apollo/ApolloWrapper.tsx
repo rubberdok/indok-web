@@ -3,7 +3,7 @@
 
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
-import { useMemo } from "react";
+import { useRef } from "react";
 
 import { config } from "@/utils/config";
 
@@ -21,9 +21,28 @@ function createApolloClient(cookies: string): ApolloClient {
   });
 }
 
+let browserApolloClient: ApolloClient | null = null;
+
+function getApolloClient(cookies: string): ApolloClient {
+  if (typeof window === "undefined") {
+    return createApolloClient(cookies);
+  }
+
+  if (!browserApolloClient) {
+    // Browser requests automatically include cookies with `credentials: "include"`.
+    browserApolloClient = createApolloClient("");
+  }
+
+  return browserApolloClient;
+}
+
 // you need to create a component to wrap your app in
 export function ApolloWrapper({ cookies, children }: React.PropsWithChildren<{ cookies: string }>) {
-  const client = useMemo(() => createApolloClient(cookies), [cookies]);
+  const clientRef = useRef<ApolloClient | null>(null);
 
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+  if (!clientRef.current) {
+    clientRef.current = getApolloClient(cookies);
+  }
+
+  return <ApolloProvider client={clientRef.current}>{children}</ApolloProvider>;
 }

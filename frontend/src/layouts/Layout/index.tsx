@@ -1,13 +1,11 @@
 import { useTheme } from "@mui/material/styles";
-import dynamic from "next/dynamic";
 import Head from "next/head";
 import { ReactNode } from "react";
 
-// https://nextjs.org/docs/advanced-features/dynamic-import
-const Header = dynamic(() => import("../header/variants/Basic").then((mod) => mod.Basic));
-const HeaderSimple = dynamic(() => import("../header/variants/Simple").then((mod) => mod.Simple));
-const Footer = dynamic(() => import("../footer/Footer").then((mod) => mod.Footer));
-const FooterSimple = dynamic(() => import("../footer/FooterSimple").then((mod) => mod.FooterSimple));
+import { Footer } from "../footer/Footer";
+import { FooterSimple } from "../footer/FooterSimple";
+import { Basic as Header } from "../header/variants/Basic";
+import { Simple as HeaderSimple } from "../header/variants/Simple";
 
 export { RootStyle } from "../styles";
 

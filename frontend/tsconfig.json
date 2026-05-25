@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmit": true,
@@ -20,10 +20,18 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "paths": {
-      "@/*": ["./src/*"],
-      "~/*": ["./*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "~/*": [
+        "./*"
+      ]
     },
     "incremental": false,
     "plugins": [
@@ -32,6 +40,16 @@
       }
     ]
   },
-  "exclude": ["**/node_modules", "**/.next", "cypress", "cypress.config.ts"],
-  "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
+  "exclude": [
+    "**/node_modules",
+    "**/.next",
+    "cypress",
+    "cypress.config.ts"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ]
 }

@@ -1,4 +1,4 @@
-import * as yup from "@/lib/validation";
+import yup from "@/lib/validation";
 
 type InfoSchema = {
   title: string;
