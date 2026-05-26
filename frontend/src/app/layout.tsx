@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/react";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { Metadata } from "next";
 
+import { SpeedInsights } from "@/components/observability/SpeedInsights";
 import { ApolloWrapper } from "@/lib/apollo";
 import { ThemeRegistry } from "@/lib/mui";
 
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </ApolloWrapper>
         </ThemeRegistry>
         <Analytics mode={process.env.VERCEL_ENV === "production" ? "production" : "development"} />
+        <SpeedInsights />
       </body>
     </html>
   );

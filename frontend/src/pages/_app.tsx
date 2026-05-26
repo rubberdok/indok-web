@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
+import { SpeedInsights } from "@/components/observability/SpeedInsights";
 import { Layout } from "@/layouts/Layout";
 import { PageProps } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
@@ -34,6 +35,7 @@ const App = (props: CustomAppProps): JSX.Element => {
         {getLayout(<Component {...pageProps} err={err} />)}
       </AppProvider>
       <Analytics />
+      <SpeedInsights />
     </>
   );
 };
