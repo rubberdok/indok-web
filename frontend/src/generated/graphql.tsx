@@ -1,11 +1,10 @@
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -2328,841 +2327,1343 @@ export type UserType = {
   yearUpdatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
+export type AdminUserInput = {
+  allergies?: string | null | undefined;
+  email?: string | null | undefined;
+  firstName?: string | null | undefined;
+  graduationYear?: number | null | undefined;
+  lastName?: string | null | undefined;
+  phoneNumber?: string | null | undefined;
+  username?: string | null | undefined;
+};
+
+export type AdminUserNfcInput = {
+  permanentAccess?: boolean | null | undefined;
+  pinCode?: string | null | undefined;
+  uidHex?: string | null | undefined;
+};
+
+export type AnswerInput = {
+  answer: string;
+  questionId: string | number;
+};
+
+/** An enumeration. */
+export type ArchiveArchiveDocumentTypeDocChoices =
+  /** Annet */
+  | 'ANNET'
+  /** Årbøker */
+  | 'ARBOKER'
+  /** Budsjett og Regnskap */
+  | 'BUDSJETT_OG_REGNSKAP'
+  /** Foreningens lover */
+  | 'FORENINGENS_LOVER'
+  /** Generalforsamling */
+  | 'GENERALFORSAMLING'
+  /** Januscript */
+  | 'JANUSCRIPT'
+  /** Støtte fra HS */
+  | 'STOTTE_FRA_HS'
+  /** Utveksling */
+  | 'UTVEKSLING';
+
+export type AssignNfcCardInput = {
+  accessEnd?: string | null | undefined;
+  accessStart?: string | null | undefined;
+  externalHolderName?: string | null | undefined;
+  metadata?: unknown;
+  permanentAccess?: boolean | null | undefined;
+  uidHex: string;
+  userId?: string | number | null | undefined;
+};
+
+export type BaseFormInput = {
+  description?: string | null | undefined;
+  name?: string | null | undefined;
+  organizationId?: string | number | null | undefined;
+};
+
+export type BaseListingInput = {
+  application?: boolean | null | undefined;
+  applicationUrl?: string | null | undefined;
+  case?: boolean | null | undefined;
+  deadline?: string | null | undefined;
+  description?: string | null | undefined;
+  endDatetime?: string | null | undefined;
+  formId?: string | number | null | undefined;
+  interview?: boolean | null | undefined;
+  readMoreUrl?: string | null | undefined;
+  startDatetime?: string | null | undefined;
+  title?: string | null | undefined;
+};
+
+export type BaseQuestionInput = {
+  description?: string | null | undefined;
+  mandatory?: boolean | null | undefined;
+  question?: string | null | undefined;
+  questionType?: QuestionTypeEnum | null | undefined;
+};
+
+/** Basic booking object type used as a base for other types and as a standalone */
+export type BookingInput = {
+  cabins?: Array<number> | null | undefined;
+  checkIn?: string | null | undefined;
+  checkOut?: string | null | undefined;
+  externalParticipants?: number | null | undefined;
+  extraInfo?: string | null | undefined;
+  firstName?: string | null | undefined;
+  internalParticipants?: number | null | undefined;
+  lastName?: string | null | undefined;
+  phone?: string | null | undefined;
+  receiverEmail?: string | null | undefined;
+};
+
+export type CreateEventInput = {
+  allowedGradeYears?: Array<number> | null | undefined;
+  availableSlots?: number | null | undefined;
+  bindingSignup?: boolean | null | undefined;
+  categoryId?: string | number | null | undefined;
+  contactEmail?: string | null | undefined;
+  deadline?: string | null | undefined;
+  description: string;
+  endTime?: string | null | undefined;
+  hasExtraInformation?: boolean | null | undefined;
+  image?: string | null | undefined;
+  isAttendable: boolean;
+  location?: string | null | undefined;
+  organizationId: string | number;
+  price?: number | null | undefined;
+  shortDescription?: string | null | undefined;
+  signupOpenDate?: string | null | undefined;
+  startTime: string;
+  title: string;
+};
+
+export type CreateFormInput = {
+  description?: string | null | undefined;
+  name: string;
+  organizationId: string | number;
+};
+
+export type CreateListingInput = {
+  application?: boolean | null | undefined;
+  applicationUrl?: string | null | undefined;
+  case?: boolean | null | undefined;
+  deadline: string;
+  description?: string | null | undefined;
+  endDatetime?: string | null | undefined;
+  formId?: string | number | null | undefined;
+  interview?: boolean | null | undefined;
+  organizationId: string | number;
+  readMoreUrl?: string | null | undefined;
+  startDatetime?: string | null | undefined;
+  title: string;
+};
+
+export type CreateNfcAccessGrantInput = {
+  accessEnd?: string | null | undefined;
+  accessStart?: string | null | undefined;
+  bookingId?: string | number | null | undefined;
+  grantedToUidHex?: string | null | undefined;
+  grantedToUserId?: string | number | null | undefined;
+  notes?: string | null | undefined;
+  participantPolicy?: string | null | undefined;
+  permanentAccess?: boolean | null | undefined;
+  scope: string;
+};
+
+export type CreateQuestionInput = {
+  description?: string | null | undefined;
+  mandatory?: boolean | null | undefined;
+  question: string;
+  questionType?: QuestionTypeEnum | null | undefined;
+};
+
+export type EmailInput = {
+  cabins?: Array<number> | null | undefined;
+  checkIn?: string | null | undefined;
+  checkOut?: string | null | undefined;
+  emailType?: string | null | undefined;
+  externalParticipants?: number | null | undefined;
+  extraInfo?: string | null | undefined;
+  firstName?: string | null | undefined;
+  internalParticipants?: number | null | undefined;
+  lastName?: string | null | undefined;
+  phone?: string | null | undefined;
+  receiverEmail?: string | null | undefined;
+};
+
+export type JanHusAreaConfigurationInput = {
+  area: string;
+  cleaningFee?: number | null | undefined;
+  defaultDepositAmount?: number | null | undefined;
+  externalPricePerHour?: number | null | undefined;
+  internalPricePerHour?: number | null | undefined;
+};
+
+export type JanHusBookingInput = {
+  area: string;
+  bookerEmail?: string | null | undefined;
+  bookerName?: string | null | undefined;
+  bookerPhone?: string | null | undefined;
+  cleaningRequested?: boolean | null | undefined;
+  comment?: string | null | undefined;
+  depositAmount?: number | null | undefined;
+  depositStatus?: string | null | undefined;
+  endsAt: string;
+  eventType?: string | null | undefined;
+  isExternalBooking?: boolean | null | undefined;
+  ownerOrganizationId?: string | number | null | undefined;
+  ownerUserId?: string | number | null | undefined;
+  responsibleEmail: string;
+  responsibleName: string;
+  responsiblePhone: string;
+  startsAt: string;
+};
+
+export type JanHusBookingRequestInput = {
+  area: string;
+  cleaningRequested?: boolean | null | undefined;
+  comment?: string | null | undefined;
+  endsAt: string;
+  eventType?: string | null | undefined;
+  guestList?: string | null | undefined;
+  ownerOrganizationId?: string | number | null | undefined;
+  requesterEmail?: string | null | undefined;
+  requesterName?: string | null | undefined;
+  requesterPhone?: string | null | undefined;
+  responsibleEmail: string;
+  responsibleName: string;
+  responsiblePhone: string;
+  startsAt: string;
+};
+
+export type JanHusBookingSettingsInput = {
+  bufferMinutes?: number | null | undefined;
+  closingHour?: number | null | undefined;
+  externalBookingsEnabled?: boolean | null | undefined;
+  fallEndDate?: string | null | undefined;
+  fallSemesterActive?: boolean | null | undefined;
+  fallStartDate?: string | null | undefined;
+  generalBookingOpensWeeksBefore?: number | null | undefined;
+  minDurationMinutes?: number | null | undefined;
+  openingHour?: number | null | undefined;
+  organizationBookingOpensWeeksBefore?: number | null | undefined;
+  slotGranularityMinutes?: number | null | undefined;
+  springEndDate?: string | null | undefined;
+  springSemesterActive?: boolean | null | undefined;
+  springStartDate?: string | null | undefined;
+};
+
+/** An enumeration. */
+export type JanhusJanHusAreaConfigurationAreaChoices =
+  /** Entire house */
+  | 'ENTIRE_HOUSE'
+  /** 1st floor */
+  | 'FIRST_FLOOR'
+  /** 2nd floor */
+  | 'SECOND_FLOOR';
+
+/** An enumeration. */
+export type JanhusJanHusBookingAreaChoices =
+  /** Entire house */
+  | 'ENTIRE_HOUSE'
+  /** 1st floor */
+  | 'FIRST_FLOOR'
+  /** 2nd floor */
+  | 'SECOND_FLOOR';
+
+/** An enumeration. */
+export type JanhusJanHusBookingDepositStatusChoices =
+  /** Not required */
+  | 'NOT_REQUIRED'
+  /** Paid */
+  | 'PAID'
+  /** Refunded */
+  | 'REFUNDED'
+  /** Requested */
+  | 'REQUESTED'
+  /** Required */
+  | 'REQUIRED'
+  /** Withheld */
+  | 'WITHHELD';
+
+/** An enumeration. */
+export type JanhusJanHusBookingDoorAccessPolicyChoices =
+  /** Booker and guest list */
+  | 'ALL_PARTICIPANTS'
+  /** Booker only */
+  | 'BOOKER_ONLY';
+
+/** An enumeration. */
+export type JanhusJanHusBookingEventTypeChoices =
+  /** External */
+  | 'EXTERNAL'
+  /** Internal */
+  | 'INTERNAL'
+  /** Open to all Indøk students */
+  | 'OPEN_FOR_INDOK'
+  /** Private */
+  | 'PRIVATE';
+
+/** An enumeration. */
+export type JanhusJanHusBookingRequestAreaChoices =
+  /** Entire house */
+  | 'ENTIRE_HOUSE'
+  /** 1st floor */
+  | 'FIRST_FLOOR'
+  /** 2nd floor */
+  | 'SECOND_FLOOR';
+
+/** An enumeration. */
+export type JanhusJanHusBookingRequestEventTypeChoices =
+  /** External */
+  | 'EXTERNAL'
+  /** Internal */
+  | 'INTERNAL'
+  /** Open to all Indøk students */
+  | 'OPEN_FOR_INDOK'
+  /** Private */
+  | 'PRIVATE';
+
+/** An enumeration. */
+export type JanhusJanHusBookingRequestStatusChoices =
+  /** Approved */
+  | 'APPROVED'
+  /** Pending */
+  | 'PENDING'
+  /** Rejected */
+  | 'REJECTED';
+
+/** An enumeration. */
+export type JanhusJanHusBookingStatusChoices =
+  /** Blocked */
+  | 'BLOCKED'
+  /** Cancelled */
+  | 'CANCELLED'
+  /** Confirmed */
+  | 'CONFIRMED'
+  /** Declined */
+  | 'DECLINED'
+  /** Pending admin review */
+  | 'PENDING_ADMIN_REVIEW'
+  /** Provisional */
+  | 'PROVISIONAL';
+
+export type LogNfcAccessEventInput = {
+  doorIdentifier?: string | null | undefined;
+  eventType: string;
+  notes?: string | null | undefined;
+  rawPayload?: unknown;
+  resolvedUserId?: string | number | null | undefined;
+  source?: string | null | undefined;
+  uidHexReported?: string | null | undefined;
+};
+
+export type MembershipInput = {
+  groupId: string | number;
+  organizationId: string | number;
+  userId: string | number;
+};
+
+export type NfcCardInput = {
+  isEnabled?: boolean | null | undefined;
+  label?: string | null | undefined;
+  notes?: string | null | undefined;
+  uidHex: string;
+};
+
+/** An enumeration. */
+export type NfcNfcAccessEventEventTypeChoices =
+  /** Access denied */
+  | 'ACCESS_DENIED'
+  /** Access granted */
+  | 'ACCESS_GRANTED'
+  /** Door opened */
+  | 'DOOR_OPENED';
+
+/** An enumeration. */
+export type NfcNfcAccessEventSourceChoices =
+  /** Backend */
+  | 'BACKEND'
+  /** Manual key */
+  | 'MANUAL_KEY'
+  /** NFC reader */
+  | 'NFC_READER'
+  /** Unknown */
+  | 'UNKNOWN';
+
+/** An enumeration. */
+export type NfcNfcAccessGrantParticipantPolicyChoices =
+  /** All participants */
+  | 'ALL_PARTICIPANTS'
+  /** Booker only */
+  | 'BOOKER_ONLY';
+
+/** An enumeration. */
+export type NfcNfcAccessGrantScopeChoices =
+  /** Booking */
+  | 'BOOKING'
+  /** Manual */
+  | 'MANUAL';
+
+export type OptionInput = {
+  answer: string;
+  id?: string | number | null | undefined;
+};
+
+/** An enumeration. */
+export type PaymentStatus =
+  | 'CANCELLED'
+  | 'CAPTURED'
+  | 'FAILED'
+  | 'INITIATED'
+  | 'REFUNDED'
+  | 'REJECTED'
+  | 'RESERVED';
+
+export type QuestionTypeEnum =
+  | 'CHECKBOXES'
+  | 'DROPDOWN'
+  | 'FILE_UPLOAD'
+  | 'MULTIPLE_CHOICE'
+  | 'PARAGRAPH'
+  | 'SHORT_ANSWER'
+  | 'SLIDER';
+
+export type ReviewJanHusBookingInput = {
+  adminComment?: string | null | undefined;
+  depositAmount?: number | null | undefined;
+  depositStatus?: string | null | undefined;
+  id: string | number;
+  status?: string | null | undefined;
+};
+
+export type ReviewJanHusBookingRequestInput = {
+  adminComment?: string | null | undefined;
+  convertToBooking?: boolean | null | undefined;
+  id: string | number;
+  status: string;
+};
+
+export type RevokeNfcAccessGrantInput = {
+  accessGrantId: string | number;
+};
+
+export type RevokeNfcAssignmentInput = {
+  assignmentId: string | number;
+  reason?: string | null | undefined;
+};
+
+export type UpdateBookingSemesterInput = {
+  fallEndDate?: string | null | undefined;
+  fallSemesterActive?: boolean | null | undefined;
+  fallStartDate?: string | null | undefined;
+  springEndDate?: string | null | undefined;
+  springSemesterActive?: boolean | null | undefined;
+  springStartDate?: string | null | undefined;
+};
+
+export type UpdateCabinInput = {
+  externalPrice?: number | null | undefined;
+  externalPriceWeekend?: number | null | undefined;
+  id?: string | number | null | undefined;
+  internalPrice?: number | null | undefined;
+  internalPriceWeekend?: number | null | undefined;
+  maxGuests?: number | null | undefined;
+  name?: string | null | undefined;
+};
+
+export type UpdateEventInput = {
+  allowedGradeYears?: Array<number> | null | undefined;
+  availableSlots?: number | null | undefined;
+  bindingSignup?: boolean | null | undefined;
+  categoryId?: string | number | null | undefined;
+  contactEmail?: string | null | undefined;
+  deadline?: string | null | undefined;
+  description?: string | null | undefined;
+  endTime?: string | null | undefined;
+  hasExtraInformation?: boolean | null | undefined;
+  image?: string | null | undefined;
+  isAttendable?: boolean | null | undefined;
+  location?: string | null | undefined;
+  organizationId?: string | number | null | undefined;
+  price?: number | null | undefined;
+  shortDescription?: string | null | undefined;
+  signupOpenDate?: string | null | undefined;
+  startTime?: string | null | undefined;
+  title?: string | null | undefined;
+};
+
+export type UpdateJanHusBookingInput = {
+  adminComment?: string | null | undefined;
+  area?: string | null | undefined;
+  bookerEmail?: string | null | undefined;
+  bookerName?: string | null | undefined;
+  bookerPhone?: string | null | undefined;
+  cleaningRequested?: boolean | null | undefined;
+  comment?: string | null | undefined;
+  depositAmount?: number | null | undefined;
+  depositStatus?: string | null | undefined;
+  doorAccessPolicy?: string | null | undefined;
+  endsAt?: string | null | undefined;
+  eventType?: string | null | undefined;
+  guestList?: string | null | undefined;
+  guestListUserFeideIds?: Array<string> | null | undefined;
+  id: string | number;
+  responsibleEmail?: string | null | undefined;
+  responsibleName?: string | null | undefined;
+  responsiblePhone?: string | null | undefined;
+  startsAt?: string | null | undefined;
+  status?: string | null | undefined;
+};
+
+export type UserInput = {
+  allergies?: string | null | undefined;
+  email?: string | null | undefined;
+  firstName?: string | null | undefined;
+  graduationYear?: number | null | undefined;
+  lastName?: string | null | undefined;
+  nfcPinCode?: string | null | undefined;
+  nfcUidHex?: string | null | undefined;
+  phoneNumber?: string | null | undefined;
+};
+
 export type ArchiveByTypesQueryVariables = Exact<{
-  documentTypes: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-  names?: InputMaybe<Scalars['String']['input']>;
+  documentTypes: Array<string | null | undefined> | string;
+  year?: number | null | undefined;
+  names?: string | null | undefined;
 }>;
 
 
-export type ArchiveByTypesQuery = { __typename?: 'Queries', archiveByTypes: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }> };
+export type ArchiveByTypesQuery = { archiveByTypes: Array<{ id: string, title: string, thumbnail: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year: number | null, webLink: string | null }> };
 
 export type FeaturedArchiveQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FeaturedArchiveQuery = { __typename?: 'Queries', featuredArchive: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }> };
+export type FeaturedArchiveQuery = { featuredArchive: Array<{ id: string, title: string, thumbnail: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year: number | null, webLink: string | null }> };
 
 export type AvailableYearsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AvailableYearsQuery = { __typename?: 'Queries', availableYears: Array<string> };
+export type AvailableYearsQuery = { availableYears: Array<string> };
 
-export type DocumentFragment = { __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null };
+export type DocumentFragment = { id: string, title: string, thumbnail: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year: number | null, webLink: string | null };
 
 export type DocumentsQueryVariables = Exact<{
-  documentTypes: Array<Scalars['String']['input']> | Scalars['String']['input'];
-  year?: InputMaybe<Scalars['Int']['input']>;
-  names?: InputMaybe<Scalars['String']['input']>;
+  documentTypes: Array<string> | string;
+  year?: number | null | undefined;
+  names?: string | null | undefined;
 }>;
 
 
-export type DocumentsQuery = { __typename?: 'Queries', availableYears: Array<string>, hasPermission?: boolean | null, archiveByTypes: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }>, featuredArchive: Array<{ __typename?: 'ArchiveDocumentType', id: string, title: string, thumbnail?: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year?: number | null, webLink?: string | null }> };
+export type DocumentsQuery = { availableYears: Array<string>, hasPermission: boolean | null, archiveByTypes: Array<{ id: string, title: string, thumbnail: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year: number | null, webLink: string | null }>, featuredArchive: Array<{ id: string, title: string, thumbnail: string | null, typeDoc: ArchiveArchiveDocumentTypeDocChoices, year: number | null, webLink: string | null }> };
 
-export type CabinFragment = { __typename?: 'CabinType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number };
+export type CabinFragment = { id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number };
 
-export type BookingFragment = { __typename?: 'AllBookingsType', id: string, checkIn: string, checkOut: string, cabins: Array<{ __typename?: 'CabinType', id: string, name: string }> };
+export type BookingFragment = { id: string, checkIn: string, checkOut: string, cabins: Array<{ id: string, name: string }> };
 
-export type AdminBookingFragment = { __typename?: 'AdminBookingType', id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price?: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cabins: Array<{ __typename?: 'CabinType', id: string, name: string }> };
+export type AdminBookingFragment = { id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cabins: Array<{ id: string, name: string }> };
 
-export type BookingResponsibleFragment = { __typename?: 'BookingResponsibleType', id: string, active?: boolean | null, firstName?: string | null, lastName?: string | null, email?: string | null, phone?: number | null };
+export type BookingResponsibleFragment = { id: string, active: boolean | null, firstName: string | null, lastName: string | null, email: string | null, phone: number | null };
 
-export type BookingSemesterFragment = { __typename?: 'UpdateBookingSemesterType', fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean };
+export type BookingSemesterFragment = { fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean };
 
 export type CreateBookingMutationVariables = Exact<{
   bookingData: BookingInput;
 }>;
 
 
-export type CreateBookingMutation = { __typename?: 'Mutations', createBooking?: { __typename?: 'CreateBooking', ok?: boolean | null } | null };
+export type CreateBookingMutation = { createBooking: { ok: boolean | null } | null };
 
 export type ConfirmBookingMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type ConfirmBookingMutation = { __typename?: 'Mutations', updateBooking?: { __typename?: 'UpdateBooking', ok?: boolean | null } | null };
+export type ConfirmBookingMutation = { updateBooking: { ok: boolean | null } | null };
 
 export type DeclineBookingMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  declineReason?: InputMaybe<Scalars['String']['input']>;
+  id: string | number;
+  declineReason?: string | null | undefined;
 }>;
 
 
-export type DeclineBookingMutation = { __typename?: 'Mutations', updateBooking?: { __typename?: 'UpdateBooking', ok?: boolean | null } | null };
+export type DeclineBookingMutation = { updateBooking: { ok: boolean | null } | null };
 
 export type SendEmailMutationVariables = Exact<{
   emailInput: EmailInput;
 }>;
 
 
-export type SendEmailMutation = { __typename?: 'Mutations', sendEmail?: { __typename?: 'SendEmail', ok?: boolean | null } | null };
+export type SendEmailMutation = { sendEmail: { ok: boolean | null } | null };
 
 export type UpdateCabinMutationVariables = Exact<{
   cabinData: UpdateCabinInput;
 }>;
 
 
-export type UpdateCabinMutation = { __typename?: 'Mutations', updateCabin?: { __typename?: 'UpdateCabin', cabin?: { __typename?: 'CabinType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number } | null } | null };
+export type UpdateCabinMutation = { updateCabin: { cabin: { id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number } | null } | null };
 
 export type UpdateBookingSemesterMutationVariables = Exact<{
   semesterData: UpdateBookingSemesterInput;
 }>;
 
 
-export type UpdateBookingSemesterMutation = { __typename?: 'Mutations', updateBookingSemester?: { __typename?: 'UpdateBookingSemester', bookingSemester?: { __typename?: 'UpdateBookingSemesterType', fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean } | null } | null };
+export type UpdateBookingSemesterMutation = { updateBookingSemester: { bookingSemester: { fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean } | null } | null };
 
 export type CabinsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CabinsQuery = { __typename?: 'Queries', cabins?: Array<{ __typename?: 'CabinType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number }> | null };
+export type CabinsQuery = { cabins: Array<{ id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number }> | null };
 
 export type AllBookingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllBookingsQuery = { __typename?: 'Queries', allBookings?: Array<{ __typename?: 'AllBookingsType', id: string, checkIn: string, checkOut: string, cabins: Array<{ __typename?: 'CabinType', id: string, name: string }> }> | null };
+export type AllBookingsQuery = { allBookings: Array<{ id: string, checkIn: string, checkOut: string, cabins: Array<{ id: string, name: string }> }> | null };
 
 export type MyCabinBookingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyCabinBookingsQuery = { __typename?: 'Queries', myCabinBookings?: Array<{ __typename?: 'AdminBookingType', id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price?: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cabins: Array<{ __typename?: 'CabinType', id: string, name: string }> }> | null };
+export type MyCabinBookingsQuery = { myCabinBookings: Array<{ id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cabins: Array<{ id: string, name: string }> }> | null };
 
 export type AdminAllBookingsQueryVariables = Exact<{
-  after?: InputMaybe<Scalars['String']['input']>;
+  after?: string | null | undefined;
 }>;
 
 
-export type AdminAllBookingsQuery = { __typename?: 'Queries', adminAllBookings?: Array<{ __typename?: 'AdminBookingType', id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price?: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cabins: Array<{ __typename?: 'CabinType', id: string, name: string }> }> | null };
+export type AdminAllBookingsQuery = { adminAllBookings: Array<{ id: string, checkIn: string, checkOut: string, firstName: string, lastName: string, phone: string, receiverEmail: string, externalParticipants: number, internalParticipants: number, price: number | null, isTentative: boolean, isDeclined: boolean, timestamp: string, extraInfo: string, declineReason: string, cabins: Array<{ id: string, name: string }> }> | null };
 
 export type ActiveBookingResponsibleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ActiveBookingResponsibleQuery = { __typename?: 'Queries', activeBookingResponsible?: { __typename?: 'BookingResponsibleType', id: string, active?: boolean | null, firstName?: string | null, lastName?: string | null, email?: string | null, phone?: number | null } | null };
+export type ActiveBookingResponsibleQuery = { activeBookingResponsible: { id: string, active: boolean | null, firstName: string | null, lastName: string | null, email: string | null, phone: number | null } | null };
 
 export type CabinsAndResponsiblesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CabinsAndResponsiblesQuery = { __typename?: 'Queries', cabins?: Array<{ __typename?: 'CabinType', id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number }> | null, activeBookingResponsible?: { __typename?: 'BookingResponsibleType', id: string, email?: string | null } | null };
+export type CabinsAndResponsiblesQuery = { cabins: Array<{ id: string, name: string, maxGuests: number, internalPrice: number, externalPrice: number, internalPriceWeekend: number, externalPriceWeekend: number }> | null, activeBookingResponsible: { id: string, email: string | null } | null };
 
 export type BookingSemesterQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BookingSemesterQuery = { __typename?: 'Queries', bookingSemester?: { __typename?: 'UpdateBookingSemesterType', fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean } | null };
+export type BookingSemesterQuery = { bookingSemester: { fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean } | null };
 
-export type ProductFragment = { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean };
+export type ProductFragment = { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean };
 
-export type OrderFragment = { __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } };
+export type OrderFragment = { id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { id: string, username: string, firstName: string, lastName: string } };
 
 export type InitiateOrderMutationVariables = Exact<{
-  productId: Scalars['ID']['input'];
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  fallbackRedirect?: InputMaybe<Scalars['String']['input']>;
+  productId: string | number;
+  quantity?: number | null | undefined;
+  fallbackRedirect?: string | null | undefined;
 }>;
 
 
-export type InitiateOrderMutation = { __typename?: 'Mutations', initiateOrder?: { __typename?: 'InitiateOrder', redirect?: string | null, orderId?: string | null } | null };
+export type InitiateOrderMutation = { initiateOrder: { redirect: string | null, orderId: string | null } | null };
 
 export type AttemptCapturePaymentMutationVariables = Exact<{
-  orderId: Scalars['ID']['input'];
+  orderId: string | number;
 }>;
 
 
-export type AttemptCapturePaymentMutation = { __typename?: 'Mutations', attemptCapturePayment?: { __typename?: 'AttemptCapturePayment', status?: PaymentStatus | null, order?: { __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } } | null } | null };
+export type AttemptCapturePaymentMutation = { attemptCapturePayment: { status: PaymentStatus | null, order: { id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { id: string, username: string, firstName: string, lastName: string } } | null } | null };
 
 export type DeliveredProductMutationVariables = Exact<{
-  orderId: Scalars['ID']['input'];
+  orderId: string | number;
 }>;
 
 
-export type DeliveredProductMutation = { __typename?: 'Mutations', deliveredProduct?: { __typename?: 'DeliveredProduct', order?: { __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } } | null } | null };
+export type DeliveredProductMutation = { deliveredProduct: { order: { id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { id: string, username: string, firstName: string, lastName: string } } | null } | null };
 
 export type ProductQueryVariables = Exact<{
-  productId: Scalars['ID']['input'];
+  productId: string | number;
 }>;
 
 
-export type ProductQuery = { __typename?: 'Queries', product?: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean } | null };
+export type ProductQuery = { product: { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean } | null };
 
 export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductsQuery = { __typename?: 'Queries', products?: Array<{ __typename?: 'ProductType', id: string, name: string, price: number, description: string, maxBuyableQuantity: number, shopItem: boolean }> | null };
+export type ProductsQuery = { products: Array<{ id: string, name: string, price: number, description: string, maxBuyableQuantity: number, shopItem: boolean }> | null };
 
 export type UserOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserOrdersQuery = { __typename?: 'Queries', userOrders?: Array<{ __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } }> | null };
+export type UserOrdersQuery = { userOrders: Array<{ id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { id: string, username: string, firstName: string, lastName: string } }> | null };
 
 export type AllUserOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllUserOrdersQuery = { __typename?: 'Queries', allUserOrders?: Array<{ __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } }> | null };
+export type AllUserOrdersQuery = { allUserOrders: Array<{ id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { id: string, username: string, firstName: string, lastName: string } }> | null };
 
 export type PaginatedShopOrdersQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: number | null | undefined;
+  offset?: number | null | undefined;
 }>;
 
 
-export type PaginatedShopOrdersQuery = { __typename?: 'Queries', paginatedShopOrders?: Array<{ __typename?: 'OrderType', id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { __typename?: 'ProductType', id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } }> | null };
+export type PaginatedShopOrdersQuery = { paginatedShopOrders: Array<{ id: string, quantity: number, totalPrice: number, paymentStatus: PaymentStatus, timestamp: string, deliveredProduct: boolean, product: { id: string, name: string, description: string, price: number, maxBuyableQuantity: number, shopItem: boolean }, user: { id: string, username: string, firstName: string, lastName: string } }> | null };
 
-export type EventFieldsFragment = { __typename?: 'EventType', id: string, title: string, startTime: string, shortDescription?: string | null, allowedGradeYears?: Array<number> | null, isFull?: boolean | null, isAttendable: boolean, signupOpenDate?: string | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null } | null, organization: { __typename?: 'OrganizationType', id: string, color?: string | null } };
+export type EventFieldsFragment = { id: string, title: string, startTime: string, shortDescription: string | null, allowedGradeYears: Array<number> | null, isFull: boolean | null, isAttendable: boolean, signupOpenDate: string | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null } | null, organization: { id: string, color: string | null } };
 
-export type EventDetailFieldsFragment = { __typename?: 'EventType', id: string, title: string, description: string, shortDescription?: string | null, startTime: string, endTime?: string | null, location?: string | null, contactEmail: string, allowedGradeYears?: Array<number> | null, hasExtraInformation: boolean, isFull?: boolean | null, signupOpenDate?: string | null, deadline?: string | null, isAttendable: boolean, bindingSignup: boolean, price?: number | null, product?: { __typename?: 'ProductType', id: string } | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null, positionOnWaitingList?: number | null, hasBoughtTicket?: boolean | null } | null, category?: { __typename?: 'CategoryType', id: string, name: string } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, logoUrl?: string | null } };
+export type EventDetailFieldsFragment = { id: string, title: string, description: string, shortDescription: string | null, startTime: string, endTime: string | null, location: string | null, contactEmail: string, allowedGradeYears: Array<number> | null, hasExtraInformation: boolean, isFull: boolean | null, signupOpenDate: string | null, deadline: string | null, isAttendable: boolean, bindingSignup: boolean, price: number | null, product: { id: string } | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null, positionOnWaitingList: number | null, hasBoughtTicket: boolean | null } | null, category: { id: string, name: string } | null, organization: { id: string, name: string, logoUrl: string | null } };
 
-export type AdminEventFragment = { __typename?: 'EventType', id: string, title: string, startTime: string, endTime?: string | null, location?: string | null, description: string, image?: string | null, isAttendable: boolean, deadline?: string | null, availableSlots?: number | null, price?: number | null, shortDescription?: string | null, signupOpenDate?: string | null, isFull?: boolean | null, hasExtraInformation: boolean, bindingSignup: boolean, contactEmail: string, allowedGradeYears?: Array<number> | null, organization: { __typename?: 'OrganizationType', id: string, name: string }, category?: { __typename?: 'CategoryType', id: string, name: string } | null, publisher?: { __typename?: 'UserType', id: string, username: string, email: string, firstName: string, lastName: string, dateJoined: string } | null, usersAttending?: Array<{ __typename?: 'SignUpType', userEmail: string, userGradeYear: number, userAllergies?: string | null, userPhoneNumber: string, extraInformation: string, hasBoughtTicket?: boolean | null, user: { __typename?: 'UserType', id: string, firstName: string, lastName: string } }> | null, usersOnWaitingList?: Array<{ __typename?: 'SignUpType', userEmail: string, userGradeYear: number, userAllergies?: string | null, userPhoneNumber: string, extraInformation: string, user: { __typename?: 'UserType', id: string, firstName: string, lastName: string } }> | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null } | null, product?: { __typename?: 'ProductType', id: string } | null };
+export type AdminEventFragment = { id: string, title: string, startTime: string, endTime: string | null, location: string | null, description: string, image: string | null, isAttendable: boolean, deadline: string | null, availableSlots: number | null, price: number | null, shortDescription: string | null, signupOpenDate: string | null, isFull: boolean | null, hasExtraInformation: boolean, bindingSignup: boolean, contactEmail: string, allowedGradeYears: Array<number> | null, organization: { id: string, name: string }, category: { id: string, name: string } | null, publisher: { id: string, username: string, email: string, firstName: string, lastName: string, dateJoined: string } | null, usersAttending: Array<{ userEmail: string, userGradeYear: number, userAllergies: string | null, userPhoneNumber: string, extraInformation: string, hasBoughtTicket: boolean | null, user: { id: string, firstName: string, lastName: string } }> | null, usersOnWaitingList: Array<{ userEmail: string, userGradeYear: number, userAllergies: string | null, userPhoneNumber: string, extraInformation: string, user: { id: string, firstName: string, lastName: string } }> | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null } | null, product: { id: string } | null };
 
-export type SignUpFragment = { __typename?: 'SignUpType', userEmail: string, userGradeYear: number, userAllergies?: string | null, userPhoneNumber: string, extraInformation: string, user: { __typename?: 'UserType', id: string, firstName: string, lastName: string } };
+export type SignUpFragment = { userEmail: string, userGradeYear: number, userAllergies: string | null, userPhoneNumber: string, extraInformation: string, user: { id: string, firstName: string, lastName: string } };
 
-export type SignUpWithTicketFragment = { __typename?: 'SignUpType', userEmail: string, userGradeYear: number, userAllergies?: string | null, userPhoneNumber: string, extraInformation: string, hasBoughtTicket?: boolean | null, user: { __typename?: 'UserType', id: string, firstName: string, lastName: string } };
+export type SignUpWithTicketFragment = { userEmail: string, userGradeYear: number, userAllergies: string | null, userPhoneNumber: string, extraInformation: string, hasBoughtTicket: boolean | null, user: { id: string, firstName: string, lastName: string } };
 
 export type CreateEventMutationVariables = Exact<{
   eventData: CreateEventInput;
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutations', createEvent?: { __typename?: 'CreateEvent', ok?: boolean | null, event?: { __typename?: 'EventType', id: string, title: string, startTime: string, shortDescription?: string | null, allowedGradeYears?: Array<number> | null, isFull?: boolean | null, isAttendable: boolean, signupOpenDate?: string | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null } | null, organization: { __typename?: 'OrganizationType', id: string, color?: string | null } } | null } | null };
+export type CreateEventMutation = { createEvent: { ok: boolean | null, event: { id: string, title: string, startTime: string, shortDescription: string | null, allowedGradeYears: Array<number> | null, isFull: boolean | null, isAttendable: boolean, signupOpenDate: string | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null } | null, organization: { id: string, color: string | null } } | null } | null };
 
 export type UpdateEventMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
   eventData: UpdateEventInput;
 }>;
 
 
-export type UpdateEventMutation = { __typename?: 'Mutations', updateEvent?: { __typename?: 'UpdateEvent', ok?: boolean | null, event?: { __typename?: 'EventType', id: string, title: string, description: string, shortDescription?: string | null, startTime: string, endTime?: string | null, location?: string | null, contactEmail: string, allowedGradeYears?: Array<number> | null, hasExtraInformation: boolean, isFull?: boolean | null, signupOpenDate?: string | null, deadline?: string | null, isAttendable: boolean, bindingSignup: boolean, price?: number | null, product?: { __typename?: 'ProductType', id: string } | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null, positionOnWaitingList?: number | null, hasBoughtTicket?: boolean | null } | null, category?: { __typename?: 'CategoryType', id: string, name: string } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, logoUrl?: string | null } } | null } | null };
+export type UpdateEventMutation = { updateEvent: { ok: boolean | null, event: { id: string, title: string, description: string, shortDescription: string | null, startTime: string, endTime: string | null, location: string | null, contactEmail: string, allowedGradeYears: Array<number> | null, hasExtraInformation: boolean, isFull: boolean | null, signupOpenDate: string | null, deadline: string | null, isAttendable: boolean, bindingSignup: boolean, price: number | null, product: { id: string } | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null, positionOnWaitingList: number | null, hasBoughtTicket: boolean | null } | null, category: { id: string, name: string } | null, organization: { id: string, name: string, logoUrl: string | null } } | null } | null };
 
 export type EventSignUpMutationVariables = Exact<{
-  eventId: Scalars['ID']['input'];
-  extraInformation?: InputMaybe<Scalars['String']['input']>;
+  eventId: string | number;
+  extraInformation?: string | null | undefined;
 }>;
 
 
-export type EventSignUpMutation = { __typename?: 'Mutations', eventSignUp?: { __typename?: 'EventSignUp', isFull?: boolean | null, event?: { __typename?: 'EventType', id: string, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null, positionOnWaitingList?: number | null } | null } | null } | null };
+export type EventSignUpMutation = { eventSignUp: { isFull: boolean | null, event: { id: string, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null, positionOnWaitingList: number | null } | null } | null } | null };
 
 export type EventSignOffMutationVariables = Exact<{
-  eventId: Scalars['ID']['input'];
+  eventId: string | number;
 }>;
 
 
-export type EventSignOffMutation = { __typename?: 'Mutations', eventSignOff?: { __typename?: 'EventSignOff', isFull?: boolean | null, event?: { __typename?: 'EventType', id: string, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null, positionOnWaitingList?: number | null } | null } | null } | null };
+export type EventSignOffMutation = { eventSignOff: { isFull: boolean | null, event: { id: string, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null, positionOnWaitingList: number | null } | null } | null } | null };
 
 export type AdminEventSignOffMutationVariables = Exact<{
-  eventId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
+  eventId: string | number;
+  userId: string | number;
 }>;
 
 
-export type AdminEventSignOffMutation = { __typename?: 'Mutations', adminEventSignOff?: { __typename?: 'AdminEventSignOff', event?: { __typename?: 'EventType', id: string } | null } | null };
+export type AdminEventSignOffMutation = { adminEventSignOff: { event: { id: string } | null } | null };
 
 export type SendEventMailsMutationVariables = Exact<{
-  eventId: Scalars['ID']['input'];
-  receiverEmails?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  content?: InputMaybe<Scalars['String']['input']>;
-  subject: Scalars['String']['input'];
+  eventId: string | number;
+  receiverEmails?: Array<string> | string | null | undefined;
+  content?: string | null | undefined;
+  subject: string;
 }>;
 
 
-export type SendEventMailsMutation = { __typename?: 'Mutations', sendEventMails?: { __typename?: 'SendEventEmails', ok?: boolean | null } | null };
+export type SendEventMailsMutation = { sendEventMails: { ok: boolean | null } | null };
 
 export type EventsQueryVariables = Exact<{
-  organization?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  startTime?: InputMaybe<Scalars['DateTime']['input']>;
-  endTime?: InputMaybe<Scalars['DateTime']['input']>;
+  organization?: string | null | undefined;
+  category?: string | null | undefined;
+  startTime?: string | null | undefined;
+  endTime?: string | null | undefined;
 }>;
 
 
-export type EventsQuery = { __typename?: 'Queries', hasPermission?: boolean | null, allEvents?: Array<{ __typename?: 'EventType', id: string, title: string, startTime: string, shortDescription?: string | null, allowedGradeYears?: Array<number> | null, isFull?: boolean | null, isAttendable: boolean, signupOpenDate?: string | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null } | null, organization: { __typename?: 'OrganizationType', id: string, color?: string | null } }> | null, defaultEvents?: Array<{ __typename?: 'EventType', id: string, title: string, startTime: string, shortDescription?: string | null, allowedGradeYears?: Array<number> | null, isFull?: boolean | null, isAttendable: boolean, signupOpenDate?: string | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null } | null, organization: { __typename?: 'OrganizationType', id: string, color?: string | null } }> | null, user?: { __typename?: 'UserType', id: string, gradeYear?: number | null } | null };
+export type EventsQuery = { hasPermission: boolean | null, allEvents: Array<{ id: string, title: string, startTime: string, shortDescription: string | null, allowedGradeYears: Array<number> | null, isFull: boolean | null, isAttendable: boolean, signupOpenDate: string | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null } | null, organization: { id: string, color: string | null } }> | null, defaultEvents: Array<{ id: string, title: string, startTime: string, shortDescription: string | null, allowedGradeYears: Array<number> | null, isFull: boolean | null, isAttendable: boolean, signupOpenDate: string | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null } | null, organization: { id: string, color: string | null } }> | null, user: { id: string, gradeYear: number | null } | null };
 
 export type EventDetailsQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type EventDetailsQuery = { __typename?: 'Queries', event?: { __typename?: 'EventType', id: string, title: string, description: string, shortDescription?: string | null, startTime: string, endTime?: string | null, location?: string | null, contactEmail: string, allowedGradeYears?: Array<number> | null, hasExtraInformation: boolean, isFull?: boolean | null, signupOpenDate?: string | null, deadline?: string | null, isAttendable: boolean, bindingSignup: boolean, price?: number | null, product?: { __typename?: 'ProductType', id: string } | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null, positionOnWaitingList?: number | null, hasBoughtTicket?: boolean | null } | null, category?: { __typename?: 'CategoryType', id: string, name: string } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, logoUrl?: string | null } } | null, user?: { __typename?: 'UserType', id: string, gradeYear?: number | null, organizations: Array<{ __typename?: 'OrganizationType', id: string }> } | null };
+export type EventDetailsQuery = { event: { id: string, title: string, description: string, shortDescription: string | null, startTime: string, endTime: string | null, location: string | null, contactEmail: string, allowedGradeYears: Array<number> | null, hasExtraInformation: boolean, isFull: boolean | null, signupOpenDate: string | null, deadline: string | null, isAttendable: boolean, bindingSignup: boolean, price: number | null, product: { id: string } | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null, positionOnWaitingList: number | null, hasBoughtTicket: boolean | null } | null, category: { id: string, name: string } | null, organization: { id: string, name: string, logoUrl: string | null } } | null, user: { id: string, gradeYear: number | null, organizations: Array<{ id: string }> } | null };
 
 export type AllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllCategoriesQuery = { __typename?: 'Queries', allCategories?: Array<{ __typename?: 'CategoryType', id: string, name: string }> | null };
+export type AllCategoriesQuery = { allCategories: Array<{ id: string, name: string }> | null };
 
 export type EventFilteredOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EventFilteredOrganizationsQuery = { __typename?: 'Queries', eventFilteredOrganizations?: Array<{ __typename?: 'OrganizationType', id: string, name: string, color?: string | null, children: Array<{ __typename?: 'OrganizationType', id: string, name: string }> }> | null };
+export type EventFilteredOrganizationsQuery = { eventFilteredOrganizations: Array<{ id: string, name: string, color: string | null, children: Array<{ id: string, name: string }> }> | null };
 
 export type AdminEventQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type AdminEventQuery = { __typename?: 'Queries', event?: { __typename?: 'EventType', id: string, title: string, startTime: string, endTime?: string | null, location?: string | null, description: string, image?: string | null, isAttendable: boolean, deadline?: string | null, availableSlots?: number | null, price?: number | null, shortDescription?: string | null, signupOpenDate?: string | null, isFull?: boolean | null, hasExtraInformation: boolean, bindingSignup: boolean, contactEmail: string, allowedGradeYears?: Array<number> | null, organization: { __typename?: 'OrganizationType', id: string, name: string }, category?: { __typename?: 'CategoryType', id: string, name: string } | null, publisher?: { __typename?: 'UserType', id: string, username: string, email: string, firstName: string, lastName: string, dateJoined: string } | null, usersAttending?: Array<{ __typename?: 'SignUpType', userEmail: string, userGradeYear: number, userAllergies?: string | null, userPhoneNumber: string, extraInformation: string, hasBoughtTicket?: boolean | null, user: { __typename?: 'UserType', id: string, firstName: string, lastName: string } }> | null, usersOnWaitingList?: Array<{ __typename?: 'SignUpType', userEmail: string, userGradeYear: number, userAllergies?: string | null, userPhoneNumber: string, extraInformation: string, user: { __typename?: 'UserType', id: string, firstName: string, lastName: string } }> | null, userAttendance?: { __typename?: 'UserAttendingType', isSignedUp?: boolean | null, isOnWaitingList?: boolean | null } | null, product?: { __typename?: 'ProductType', id: string } | null } | null };
+export type AdminEventQuery = { event: { id: string, title: string, startTime: string, endTime: string | null, location: string | null, description: string, image: string | null, isAttendable: boolean, deadline: string | null, availableSlots: number | null, price: number | null, shortDescription: string | null, signupOpenDate: string | null, isFull: boolean | null, hasExtraInformation: boolean, bindingSignup: boolean, contactEmail: string, allowedGradeYears: Array<number> | null, organization: { id: string, name: string }, category: { id: string, name: string } | null, publisher: { id: string, username: string, email: string, firstName: string, lastName: string, dateJoined: string } | null, usersAttending: Array<{ userEmail: string, userGradeYear: number, userAllergies: string | null, userPhoneNumber: string, extraInformation: string, hasBoughtTicket: boolean | null, user: { id: string, firstName: string, lastName: string } }> | null, usersOnWaitingList: Array<{ userEmail: string, userGradeYear: number, userAllergies: string | null, userPhoneNumber: string, extraInformation: string, user: { id: string, firstName: string, lastName: string } }> | null, userAttendance: { isSignedUp: boolean | null, isOnWaitingList: boolean | null } | null, product: { id: string } | null } | null };
 
 export type EventSignUpsQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type EventSignUpsQuery = { __typename?: 'Queries', event?: { __typename?: 'EventType', isAttendable: boolean, usersAttending?: Array<{ __typename?: 'SignUpType', userEmail: string }> | null } | null };
+export type EventSignUpsQuery = { event: { isAttendable: boolean, usersAttending: Array<{ userEmail: string }> | null } | null };
 
 export type AttendeeReportQueryVariables = Exact<{
-  eventId: Scalars['ID']['input'];
-  fields?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  filetype?: InputMaybe<Scalars['String']['input']>;
+  eventId: string | number;
+  fields?: Array<string> | string | null | undefined;
+  filetype?: string | null | undefined;
 }>;
 
 
-export type AttendeeReportQuery = { __typename?: 'Queries', attendeeReport?: string | null };
+export type AttendeeReportQuery = { attendeeReport: string | null };
 
 export type AttendeeReportOrgQueryVariables = Exact<{
-  orgId: Scalars['ID']['input'];
-  fields?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  filetype?: InputMaybe<Scalars['String']['input']>;
+  orgId: string | number;
+  fields?: Array<string> | string | null | undefined;
+  filetype?: string | null | undefined;
 }>;
 
 
-export type AttendeeReportOrgQuery = { __typename?: 'Queries', attendeeReportOrg?: string | null };
+export type AttendeeReportOrgQuery = { attendeeReportOrg: string | null };
 
 export type AttendeeReportsQueryVariables = Exact<{
-  eventIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
-  fields?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  filetype?: InputMaybe<Scalars['String']['input']>;
+  eventIds: Array<string | number> | string | number;
+  fields?: Array<string> | string | null | undefined;
+  filetype?: string | null | undefined;
 }>;
 
 
-export type AttendeeReportsQuery = { __typename?: 'Queries', attendeeReports?: string | null };
+export type AttendeeReportsQuery = { attendeeReports: string | null };
 
 export type EventUserOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EventUserOrganizationsQuery = { __typename?: 'Queries', user?: { __typename?: 'UserType', id: string, organizations: Array<{ __typename?: 'OrganizationType', id: string }> } | null };
+export type EventUserOrganizationsQuery = { user: { id: string, organizations: Array<{ id: string }> } | null };
 
-export type FormFragment = { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }> };
+export type FormFragment = { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, options: Array<{ id: string, answer: string }> | null }> };
 
-export type FormWithAnswersFragment = { __typename?: 'FormType', id: string, name: string, description: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answer?: { __typename?: 'AnswerType', id?: string | null, answer: string } | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }> };
+export type FormWithAnswersFragment = { id: string, name: string, description: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answer: { id: string | null, answer: string } | null, options: Array<{ id: string, answer: string }> | null }> };
 
-export type FormWithAllResponsesFragment = { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }>, responses?: Array<{ __typename?: 'ResponseType', id?: string | null, respondent: { __typename?: 'UserType', id: string, firstName: string, lastName: string }, answers: Array<{ __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } }> }> | null };
+export type FormWithAllResponsesFragment = { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null }>, responses: Array<{ id: string | null, respondent: { id: string, firstName: string, lastName: string }, answers: Array<{ id: string | null, answer: string, question: { id: string } }> }> | null };
 
-export type ResponseFragment = { __typename?: 'ResponseType', id?: string | null, respondent: { __typename?: 'UserType', id: string, firstName: string, lastName: string }, answers: Array<{ __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } }> };
+export type ResponseFragment = { id: string | null, respondent: { id: string, firstName: string, lastName: string }, answers: Array<{ id: string | null, answer: string, question: { id: string } }> };
 
-export type QuestionFragment = { __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null };
+export type QuestionFragment = { id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, options: Array<{ id: string, answer: string }> | null };
 
-export type QuestionWithAnswerFragment = { __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answer?: { __typename?: 'AnswerType', id?: string | null, answer: string } | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null };
+export type QuestionWithAnswerFragment = { id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answer: { id: string | null, answer: string } | null, options: Array<{ id: string, answer: string }> | null };
 
-export type QuestionWithAnswerIdsFragment = { __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null };
+export type QuestionWithAnswerIdsFragment = { id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null };
 
-export type OptionFragment = { __typename?: 'OptionType', id: string, answer: string };
+export type OptionFragment = { id: string, answer: string };
 
-export type AnswerFragment = { __typename?: 'AnswerType', id?: string | null, answer: string };
+export type AnswerFragment = { id: string | null, answer: string };
 
-export type AnswerWithQuestionIdFragment = { __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } };
+export type AnswerWithQuestionIdFragment = { id: string | null, answer: string, question: { id: string } };
 
 export type CreateFormMutationVariables = Exact<{
   formData: CreateFormInput;
-  listingId?: InputMaybe<Scalars['ID']['input']>;
+  listingId?: string | number | null | undefined;
 }>;
 
 
-export type CreateFormMutation = { __typename?: 'Mutations', createForm?: { __typename?: 'CreateForm', ok?: boolean | null, form?: { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }>, responses?: Array<{ __typename?: 'ResponseType', id?: string | null, respondent: { __typename?: 'UserType', id: string, firstName: string, lastName: string }, answers: Array<{ __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } }> }> | null } | null } | null };
+export type CreateFormMutation = { createForm: { ok: boolean | null, form: { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null }>, responses: Array<{ id: string | null, respondent: { id: string, firstName: string, lastName: string }, answers: Array<{ id: string | null, answer: string, question: { id: string } }> }> | null } | null } | null };
 
 export type UpdateFormMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
   formData: BaseFormInput;
 }>;
 
 
-export type UpdateFormMutation = { __typename?: 'Mutations', updateForm?: { __typename?: 'UpdateForm', ok?: boolean | null, form?: { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }>, responses?: Array<{ __typename?: 'ResponseType', id?: string | null, respondent: { __typename?: 'UserType', id: string, firstName: string, lastName: string }, answers: Array<{ __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } }> }> | null } | null } | null };
+export type UpdateFormMutation = { updateForm: { ok: boolean | null, form: { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null }>, responses: Array<{ id: string | null, respondent: { id: string, firstName: string, lastName: string }, answers: Array<{ id: string | null, answer: string, question: { id: string } }> }> | null } | null } | null };
 
 export type CreateQuestionMutationVariables = Exact<{
-  formId: Scalars['ID']['input'];
+  formId: string | number;
   questionData: CreateQuestionInput;
 }>;
 
 
-export type CreateQuestionMutation = { __typename?: 'Mutations', createQuestion?: { __typename?: 'CreateQuestion', ok?: boolean | null, question?: { __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null } | null } | null };
+export type CreateQuestionMutation = { createQuestion: { ok: boolean | null, question: { id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null } | null } | null };
 
 export type UpdateQuestionMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
   questionData: BaseQuestionInput;
-  optionData?: InputMaybe<Array<OptionInput> | OptionInput>;
+  optionData?: Array<OptionInput> | OptionInput | null | undefined;
 }>;
 
 
-export type UpdateQuestionMutation = { __typename?: 'Mutations', createUpdateAndDeleteOptions?: { __typename?: 'CreateUpdateAndDeleteOptions', ok?: boolean | null } | null, updateQuestion?: { __typename?: 'UpdateQuestion', ok?: boolean | null, question?: { __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null } | null } | null };
+export type UpdateQuestionMutation = { createUpdateAndDeleteOptions: { ok: boolean | null } | null, updateQuestion: { ok: boolean | null, question: { id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null } | null } | null };
 
 export type DeleteQuestionMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type DeleteQuestionMutation = { __typename?: 'Mutations', deleteQuestion?: { __typename?: 'DeleteQuestion', deletedId?: string | null, ok?: boolean | null } | null };
+export type DeleteQuestionMutation = { deleteQuestion: { deletedId: string | null, ok: boolean | null } | null };
 
 export type SubmitAnswersMutationVariables = Exact<{
-  formId: Scalars['ID']['input'];
-  answersData?: InputMaybe<Array<AnswerInput> | AnswerInput>;
+  formId: string | number;
+  answersData?: Array<AnswerInput> | AnswerInput | null | undefined;
 }>;
 
 
-export type SubmitAnswersMutation = { __typename?: 'Mutations', submitAnswers?: { __typename?: 'SubmitOrUpdateAnswers', ok?: boolean | null, message?: string | null } | null };
+export type SubmitAnswersMutation = { submitAnswers: { ok: boolean | null, message: string | null } | null };
 
 export type FormWithAllResponsesQueryVariables = Exact<{
-  formId: Scalars['ID']['input'];
+  formId: string | number;
 }>;
 
 
-export type FormWithAllResponsesQuery = { __typename?: 'Queries', form?: { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }>, responses?: Array<{ __typename?: 'ResponseType', id?: string | null, respondent: { __typename?: 'UserType', id: string, firstName: string, lastName: string }, answers: Array<{ __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } }> }> | null } | null };
+export type FormWithAllResponsesQuery = { form: { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null }>, responses: Array<{ id: string | null, respondent: { id: string, firstName: string, lastName: string }, answers: Array<{ id: string | null, answer: string, question: { id: string } }> }> | null } | null };
 
 export type FormWithAnswersQueryVariables = Exact<{
-  formId: Scalars['ID']['input'];
+  formId: string | number;
 }>;
 
 
-export type FormWithAnswersQuery = { __typename?: 'Queries', form?: { __typename?: 'FormType', id: string, name: string, description: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answer?: { __typename?: 'AnswerType', id?: string | null, answer: string } | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }> } | null };
+export type FormWithAnswersQuery = { form: { id: string, name: string, description: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answer: { id: string | null, answer: string } | null, options: Array<{ id: string, answer: string }> | null }> } | null };
 
-export type JanHusGuestListEntryFragment = { __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string };
+export type JanHusGuestListEntryFragment = { feideUserid: string, displayName: string };
 
-export type JanHusBookingFragment = { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null };
+export type JanHusBookingFragment = { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null };
 
-export type JanHusBookingRequestFragment = { __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanhusJanHusBookingStatusChoices } | null };
+export type JanHusBookingRequestFragment = { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, convertedBooking: { id: string, status: JanhusJanHusBookingStatusChoices } | null };
 
-export type JanHusBookingSettingsFragment = { __typename?: 'JanHusBookingSettingsType', id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean, externalBookingsEnabled: boolean };
+export type JanHusBookingSettingsFragment = { id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean, externalBookingsEnabled: boolean };
 
-export type JanHusAreaConfigurationFragment = { __typename?: 'JanHusAreaConfigurationType', id: string, area: JanhusJanHusAreaConfigurationAreaChoices, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number, defaultDepositAmount: number };
+export type JanHusAreaConfigurationFragment = { id: string, area: JanhusJanHusAreaConfigurationAreaChoices, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number, defaultDepositAmount: number };
 
-export type JanHusBookingLevelFragment = { __typename?: 'JanHusBookingLevelType', id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore?: number | null };
+export type JanHusBookingLevelFragment = { id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore: number | null };
 
 export type CreateJanhusBookingMutationVariables = Exact<{
   bookingData: JanHusBookingInput;
 }>;
 
 
-export type CreateJanhusBookingMutation = { __typename?: 'Mutations', createJanhusBooking?: { __typename?: 'CreateJanHusBooking', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null } | null } | null };
+export type CreateJanhusBookingMutation = { createJanhusBooking: { ok: boolean | null, booking: { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null } | null } | null };
 
 export type UpdateJanhusBookingMutationVariables = Exact<{
   bookingData: UpdateJanHusBookingInput;
 }>;
 
 
-export type UpdateJanhusBookingMutation = { __typename?: 'Mutations', updateJanhusBooking?: { __typename?: 'UpdateJanHusBooking', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null } | null } | null };
+export type UpdateJanhusBookingMutation = { updateJanhusBooking: { ok: boolean | null, booking: { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null } | null } | null };
 
 export type ReviewJanhusBookingMutationVariables = Exact<{
   reviewData: ReviewJanHusBookingInput;
 }>;
 
 
-export type ReviewJanhusBookingMutation = { __typename?: 'Mutations', reviewJanhusBooking?: { __typename?: 'ReviewJanHusBooking', ok?: boolean | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null } | null } | null };
+export type ReviewJanhusBookingMutation = { reviewJanhusBooking: { ok: boolean | null, booking: { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null } | null } | null };
 
 export type CreateJanhusBookingRequestMutationVariables = Exact<{
   requestData: JanHusBookingRequestInput;
 }>;
 
 
-export type CreateJanhusBookingRequestMutation = { __typename?: 'Mutations', createJanhusBookingRequest?: { __typename?: 'CreateJanHusBookingRequest', ok?: boolean | null, bookingRequest?: { __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanhusJanHusBookingStatusChoices } | null } | null } | null };
+export type CreateJanhusBookingRequestMutation = { createJanhusBookingRequest: { ok: boolean | null, bookingRequest: { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, convertedBooking: { id: string, status: JanhusJanHusBookingStatusChoices } | null } | null } | null };
 
 export type ReviewJanhusBookingRequestMutationVariables = Exact<{
   reviewData: ReviewJanHusBookingRequestInput;
 }>;
 
 
-export type ReviewJanhusBookingRequestMutation = { __typename?: 'Mutations', reviewJanhusBookingRequest?: { __typename?: 'ReviewJanHusBookingRequest', ok?: boolean | null, bookingRequest?: { __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanhusJanHusBookingStatusChoices } | null } | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null } | null } | null };
+export type ReviewJanhusBookingRequestMutation = { reviewJanhusBookingRequest: { ok: boolean | null, bookingRequest: { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, convertedBooking: { id: string, status: JanhusJanHusBookingStatusChoices } | null } | null, booking: { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null } | null } | null };
 
 export type UpdateJanhusBookingSettingsMutationVariables = Exact<{
   settingsData: JanHusBookingSettingsInput;
 }>;
 
 
-export type UpdateJanhusBookingSettingsMutation = { __typename?: 'Mutations', updateJanhusBookingSettings?: { __typename?: 'UpdateJanHusBookingSettings', ok?: boolean | null, bookingSettings?: { __typename?: 'JanHusBookingSettingsType', id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean, externalBookingsEnabled: boolean } | null } | null };
+export type UpdateJanhusBookingSettingsMutation = { updateJanhusBookingSettings: { ok: boolean | null, bookingSettings: { id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean, externalBookingsEnabled: boolean } | null } | null };
 
 export type UpdateJanhusAreaConfigurationMutationVariables = Exact<{
   areaData: JanHusAreaConfigurationInput;
 }>;
 
 
-export type UpdateJanhusAreaConfigurationMutation = { __typename?: 'Mutations', updateJanhusAreaConfiguration?: { __typename?: 'UpdateJanHusAreaConfiguration', ok?: boolean | null, areaConfiguration?: { __typename?: 'JanHusAreaConfigurationType', id: string, area: JanhusJanHusAreaConfigurationAreaChoices, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number, defaultDepositAmount: number } | null } | null };
+export type UpdateJanhusAreaConfigurationMutation = { updateJanhusAreaConfiguration: { ok: boolean | null, areaConfiguration: { id: string, area: JanhusJanHusAreaConfigurationAreaChoices, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number, defaultDepositAmount: number } | null } | null };
 
 export type CreateJanhusPaymentProductMutationVariables = Exact<{
-  bookingId: Scalars['ID']['input'];
-  organizationId?: InputMaybe<Scalars['ID']['input']>;
+  bookingId: string | number;
+  organizationId?: string | number | null | undefined;
 }>;
 
 
-export type CreateJanhusPaymentProductMutation = { __typename?: 'Mutations', createJanhusPaymentProduct?: { __typename?: 'CreateJanHusPaymentProduct', ok?: boolean | null, productId?: string | null, booking?: { __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null } | null } | null };
+export type CreateJanhusPaymentProductMutation = { createJanhusPaymentProduct: { ok: boolean | null, productId: string | null, booking: { id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null } | null } | null };
 
 export type DeleteJanhusBookingMutationVariables = Exact<{
-  bookingId: Scalars['ID']['input'];
+  bookingId: string | number;
 }>;
 
 
-export type DeleteJanhusBookingMutation = { __typename?: 'Mutations', deleteJanhusBooking?: { __typename?: 'DeleteJanHusBooking', ok?: boolean | null } | null };
+export type DeleteJanhusBookingMutation = { deleteJanhusBooking: { ok: boolean | null } | null };
 
 export type DeleteJanhusBookingRequestMutationVariables = Exact<{
-  requestId: Scalars['ID']['input'];
+  requestId: string | number;
 }>;
 
 
-export type DeleteJanhusBookingRequestMutation = { __typename?: 'Mutations', deleteJanhusBookingRequest?: { __typename?: 'DeleteJanHusBookingRequest', ok?: boolean | null } | null };
+export type DeleteJanhusBookingRequestMutation = { deleteJanhusBookingRequest: { ok: boolean | null } | null };
 
 export type JanHusBookingsQueryVariables = Exact<{
-  startsAt?: InputMaybe<Scalars['DateTime']['input']>;
-  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
-  area?: InputMaybe<Scalars['String']['input']>;
+  startsAt?: string | null | undefined;
+  endsAt?: string | null | undefined;
+  area?: string | null | undefined;
 }>;
 
 
-export type JanHusBookingsQuery = { __typename?: 'Queries', janhusBookings?: Array<{ __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null }> | null };
+export type JanHusBookingsQuery = { janhusBookings: Array<{ id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null }> | null };
 
 export type JanHusMyBookingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type JanHusMyBookingsQuery = { __typename?: 'Queries', janhusMyBookings?: Array<{ __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null }> | null };
+export type JanHusMyBookingsQuery = { janhusMyBookings: Array<{ id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null }> | null };
 
 export type JanHusGuestSearchQueryVariables = Exact<{
-  bookingId: Scalars['ID']['input'];
-  query: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  bookingId: string | number;
+  query: string;
+  limit?: number | null | undefined;
 }>;
 
 
-export type JanHusGuestSearchQuery = { __typename?: 'Queries', janhusGuestSearch?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null };
+export type JanHusGuestSearchQuery = { janhusGuestSearch: Array<{ feideUserid: string, displayName: string }> | null };
 
 export type JanHusGuestSearchForRequestQueryVariables = Exact<{
-  query: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  query: string;
+  limit?: number | null | undefined;
 }>;
 
 
-export type JanHusGuestSearchForRequestQuery = { __typename?: 'Queries', janhusGuestSearchForRequest?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null };
+export type JanHusGuestSearchForRequestQuery = { janhusGuestSearchForRequest: Array<{ feideUserid: string, displayName: string }> | null };
 
 export type AdminJanHusBookingsQueryVariables = Exact<{
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: string | null | undefined;
 }>;
 
 
-export type AdminJanHusBookingsQuery = { __typename?: 'Queries', adminJanhusBookings?: Array<{ __typename?: 'JanHusBookingType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount?: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice?: number | null, durationMinutes?: number | null, createdAt: string, updatedAt: string, ownerUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, bookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, priority: number } | null, guestListEntries?: Array<{ __typename?: 'JanHusGuestListEntryType', feideUserid: string, displayName: string }> | null, vippsProduct?: { __typename?: 'ProductType', id: string, name: string, price: number } | null, vippsOrder?: { __typename?: 'OrderType', id: string, paymentStatus: PaymentStatus } | null }> | null };
+export type AdminJanHusBookingsQuery = { adminJanhusBookings: Array<{ id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingAreaChoices, status: JanhusJanHusBookingStatusChoices, isExternalBooking: boolean, bookerName: string, bookerEmail: string, bookerPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingEventTypeChoices, cleaningRequested: boolean, depositStatus: JanhusJanHusBookingDepositStatusChoices, depositAmount: number, outstandingDepositAmount: number | null, comment: string, adminComment: string, guestList: string, doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices, totalPrice: number | null, durationMinutes: number | null, createdAt: string, updatedAt: string, ownerUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, bookingLevel: { id: string, name: string, priority: number } | null, guestListEntries: Array<{ feideUserid: string, displayName: string }> | null, vippsProduct: { id: string, name: string, price: number } | null, vippsOrder: { id: string, paymentStatus: PaymentStatus } | null }> | null };
 
 export type JanHusBookingSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type JanHusBookingSettingsQuery = { __typename?: 'Queries', janhusBookingSettings?: { __typename?: 'JanHusBookingSettingsType', id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean, externalBookingsEnabled: boolean } | null };
+export type JanHusBookingSettingsQuery = { janhusBookingSettings: { id: string, minDurationMinutes: number, slotGranularityMinutes: number, openingHour: number, closingHour: number, bufferMinutes: number, organizationBookingOpensWeeksBefore: number, generalBookingOpensWeeksBefore: number, fallStartDate: string, fallEndDate: string, springStartDate: string, springEndDate: string, fallSemesterActive: boolean, springSemesterActive: boolean, externalBookingsEnabled: boolean } | null };
 
 export type JanHusAreaConfigurationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type JanHusAreaConfigurationsQuery = { __typename?: 'Queries', janhusAreaConfigurations?: Array<{ __typename?: 'JanHusAreaConfigurationType', id: string, area: JanhusJanHusAreaConfigurationAreaChoices, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number, defaultDepositAmount: number }> | null };
+export type JanHusAreaConfigurationsQuery = { janhusAreaConfigurations: Array<{ id: string, area: JanhusJanHusAreaConfigurationAreaChoices, internalPricePerHour: number, externalPricePerHour: number, cleaningFee: number, defaultDepositAmount: number }> | null };
 
 export type JanHusBookingLevelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type JanHusBookingLevelsQuery = { __typename?: 'Queries', janhusBookingLevels?: Array<{ __typename?: 'JanHusBookingLevelType', id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore?: number | null }> | null };
+export type JanHusBookingLevelsQuery = { janhusBookingLevels: Array<{ id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore: number | null }> | null };
 
 export type JanHusMyBookingLevelQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type JanHusMyBookingLevelQuery = { __typename?: 'Queries', janhusMyBookingLevel?: { __typename?: 'JanHusBookingLevelType', id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore?: number | null } | null };
+export type JanHusMyBookingLevelQuery = { janhusMyBookingLevel: { id: string, name: string, description: string, priority: number, canBookAnytime: boolean, canCreateProvisional: boolean, canCreateConfirmed: boolean, canOverrideLowerLevels: boolean, canEditOwnBookingsOnly: boolean, canEditAllBookings: boolean, bookingOpensWeeksBefore: number | null } | null };
 
 export type JanHusBookingRequestsQueryVariables = Exact<{
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: string | null | undefined;
 }>;
 
 
-export type JanHusBookingRequestsQuery = { __typename?: 'Queries', janhusBookingRequests?: Array<{ __typename?: 'JanHusBookingRequestType', id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser?: { __typename?: 'UserType', id: string, firstName: string, lastName: string } | null, ownerOrganization?: { __typename?: 'OrganizationType', id: string, name: string } | null, convertedBooking?: { __typename?: 'JanHusBookingType', id: string, status: JanhusJanHusBookingStatusChoices } | null }> | null };
+export type JanHusBookingRequestsQuery = { janhusBookingRequests: Array<{ id: string, startsAt: string, endsAt: string, area: JanhusJanHusBookingRequestAreaChoices, requesterName: string, requesterEmail: string, requesterPhone: string, responsibleName: string, responsibleEmail: string, responsiblePhone: string, eventType: JanhusJanHusBookingRequestEventTypeChoices, cleaningRequested: boolean, comment: string, guestList: string, status: JanhusJanHusBookingRequestStatusChoices, adminComment: string, createdAt: string, updatedAt: string, requesterUser: { id: string, firstName: string, lastName: string } | null, ownerOrganization: { id: string, name: string } | null, convertedBooking: { id: string, status: JanhusJanHusBookingStatusChoices } | null }> | null };
 
-export type ListingFragment = { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } };
+export type ListingFragment = { id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } };
 
-export type ListingOrganizationFragment = { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string };
+export type ListingOrganizationFragment = { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string };
 
-export type ListingWithFormIdFragment = { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, form?: { __typename?: 'FormType', id: string } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } };
+export type ListingWithFormIdFragment = { id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, form: { id: string } | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } };
 
-export type ListingWithFormFragment = { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, form?: { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }> } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } };
+export type ListingWithFormFragment = { id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, form: { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, options: Array<{ id: string, answer: string }> | null }> } | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } };
 
-export type ListingWithResponsesFragment = { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, form?: { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }>, responses?: Array<{ __typename?: 'ResponseType', id?: string | null, respondent: { __typename?: 'UserType', id: string, firstName: string, lastName: string }, answers: Array<{ __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } }> }> | null } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } };
+export type ListingWithResponsesFragment = { id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, form: { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null }>, responses: Array<{ id: string | null, respondent: { id: string, firstName: string, lastName: string }, answers: Array<{ id: string | null, answer: string, question: { id: string } }> }> | null } | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } };
 
 export type CreateListingMutationVariables = Exact<{
   input: CreateListingInput;
 }>;
 
 
-export type CreateListingMutation = { __typename?: 'Mutations', createListing?: { __typename?: 'CreateListing', ok?: boolean | null, listing?: { __typename?: 'ListingType', id: string, slug: string } | null } | null };
+export type CreateListingMutation = { createListing: { ok: boolean | null, listing: { id: string, slug: string } | null } | null };
 
 export type UpdateListingMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  input?: InputMaybe<BaseListingInput>;
+  id: string | number;
+  input?: BaseListingInput | null | undefined;
 }>;
 
 
-export type UpdateListingMutation = { __typename?: 'Mutations', updateListing?: { __typename?: 'UpdateListing', ok?: boolean | null, listing?: { __typename?: 'ListingType', id: string, slug: string } | null } | null };
+export type UpdateListingMutation = { updateListing: { ok: boolean | null, listing: { id: string, slug: string } | null } | null };
 
 export type DeleteListingMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type DeleteListingMutation = { __typename?: 'Mutations', deleteListing?: { __typename?: 'DeleteListing', listingId?: string | null, ok?: boolean | null } | null };
+export type DeleteListingMutation = { deleteListing: { listingId: string | null, ok: boolean | null } | null };
 
 export type ListingQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type ListingQuery = { __typename?: 'Queries', listing?: { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, form?: { __typename?: 'FormType', id: string } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } } | null };
+export type ListingQuery = { listing: { id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, form: { id: string } | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } } | null };
 
 export type ListingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListingsQuery = { __typename?: 'Queries', listings?: Array<{ __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } }> | null };
+export type ListingsQuery = { listings: Array<{ id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } }> | null };
 
 export type ListingWithFormQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type ListingWithFormQuery = { __typename?: 'Queries', listing?: { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, form?: { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }> } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } } | null };
+export type ListingWithFormQuery = { listing: { id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, form: { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, options: Array<{ id: string, answer: string }> | null }> } | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } } | null };
 
 export type ListingWithResponsesQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type ListingWithResponsesQuery = { __typename?: 'Queries', listing?: { __typename?: 'ListingType', id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl?: string | null, chips: Array<string>, readMoreUrl?: string | null, heroImageUrl?: string | null, form?: { __typename?: 'FormType', id: string, name: string, questions: Array<{ __typename?: 'QuestionType', id: string, question: string, description: string, questionType?: QuestionTypeEnum | null, mandatory: boolean, answers?: Array<{ __typename?: 'AnswerType', id?: string | null }> | null, options?: Array<{ __typename?: 'OptionType', id: string, answer: string }> | null }>, responses?: Array<{ __typename?: 'ResponseType', id?: string | null, respondent: { __typename?: 'UserType', id: string, firstName: string, lastName: string }, answers: Array<{ __typename?: 'AnswerType', id?: string | null, answer: string, question: { __typename?: 'QuestionType', id: string } }> }> | null } | null, organization: { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string } } | null };
+export type ListingWithResponsesQuery = { listing: { id: string, title: string, slug: string, description: string, startDatetime: string, deadline: string, endDatetime: string, applicationUrl: string | null, chips: Array<string>, readMoreUrl: string | null, heroImageUrl: string | null, form: { id: string, name: string, questions: Array<{ id: string, question: string, description: string, questionType: QuestionTypeEnum | null, mandatory: boolean, answers: Array<{ id: string | null }> | null, options: Array<{ id: string, answer: string }> | null }>, responses: Array<{ id: string | null, respondent: { id: string, firstName: string, lastName: string }, answers: Array<{ id: string | null, answer: string, question: { id: string } }> }> | null } | null, organization: { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string } } | null };
 
-export type NfcUserLiteFragment = { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string };
+export type NfcUserLiteFragment = { id: string, username: string, firstName: string, lastName: string };
 
-export type NfcCardLiteFragment = { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean };
+export type NfcCardLiteFragment = { id: string, uidHex: string, label: string, isEnabled: boolean };
 
-export type NfcCardAssignmentFragment = { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null };
+export type NfcCardAssignmentFragment = { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null };
 
-export type NfcCardFragment = { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null };
+export type NfcCardFragment = { id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment: { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null };
 
-export type NfcAccessGrantFragment = { __typename?: 'NfcAccessGrantType', id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, notes: string, hasAccessNow?: boolean | null, createdAt: string, updatedAt: string, booking?: { __typename?: 'AdminBookingType', id: string, checkIn: string, checkOut: string } | null, grantedToUser?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, grantedToCard?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null };
+export type NfcAccessGrantFragment = { id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, notes: string, hasAccessNow: boolean | null, createdAt: string, updatedAt: string, booking: { id: string, checkIn: string, checkOut: string } | null, grantedToUser: { id: string, username: string, firstName: string, lastName: string } | null, grantedToCard: { id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null };
 
-export type NfcAccessEventFragment = { __typename?: 'NfcAccessEventType', id: string, eventType: NfcNfcAccessEventEventTypeChoices, source: NfcNfcAccessEventSourceChoices, doorIdentifier: string, uidHexReported: string, occurredAt: string, notes: string, rawPayload: unknown, card?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean } | null, cardAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, permanentAccess: boolean, accessStart?: string | null, accessEnd?: string | null, revokedAt?: string | null } | null, resolvedUser?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null };
+export type NfcAccessEventFragment = { id: string, eventType: NfcNfcAccessEventEventTypeChoices, source: NfcNfcAccessEventSourceChoices, doorIdentifier: string, uidHexReported: string, occurredAt: string, notes: string, rawPayload: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean } | null, cardAssignment: { id: string, externalHolderName: string, permanentAccess: boolean, accessStart: string | null, accessEnd: string | null, revokedAt: string | null } | null, resolvedUser: { id: string, username: string, firstName: string, lastName: string } | null };
 
 export type UpsertNfcCardMutationVariables = Exact<{
   cardData: NfcCardInput;
 }>;
 
 
-export type UpsertNfcCardMutation = { __typename?: 'Mutations', upsertNfcCard?: { __typename?: 'UpsertNfcCard', ok: boolean, card?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null } | null } | null };
+export type UpsertNfcCardMutation = { upsertNfcCard: { ok: boolean, card: { id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment: { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null } | null } | null };
 
 export type AssignNfcCardMutationVariables = Exact<{
   assignmentData: AssignNfcCardInput;
 }>;
 
 
-export type AssignNfcCardMutation = { __typename?: 'Mutations', assignNfcCard?: { __typename?: 'AssignNfcCard', ok: boolean, assignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
+export type AssignNfcCardMutation = { assignNfcCard: { ok: boolean, assignment: { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type RevokeNfcAssignmentMutationVariables = Exact<{
   revokeData: RevokeNfcAssignmentInput;
 }>;
 
 
-export type RevokeNfcAssignmentMutation = { __typename?: 'Mutations', revokeNfcAssignment?: { __typename?: 'RevokeNfcAssignment', ok: boolean, assignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
+export type RevokeNfcAssignmentMutation = { revokeNfcAssignment: { ok: boolean, assignment: { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type CreateNfcAccessGrantMutationVariables = Exact<{
   grantData: CreateNfcAccessGrantInput;
 }>;
 
 
-export type CreateNfcAccessGrantMutation = { __typename?: 'Mutations', createNfcAccessGrant?: { __typename?: 'CreateNfcAccessGrant', ok: boolean, accessGrant?: { __typename?: 'NfcAccessGrantType', id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, notes: string, hasAccessNow?: boolean | null, createdAt: string, updatedAt: string, booking?: { __typename?: 'AdminBookingType', id: string, checkIn: string, checkOut: string } | null, grantedToUser?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, grantedToCard?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
+export type CreateNfcAccessGrantMutation = { createNfcAccessGrant: { ok: boolean, accessGrant: { id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, notes: string, hasAccessNow: boolean | null, createdAt: string, updatedAt: string, booking: { id: string, checkIn: string, checkOut: string } | null, grantedToUser: { id: string, username: string, firstName: string, lastName: string } | null, grantedToCard: { id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type RevokeNfcAccessGrantMutationVariables = Exact<{
   revokeData: RevokeNfcAccessGrantInput;
 }>;
 
 
-export type RevokeNfcAccessGrantMutation = { __typename?: 'Mutations', revokeNfcAccessGrant?: { __typename?: 'RevokeNfcAccessGrant', ok: boolean, accessGrant?: { __typename?: 'NfcAccessGrantType', id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, notes: string, hasAccessNow?: boolean | null, createdAt: string, updatedAt: string, booking?: { __typename?: 'AdminBookingType', id: string, checkIn: string, checkOut: string } | null, grantedToUser?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, grantedToCard?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
+export type RevokeNfcAccessGrantMutation = { revokeNfcAccessGrant: { ok: boolean, accessGrant: { id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, notes: string, hasAccessNow: boolean | null, createdAt: string, updatedAt: string, booking: { id: string, checkIn: string, checkOut: string } | null, grantedToUser: { id: string, username: string, firstName: string, lastName: string } | null, grantedToCard: { id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type LogNfcAccessEventMutationVariables = Exact<{
   eventData: LogNfcAccessEventInput;
 }>;
 
 
-export type LogNfcAccessEventMutation = { __typename?: 'Mutations', logNfcAccessEvent?: { __typename?: 'LogNfcAccessEvent', ok: boolean, event?: { __typename?: 'NfcAccessEventType', id: string, eventType: NfcNfcAccessEventEventTypeChoices, source: NfcNfcAccessEventSourceChoices, doorIdentifier: string, uidHexReported: string, occurredAt: string, notes: string, rawPayload: unknown, card?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean } | null, cardAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, permanentAccess: boolean, accessStart?: string | null, accessEnd?: string | null, revokedAt?: string | null } | null, resolvedUser?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
+export type LogNfcAccessEventMutation = { logNfcAccessEvent: { ok: boolean, event: { id: string, eventType: NfcNfcAccessEventEventTypeChoices, source: NfcNfcAccessEventSourceChoices, doorIdentifier: string, uidHexReported: string, occurredAt: string, notes: string, rawPayload: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean } | null, cardAssignment: { id: string, externalHolderName: string, permanentAccess: boolean, accessStart: string | null, accessEnd: string | null, revokedAt: string | null } | null, resolvedUser: { id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type NfcCardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NfcCardsQuery = { __typename?: 'Queries', nfcCards?: Array<{ __typename?: 'NfcCardType', id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null }> | null };
+export type NfcCardsQuery = { nfcCards: Array<{ id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment: { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null }> | null };
 
 export type NfcCardQueryVariables = Exact<{
-  uidHex: Scalars['String']['input'];
+  uidHex: string;
 }>;
 
 
-export type NfcCardQuery = { __typename?: 'Queries', nfcCard?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
+export type NfcCardQuery = { nfcCard: { id: string, uidHex: string, label: string, notes: string, isEnabled: boolean, createdAt: string, updatedAt: string, activeAssignment: { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null } | null };
 
 export type NfcCardAssignmentsQueryVariables = Exact<{
-  activeOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  activeOnly?: boolean | null | undefined;
 }>;
 
 
-export type NfcCardAssignmentsQuery = { __typename?: 'Queries', nfcCardAssignments?: Array<{ __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null }> | null };
+export type NfcCardAssignmentsQuery = { nfcCardAssignments: Array<{ id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null }> | null };
 
 export type MyNfcCardAssignmentQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyNfcCardAssignmentQuery = { __typename?: 'Queries', myNfcCardAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, assignedAt: string, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, revocationReason: string, hasAccessNow?: boolean | null, metadata: unknown, card: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean }, user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, assignedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null };
+export type MyNfcCardAssignmentQuery = { myNfcCardAssignment: { id: string, externalHolderName: string, assignedAt: string, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, revocationReason: string, hasAccessNow: boolean | null, metadata: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean }, user: { id: string, username: string, firstName: string, lastName: string } | null, assignedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null } | null };
 
 export type NfcAccessGrantsQueryVariables = Exact<{
-  activeOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  activeOnly?: boolean | null | undefined;
 }>;
 
 
-export type NfcAccessGrantsQuery = { __typename?: 'Queries', nfcAccessGrants?: Array<{ __typename?: 'NfcAccessGrantType', id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart?: string | null, accessEnd?: string | null, permanentAccess: boolean, revokedAt?: string | null, notes: string, hasAccessNow?: boolean | null, createdAt: string, updatedAt: string, booking?: { __typename?: 'AdminBookingType', id: string, checkIn: string, checkOut: string } | null, grantedToUser?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, grantedToCard?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null, revokedBy?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null }> | null };
+export type NfcAccessGrantsQuery = { nfcAccessGrants: Array<{ id: string, scope: NfcNfcAccessGrantScopeChoices, participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices, accessStart: string | null, accessEnd: string | null, permanentAccess: boolean, revokedAt: string | null, notes: string, hasAccessNow: boolean | null, createdAt: string, updatedAt: string, booking: { id: string, checkIn: string, checkOut: string } | null, grantedToUser: { id: string, username: string, firstName: string, lastName: string } | null, grantedToCard: { id: string, uidHex: string, label: string, isEnabled: boolean } | null, grantedBy: { id: string, username: string, firstName: string, lastName: string } | null, revokedBy: { id: string, username: string, firstName: string, lastName: string } | null }> | null };
 
 export type NfcAccessEventsQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  doorIdentifier?: InputMaybe<Scalars['String']['input']>;
+  limit?: number | null | undefined;
+  doorIdentifier?: string | null | undefined;
 }>;
 
 
-export type NfcAccessEventsQuery = { __typename?: 'Queries', nfcAccessEvents?: Array<{ __typename?: 'NfcAccessEventType', id: string, eventType: NfcNfcAccessEventEventTypeChoices, source: NfcNfcAccessEventSourceChoices, doorIdentifier: string, uidHexReported: string, occurredAt: string, notes: string, rawPayload: unknown, card?: { __typename?: 'NfcCardType', id: string, uidHex: string, label: string, isEnabled: boolean } | null, cardAssignment?: { __typename?: 'NfcCardAssignmentType', id: string, externalHolderName: string, permanentAccess: boolean, accessStart?: string | null, accessEnd?: string | null, revokedAt?: string | null } | null, resolvedUser?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null }> | null };
+export type NfcAccessEventsQuery = { nfcAccessEvents: Array<{ id: string, eventType: NfcNfcAccessEventEventTypeChoices, source: NfcNfcAccessEventSourceChoices, doorIdentifier: string, uidHexReported: string, occurredAt: string, notes: string, rawPayload: unknown, card: { id: string, uidHex: string, label: string, isEnabled: boolean } | null, cardAssignment: { id: string, externalHolderName: string, permanentAccess: boolean, accessStart: string | null, accessEnd: string | null, revokedAt: string | null } | null, resolvedUser: { id: string, username: string, firstName: string, lastName: string } | null }> | null };
 
-export type AdminOrganizationFragment = { __typename?: 'OrganizationType', id: string, name: string, hrGroup?: { __typename?: 'ResponsibleGroupType', id: string, uuid: string } | null, primaryGroup?: { __typename?: 'ResponsibleGroupType', id: string, uuid: string } | null, events: Array<{ __typename?: 'EventType', id: string, title: string, startTime: string, shortDescription?: string | null, availableSlots?: number | null, isFull?: boolean | null, usersAttending?: Array<{ __typename?: 'SignUpType', id: string }> | null }>, listings?: Array<{ __typename?: 'ListingType', id: string, title: string, deadline: string }> | null };
+export type AdminOrganizationFragment = { id: string, name: string, hrGroup: { id: string, uuid: string } | null, primaryGroup: { id: string, uuid: string } | null, events: Array<{ id: string, title: string, startTime: string, shortDescription: string | null, availableSlots: number | null, isFull: boolean | null, usersAttending: Array<{ id: string }> | null }>, listings: Array<{ id: string, title: string, deadline: string }> | null };
 
-export type OrgAdminEventFragment = { __typename?: 'EventType', id: string, title: string, startTime: string, shortDescription?: string | null, availableSlots?: number | null, isFull?: boolean | null, usersAttending?: Array<{ __typename?: 'SignUpType', id: string }> | null };
+export type OrgAdminEventFragment = { id: string, title: string, startTime: string, shortDescription: string | null, availableSlots: number | null, isFull: boolean | null, usersAttending: Array<{ id: string }> | null };
 
-export type OrgAdminListingFragment = { __typename?: 'ListingType', id: string, title: string, deadline: string };
+export type OrgAdminListingFragment = { id: string, title: string, deadline: string };
 
-export type MembershipFragment = { __typename?: 'MembershipType', id: string, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string }, group?: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null };
+export type MembershipFragment = { id: string, user: { id: string, username: string, firstName: string, lastName: string }, group: { id: string, name: string, uuid: string } | null };
 
-export type MembershipWithOrganizationFragment = { __typename?: 'MembershipType', id: string, organization: { __typename?: 'OrganizationType', id: string, name: string }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string }, group?: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null };
+export type MembershipWithOrganizationFragment = { id: string, organization: { id: string, name: string }, user: { id: string, username: string, firstName: string, lastName: string }, group: { id: string, name: string, uuid: string } | null };
 
 export type UpsertMembershipMutationVariables = Exact<{
   membershipData: MembershipInput;
 }>;
 
 
-export type UpsertMembershipMutation = { __typename?: 'Mutations', upsertMembership?: { __typename?: 'UpsertMembership', ok?: boolean | null, membership?: { __typename?: 'MembershipType', id: string, organization: { __typename?: 'OrganizationType', id: string, name: string }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string }, group?: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null } | null } | null };
+export type UpsertMembershipMutation = { upsertMembership: { ok: boolean | null, membership: { id: string, organization: { id: string, name: string }, user: { id: string, username: string, firstName: string, lastName: string }, group: { id: string, name: string, uuid: string } | null } | null } | null };
 
 export type RemoveMembershipMutationVariables = Exact<{
-  membershipId: Scalars['ID']['input'];
+  membershipId: string | number;
 }>;
 
 
-export type RemoveMembershipMutation = { __typename?: 'Mutations', removeMembership?: { __typename?: 'RemoveMembership', ok?: boolean | null, removedMember?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string } | null } | null };
+export type RemoveMembershipMutation = { removeMembership: { ok: boolean | null, removedMember: { id: string, username: string, firstName: string, lastName: string } | null } | null };
 
 export type AdminOrganizationQueryVariables = Exact<{
-  orgId: Scalars['ID']['input'];
+  orgId: string | number;
 }>;
 
 
-export type AdminOrganizationQuery = { __typename?: 'Queries', organization?: { __typename?: 'OrganizationType', id: string, name: string, hrGroup?: { __typename?: 'ResponsibleGroupType', id: string, uuid: string } | null, primaryGroup?: { __typename?: 'ResponsibleGroupType', id: string, uuid: string } | null, events: Array<{ __typename?: 'EventType', id: string, title: string, startTime: string, shortDescription?: string | null, availableSlots?: number | null, isFull?: boolean | null, usersAttending?: Array<{ __typename?: 'SignUpType', id: string }> | null }>, listings?: Array<{ __typename?: 'ListingType', id: string, title: string, deadline: string }> | null } | null };
+export type AdminOrganizationQuery = { organization: { id: string, name: string, hrGroup: { id: string, uuid: string } | null, primaryGroup: { id: string, uuid: string } | null, events: Array<{ id: string, title: string, startTime: string, shortDescription: string | null, availableSlots: number | null, isFull: boolean | null, usersAttending: Array<{ id: string }> | null }>, listings: Array<{ id: string, title: string, deadline: string }> | null } | null };
 
 export type MembershipsQueryVariables = Exact<{
-  organizationId: Scalars['ID']['input'];
+  organizationId: string | number;
 }>;
 
 
-export type MembershipsQuery = { __typename?: 'Queries', memberships?: Array<{ __typename?: 'MembershipType', id: string, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string }, group?: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null }> | null };
+export type MembershipsQuery = { memberships: Array<{ id: string, user: { id: string, username: string, firstName: string, lastName: string }, group: { id: string, name: string, uuid: string } | null }> | null };
 
 export type AllOrganizationsForAdminEditQueryVariables = Exact<{
-  search?: InputMaybe<Scalars['String']['input']>;
+  search?: string | null | undefined;
 }>;
 
 
-export type AllOrganizationsForAdminEditQuery = { __typename?: 'Queries', allOrganizations?: Array<{ __typename?: 'OrganizationType', id: string, name: string, slug: string, primaryGroup?: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null, hrGroup?: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null, permissionGroups?: Array<{ __typename?: 'ResponsibleGroupType', id: string, uuid: string, name: string, groupType: string }> | null }> | null };
+export type AllOrganizationsForAdminEditQuery = { allOrganizations: Array<{ id: string, name: string, slug: string, primaryGroup: { id: string, name: string, uuid: string } | null, hrGroup: { id: string, name: string, uuid: string } | null, permissionGroups: Array<{ id: string, uuid: string, name: string, groupType: string }> | null }> | null };
 
 export type HasPermissionQueryVariables = Exact<{
-  permission: Scalars['String']['input'];
+  permission: string;
 }>;
 
 
-export type HasPermissionQuery = { __typename?: 'Queries', hasPermission?: boolean | null };
+export type HasPermissionQuery = { hasPermission: boolean | null };
 
-export type UserFragment = { __typename?: 'UserType', id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear?: number | null, gradeYear?: number | null, allergies?: string | null, phoneNumber: string, firstLogin: boolean };
+export type UserFragment = { id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear: number | null, gradeYear: number | null, allergies: string | null, phoneNumber: string, firstLogin: boolean };
 
-export type UserWithEventsAndOrgsFragment = { __typename?: 'UserType', id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear?: number | null, gradeYear?: number | null, allergies?: string | null, phoneNumber: string, firstLogin: boolean, events?: Array<{ __typename?: 'EventType', id: string }> | null, organizations: Array<{ __typename?: 'OrganizationType', id: string, name: string }> };
+export type UserWithEventsAndOrgsFragment = { id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear: number | null, gradeYear: number | null, allergies: string | null, phoneNumber: string, firstLogin: boolean, events: Array<{ id: string }> | null, organizations: Array<{ id: string, name: string }> };
 
-export type UserToEditFragment = { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies?: string | null, email: string, graduationYear?: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear?: boolean | null, yearUpdatedAt?: string | null, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null };
+export type UserToEditFragment = { id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies: string | null, email: string, graduationYear: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear: boolean | null, yearUpdatedAt: string | null, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null };
 
-export type UserAdminEditFragment = { __typename?: 'UserType', feideUserid: string, gradeYear?: number | null, dateJoined: string, lastLogin?: string | null, id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies?: string | null, email: string, graduationYear?: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear?: boolean | null, yearUpdatedAt?: string | null, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null };
+export type UserAdminEditFragment = { feideUserid: string, gradeYear: number | null, dateJoined: string, lastLogin: string | null, id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies: string | null, email: string, graduationYear: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear: boolean | null, yearUpdatedAt: string | null, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null };
 
-export type UserNfcSearchFragment = { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null };
+export type UserNfcSearchFragment = { id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null };
 
-export type UserAdminSearchFragment = { __typename?: 'UserType', email: string, phoneNumber: string, allergies?: string | null, graduationYear?: number | null, gradeYear?: number | null, dateJoined: string, lastLogin?: string | null, feideUserid: string, id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null };
+export type UserAdminSearchFragment = { email: string, phoneNumber: string, allergies: string | null, graduationYear: number | null, gradeYear: number | null, dateJoined: string, lastLogin: string | null, feideUserid: string, id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null };
 
-export type UserOrganizationFragment = { __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string };
+export type UserOrganizationFragment = { id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LogoutMutation = { __typename?: 'Mutations', logout?: { __typename?: 'Logout', idToken?: string | null } | null };
+export type LogoutMutation = { logout: { idToken: string | null } | null };
 
 export type AuthUserMutationVariables = Exact<{
-  code: Scalars['String']['input'];
+  code: string;
 }>;
 
 
-export type AuthUserMutation = { __typename?: 'Mutations', authUser: { __typename?: 'AuthUser', user: { __typename?: 'UserType', id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear?: number | null, gradeYear?: number | null, allergies?: string | null, phoneNumber: string, firstLogin: boolean } } };
+export type AuthUserMutation = { authUser: { user: { id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear: number | null, gradeYear: number | null, allergies: string | null, phoneNumber: string, firstLogin: boolean } } };
 
 export type UpdateUserMutationVariables = Exact<{
-  userData?: InputMaybe<UserInput>;
+  userData?: UserInput | null | undefined;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutations', updateUser?: { __typename?: 'UpdateUser', user?: { __typename?: 'UserType', id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear?: number | null, gradeYear?: number | null, allergies?: string | null, phoneNumber: string, firstLogin: boolean } | null } | null };
+export type UpdateUserMutation = { updateUser: { user: { id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear: number | null, gradeYear: number | null, allergies: string | null, phoneNumber: string, firstLogin: boolean } | null } | null };
 
 export type AdminUpdateUserMutationVariables = Exact<{
-  userId: Scalars['ID']['input'];
+  userId: string | number;
   userData: AdminUserInput;
 }>;
 
 
-export type AdminUpdateUserMutation = { __typename?: 'Mutations', adminUpdateUser?: { __typename?: 'AdminUpdateUser', user?: { __typename?: 'UserType', feideUserid: string, gradeYear?: number | null, dateJoined: string, lastLogin?: string | null, id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies?: string | null, email: string, graduationYear?: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear?: boolean | null, yearUpdatedAt?: string | null, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null } | null } | null };
+export type AdminUpdateUserMutation = { adminUpdateUser: { user: { feideUserid: string, gradeYear: number | null, dateJoined: string, lastLogin: string | null, id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies: string | null, email: string, graduationYear: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear: boolean | null, yearUpdatedAt: string | null, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null } | null } | null };
 
 export type AdminUpdateUserNfcMutationVariables = Exact<{
-  userId: Scalars['ID']['input'];
+  userId: string | number;
   nfcData: AdminUserNfcInput;
 }>;
 
 
-export type AdminUpdateUserNfcMutation = { __typename?: 'Mutations', adminUpdateUserNfc?: { __typename?: 'AdminUpdateUserNfc', user?: { __typename?: 'UserType', feideUserid: string, gradeYear?: number | null, dateJoined: string, lastLogin?: string | null, id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies?: string | null, email: string, graduationYear?: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear?: boolean | null, yearUpdatedAt?: string | null, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null } | null } | null };
+export type AdminUpdateUserNfcMutation = { adminUpdateUserNfc: { user: { feideUserid: string, gradeYear: number | null, dateJoined: string, lastLogin: string | null, id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies: string | null, email: string, graduationYear: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear: boolean | null, yearUpdatedAt: string | null, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null } | null } | null };
 
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQuery = { __typename?: 'Queries', user?: { __typename?: 'UserType', id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear?: number | null, gradeYear?: number | null, allergies?: string | null, phoneNumber: string, firstLogin: boolean } | null };
+export type UserQuery = { user: { id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear: number | null, gradeYear: number | null, allergies: string | null, phoneNumber: string, firstLogin: boolean } | null };
 
 export type UserWithEventsAndOrgsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserWithEventsAndOrgsQuery = { __typename?: 'Queries', user?: { __typename?: 'UserType', id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear?: number | null, gradeYear?: number | null, allergies?: string | null, phoneNumber: string, firstLogin: boolean, events?: Array<{ __typename?: 'EventType', id: string }> | null, organizations: Array<{ __typename?: 'OrganizationType', id: string, name: string }> } | null };
+export type UserWithEventsAndOrgsQuery = { user: { id: string, feideEmail: string, email: string, username: string, firstName: string, lastName: string, dateJoined: string, graduationYear: number | null, gradeYear: number | null, allergies: string | null, phoneNumber: string, firstLogin: boolean, events: Array<{ id: string }> | null, organizations: Array<{ id: string, name: string }> } | null };
 
 export type UserToEditQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserToEditQuery = { __typename?: 'Queries', user?: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies?: string | null, email: string, graduationYear?: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear?: boolean | null, yearUpdatedAt?: string | null, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null } | null };
+export type UserToEditQuery = { user: { id: string, username: string, firstName: string, lastName: string, phoneNumber: string, allergies: string | null, email: string, graduationYear: number | null, firstLogin: boolean, feideEmail: string, canUpdateYear: boolean | null, yearUpdatedAt: string | null, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null } | null };
 
 export type UserOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserOrganizationsQuery = { __typename?: 'Queries', user?: { __typename?: 'UserType', id: string, isIndok: boolean, organizations: Array<{ __typename?: 'OrganizationType', id: string, name: string, slug: string, logoUrl?: string | null, color?: string | null, description: string }> } | null };
+export type UserOrganizationsQuery = { user: { id: string, isIndok: boolean, organizations: Array<{ id: string, name: string, slug: string, logoUrl: string | null, color: string | null, description: string }> } | null };
 
 export type AdminEditCapabilitiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AdminEditCapabilitiesQuery = { __typename?: 'Queries', canManageUserProfiles: boolean, canManageUserNfc: boolean };
+export type AdminEditCapabilitiesQuery = { canManageUserProfiles: boolean, canManageUserNfc: boolean };
 
 export type NfcUserSearchQueryVariables = Exact<{
-  query: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  query: string;
+  limit?: number | null | undefined;
 }>;
 
 
-export type NfcUserSearchQuery = { __typename?: 'Queries', nfcUserSearch?: Array<{ __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null }> | null };
+export type NfcUserSearchQuery = { nfcUserSearch: Array<{ id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null }> | null };
 
 export type UserSearchQueryVariables = Exact<{
-  query: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  query: string;
+  limit?: number | null | undefined;
 }>;
 
 
-export type UserSearchQuery = { __typename?: 'Queries', userSearch?: Array<{ __typename?: 'UserType', email: string, phoneNumber: string, allergies?: string | null, graduationYear?: number | null, gradeYear?: number | null, dateJoined: string, lastLogin?: string | null, feideUserid: string, id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex?: string | null, nfcPinCode?: string | null, nfcPermanentAccess?: boolean | null }> | null };
+export type UserSearchQuery = { userSearch: Array<{ email: string, phoneNumber: string, allergies: string | null, graduationYear: number | null, gradeYear: number | null, dateJoined: string, lastLogin: string | null, feideUserid: string, id: string, username: string, firstName: string, lastName: string, feideEmail: string, nfcUidHex: string | null, nfcPinCode: string | null, nfcPermanentAccess: boolean | null }> | null };
 
 export type ServerTimeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ServerTimeQuery = { __typename?: 'Queries', serverTime?: string | null };
+export type ServerTimeQuery = { serverTime: string | null };
 
 export const DocumentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Document"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArchiveDocumentType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail"}},{"kind":"Field","name":{"kind":"Name","value":"typeDoc"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"webLink"}}]}}]} as unknown as DocumentNode<DocumentFragment, unknown>;
 export const CabinFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Cabin"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CabinType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"maxGuests"}},{"kind":"Field","name":{"kind":"Name","value":"internalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"externalPrice"}},{"kind":"Field","name":{"kind":"Name","value":"internalPriceWeekend"}},{"kind":"Field","name":{"kind":"Name","value":"externalPriceWeekend"}}]}}]} as unknown as DocumentNode<CabinFragment, unknown>;

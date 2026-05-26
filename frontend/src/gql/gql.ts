@@ -11,8 +11,19 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * 3. It does not support dead code elimination, so it will add unused operations.
  *
  * Therefore it is highly recommended to use the babel or swc plugin for production.
+ * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+    "\n  query LoggedInUser {\n    user {\n      id\n      firstName\n    }\n  }\n": typeof types.LoggedInUserDocument,
+    "\n  query UserWithId {\n    user {\n      id\n    }\n  }\n": typeof types.UserWithIdDocument,
+    "\n  query HasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n": typeof types.HasPermissionDocument,
+    "\n  mutation Logout {\n    logout {\n      idToken\n    }\n  }\n": typeof types.LogoutDocument,
+    "\n  query Profile {\n    user {\n      id\n      feideEmail\n      email\n      username\n      firstName\n      lastName\n      dateJoined\n      graduationYear\n      gradeYear\n      allergies\n      phoneNumber\n      firstLogin\n    }\n  }\n": typeof types.ProfileDocument,
+    "\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n": typeof types.CabinPermissionDocument,
+    "\n  query JanHusPermission {\n    hasPermission(permission: \"janhus.manage_booking\")\n  }\n": typeof types.JanHusPermissionDocument,
+    "\n  query ProfileAdminEditCapabilities {\n    canManageUserProfiles\n    canManageUserNfc\n  }\n": typeof types.ProfileAdminEditCapabilitiesDocument,
+};
+const documents: Documents = {
     "\n  query LoggedInUser {\n    user {\n      id\n      firstName\n    }\n  }\n": types.LoggedInUserDocument,
     "\n  query UserWithId {\n    user {\n      id\n    }\n  }\n": types.UserWithIdDocument,
     "\n  query HasPermission($permission: String!) {\n    hasPermission(permission: $permission)\n  }\n": types.HasPermissionDocument,

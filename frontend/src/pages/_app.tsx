@@ -1,5 +1,6 @@
 import { EmotionCache } from "@emotion/react";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
@@ -13,6 +14,8 @@ export interface CustomAppProps extends AppProps<PageProps> {
   Component: NextPageWithLayout;
   emotionCache?: EmotionCache;
 }
+
+const speedInsightsSampleRate = process.env.VERCEL_ENV === "production" ? 1 : 0.1;
 
 const App = (props: CustomAppProps): JSX.Element => {
   const { pageProps, err, Component, emotionCache } = props;
@@ -34,6 +37,7 @@ const App = (props: CustomAppProps): JSX.Element => {
         {getLayout(<Component {...pageProps} err={err} />)}
       </AppProvider>
       <Analytics />
+      <SpeedInsights sampleRate={speedInsightsSampleRate} />
     </>
   );
 };

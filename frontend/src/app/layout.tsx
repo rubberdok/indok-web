@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { Metadata } from "next";
 
@@ -9,6 +10,7 @@ import { AppBar } from "./components/Layout/AppBar";
 import { Footer } from "./components/Layout/Footer";
 
 const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URI ?? "https://www.indokntnu.no";
+const speedInsightsSampleRate = process.env.VERCEL_ENV === "production" ? 1 : 0.1;
 
 export const metadata: Metadata = {
   title: "Indøk NTNU | Janus Linjeforening",
@@ -37,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </ApolloWrapper>
         </ThemeRegistry>
         <Analytics mode={process.env.VERCEL_ENV === "production" ? "production" : "development"} />
+        <SpeedInsights sampleRate={speedInsightsSampleRate} />
       </body>
     </html>
   );

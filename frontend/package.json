@@ -38,6 +38,7 @@
     "@opentelemetry/sdk-trace-base": "^2.7.1",
     "@sentry/nextjs": "^10.53.1",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "dayjs": "^1.11.20",
     "deepmerge": "^4.3.1",
     "graphql": "^16.14.0",
@@ -90,7 +91,7 @@
     "prettier": "^3.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
-    "webpack": "^5.107.1",
-    "wait-on": "^9.0.10"
+    "wait-on": "^9.0.10",
+    "webpack": "^5.107.1"
   }
 }
