@@ -560,7 +560,7 @@ export default function AdminEditPage() {
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Typography variant="h4">Generell bruker og Organisasjon administasjon</Typography>
+      <Typography variant="h4">Generell bruker og Forening/Organisasjon administasjon</Typography>
       <Alert severity="info">
         {canManageProfiles
           ? "Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon. "
@@ -805,12 +805,12 @@ export default function AdminEditPage() {
         <Card>
           <CardContent>
             <Stack spacing={2}>
-              <Typography variant="h6">Organisasjoner og roller</Typography>
+              <Typography variant="h6">Foreninger/Organisasjoner og roller</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    label="Søk organisasjon"
+                    label="Søk forening/organisasjon"
                     value={orgSearch}
                     onChange={(e) => setOrgSearch(e.target.value)}
                   />
@@ -819,7 +819,7 @@ export default function AdminEditPage() {
                   <TextField
                     select
                     fullWidth
-                    label="Velg organisasjon"
+                    label="Velg forening/organisasjon"
                     value={selectedOrgId}
                     onChange={(e) => setSelectedOrgId(e.target.value)}
                   >
@@ -833,7 +833,7 @@ export default function AdminEditPage() {
               </Grid>
 
               {loadingOrgs && <CircularProgress size={24} />}
-              {orgError && <Alert severity="error">Kunne ikke hente organisasjoner.</Alert>}
+              {orgError && <Alert severity="error">Kunne ikke hente foreninger/organisasjoner.</Alert>}
 
               {selectedOrg && (
                 <Stack spacing={2}>
@@ -895,7 +895,7 @@ export default function AdminEditPage() {
                             disabled={!selectedMembership || removingMembership}
                             onClick={() => selectedMembership && void onRemoveMembership(selectedMembership.id)}
                           >
-                            Fjern valgt bruker fra organisasjon
+                            Fjern valgt bruker fra forening/organisasjon
                           </Button>
                         </Stack>
                       </Grid>

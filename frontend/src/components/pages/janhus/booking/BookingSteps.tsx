@@ -299,7 +299,7 @@ export const BookingSteps: React.FC<Props> = ({
               >
                 {canCreateNonExternalBooking ? <MenuItem value="PERSONAL">Personlig booking</MenuItem> : null}
                 {canCreateNonExternalBooking && organizations.length > 0 ? (
-                  <MenuItem value="ORGANIZATION">Booking på vegne av organisasjon</MenuItem>
+                  <MenuItem value="ORGANIZATION">Booking på vegne av forening</MenuItem>
                 ) : null}
                 {/* {externalBookingsEnabled || !isAuthenticated || !isIndokStudent ? (
                   <MenuItem value="EXTERNAL" disabled={!externalBookingsEnabled}>
@@ -316,10 +316,10 @@ export const BookingSteps: React.FC<Props> = ({
 
             {ownerType === "ORGANIZATION" ? (
               <FormControl>
-                <InputLabel>Organisasjon</InputLabel>
+                <InputLabel>Forening</InputLabel>
                 <Select
                   value={organizationId}
-                  label="Organisasjon"
+                  label="Forening"
                   onChange={(event) => onOrganizationChange(event.target.value)}
                 >
                   {organizations.map((organization) => (

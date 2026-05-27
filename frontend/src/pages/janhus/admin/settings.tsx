@@ -439,7 +439,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                     </Select>
                   </FormControl>
                   <TextField
-                    label="Organisasjoner åpner (uker før)"
+                    label="Forenings bookinger åpner (uker før):"
                     type="number"
                     value={settingsForm.organizationBookingOpensWeeksBefore}
                     onChange={(event) =>
@@ -450,7 +450,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                     }
                   />
                   <TextField
-                    label="Personlige bookinger åpner (uker før)"
+                    label="Personlige bookinger åpner (uker før):"
                     type="number"
                     value={settingsForm.generalBookingOpensWeeksBefore}
                     onChange={(event) =>

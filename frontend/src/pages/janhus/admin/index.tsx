@@ -94,7 +94,7 @@ const MANUAL_ENTRY_PREFIX = "manual:";
 
 const OWNER_TYPE_LABELS: Record<OwnerType, string> = {
   PERSONAL: "Personlig",
-  ORGANIZATION: "Organisasjon",
+  ORGANIZATION: "Forening",
   // EXTERNAL: "Ekstern",
 };
 
@@ -620,7 +620,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                       >
                         <MenuItem value="ALL">Alle</MenuItem>
                         <MenuItem value="PERSONAL">Personlig</MenuItem>
-                        <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
+                        <MenuItem value="ORGANIZATION">Forening</MenuItem>
                         <MenuItem value="EXTERNAL">Ekstern</MenuItem>
                       </Select>
                     </FormControl>
@@ -902,7 +902,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                       >
                         <MenuItem value="ALL">Alle</MenuItem>
                         <MenuItem value="PERSONAL">Personlig</MenuItem>
-                        <MenuItem value="ORGANIZATION">Organisasjon</MenuItem>
+                        <MenuItem value="ORGANIZATION">Forening</MenuItem>
                         <MenuItem value="EXTERNAL">Ekstern</MenuItem>
                       </Select>
                     </FormControl>

@@ -223,8 +223,8 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                       JanHus
                     </Typography>
                     <Typography color="text.secondary" variant="body2">
-                      Organisasjonsbookinger vises kun for organisasjonsledere i denne oversikten. Depositum for
-                      organisasjonsbookinger håndteres internt, uten direkte Vipps-betaling her.
+                      Foreningsbookinger vises kun for foreningssledere i denne oversikten. Depositum for
+                      foreningsbookinger håndteres internt, uten direkte Vipps-betaling her.
                     </Typography>
                   </Box>
 
@@ -312,7 +312,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                   </Typography>
 
                                   <Typography variant="body2" color="text.secondary">
-                                    Organisasjon: {booking.ownerOrganization?.name ?? "Ingen"}
+                                    Forening: {booking.ownerOrganization?.name ?? "Ingen"}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary">
                                     Arrangementstype: {EVENT_TYPE_LABELS[booking.eventType] ?? booking.eventType}
@@ -397,7 +397,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
 
                                   {isOrganizationBooking ? (
                                     <Alert severity="info">
-                                      Denne bookingen er gjort på vegne av organisasjon. Kostnad håndteres internt.
+                                      Denne bookingen er gjort på vegne av forening. Kostnad håndteres internt.
                                     </Alert>
                                   ) : null}
 
@@ -423,7 +423,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                   ) : (
                                     <Typography variant="body2" color="text.secondary">
                                       {isOrganizationBooking
-                                        ? "Ingen Vipps-betaling for organisasjonsbooking"
+                                        ? "Ingen Vipps-betaling for foreningsbooking"
                                         : "Ingen Vipps-forespørsel ennå"}
                                     </Typography>
                                   )}
