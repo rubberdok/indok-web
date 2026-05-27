@@ -9,7 +9,8 @@ import * as React from "react";
 const Anchor = styled("a")({});
 
 interface NextLinkComposedProps
-  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">,
+  extends
+    Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">,
     Omit<NextLinkProps, "href" | "as" | "legacyBehavior" | "passHref" | "onMouseEnter" | "onClick" | "onTouchStart"> {
   to: NextLinkProps["href"];
   linkAs?: NextLinkProps["as"];
