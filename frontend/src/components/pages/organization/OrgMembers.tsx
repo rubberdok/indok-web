@@ -205,7 +205,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
 
     try {
       await removeMembership({ variables: { membershipId } });
-      setFeedbackSuccess("Bruker fjernet fra organisasjonen.");
+      setFeedbackSuccess("Bruker fjernet fra foreningen/organisasjonen.");
       await refetch();
     } catch (err) {
       setFeedbackError(toErrorMessage(err, "Klarte ikke å fjerne bruker."));

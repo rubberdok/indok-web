@@ -1,23 +1,23 @@
 import { Grid, Typography } from "@mui/material";
 
-import Event from "~/public/illustrations/Event.svg";
+import Organization from "~/public/illustrations/Organization.svg";
 
 import { ProfileCardBase } from "./ProfileCardBase";
 
-export const OwnBookingsCard: React.VFC = ({ ...props }) => {
+export const JanHusAdminCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
-      title="Mine bookinger"
-      actionText="Se bookinger"
-      actionLink="/booking/own_bookings"
-      image={Event}
+      title="JanHus-admin"
+      actionText="Administrer JanHus"
+      actionLink="/janhus/admin"
+      image={Organization}
       alt=""
       {...props}
     >
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body2">
-            Se JanHus- og hyttebookinger samlet, og betal JanHus-bookinger med Vipps.
+            Administrer forespørsler, bookinger, prisgrunnlag og innstillinger for JanHus.
           </Typography>
         </Grid>
       </Grid>

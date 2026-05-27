@@ -493,7 +493,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     }
 
     if (ownerType === "ORGANIZATION" && !organizationId) {
-      setErrorMessage("Velg organisasjon for booking på vegne av organisasjon.");
+      setErrorMessage("Velg forening for booking på vegne av forening.");
       return false;
     }
 
