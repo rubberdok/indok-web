@@ -1,9 +1,9 @@
 import { EmotionCache } from "@emotion/react";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
-import { SpeedInsights } from "@/components/observability/SpeedInsights";
 import { Layout } from "@/layouts/Layout";
 import { PageProps } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
