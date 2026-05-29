@@ -13,9 +13,6 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
-import "./commands";
-
 Cypress.on("uncaught:exception", (err) => {
   const message = err?.message ?? "";
   console.log("Uncaught exception: %o", err);

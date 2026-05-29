@@ -15,8 +15,11 @@
     "generate": "graphql-codegen --config codegen.ts",
     "test": "cypress open",
     "test:headless": "cypress run",
+    "test:smoke": "cypress run --spec \"cypress/e2e/smoke/**/*.cy.ts\"",
+    "test:auth": "cypress run --env RUN_FEIDE_E2E=true --spec \"cypress/e2e/auth/**/*.cy.ts,cypress/e2e/profile/**/*.cy.ts\"",
     "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test",
-    "e2e:headless": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test:headless"
+    "e2e:headless": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test:headless",
+    "e2e:smoke": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test:smoke"
   },
   "repository": {
     "type": "git",
@@ -76,7 +79,7 @@
     "@types/validator": "^13.15.10",
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.4",
-    "cypress": "^15.15.0",
+    "cypress": "15.16.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.6",
     "eslint-config-prettier": "^10.1.8",
