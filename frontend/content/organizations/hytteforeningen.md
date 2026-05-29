@@ -30,7 +30,7 @@ board:
     title: Bookingansvarlig
   book2:
     name: Sander Haugen
-    phoneNumber: 905 81 561
+    phoneNumber: 905 82 561
     title: Bookingansvarlig
   log:
     name: Konrad Henry
