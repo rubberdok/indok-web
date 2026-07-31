@@ -5,8 +5,8 @@ logo: /static/cabins/logo.svg
 image: /img/hy1.jpg
 board:
   leder:
-    name: Jørgen Ekeland Bjurstrøm
-    phoneNumber: 901 19 460
+    name: Andreas Kolderup Eidsvig
+    phoneNumber: 465 15 125
     title: Leder
   øko_nestleder:
     name: Astrid Skrøvseth
@@ -21,8 +21,8 @@ board:
     phoneNumber: 955 25 788
     title: Driftsansvarlig
   drift2:
-    name: Andreas Kolderup Eidsvig
-    phoneNumber: 465 15 125
+    name: navn
+    phoneNumber: 12345678
     title: Driftsansvarlig
   book1:
     name: Magnus Thorstensen
