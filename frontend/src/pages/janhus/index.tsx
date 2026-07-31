@@ -24,7 +24,7 @@ const JanHusPage: NextPageWithLayout = () => {
       <Title
         title="JanHus"
         overline="Booking"
-        variant="dark"
+        variant="normal"
         breadcrumbs={[
           {
             name: "Hjem",

@@ -539,7 +539,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
       <Title
         title="Booking adminside"
         overline="Bookinger"
-        variant="dark"
+        variant="normal"
         breadcrumbs={[
           {
             name: "Hjem",
