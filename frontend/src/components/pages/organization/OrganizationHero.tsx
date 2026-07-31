@@ -19,7 +19,7 @@ export const OrganizationHero: React.FC<Props> = ({ organization, handleTabChang
         { href: "/orgs", name: "Foreninger" },
         { name: organization.name, href: `/orgs/${organization.id}` },
       ]}
-      variant="dark"
+      variant="normal"
     >
       <Tabs textColor="primary" indicatorColor="primary" onChange={handleTabChange} value={activeTab}>
         <Tab label="Arrangementer" />

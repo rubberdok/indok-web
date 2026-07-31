@@ -12,7 +12,7 @@ const SettingsPage: NextPageWithLayout = () => {
       <Title
         title="Innstillinger"
         overline="Bookinger"
-        variant="dark"
+        variant="normal"
         breadcrumbs={[
           {
             name: "Hjem",
