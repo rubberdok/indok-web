@@ -55,7 +55,7 @@ const programDays: ProgramDay[] = [
   {
     day: "Onsdag",
     date: "12. august",
-    guidance: "Oops, jeg kom feil + 'anything but a cup' (ta med alternativ drikkebeholder).",
+    guidance: "Oops, jeg kom feil + 'anything but a cup'.",
     events: [
       { time: "17:30", title: "Vors", location: "Faddergrupper" },
       { time: "19:00", title: "Oops, jeg kom feil + anything but a cup", location: "JanHus" },
@@ -82,7 +82,7 @@ const programDays: ProgramDay[] = [
   {
     day: "Lørdag",
     date: "15. august",
-    guidance: "Dobbeltlaken uten stretch er et pluss (til toga), samt sikkerhetsnåler.",
+    guidance: "Hvit laken uten stretch, samt sikkerhetsnåler.",
     events: [
       { time: "18:00", title: "Vors", location: "Faddergrupper" },
       { time: "20:00", title: "Togafest", location: "Samfundet" },
@@ -101,7 +101,7 @@ const programDays: ProgramDay[] = [
   {
     day: "Mandag",
     date: "17. august",
-    guidance: "Medisin / sykepleie / sykehus-tema.",
+    guidance: "Medisin-tema.",
     events: [
       { time: "17:00", title: "Vors – medisintema", location: "Faddergrupper" },
       { time: "20:00", title: "Janus x Placebo", location: "The King" },
