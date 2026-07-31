@@ -5,7 +5,6 @@ import {
   CardContent,
   Container,
   Divider,
-  Grid,
   List,
   ListItem,
   ListItemText,
@@ -163,7 +162,7 @@ const packingList: string[] = [
   "Hippie-klær (til hippie-hunt)",
   "Anything but a cup (alt som holder væske, men ikke et glass)",
   "Badetøy (til badstue og bading på Havet)",
-  "Laken til toga (kjøp tidlig – de blir fort utsolgt)",
+  "Laken til toga (kjøp tidlig, de blir fort utsolgt!)",
   "Legekostyme eller annet medisintema",
   "Treningstøy (til OL og showkamp)",
   "Monokromt antrekk (én farge fra topp til tå)",
@@ -175,40 +174,48 @@ const FadderukenePage: NextPageWithLayout = () => {
   return (
     <>
       <Title variant="normal" sx={{ textAlign: "center", py: 5 }}>
-        <Typography variant="h1" component="h1">
+        <Typography
+          variant="h1"
+          component="h1"
+          sx={{
+            fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4rem" },
+            lineHeight: 1.1,
+            overflowWrap: "anywhere",
+          }}
+        >
           Fadderukene
         </Typography>
       </Title>
 
       <Container maxWidth="lg" sx={{ pb: 10 }}>
-        <Stack spacing={4}>
-          <Card
-            elevation={0}
-            sx={{
-              border: "1px solid",
-              borderColor: "divider",
-            }}
-          >
-            <CardContent>
-              <Typography variant="h5" gutterBottom>
-                Velkommen til oppstart på INDØK! 🎉
+        <Stack spacing={{ xs: 3, md: 4 }}>
+          <Card sx={{ height: "100%" }}>
+            <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
+              <Typography variant="h5" gutterBottom sx={{ textAlign: { xs: "center", md: "left" } }}>
+                Velkommen til fadderukene på INDØK! 🎉
               </Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
+              <Typography variant="body1" sx={{ mb: 2, textAlign: { xs: "center", md: "left" } }}>
                 Vi i Janus linjeforening gleder oss stort til å møte dere og ta dere med på opplegget vi har laget for
                 dere. Her er litt praktisk informasjon om fadderukene som kan være nyttig å vite før avreise.
               </Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" sx={{ textAlign: { xs: "center", md: "left" } }}>
                 Verdt å tenke på: noen dager har temaer og opplegg som kan kreve litt ekstra bagasjeplass eller
                 idémyldring.
               </Typography>
 
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mt: 3 }}>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                sx={{ mt: 3 }}
+                alignItems={{ xs: "stretch", sm: "flex-start" }}
+              >
                 <Button
                   component="a"
                   href="https://www.ntnu.no/studier/mtiot/studiestart"
                   target="_blank"
                   rel="noopener noreferrer"
                   variant="contained"
+                  sx={{ width: { xs: "100%", sm: "auto" }, textAlign: "center" }}
                 >
                   Informasjon fra NTNU om studiestart
                 </Button>
@@ -218,109 +225,134 @@ const FadderukenePage: NextPageWithLayout = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   variant="contained"
+                  sx={{ width: { xs: "100%", sm: "auto" }, textAlign: "center" }}
                 >
-                  Følg @janus_linjeforening
+                  Følg @janus_linjeforening på Instagram
                 </Button>
               </Stack>
             </CardContent>
           </Card>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={7}>
-              <Card sx={{ height: "100%" }}>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    Programmet
-                  </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 3,
+              gridTemplateColumns: { xs: "1fr", md: "minmax(0, 7fr) minmax(0, 5fr)" },
+              alignItems: "stretch",
+            }}
+          >
+            <Card sx={{ height: "100%" }}>
+              <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
+                <Typography variant="h5" gutterBottom sx={{ textAlign: { xs: "center", md: "left" } }}>
+                  Programmet
+                </Typography>
 
-                  <Box
-                    sx={{
-                      textAlign: "center",
-                      borderRadius: 2,
-                      overflow: "hidden",
-                      border: "1px solid",
-                      borderColor: "divider",
-                    }}
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    border: "1px solid",
+                    borderColor: "divider",
+                  }}
+                >
+                  <Image
+                    src={PROGRAM_IMAGE_URL}
+                    alt="Fadderukene program"
+                    style={{ maxWidth: "100%", height: "auto", display: "block" }}
+                    width={1200}
+                    height={900}
+                  />
+                </Box>
+
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={1.5}
+                  sx={{ mt: 2 }}
+                  alignItems={{ xs: "stretch", sm: "flex-start" }}
+                >
+                  <Button
+                    component="a"
+                    href={PROGRAM_IMAGE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="contained"
+                    sx={{ width: { xs: "100%", sm: "auto" }, textAlign: "center" }}
                   >
-                    <Image
-                      src={PROGRAM_IMAGE_URL}
-                      alt="Fadderukene program"
-                      style={{ maxWidth: "100%", height: "auto", display: "block" }}
-                      width={1200}
-                      height={900}
-                    />
-                  </Box>
+                    Åpne programmet i ny fane
+                  </Button>
+                  <Button
+                    component="a"
+                    href={PROGRAM_IMAGE_URL}
+                    download
+                    variant="contained"
+                    sx={{ width: { xs: "100%", sm: "auto" }, textAlign: "center" }}
+                  >
+                    Last ned programmet
+                  </Button>
+                </Stack>
+              </CardContent>
+            </Card>
 
-                  <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} sx={{ mt: 2 }}>
-                    <Button
-                      component="a"
-                      href={PROGRAM_IMAGE_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      variant="outlined"
-                    >
-                      Åpne programmet i ny fane
-                    </Button>
-                    <Button component="a" href={PROGRAM_IMAGE_URL} download variant="contained">
-                      Last ned programmet
-                    </Button>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} md={5}>
-              <Card sx={{ height: "100%" }}>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    Pakkeliste
-                  </Typography>
-                  <List dense sx={{ pt: 0 }}>
-                    {packingList.map((item) => (
-                      <ListItem key={item} disableGutters>
-                        <ListItemText primary={`• ${item}`} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+            <Card sx={{ height: "100%" }}>
+              <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
+                <Typography variant="h5" gutterBottom sx={{ textAlign: { xs: "center", md: "left" } }}>
+                  Pakkeliste
+                </Typography>
+                <List dense sx={{ pt: 0 }}>
+                  {packingList.map((item) => (
+                    <ListItem key={item} disableGutters>
+                      <ListItemText primary={`• ${item}`} />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          </Box>
 
           <Box>
-            <Typography variant="h4" sx={{ mb: 2 }}>
+            <Typography variant="h4" sx={{ mb: 2, textAlign: { xs: "center", md: "left" } }}>
               Dag for dag program
             </Typography>
-            <Grid container spacing={2}>
+
+            <Box
+              sx={{
+                display: "grid",
+                gap: 2,
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  md: "repeat(2, minmax(0, 1fr))",
+                  lg: "repeat(3, minmax(0, 1fr))",
+                },
+              }}
+            >
               {programDays.map((day) => (
-                <Grid item xs={12} md={6} lg={4} key={`${day.day}-${day.date}`}>
-                  <Card sx={{ height: "100%" }}>
-                    <CardContent>
-                      <Typography variant="h6">
-                        {day.day} {day.date}
-                      </Typography>
+                <Card key={`${day.day}-${day.date}`} sx={{ height: "100%" }}>
+                  <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
+                    <Typography variant="h6">
+                      {day.day} {day.date}
+                    </Typography>
 
-                      <Typography variant="body2" sx={{ mt: 1, opacity: 0.85 }}>
-                        {day.guidance}
-                      </Typography>
+                    <Typography variant="body2" sx={{ mt: 1, opacity: 0.85 }}>
+                      {day.guidance}
+                    </Typography>
 
-                      <Divider sx={{ my: 1.5 }} />
+                    <Divider sx={{ my: 1.5 }} />
 
-                      <List dense disablePadding>
-                        {day.events.map((event, index) => (
-                          <ListItem key={`${day.day}-${day.date}-${event.title}-${index}`} disableGutters>
-                            <ListItemText
-                              primary={event.time ? `${event.time} · ${event.title}` : event.title}
-                              secondary={event.location}
-                            />
-                          </ListItem>
-                        ))}
-                      </List>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                    <List dense disablePadding>
+                      {day.events.map((event, index) => (
+                        <ListItem key={`${day.day}-${day.date}-${event.title}-${index}`} disableGutters>
+                          <ListItemText
+                            primary={event.time ? `${event.time} · ${event.title}` : event.title}
+                            secondary={event.location}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </CardContent>
+                </Card>
               ))}
-            </Grid>
+            </Box>
           </Box>
         </Stack>
       </Container>
