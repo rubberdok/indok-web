@@ -37,7 +37,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [createBooking] = useMutation(CreateBookingDocument);
   const [sendEmail] = useMutation(SendEmailDocument);
 
-  // Extra info from the user, sent to Janushyttene
+  // Extra info from the user, sent to Janus Eiendom
   const [extraInfo, setExtraInfo] = useState("");
 
   /**
@@ -102,8 +102,8 @@ const CabinBookingPage: NextPageWithLayout = () => {
   }
 
   /**
-   * Send the booking to Janushyttene and create a booking in the database.
-   * The booking is sent to Janushyttene and the user by email.
+   * Send the booking to Janus Eiendom and create a booking in the database.
+   * The booking is sent to Janus Eiendom and the user by email.
    *
    * @todo move the email sendout to the backend. It should absolutely not be done on the client like this :)
    */
