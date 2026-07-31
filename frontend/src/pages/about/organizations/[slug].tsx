@@ -22,7 +22,7 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
       <Title
         title={frontmatter.title}
         bgImage={frontmatter.image}
-        variant="dark"
+        variant="normal"
         ImageProps={{
           placeholder: "empty",
         }}

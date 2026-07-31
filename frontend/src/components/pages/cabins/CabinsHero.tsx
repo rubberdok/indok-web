@@ -7,7 +7,7 @@ export const CabinsHero: React.VFC = () => {
   return (
     <Title
       title="Hyttebooking"
-      variant="dark"
+      variant="normal"
       breadcrumbs={[
         { href: "/", name: "Hjem" },
         { href: "/booking", name: "Booking" },
