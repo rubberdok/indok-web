@@ -565,7 +565,7 @@ class EmailTestCase(CabinsBaseTestCase):
 
         # Verify that the subject of the first message is correct.
         self.assertTrue(
-            "Janushyttene har tatt stilling til søknaden din om booking av"
+            "Janus Eiendom har tatt stilling til søknaden din om booking av"
             in mail.outbox[0].subject
         )
 

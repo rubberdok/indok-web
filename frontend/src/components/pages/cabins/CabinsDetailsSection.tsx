@@ -39,18 +39,18 @@ export const CabinsDetailsSection: React.FC = () => {
               venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle bylivet. Indøks egne
               Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er en flott mulighet til både å
               bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre indøkere på tvers av
-              klassetrinnene. Janushyttene har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og
+              klassetrinnene. Janus Eiendom har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og
               organisering av utleie.
             </Typography>
             <Grid item>
               <Button
                 component={NextLinkComposed}
-                to="/about/organizations/hytteforeningen"
+                to="/about/organizations/januseiendom"
                 variant="outlined"
                 size="small"
                 fullWidth={false}
               >
-                Om Janushyttene
+                Om Janus Eiendom
               </Button>
             </Grid>
           </Grid>
