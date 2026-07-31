@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 import yup from "@/lib/validation";
-import Janus Eiendom from "~/public/static/cabins/logo.svg";
+import JanusEiendom from "~/public/static/cabins/logo.svg";
 
 import { useStepContext } from "../StepContext";
 
@@ -67,7 +67,7 @@ export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, startDate
         <Grid container maxWidth={(theme) => theme.breakpoints.values.sm}>
           <Box m={2}>
             <Box display="flex" justifyContent="center" alignItems="center">
-              <Image alt="Janus Eiendom" src={Janus Eiendom} width={300} height={165} />
+              <Image alt="Janus Eiendom" src={JanusEiendom} width={300} height={165} />
             </Box>
             <Typography variant="h2" align="center">
               Leiekontrakt
