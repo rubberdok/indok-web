@@ -173,7 +173,7 @@ const PROGRAM_IMAGE_URL = "/static/fadderukene/2026/Fadderuker%202026.PNG"; //en
 const FadderukenePage: NextPageWithLayout = () => {
   return (
     <>
-      <Title variant="normal" sx={{ textAlign: "center", py: 5 }}>
+      <Title sx={{ textAlign: "center", py: 5 }}>
         <Typography
           variant="h1"
           component="h1"

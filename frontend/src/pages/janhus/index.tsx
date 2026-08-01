@@ -24,7 +24,7 @@ const JanHusPage: NextPageWithLayout = () => {
       <Title
         title="JanHus"
         overline="Booking"
-        variant="normal"
+        variant="dark" //dette er for at eventuelt bilde vil gjøre teksten synlig, om det er relevant, ellers fjern denne linjen.
         breadcrumbs={[
           {
             name: "Hjem",
