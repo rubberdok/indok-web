@@ -34,7 +34,6 @@ const AdminPage: NextPageWithLayout = () => {
       <Title
         title="Booking adminside"
         overline="Bookinger"
-        variant="normal"
         breadcrumbs={[
           {
             name: "Hjem",

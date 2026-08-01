@@ -242,8 +242,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
     <>
       <Title
         title="Innstillinger"
-        overline="Bookinger"
-        variant="normal"
+        overline="JanHus Booking"
         breadcrumbs={[
           {
             name: "Hjem",

@@ -12,7 +12,6 @@ const BookingHubPage: NextPageWithLayout = () => {
       <Title
         title="Booking"
         overline=""
-        variant="normal"
         breadcrumbs={[
           {
             name: "Hjem",
