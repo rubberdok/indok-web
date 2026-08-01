@@ -35,7 +35,7 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 [![codecov](https://codecov.io/gh/rubberdok/indok-web/branch/main/graph/badge.svg?token=UO2NENP9Z8)](https://codecov.io/gh/rubberdok/indok-web)
 
-Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, Next.js, and a GraphQL API. Maintained by Rubberdøk NTNU.
+Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, Next.js, and a GraphQL API. Maintained by Rubberdøk Webkomité NTNU.
 
 ![Landing page](https://github.com/rubberdok/indok-web/blob/docs/assets/index-light.png#gh-light-mode-only)
 ![Landing page](https://github.com/rubberdok/indok-web/blob/docs/assets/index-dark.png#gh-dark-mode-only)
