@@ -1,5 +1,6 @@
 "use client";
 
+import { gql } from "@apollo/client";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
 import {
@@ -54,6 +55,18 @@ type AdminEditableUser = {
   nfcPinCode?: string | null;
   nfcPermanentAccess?: boolean | null;
 };
+
+type AdminEditNfcSettingsQuery = {
+  nfcAccepts4ByteUid?: boolean | null;
+  nfcAccepts7ByteUid?: boolean | null;
+};
+
+const AdminEditNfcSettingsDocument = gql`
+  query adminEditNfcSettings {
+    nfcAccepts4ByteUid
+    nfcAccepts7ByteUid
+  }
+`;
 
 function toErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof CombinedGraphQLErrors) {
@@ -119,6 +132,39 @@ export default function AdminEditPage() {
   const canManageNfc = Boolean(capabilityData?.canManageUserNfc);
   const hasAnyAccess = canManageProfiles || canManageNfc;
   const nfcOnlyMode = canManageNfc && !canManageProfiles;
+
+  const { data: nfcSettingsDataRaw } = useQuery(AdminEditNfcSettingsDocument, {
+    ssr: false,
+    skip: !isClientReady || !canManageNfc,
+  });
+
+  const nfcSettingsData = nfcSettingsDataRaw as AdminEditNfcSettingsQuery | undefined;
+  const accepts4ByteUid = nfcSettingsData?.nfcAccepts4ByteUid ?? false;
+  const accepts7ByteUid = nfcSettingsData?.nfcAccepts7ByteUid ?? true;
+
+  const acceptedUidLengths = useMemo(() => {
+    const lengths: number[] = [];
+    if (accepts4ByteUid) {
+      lengths.push(8);
+    }
+    if (accepts7ByteUid) {
+      lengths.push(14);
+    }
+    return lengths;
+  }, [accepts4ByteUid, accepts7ByteUid]);
+
+  const uidLengthRuleText = useMemo(() => {
+    if (accepts4ByteUid && accepts7ByteUid) {
+      return "UID må være 4 eller 7 bytes (8 eller 14 hex-tegn).";
+    }
+    if (accepts4ByteUid) {
+      return "UID må være nøyaktig 4 bytes (8 hex-tegn).";
+    }
+    if (accepts7ByteUid) {
+      return "UID må være nøyaktig 7 bytes (14 hex-tegn).";
+    }
+    return "UID-registrering er deaktivert fordi ingen UID-lengder er aktivert.";
+  }, [accepts4ByteUid, accepts7ByteUid]);
 
   useEffect(() => {
     setIsClientReady(true);
@@ -402,8 +448,8 @@ export default function AdminEditPage() {
     const hasExistingUid = Boolean(selectedUser.nfcUidHex);
     const pin = formData.nfcPinCode.trim();
 
-    if (hasNewUid && !/^[0-9A-F]{14}$/.test(normalizedNewUid)) {
-      return "UID må være nøyaktig 7 bytes (14 hex-tegn).";
+    if (hasNewUid && !acceptedUidLengths.includes(normalizedNewUid.length)) {
+      return uidLengthRuleText;
     }
 
     if (pin.length > 0 && !/^\d{4}$/.test(pin)) {
@@ -750,7 +796,7 @@ export default function AdminEditPage() {
                           setFormData((prev) => ({ ...prev, nfcUidHex: e.target.value }));
                         }}
                         placeholder="F.eks. 04A1B2C3D4E5F6"
-                        helperText="UID må være 7 bytes (14 hex-tegn). Separatorer ignoreres."
+                        helperText={`${uidLengthRuleText} Separatorer ignoreres.`}
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
