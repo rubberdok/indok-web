@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client/react";
 import { GetApp } from "@mui/icons-material";
 import { Box, Button, ButtonGroup, CircularProgress, Typography } from "@mui/material";
 import React from "react";
@@ -9,18 +9,18 @@ import { promptDownloadFromPayload } from "@/utils/exports";
 type Props = { eventId: string };
 
 export const AttendeeExport: React.FC<Props> = ({ eventId }) => {
-  const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(AttendeeReportDocument, {
-    onCompleted: (data) => {
-      if (data.attendeeReport) promptDownloadFromPayload(JSON.parse(data.attendeeReport));
-    },
-  });
+  const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(AttendeeReportDocument);
+
+  const downloadAttendeeReport = async (eventId: string, filetype: string) => {
+    const { data } = await getAttendeeReport({ variables: { eventId, filetype } });
+    if (data?.attendeeReport) {
+      promptDownloadFromPayload(JSON.parse(data.attendeeReport));
+    }
+  };
 
   const wrapDownloadButtonReport = (eventId: string, filetype: string) => {
     return (
-      <Button
-        startIcon={<GetApp fontSize="small" />}
-        onClick={() => getAttendeeReport({ variables: { eventId: eventId, filetype: filetype } })}
-      >
+      <Button startIcon={<GetApp fontSize="small" />} onClick={() => void downloadAttendeeReport(eventId, filetype)}>
         {filetype}
       </Button>
     );

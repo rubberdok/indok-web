@@ -40,7 +40,9 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         # Create some questions
         self.paragraph = QuestionFactory(form=self.form)
         self.not_mandatory = QuestionFactory(form=self.form, mandatory=False)
-        self.short_question = QuestionFactory(form=self.form, question_type="SHORT_ANSWER")
+        self.short_question = QuestionFactory(
+            form=self.form, question_type="SHORT_ANSWER"
+        )
         self.mcq = QuestionFactory(form=self.form, question_type="MULTIPLE_CHOICE")
         self.checkboxes = QuestionFactory(form=self.form, question_type="CHECKBOXES")
         self.dropdown = QuestionFactory(form=self.form, question_type="DROPDOWN")
@@ -54,7 +56,9 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         # Populate with some preexisting answers
         self.response = ResponseFactory(respondent=self.preexisting_user)
         self.answer = AnswerFactory(question=self.paragraph, response=self.response)
-        self.answer = AnswerFactory(question=self.short_question, response=self.response)
+        self.answer = AnswerFactory(
+            question=self.short_question, response=self.response
+        )
         self.answer = AnswerFactory(question=self.mcq, response=self.response)
         self.answer = AnswerFactory(question=self.checkboxes, response=self.response)
         self.answer = AnswerFactory(question=self.dropdown, response=self.response)
@@ -216,7 +220,9 @@ class FormsMutationTestCase(FormBaseTestCase):
         response = self.query(self.CREATE_QUESTION_MUTATION, user=self.authorized_user)
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
-        question: Optional[Question] = Question.objects.get(pk=data["createQuestion"]["question"]["id"])
+        question: Optional[Question] = Question.objects.get(
+            pk=data["createQuestion"]["question"]["id"]
+        )
 
         if question is None:
             self.assertIsNotNone(question)
@@ -266,7 +272,9 @@ class FormsMutationTestCase(FormBaseTestCase):
 
         response = self.query(query=query, user=self.authorized_user)
         self.assertResponseNoErrors(response)
-        options: list[dict[str, str]] = json.loads(response.content)["data"]["createUpdateAndDeleteOptions"]["options"]
+        options: list[dict[str, str]] = json.loads(response.content)["data"][
+            "createUpdateAndDeleteOptions"
+        ]["options"]
         self.deep_assert_equal(options, self.mcq.options.all())
 
     def test_authorized_update_options(self):
@@ -297,12 +305,16 @@ class FormsMutationTestCase(FormBaseTestCase):
         """
         response = self.query(query=query, user=self.authorized_user)
         self.assertResponseNoErrors(response)
-        options: list[dict[str, str]] = json.loads(response.content)["data"]["createUpdateAndDeleteOptions"]["options"]
+        options: list[dict[str, str]] = json.loads(response.content)["data"][
+            "createUpdateAndDeleteOptions"
+        ]["options"]
         self.deep_assert_equal(options, self.mcq.options.all())
 
 
 class FormResponseTestCase(FormBaseTestCase):
-    def submit_response_query(self, form: Union[FormFactory, Form], response: str = "Answer") -> str:
+    def submit_response_query(
+        self, form: Union[FormFactory, Form], response: str = "Answer"
+    ) -> str:
         return f"""
             mutation {{
                 submitAnswers(
@@ -344,7 +356,9 @@ class FormResponseTestCase(FormBaseTestCase):
         super().setUp()
         self.responding_student = IndokUserFactory()
         ListingFactory(
-            form=self.form, deadline=timezone.now() + timedelta(days=7), end_datetime=timezone.now() + timedelta(days=7)
+            form=self.form,
+            deadline=timezone.now() + timedelta(days=7),
+            end_datetime=timezone.now() + timedelta(days=7),
         )
 
     def test_answer_previously_unanswered_form(self) -> None:
@@ -419,7 +433,9 @@ class FormsQueryTestCase(FormBaseTestCase):
     """
 
     def test_unauthenticated_get_forms(self):
-        unauthorized_response = self.query(self.FORMS_WITH_RESPONSES, user=self.unauthorized_user)
+        unauthorized_response = self.query(
+            self.FORMS_WITH_RESPONSES, user=self.unauthorized_user
+        )
         data = json.loads(unauthorized_response.content)["data"]
         self.assert_null_fields(data, ["responses", "responders"])
 

@@ -1,11 +1,8 @@
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
 import { routes } from "./constants";
-
-// https://nextjs.org/docs/advanced-features/dynamic-import
-const Drawer = dynamic(() => import("./variants/Drawer").then((mod) => mod.Drawer));
-const Basic = dynamic(() => import("./variants/Basic").then((mod) => mod.Basic));
+import { Basic } from "./variants/Basic";
+import { Drawer } from "./variants/Drawer";
 
 /**
  * Navigation component for the app bar, switches between a navigation drawer and

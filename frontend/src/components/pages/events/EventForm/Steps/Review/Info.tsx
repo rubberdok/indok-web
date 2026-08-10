@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";

@@ -49,4 +49,6 @@ class Migration(migrations.Migration):
         ("users", "0012_user_is_indok"),
     ]
 
-    operations = [migrations.RunPython(assign_standard_permissions, migrations.RunPython.noop)]
+    operations = [
+        migrations.RunPython(assign_standard_permissions, migrations.RunPython.noop)
+    ]

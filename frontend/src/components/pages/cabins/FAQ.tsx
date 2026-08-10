@@ -88,8 +88,8 @@ const faqs = [
     question: "Hvor mye må jeg betale om jeg mister nøklene?",
     answer: (
       <Typography>
-        Den som er nøkkelansvarlig er ansvarlig for nøklene. Dersom disse går tapt vil Janushyttene fakturere den
-        nøkkelansvarlige et gebyr på 1000,-. Janushyttene tar ikke stilling til hvorvidt de andre gjestene bidrar til å
+        Den som er nøkkelansvarlig er ansvarlig for nøklene. Dersom disse går tapt vil Janus Eiendom fakturere den
+        nøkkelansvarlige et gebyr på 1000,-. Janus Eiendom tar ikke stilling til hvorvidt de andre gjestene bidrar til å
         dekke gebyret.
       </Typography>
     ),

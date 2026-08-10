@@ -1,0 +1,53 @@
+mutation upsertNfcCard($cardData: NfcCardInput!) {
+	upsertNfcCard(cardData: $cardData) {
+		ok
+		card {
+			...NfcCard
+		}
+	}
+}
+
+mutation assignNfcCard($assignmentData: AssignNfcCardInput!) {
+	assignNfcCard(assignmentData: $assignmentData) {
+		ok
+		assignment {
+			...NfcCardAssignment
+		}
+	}
+}
+
+mutation revokeNfcAssignment($revokeData: RevokeNfcAssignmentInput!) {
+	revokeNfcAssignment(revokeData: $revokeData) {
+		ok
+		assignment {
+			...NfcCardAssignment
+		}
+	}
+}
+
+mutation createNfcAccessGrant($grantData: CreateNfcAccessGrantInput!) {
+	createNfcAccessGrant(grantData: $grantData) {
+		ok
+		accessGrant {
+			...NfcAccessGrant
+		}
+	}
+}
+
+mutation revokeNfcAccessGrant($revokeData: RevokeNfcAccessGrantInput!) {
+	revokeNfcAccessGrant(revokeData: $revokeData) {
+		ok
+		accessGrant {
+			...NfcAccessGrant
+		}
+	}
+}
+
+mutation logNfcAccessEvent($eventData: LogNfcAccessEventInput!) {
+	logNfcAccessEvent(eventData: $eventData) {
+		ok
+		event {
+			...NfcAccessEvent
+		}
+	}
+}

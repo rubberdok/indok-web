@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Divider, Grid, Typography } from "@mui/material";
 
 import { CabinsDocument } from "@/generated/graphql";

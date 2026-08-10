@@ -34,18 +34,33 @@ def get_weekday_nights(check_in: date, check_out: date) -> int:
 
 
 def price(
-    cabins: QuerySet["Cabin"], check_in: date, check_out: date, internal_participants: int, external_participants: int
+    cabins: QuerySet["Cabin"],
+    check_in: date,
+    check_out: date,
+    internal_participants: int,
+    external_participants: int,
 ) -> int:
     if is_internal_price(internal_participants, external_participants):
-        weekday_price_pr_night = cabins.aggregate(models.Sum("internal_price"))["internal_price__sum"]
-        weekend_price_pr_night = cabins.aggregate(models.Sum("internal_price_weekend"))["internal_price_weekend__sum"]
+        weekday_price_pr_night = cabins.aggregate(models.Sum("internal_price"))[
+            "internal_price__sum"
+        ]
+        weekend_price_pr_night = cabins.aggregate(models.Sum("internal_price_weekend"))[
+            "internal_price_weekend__sum"
+        ]
     else:
-        weekday_price_pr_night = cabins.aggregate(models.Sum("external_price"))["external_price__sum"]
-        weekend_price_pr_night = cabins.aggregate(models.Sum("external_price_weekend"))["external_price_weekend__sum"]
+        weekday_price_pr_night = cabins.aggregate(models.Sum("external_price"))[
+            "external_price__sum"
+        ]
+        weekend_price_pr_night = cabins.aggregate(models.Sum("external_price_weekend"))[
+            "external_price_weekend__sum"
+        ]
     nights = number_of_nights(check_out, check_in)
     weekday_nights = get_weekday_nights(check_in, check_out)
     weekend_nights = nights - weekday_nights
-    return weekday_nights * weekday_price_pr_night + weekend_nights * weekend_price_pr_night
+    return (
+        weekday_nights * weekday_price_pr_night
+        + weekend_nights * weekend_price_pr_night
+    )
 
 
 def snake_case_to_camel_case(snake: str) -> str:

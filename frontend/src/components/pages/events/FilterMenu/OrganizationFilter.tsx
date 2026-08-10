@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Checkbox, Grid, Skeleton, Typography } from "@mui/material";
 import { range } from "lodash";
 import React from "react";

@@ -68,7 +68,9 @@ class DataportenAuth:
             # Raises exceptions upon HTTP errors
             response.raise_for_status()
         except requests.exceptions.RequestException:
-            raise RuntimeError("En feil oppstod under fullføring av Dataporten-autentisering.")
+            raise RuntimeError(
+                "En feil oppstod under fullføring av Dataporten-autentisering."
+            )
 
         return response.json()
 
@@ -137,7 +139,9 @@ class DataportenAuth:
             "Authorization": f"Bearer {access_token}",
         }
         try:
-            response = requests.get("https://auth.dataporten.no/openid/userinfo", headers=params)
+            response = requests.get(
+                "https://auth.dataporten.no/openid/userinfo", headers=params
+            )
             response.raise_for_status()
         except requests.exceptions.RequestException:
             raise Exception("Kunne ikke hente brukerinfo fra Dataporten.")
@@ -146,7 +150,8 @@ class DataportenAuth:
         feide_userid = data["sub"]
         first_name, last_name = data["name"].rsplit(" ", 1)
         username = next(
-            (id for id in data["dataporten-userid_sec"] if id.endswith("@ntnu.no")), data["dataporten-userid_sec"][0]
+            (id for id in data["dataporten-userid_sec"] if id.endswith("@ntnu.no")),
+            data["dataporten-userid_sec"][0],
         )
         username = username[username.index(":") + 1 : username.index("@")]
         email = data["email"]

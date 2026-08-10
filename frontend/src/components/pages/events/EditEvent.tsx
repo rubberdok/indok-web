@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { LinearProgress } from "@mui/material";
 
 import { AdminEventDocument, UpdateEventDocument } from "@/generated/graphql";

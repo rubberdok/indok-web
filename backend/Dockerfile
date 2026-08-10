@@ -1,5 +1,5 @@
 # pull official base image
-FROM --platform=linux/amd64 public.ecr.aws/docker/library/python:3.9-slim
+FROM public.ecr.aws/docker/library/python:3.9-slim
 
 # set work directory
 WORKDIR /usr/src/app
@@ -12,8 +12,8 @@ RUN apt-get update && \
     dos2unix
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # install dependencies
 RUN pip install --upgrade pip

@@ -17,7 +17,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="ResponsibleGroup",
             fields=[
-                ("uuid", models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
+                    ),
+                ),
                 ("name", models.CharField(max_length=250)),
                 (
                     "group",

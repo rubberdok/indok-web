@@ -62,6 +62,7 @@ export const getServerSideProps: GetServerSideProps<ResultOf<typeof EventsDocume
   });
 
   if (error) throw new Error(error.message);
+  if (!data) return { notFound: true };
 
   return addApolloState(client, {
     props: {

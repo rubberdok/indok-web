@@ -164,7 +164,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return addApolloState(client, {
     props: {
-      ...data,
+      ...(data ?? {}),
     },
   });
 };

@@ -226,7 +226,9 @@ class ListingMutationTestCase(ListingBaseTestCase):
 
         data = json.loads(response.content)["data"]
         listing_data = data["updateListing"]["listing"]
-        self.deep_assert_equal(listing_data, Listing.objects.get(pk=self.visible_listing.pk))
+        self.deep_assert_equal(
+            listing_data, Listing.objects.get(pk=self.visible_listing.pk)
+        )
 
     def test_authorized_delete_listing(self):
         response = self.query(self.delete_mutation, user=self.authorized_user)

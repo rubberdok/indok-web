@@ -4,7 +4,6 @@ import { CssBaseline } from "@mui/material";
 import {
   Experimental_CssVarsProvider as ThemeProvider,
   experimental_extendTheme as extendTheme,
-  getInitColorSchemeScript,
   responsiveFontSizes,
 } from "@mui/material/styles";
 
@@ -17,26 +16,18 @@ export default function ThemeRegistry({ children }: { children: React.ReactNode 
   const responsiveTheme = responsiveFontSizes(theme);
 
   return (
-    <>
-      {getInitColorSchemeScript({
-        defaultMode: "system",
-        colorSchemeStorageKey: "color-scheme",
-        modeStorageKey: "mode",
-        attribute: "data-color-scheme",
-      })}
-      <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
-        <ThemeProvider
-          theme={responsiveTheme}
-          defaultMode="system"
-          colorSchemeStorageKey="color-scheme"
-          modeStorageKey="mode"
-          attribute="data-color-scheme"
-        >
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
-      </NextAppDirEmotionCacheProvider>
-    </>
+    <NextAppDirEmotionCacheProvider options={{ key: "css" }}>
+      <ThemeProvider
+        theme={responsiveTheme}
+        defaultMode="system"
+        colorSchemeStorageKey="color-scheme"
+        modeStorageKey="mode"
+        attribute="data-color-scheme"
+      >
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </NextAppDirEmotionCacheProvider>
   );
 }

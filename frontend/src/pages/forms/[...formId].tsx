@@ -1,4 +1,5 @@
-import { ApolloError, useQuery } from "@apollo/client";
+import { toErrorLike } from "@apollo/client/errors";
+import { useQuery } from "@apollo/client/react";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Container } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -58,11 +59,12 @@ export const getServerSideProps: GetServerSideProps<{
       query: FormWithAnswersDocument,
       variables: { formId: id },
     });
+    const form = data?.form;
 
-    if (data.form) {
+    if (form) {
       return addApolloState(client, {
         props: {
-          form: data.form,
+          form,
         },
       });
     }
@@ -71,18 +73,17 @@ export const getServerSideProps: GetServerSideProps<{
       notFound: true,
     };
   } catch (err) {
-    if (err instanceof ApolloError) {
-      /**
-       * User is not logged in, redirect to login page.
-       */
-      if (err.message.includes("permissions")) {
-        return {
-          redirect: {
-            destination: generateFeideLoginUrl(ctx.resolvedUrl),
-            permanent: false,
-          },
-        };
-      }
+    const error = toErrorLike(err);
+    /**
+     * User is not logged in, redirect to login page.
+     */
+    if (error.message.includes("permissions")) {
+      return {
+        redirect: {
+          destination: generateFeideLoginUrl(ctx.resolvedUrl),
+          permanent: false,
+        },
+      };
     }
   }
   // Unknown error

@@ -54,11 +54,12 @@ export const AddToCalendar: React.FC<Props> = ({ title, start, end, location }) 
   const [fileUrl, setFileUrl] = useState("");
 
   useEffect(() => {
-    setFileUrl(createCalendarFile(title, start, end, location));
+    const nextFileUrl = createCalendarFile(title, start, end, location);
+    setFileUrl(nextFileUrl);
     return () => {
-      window.URL.revokeObjectURL(fileUrl);
+      window.URL.revokeObjectURL(nextFileUrl);
     };
-  }, []);
+  }, [title, start, end, location]);
 
   return (
     <Button

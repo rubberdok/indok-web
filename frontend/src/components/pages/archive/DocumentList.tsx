@@ -8,6 +8,8 @@ type Props = {
   documents?: ArchiveByTypesQuery["archiveByTypes"];
 };
 
+const ARCHIVE_THUMBNAIL_FALLBACK = "/img/januslogo.png";
+
 export const DocumentList: React.FC<Props> = ({ documents }) => {
   if (!documents?.length) return <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>;
 
@@ -26,8 +28,14 @@ export const DocumentList: React.FC<Props> = ({ documents }) => {
             <CardActionArea href={doc.webLink ?? ""} sx={{ height: "100%" }}>
               <CardMedia
                 component="img"
-                image={doc.thumbnail ?? ""}
+                image={doc.thumbnail ?? ARCHIVE_THUMBNAIL_FALLBACK}
                 height="150"
+                onError={(event) => {
+                  const image = event.currentTarget;
+                  if (!image.src.endsWith(ARCHIVE_THUMBNAIL_FALLBACK)) {
+                    image.src = ARCHIVE_THUMBNAIL_FALLBACK;
+                  }
+                }}
                 sx={{
                   objectPosition: "top",
                 }}

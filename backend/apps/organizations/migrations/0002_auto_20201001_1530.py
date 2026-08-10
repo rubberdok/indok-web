@@ -24,7 +24,9 @@ class Migration(migrations.Migration):
             model_name="organization",
             name="parent",
             field=models.ForeignKey(
-                null=True, on_delete=django.db.models.deletion.CASCADE, to="organizations.organization"
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="organizations.organization",
             ),
         ),
     ]

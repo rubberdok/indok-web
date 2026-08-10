@@ -25,11 +25,20 @@ class InitiateOrder(graphene.Mutation):
         quantity = graphene.Int()
 
     @login_required
-    def mutate(self, info, product_id, fallback_redirect: Optional[str] = None, quantity: int = 1):
+    def mutate(
+        self,
+        info,
+        product_id,
+        fallback_redirect: Optional[str] = None,
+        quantity: int = 1,
+    ):
         user = info.context.user
         # Check if user is allowed to buy the product
         product = Product.objects.get(pk=product_id)
-        if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
+        if (
+            product.related_object
+            and not product.related_object.is_user_allowed_to_buy_product(user)
+        ):
             raise PurchaseNotAllowedError("Du kan ikke kjøpe dette produktet.")
 
         # If any of the below fails, do not commit any DB transactions
@@ -71,7 +80,9 @@ class InitiateOrder(graphene.Mutation):
                 # Cancel previous attempt to avoid simultaneous payments
                 elif status_success and status == "INITIATE":
                     try:
-                        InitiateOrder.vipps_api.cancel_transaction(f"{order.id}-{order.payment_attempt}")
+                        InitiateOrder.vipps_api.cancel_transaction(
+                            f"{order.id}-{order.payment_attempt}"
+                        )
                     except HTTPError:
                         raise ValueError("Fullfør den pågående betalingen først.")
                     finally:
@@ -83,11 +94,18 @@ class InitiateOrder(graphene.Mutation):
                 order.save()
 
             except Order.DoesNotExist:
-                order = Order(product=product, user=user, quantity=quantity, total_price=product.price * quantity)
+                order = Order(
+                    product=product,
+                    user=user,
+                    quantity=quantity,
+                    total_price=product.price * quantity,
+                )
 
                 order.save()
 
-            redirect = InitiateOrder.vipps_api.initiate_payment(order, fallback_redirect)
+            redirect = InitiateOrder.vipps_api.initiate_payment(
+                order, fallback_redirect
+            )
 
         return InitiateOrder(redirect=redirect)
 
@@ -113,8 +131,10 @@ class AttemptCapturePayment(graphene.Mutation):
 
             if order.payment_status == Order.PaymentStatus.INITIATED:
                 # Update status according to Vipps payment details
-                status, status_success = AttemptCapturePayment.vipps_api.get_payment_status(
-                    f"{order.id}-{order.payment_attempt}"
+                status, status_success = (
+                    AttemptCapturePayment.vipps_api.get_payment_status(
+                        f"{order.id}-{order.payment_attempt}"
+                    )
                 )
 
                 if status_success and status == "RESERVE":
@@ -129,7 +149,9 @@ class AttemptCapturePayment(graphene.Mutation):
             # Capture payment if it is reserved
             if order.payment_status == Order.PaymentStatus.RESERVED:
                 try:
-                    AttemptCapturePayment.vipps_api.capture_payment(order, method="polling")
+                    AttemptCapturePayment.vipps_api.capture_payment(
+                        order, method="polling"
+                    )
                     order.payment_status = Order.PaymentStatus.CAPTURED
                     order.save()
                 except HTTPError:
@@ -157,7 +179,9 @@ class CreateProduct(graphene.Mutation):
     @staff_member_required
     def mutate(self, info, product_data):
         try:
-            organization = Organization.objects.get(id=product_data.get("organization_id"))
+            organization = Organization.objects.get(
+                id=product_data.get("organization_id")
+            )
         except Organization.DoesNotExist:
             raise ValueError("Ugyldig forening oppgitt")
 

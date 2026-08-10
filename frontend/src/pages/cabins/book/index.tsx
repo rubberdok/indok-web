@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
 import { useMemo, useState } from "react";
 
@@ -6,7 +6,7 @@ import { BookingSteps } from "@/components/pages/cabins/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cabins/booking/Steps/ContactInfo";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
@@ -37,7 +37,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [createBooking] = useMutation(CreateBookingDocument);
   const [sendEmail] = useMutation(SendEmailDocument);
 
-  // Extra info from the user, sent to Janushyttene
+  // Extra info from the user, sent to Janus Eiendom
   const [extraInfo, setExtraInfo] = useState("");
 
   /**
@@ -102,8 +102,8 @@ const CabinBookingPage: NextPageWithLayout = () => {
   }
 
   /**
-   * Send the booking to Janushyttene and create a booking in the database.
-   * The booking is sent to Janushyttene and the user by email.
+   * Send the booking to Janus Eiendom and create a booking in the database.
+   * The booking is sent to Janus Eiendom and the user by email.
    *
    * @todo move the email sendout to the backend. It should absolutely not be done on the client like this :)
    */
@@ -174,6 +174,10 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 };
 
-CabinBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
+CabinBookingPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default CabinBookingPage;

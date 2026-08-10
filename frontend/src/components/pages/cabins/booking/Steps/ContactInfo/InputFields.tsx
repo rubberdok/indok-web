@@ -16,7 +16,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { CabinFragment } from "@/generated/graphql";
-import * as yup from "@/lib/validation";
+import yup from "@/lib/validation";
 
 import { Stepper } from "../Stepper";
 

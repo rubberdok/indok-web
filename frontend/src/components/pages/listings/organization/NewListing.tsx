@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Container, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ListingForm } from "@/components/pages/listings/organization/ListingForm";
 import { CreateListingDocument, UserOrganizationsDocument } from "@/generated/graphql";
@@ -36,19 +36,20 @@ export const NewListing: React.FC<Props> = ({ defaultOrganizationId }) => {
    * Load the organizations to which the user belongs.
    * @todo Currently assumes the user belongs to an organization, which must be the case, yet this should allow for dynamically setting the default organization.
    */
-  const { loading, error, data } = useQuery(UserOrganizationsDocument, {
-    onCompleted: (data) => {
-      const user = data.user;
-      if (user) {
-        setListing({
-          ...listing,
-          organization:
-            user.organizations.find((organization) => organization.id === defaultOrganizationId) ||
-            user.organizations[0],
-        });
-      }
-    },
-  });
+  const { loading, error, data } = useQuery(UserOrganizationsDocument);
+
+  useEffect(() => {
+    const user = data?.user;
+    if (!user || listing.organization.id) {
+      return;
+    }
+
+    setListing((currentListing) => ({
+      ...currentListing,
+      organization:
+        user.organizations.find((organization) => organization.id === defaultOrganizationId) || user.organizations[0],
+    }));
+  }, [data?.user, defaultOrganizationId, listing.organization.id]);
 
   // Create the listing, navigate to the newly created listing upon completion.
   const [createListing] = useMutation(CreateListingDocument, {

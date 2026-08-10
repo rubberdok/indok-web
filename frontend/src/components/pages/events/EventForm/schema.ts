@@ -1,4 +1,4 @@
-import * as yup from "@/lib/validation";
+import yup from "@/lib/validation";
 
 type InfoSchema = {
   title: string;
@@ -89,7 +89,7 @@ export type IEventForm = {
   info: InfoSchema;
   timeAndPlace: TimeAndPlaceSchema;
   registration: RegistrationSchema;
-  review: Record<string, never> | undefined;
+  review?: Record<string, never>;
 };
 /**
  * Combined validation schema of the above schemas

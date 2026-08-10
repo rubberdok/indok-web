@@ -35,9 +35,9 @@ class VippsCallback(APIView):
             return Response()
 
         # Update payment status
-        status: Literal["RESERVED", "CANCELLED", "REJECTED", "RESERVE_FAILED"] = request.data.get(
-            "transactionInfo"
-        ).get("status")
+        status: Literal["RESERVED", "CANCELLED", "REJECTED", "RESERVE_FAILED"] = (
+            request.data.get("transactionInfo").get("status")
+        )
 
         was_initiated = order.payment_status == Order.PaymentStatus.INITIATED
         if was_initiated and payment_attempt == order.payment_attempt:

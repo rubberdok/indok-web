@@ -1,0 +1,35 @@
+query nfcCards {
+	nfcCards {
+		...NfcCard
+	}
+}
+
+query nfcCard($uidHex: String!) {
+	nfcCard(uidHex: $uidHex) {
+		...NfcCard
+	}
+}
+
+query nfcCardAssignments($activeOnly: Boolean) {
+	nfcCardAssignments(activeOnly: $activeOnly) {
+		...NfcCardAssignment
+	}
+}
+
+query myNfcCardAssignment {
+	myNfcCardAssignment {
+		...NfcCardAssignment
+	}
+}
+
+query nfcAccessGrants($activeOnly: Boolean) {
+	nfcAccessGrants(activeOnly: $activeOnly) {
+		...NfcAccessGrant
+	}
+}
+
+query nfcAccessEvents($limit: Int, $doorIdentifier: String) {
+	nfcAccessEvents(limit: $limit, doorIdentifier: $doorIdentifier) {
+		...NfcAccessEvent
+	}
+}

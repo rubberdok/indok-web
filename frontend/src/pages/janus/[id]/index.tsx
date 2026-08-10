@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Alert, Box, Link, Stack, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<{ product: ProductFragment }
     throw new Error(error.message);
   }
 
-  const product = data.product;
+  const product = data?.product;
 
   if (!product) {
     return {

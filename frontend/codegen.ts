@@ -23,6 +23,7 @@ const config: CodegenConfig = {
       Date: "string",
       DateTime: "string",
       Decimal: "number",
+      JSONString: "unknown",
       UUID: "string",
     },
   },

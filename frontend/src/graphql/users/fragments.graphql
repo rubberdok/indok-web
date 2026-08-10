@@ -37,4 +37,47 @@ fragment UserToEdit on UserType {
   feideEmail
   canUpdateYear
   yearUpdatedAt
+  nfcUidHex
+  nfcPinCode
+  nfcPermanentAccess
+}
+
+fragment UserAdminEdit on UserType {
+  ...UserToEdit
+  feideUserid
+  gradeYear
+  dateJoined
+  lastLogin
+}
+
+fragment UserNfcSearch on UserType {
+  id
+  username
+  firstName
+  lastName
+  feideEmail
+  nfcUidHex
+  nfcPinCode
+  nfcPermanentAccess
+}
+
+fragment UserAdminSearch on UserType {
+  ...UserNfcSearch
+  email
+  phoneNumber
+  allergies
+  graduationYear
+  gradeYear
+  dateJoined
+  lastLogin
+  feideUserid
+}
+
+fragment UserOrganization on OrganizationType {
+  id
+  name
+  slug
+  logoUrl
+  color
+  description
 }

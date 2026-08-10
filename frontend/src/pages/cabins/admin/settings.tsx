@@ -11,8 +11,7 @@ const SettingsPage: NextPageWithLayout = () => {
     <>
       <Title
         title="Innstillinger"
-        overline="Bookinger"
-        variant="dark"
+        overline="Hyttebooking"
         breadcrumbs={[
           {
             name: "Hjem",

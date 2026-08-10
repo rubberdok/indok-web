@@ -20,9 +20,12 @@ export const CalendarDay: React.VFC<Props> = ({
   isInRange,
   isFromDate,
 }) => {
+  const isSingleDate = Boolean(isFromDate && isToDate);
+
   const classes = clsx({
-    "booking-fromDate": !isHidden && isFromDate,
-    "booking-toDate": !isHidden && isToDate,
+    "booking-singleDate": !isHidden && isSingleDate,
+    "booking-fromDate": !isHidden && isFromDate && !isSingleDate,
+    "booking-toDate": !isHidden && isToDate && !isSingleDate,
     "booking-inSelectedRange": !isHidden && isInRange,
   });
 

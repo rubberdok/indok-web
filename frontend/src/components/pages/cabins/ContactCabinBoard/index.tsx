@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { MailOutline } from "@mui/icons-material";
 import { Link, Stack, Typography } from "@mui/material";
 import React from "react";

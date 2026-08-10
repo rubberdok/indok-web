@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Container, Grid } from "@mui/material";
 import { useRouter } from "next/router";
 
@@ -24,7 +24,6 @@ const AdminEventPage: NextPageWithLayout = () => {
           { href: "/", name: "Hjem" },
           { href: "/orgs", name: "Foreninger" },
         ]}
-        variant="dark"
       />
     );
   }
@@ -41,7 +40,6 @@ const AdminEventPage: NextPageWithLayout = () => {
             { href: `/orgs/${event.organization.id}`, name: event.organization.name },
             { name: event.title, href: `/orgs/${event.organization.id}/events/${event.id}` },
           ]}
-          variant="dark"
         />
         <Container>
           <Grid container direction="row" spacing={2} alignItems="flex-start">

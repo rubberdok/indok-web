@@ -180,7 +180,7 @@ the VSCode editor.
 4. Type `cd indok-web` to move into the new folder
 5. (optional, but extremely recommended) Set up the backend locally, to get linting, auto-complete and environment variables
    - Follow steps 1-9 under [Without Docker: Backend](#backend) below
-6. (optional, but extremely  recommended) Set up the frontend locally, to get pre-commit hooks, linting, auto-complete and
+6. (optional, but extremely recommended) Set up the frontend locally, to get pre-commit hooks, linting, auto-complete and
    environment variables
    - Follow steps 1-8 under [Without Docker: Frontend](#frontend) below
 7. Type `docker compose build` to build the project
@@ -251,12 +251,16 @@ If you still want to run Postgres without Docker, download and install it from h
    - If on Windows, install `pyenv-win` instead: https://github.com/pyenv-win/pyenv-win#installation
    - Type `pyenv --version` in a new terminal to check that it was installed correctly
 2. Type `pyenv install --list | grep " 3.9"` to get the list of available Python 3.9 versions
-   - If on Windows, type `pyenv install --list | findstr " 3.9"` instead
+
+- If on Windows, type `pyenv install --list | findstr " 3.9"` instead
+
 3. Type `pyenv install 3.9.X`, where `X` is the latest version found from the previous step
 4. Type `pyenv global 3.9.X`, where `X` is the same as the previous step
-   - If you do not want to use Python 3.9 globally, type `pyenv local 3.9.X` instead (make sure you are in the
-     `indok-web` folder when you do this)
-   - Type `python --version` to verify that it has been set to `3.9.X`
+
+- If you do not want to use Python 3.9 globally, type `pyenv local 3.9.X` instead (make sure you are in the
+  `indok-web` folder when you do this)
+- Type `python --version` to verify that it has been set to `3.9.X` (the website uses 3.9-slim in Docker, any 3.9 version should work locally)
+
 5. Type `cd indok-web` to move into the project folder (if you weren't already there)
 6. Type `python -m venv venv`
    - This sets up a Python virtual environment, to isolate this project from others
@@ -561,6 +565,7 @@ An outline of how a developer may work with this project:
   - Respond to any questions or concerns they may have with your Pull Request
   - If an automatic test fails, click `Details` on it to see what went wrong in the logs
   - Once your Pull Request is approved, and the tests pass, you can merge it - now your changes are live!
+
 ### Comprehenceive Api and Backend Models Guide
 
 #### Making a model (changes to the database)

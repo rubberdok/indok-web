@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { LandingListings, LandingPromo, LandingSection } from "./_components";
+import { LandingFadderukene, LandingListings, LandingPromo, LandingSection } from "./_components";
 import { LandingHero } from "./_components/LandingHero";
 
 export const metadata: Metadata = {
@@ -16,6 +16,7 @@ export default function HomePage() {
   return (
     <>
       <LandingHero />
+      <LandingFadderukene />
       <LandingSection />
       <LandingListings />
       <LandingPromo />

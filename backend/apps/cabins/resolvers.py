@@ -1,5 +1,11 @@
-from apps.cabins.models import Booking as BookingModel, Cabin, BookingResponsible, BookingSemester
+from apps.cabins.models import (
+    Booking as BookingModel,
+    Cabin,
+    BookingResponsible,
+    BookingSemester,
+)
 from decorators import permission_required
+from django.db.models import Q
 
 
 class CabinResolvers:
@@ -36,3 +42,14 @@ class CabinResolvers:
 
     def resolve_booking_semester(self, info):
         return BookingSemester.objects.first()
+
+    def resolve_my_cabin_bookings(self, info):
+        user = info.context.user
+        if not user or not user.is_authenticated:
+            return BookingModel.objects.none()
+
+        email_filters = Q(receiver_email__iexact=user.email)
+        if getattr(user, "feide_email", None):
+            email_filters |= Q(receiver_email__iexact=user.feide_email)
+
+        return BookingModel.objects.filter(email_filters).order_by("-check_in")

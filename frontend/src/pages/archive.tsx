@@ -127,7 +127,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   });
 
-  if (!permissionData.hasPermission) return { notFound: true };
+  if (!permissionData?.hasPermission) return { notFound: true };
 
   const { data, error } = await client.query({
     query: DocumentsDocument,

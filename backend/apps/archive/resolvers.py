@@ -25,5 +25,8 @@ class ArchiveDocumentResolvers:
     @permission_required("archive.view_archivedocument")
     def resolve_available_years(self, info):
         return (
-            ArchiveDocument.objects.distinct("year").exclude(year=None).values_list("year", flat=True).order_by("-year")
+            ArchiveDocument.objects.distinct("year")
+            .exclude(year=None)
+            .values_list("year", flat=True)
+            .order_by("-year")
         )

@@ -1,10 +1,10 @@
-import { ApolloError } from "@apollo/client";
+import type { ErrorLike } from "@apollo/client";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import React from "react";
 
 type Props = {
   handleErrorDialogClose: () => void;
-  error?: ApolloError;
+  error?: ErrorLike;
 };
 
 /** Displays the error message in a dialog. */

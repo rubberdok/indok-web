@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { CalendarToday, Class, CreditCard, Email, Label, Place } from "@mui/icons-material";
 import {
   Alert,
@@ -164,5 +164,5 @@ export const EventDetail: React.FC<Props> = ({ event }) => {
 };
 
 function formatDate(date: string) {
-  return dayjs(date).format("LLL");
+  return dayjs(date).tz("Europe/Oslo").format("LLL");
 }

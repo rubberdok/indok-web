@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Card, CardActionArea, CircularProgress, Container, Grid, Typography } from "@mui/material";
 
 import { Link } from "@/components";

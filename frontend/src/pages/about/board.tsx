@@ -10,61 +10,61 @@ const BoardPage: NextPageWithLayout = () => {
   const boardMembers: BoardMember[] = [
     {
       rank: 1,
-      name: "Kristoffer Grude",
+      name: "Jens Eggen Skaug",
       position: "Leder Hovedstyret",
       email: "leder@indokhs.no",
     },
     {
       rank: 2,
-      name: "Branny Lin",
+      name: "Herman Hytta Gunnarsen",
       position: "Leder Hovedstyret",
       email: "leder@indokhs.no",
     },
     {
       rank: 3,
-      name: "Markus Kile Søyland",
+      name: "Simen Petersson",
       position: "Finanssjef Hovedstyret",
       email: "finans@indokhs.no",
     },
     {
       rank: 4,
-      name: "Thomas Kallasten Pedersen",
+      name: "Kristina Vatnar Lie",
       position: "President Janus Sosial",
       email: "president@januslinjeforening.no",
     },
     {
       rank: 5,
-      name: "Aidan Stautland",
+      name: "Mina Lindebø Myrstøl",
       position: "Instituttstillitsvalg",
       email: "itv@iot.ntnu.no",
     },
     {
       rank: 6,
-      name: "Ida Harneshaug",
+      name: "Emmy Olsen",
       position: "Leder Bindeleddet",
       email: "leder@bindeleddet.no",
     },
     {
       rank: 7,
-      name: "Jens Skaug",
+      name: "Aidan Stautland",
       position: "Leder Janus IF",
       email: "if@indokhs.no",
     },
     {
       rank: 8,
-      name: "Live Krohg",
+      name: "Isak Dalseg Haseth",
       position: "Leder Janus Kultur",
       email: "kultur@indokhs.no",
     },
     {
       rank: 9,
-      name: "Brage Sømoen",
-      position: "Leder Janushyttene",
+      name: "Jørgen Ekeland Bjurstrøm",
+      position: "Leder Janus Eiendom",
       email: "leder@indokhyttene.no",
     },
     {
       rank: 10,
-      name: "Bjørn Borkamo",
+      name: "Elias Nibe Kvåle",
       position: "Leder ESTIEM",
       email: "leder@estiem.no",
     },
@@ -79,7 +79,7 @@ const BoardPage: NextPageWithLayout = () => {
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
-        Janus, Bindeleddet, ESTIEM, Janushyttene, Janus IF og Janus Kultur.
+        Janus, Bindeleddet, ESTIEM, Janus Eiendom, Janus IF og Janus Kultur.
       </Typography>
       <Typography variant="body1" paragraph>
         Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene,

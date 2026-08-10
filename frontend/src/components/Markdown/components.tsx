@@ -1,4 +1,4 @@
-import { Card, CardContent, Divider, List, ListItemText, ListItem as MuiListItem, Typography } from "@mui/material";
+import { Card, CardContent, Divider, List, ListItem as MuiListItem, Typography } from "@mui/material";
 import { listItemClasses } from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import { typographyClasses } from "@mui/material/Typography";
@@ -54,8 +54,9 @@ const H6: Components["h2"] = ({ children, id }) => {
   );
 };
 
-const Image: Components["img"] = (props) => {
-  return <img {...props} style={{ objectFit: "contain" }} width="100%" />;
+const Image: Components["img"] = ({ alt = "", ...props }) => {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img {...props} alt={alt} style={{ objectFit: "contain" }} width="100%" />;
 };
 
 const UnorderedList: Components["ul"] = ({ children }) => {
@@ -92,8 +93,14 @@ const OrderedList: Components["ol"] = ({ children }) => {
 
 const ListItem: Components["li"] = ({ children }) => {
   return (
-    <MuiListItem>
-      <ListItemText primary={children} />
+    <MuiListItem
+      sx={{
+        display: "list-item",
+        py: 0,
+        px: 0,
+      }}
+    >
+      {children}
     </MuiListItem>
   );
 };

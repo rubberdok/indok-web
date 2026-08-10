@@ -18,7 +18,7 @@ export const DateTimePicker: React.FC<Props> = ({ name, control, ...props }) => 
       render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}
-          value={dayjs(field.value).format("YYYY-MM-DDTHH:mm")}
+          value={dayjs(field.value).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm")}
           error={Boolean(error)}
           helperText={error?.message}
           fullWidth

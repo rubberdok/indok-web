@@ -22,10 +22,3 @@ query listingWithResponses($id: ID!) {
   }
 }
 
-query userOrganizations {
-  user {
-    organizations {
-      ...ListingOrganization
-    }
-  }
-}

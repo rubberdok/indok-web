@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { Button, Container } from "@mui/material";
 
 import { Link } from "@/components";

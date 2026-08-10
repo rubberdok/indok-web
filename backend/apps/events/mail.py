@@ -11,7 +11,9 @@ from .models import Event
 
 class EventEmail:
     @staticmethod
-    def send_event_emails(receiver_emails: Sequence[str], content: str, subject: str, event: Event) -> None:
+    def send_event_emails(
+        receiver_emails: Sequence[str], content: str, subject: str, event: Event
+    ) -> None:
         mail = TransactionalEmail(
             template_id="event-notifications",
             template_variables={},

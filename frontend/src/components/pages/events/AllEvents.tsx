@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Tune } from "@mui/icons-material";
 import { Box, Button, Drawer, Unstable_Grid2 as Grid, Skeleton, Stack, Typography } from "@mui/material";
@@ -83,23 +83,22 @@ export const AllEvents: React.FC = () => {
   }
 
   userRelevantEvents = filterEvents(userRelevantEvents, data?.user);
+  const now = dayjs().tz("Europe/Oslo");
+  const nextWeek = now.add(1, "week");
+  const twoWeeks = now.add(2, "week");
 
   const thisWeeksEvents = userRelevantEvents.filter((event) => {
-    const eventDate = dayjs(event.startTime);
-    const nextWeek = dayjs().add(1, "week");
+    const eventDate = dayjs(event.startTime).tz("Europe/Oslo");
     return eventDate.isBefore(nextWeek, "week");
   });
 
   const nextWeeksEvents = userRelevantEvents.filter((event) => {
-    const eventDate = dayjs(event.startTime);
-    const nextWeek = dayjs().add(1, "week");
-    const twoWeeks = dayjs().add(2, "week");
+    const eventDate = dayjs(event.startTime).tz("Europe/Oslo");
     return eventDate.isBetween(nextWeek, twoWeeks, "week", "[)");
   });
 
   const futureEvents = userRelevantEvents.filter((event) => {
-    const eventDate = dayjs(event.startTime);
-    const twoWeeks = dayjs().add(2, "week");
+    const eventDate = dayjs(event.startTime).tz("Europe/Oslo");
     return eventDate.isSameOrAfter(twoWeeks, "week");
   });
 

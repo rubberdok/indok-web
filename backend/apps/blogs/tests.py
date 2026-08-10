@@ -252,7 +252,9 @@ class BlogMutationTestCase(BlogBaseTestCase):
         try:
             BlogPost.objects.get(pk=self.blog_post_one.id)
             BlogPost.objects.get(pk=self.blog_post_two.id)
-            self.fail("Expected the blog posts in the deleted blog to also be deleted, but they were not.")
+            self.fail(
+                "Expected the blog posts in the deleted blog to also be deleted, but they were not."
+            )
         except BlogPost.DoesNotExist:
             pass
 
@@ -345,7 +347,9 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         response = self.query(self.create_mutation, user=self.authorized_user)
         self.assertResponseNoErrors(response)
 
-        blog_post_data = json.loads(response.content)["data"]["createBlogPost"]["blogPost"]
+        blog_post_data = json.loads(response.content)["data"]["createBlogPost"][
+            "blogPost"
+        ]
         blog_post = BlogPost.objects.get(pk=blog_post_data["id"])
         self.deep_assert_equal(blog_post_data, blog_post)
 
@@ -359,8 +363,12 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         response = self.query(self.update_mutation, user=self.authorized_user)
         self.assertResponseNoErrors(response)
 
-        updated_blog_post = json.loads(response.content)["data"]["updateBlogPost"]["blogPost"]
-        self.deep_assert_equal(updated_blog_post, BlogPost.objects.get(pk=self.blog_post_one.id))
+        updated_blog_post = json.loads(response.content)["data"]["updateBlogPost"][
+            "blogPost"
+        ]
+        self.deep_assert_equal(
+            updated_blog_post, BlogPost.objects.get(pk=self.blog_post_one.id)
+        )
 
     def test_unauthorized_delete_blog_post(self):
         response = self.query(self.delete_mutation)

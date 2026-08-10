@@ -17,6 +17,10 @@ FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="http://localhost:3000")
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "backend"]
 CORS_ALLOW_CREDENTIALS = True
 
-EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+EMAIL_BACKEND = env(
+    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
 AWS_SES_REGION_NAME = env("AWS_SES_REGION_NAME", default="eu-north-1")
-AWS_SES_REGION_ENDPOINT = env("AWS_SES_REGION_ENDPOINT", default="email.eu-north-1.amazonaws.com")
+AWS_SES_REGION_ENDPOINT = env(
+    "AWS_SES_REGION_ENDPOINT", default="email.eu-north-1.amazonaws.com"
+)

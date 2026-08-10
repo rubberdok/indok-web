@@ -7,6 +7,7 @@ import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 import Eventsjef from "~/public/img/JanusstyretsMedlemmer/Eventsjef.jpg";
+import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Faddersjef.jpg";
 import Festsjef from "~/public/img/JanusstyretsMedlemmer/Festsjef.jpg";
 import Hyttetursjef from "~/public/img/JanusstyretsMedlemmer/Hyttetursjef.jpg";
 import JanusScriptRedaktør from "~/public/img/JanusstyretsMedlemmer/JanusScriptRedaktør.jpg";
@@ -16,7 +17,6 @@ import President from "~/public/img/JanusstyretsMedlemmer/President.jpg";
 import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpg";
 import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
 import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpg";
-import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Faddersjef.jpg";
 const JanusPage: NextPageWithLayout = () => {
   const responsibles = [
     {

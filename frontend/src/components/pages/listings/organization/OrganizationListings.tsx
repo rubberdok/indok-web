@@ -44,7 +44,7 @@ export const OrganizationListings: React.FC<Props> = ({ organization }) => {
                 {organization.listings.map((listing) => (
                   <TableRow key={listing.id}>
                     <TableCell>{listing.title}</TableCell>
-                    <TableCell>{dayjs(listing.deadline).format("LLL")}</TableCell>
+                    <TableCell>{dayjs(listing.deadline).tz("Europe/Oslo").format("LLL")}</TableCell>
                     <TableCell size="small" align="right">
                       <Stack spacing={1} direction="row" justifyContent="flex-end">
                         <Button

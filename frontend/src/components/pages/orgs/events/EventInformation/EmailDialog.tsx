@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Close } from "@mui/icons-material";
 import {
@@ -17,7 +17,7 @@ import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { EventSignUpsDocument } from "@/generated/graphql";
-import * as yup from "@/lib/validation";
+import yup from "@/lib/validation";
 
 import { ConfirmationDialog } from "./ConfirmationDialog";
 

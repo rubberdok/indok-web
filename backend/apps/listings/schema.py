@@ -7,7 +7,9 @@ from .types import ListingType
 
 
 class ListingQueries(graphene.ObjectType, ListingResolvers):
-    listings = graphene.List(NonNull(ListingType), search=graphene.String(required=False))
+    listings = graphene.List(
+        NonNull(ListingType), search=graphene.String(required=False)
+    )
     listing = graphene.Field(ListingType, id=graphene.ID())
 
 
