@@ -119,8 +119,8 @@ const OrganizationPage: NextPageWithLayout<InferGetStaticPropsType<typeof getSta
           <CardContent>
             <Typography>
               Janus Kultur er paraplyforeningen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
-              Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon
-              (IVI).
+              Mannskoret Klingende Mynt, Kvinnekoret Ekho, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en
+              veldedig organisasjon veldedig organisasjon (IVI).
             </Typography>
           </CardContent>
         </Card>
