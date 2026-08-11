@@ -29,7 +29,7 @@ export type IUserForm = {
   allergies: string;
   graduationYear: number;
   phoneNumber: string;
-  nfcUidHex?: string;
+  nfcMifareCsn?: string;
   nfcPinCode?: string;
 };
 
@@ -45,10 +45,23 @@ export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
   phoneNumber: Yup.string()
     .matches(/^(0047|\+47|47)?[49]\d{7}$/, { message: "Må være et gyldig telefonnummer.", excludeEmptyString: true })
     .ensure(),
-  nfcUidHex: Yup.string()
-    .matches(/^[0-9a-fA-F\s:-]*$/, {
-      message: "UID kan kun inneholde hex-tegn (0-9, A-F) og skilletegn.",
+  nfcMifareCsn: Yup.string()
+    .matches(/^[0-9a-fA-F\s-]*$/, {
+      message: "Kortnummer kan kun inneholde sifre.",
       excludeEmptyString: true,
+    })
+    .test("nfc-card-number-or-hex", "Oppgi 10 sifre (mS på NTNU kortet ditt).", (value) => {
+      if (!value) {
+        return true;
+      }
+
+      const digitsOnly = value.replace(/\D/g, "");
+      if (/^\d{10}$/.test(digitsOnly)) {
+        return true;
+      }
+
+      const compactHex = value.replace(/[^0-9a-fA-F]/g, "");
+      return /^[0-9a-fA-F]{8}$/.test(compactHex);
     })
     .optional(),
   nfcPinCode: Yup.string()

@@ -13,8 +13,8 @@ from .models import (
 
 @admin.register(NfcCard)
 class NfcCardAdmin(admin.ModelAdmin):
-    list_display = ("uid_hex", "label", "is_enabled", "created_at", "updated_at")
-    search_fields = ("uid_hex", "label")
+    list_display = ("mifare_csn", "label", "is_enabled", "created_at", "updated_at")
+    search_fields = ("mifare_csn", "label")
 
 
 @admin.register(NfcCardAssignment)
@@ -28,7 +28,7 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
         "permanent_access",
         "revoked_at",
     )
-    search_fields = ("card__uid_hex", "user__username", "external_holder_name")
+    search_fields = ("card__mifare_csn", "user__username", "external_holder_name")
     list_filter = ("permanent_access", "revoked_at")
 
 
@@ -54,20 +54,16 @@ class NfcAccessEventAdmin(admin.ModelAdmin):
         "event_type",
         "source",
         "door_identifier",
-        "uid_hex_reported",
+        "mifare_csn_reported",
         "occurred_at",
     )
-    search_fields = ("door_identifier", "uid_hex_reported", "resolved_user__username")
+    search_fields = ("door_identifier", "mifare_csn_reported", "resolved_user__username")
     list_filter = ("event_type", "source")
 
 
 @admin.register(NfcSettings)
 class NfcSettingsAdmin(admin.ModelAdmin):
-    list_display = (
-        "allow_user_uid_self_service",
-        "allow_7_byte_uid",
-        "allow_4_byte_uid",
-    )
+    list_display = ("allow_user_mifare_csn_self_service",)
 
     def has_add_permission(self, request):
         return not NfcSettings.objects.exists()
@@ -79,9 +75,7 @@ class NfcSettingsAdmin(admin.ModelAdmin):
         settings_obj, _created = NfcSettings.objects.get_or_create(
             pk=NfcSettings.SINGLETON_PK,
             defaults={
-                "allow_user_uid_self_service": True,
-                "allow_7_byte_uid": True,
-                "allow_4_byte_uid": False,
+                "allow_user_mifare_csn_self_service": True,
             },
         )
         url = reverse("admin:nfc_nfcsettings_change", args=(settings_obj.pk,))

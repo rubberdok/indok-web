@@ -18,9 +18,14 @@ class NfcCardAssignmentModelTests(TestCase):
     def setUp(self):
         self.user = UserFactory()
 
+    def test_card_mifare_csn_input_is_converted_to_csn(self):
+        card = NfcCard.objects.create(mifare_csn="9B87BA1C")
+
+        self.assertEqual(card.mifare_csn, "0481986459")
+
     def test_one_active_assignment_per_user(self):
-        card1 = NfcCard.objects.create(uid_hex="04A1B2C3D4E5F6")
-        card2 = NfcCard.objects.create(uid_hex="04A1B2C3D4E5F7")
+        card1 = NfcCard.objects.create(mifare_csn="1234567890")
+        card2 = NfcCard.objects.create(mifare_csn="1234567891")
 
         assignment = NfcCardAssignment.objects.create(card=card1, user=self.user)
         assignment.revoke(reason="Card replaced")
@@ -32,7 +37,7 @@ class NfcCardAssignmentModelTests(TestCase):
         self.assertIsNotNone(replacement_assignment.pk)
 
     def test_external_holder_assignment_without_user(self):
-        card = NfcCard.objects.create(uid_hex="04A1B2C3D4E5F8")
+        card = NfcCard.objects.create(mifare_csn="1234567892")
         assignment = NfcCardAssignment.objects.create(
             card=card, external_holder_name="Guest Lecturer"
         )
@@ -62,9 +67,7 @@ class NfcSettingsModelTests(TestCase):
         self.assertEqual(second.pk, NfcSettings.SINGLETON_PK)
         self.assertEqual(NfcSettings.objects.count(), 1)
 
-    def test_default_values_are_yes_yes_no(self):
+    def test_default_values(self):
         settings_obj = get_or_create_nfc_settings()
 
-        self.assertTrue(settings_obj.allow_user_uid_self_service)
-        self.assertTrue(settings_obj.allow_7_byte_uid)
-        self.assertFalse(settings_obj.allow_4_byte_uid)
+        self.assertTrue(settings_obj.allow_user_mifare_csn_self_service)

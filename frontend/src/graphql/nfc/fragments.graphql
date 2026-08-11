@@ -7,7 +7,7 @@ fragment NfcUserLite on UserType {
 
 fragment NfcCardLite on NfcCardType {
 	id
-	uidHex
+	mifareCsn
 	label
 	isEnabled
 }
@@ -39,7 +39,7 @@ fragment NfcCardAssignment on NfcCardAssignmentType {
 
 fragment NfcCard on NfcCardType {
 	id
-	uidHex
+	mifareCsn
 	label
 	notes
 	isEnabled
@@ -86,7 +86,7 @@ fragment NfcAccessEvent on NfcAccessEventType {
 	eventType
 	source
 	doorIdentifier
-	uidHexReported
+	mifareCsnReported
 	occurredAt
 	notes
 	rawPayload

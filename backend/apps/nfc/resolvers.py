@@ -1,3 +1,5 @@
+from typing import Optional
+
 from decorators import login_required, permission_required
 
 from .models import (
@@ -5,19 +7,19 @@ from .models import (
     NfcAccessGrant,
     NfcCard,
     NfcCardAssignment,
-    normalize_uid_hex,
+    normalize_card_identifier,
 )
 
 
 class NfcResolvers:
     @permission_required("nfc.manage_nfc")
     def resolve_nfc_cards(self, info):
-        return NfcCard.objects.all().order_by("uid_hex")
+        return NfcCard.objects.all().order_by("mifare_csn")
 
     @permission_required("nfc.manage_nfc")
-    def resolve_nfc_card(self, info, uid_hex: str):
-        normalized_uid = normalize_uid_hex(uid_hex)
-        return NfcCard.objects.filter(uid_hex=normalized_uid).first()
+    def resolve_nfc_card(self, info, mifare_csn: str):
+        normalized_mifare_csn = normalize_card_identifier(mifare_csn)
+        return NfcCard.objects.filter(mifare_csn=normalized_mifare_csn).first()
 
     @permission_required("nfc.manage_nfc")
     def resolve_nfc_card_assignments(self, info, active_only: bool = True):
@@ -47,7 +49,7 @@ class NfcResolvers:
 
     @permission_required("nfc.manage_nfc")
     def resolve_nfc_access_events(
-        self, info, limit: int = 200, door_identifier: str = None
+        self, info, limit: int = 200, door_identifier: Optional[str] = None
     ):
         query = NfcAccessEvent.objects.select_related(
             "card", "card_assignment", "resolved_user"

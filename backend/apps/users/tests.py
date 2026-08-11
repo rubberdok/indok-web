@@ -382,7 +382,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertResponseNoErrors(res)
         self.assertEqual(
             today + 1,
-            get_user_model().objects.get(pk=self.indok_user.id).graduation_year,
+            getattr(get_user_model().objects.get(pk=self.indok_user.id), "graduation_year"),
         )
 
     def test_prevent_graduation_year_update(self):
@@ -392,7 +392,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertResponseNoErrors(res)
         self.assertEqual(
             today + 1,
-            get_user_model().objects.get(pk=self.indok_user.id).graduation_year,
+            getattr(get_user_model().objects.get(pk=self.indok_user.id), "graduation_year"),
         )
 
         query = self.mutation(today + 2)
@@ -400,7 +400,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertResponseNoErrors(res)
         self.assertEqual(
             today + 1,
-            get_user_model().objects.get(pk=self.indok_user.id).graduation_year,
+            getattr(get_user_model().objects.get(pk=self.indok_user.id), "graduation_year"),
         )
 
     def test_update_graduation_year_after_registering(self):
@@ -413,7 +413,10 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertResponseNoErrors(res)
         self.assertEqual(
             today + 1,
-            get_user_model().objects.get(pk=newly_registered_user.id).graduation_year,
+            getattr(
+                get_user_model().objects.get(pk=newly_registered_user.id),
+                "graduation_year",
+            ),
         )
 
         query = self.mutation(today + 2)
@@ -421,7 +424,10 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertResponseNoErrors(res)
         self.assertEqual(
             today + 2,
-            get_user_model().objects.get(pk=newly_registered_user.id).graduation_year,
+            getattr(
+                get_user_model().objects.get(pk=newly_registered_user.id),
+                "graduation_year",
+            ),
         )
 
     def test_update_user(self):
@@ -463,18 +469,10 @@ class UsersMutationsTestCase(UsersBaseTestCase):
     def test_get_id_token(self):
         pass
 
-    def test_update_user_nfc_uid_requires_self_service_flag(self):
+    def test_update_user_nfc_mifare_csn_requires_self_service_flag(self):
         settings_obj = NfcSettings.objects.create()
-        settings_obj.allow_user_uid_self_service = False
-        settings_obj.allow_7_byte_uid = True
-        settings_obj.allow_4_byte_uid = False
-        settings_obj.save(
-            update_fields=[
-                "allow_user_uid_self_service",
-                "allow_7_byte_uid",
-                "allow_4_byte_uid",
-            ]
-        )
+        settings_obj.allow_user_mifare_csn_self_service = False
+        settings_obj.save(update_fields=["allow_user_mifare_csn_self_service"])
 
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
@@ -492,14 +490,14 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
-                    "nfcUidHex": "04 A1 B2 C3 D4 E5 F6",
+                    "nfcMifareCsn": "1234 567 890",
                 },
             },
         )
         self.assertResponseHasErrors(response)
         content = response.json()
         self.assertIn(
-            "Egenregistrering av UID er deaktivert",
+            "Egenregistrering av kortnummer er deaktivert",
             content["errors"][0]["message"],
         )
         self.assertFalse(
@@ -508,22 +506,14 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             ).exists()
         )
 
-    def test_update_user_nfc_uid_when_self_service_enabled(self):
+    def test_update_user_nfc_mifare_csn_when_self_service_enabled(self):
         self.indok_user.first_name = "Ola"
         self.indok_user.last_name = "Nordmann"
         self.indok_user.save(update_fields=["first_name", "last_name"])
 
         settings_obj = NfcSettings.objects.create()
-        settings_obj.allow_user_uid_self_service = True
-        settings_obj.allow_7_byte_uid = True
-        settings_obj.allow_4_byte_uid = False
-        settings_obj.save(
-            update_fields=[
-                "allow_user_uid_self_service",
-                "allow_7_byte_uid",
-                "allow_4_byte_uid",
-            ]
-        )
+        settings_obj.allow_user_mifare_csn_self_service = True
+        settings_obj.save(update_fields=["allow_user_mifare_csn_self_service"])
 
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
@@ -541,7 +531,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
-                    "nfcUidHex": "04 A1 B2 C3 D4 E5 F6",
+                    "nfcMifareCsn": "1234 567 890",
                 },
             },
         )
@@ -556,23 +546,15 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             .first()
         )
         if assignment is None:
-            self.fail("Expected active NFC assignment after self-service UID update")
+            self.fail("Expected active NFC assignment after self-service card update")
         assignment = cast(NfcCardAssignment, assignment)
-        self.assertEqual(assignment.card.uid_hex, "04A1B2C3D4E5F6")
+        self.assertEqual(assignment.card.mifare_csn, "1234567890")
         self.assertEqual(assignment.card.label, "Ola Nordmann sitt kort (E)")
 
-    def test_update_user_nfc_uid_with_4_byte_policy(self):
+    def test_update_user_nfc_mifare_csn_converts_hex_to_csn(self):
         settings_obj = NfcSettings.objects.create()
-        settings_obj.allow_user_uid_self_service = True
-        settings_obj.allow_7_byte_uid = False
-        settings_obj.allow_4_byte_uid = True
-        settings_obj.save(
-            update_fields=[
-                "allow_user_uid_self_service",
-                "allow_7_byte_uid",
-                "allow_4_byte_uid",
-            ]
-        )
+        settings_obj.allow_user_mifare_csn_self_service = True
+        settings_obj.save(update_fields=["allow_user_mifare_csn_self_service"])
 
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
@@ -590,7 +572,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
-                    "nfcUidHex": "A1-B2-C3-D4",
+                    "nfcMifareCsn": "9B87BA1C",
                 },
             },
         )
@@ -605,22 +587,14 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             .first()
         )
         if assignment is None:
-            self.fail("Expected active NFC assignment for 4-byte UID policy")
+            self.fail("Expected active NFC assignment after hex to CSN conversion")
         assignment = cast(NfcCardAssignment, assignment)
-        self.assertEqual(assignment.card.uid_hex, "A1B2C3D4")
+        self.assertEqual(assignment.card.mifare_csn, "0481986459")
 
-    def test_update_user_nfc_uid_can_only_be_set_once(self):
+    def test_update_user_nfc_mifare_csn_can_only_be_set_once(self):
         settings_obj = NfcSettings.objects.create()
-        settings_obj.allow_user_uid_self_service = True
-        settings_obj.allow_7_byte_uid = True
-        settings_obj.allow_4_byte_uid = False
-        settings_obj.save(
-            update_fields=[
-                "allow_user_uid_self_service",
-                "allow_7_byte_uid",
-                "allow_4_byte_uid",
-            ]
-        )
+        settings_obj.allow_user_mifare_csn_self_service = True
+        settings_obj.save(update_fields=["allow_user_mifare_csn_self_service"])
 
         mutation = """
             mutation UpdateOwnUserNfc($userData: UserInput) {
@@ -638,7 +612,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
-                    "nfcUidHex": "04A1B2C3D4E5F6",
+                    "nfcMifareCsn": "1234567890",
                 },
             },
         )
@@ -650,7 +624,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
-                    "nfcUidHex": "04A1B2C3D4E5F7",
+                    "nfcMifareCsn": "1234567891",
                 },
             },
         )

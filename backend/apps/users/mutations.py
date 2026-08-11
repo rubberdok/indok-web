@@ -1,5 +1,5 @@
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, cast
 
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
@@ -38,7 +38,7 @@ class UserInput(graphene.InputObjectType):
     graduation_year = graphene.Int()
     phone_number = graphene.String()
     allergies = graphene.String()
-    nfc_uid_hex = graphene.String()
+    nfc_mifare_csn = graphene.String()
     nfc_pin_code = graphene.String()
 
 
@@ -53,7 +53,7 @@ class AdminUserInput(graphene.InputObjectType):
 
 
 class AdminUserNfcInput(graphene.InputObjectType):
-    uid_hex = graphene.String(required=False)
+    mifare_csn = graphene.String(required=False)
     pin_code = graphene.String(required=False)
     permanent_access = graphene.Boolean(required=False)
 
@@ -91,31 +91,31 @@ def _apply_user_updates(
         active_assignment.save(update_fields=["pin_code"])
 
     for k, v in user_data.items():
-        if k not in ("graduation_year", "nfc_pin_code", "nfc_uid_hex"):
+        if k not in ("graduation_year", "nfc_pin_code", "nfc_mifare_csn"):
             setattr(target_user, k, v)
         elif k == "graduation_year":
             update_graduation_year(target_user, new_graduation_year)
 
 
-def _apply_user_nfc_uid_update(
-    acting_user: "models.User", target_user: "models.User", uid_hex: str
+def _apply_user_nfc_mifare_csn_update(
+    acting_user: "models.User", target_user: "models.User", mifare_csn_input: str
 ) -> None:
     from apps.nfc.models import (
         NfcCard,
         NfcCardAssignment,
-        is_user_uid_self_service_enabled,
-        normalize_uid_hex,
-        validate_uid_hex,
+        is_user_mifare_csn_self_service_enabled,
+        normalize_card_identifier,
+        validate_card_identifier,
     )
 
-    if not is_user_uid_self_service_enabled():
-        raise ValueError("Egenregistrering av UID er deaktivert")
+    if not is_user_mifare_csn_self_service_enabled():
+        raise ValueError("Egenregistrering av kortnummer er deaktivert")
 
-    normalized_uid = normalize_uid_hex(uid_hex)
-    if normalized_uid == "":
-        raise ValueError("UID kan ikke være tom")
+    normalized_mifare_csn = normalize_card_identifier(mifare_csn_input)
+    if normalized_mifare_csn == "":
+        raise ValueError("Kortnummer kan ikke være tomt")
 
-    validate_uid_hex(normalized_uid)
+    validate_card_identifier(normalized_mifare_csn)
 
     active_assignment = (
         NfcCardAssignment.objects.select_related("card")
@@ -124,10 +124,10 @@ def _apply_user_nfc_uid_update(
     )
 
     if active_assignment is not None:
-        if active_assignment.card.uid_hex == normalized_uid:
+        if active_assignment.card.mifare_csn == normalized_mifare_csn:
             return
         raise ValueError(
-            "Du kan bare registrere UID én gang. Kontakt admin for endringer."
+            "Du kan bare registrere kortnummer én gang. Kontakt admin for endringer."
         )
 
     has_any_previous_assignment = NfcCardAssignment.objects.filter(
@@ -135,10 +135,10 @@ def _apply_user_nfc_uid_update(
     ).exists()
     if has_any_previous_assignment:
         raise ValueError(
-            "Du kan bare registrere UID én gang. Kontakt admin for endringer."
+            "Du kan bare registrere kortnummer én gang. Kontakt admin for endringer."
         )
 
-    card, created = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
+    card, created = NfcCard.objects.get_or_create(mifare_csn=normalized_mifare_csn)
     if created:
         card.label = _get_self_registered_card_label(target_user)
         card.save(update_fields=["label"])
@@ -146,8 +146,12 @@ def _apply_user_nfc_uid_update(
     card_active_assignment = NfcCardAssignment.objects.filter(
         card=card, revoked_at__isnull=True
     ).first()
-    if card_active_assignment and card_active_assignment.user_id != target_user.id:
-        raise ValueError("UID er allerede i bruk av en annen bruker")
+    if (
+        card_active_assignment
+        and card_active_assignment.user
+        and card_active_assignment.user.pk != target_user.pk
+    ):
+        raise ValueError("Kortnummer er allerede i bruk av en annen bruker")
 
     assignment = NfcCardAssignment(
         card=card,
@@ -173,12 +177,12 @@ class UpdateUser(graphene.Mutation):
         user: "models.User" = info.context.user
 
         user_data = dict(user_data)
-        nfc_uid_hex = user_data.pop("nfc_uid_hex", None)
+        nfc_mifare_csn = user_data.pop("nfc_mifare_csn", None)
 
         try:
             with transaction.atomic():
-                if nfc_uid_hex is not None:
-                    _apply_user_nfc_uid_update(user, user, nfc_uid_hex)
+                if nfc_mifare_csn is not None:
+                    _apply_user_nfc_mifare_csn_update(user, user, nfc_mifare_csn)
 
                 _apply_user_updates(user, user_data)
 
@@ -212,7 +216,10 @@ class AdminUpdateUser(graphene.Mutation):
         if not can_manage_user_profiles(acting_user):
             raise GraphQLError("Du har ikke tilgang til å redigere andre brukere")
 
-        target_user = get_user_model().objects.filter(pk=user_id).first()
+        target_user = cast(
+            Optional["models.User"],
+            get_user_model().objects.filter(pk=user_id).first(),
+        )
         if target_user is None:
             raise GraphQLError("Fant ikke bruker")
 
@@ -245,19 +252,27 @@ class AdminUpdateUserNfc(graphene.Mutation):
                 "Du har ikke tilgang til å redigere NFC-data for brukere"
             )
 
-        target_user = get_user_model().objects.filter(pk=user_id).first()
+        target_user = cast(
+            Optional["models.User"],
+            get_user_model().objects.filter(pk=user_id).first(),
+        )
         if target_user is None:
             raise GraphQLError("Fant ikke bruker")
 
-        from apps.nfc.models import NfcCard, NfcCardAssignment, normalize_uid_hex
+        from apps.nfc.models import (
+            NfcCard,
+            NfcCardAssignment,
+            normalize_card_identifier,
+            validate_card_identifier,
+        )
 
-        uid_hex = nfc_data.get("uid_hex")
+        mifare_csn = nfc_data.get("mifare_csn")
         pin_code = nfc_data.get("pin_code")
         permanent_access = nfc_data.get("permanent_access")
 
-        if uid_hex is None and pin_code is None and permanent_access is None:
+        if mifare_csn is None and pin_code is None and permanent_access is None:
             raise GraphQLError(
-                "Du må sende inn UID, PIN-kode og/eller permanent tilgang"
+                "Du må sette kortnummer. PIN-kode og/eller permanent tilgang er ikke påkrevd."
             )
 
         try:
@@ -269,29 +284,38 @@ class AdminUpdateUserNfc(graphene.Mutation):
                 )
                 assignment = active_assignment
 
-                if uid_hex is not None:
-                    normalized_uid = normalize_uid_hex(uid_hex)
-                    if normalized_uid == "":
-                        raise GraphQLError("UID kan ikke være tom")
+                if mifare_csn is not None:
+                    normalized_mifare_csn = normalize_card_identifier(mifare_csn)
+                    if normalized_mifare_csn == "":
+                        raise GraphQLError("Kortnummer kan ikke være tomt")
 
-                    card, _ = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
+                    validate_card_identifier(normalized_mifare_csn)
+
+                    card, _ = NfcCard.objects.get_or_create(
+                        mifare_csn=normalized_mifare_csn
+                    )
 
                     card_active_assignment = NfcCardAssignment.objects.filter(
                         card=card, revoked_at__isnull=True
                     ).first()
                     if (
                         card_active_assignment
-                        and card_active_assignment.user_id != target_user.id
+                        and card_active_assignment.user
+                        and card_active_assignment.user.pk != target_user.pk
                     ):
                         card_active_assignment.revoke(
                             revoked_by=acting_user,
                             reason="Auto-revoked due to reassignment",
                         )
 
-                    if active_assignment and active_assignment.card_id != card.id:
+                    if (
+                        active_assignment
+                        and active_assignment.card
+                        and active_assignment.card.pk != card.pk
+                    ):
                         active_assignment.revoke(
                             revoked_by=acting_user,
-                            reason="Auto-revoked due to new UID assignment",
+                            reason="Auto-revoked due to new card number assignment",
                         )
                         assignment = None
 

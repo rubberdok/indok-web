@@ -14,7 +14,7 @@ from .models import (
     NfcAccessGrant,
     NfcCard,
     NfcCardAssignment,
-    normalize_uid_hex,
+    normalize_card_identifier,
 )
 from .permissions import can_manage_booking_access
 from .types import (
@@ -28,14 +28,14 @@ User = get_user_model()
 
 
 class NfcCardInput(graphene.InputObjectType):
-    uid_hex = graphene.String(required=True)
+    mifare_csn = graphene.String(required=True)
     label = graphene.String(required=False)
     notes = graphene.String(required=False)
     is_enabled = graphene.Boolean(required=False)
 
 
 class AssignNfcCardInput(graphene.InputObjectType):
-    uid_hex = graphene.String(required=True)
+    mifare_csn = graphene.String(required=True)
     user_id = graphene.ID(required=False)
     external_holder_name = graphene.String(required=False)
     access_start = graphene.DateTime(required=False)
@@ -54,7 +54,7 @@ class CreateNfcAccessGrantInput(graphene.InputObjectType):
     participant_policy = graphene.String(required=False)
     booking_id = graphene.ID(required=False)
     granted_to_user_id = graphene.ID(required=False)
-    granted_to_uid_hex = graphene.String(required=False)
+    granted_to_mifare_csn = graphene.String(required=False)
     access_start = graphene.DateTime(required=False)
     access_end = graphene.DateTime(required=False)
     permanent_access = graphene.Boolean(required=False)
@@ -69,7 +69,7 @@ class LogNfcAccessEventInput(graphene.InputObjectType):
     event_type = graphene.String(required=True)
     source = graphene.String(required=False)
     door_identifier = graphene.String(required=False)
-    uid_hex_reported = graphene.String(required=False)
+    mifare_csn_reported = graphene.String(required=False)
     resolved_user_id = graphene.ID(required=False)
     notes = graphene.String(required=False)
     raw_payload = graphene.JSONString(required=False)
@@ -84,9 +84,11 @@ class UpsertNfcCard(graphene.Mutation):
 
     @permission_required("nfc.manage_nfc")
     def mutate(self, info, card_data):
-        normalized_uid = normalize_uid_hex(card_data["uid_hex"])
+        normalized_mifare_csn = normalize_card_identifier(card_data["mifare_csn"])
 
-        card, created = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
+        card, created = NfcCard.objects.get_or_create(
+            mifare_csn=normalized_mifare_csn
+        )
         for field in ["label", "notes", "is_enabled"]:
             if field in card_data and card_data.get(field) is not None:
                 setattr(card, field, card_data[field])
@@ -108,7 +110,9 @@ class AssignNfcCard(graphene.Mutation):
 
     @permission_required("nfc.manage_nfc")
     def mutate(self, info, assignment_data):
-        normalized_uid = normalize_uid_hex(assignment_data["uid_hex"])
+        normalized_mifare_csn = normalize_card_identifier(
+            assignment_data["mifare_csn"]
+        )
         user = None
 
         user_id = assignment_data.get("user_id")
@@ -116,10 +120,12 @@ class AssignNfcCard(graphene.Mutation):
             user = get_object_or_404(User, pk=user_id)
 
         with transaction.atomic():
-            card, _ = NfcCard.objects.get_or_create(uid_hex=normalized_uid)
+            card, _ = NfcCard.objects.get_or_create(
+                mifare_csn=normalized_mifare_csn
+            )
 
-            card_active_assignment = card.assignments.filter(
-                revoked_at__isnull=True
+            card_active_assignment = NfcCardAssignment.objects.filter(
+                card=card, revoked_at__isnull=True
             ).first()
             if card_active_assignment:
                 card_active_assignment.revoke(
@@ -209,9 +215,12 @@ class CreateNfcAccessGrant(graphene.Mutation):
             )
 
         granted_to_card = None
-        if grant_data.get("granted_to_uid_hex"):
+        if grant_data.get("granted_to_mifare_csn"):
             granted_to_card = get_object_or_404(
-                NfcCard, uid_hex=normalize_uid_hex(grant_data["granted_to_uid_hex"])
+                NfcCard,
+                mifare_csn=normalize_card_identifier(
+                    grant_data["granted_to_mifare_csn"]
+                ),
             )
 
         booking = None
@@ -273,17 +282,19 @@ class LogNfcAccessEvent(graphene.Mutation):
 
     @permission_required("nfc.add_nfcaccessevent")
     def mutate(self, info, event_data):
-        normalized_uid: Optional[str] = None
-        if event_data.get("uid_hex_reported"):
-            normalized_uid = normalize_uid_hex(event_data["uid_hex_reported"])
+        normalized_mifare_csn: Optional[str] = None
+        if event_data.get("mifare_csn_reported"):
+            normalized_mifare_csn = normalize_card_identifier(
+                event_data["mifare_csn_reported"]
+            )
 
         card = None
         assignment = None
-        if normalized_uid:
-            card = NfcCard.objects.filter(uid_hex=normalized_uid).first()
+        if normalized_mifare_csn:
+            card = NfcCard.objects.filter(mifare_csn=normalized_mifare_csn).first()
             if card:
                 assignment = (
-                    card.assignments.filter(revoked_at__isnull=True)
+                    NfcCardAssignment.objects.filter(card=card, revoked_at__isnull=True)
                     .select_related("user")
                     .first()
                 )
@@ -298,7 +309,7 @@ class LogNfcAccessEvent(graphene.Mutation):
             event_type=event_data["event_type"],
             source=event_data.get("source", NfcAccessEvent.Source.UNKNOWN),
             door_identifier=event_data.get("door_identifier", ""),
-            uid_hex_reported=normalized_uid or "",
+            mifare_csn_reported=normalized_mifare_csn or "",
             card=card,
             card_assignment=assignment,
             resolved_user=resolved_user,
