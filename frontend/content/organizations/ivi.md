@@ -5,14 +5,14 @@ image: /img/ivibilde.jpg
 logo: /img/ivilogo.png
 board:
   leder:
-    name: Synne Andersen Buen
+    name: Marie Berge Foss
     title: Leder
-    mail: synne.andersen.buen@gmail.com
+    mail: marie.berge.foss@icloud.com
 
   leder2:
-    name: Hannah Dæhlin
+    name: Anna Elise Vigdenes
     title: Leder
-    mail: hannahdaehlin@gmail.com
+    mail: annavigdenes@gmail.com
 
 tag: kultur
 ---
