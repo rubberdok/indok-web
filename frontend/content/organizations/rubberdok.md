@@ -6,15 +6,19 @@ image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 board:
   ceo:
-    name: Jens Mathias Jenssen Richter
-    title: Prosjektleder
+    name: Christian Elijah Røren
+    title: Leder
     mail: leder@rubberdok.no
+    mail2: christian.roeren@rubberdok.no
+    phoneNumber: 969 155 91
   cto:
-    name: Vedin Eljar Engmark Øyulvstad
-    title: Prosjektleder
+    name: Markus Emil Omdal
+    title: Leder
     mail: leder@rubberdok.no
 tag: annet
 ---
+
+Per nå er den kjappeste måten å komme i kontakt med oss via epost eller messenger.
 
 ##### Hvem er vi?
 
@@ -34,6 +38,8 @@ Historie:
 Liker du progging, pils og god stemning: nye medlemmer tas opp hver høst!
 
 _Vi progges!_
+
+Følg oss på instagram: [@rubberdokntnu](https://www.instagram.com/rubberdokntnu/)
 
 Lansering 2021
 ![bilde](/img/rubberdok3.jpg)

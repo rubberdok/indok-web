@@ -1,8 +1,8 @@
+from apps.permissions.constants import HR_TYPE
 from apps.users.models import User
 from apps.organizations.models import Organization, Membership
 from decorators import PermissionDenied
 from decorators.constants import PERMISSION_REQUIRED_ERROR
-from apps.permissions.constants import HR_TYPE
 
 
 def check_user_membership(user: User, organization: Organization):
@@ -19,6 +19,7 @@ def can_manage_memberships(user: User, organization: Organization) -> bool:
 
     return bool(
         user.is_superuser
+        or user.has_perm("users.manage_user_profiles")
         or user.has_perm("organizations.manage_organization")
         or Membership.objects.filter(
             user=user,

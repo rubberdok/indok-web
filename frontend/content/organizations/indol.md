@@ -5,7 +5,7 @@ logo: /img/indollogo.png
 image: /img/indolbilde.jpg
 board:
   ceo:
-    name: Magnus Trandokken
+    name: Emil Andreas Midelfart
     title: Leder
 tag: kultur
 ---
