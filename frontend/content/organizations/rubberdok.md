@@ -18,7 +18,7 @@ board:
 tag: annet
 ---
 
-Per nå er den kjappeste måten å komme i kontakt med oss via epost elelr messenger.
+Per nå er den kjappeste måten å komme i kontakt med oss via epost eller messenger.
 
 ##### Hvem er vi?
 
