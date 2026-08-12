@@ -16,6 +16,7 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
         self.hr_user = UserFactory()
         self.regular_member = UserFactory()
         self.profile_manager_user = UserFactory()
+        self.change_user_permission_user = UserFactory()
         self.target_user = UserFactory()
 
         MembershipFactory(
@@ -31,6 +32,10 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
 
         permission = Permission.objects.get(codename="manage_user_profiles")
         self.profile_manager_user.user_permissions.add(permission)
+        change_user_permission = Permission.objects.get(
+            codename="change_user", content_type__app_label="auth"
+        )
+        self.change_user_permission_user.user_permissions.add(change_user_permission)
 
     def test_upsert_membership_allows_hr_member_without_global_permission(self):
         response = self.query(
@@ -164,6 +169,27 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
         content = json.loads(response.content)
         self.assertTrue(content["data"]["removeMembership"]["ok"])
         self.assertFalse(Membership.objects.filter(id=membership.id).exists())
+
+    def test_upsert_membership_denies_auth_change_user_without_org_membership(self):
+        response = self.query(
+            f"""
+            mutation {{
+                upsertMembership(membershipData: {{
+                    userId: \"{self.target_user.id}\"
+                    organizationId: \"{self.organization.id}\"
+                    groupId: \"{self.organization.primary_group.pk}\"
+                }}) {{
+                    ok
+                    membership {{
+                        id
+                    }}
+                }}
+            }}
+            """,
+            user=self.change_user_permission_user,
+        )
+
+        self.assert_permission_error(response)
 
 
 class OrganizationListingsResolverTests(ExtendedGraphQLTestCase):
