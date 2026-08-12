@@ -11,7 +11,7 @@ class UserType(DjangoObjectType):
     events = graphene.List(NonNull("apps.events.types.EventType"), source="events")
     allergies = graphene.String(required=False)
     can_update_year = graphene.Boolean()
-    nfc_uid_hex = graphene.String()
+    nfc_mifare_csn = graphene.String()
     nfc_pin_code = graphene.String()
     nfc_permanent_access = graphene.Boolean()
 
@@ -52,7 +52,7 @@ class UserType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_nfc_uid_hex(parent, info):
+    def resolve_nfc_mifare_csn(parent, info):
         if info.context.user.pk != parent.pk and not can_manage_user_nfc(
             info.context.user
         ):
@@ -65,7 +65,7 @@ class UserType(DjangoObjectType):
             .filter(user=parent, revoked_at__isnull=True)
             .first()
         )
-        return active_assignment.card.uid_hex if active_assignment else None
+        return active_assignment.card.mifare_csn if active_assignment else None
 
     @staticmethod
     @login_required

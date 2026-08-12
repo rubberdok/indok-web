@@ -51,16 +51,7 @@ export const LandingListings: React.FC = () => {
           <Grid item md={6} sm={8} xs={12}>
             <Grid container my={{ xs: 6, md: 12 }} direction="column" alignItems={{ xs: "center", md: "flex-start" }}>
               <Grid item sx={{ mr: { xs: 0, md: 2 } }}>
-                <Typography
-                  variant="overline"
-                  sx={(theme) => ({
-                    color: "primary.main",
-                    [theme.getColorSchemeSelector("dark")]: {
-                      color: "primary.light",
-                    },
-                    mb: 3,
-                  })}
-                >
+                <Typography variant="overline" sx={{ mb: 3 }}>
                   Sosialt
                 </Typography>
                 <Typography variant="h2">Delta i et fantastisk studentmiljø</Typography>

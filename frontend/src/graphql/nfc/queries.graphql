@@ -4,8 +4,8 @@ query nfcCards {
 	}
 }
 
-query nfcCard($uidHex: String!) {
-	nfcCard(uidHex: $uidHex) {
+query nfcCard($mifareCsn: String!) {
+	nfcCard(mifareCsn: $mifareCsn) {
 		...NfcCard
 	}
 }

@@ -11,7 +11,6 @@ export const LandingSection: React.FC = () => {
   const theme = useTheme();
   return (
     <Box
-      data-color-scheme="dark"
       bgcolor="background.elevated"
       sx={{
         display: { xs: "block", md: "grid" },
@@ -53,14 +52,11 @@ export const LandingSection: React.FC = () => {
           <Stack
             direction="column"
             ml={{ xs: 0, md: 4 }}
-            color="common.white"
             my={{ xs: 6, md: 12 }}
             alignItems={{ xs: "center", md: "flex-start" }}
             justifyContent="center"
           >
-            <Typography variant="overline" sx={{ color: "grey.300" }}>
-              Samarbeid og kommunikasjon
-            </Typography>
+            <Typography variant="overline">Samarbeid og kommunikasjon</Typography>
             <Typography variant="h2">Hovedstyret i foreningen</Typography>
             <Typography maxWidth={450} textAlign="left" sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
               Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike

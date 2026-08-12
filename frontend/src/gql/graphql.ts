@@ -98,9 +98,9 @@ export type AdminUserInput = {
 };
 
 export type AdminUserNfcInput = {
+  mifareCsn: InputMaybe<Scalars['String']['input']>;
   permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
   pinCode: InputMaybe<Scalars['String']['input']>;
-  uidHex: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Booking type for fields available for not logged in users */
@@ -175,8 +175,8 @@ export type AssignNfcCardInput = {
   accessStart: InputMaybe<Scalars['DateTime']['input']>;
   externalHolderName: InputMaybe<Scalars['String']['input']>;
   metadata: InputMaybe<Scalars['JSONString']['input']>;
+  mifareCsn: Scalars['String']['input'];
   permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
-  uidHex: Scalars['String']['input'];
   userId: InputMaybe<Scalars['ID']['input']>;
 };
 
@@ -405,7 +405,7 @@ export type CreateNfcAccessGrantInput = {
   accessEnd: InputMaybe<Scalars['DateTime']['input']>;
   accessStart: InputMaybe<Scalars['DateTime']['input']>;
   bookingId: InputMaybe<Scalars['ID']['input']>;
-  grantedToUidHex: InputMaybe<Scalars['String']['input']>;
+  grantedToMifareCsn: InputMaybe<Scalars['String']['input']>;
   grantedToUserId: InputMaybe<Scalars['ID']['input']>;
   notes: InputMaybe<Scalars['String']['input']>;
   participantPolicy: InputMaybe<Scalars['String']['input']>;
@@ -984,11 +984,11 @@ export type LogNfcAccessEvent = {
 export type LogNfcAccessEventInput = {
   doorIdentifier: InputMaybe<Scalars['String']['input']>;
   eventType: Scalars['String']['input'];
+  mifareCsnReported: InputMaybe<Scalars['String']['input']>;
   notes: InputMaybe<Scalars['String']['input']>;
   rawPayload: InputMaybe<Scalars['JSONString']['input']>;
   resolvedUserId: InputMaybe<Scalars['ID']['input']>;
   source: InputMaybe<Scalars['String']['input']>;
-  uidHexReported: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Logout = {
@@ -1495,12 +1495,12 @@ export type NfcAccessEventType = {
   doorIdentifier: Scalars['String']['output'];
   eventType: NfcNfcAccessEventEventTypeChoices;
   id: Scalars['ID']['output'];
+  mifareCsnReported: Scalars['String']['output'];
   notes: Scalars['String']['output'];
   occurredAt: Scalars['DateTime']['output'];
   rawPayload: Scalars['JSONString']['output'];
   resolvedUser: Maybe<UserType>;
   source: NfcNfcAccessEventSourceChoices;
-  uidHexReported: Scalars['String']['output'];
 };
 
 export type NfcAccessGrantType = {
@@ -1544,8 +1544,8 @@ export type NfcCardAssignmentType = {
 export type NfcCardInput = {
   isEnabled: InputMaybe<Scalars['Boolean']['input']>;
   label: InputMaybe<Scalars['String']['input']>;
+  mifareCsn: Scalars['String']['input'];
   notes: InputMaybe<Scalars['String']['input']>;
-  uidHex: Scalars['String']['input'];
 };
 
 export type NfcCardType = {
@@ -1555,8 +1555,8 @@ export type NfcCardType = {
   id: Scalars['ID']['output'];
   isEnabled: Scalars['Boolean']['output'];
   label: Scalars['String']['output'];
+  mifareCsn: Scalars['String']['output'];
   notes: Scalars['String']['output'];
-  uidHex: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -1722,8 +1722,6 @@ export type Queries = {
   memberships: Maybe<Array<MembershipType>>;
   myCabinBookings: Maybe<Array<AdminBookingType>>;
   myNfcCardAssignment: Maybe<NfcCardAssignmentType>;
-  nfcAccepts4ByteUid: Scalars['Boolean']['output'];
-  nfcAccepts7ByteUid: Scalars['Boolean']['output'];
   nfcAccessEvents: Maybe<Array<NfcAccessEventType>>;
   nfcAccessGrants: Maybe<Array<NfcAccessGrantType>>;
   nfcCard: Maybe<NfcCardType>;
@@ -1881,7 +1879,7 @@ export type QueriesNfcAccessGrantsArgs = {
 
 
 export type QueriesNfcCardArgs = {
-  uidHex: Scalars['String']['input'];
+  mifareCsn: Scalars['String']['input'];
 };
 
 
@@ -2315,8 +2313,8 @@ export type UserInput = {
   firstName: InputMaybe<Scalars['String']['input']>;
   graduationYear: InputMaybe<Scalars['Int']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
+  nfcMifareCsn: InputMaybe<Scalars['String']['input']>;
   nfcPinCode: InputMaybe<Scalars['String']['input']>;
-  nfcUidHex: InputMaybe<Scalars['String']['input']>;
   phoneNumber: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2339,9 +2337,9 @@ export type UserType = {
   lastLogin: Maybe<Scalars['DateTime']['output']>;
   lastName: Scalars['String']['output'];
   memberships: Array<MembershipType>;
+  nfcMifareCsn: Maybe<Scalars['String']['output']>;
   nfcPermanentAccess: Maybe<Scalars['Boolean']['output']>;
   nfcPinCode: Maybe<Scalars['String']['output']>;
-  nfcUidHex: Maybe<Scalars['String']['output']>;
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars['String']['output'];
   responses: Array<ResponseType>;

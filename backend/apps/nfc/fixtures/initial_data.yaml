@@ -1,7 +1,7 @@
 - model: nfc.nfccard
   pk: 1
   fields:
-    uid_hex: 04A1B2C3D4E5F6
+    mifare_csn: "1234567890"
     label: "Eva sitt kort"
     notes: "Primærkort for testbruker"
     is_enabled: true
@@ -11,7 +11,7 @@
 - model: nfc.nfccard
   pk: 2
   fields:
-    uid_hex: 04A1B2C3D4E5F7
+    mifare_csn: "1234567891"
     label: "Gjestekort A"
     notes: "Midlertidig gjestekort"
     is_enabled: true
@@ -21,7 +21,7 @@
 - model: nfc.nfccard
   pk: 3
   fields:
-    uid_hex: 04A1B2C3D4E5F8
+    mifare_csn: "1234567892"
     label: "Asbjørn sitt kort"
     notes: "Reservekort"
     is_enabled: true
@@ -145,7 +145,7 @@
     event_type: DOOR_OPENED
     source: NFC_READER
     door_identifier: janus-main-door
-    uid_hex_reported: 04A1B2C3D4E5F6
+    mifare_csn_reported: "1234567890"
     card: 1
     card_assignment: 1
     resolved_user: 3
@@ -161,7 +161,7 @@
     event_type: ACCESS_DENIED
     source: NFC_READER
     door_identifier: janus-main-door
-    uid_hex_reported: 04FFFFFFFFFFFF
+    mifare_csn_reported: "9999999999"
     card: null
     card_assignment: null
     resolved_user: null
@@ -177,7 +177,7 @@
     event_type: ACCESS_GRANTED
     source: MANUAL_KEY
     door_identifier: janus-main-door
-    uid_hex_reported: ""
+    mifare_csn_reported: ""
     card: null
     card_assignment: null
     resolved_user: 2

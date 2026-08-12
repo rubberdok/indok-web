@@ -21,7 +21,7 @@ import {
 import range from "lodash/range";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { Link } from "@/components";
 import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
@@ -39,8 +39,6 @@ import {
 const UserNfcSettingsDocument = gql`
   query userNfcSettings {
     nfcSelfServiceEnabled
-    nfcAccepts4ByteUid
-    nfcAccepts7ByteUid
   }
 `;
 
@@ -53,8 +51,6 @@ type Props = {
 
 type UserNfcSettingsQuery = {
   nfcSelfServiceEnabled?: boolean | null;
-  nfcAccepts4ByteUid?: boolean | null;
-  nfcAccepts7ByteUid?: boolean | null;
 };
 
 export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
@@ -64,57 +60,31 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
   const nfcSettingsData = nfcSettingsDataRaw as UserNfcSettingsQuery | undefined;
 
   const nfcSelfServiceEnabled = nfcSettingsData?.nfcSelfServiceEnabled ?? true;
-  const accepts4ByteUid = nfcSettingsData?.nfcAccepts4ByteUid ?? false;
-  const accepts7ByteUid = nfcSettingsData?.nfcAccepts7ByteUid ?? true;
-
-  const acceptedUidLengthLabel = () => {
-    if (accepts4ByteUid && accepts7ByteUid) {
-      return "4 eller 7 byte";
-    }
-    if (accepts4ByteUid) {
-      return "4 byte";
-    }
-    if (accepts7ByteUid) {
-      return "7 byte";
-    }
-    return "ingen aktiv lengde";
-  };
-
-  const formatUidLengthMessage = (rawMessage: string) => {
-    const allows4Byte = /\b4\s*bytes?\b|\b8\s*hex\b/i.test(rawMessage);
-    const allows7Byte = /\b7\s*bytes?\b|\b14\s*hex\b/i.test(rawMessage);
-
-    if (allows4Byte && allows7Byte) {
-      return "UID har feil lengde. UID må være 4 eller 7 byte hex (8 eller 14 tegn).";
-    }
-    if (allows4Byte) {
-      return "UID har feil lengde. UID må være 4 byte hex (8 tegn).";
-    }
-    if (allows7Byte) {
-      return "UID har feil lengde. UID må være 7 byte hex (14 tegn).";
-    }
-
-    return "UID har feil lengde. Bruk riktig kortlengde som er satt i systemet.";
-  };
 
   const toUserFriendlyError = (error: ErrorLike) => {
     const rawMessage =
       (error instanceof CombinedGraphQLErrors ? error.errors[0]?.message : undefined) || error.message || "";
 
-    if (rawMessage.includes("Egenregistrering av UID er deaktivert")) {
-      return "Du kan ikke registrere UID akkurat nå. Ta kontakt med Rubberdøk.";
+    if (
+      rawMessage.includes("Egenregistrering av UID er deaktivert") ||
+      rawMessage.includes("Egenregistrering av kortnummer er deaktivert")
+    ) {
+      return "Du kan ikke registrere kortnummer akkurat nå. Ta kontakt med Rubberdøk.";
     }
-    if (rawMessage.includes("Du kan bare registrere UID én gang")) {
+    if (
+      rawMessage.includes("Du kan bare registrere UID én gang") ||
+      rawMessage.includes("Du kan bare registrere kortnummer én gang")
+    ) {
       return "Du har allerede registrert kort. Hvis du trenger å bytte kort, kontakt Rubberdøk.";
     }
-    if (rawMessage.includes("UID er allerede i bruk")) {
-      return "Denne UID-en er allerede registrert på en annen bruker. Sjekk at du skrev riktig UID. Ta kontakt med Rubberdøk hvis du tror dette er en feil.";
+    if (rawMessage.includes("UID er allerede i bruk") || rawMessage.includes("Kortnummer er allerede i bruk")) {
+      return "Dette kortnummeret er allerede registrert på en annen bruker. Sjekk at du skrev riktig nummer. Ta kontakt med Rubberdøk hvis du tror dette er en feil.";
     }
-    if (rawMessage.includes("UID kan ikke være tom")) {
-      return "UID kan ikke være tom. Skriv inn UID eller la feltet stå urørt.";
+    if (rawMessage.includes("UID kan ikke være tom") || rawMessage.includes("Kortnummer kan ikke være tomt")) {
+      return "Kortnummer kan ikke være tomt. Skriv inn kortnummer eller la feltet stå urørt.";
     }
-    if (rawMessage.includes("UID must be exactly") || rawMessage.includes("UID must be one of")) {
-      return formatUidLengthMessage(rawMessage);
+    if (rawMessage.includes("Kortnummer må være nøyaktig 10 sifre")) {
+      return "Kortnummer må være nøyaktig 10 sifre.";
     }
     if (rawMessage.includes("PIN-kode må være nøyaktig 4 sifre")) {
       return "PIN-kode må være nøyaktig 4 sifre.";
@@ -138,7 +108,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
   const router = useRouter();
   const currentYear = dayjs().tz("Europe/Oslo").year();
   const ID_PREFIX = `${dataTestId}`;
-  const hasRegisteredUid = Boolean((data?.user?.nfcUidHex || "").trim());
+  const hasRegisteredMifareCsn = Boolean((data?.user?.nfcMifareCsn || "").trim());
 
   const minimumGraduationYear = Math.min(currentYear, data?.user?.graduationYear ?? currentYear);
   const graduationYears = range(minimumGraduationYear, maxGraduationYear + 1, 1);
@@ -146,7 +116,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<IUserForm>({
     mode: "onTouched",
@@ -157,7 +127,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
-      nfcUidHex: data?.user?.nfcUidHex || "",
+      nfcMifareCsn: data?.user?.nfcMifareCsn || "",
       nfcPinCode: data?.user?.nfcPinCode || "",
     },
     values: {
@@ -167,12 +137,14 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
-      nfcUidHex: data?.user?.nfcUidHex || "",
+      nfcMifareCsn: data?.user?.nfcMifareCsn || "",
       nfcPinCode: data?.user?.nfcPinCode || "",
     },
     resolver: yupResolver(validationSchema),
   });
-  const hasUidForPin = Boolean((watch("nfcUidHex") || data?.user?.nfcUidHex || "").trim());
+  const watchedMifareCsn = useWatch({ control, name: "nfcMifareCsn" });
+  const watchedAllergies = useWatch({ control, name: "allergies" });
+  const hasMifareCsnForPin = Boolean((watchedMifareCsn || data?.user?.nfcMifareCsn || "").trim());
 
   return (
     <form
@@ -180,14 +152,14 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
         setSubmitError(undefined);
         const userData = { ...values };
 
-        const normalizedUidInput = userData.nfcUidHex?.trim() || "";
-        if (!normalizedUidInput) {
-          delete userData.nfcUidHex;
+        const normalizedMifareCsnInput = userData.nfcMifareCsn?.trim() || "";
+        if (!normalizedMifareCsnInput) {
+          delete userData.nfcMifareCsn;
         } else {
-          userData.nfcUidHex = normalizedUidInput;
+          userData.nfcMifareCsn = normalizedMifareCsnInput;
         }
 
-        if (!hasUidForPin && !userData.nfcUidHex) {
+        if (!hasMifareCsnForPin && !userData.nfcMifareCsn) {
           delete userData.nfcPinCode;
         }
 
@@ -335,7 +307,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                 />
               </Grid>
               <Grid item>
-                <Typography variant="body1">{isVegetarian(watch("allergies")) && "💚"}</Typography>
+                <Typography variant="body1">{isVegetarian(watchedAllergies || null) && "💚"}</Typography>
               </Grid>
             </Grid>
 
@@ -348,21 +320,21 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  label="UID"
-                  {...register("nfcUidHex")}
+                  label="Kortnummer"
+                  {...register("nfcMifareCsn")}
                   InputProps={{
-                    readOnly: hasRegisteredUid,
+                    readOnly: hasRegisteredMifareCsn,
                   }}
-                  error={Boolean(errors.nfcUidHex)}
+                  error={Boolean(errors.nfcMifareCsn)}
                   helperText={
-                    errors.nfcUidHex?.message ||
-                    (hasRegisteredUid
+                    errors.nfcMifareCsn?.message ||
+                    (hasRegisteredMifareCsn
                       ? "Kontakt Rubberdøk for endring av kort."
                       : nfcSelfServiceEnabled
-                        ? `Skriv inn UID (hex). Systemet godtar ${acceptedUidLengthLabel()} UID.`
-                        : "Egenregistrering av UID er deaktivert.")
+                        ? "Skriv inn MIFARE kortnummer (10 sifre). Dette står som 'mS' på NTNU-kortet ditt."
+                        : "Egenregistrering av kortnummer er deaktivert.")
                   }
-                  data-test-id={`${ID_PREFIX}nfcUidHexTextField`}
+                  data-test-id={`${ID_PREFIX}nfcMifareCsnTextField`}
                 />
               </Grid>
               <Grid item>
@@ -378,7 +350,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                   error={Boolean(errors.nfcPinCode)}
                   helperText={
                     errors.nfcPinCode?.message ||
-                    (hasUidForPin
+                    (hasMifareCsnForPin
                       ? "Denne PIN-koden brukes til å låse opp JanHus, når du skal ha tilgang."
                       : "PIN-kode kan kun settes når du har et aktivt kort.")
                   }
@@ -387,7 +359,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                     maxLength: 4,
                     pattern: "[0-9]{4}",
                   }}
-                  disabled={!hasUidForPin}
+                  disabled={!hasMifareCsnForPin}
                   data-test-id={`${ID_PREFIX}nfcPinCodeTextField`}
                 />
               </Grid>

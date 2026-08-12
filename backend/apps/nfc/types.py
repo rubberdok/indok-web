@@ -11,7 +11,7 @@ class NfcCardType(DjangoObjectType):
         model = NfcCard
         fields = [
             "id",
-            "uid_hex",
+            "mifare_csn",
             "label",
             "notes",
             "is_enabled",
@@ -21,7 +21,7 @@ class NfcCardType(DjangoObjectType):
 
     @staticmethod
     def resolve_active_assignment(card: NfcCard, info):
-        return card.assignments.filter(revoked_at__isnull=True).first()
+        return NfcCardAssignment.objects.filter(card=card, revoked_at__isnull=True).first()
 
 
 class NfcCardAssignmentType(DjangoObjectType):
@@ -86,7 +86,7 @@ class NfcAccessEventType(DjangoObjectType):
             "event_type",
             "source",
             "door_identifier",
-            "uid_hex_reported",
+            "mifare_csn_reported",
             "card",
             "card_assignment",
             "resolved_user",

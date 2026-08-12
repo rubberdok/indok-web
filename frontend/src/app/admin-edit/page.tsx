@@ -1,6 +1,5 @@
 "use client";
 
-import { gql } from "@apollo/client";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
 import {
@@ -51,22 +50,10 @@ type AdminEditableUser = {
   lastLogin?: string | null;
   feideUserid?: string | null;
   feideEmail?: string | null;
-  nfcUidHex?: string | null;
+  nfcMifareCsn?: string | null;
   nfcPinCode?: string | null;
   nfcPermanentAccess?: boolean | null;
 };
-
-type AdminEditNfcSettingsQuery = {
-  nfcAccepts4ByteUid?: boolean | null;
-  nfcAccepts7ByteUid?: boolean | null;
-};
-
-const AdminEditNfcSettingsDocument = gql`
-  query adminEditNfcSettings {
-    nfcAccepts4ByteUid
-    nfcAccepts7ByteUid
-  }
-`;
 
 function toErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof CombinedGraphQLErrors) {
@@ -82,15 +69,20 @@ function toErrorMessage(error: unknown, fallback: string): string {
   return fallback;
 }
 
-function normalizeUid(uid: string): string {
-  return uid.replace(/[^0-9a-fA-F]/g, "").toUpperCase();
+function normalizeMifareCsn(identifier: string): string {
+  return identifier.replace(/\D/g, "");
+}
+
+function isLegacyMifareHexCandidate(identifier: string): boolean {
+  const compact = identifier.replace(/[^0-9a-fA-F]/g, "");
+  return /^[0-9a-fA-F]{8}$/.test(compact);
 }
 
 export default function AdminEditPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const nfcMode = searchParams?.get("mode") === "nfc";
-  const [isClientReady, setIsClientReady] = useState(false);
+  const isClientReady = true;
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<AdminEditableUser | null>(null);
@@ -112,7 +104,7 @@ export default function AdminEditPage() {
     phoneNumber: "",
     allergies: "",
     graduationYear: "",
-    nfcUidHex: "",
+    nfcMifareCsn: "",
     nfcPinCode: "",
     nfcPermanentAccess: false,
   });
@@ -133,42 +125,7 @@ export default function AdminEditPage() {
   const hasAnyAccess = canManageProfiles || canManageNfc;
   const nfcOnlyMode = canManageNfc && !canManageProfiles;
 
-  const { data: nfcSettingsDataRaw } = useQuery(AdminEditNfcSettingsDocument, {
-    ssr: false,
-    skip: !isClientReady || !canManageNfc,
-  });
-
-  const nfcSettingsData = nfcSettingsDataRaw as AdminEditNfcSettingsQuery | undefined;
-  const accepts4ByteUid = nfcSettingsData?.nfcAccepts4ByteUid ?? false;
-  const accepts7ByteUid = nfcSettingsData?.nfcAccepts7ByteUid ?? true;
-
-  const acceptedUidLengths = useMemo(() => {
-    const lengths: number[] = [];
-    if (accepts4ByteUid) {
-      lengths.push(8);
-    }
-    if (accepts7ByteUid) {
-      lengths.push(14);
-    }
-    return lengths;
-  }, [accepts4ByteUid, accepts7ByteUid]);
-
-  const uidLengthRuleText = useMemo(() => {
-    if (accepts4ByteUid && accepts7ByteUid) {
-      return "UID må være 4 eller 7 bytes (8 eller 14 hex-tegn).";
-    }
-    if (accepts4ByteUid) {
-      return "UID må være nøyaktig 4 bytes (8 hex-tegn).";
-    }
-    if (accepts7ByteUid) {
-      return "UID må være nøyaktig 7 bytes (14 hex-tegn).";
-    }
-    return "UID-registrering er deaktivert fordi ingen UID-lengder er aktivert.";
-  }, [accepts4ByteUid, accepts7ByteUid]);
-
-  useEffect(() => {
-    setIsClientReady(true);
-  }, []);
+  const mifareCsnRuleText = "MIFARE CSN må være 10 sifre langt.";
 
   useEffect(() => {
     if (!isClientReady) {
@@ -227,6 +184,10 @@ export default function AdminEditPage() {
     () => orgData?.allOrganizations?.find((org) => org.id === selectedOrgId),
     [orgData?.allOrganizations, selectedOrgId]
   );
+  const defaultSelectedGroupId = selectedOrg?.primaryGroup?.id ?? selectedOrg?.permissionGroups?.[0]?.id ?? "";
+  const selectedGroupIdIsValidForOrg =
+    selectedOrg?.permissionGroups?.some((group) => group.id === selectedGroupId) ?? false;
+  const effectiveSelectedGroupId = selectedGroupIdIsValidForOrg ? selectedGroupId : defaultSelectedGroupId;
 
   const {
     data: membershipsData,
@@ -250,15 +211,6 @@ export default function AdminEditPage() {
     (_, i) => minimumGraduationYear + i
   );
 
-  useEffect(() => {
-    if (!selectedOrg) {
-      setSelectedGroupId("");
-      return;
-    }
-
-    setSelectedGroupId(selectedOrg.primaryGroup?.id ?? selectedOrg.permissionGroups?.[0]?.id ?? "");
-  }, [selectedOrg]);
-
   const searchResults: AdminEditableUser[] = useMemo(() => {
     if (canManageProfiles) {
       return (
@@ -276,7 +228,7 @@ export default function AdminEditPage() {
           lastLogin: u.lastLogin,
           feideUserid: u.feideUserid,
           feideEmail: u.feideEmail,
-          nfcUidHex: u.nfcUidHex,
+          nfcMifareCsn: u.nfcMifareCsn,
           nfcPinCode: u.nfcPinCode,
           nfcPermanentAccess: u.nfcPermanentAccess,
         })) ?? []
@@ -290,7 +242,7 @@ export default function AdminEditPage() {
         firstName: u.firstName,
         lastName: u.lastName,
         feideEmail: u.feideEmail,
-        nfcUidHex: u.nfcUidHex,
+        nfcMifareCsn: u.nfcMifareCsn,
         nfcPinCode: u.nfcPinCode,
         nfcPermanentAccess: u.nfcPermanentAccess,
       })) ?? []
@@ -315,7 +267,7 @@ export default function AdminEditPage() {
       phoneNumber: user.phoneNumber ?? "",
       allergies: user.allergies ?? "",
       graduationYear: user.graduationYear?.toString() ?? "",
-      nfcUidHex: user.nfcUidHex ?? "",
+      nfcMifareCsn: user.nfcMifareCsn ?? "",
       nfcPinCode: user.nfcPinCode ?? "",
       nfcPermanentAccess: Boolean(user.nfcPermanentAccess),
     });
@@ -352,7 +304,7 @@ export default function AdminEditPage() {
       lastLogin: user.lastLogin,
       feideUserid: user.feideUserid,
       feideEmail: user.feideEmail,
-      nfcUidHex: user.nfcUidHex,
+      nfcMifareCsn: user.nfcMifareCsn,
       nfcPinCode: user.nfcPinCode,
       nfcPermanentAccess: user.nfcPermanentAccess,
     });
@@ -393,7 +345,7 @@ export default function AdminEditPage() {
             lastLogin: user.lastLogin,
             feideUserid: user.feideUserid,
             feideEmail: user.feideEmail,
-            nfcUidHex: user.nfcUidHex,
+            nfcMifareCsn: user.nfcMifareCsn,
             nfcPinCode: user.nfcPinCode,
             nfcPermanentAccess: user.nfcPermanentAccess,
           };
@@ -408,7 +360,7 @@ export default function AdminEditPage() {
             firstName: user.firstName,
             lastName: user.lastName,
             feideEmail: user.feideEmail,
-            nfcUidHex: user.nfcUidHex,
+            nfcMifareCsn: user.nfcMifareCsn,
             nfcPinCode: user.nfcPinCode,
             nfcPermanentAccess: user.nfcPermanentAccess,
           };
@@ -443,21 +395,23 @@ export default function AdminEditPage() {
       return "Velg en bruker først.";
     }
 
-    const normalizedNewUid = normalizeUid(formData.nfcUidHex);
-    const hasNewUid = normalizedNewUid.length > 0;
-    const hasExistingUid = Boolean(selectedUser.nfcUidHex);
+    const normalizedDigits = normalizeMifareCsn(formData.nfcMifareCsn);
+    const hasNewMifareCsn = formData.nfcMifareCsn.trim().length > 0;
+    const hasExistingMifareCsn = Boolean(selectedUser.nfcMifareCsn);
     const pin = formData.nfcPinCode.trim();
 
-    if (hasNewUid && !acceptedUidLengths.includes(normalizedNewUid.length)) {
-      return uidLengthRuleText;
+    const isValidCsnInput = /^\d{10}$/.test(normalizedDigits);
+    const isValidLegacyMifareHexInput = isLegacyMifareHexCandidate(formData.nfcMifareCsn);
+    if (hasNewMifareCsn && !isValidCsnInput && !isValidLegacyMifareHexInput) {
+      return mifareCsnRuleText;
     }
 
     if (pin.length > 0 && !/^\d{4}$/.test(pin)) {
       return "PIN-kode må være nøyaktig 4 sifre.";
     }
 
-    if (pin.length > 0 && !hasNewUid && !hasExistingUid) {
-      return "Du må sette en UID før PIN-kode kan lagres.";
+    if (pin.length > 0 && !hasNewMifareCsn && !hasExistingMifareCsn) {
+      return "Du må sette et kortnummer før PIN-kode kan lagres.";
     }
 
     return null;
@@ -509,14 +463,14 @@ export default function AdminEditPage() {
         variables: {
           userId: selectedUser.id,
           nfcData: {
-            uidHex: formData.nfcUidHex.trim() || null,
+            mifareCsn: formData.nfcMifareCsn.trim() || null,
             pinCode: formData.nfcPinCode.trim(),
             permanentAccess: formData.nfcPermanentAccess,
           },
         },
       });
 
-      setSaveNfcSuccess("NFC UID/PIN lagret.");
+      setSaveNfcSuccess("MIFARE kortnummer/PIN lagret.");
 
       if (canManageProfiles) {
         const updated = await runUserSearchById({ variables: { query: selectedUser.id, limit: 1 } });
@@ -536,19 +490,19 @@ export default function AdminEditPage() {
             lastLogin: updatedUser.lastLogin,
             feideUserid: updatedUser.feideUserid,
             feideEmail: updatedUser.feideEmail,
-            nfcUidHex: updatedUser.nfcUidHex,
+            nfcMifareCsn: updatedUser.nfcMifareCsn,
             nfcPinCode: updatedUser.nfcPinCode,
             nfcPermanentAccess: updatedUser.nfcPermanentAccess,
           });
         }
       }
     } catch (error) {
-      setSaveNfcError(toErrorMessage(error, "Klarte ikke å lagre NFC UID/PIN."));
+      setSaveNfcError(toErrorMessage(error, "Klarte ikke å lagre MIFARE kortnummer/PIN."));
     }
   };
 
   const onSetMembershipRole = async () => {
-    if (!selectedUser || !selectedOrg || !selectedGroupId || !canManageProfiles) {
+    if (!selectedUser || !selectedOrg || !effectiveSelectedGroupId || !canManageProfiles) {
       return;
     }
 
@@ -557,7 +511,7 @@ export default function AdminEditPage() {
         membershipData: {
           userId: selectedUser.id,
           organizationId: selectedOrg.id,
-          groupId: selectedGroupId,
+          groupId: effectiveSelectedGroupId,
         },
       },
     });
@@ -574,12 +528,10 @@ export default function AdminEditPage() {
     await refetchMemberships();
   };
 
-  const selectedMembership = useMemo(() => {
-    if (!selectedUser || !membershipsData?.memberships) {
-      return null;
-    }
-    return membershipsData.memberships.find((membership) => membership.user.id === selectedUser.id) ?? null;
-  }, [membershipsData?.memberships, selectedUser]);
+  const selectedMembership =
+    selectedUser && membershipsData?.memberships
+      ? (membershipsData.memberships.find((membership) => membership.user.id === selectedUser.id) ?? null)
+      : null;
 
   if (loadingCapabilities) {
     return (
@@ -610,7 +562,7 @@ export default function AdminEditPage() {
       <Alert severity="info">
         {canManageProfiles
           ? "Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon. "
-          : "NFC-modus: Her kan du kun søke opp bruker og oppdatere UID/PIN."}
+          : "NFC-modus: Her kan du kun søke opp bruker og oppdatere kortnummer/PIN."}
       </Alert>
 
       <Card>
@@ -647,7 +599,7 @@ export default function AdminEditPage() {
                   >
                     <ListItemText
                       primary={`${user.firstName} ${user.lastName} (${user.username})`}
-                      secondary={`ID: ${user.id} ・ Epost/Feide: ${user.feideUserid || user.feideEmail || "-"} ・ UID: ${user.nfcUidHex || "-"}`}
+                      secondary={`ID: ${user.id} ・ Epost/Feide: ${user.feideUserid || user.feideEmail || "-"} ・ Kortnummer: ${user.nfcMifareCsn || "-"}`}
                     />
                   </ListItemButton>
                 ))}
@@ -783,25 +735,25 @@ export default function AdminEditPage() {
 
               {canManageNfc && (
                 <>
-                  <Typography variant="subtitle1">NFC UID/PIN</Typography>
+                  <Typography variant="subtitle1">MIFARE kortnummer/PIN</Typography>
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="NFC UID"
+                        label="MIFARE kortnummer"
                         fullWidth
-                        value={formData.nfcUidHex}
+                        value={formData.nfcMifareCsn}
                         onChange={(e) => {
                           setSaveNfcError("");
                           setSaveNfcSuccess("");
-                          setFormData((prev) => ({ ...prev, nfcUidHex: e.target.value }));
+                          setFormData((prev) => ({ ...prev, nfcMifareCsn: e.target.value }));
                         }}
-                        placeholder="F.eks. 04A1B2C3D4E5F6"
-                        helperText={`${uidLengthRuleText} Separatorer ignoreres.`}
+                        placeholder="F.eks. 1234567890"
+                        helperText={mifareCsnRuleText}
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="NFC PIN-kode (4 sifre)"
+                        label="PIN-kode (4 sifre)"
                         fullWidth
                         value={formData.nfcPinCode}
                         onChange={(e) => {
@@ -810,7 +762,7 @@ export default function AdminEditPage() {
                           setFormData((prev) => ({ ...prev, nfcPinCode: e.target.value }));
                         }}
                         inputProps={{ maxLength: 4, inputMode: "numeric", pattern: "[0-9]{4}" }}
-                        helperText="PIN krever at bruker har UID (eksisterende eller ny)."
+                        helperText="PIN krever at bruker har kortnummer (eksisterende eller nytt)."
                       />
                     </Grid>
                   </Grid>
@@ -837,7 +789,7 @@ export default function AdminEditPage() {
 
                   <Box>
                     <Button variant="contained" onClick={onSaveNfc} disabled={savingNfc}>
-                      {savingNfc ? "Lagrer NFC..." : "Lagre NFC UID/PIN"}
+                      {savingNfc ? "Lagrer MIFARE..." : "Lagret MIFARE kortnummer/PIN"}
                     </Button>
                   </Box>
                 </>
@@ -920,7 +872,7 @@ export default function AdminEditPage() {
                           select
                           fullWidth
                           label="Gruppe for valgt bruker"
-                          value={selectedGroupId}
+                          value={effectiveSelectedGroupId}
                           onChange={(e) => setSelectedGroupId(e.target.value)}
                         >
                           {(selectedOrg.permissionGroups || []).map((group) => (

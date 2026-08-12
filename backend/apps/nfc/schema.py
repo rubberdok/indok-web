@@ -31,7 +31,7 @@ class NfcMutations(graphene.ObjectType):
 
 class NfcQueries(graphene.ObjectType, NfcResolvers):
     nfc_cards = graphene.List(NonNull(NfcCardType))
-    nfc_card = graphene.Field(NfcCardType, uid_hex=graphene.String(required=True))
+    nfc_card = graphene.Field(NfcCardType, mifare_csn=graphene.String(required=True))
 
     nfc_card_assignments = graphene.List(
         NonNull(NfcCardAssignmentType), active_only=graphene.Boolean(required=False)
