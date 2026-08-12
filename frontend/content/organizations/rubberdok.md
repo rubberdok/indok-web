@@ -7,12 +7,13 @@ alt: Logoen til rubberdøk
 board:
   ceo:
     name: Christian Elijah Røren
-    title: Prosjektleder
+    title: Leder
     mail: leder@rubberdok.no
     mail2: christian.roeren@rubberdok.no
+    phoneNumber: 969 155 91
   cto:
     name: Markus Emil Omdal
-    title: Prosjektleder
+    title: Leder
     mail: leder@rubberdok.no
 tag: annet
 ---

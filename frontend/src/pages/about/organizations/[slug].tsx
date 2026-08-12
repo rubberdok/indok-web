@@ -60,6 +60,18 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
                             icon={<MailOutline />}
                           />
                         )}
+                        {member.mail2 && (
+                          <>
+                            <br />
+                            <Chip
+                              component={Link}
+                              href={`mailto:${member.mail2}`}
+                              size="small"
+                              label={member.mail2}
+                              icon={<MailOutline />}
+                            />
+                          </>
+                        )}
                         {member.mail && member.phoneNumber && <br />}
                         {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
                         {index < array.length - 1 && <Divider sx={{ mt: 2 }} />}

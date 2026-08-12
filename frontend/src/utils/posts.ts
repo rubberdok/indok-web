@@ -5,6 +5,7 @@ import matter from "gray-matter";
 type BoardMember = {
   name: string;
   mail: string;
+  mail2?: string;
   title: string;
   phoneNumber: string;
 };
