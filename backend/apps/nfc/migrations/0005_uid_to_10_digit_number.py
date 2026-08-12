@@ -23,15 +23,15 @@ def _to_csn(value: str, allow_blank: bool = False) -> str:
 
 
 def convert_uid_values_to_csn(apps, schema_editor):
-    NfcCard = apps.get_model("nfc", "NfcCard")
-    NfcAccessEvent = apps.get_model("nfc", "NfcAccessEvent")
+    nfc_card_model = apps.get_model("nfc", "NfcCard")
+    nfc_access_event_model = apps.get_model("nfc", "NfcAccessEvent")
 
     # Pre-production data reset: existing cards can collapse to identical CSN values
     # during conversion, which violates the unique constraint on uid_hex.
     # The project has explicitly accepted purging NFC cards at this stage.
-    NfcCard.objects.all().delete()
+    nfc_card_model.objects.all().delete()
 
-    for event in NfcAccessEvent.objects.all().iterator():
+    for event in nfc_access_event_model.objects.all().iterator():
         converted = _to_csn(event.uid_hex_reported, allow_blank=True)
         if converted != event.uid_hex_reported:
             event.uid_hex_reported = converted
