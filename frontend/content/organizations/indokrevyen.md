@@ -5,13 +5,13 @@ logo: /img/indokrevylogo.jpg
 image: /img/indokrevyen2025.jpg
 board:
   leder1:
-    name: Martin Mæle
+    name: Nikita Upadhyaya
     title: Revysjef
-    mail: martin.maele@indokrevyen.no
+    mail: nikitagu03@gmail.com
   leder2:
-    name: Nicolai Harvik
+    name: Knut Lembach-Beylegaard
     title: Revysjef
-    mail: nicolai.harvik@indokrevyen.no
+    mail: knut.aku@gmail.com
 tag: kultur
 ---
 
@@ -20,11 +20,9 @@ tag: kultur
 Indøkrevyen ble arrangert første gang i 2011, i forbindelse med feiringen av Indøk sitt 25 års-jubileum. Det hele var en stor suksess, og siden 2014 har det vært arrangert revy flere ganger. Som en del av revygjengen får man en unik mulighet til å bli kjent med Indøkere på tvers av klassetrinn samtidig som man setter opp tidenes forestilling!
 Revygjengen tas opp på høsten hvert år og revyen settes opp i februar/mars.
 
-#### Årets billetter er i salg!
-Billetter til årets revy er nå i salg! Kjøp billetter [her](https://www.eventim-light.com/no/a/6564b9a575a8ab6600ce84c3/).
-
 ##### Her er de tidligere revyene:
 
+- Indøkrevyen 2027 - TBD
 - Indøkrevyen 2026 - Klostergata Borettslag
 - Indøkrevyen 2025 - Frukt i våre haver
 - Indøkrevyen 2024 - I Beste Stengetid
@@ -43,7 +41,7 @@ Billetter til årets revy er nå i salg! Kjøp billetter [her](https://www.event
 
 Følg oss på Instagram [@indokrevyen](https://www.instagram.com/indokrevyen/)!
 
-Revyen består av flere undergrupper, som alle jobber sammen for å skape en uforglemmelig revy.
+Revyen består av flere undergrupper, som alle jobber sammen for å skape en uforglemmelig revy:
 
 - Skuespillere
 - Forfattere
@@ -54,6 +52,8 @@ Revyen består av flere undergrupper, som alle jobber sammen for å skape en ufo
 - Band
 - Scene
 - Inspisient
+
+Føler deg inspirert til å bidra med revyen? Bli med davel!
 
 ![Indøkrevyen 2025](/img/indokrevyen2025.jpg)
 ![Indøkrevyen](/img/indokrevyenbilde.jpg)
