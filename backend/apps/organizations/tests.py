@@ -1,6 +1,8 @@
 import json
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 from apps.organizations.models import Membership
 from utils.testing.base import ExtendedGraphQLTestCase
@@ -32,8 +34,10 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
 
         permission = Permission.objects.get(codename="manage_user_profiles")
         self.profile_manager_user.user_permissions.add(permission)
+        # The user model is swapped, so change_user lives on the users content type.
         change_user_permission = Permission.objects.get(
-            codename="change_user", content_type__app_label="auth"
+            codename="change_user",
+            content_type=ContentType.objects.get_for_model(get_user_model()),
         )
         self.change_user_permission_user.user_permissions.add(change_user_permission)
 
