@@ -70,8 +70,7 @@
             "FIELD_DEFINITION",
             "ARGUMENT_DEFINITION",
             "INPUT_FIELD_DEFINITION",
-            "ENUM_VALUE",
-            "DIRECTIVE_DEFINITION"
+            "ENUM_VALUE"
           ],
           "name": "deprecated"
         },
@@ -108,11 +107,9 @@
         }
       ],
       "mutationType": {
-        "kind": "OBJECT",
         "name": "Mutations"
       },
       "queryType": {
-        "kind": "OBJECT",
         "name": "Queries"
       },
       "subscriptionType": null,
@@ -16698,22 +16695,7 @@
               }
             },
             {
-              "args": [
-                {
-                  "defaultValue": "false",
-                  "description": null,
-                  "name": "includeDeprecated",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Boolean",
-                      "ofType": null
-                    }
-                  }
-                }
-              ],
+              "args": [],
               "deprecationReason": null,
               "description": "A list of all directives supported by this server.",
               "isDeprecated": false,
@@ -17408,34 +17390,6 @@
                   }
                 }
               }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "isDeprecated",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "deprecationReason",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
             }
           ],
           "inputFields": null,
@@ -17560,12 +17514,6 @@
               "description": "Location adjacent to an input object field definition.",
               "isDeprecated": false,
               "name": "INPUT_FIELD_DEFINITION"
-            },
-            {
-              "deprecationReason": null,
-              "description": "Location adjacent to a directive definition.",
-              "isDeprecated": false,
-              "name": "DIRECTIVE_DEFINITION"
             }
           ],
           "fields": null,

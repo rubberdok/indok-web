@@ -1,7 +1,7 @@
 ---
-title: Indok Bader
+title: Indøk Bader
 description: Beskrivelse
-logo: /img/indokbader.jpg
+logo: /img/indokbader.png
 # image: /img/BILDE.jpg
 board:
   ceo:
