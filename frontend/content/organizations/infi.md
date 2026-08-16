@@ -1,5 +1,5 @@
 ---
-title: Infi
+title: InFi
 description: BESKRIVELSE
 logo: /img/infilogo.png
 image: /img/infilogo.png
