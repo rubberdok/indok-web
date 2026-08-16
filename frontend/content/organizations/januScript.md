@@ -5,10 +5,10 @@ logo: /img/januscriptlogo.jpg
 image: /img/januscriptlogo.jpg
 board:
   redaktør:
-    name: Hannah Bjerke Lote
+    name: Martin Buchholz
     title: Redaktør
-    mail: hannah.bjerke.lote@gmail.com
+    mail: Martin@buchholz.no
 tag: kultur
 ---
 
-Indøks avis verv. Mer info kommer
+Indøks avis verv. Mer info kommer...

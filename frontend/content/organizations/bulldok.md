@@ -5,9 +5,11 @@ logo: /img/bulldok2.jpeg
 image: /img/bulldok2.jpeg
 board:
   leder:
-    name: Håvard Navelsaker
-    title: Leder
-    mail: havard.navelsaker@outlook.com
+    name: Ulrik McFadzean
+    title: Lederpar
+  leder2:
+    name: Mats Eide Richardsen
+    title: Lederpar
 tag: idrett
 ---
 

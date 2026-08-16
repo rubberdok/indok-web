@@ -5,8 +5,11 @@ logo: /img/FK_logo.jpg
 image: /img/janushklogo.jpg
 board:
   ceo:
-    name: Markus Myklebust
-    title: Leder
+    name: Vilde Aarvik
+    title: Lederpar
+  cto:
+    name: Emilie Sebergsen
+    title: Lederpar
 tag: idrett
 ---
 
@@ -16,6 +19,6 @@ Vi er et veletablert, historisk (anno 2015) håndballag for både jenter og gutt
 
 Kontakt oss på [facebooksiden](https://www.facebook.com/janushk/) vår!
 
-Treningstider: tirsdag 08:00-09:00 på SiT Gløshaugen
+Treningstider kommer på facebook.
 
 ![bilde](/img/janushk.jpg)

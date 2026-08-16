@@ -5,10 +5,13 @@ logo: /img/mkmlogo.png
 image: /img/mkm.jpg
 board:
   ceo:
-    name: Amund Bekkelund Bakken
+    name: Gustav Brandsæter Vik
     mail: ceo@klingendemynt.no
     title: CEO
-
+  cto:
+    name: Alver Brennersted
+    mail: cto@klingendemynt.no
+    title: CTO
 tag: kultur
 ---
 

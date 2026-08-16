@@ -5,8 +5,11 @@ logo: /img/FK_logo.jpg
 image: /img/fkbilde.jpg
 board:
   ceo:
-    name: Gard Drag Erlandsen
+    name: Viktor Borgos
     title: Leder
+  cto:
+    name: Eirik Moen-Kasin
+    title: Trener
 tag: idrett
 ---
 

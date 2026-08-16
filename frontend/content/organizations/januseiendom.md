@@ -9,32 +9,32 @@ board:
     phoneNumber: 465 15 125
     title: Leder
   øko_nestleder:
-    name: Astrid Skrøvseth
-    phoneNumber: 957 28 185
+    name: A
+    phoneNumber: 0
     title: Nestleder og økonomiansvarlig
   pr:
-    name: Maria Vaagland
-    phoneNumber: 930 56 553
+    name: A
+    phoneNumber: 0
     title: PR- og sosialansvarlig
   drift1:
-    name: Christian Viken-Slåtten
-    phoneNumber: 955 25 788
+    name: A
+    phoneNumber: 0
     title: Driftsansvarlig
   drift2:
-    name: navn
-    phoneNumber: 12345678
+    name: A
+    phoneNumber: 0
     title: Driftsansvarlig
   book1:
-    name: Magnus Thorstensen
-    phoneNumber: 467 64 166
+    name: A
+    phoneNumber: 0
     title: Bookingansvarlig
   book2:
-    name: Sander Haugen
-    phoneNumber: 905 82 561
+    name: A
+    phoneNumber: 0
     title: Bookingansvarlig
   log:
-    name: Konrad Henry
-    phoneNumber: 454 75 151
+    name: A
+    phoneNumber: 0
     title: Logistikkansvarlig
 
 tag: annet
