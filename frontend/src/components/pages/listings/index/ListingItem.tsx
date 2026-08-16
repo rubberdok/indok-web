@@ -18,9 +18,11 @@ const timestamp = (datetime: string) => {
 const translateChip = (chip: string) => {
   switch (chip) {
     case "application":
-      return "søknad";
+      return "Søknad";
     case "interview":
-      return "intervju";
+      return "Intervju";
+    case "case":
+      return "Case";
     default:
       return chip;
   }
