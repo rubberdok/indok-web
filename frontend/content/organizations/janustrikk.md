@@ -5,8 +5,11 @@ logo: /img/janusstrikk.jpg
 image: /img/janusstrikk.jpg
 board:
   ceo:
-    name: Ane Holm Grøneng
-    title: Leder
+    name: Mina Malthe-Sørensen
+    title: Lederpar
+  cto:
+    name: Tuva Coch Sæter
+    title: Lederpar
 tag: annet
 ---
 

@@ -5,8 +5,11 @@ logo: /img/jslklogo.png
 image: /img/jslk.jpg
 board:
   ceo:
-    name: Synne Råheim Borge
-    title: Leder
+    name: Magnus Thorstensen
+    title: Lederpar
+  cto:
+    name: Sigurd Tveter
+    title: Lederpar
 tag: idrett
 ---
 

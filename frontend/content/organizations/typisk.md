@@ -5,7 +5,7 @@ logo: /img/typisk.jpg
 image: /img/hero.jpg
 board:
   ceo:
-    name: Marie Eskeland Børtveit
+    name: NAVN
     title: Podcasthost
 tag: kultur
 ---

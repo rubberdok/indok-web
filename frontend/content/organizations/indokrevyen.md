@@ -12,6 +12,10 @@ board:
     name: Knut Lembach-Beylegaard
     title: Revysjef
     mail: knut.aku@gmail.com
+  leder3:
+    name: Ulrik Longva
+    title: Revysjef
+    mail: ulhaugland@gmail.com
 tag: kultur
 ---
 

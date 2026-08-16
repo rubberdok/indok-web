@@ -11,6 +11,8 @@ board:
 tag: idrett
 ---
 
+Denne foreningen eksisterer ikke lenger.
+
 ##### Hvem er vi?
 
 Janus: To Tårn består av indøkstudenter med fasinasjon for teori og taktikk satt i praksis. Vi tilbyr et støttende miljø som hjelper hverandre med utvikling og forståelse for spillet.

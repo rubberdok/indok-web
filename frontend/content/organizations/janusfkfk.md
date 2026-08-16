@@ -5,13 +5,13 @@ logo: /img/fkfklogo.png
 image: /img/fkfkbilde.png
 board:
   ceo:
-    name: Johanne Dokken Kristiansen
+    name: Live Aksnessæther
     title: Chief Executive Officer
-    mail: johandk@stud.ntnu.no
+    mail: EPOST
   cto:
-    name: Marit Østhus
+    name: Andrea Fjeldbraaten
     title: Chief Executive Officer
-    mail: mariosth@stud.ntnu.no
+    mail: EPOST
 tag: idrett
 ---
 

@@ -5,10 +5,11 @@ logo: /img/eivlogo.jpg
 image: /img/eivbilde.jpg
 board:
   ceo:
-    name: Olav Utle Kolltveit
+    name: Benjamin Svarød
     title: Head of Red
+    email: benjamin.svarod@gmail.com
   cto:
-    name: Nora Vengstad Furøy
+    name: Selma Dale Ditlev-Simonsen
     title: Head of Bread
 tag: kultur
 ---
