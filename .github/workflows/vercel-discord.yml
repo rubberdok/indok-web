@@ -1,0 +1,66 @@
+name: Vercel Discord Varsel
+
+on:
+  deployment_status:
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send status til Discord med Embeds
+        run: |
+          STATE="${{ github.event.deployment_status.state }}"
+          ENV="${{ github.event.deployment.environment }}"
+          URL="${{ github.event.deployment_status.target_url }}"
+          REPO="${{ github.repository }}"
+          ACTOR="${{ github.actor }}"
+          SHA="${{ github.sha }}"
+          
+          # Henter de 7 første tegnene av commit-hashen for at den skal bli penere å lese
+          SHORT_SHA=$(echo $SHA | cut -c1-7)
+          
+          # Ignorer 'pending' slik at dere slipper spam når Vercel starter byggingen
+          if [ "$STATE" = "pending" ]; then
+            echo "Bygg startet, ignorerer varsel..."
+            exit 0
+          fi
+          
+          # Sett opp farger (desimal-fargekoder) og titler basert på status
+          if [ "$STATE" = "success" ]; then
+            COLOR=3066993      # Grønn
+            TITLE="✅ Vercel Deploy Vellykket"
+          elif [ "$STATE" = "failure" ]; then
+            COLOR=15158332     # Rød
+            TITLE="❌ Vercel Deploy Feilet"
+          else
+            COLOR=16776960     # Gul (for andre feil/avbrudd)
+            TITLE="⚠️ Vercel Deploy Status: $STATE"
+          fi
+          
+          # Bruker jq for å trygt bygge en avansert JSON med 'embeds'
+          JSON_PAYLOAD=$(jq -n \
+            --arg title "$TITLE" \
+            --arg url "$URL" \
+            --arg repo "$REPO" \
+            --arg env "$ENV" \
+            --arg actor "$ACTOR" \
+            --arg sha "$SHORT_SHA" \
+            --arg full_sha "$SHA" \
+            --argjson color "$COLOR" \
+            '{
+              embeds: [{
+                title: $title,
+                url: $url,
+                color: $color,
+                description: "En oppdatering for **\($repo)** er nettopp ferdig.",
+                fields: [
+                  { name: "🌍 Miljø", value: $env, inline: true },
+                  { name: "👤 Utført av", value: $actor, inline: true },
+                  { name: "💻 Commit", value: "[\($sha)](https://github.com/\($repo)/commit/\($full_sha))", inline: true }
+                ],
+                footer: { text: "Vercel via GitHub Actions" },
+                timestamp: (now | todate)
+              }]
+            }')
+            
+          curl -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" ${{ secrets.DISCORD_WEBHOOK_URL }}
