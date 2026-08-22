@@ -18,7 +18,7 @@ class GoogleDriveAPI:
             )
             .execute()
         )
-        return file["webViewLink"]
+        return file.get("webViewLink")
 
     def get_thumbnail(self, file_id: str) -> Optional[str]:
         file = (
@@ -30,4 +30,4 @@ class GoogleDriveAPI:
             )
             .execute()
         )
-        return file["thumbnailLink"]
+        return file.get("thumbnailLink")
