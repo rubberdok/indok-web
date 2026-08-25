@@ -115,7 +115,7 @@ export const EventDetail: React.FC<Props> = ({ event }) => {
                       <ListItemIcon>
                         <CreditCard />
                       </ListItemIcon>
-                      <ListItemText primary="Pris" secondary={event.price} />
+                      <ListItemText primary="Pris" secondary={`${event.price} kr`} />
                     </ListItem>
                   )}
                   {event.category && (
