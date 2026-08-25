@@ -5,14 +5,10 @@ logo: /img/indokrevylogo.jpg
 image: /img/indokrevyen2025.jpg
 board:
   leder1:
-    name: Nikita Upadhyaya
-    title: Revysjef
-    mail: nikitagu03@gmail.com
-  leder2:
     name: Knut Lembach-Beylegaard
     title: Revysjef
     mail: knut.aku@gmail.com
-  leder3:
+  leder2:
     name: Ulrik Longva
     title: Revysjef
     mail: ulhaugland@gmail.com
