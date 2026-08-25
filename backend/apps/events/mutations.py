@@ -33,6 +33,7 @@ class BaseEventInput:
     contact_email = graphene.String(required=False)
     binding_signup = graphene.Boolean(required=False)
     allowed_grade_years = graphene.List(NonNull(graphene.Int))
+    is_hidden = graphene.Boolean(required=False)
 
 
 class CreateEventInput(BaseEventInput, graphene.InputObjectType):

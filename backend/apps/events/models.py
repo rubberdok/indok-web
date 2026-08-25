@@ -47,6 +47,8 @@ class Event(models.Model, Sellable):
     image = models.URLField(blank=True, null=True)
     short_description = models.CharField(max_length=100, blank=True, null=True)
     has_extra_information = models.BooleanField(default=False)
+
+    is_hidden = models.BooleanField(default=False)
     contact_email = models.EmailField(blank=True, default="")
     GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
     allowed_grade_years = MultiSelectField(

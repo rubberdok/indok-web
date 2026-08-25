@@ -109,6 +109,7 @@ class EventType(DjangoObjectType):
             "has_extra_information",
             "binding_signup",
             "contact_email",
+            "is_hidden",
         ]
 
     class PermissionDecorators:

@@ -263,3 +263,6 @@ web.code-workspace
 
 # Apollo VS Code extension
 apollo.config.js
+
+# Local Github AI skills
+.github/skills/**/*

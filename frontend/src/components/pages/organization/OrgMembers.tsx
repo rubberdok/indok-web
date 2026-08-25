@@ -63,9 +63,9 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const currentUserId = currentUserData?.user?.id;
   const isHrMember = Boolean(
     currentUserId &&
-    memberships.some(
-      (membership) => membership.user.id === currentUserId && membership?.group?.uuid === organization.hrGroup?.uuid
-    )
+      memberships.some(
+        (membership) => membership.user.id === currentUserId && membership?.group?.uuid === organization.hrGroup?.uuid
+      )
   );
   const canEditMemberships = isHrMember || Boolean(manageOrganizationPermissionData?.hasPermission);
 
@@ -193,7 +193,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
         },
       });
 
-      setFeedbackSuccess(isAdmin ? "Bruker demotert til medlem." : "Bruker promotert til administrator.");
+      setFeedbackSuccess(isAdmin ? "Bruker degradert til medlem." : "Bruker forfremmet til administrator.");
       await refetch();
     } catch (err) {
       setFeedbackError(toErrorMessage(err, "Klarte ikke å oppdatere rolle."));
@@ -251,7 +251,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                   {membership.user.firstName} {membership.user.lastName}
                 </TableCell>
                 <TableCell>
-                  {membership?.group?.name === "HR" ? "Administrator" : (membership?.group?.name ?? "--")}
+                  {membership?.group?.name === "HR" ? "Administrator" : membership?.group?.name ?? "--"}
                 </TableCell>
                 {canEditMemberships ? (
                   <TableCell>
@@ -265,7 +265,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                         void promoteOrDemote(membership.user.id, membership?.group?.uuid === organization.hrGroup?.uuid)
                       }
                     >
-                      {membership?.group?.uuid === organization.hrGroup?.uuid ? "Demoter" : "Promoter"}
+                      {membership?.group?.uuid === organization.hrGroup?.uuid ? "Degrader" : "Forfrem"}
                     </Button>
                     <Button
                       variant="contained"
