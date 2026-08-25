@@ -120,6 +120,78 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.assertEqual(send_mail_mock.call_args_list[1].args[1], self.event)
 
 
+class HiddenEventTestCase(EventsBaseTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.visible_event = EventFactory(is_attendable=False, is_hidden=False)
+        self.hidden_event = EventFactory(is_attendable=False, is_hidden=True)
+
+    def test_hidden_event_excluded_from_all_events(self):
+        query = """
+            query {
+                allEvents {
+                    id
+                }
+            }
+        """
+        response = self.query(query)
+        event_ids = {event["id"] for event in response.json()["data"]["allEvents"]}
+        self.assertIn(str(self.visible_event.id), event_ids)
+        self.assertNotIn(str(self.hidden_event.id), event_ids)
+
+    def test_hidden_event_excluded_from_all_events_with_filters(self):
+        query = f"""
+            query {{
+                allEvents(organization: "{self.hidden_event.organization.name}") {{
+                    id
+                }}
+            }}
+        """
+        response = self.query(query)
+        event_ids = {event["id"] for event in response.json()["data"]["allEvents"]}
+        self.assertNotIn(str(self.hidden_event.id), event_ids)
+
+    def test_hidden_event_excluded_from_default_events(self):
+        query = """
+            query {
+                defaultEvents {
+                    id
+                }
+            }
+        """
+        response = self.query(query)
+        event_ids = {event["id"] for event in response.json()["data"]["defaultEvents"]}
+        self.assertNotIn(str(self.hidden_event.id), event_ids)
+
+    def test_hidden_event_still_accessible_by_id(self):
+        query = f"""
+            query {{
+                event(id: {self.hidden_event.id}) {{
+                    id
+                }}
+            }}
+        """
+        response = self.query(query)
+        self.assertEqual(response.json()["data"]["event"]["id"], str(self.hidden_event.id))
+
+    def test_update_event_can_set_is_hidden(self):
+        org_user = IndokUserFactory()
+        MembershipFactory(user=org_user, organization=self.visible_event.organization)
+        mutation = f"""
+            mutation {{
+                updateEvent(id: {self.visible_event.id}, eventData: {{isHidden: true}}) {{
+                    ok
+                    event {{
+                        isHidden
+                    }}
+                }}
+            }}
+        """
+        response = self.query(mutation, user=org_user)
+        self.assertTrue(response.json()["data"]["updateEvent"]["ok"])
+        self.assertTrue(response.json()["data"]["updateEvent"]["event"]["isHidden"])
+
+
 class AttendeeReportExportTestCase(EventsBaseTestCase):
     def test_wrap_attendee_report_as_json_supports_xlsx(self):
         dataframe = pd.DataFrame(

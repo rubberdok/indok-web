@@ -51,7 +51,7 @@ class EventResolvers:
         Get all events that fit the given filters
         """
         if category or organization or start_time or end_time:
-            filteredEvents = Event.objects
+            filteredEvents = Event.objects.filter(is_hidden=False)
 
             if start_time and end_time:
                 filteredEvents = filteredEvents.filter(
@@ -88,15 +88,18 @@ class EventResolvers:
                 )  # Only show events that have yet to pass
                 .order_by("start_time")
             )
-        return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
+        return (
+            Event.objects.filter(is_hidden=False, start_time__gte=date.today())
+            .order_by("start_time")
+        )
 
     def resolve_default_events(self, info):
         """
         For each organization, get the most recent (future) event
         """
-        return Event.objects.filter(start_time__gte=date.today()).distinct(
-            "organization"
-        )
+        return Event.objects.filter(
+            is_hidden=False, start_time__gte=date.today()
+        ).distinct("organization")
 
     def resolve_event(self, info, id):
         try:

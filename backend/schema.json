@@ -3853,6 +3853,22 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
+              "name": "isHidden",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
               "name": "contactEmail",
               "type": {
                 "kind": "NON_NULL",
@@ -16065,6 +16081,16 @@
             {
               "defaultValue": null,
               "description": null,
+              "name": "isHidden",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
               "name": "organizationId",
               "type": {
                 "kind": "NON_NULL",
@@ -16298,6 +16324,16 @@
                     "ofType": null
                   }
                 }
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "isHidden",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
               }
             },
             {
