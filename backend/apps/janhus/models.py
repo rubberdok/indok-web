@@ -70,6 +70,8 @@ class JanHusBookingLevel(models.Model):
 
     class Meta:
         ordering = ["-priority", "name"]
+        verbose_name = "JanHus booking level"
+        verbose_name_plural = "JanHus booking levels"
 
     def __str__(self):
         return self.name
@@ -181,6 +183,8 @@ class JanHusAreaConfiguration(models.Model):
 
     class Meta:
         ordering = ["area"]
+        verbose_name = "JanHus area configuration"
+        verbose_name_plural = "JanHus area configurations"
 
     def __str__(self):
         return f"{self.get_area_display()} configuration"
@@ -189,6 +193,8 @@ class JanHusAreaConfiguration(models.Model):
 class JanHusBooking(models.Model):
     class Meta:
         ordering = ["starts_at"]
+        verbose_name = "JanHus booking"
+        verbose_name_plural = "JanHus bookings"
         permissions = [
             ("manage_booking", "Can manage JanHus bookings"),
             ("manage_settings", "Can manage JanHus booking settings"),
@@ -418,6 +424,8 @@ class JanHusBookingRequest(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name = "JanHus booking request"
+        verbose_name_plural = "JanHus booking requests"
 
     def __str__(self):
         return f"JanHus request {self.id} ({self.status})"
