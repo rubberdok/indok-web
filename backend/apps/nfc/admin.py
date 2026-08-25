@@ -30,6 +30,7 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
     )
     search_fields = ("card__mifare_csn", "user__username", "external_holder_name")
     list_filter = ("permanent_access", "revoked_at")
+    raw_id_fields = ("user", "assigned_by", "revoked_by")
 
 
 @admin.register(NfcAccessGrant)
@@ -46,6 +47,7 @@ class NfcAccessGrantAdmin(admin.ModelAdmin):
         "revoked_at",
     )
     list_filter = ("scope", "participant_policy", "permanent_access", "revoked_at")
+    raw_id_fields = ("granted_to_user", "granted_by", "revoked_by")
 
 
 @admin.register(NfcAccessEvent)
@@ -59,6 +61,7 @@ class NfcAccessEventAdmin(admin.ModelAdmin):
     )
     search_fields = ("door_identifier", "mifare_csn_reported", "resolved_user__username")
     list_filter = ("event_type", "source")
+    raw_id_fields = ("resolved_user",)
 
 
 @admin.register(NfcSettings)
