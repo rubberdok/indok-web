@@ -13,8 +13,7 @@ board:
     phoneNumber: 969 155 91
   cto:
     name: Markus Emil Omdal
-    title: Leder
-    mail: leder@rubberdok.no
+    title: Nest-leder
 tag: annet
 ---
 
