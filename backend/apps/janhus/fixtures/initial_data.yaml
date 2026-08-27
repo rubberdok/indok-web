@@ -1,29 +1,35 @@
-- model: janhus.janhusareaconfiguration
+- model: janhus.janhusarea
+  pk: 3
+  fields:
+    name: Hele huset
+    parent: null
+    is_active: true
+    internal_price_per_hour: 0.00
+    external_price_per_hour: 200.00
+    cleaning_fee: 1100.00
+    default_deposit_amount: 2000.00
+
+- model: janhus.janhusarea
   pk: 1
   fields:
-    area: FIRST_FLOOR
+    name: 1. etasje
+    parent: 3
+    is_active: true
     internal_price_per_hour: 0.00
     external_price_per_hour: 100.00
     cleaning_fee: 600.00
     default_deposit_amount: 1000.00
 
-- model: janhus.janhusareaconfiguration
+- model: janhus.janhusarea
   pk: 2
   fields:
-    area: SECOND_FLOOR
+    name: 2. etasje
+    parent: 3
+    is_active: true
     internal_price_per_hour: 0.00
     external_price_per_hour: 100.00
     cleaning_fee: 500.00
     default_deposit_amount: 750.00
-
-- model: janhus.janhusareaconfiguration
-  pk: 3
-  fields:
-    area: ENTIRE_HOUSE
-    internal_price_per_hour: 0.00
-    external_price_per_hour: 200.00
-    cleaning_fee: 1100.00
-    default_deposit_amount: 2000.00
 
 - model: janhus.janhusbookingsettings
   pk: 1
@@ -43,7 +49,7 @@
   fields:
     starts_at: 2026-06-01 17:00:00+00:00
     ends_at: 2026-06-01 21:00:00+00:00
-    area: FIRST_FLOOR
+    area: 1
     status: CONFIRMED
     owner_user: 3
     owner_organization: null
@@ -75,7 +81,7 @@
   fields:
     starts_at: 2026-06-05 16:00:00+00:00
     ends_at: 2026-06-05 23:00:00+00:00
-    area: ENTIRE_HOUSE
+    area: 3
     status: CONFIRMED
     owner_user: null
     owner_organization: 19
@@ -107,7 +113,7 @@
   fields:
     starts_at: 2026-06-10 18:00:00+00:00
     ends_at: 2026-06-11 00:30:00+00:00
-    area: SECOND_FLOOR
+    area: 2
     status: PROVISIONAL
     owner_user: 2
     owner_organization: null
@@ -139,7 +145,7 @@
   fields:
     starts_at: 2026-06-15 12:00:00+00:00
     ends_at: 2026-06-15 17:00:00+00:00
-    area: FIRST_FLOOR
+    area: 1
     status: PENDING_ADMIN_REVIEW
     owner_user: null
     owner_organization: null

@@ -7,7 +7,6 @@ from graphql import GraphQLError
 
 from apps.janhus.models import (
     JanHusArea,
-    JanHusAreaConfiguration,
     JanHusBooking,
     JanHusBookingLevel,
     JanHusBookingSettings,
@@ -30,10 +29,11 @@ def get_or_create_settings() -> JanHusBookingSettings:
     return settings
 
 
-def ensure_area_configurations() -> QuerySet[JanHusAreaConfiguration]:
-    for area in JanHusArea.values:
-        JanHusAreaConfiguration.objects.get_or_create(area=area)
-    return JanHusAreaConfiguration.objects.all()
+def ensure_default_areas() -> QuerySet[JanHusArea]:
+    entire_house, _ = JanHusArea.objects.get_or_create(name="Hele huset")
+    JanHusArea.objects.get_or_create(name="1. etasje", defaults={"parent": entire_house})
+    JanHusArea.objects.get_or_create(name="2. etasje", defaults={"parent": entire_house})
+    return JanHusArea.objects.filter(is_active=True)
 
 
 def ensure_default_levels(
@@ -186,25 +186,17 @@ def can_override_provisionals(
     return weeks_in_advance > settings.organization_booking_opens_weeks_before
 
 
-def get_conflicting_areas(area: str) -> list[str]:
-    if area == JanHusArea.ENTIRE_HOUSE:
-        return [
-            JanHusArea.ENTIRE_HOUSE,
-            JanHusArea.FIRST_FLOOR,
-            JanHusArea.SECOND_FLOOR,
-        ]
-    if area == JanHusArea.FIRST_FLOOR:
-        return [JanHusArea.FIRST_FLOOR, JanHusArea.ENTIRE_HOUSE]
-    return [JanHusArea.SECOND_FLOOR, JanHusArea.ENTIRE_HOUSE]
+def get_conflicting_areas(area: JanHusArea) -> list:
+    return area.conflicting_area_ids
 
 
 def get_overlapping_bookings(
-    *, starts_at, ends_at, area: str, exclude_booking_id: Optional[int] = None
+    *, starts_at, ends_at, area: JanHusArea, exclude_booking_id: Optional[int] = None
 ):
     query = JanHusBooking.objects.filter(
         starts_at__lt=ends_at,
         ends_at__gt=starts_at,
-        area__in=get_conflicting_areas(area),
+        area_id__in=get_conflicting_areas(area),
     ).exclude(
         status__in=[
             JanHusBookingStatus.DECLINED,

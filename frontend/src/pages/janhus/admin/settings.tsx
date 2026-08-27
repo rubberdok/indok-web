@@ -21,9 +21,11 @@ import { useEffect, useMemo, useState } from "react";
 import { PermissionRequired } from "@/components/Auth";
 import { Title } from "@/components/Title";
 import {
-  JanHusAreaConfigurationsDocument,
+  CreateJanhusAreaDocument,
+  DeleteJanhusAreaDocument,
+  JanHusAreasDocument,
   JanHusBookingSettingsDocument,
-  UpdateJanhusAreaConfigurationDocument,
+  UpdateJanhusAreaDocument,
   UpdateJanhusBookingSettingsDocument,
 } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
@@ -51,19 +53,16 @@ type SettingsForm = {
   fallSemesterActive: boolean;
   springSemesterActive: boolean;
   externalBookingsEnabled: boolean;
-};
-
-const AREA_LABELS: Record<string, string> = {
-  FIRST_FLOOR: "1. etasje",
-  SECOND_FLOOR: "2. etasje",
-  ENTIRE_HOUSE: "Hele huset",
+  privateBookingsEnabled: boolean;
 };
 
 const JanHusSettingsPage: NextPageWithLayout = () => {
   const [alert, setAlert] = useState<{ severity: "success" | "error"; message: string } | undefined>();
 
   const { data: settingsData, refetch: refetchSettings } = useQuery(JanHusBookingSettingsDocument);
-  const { data: areaData, refetch: refetchAreas } = useQuery(JanHusAreaConfigurationsDocument);
+  const { data: areaData, refetch: refetchAreas } = useQuery(JanHusAreasDocument, {
+    variables: { includeInactive: true },
+  });
 
   const [settingsForm, setSettingsForm] = useState<SettingsForm>({
     minDurationMinutes: 60,
@@ -80,6 +79,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
     fallSemesterActive: true,
     springSemesterActive: true,
     externalBookingsEnabled: true,
+    privateBookingsEnabled: true,
   });
 
   const [areaForms, setAreaForms] = useState<
@@ -93,6 +93,8 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
       }
     >
   >({});
+  const [newAreaName, setNewAreaName] = useState("");
+  const [newAreaParentId, setNewAreaParentId] = useState("");
 
   const openingHourOptions = useMemo(() => {
     const slotGranularityMinutes = Math.max(settingsForm.slotGranularityMinutes, 1);
@@ -160,22 +162,23 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
       fallSemesterActive: settings.fallSemesterActive,
       springSemesterActive: settings.springSemesterActive,
       externalBookingsEnabled: settings.externalBookingsEnabled ?? true,
+      privateBookingsEnabled: settings.privateBookingsEnabled ?? true,
     });
   }, [settingsData]);
 
   useEffect(() => {
-    const configurations = areaData?.janhusAreaConfigurations;
-    if (!configurations) return;
+    const areas = areaData?.janhusAreas;
+    if (!areas) return;
 
     setAreaForms(
       Object.fromEntries(
-        configurations.map((configuration) => [
-          configuration.area,
+        areas.map((area) => [
+          area.id,
           {
-            internalPricePerHour: String(configuration.internalPricePerHour),
-            externalPricePerHour: String(configuration.externalPricePerHour),
-            cleaningFee: String(configuration.cleaningFee),
-            defaultDepositAmount: String(configuration.defaultDepositAmount ?? 0),
+            internalPricePerHour: String(area.internalPricePerHour),
+            externalPricePerHour: String(area.externalPricePerHour),
+            cleaningFee: String(area.cleaningFee),
+            defaultDepositAmount: String(area.defaultDepositAmount ?? 0),
           },
         ])
       )
@@ -190,9 +193,27 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
     onError: (error) => setAlert({ severity: "error", message: error.message }),
   });
 
-  const [updateArea, { loading: areaSaving }] = useMutation(UpdateJanhusAreaConfigurationDocument, {
+  const [updateArea, { loading: areaSaving }] = useMutation(UpdateJanhusAreaDocument, {
     onCompleted: async () => {
       setAlert({ severity: "success", message: "Prisinnstillinger oppdatert" });
+      await refetchAreas();
+    },
+    onError: (error) => setAlert({ severity: "error", message: error.message }),
+  });
+
+  const [createArea, { loading: areaCreating }] = useMutation(CreateJanhusAreaDocument, {
+    onCompleted: async () => {
+      setAlert({ severity: "success", message: "Område opprettet" });
+      setNewAreaName("");
+      setNewAreaParentId("");
+      await refetchAreas();
+    },
+    onError: (error) => setAlert({ severity: "error", message: error.message }),
+  });
+
+  const [deleteArea] = useMutation(DeleteJanhusAreaDocument, {
+    onCompleted: async () => {
+      setAlert({ severity: "success", message: "Område arkivert" });
       await refetchAreas();
     },
     onError: (error) => setAlert({ severity: "error", message: error.message }),
@@ -216,19 +237,20 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
           fallSemesterActive: settingsForm.fallSemesterActive,
           springSemesterActive: settingsForm.springSemesterActive,
           externalBookingsEnabled: settingsForm.externalBookingsEnabled,
+          privateBookingsEnabled: settingsForm.privateBookingsEnabled,
         },
       },
     });
   }
 
-  async function saveArea(area: string) {
-    const form = areaForms[area];
+  async function saveArea(id: string) {
+    const form = areaForms[id];
     if (!form) return;
 
     await updateArea({
       variables: {
         areaData: {
-          area,
+          id,
           internalPricePerHour: Number(form.internalPricePerHour),
           externalPricePerHour: Number(form.externalPricePerHour),
           cleaningFee: Number(form.cleaningFee),
@@ -236,6 +258,23 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
         },
       },
     });
+  }
+
+  async function handleCreateArea() {
+    if (!newAreaName.trim()) return;
+
+    await createArea({
+      variables: {
+        areaData: {
+          name: newAreaName.trim(),
+          parentId: newAreaParentId || null,
+        },
+      },
+    });
+  }
+
+  async function handleArchiveArea(id: string) {
+    await deleteArea({ variables: { id } });
   }
 
   return (
@@ -473,6 +512,18 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                   label="Tillat eksterne bookingforespørsler"
                 />
 
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={settingsForm.privateBookingsEnabled}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({ ...prev, privateBookingsEnabled: event.target.checked }))
+                      }
+                    />
+                  }
+                  label="Tillat private bookingforespørsler"
+                />
+
                 <Box>
                   <Button variant="contained" onClick={saveSettings} disabled={settingsSaving}>
                     Lagre regler
@@ -486,17 +537,56 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
             <Paper sx={{ p: 3 }} elevation={0}>
               <Stack direction="column" spacing={2}>
                 <Typography variant="h4" component="h2">
-                  Pris per område
+                  Områder og priser
                 </Typography>
-                <Typography>Her kan dere oppdatere intern-/eksternpris og renholdsgebyr for hvert område.</Typography>
+                <Typography>
+                  Legg til nye områder (som f.eks. en kjeller) og oppdater intern-/eksternpris og renholdsgebyr for
+                  hvert område.
+                </Typography>
+
+                <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "flex-end" }}>
+                  <TextField
+                    label="Navn på nytt område"
+                    value={newAreaName}
+                    onChange={(event) => setNewAreaName(event.target.value)}
+                  />
+                  <FormControl sx={{ minWidth: 200 }}>
+                    <InputLabel>Underområde av</InputLabel>
+                    <Select
+                      label="Underområde av"
+                      value={newAreaParentId}
+                      onChange={(event) => setNewAreaParentId(event.target.value)}
+                    >
+                      <MenuItem value="">Ingen (toppnivå)</MenuItem>
+                      {(areaData?.janhusAreas ?? []).map((area) => (
+                        <MenuItem key={area.id} value={area.id}>
+                          {area.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <Button variant="contained" onClick={handleCreateArea} disabled={areaCreating || !newAreaName.trim()}>
+                    Legg til område
+                  </Button>
+                </Stack>
 
                 <Stack spacing={2}>
-                  {(areaData?.janhusAreaConfigurations ?? []).map((configuration) => {
-                    const form = areaForms[configuration.area];
+                  {(areaData?.janhusAreas ?? []).map((configuration) => {
+                    const form = areaForms[configuration.id];
                     return (
                       <Box key={configuration.id} p={2} border={1} borderColor="divider" borderRadius={2}>
                         <Stack spacing={2}>
-                          <Typography variant="h6">{AREA_LABELS[configuration.area] ?? configuration.area}</Typography>
+                          <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Typography variant="h6">
+                              {configuration.name}
+                              {!configuration.isActive && " (arkivert)"}
+                            </Typography>
+                            {configuration.isActive && (
+                              <Button color="error" size="small" onClick={() => handleArchiveArea(configuration.id)}>
+                                Arkiver
+                              </Button>
+                            )}
+                          </Stack>
                           <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                             <TextField
                               label="Internpris per time"
@@ -505,8 +595,8 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                               onChange={(event) =>
                                 setAreaForms((prev) => ({
                                   ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
+                                  [configuration.id]: {
+                                    ...(prev[configuration.id] ?? {
                                       internalPricePerHour: "0",
                                       externalPricePerHour: "0",
                                       cleaningFee: "0",
@@ -524,8 +614,8 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                               onChange={(event) =>
                                 setAreaForms((prev) => ({
                                   ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
+                                  [configuration.id]: {
+                                    ...(prev[configuration.id] ?? {
                                       internalPricePerHour: "0",
                                       externalPricePerHour: "0",
                                       cleaningFee: "0",
@@ -536,25 +626,6 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                                 }))
                               }
                             />
-                            {/* <TextField
-                              label="Renholdsgebyr"
-                              type="number"
-                              value={form?.cleaningFee ?? ""}
-                              onChange={(event) =>
-                                setAreaForms((prev) => ({
-                                  ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
-                                      internalPricePerHour: "0",
-                                      externalPricePerHour: "0",
-                                      cleaningFee: "0",
-                                      defaultDepositAmount: "0",
-                                    }),
-                                    cleaningFee: event.target.value,
-                                  },
-                                }))
-                              }
-                            /> */}
                             <TextField
                               label="Depositum"
                               type="number"
@@ -562,8 +633,8 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                               onChange={(event) =>
                                 setAreaForms((prev) => ({
                                   ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
+                                  [configuration.id]: {
+                                    ...(prev[configuration.id] ?? {
                                       internalPricePerHour: "0",
                                       externalPricePerHour: "0",
                                       cleaningFee: "0",
@@ -576,11 +647,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                             />
                           </Stack>
                           <Box>
-                            <Button
-                              variant="outlined"
-                              onClick={() => saveArea(configuration.area)}
-                              disabled={areaSaving}
-                            >
+                            <Button variant="outlined" onClick={() => saveArea(configuration.id)} disabled={areaSaving}>
                               Lagre priser
                             </Button>
                           </Box>

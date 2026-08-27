@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from apps.janhus.models import (
-    JanHusAreaConfiguration,
+    JanHusArea,
     JanHusBooking,
     JanHusBookingLevel,
     JanHusBookingRequest,
@@ -45,6 +45,7 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "owner_organization",
         "booking_level",
         "created_by_user",
+        "area",
     )
 
 
@@ -67,7 +68,7 @@ class JanHusBookingRequestAdmin(admin.ModelAdmin):
         "responsible_name",
         "responsible_email",
     )
-    raw_id_fields = ("requester_user", "owner_organization", "converted_booking")
+    raw_id_fields = ("requester_user", "owner_organization", "converted_booking", "area")
 
 
 @admin.register(JanHusBookingLevel)
@@ -126,12 +127,15 @@ class JanHusBookingSettingsAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(JanHusAreaConfiguration)
-class JanHusAreaConfigurationAdmin(admin.ModelAdmin):
+@admin.register(JanHusArea)
+class JanHusAreaAdmin(admin.ModelAdmin):
     list_display = (
-        "area",
+        "name",
+        "parent",
+        "is_active",
         "internal_price_per_hour",
         "external_price_per_hour",
         "cleaning_fee",
     )
-    list_filter = ("area",)
+    list_filter = ("is_active",)
+    search_fields = ("name",)

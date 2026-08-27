@@ -11,7 +11,7 @@ from django.utils import timezone
 from apps.ecommerce.models import Order
 from apps.janhus.mail import send_pending_review_notification
 from apps.janhus.models import (
-    JanHusAreaConfiguration,
+    JanHusArea,
     JanHusBooking,
     JanHusBookingRequest,
     JanHusDepositStatus,
@@ -37,6 +37,16 @@ class JanHusBaseTestCase(ExtendedGraphQLTestCase):
         )
         self.end_dt = self.start_dt + timedelta(hours=2)
 
+        self.entire_house_area, _ = JanHusArea.objects.get_or_create(
+            name="Hele huset"
+        )
+        self.first_floor_area, _ = JanHusArea.objects.get_or_create(
+            name="1. etasje", defaults={"parent": self.entire_house_area}
+        )
+        self.second_floor_area, _ = JanHusArea.objects.get_or_create(
+            name="2. etasje", defaults={"parent": self.entire_house_area}
+        )
+
     def add_booking_permission(self, user):
         content_type = ContentType.objects.get_for_model(JanHusBooking)
         user.user_permissions.add(
@@ -52,7 +62,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 requestData: {{
                   startsAt: \"{self.start_dt.isoformat()}\"
                   endsAt: \"{self.end_dt.isoformat()}\"
-                  area: \"FIRST_FLOOR\"
+                  area: \"{self.first_floor_area.id}\"
                   requesterName: \"External User\"
                   requesterEmail: \"external@example.com\"
                   requesterPhone: \"41234567\"
@@ -93,7 +103,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 requestData: {{
                   startsAt: "{self.start_dt.isoformat()}"
                   endsAt: "{self.end_dt.isoformat()}"
-                  area: "FIRST_FLOOR"
+                  area: "{self.first_floor_area.id}"
                   requesterName: "Non Indok User"
                   requesterEmail: "non-indok@example.com"
                   requesterPhone: "41234567"
@@ -126,7 +136,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 requestData: {{
                   startsAt: "{self.start_dt.isoformat()}"
                   endsAt: "{self.end_dt.isoformat()}"
-                  area: "FIRST_FLOOR"
+                  area: "{self.first_floor_area.id}"
                   requesterName: "Non Indok User"
                   requesterEmail: "non-indok@example.com"
                   requesterPhone: "41234567"
@@ -165,7 +175,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 bookingData: {{
                   startsAt: "{self.start_dt.isoformat()}"
                   endsAt: "{self.end_dt.isoformat()}"
-                  area: "FIRST_FLOOR"
+                  area: "{self.first_floor_area.id}"
                   responsibleName: "Non Indok User"
                   responsibleEmail: "non-indok@example.com"
                   responsiblePhone: "41234567"
@@ -186,6 +196,69 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertIn("Only Indøk students", content["errors"][0]["message"])
 
+    def test_create_booking_rejects_private_event_type_when_disabled(self):
+        JanHusBookingSettings.objects.create(private_bookings_enabled=False)
+
+        query = f"""
+            mutation {{
+              createJanhusBooking(
+                bookingData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "{self.first_floor_area.id}"
+                  responsibleName: "Indok User"
+                  responsibleEmail: "indok@example.com"
+                  responsiblePhone: "41234567"
+                  eventType: "PRIVATE"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIn("Private JanHus-bookinger er midlertidig deaktivert", content["errors"][0]["message"])
+
+    def test_create_booking_request_rejects_external_event_type_when_disabled(self):
+        JanHusBookingSettings.objects.create(external_bookings_enabled=False)
+
+        query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: \"{self.start_dt.isoformat()}\"
+                  endsAt: \"{self.end_dt.isoformat()}\"
+                  area: \"{self.first_floor_area.id}\"
+                  requesterName: \"External User\"
+                  requesterEmail: \"external@example.com\"
+                  requesterPhone: \"41234567\"
+                  responsibleName: \"Responsible User\"
+                  responsibleEmail: \"responsible@example.com\"
+                  responsiblePhone: \"41234567\"
+                  eventType: \"EXTERNAL\"
+                }}
+              ) {{
+                ok
+                bookingRequest {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query)
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIn("Eksterne JanHus-bookinger er midlertidig deaktivert", content["errors"][0]["message"])
+
     def test_guest_list_is_preserved_when_request_is_converted(self):
         self.add_booking_permission(self.user)
 
@@ -198,7 +271,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 requestData: {{
                   startsAt: \"{self.start_dt.isoformat()}\"
                   endsAt: \"{self.end_dt.isoformat()}\"
-                  area: \"FIRST_FLOOR\"
+                  area: \"{self.first_floor_area.id}\"
                   requesterName: \"Requester User\"
                   requesterEmail: \"requester@example.com\"
                   requesterPhone: \"41234567\"
@@ -274,18 +347,15 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
     def test_non_org_booking_requires_full_payment_before_confirmed(self):
         self.add_booking_permission(self.user)
 
-        JanHusAreaConfiguration.objects.create(
-            area="FIRST_FLOOR",
-            internal_price_per_hour=Decimal("100"),
-            external_price_per_hour=Decimal("200"),
-            cleaning_fee=Decimal("50"),
-            default_deposit_amount=Decimal("0"),
-        )
+        self.first_floor_area.internal_price_per_hour = Decimal("100")
+        self.first_floor_area.external_price_per_hour = Decimal("200")
+        self.first_floor_area.cleaning_fee = Decimal("50")
+        self.first_floor_area.save()
 
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_user=self.user,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -337,6 +407,181 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertEqual(JanHusDepositStatus.PAID, booking.deposit_status)
         self.assertEqual(paid_order.id, booking.vipps_order_id)
 
+    def test_manually_marked_as_paid_bypasses_payment_requirement(self):
+        self.add_booking_permission(self.user)
+
+        self.first_floor_area.internal_price_per_hour = Decimal("100")
+        self.first_floor_area.external_price_per_hour = Decimal("200")
+        self.first_floor_area.cleaning_fee = Decimal("50")
+        self.first_floor_area.save()
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+            deposit_status=JanHusDepositStatus.REQUIRED,
+            deposit_amount=Decimal("300"),
+        )
+
+        mark_paid_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  manuallyMarkedAsPaid: true
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+        mark_paid_response = self.query(mark_paid_query, user=self.user)
+        self.assertResponseNoErrors(mark_paid_response)
+
+        confirm_query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  status: "CONFIRMED"
+                }}
+              ) {{
+                ok
+                booking {{
+                  status
+                }}
+              }}
+            }}
+        """
+        confirm_response = self.query(confirm_query, user=self.user)
+        self.assertResponseNoErrors(confirm_response)
+
+        booking.refresh_from_db()
+        self.assertEqual(JanHusBookingStatus.CONFIRMED, booking.status)
+
+    def test_non_admin_cannot_set_manually_marked_as_paid(self):
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+        )
+
+        query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  manuallyMarkedAsPaid: true
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseHasErrors(response)
+        booking.refresh_from_db()
+        self.assertFalse(booking.manually_marked_as_paid)
+
+    def test_price_override_amount_takes_precedence(self):
+        self.add_booking_permission(self.user)
+
+        self.first_floor_area.internal_price_per_hour = Decimal("100")
+        self.first_floor_area.external_price_per_hour = Decimal("200")
+        self.first_floor_area.cleaning_fee = Decimal("50")
+        self.first_floor_area.save()
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+        )
+
+        query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  priceOverrideAmount: "42.50"
+                }}
+              ) {{
+                ok
+                booking {{
+                  totalPrice
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        self.assertEqual(
+            Decimal("42.50"),
+            Decimal(content["data"]["updateJanhusBooking"]["booking"]["totalPrice"]),
+        )
+
+    def test_price_override_tier_switches_to_external_pricing(self):
+        self.add_booking_permission(self.user)
+
+        self.first_floor_area.internal_price_per_hour = Decimal("100")
+        self.first_floor_area.external_price_per_hour = Decimal("200")
+        self.first_floor_area.cleaning_fee = Decimal("0")
+        self.first_floor_area.save()
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            event_type="PRIVATE",
+            status=JanHusBookingStatus.PROVISIONAL,
+        )
+
+        self.assertEqual(Decimal("200"), booking.total_price)
+
+        query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{
+                  id: "{booking.id}"
+                  priceOverrideTier: "EXTERNAL"
+                }}
+              ) {{
+                ok
+                booking {{
+                  totalPrice
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        self.assertEqual(Decimal("400"), booking.total_price)
+
     def test_create_booking_and_block_overlap(self):
         create_booking_query = f"""
             mutation {{
@@ -344,7 +589,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 bookingData: {{
                   startsAt: \"{self.start_dt.isoformat()}\"
                   endsAt: \"{self.end_dt.isoformat()}\"
-                  area: \"ENTIRE_HOUSE\"
+                  area: \"{self.entire_house_area.id}\"
                   responsibleName: \"Test User\"
                   responsibleEmail: \"test.user@example.com\"
                   responsiblePhone: \"41234567\"
@@ -376,7 +621,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 bookingData: {{
                   startsAt: \"{self.start_dt.isoformat()}\"
                   endsAt: \"{self.end_dt.isoformat()}\"
-                  area: \"FIRST_FLOOR\"
+                  area: \"{self.first_floor_area.id}\"
                   responsibleName: \"Other User\"
                   responsibleEmail: \"other.user@example.com\"
                   responsiblePhone: \"42222222\"
@@ -410,7 +655,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 requestData: {{
                   startsAt: \"{self.start_dt.isoformat()}\"
                   endsAt: \"{too_long_end.isoformat()}\"
-                  area: \"FIRST_FLOOR\"
+                  area: \"{self.first_floor_area.id}\"
                   requesterName: \"Internal User\"
                   requesterEmail: \"internal@example.com\"
                   requesterPhone: \"41234567\"
@@ -454,7 +699,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 requestData: {{
                   startsAt: \"{self.start_dt.isoformat()}\"
                   endsAt: \"{self.end_dt.isoformat()}\"
-                  area: \"FIRST_FLOOR\"
+                  area: \"{self.first_floor_area.id}\"
                   requesterName: \"Internal User\"
                   requesterEmail: \"internal@example.com\"
                   requesterPhone: \"41234567\"
@@ -483,18 +728,15 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
     def test_update_booking_syncs_existing_vipps_product_price(self):
         self.add_booking_permission(self.user)
 
-        JanHusAreaConfiguration.objects.create(
-            area="FIRST_FLOOR",
-            internal_price_per_hour=Decimal("100"),
-            external_price_per_hour=Decimal("200"),
-            cleaning_fee=Decimal("0"),
-            default_deposit_amount=Decimal("0"),
-        )
+        self.first_floor_area.internal_price_per_hour = Decimal("100")
+        self.first_floor_area.external_price_per_hour = Decimal("200")
+        self.first_floor_area.cleaning_fee = Decimal("0")
+        self.first_floor_area.save()
 
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_user=self.user,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -542,7 +784,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_organization=organization,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -577,7 +819,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_user=self.user,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -613,7 +855,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_user=self.user,
             booker_name=f"{booker_user.first_name} {booker_user.last_name}",
             booker_email=booker_user.email,
@@ -750,7 +992,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_organization=organization,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -787,7 +1029,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_user=self.user,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -833,7 +1075,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         org_booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_organization=organization,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -843,7 +1085,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         personal_booking = JanHusBooking.objects.create(
             starts_at=self.start_dt + timedelta(hours=4),
             ends_at=self.end_dt + timedelta(hours=4),
-            area="SECOND_FLOOR",
+            area=self.second_floor_area,
             owner_user=member_user,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -880,7 +1122,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         booker_booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_user=self.user,
             booker_name=f"{self.other_user.first_name} {self.other_user.last_name}",
             booker_email=self.other_user.email,
@@ -893,7 +1135,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         responsible_booking = JanHusBooking.objects.create(
             starts_at=self.start_dt + timedelta(hours=4),
             ends_at=self.end_dt + timedelta(hours=4),
-            area="SECOND_FLOOR",
+            area=self.second_floor_area,
             owner_user=self.user,
             booker_name="Booker",
             booker_email="booker@example.com",
@@ -933,7 +1175,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
-            area="FIRST_FLOOR",
+            area=self.first_floor_area,
             owner_user=self.user,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
@@ -1007,15 +1249,100 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         )
 
 
+class JanHusAreaTestCase(JanHusBaseTestCase):
+    def test_conflicting_area_ids_include_ancestors_and_descendants(self):
+        self.assertCountEqual(
+            [self.first_floor_area.id, self.entire_house_area.id],
+            self.first_floor_area.conflicting_area_ids,
+        )
+        self.assertCountEqual(
+            [
+                self.entire_house_area.id,
+                self.first_floor_area.id,
+                self.second_floor_area.id,
+            ],
+            self.entire_house_area.conflicting_area_ids,
+        )
+
+    def test_create_and_update_area_requires_settings_permission(self):
+        query = f"""
+            mutation {{
+              createJanhusArea(
+                areaData: {{
+                  name: "Kjeller"
+                  parentId: "{self.entire_house_area.id}"
+                  internalPricePerHour: "50"
+                  externalPricePerHour: "100"
+                }}
+              ) {{
+                ok
+                area {{
+                  id
+                  name
+                }}
+              }}
+            }}
+        """
+
+        denied_response = self.query(query, user=self.user)
+        self.assertResponseHasErrors(denied_response)
+
+        content_type = ContentType.objects.get_for_model(JanHusBooking)
+        self.user.user_permissions.add(
+            Permission.objects.get(
+                codename="manage_settings", content_type=content_type
+            )
+        )
+        allowed_response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(allowed_response)
+
+        content = json.loads(allowed_response.content)
+        self.assertEqual("Kjeller", content["data"]["createJanhusArea"]["area"]["name"])
+
+    def test_delete_area_soft_deletes_when_referenced(self):
+        JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+
+        content_type = ContentType.objects.get_for_model(JanHusBooking)
+        self.user.user_permissions.add(
+            Permission.objects.get(
+                codename="manage_settings", content_type=content_type
+            )
+        )
+
+        query = f"""
+            mutation {{
+              deleteJanhusArea(id: "{self.first_floor_area.id}") {{
+                ok
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        self.first_floor_area.refresh_from_db()
+        self.assertFalse(self.first_floor_area.is_active)
+
+
 class JanHusMailTestCase(TestCase):
     def test_pending_review_notification_includes_booker_and_responsible(self):
         start_dt = timezone.make_aware(
             datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
         )
+        area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
         booking = JanHusBooking.objects.create(
             starts_at=start_dt,
             ends_at=start_dt + timedelta(hours=1),
-            area="FIRST_FLOOR",
+            area=area,
             status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
             responsible_name="Responsible",
             responsible_email="responsible@example.com",

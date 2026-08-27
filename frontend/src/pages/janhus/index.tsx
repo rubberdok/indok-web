@@ -7,17 +7,17 @@ import { GetServerSideProps } from "next";
 import { PermissionRequired } from "@/components/Auth";
 import { NextLinkComposed } from "@/components/Link";
 import { Title } from "@/components/Title";
-import { JanHusAreaConfigurationsDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
+import { JanHusAreasDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
   // const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
-  // const { data: areaData } = useQuery(JanHusAreaConfigurationsDocument);
+  // const { data: areaData } = useQuery(JanHusAreasDocument);
 
   // const settings = settingsData?.janhusBookingSettings;
-  // const configuredAreaCount = areaData?.janhusAreaConfigurations?.length ?? 0;
+  // const configuredAreaCount = areaData?.janhusAreas?.length ?? 0;
 
   return (
     <>
@@ -109,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   await Promise.all([
     client.query({ query: JanHusBookingSettingsDocument }),
-    client.query({ query: JanHusAreaConfigurationsDocument }),
+    client.query({ query: JanHusAreasDocument }),
   ]);
 
   return addApolloState(client, {

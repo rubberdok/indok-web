@@ -4,10 +4,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { BookingSteps, JanHusOwnerType } from "@/components/pages/janhus/booking/BookingSteps";
+import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
 import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
 import {
   CreateJanhusBookingRequestDocument,
-  JanHusAreaConfigurationsDocument,
+  JanHusAreasDocument,
   JanHusBookingsDocument,
   JanHusBookingSettingsDocument,
   UserOrganizationsDocument,
@@ -30,18 +31,7 @@ const DEFAULT_SETTINGS = {
   fallSemesterActive: true,
   springSemesterActive: true,
   externalBookingsEnabled: true,
-};
-
-const AREA_LABELS: Record<string, string> = {
-  FIRST_FLOOR: "1. etasje",
-  SECOND_FLOOR: "2. etasje",
-  ENTIRE_HOUSE: "Hele huset",
-};
-
-const EVENT_TYPE_LABELS: Record<string, string> = {
-  INTERNAL: "Intern",
-  OPEN_FOR_INDOK: "Åpent for Indøk-studenter",
-  PRIVATE: "Privat",
+  privateBookingsEnabled: true,
 };
 
 const NORWEGIAN_PHONE_REGEX = /^(0047|\+47|47)?[49]\d{7}$/;
@@ -82,16 +72,6 @@ const formatSubmissionError = (rawMessage: string) => {
   return rawMessage;
 };
 
-const getConflictingAreas = (area: string) => {
-  if (area === "ENTIRE_HOUSE") {
-    return ["ENTIRE_HOUSE", "FIRST_FLOOR", "SECOND_FLOOR"];
-  }
-  if (area === "FIRST_FLOOR") {
-    return ["FIRST_FLOOR", "ENTIRE_HOUSE"];
-  }
-  return ["SECOND_FLOOR", "ENTIRE_HOUSE"];
-};
-
 const formatSlotLabel = (slot: dayjs.Dayjs, baseDay?: dayjs.Dayjs) => {
   const nextDay = baseDay ? !slot.isSame(baseDay, "day") : false;
   return `${slot.format("HH:mm")}${nextDay ? " (+1 dag)" : ""}`;
@@ -127,7 +107,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [bookingDate, setBookingDate] = useState<dayjs.Dayjs | undefined>();
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
-  const [area, setArea] = useState("FIRST_FLOOR");
+  const [area, setArea] = useState("");
 
   const [ownerType, setOwnerType] = useState<JanHusOwnerType>("PERSONAL"); //("EXTERNAL");
   const [organizationId, setOrganizationId] = useState("");
@@ -153,7 +133,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [submittedBookingRequestId, setSubmittedBookingRequestId] = useState<string | undefined>();
 
   const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
-  const { data: areasData } = useQuery(JanHusAreaConfigurationsDocument);
+  const { data: areasData } = useQuery(JanHusAreasDocument);
   const { data: orgData } = useQuery(UserOrganizationsDocument, {
     fetchPolicy: "cache-and-network",
   });
@@ -179,10 +159,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const isIndokStudent = orgData?.user?.isIndok ?? false;
   const canCreateNonExternalBooking = isAuthenticated && isIndokStudent;
   const organizations = useMemo(() => orgData?.user?.organizations ?? [], [orgData]);
-  const areaConfigurations = useMemo(() => areasData?.janhusAreaConfigurations ?? [], [areasData]);
+  const areas = useMemo(() => areasData?.janhusAreas ?? [], [areasData]);
 
   const bookingSettings = settingsData?.janhusBookingSettings ?? DEFAULT_SETTINGS;
   const externalBookingsEnabled = bookingSettings.externalBookingsEnabled ?? true;
+  const privateBookingsEnabled = bookingSettings.privateBookingsEnabled ?? true;
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
   const slotGranularityMinutes = Math.max(bookingSettings.slotGranularityMinutes, 1);
   const openingHour = bookingSettings.openingHour;
@@ -236,14 +217,15 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const overlappingBookings = useMemo(() => overlappingBookingsData?.janhusBookings ?? [], [overlappingBookingsData]);
 
   const relevantBookings = useMemo(() => {
-    const conflictingAreas = getConflictingAreas(area);
+    const selectedArea = areas.find((candidate) => candidate.id === area);
+    const conflictingAreaIds = selectedArea?.conflictingAreaIds ?? [area];
     return overlappingBookings
-      .filter((booking) => conflictingAreas.includes(booking.area))
+      .filter((booking) => conflictingAreaIds.includes(booking.area.id))
       .map((booking) => ({
         startsAt: dayjs(booking.startsAt),
         endsAt: dayjs(booking.endsAt),
       }));
-  }, [area, overlappingBookings]);
+  }, [area, areas, overlappingBookings]);
 
   const hasOverlap = useCallback(
     (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
@@ -411,6 +393,18 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   }, [bookingDate, area]);
 
   useEffect(() => {
+    if (!area && areas.length > 0) {
+      setArea(areas[0].id);
+    }
+  }, [area, areas]);
+
+  useEffect(() => {
+    if (eventType === "PRIVATE" && !privateBookingsEnabled) {
+      setEventType("INTERNAL");
+    }
+  }, [eventType, privateBookingsEnabled]);
+
+  useEffect(() => {
     if (startsAt && !startOptions.some((option) => option.value === startsAt)) {
       setStartsAt("");
       setEndsAt("");
@@ -497,6 +491,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
+    if (eventType === "PRIVATE" && !privateBookingsEnabled) {
+      setErrorMessage("Private JanHus-bookinger er midlertidig deaktivert.");
+      return false;
+    }
+
     // if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
     //   setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
     //   return false;
@@ -511,9 +510,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   }, [
     // canCreateNonExternalBooking,
     // externalBookingsEnabled,
+    eventType,
     hasDifferentResponsible,
     organizationId,
     ownerType,
+    privateBookingsEnabled,
     requesterEmail,
     requesterName,
     requesterPhone,
@@ -629,26 +630,20 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     setActiveStep((prev) => prev + 1);
   }, [validateContractStep]);
 
-  const selectedAreaLabel = AREA_LABELS[area] ?? area;
+  const selectedAreaLabel = areas.find((candidate) => candidate.id === area)?.name ?? "";
 
   const areaOptions = useMemo(
-    () =>
-      areaConfigurations.length
-        ? areaConfigurations.map((configuration) => ({
-            value: configuration.area,
-            label: AREA_LABELS[configuration.area] ?? configuration.area,
-          }))
-        : [
-            { value: "FIRST_FLOOR", label: AREA_LABELS.FIRST_FLOOR },
-            { value: "SECOND_FLOOR", label: AREA_LABELS.SECOND_FLOOR },
-            { value: "ENTIRE_HOUSE", label: AREA_LABELS.ENTIRE_HOUSE },
-          ],
-    [areaConfigurations]
+    () => areas.map((candidate) => ({ value: candidate.id, label: candidate.name })),
+    [areas]
   );
 
   const eventTypeOptions = useMemo(
-    () => Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => ({ value, label })),
-    []
+    () =>
+      Object.entries(JANHUS_EVENT_TYPE_LABELS)
+        .filter(([value]) => value !== "EXTERNAL")
+        .filter(([value]) => value !== "PRIVATE" || privateBookingsEnabled)
+        .map(([value, label]) => ({ value, label })),
+    [privateBookingsEnabled]
   );
 
   return (

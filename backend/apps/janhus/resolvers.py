@@ -5,6 +5,7 @@ from graphql import GraphQLError
 from apps.permissions.constants import HR_TYPE
 
 from apps.janhus.models import (
+    JanHusArea,
     JanHusBooking,
     JanHusBookingRequest,
 )
@@ -14,7 +15,7 @@ from apps.janhus.permissions import (
     normalize_phone_number,
 )
 from apps.janhus.rules import (
-    ensure_area_configurations,
+    ensure_default_areas,
     ensure_default_levels,
     get_or_create_settings,
     resolve_booking_level,
@@ -84,7 +85,7 @@ class JanHusResolvers:
         if kwargs.get("ends_at"):
             query = query.filter(starts_at__lte=kwargs.get("ends_at"))
         if kwargs.get("area"):
-            query = query.filter(area=kwargs.get("area"))
+            query = query.filter(area_id=kwargs.get("area"))
 
         return query
 
@@ -151,8 +152,11 @@ class JanHusResolvers:
     def resolve_janhus_booking_settings(self, info):
         return get_or_create_settings()
 
-    def resolve_janhus_area_configurations(self, info):
-        return ensure_area_configurations()
+    def resolve_janhus_areas(self, info, include_inactive=False):
+        ensure_default_areas()
+        if include_inactive:
+            return JanHusArea.objects.all()
+        return JanHusArea.objects.filter(is_active=True)
 
     def resolve_janhus_booking_levels(self, info):
         settings = get_or_create_settings()

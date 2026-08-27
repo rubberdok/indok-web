@@ -333,6 +333,7 @@ export type CreateEventInput = {
   hasExtraInformation: InputMaybe<Scalars['Boolean']['input']>;
   image: InputMaybe<Scalars['String']['input']>;
   isAttendable: Scalars['Boolean']['input'];
+  isHidden: InputMaybe<Scalars['Boolean']['input']>;
   location: InputMaybe<Scalars['String']['input']>;
   organizationId: Scalars['ID']['input'];
   price: InputMaybe<Scalars['Float']['input']>;
@@ -352,6 +353,12 @@ export type CreateFormInput = {
   description: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   organizationId: Scalars['ID']['input'];
+};
+
+export type CreateJanHusArea = {
+  __typename?: 'CreateJanHusArea';
+  area: Maybe<JanHusAreaType>;
+  ok: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type CreateJanHusBooking = {
@@ -507,6 +514,11 @@ export type DeleteForm = {
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type DeleteJanHusArea = {
+  __typename?: 'DeleteJanHusArea';
+  ok: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type DeleteJanHusBooking = {
   __typename?: 'DeleteJanHusBooking';
   ok: Maybe<Scalars['Boolean']['output']>;
@@ -597,6 +609,7 @@ export type EventType = {
   image: Maybe<Scalars['String']['output']>;
   isAttendable: Scalars['Boolean']['output'];
   isFull: Maybe<Scalars['Boolean']['output']>;
+  isHidden: Scalars['Boolean']['output'];
   location: Maybe<Scalars['String']['output']>;
   organization: OrganizationType;
   price: Maybe<Scalars['Float']['output']>;
@@ -661,26 +674,33 @@ export type InitiateOrder = {
   redirect: Maybe<Scalars['String']['output']>;
 };
 
-export type JanHusAreaConfigurationInput = {
-  area: Scalars['String']['input'];
+export type JanHusAreaInput = {
   cleaningFee: InputMaybe<Scalars['Decimal']['input']>;
   defaultDepositAmount: InputMaybe<Scalars['Decimal']['input']>;
   externalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
   internalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
+  name: Scalars['String']['input'];
+  parentId: InputMaybe<Scalars['ID']['input']>;
 };
 
-export type JanHusAreaConfigurationType = {
-  __typename?: 'JanHusAreaConfigurationType';
-  area: JanhusJanHusAreaConfigurationAreaChoices;
+export type JanHusAreaType = {
+  __typename?: 'JanHusAreaType';
+  bookingRequests: Array<JanHusBookingRequestType>;
+  bookings: Array<JanHusBookingType>;
+  children: Array<JanHusAreaType>;
   cleaningFee: Scalars['Decimal']['output'];
+  conflictingAreaIds: Maybe<Array<Scalars['ID']['output']>>;
   defaultDepositAmount: Scalars['Decimal']['output'];
   externalPricePerHour: Scalars['Decimal']['output'];
   id: Scalars['ID']['output'];
   internalPricePerHour: Scalars['Decimal']['output'];
+  isActive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  parent: Maybe<JanHusAreaType>;
 };
 
 export type JanHusBookingInput = {
-  area: Scalars['String']['input'];
+  area: Scalars['ID']['input'];
   bookerEmail: InputMaybe<Scalars['String']['input']>;
   bookerName: InputMaybe<Scalars['String']['input']>;
   bookerPhone: InputMaybe<Scalars['String']['input']>;
@@ -719,7 +739,7 @@ export type JanHusBookingLevelType = {
 };
 
 export type JanHusBookingRequestInput = {
-  area: Scalars['String']['input'];
+  area: Scalars['ID']['input'];
   cleaningRequested: InputMaybe<Scalars['Boolean']['input']>;
   comment: InputMaybe<Scalars['String']['input']>;
   endsAt: Scalars['DateTime']['input'];
@@ -738,7 +758,7 @@ export type JanHusBookingRequestInput = {
 export type JanHusBookingRequestType = {
   __typename?: 'JanHusBookingRequestType';
   adminComment: Scalars['String']['output'];
-  area: JanhusJanHusBookingRequestAreaChoices;
+  area: JanHusAreaType;
   cleaningRequested: Scalars['Boolean']['output'];
   comment: Scalars['String']['output'];
   convertedBooking: Maybe<JanHusBookingType>;
@@ -771,6 +791,7 @@ export type JanHusBookingSettingsInput = {
   minDurationMinutes: InputMaybe<Scalars['Int']['input']>;
   openingHour: InputMaybe<Scalars['Int']['input']>;
   organizationBookingOpensWeeksBefore: InputMaybe<Scalars['Int']['input']>;
+  privateBookingsEnabled: InputMaybe<Scalars['Boolean']['input']>;
   slotGranularityMinutes: InputMaybe<Scalars['Int']['input']>;
   springEndDate: InputMaybe<Scalars['Date']['input']>;
   springSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
@@ -790,6 +811,7 @@ export type JanHusBookingSettingsType = {
   minDurationMinutes: Scalars['Int']['output'];
   openingHour: Scalars['Int']['output'];
   organizationBookingOpensWeeksBefore: Scalars['Int']['output'];
+  privateBookingsEnabled: Scalars['Boolean']['output'];
   slotGranularityMinutes: Scalars['Int']['output'];
   springEndDate: Scalars['Date']['output'];
   springSemesterActive: Scalars['Boolean']['output'];
@@ -799,7 +821,7 @@ export type JanHusBookingSettingsType = {
 export type JanHusBookingType = {
   __typename?: 'JanHusBookingType';
   adminComment: Scalars['String']['output'];
-  area: JanhusJanHusBookingAreaChoices;
+  area: JanHusAreaType;
   bookerEmail: Scalars['String']['output'];
   bookerName: Scalars['String']['output'];
   bookerPhone: Scalars['String']['output'];
@@ -818,9 +840,12 @@ export type JanHusBookingType = {
   guestListEntries: Maybe<Array<JanHusGuestListEntryType>>;
   id: Scalars['ID']['output'];
   isExternalBooking: Scalars['Boolean']['output'];
+  manuallyMarkedAsPaid: Scalars['Boolean']['output'];
   outstandingDepositAmount: Maybe<Scalars['Decimal']['output']>;
   ownerOrganization: Maybe<OrganizationType>;
   ownerUser: Maybe<UserType>;
+  priceOverrideAmount: Maybe<Scalars['Decimal']['output']>;
+  priceOverrideTier: Maybe<JanhusJanHusBookingPriceOverrideTierChoices>;
   responsibleEmail: Scalars['String']['output'];
   responsibleName: Scalars['String']['output'];
   responsiblePhone: Scalars['String']['output'];
@@ -852,26 +877,6 @@ export type JanHusUserBookingLevelType = {
   level: JanHusBookingLevelType;
   user: UserType;
 };
-
-/** An enumeration. */
-export enum JanhusJanHusAreaConfigurationAreaChoices {
-  /** Entire house */
-  EntireHouse = 'ENTIRE_HOUSE',
-  /** 1st floor */
-  FirstFloor = 'FIRST_FLOOR',
-  /** 2nd floor */
-  SecondFloor = 'SECOND_FLOOR'
-}
-
-/** An enumeration. */
-export enum JanhusJanHusBookingAreaChoices {
-  /** Entire house */
-  EntireHouse = 'ENTIRE_HOUSE',
-  /** 1st floor */
-  FirstFloor = 'FIRST_FLOOR',
-  /** 2nd floor */
-  SecondFloor = 'SECOND_FLOOR'
-}
 
 /** An enumeration. */
 export enum JanhusJanHusBookingDepositStatusChoices {
@@ -910,13 +915,11 @@ export enum JanhusJanHusBookingEventTypeChoices {
 }
 
 /** An enumeration. */
-export enum JanhusJanHusBookingRequestAreaChoices {
-  /** Entire house */
-  EntireHouse = 'ENTIRE_HOUSE',
-  /** 1st floor */
-  FirstFloor = 'FIRST_FLOOR',
-  /** 2nd floor */
-  SecondFloor = 'SECOND_FLOOR'
+export enum JanhusJanHusBookingPriceOverrideTierChoices {
+  /** External */
+  External = 'EXTERNAL',
+  /** Internal */
+  Internal = 'INTERNAL'
 }
 
 /** An enumeration. */
@@ -1035,6 +1038,7 @@ export type Mutations = {
   /** Create a new event */
   createEvent: Maybe<CreateEvent>;
   createForm: Maybe<CreateForm>;
+  createJanhusArea: Maybe<CreateJanHusArea>;
   createJanhusBooking: Maybe<CreateJanHusBooking>;
   createJanhusBookingRequest: Maybe<CreateJanHusBookingRequest>;
   createJanhusPaymentProduct: Maybe<CreateJanHusPaymentProduct>;
@@ -1057,6 +1061,7 @@ export type Mutations = {
   /** Deletes the event with the given ID */
   deleteEvent: Maybe<DeleteEvent>;
   deleteForm: Maybe<DeleteForm>;
+  deleteJanhusArea: Maybe<DeleteJanHusArea>;
   deleteJanhusBooking: Maybe<DeleteJanHusBooking>;
   deleteJanhusBookingRequest: Maybe<DeleteJanHusBookingRequest>;
   /** Deletes the listing with the given ID */
@@ -1103,7 +1108,7 @@ export type Mutations = {
   /** Updates the event with a given ID with the data in event_data */
   updateEvent: Maybe<UpdateEvent>;
   updateForm: Maybe<UpdateForm>;
-  updateJanhusAreaConfiguration: Maybe<UpdateJanHusAreaConfiguration>;
+  updateJanhusArea: Maybe<UpdateJanHusArea>;
   updateJanhusBooking: Maybe<UpdateJanHusBooking>;
   updateJanhusBookingSettings: Maybe<UpdateJanHusBookingSettings>;
   updateListing: Maybe<UpdateListing>;
@@ -1198,6 +1203,11 @@ export type MutationsCreateFormArgs = {
 };
 
 
+export type MutationsCreateJanhusAreaArgs = {
+  areaData: JanHusAreaInput;
+};
+
+
 export type MutationsCreateJanhusBookingArgs = {
   bookingData: JanHusBookingInput;
 };
@@ -1287,6 +1297,11 @@ export type MutationsDeleteEventArgs = {
 
 
 export type MutationsDeleteFormArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationsDeleteJanhusAreaArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -1441,8 +1456,8 @@ export type MutationsUpdateFormArgs = {
 };
 
 
-export type MutationsUpdateJanhusAreaConfigurationArgs = {
-  areaData: JanHusAreaConfigurationInput;
+export type MutationsUpdateJanhusAreaArgs = {
+  areaData: UpdateJanHusAreaInput;
 };
 
 
@@ -1707,7 +1722,7 @@ export type Queries = {
   form: Maybe<FormType>;
   forms: Maybe<Array<FormType>>;
   hasPermission: Maybe<Scalars['Boolean']['output']>;
-  janhusAreaConfigurations: Maybe<Array<JanHusAreaConfigurationType>>;
+  janhusAreas: Maybe<Array<JanHusAreaType>>;
   janhusBookingLevels: Maybe<Array<JanHusBookingLevelType>>;
   janhusBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
   janhusBookingSettings: Maybe<JanHusBookingSettingsType>;
@@ -1827,13 +1842,18 @@ export type QueriesHasPermissionArgs = {
 };
 
 
+export type QueriesJanhusAreasArgs = {
+  includeInactive: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type QueriesJanhusBookingRequestsArgs = {
   status: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueriesJanhusBookingsArgs = {
-  area: InputMaybe<Scalars['String']['input']>;
+  area: InputMaybe<Scalars['ID']['input']>;
   endsAt: InputMaybe<Scalars['DateTime']['input']>;
   startsAt: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -2208,6 +2228,7 @@ export type UpdateEventInput = {
   hasExtraInformation: InputMaybe<Scalars['Boolean']['input']>;
   image: InputMaybe<Scalars['String']['input']>;
   isAttendable: InputMaybe<Scalars['Boolean']['input']>;
+  isHidden: InputMaybe<Scalars['Boolean']['input']>;
   location: InputMaybe<Scalars['String']['input']>;
   organizationId: InputMaybe<Scalars['ID']['input']>;
   price: InputMaybe<Scalars['Float']['input']>;
@@ -2223,10 +2244,21 @@ export type UpdateForm = {
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
-export type UpdateJanHusAreaConfiguration = {
-  __typename?: 'UpdateJanHusAreaConfiguration';
-  areaConfiguration: Maybe<JanHusAreaConfigurationType>;
+export type UpdateJanHusArea = {
+  __typename?: 'UpdateJanHusArea';
+  area: Maybe<JanHusAreaType>;
   ok: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type UpdateJanHusAreaInput = {
+  cleaningFee: InputMaybe<Scalars['Decimal']['input']>;
+  defaultDepositAmount: InputMaybe<Scalars['Decimal']['input']>;
+  externalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
+  id: Scalars['ID']['input'];
+  internalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
+  isActive: InputMaybe<Scalars['Boolean']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+  parentId: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type UpdateJanHusBooking = {
@@ -2237,7 +2269,7 @@ export type UpdateJanHusBooking = {
 
 export type UpdateJanHusBookingInput = {
   adminComment: InputMaybe<Scalars['String']['input']>;
-  area: InputMaybe<Scalars['String']['input']>;
+  area: InputMaybe<Scalars['ID']['input']>;
   bookerEmail: InputMaybe<Scalars['String']['input']>;
   bookerName: InputMaybe<Scalars['String']['input']>;
   bookerPhone: InputMaybe<Scalars['String']['input']>;
@@ -2251,6 +2283,9 @@ export type UpdateJanHusBookingInput = {
   guestList: InputMaybe<Scalars['String']['input']>;
   guestListUserFeideIds: InputMaybe<Array<Scalars['String']['input']>>;
   id: Scalars['ID']['input'];
+  manuallyMarkedAsPaid: InputMaybe<Scalars['Boolean']['input']>;
+  priceOverrideAmount: InputMaybe<Scalars['Decimal']['input']>;
+  priceOverrideTier: InputMaybe<Scalars['String']['input']>;
   responsibleEmail: InputMaybe<Scalars['String']['input']>;
   responsibleName: InputMaybe<Scalars['String']['input']>;
   responsiblePhone: InputMaybe<Scalars['String']['input']>;

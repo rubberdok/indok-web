@@ -36,12 +36,6 @@ import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
-const AREA_LABELS: Record<string, string> = {
-  FIRST_FLOOR: "1. etasje",
-  SECOND_FLOOR: "2. etasje",
-  ENTIRE_HOUSE: "Hele huset",
-};
-
 const STATUS_LABELS: Record<string, string> = {
   PROVISIONAL: "Foreløpig",
   PENDING_ADMIN_REVIEW: "Venter behandling",
@@ -307,7 +301,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                   </Stack>
 
                                   <Typography variant="body2">
-                                    {AREA_LABELS[booking.area] ?? booking.area} ·{" "}
+                                    {booking.area.name} ·{" "}
                                     {booking.cleaningRequested ? "Med" : "Uten"} innleid renhold
                                   </Typography>
 

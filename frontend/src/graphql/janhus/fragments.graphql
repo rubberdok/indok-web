@@ -7,7 +7,10 @@ fragment JanHusBooking on JanHusBookingType {
   id
   startsAt
   endsAt
-  area
+  area {
+    id
+    name
+  }
   status
   ownerUser {
     id
@@ -44,6 +47,9 @@ fragment JanHusBooking on JanHusBookingType {
   doorAccessPolicy
   totalPrice
   durationMinutes
+  priceOverrideTier
+  priceOverrideAmount
+  manuallyMarkedAsPaid
   vippsProduct {
     id
     name
@@ -61,7 +67,10 @@ fragment JanHusBookingRequest on JanHusBookingRequestType {
   id
   startsAt
   endsAt
-  area
+  area {
+    id
+    name
+  }
   requesterUser {
     id
     firstName
@@ -107,15 +116,22 @@ fragment JanHusBookingSettings on JanHusBookingSettingsType {
   fallSemesterActive
   springSemesterActive
   externalBookingsEnabled
+  privateBookingsEnabled
 }
 
-fragment JanHusAreaConfiguration on JanHusAreaConfigurationType {
+fragment JanHusArea on JanHusAreaType {
   id
-  area
+  name
+  isActive
+  parent {
+    id
+    name
+  }
   internalPricePerHour
   externalPricePerHour
   cleaningFee
   defaultDepositAmount
+  conflictingAreaIds
 }
 
 fragment JanHusBookingLevel on JanHusBookingLevelType {

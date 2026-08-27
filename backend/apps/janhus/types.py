@@ -3,7 +3,7 @@ from graphene_django import DjangoObjectType
 
 from apps.janhus.guest_list import build_guest_list_entries
 from apps.janhus.models import (
-    JanHusAreaConfiguration,
+    JanHusArea,
     JanHusBooking,
     JanHusBookingLevel,
     JanHusBookingRequest,
@@ -57,6 +57,12 @@ class JanHusBookingSettingsType(DjangoObjectType):
         model = JanHusBookingSettings
 
 
-class JanHusAreaConfigurationType(DjangoObjectType):
+class JanHusAreaType(DjangoObjectType):
+    conflicting_area_ids = graphene.List(graphene.NonNull(graphene.ID))
+
     class Meta:
-        model = JanHusAreaConfiguration
+        model = JanHusArea
+
+    @staticmethod
+    def resolve_conflicting_area_ids(parent: JanHusArea, info):
+        return parent.conflicting_area_ids

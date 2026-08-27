@@ -8,12 +8,6 @@ from django.db import models
 from apps.organizations.models import Organization
 
 
-class JanHusArea(models.TextChoices):
-    FIRST_FLOOR = "FIRST_FLOOR", "1st floor"
-    SECOND_FLOOR = "SECOND_FLOOR", "2nd floor"
-    ENTIRE_HOUSE = "ENTIRE_HOUSE", "Entire house"
-
-
 class JanHusBookingStatus(models.TextChoices):
     PROVISIONAL = "PROVISIONAL", "Provisional"
     PENDING_ADMIN_REVIEW = "PENDING_ADMIN_REVIEW", "Pending admin review"
@@ -140,6 +134,7 @@ class JanHusBookingSettings(models.Model):
     spring_semester_active = models.BooleanField(default=True)
 
     external_bookings_enabled = models.BooleanField(default=True)
+    private_bookings_enabled = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "JanHus booking settings"
@@ -165,8 +160,17 @@ class JanHusBookingSettings(models.Model):
         return "JanHus booking settings"
 
 
-class JanHusAreaConfiguration(models.Model):
-    area = models.CharField(max_length=32, choices=JanHusArea.choices, unique=True)
+class JanHusArea(models.Model):
+    """
+    A bookable area. Areas can be nested (e.g. "Entire house" contains "1st floor"),
+    conflicts_with a booking of any ancestor or descendant area.
+    """
+
+    name = models.CharField(max_length=100, unique=True)
+    parent = models.ForeignKey(
+        "self", on_delete=models.PROTECT, null=True, blank=True, related_name="children"
+    )
+    is_active = models.BooleanField(default=True)
 
     internal_price_per_hour = models.DecimalField(
         max_digits=10, decimal_places=2, default=Decimal("0")
@@ -182,12 +186,29 @@ class JanHusAreaConfiguration(models.Model):
     )
 
     class Meta:
-        ordering = ["area"]
-        verbose_name = "JanHus area configuration"
-        verbose_name_plural = "JanHus area configurations"
+        ordering = ["name"]
+        verbose_name = "JanHus area"
+        verbose_name_plural = "JanHus areas"
 
     def __str__(self):
-        return f"{self.get_area_display()} configuration"
+        return self.name
+
+    @property
+    def conflicting_area_ids(self) -> list:
+        ids = {self.id}
+        node = self.parent
+        while node is not None:
+            ids.add(node.id)
+            node = node.parent
+        ids.update(self._descendant_ids())
+        return sorted(ids)
+
+    def _descendant_ids(self) -> set:
+        ids = set()
+        for child in self.children.all():
+            ids.add(child.id)
+            ids.update(child._descendant_ids())
+        return ids
 
 
 class JanHusBooking(models.Model):
@@ -203,7 +224,7 @@ class JanHusBooking(models.Model):
 
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
-    area = models.CharField(max_length=32, choices=JanHusArea.choices)
+    area = models.ForeignKey(JanHusArea, on_delete=models.PROTECT, related_name="bookings")
 
     status = models.CharField(
         max_length=32,
@@ -264,6 +285,18 @@ class JanHusBooking(models.Model):
         max_digits=10, decimal_places=2, default=Decimal("0")
     )
 
+    # Admin overrides for pricing; price_override_amount takes precedence over price_override_tier
+    price_override_tier = models.CharField(
+        max_length=16,
+        choices=[("INTERNAL", "Internal"), ("EXTERNAL", "External")],
+        null=True,
+        blank=True,
+    )
+    price_override_amount = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    manually_marked_as_paid = models.BooleanField(default=False)
+
     comment = models.TextField(blank=True, default="")
     admin_comment = models.TextField(blank=True, default="")
 
@@ -323,24 +356,28 @@ class JanHusBooking(models.Model):
 
     @property
     def uses_external_pricing(self) -> bool:
+        if self.price_override_tier:
+            return self.price_override_tier == "EXTERNAL"
         return self.is_external_booking or self.event_type == JanHusEventType.EXTERNAL
 
     @property
     def total_price(self) -> Decimal:
-        config = JanHusAreaConfiguration.objects.filter(area=self.area).first()
-        if not config:
+        if self.price_override_amount is not None:
+            return self.price_override_amount
+
+        if not self.area_id:
             return Decimal("0")
 
         duration = Decimal(self.duration_minutes)
         hourly_price = (
-            config.external_price_per_hour
+            self.area.external_price_per_hour
             if self.uses_external_pricing
-            else config.internal_price_per_hour
+            else self.area.internal_price_per_hour
         )
         base_price = (hourly_price * duration) / Decimal("60")
 
         if self.cleaning_requested:
-            base_price += config.cleaning_fee
+            base_price += self.area.cleaning_fee
 
         return base_price
 
@@ -374,7 +411,9 @@ class JanHusBookingRequest(models.Model):
 
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
-    area = models.CharField(max_length=32, choices=JanHusArea.choices)
+    area = models.ForeignKey(
+        JanHusArea, on_delete=models.PROTECT, related_name="booking_requests"
+    )
 
     requester_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
