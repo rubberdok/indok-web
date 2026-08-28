@@ -4,11 +4,11 @@ description: Indøks helt egne case-klubb
 logo: /img/IBClogo.png
 image: /img/IBCmote.jpeg
 board:
-  erik:
+  leder1:
     name: Erik Olsen
     phoneNumber: 903 60 330
     title: Leder
-  board:
+  leder2:
     name: Aleksander Linnbar-Roblero
     phoneNumber: 482 15 524
     title: Leder
