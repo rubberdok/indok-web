@@ -9,6 +9,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from apps.ecommerce.models import Order
+from apps.janhus import mail
 from apps.janhus.mail import (
     send_booking_confirmation,
     send_booking_request_received,
@@ -2191,3 +2192,27 @@ class JanHusMailTestCase(TestCase):
         self.assertCountEqual(
             ["kari@example.com", "ola@example.com"], kwargs["bcc"]
         )
+
+    def test_mail_templates_use_the_shared_branding_colour(self):
+        """
+        The colour lives in utils/mail/branding.py, not in each template, so it
+        cannot drift between the emails.
+        """
+        from django.template.loader import get_template
+
+        from utils.mail.branding import EMAIL_COLORS
+
+        templates = [
+            mail.CONFIRMATION_TEMPLATE,
+            mail.REQUEST_RECEIVED_TEMPLATE,
+            mail.ADMIN_REQUEST_TEMPLATE,
+            mail.REJECTED_TEMPLATE,
+        ]
+
+        for template_name in templates:
+            with self.subTest(template=template_name):
+                html = get_template(template_name).render({})
+                self.assertIn(EMAIL_COLORS["primary"], html)
+                self.assertIn(EMAIL_COLORS["surface"], html)
+                # Nothing should reach the client as an unrendered tag.
+                self.assertNotIn("email_color", html)

@@ -1,4 +1,4 @@
-<!doctype html>
+{% load email_branding %}<!doctype html>
 
 <html lang="no">
   <head>
@@ -29,7 +29,7 @@
     "
   >
     <div
-      style="border: 5px solid #065a5a; text-align: center; padding: 50px; background-color: #f5f0eb; width: 80%"
+      style="border: 5px solid {% email_color 'primary' %}; text-align: center; padding: 50px; background-color: {% email_color 'surface' %}; width: 80%"
       class="contentDiv"
     >
       <h2>Ny JanHus-søknad</h2>
