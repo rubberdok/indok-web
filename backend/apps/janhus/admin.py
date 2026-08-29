@@ -128,7 +128,9 @@ class JanHusBookingSettingsAdmin(admin.ModelAdmin):
         "external_bookings_enabled",
         "private_bookings_enabled",
         "cleaning_option_enabled",
+        "booking_contact_name",
         "booking_contact_email",
+        "booking_contact_phone",
         "payment_provider_organization",
     )
     raw_id_fields = ("payment_provider_organization",)

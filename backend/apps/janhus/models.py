@@ -150,7 +150,9 @@ class JanHusBookingSettings(models.Model):
     private_bookings_enabled = models.BooleanField(default=True)
     cleaning_option_enabled = models.BooleanField(default=True)
 
+    booking_contact_name = models.CharField(max_length=200, blank=True, default="")
     booking_contact_email = models.EmailField(blank=True, default="")
+    booking_contact_phone = models.CharField(max_length=32, blank=True, default="")
 
     # The organization credited as the seller of JanHus payment products.
     # Set by a Django admin.

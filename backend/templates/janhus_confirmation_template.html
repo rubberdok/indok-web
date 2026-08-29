@@ -34,8 +34,9 @@
     >
       <h2>Hei {{ booker_name }}!</h2>
       <p>
-        Bookingen din av <strong>{{ area_name }}</strong> fra <span><strong>{{ starts_at }}</strong></span> til
-        <span><strong>{{ ends_at }}</strong></span> er <strong>bekreftet</strong>.
+        Din søknad for booking av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til
+        <span><strong>{{ ends_at }}</strong> har blitt <strong>godkjent</strong> av Janus Eiendom.</span>
       </p>
 
       <p>Referansen din er:</p>
@@ -51,7 +52,7 @@
 
       {% if show_price %}
       <p>
-        Pris for leien er <strong>{{ total_price }} kr</strong>.{% if deposit_amount %} Depositum kommer i tillegg på
+        Prisen kommer på <strong>{{ total_price }} kr</strong>.{% if deposit_amount %} Depositum kommer i tillegg på
         <strong>{{ deposit_amount }} kr</strong>.{% endif %}
       </p>
       {% endif %}
@@ -61,15 +62,12 @@
         som måtte forekomme.
       </p>
 
-      <!-- Kontrakt informasjon...-->
-
       <p>
-        Dette er en "no-reply"-mail. Ved spørsmål om bookingen, send mail til
+        Dette er en "no-reply"-mail. Ved spørsmål om booking, send mail til
         <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> og oppgi referansen
         <strong>{{ reference }}</strong>.
       </p>
-
-      <h2>Velkommen til JanHus!</h2>
+      {% include "janhus_signature.html" %}
     </div>
   </body>
 </html>

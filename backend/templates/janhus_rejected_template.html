@@ -34,21 +34,19 @@
     >
       <h2>Hei {{ requester_name }}!</h2>
       <p>
-        Søknaden din om booking av <strong>{{ area_name }}</strong> fra
-        <span><strong>{{ starts_at }}</strong></span> til <span><strong>{{ ends_at }}</strong></span> har dessverre
-        <strong>ikke blitt godkjent</strong>.
+        Din søknad for booking av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til
+        <span><strong>{{ ends_at }}</strong> har dessverre blitt <strong>underkjent</strong> av Janus Eiendom.</span>
       </p>
 
       {% if admin_comment %}
-      <p><strong>Begrunnelse fra JanHus-styret:</strong><br />{{ admin_comment }}</p>
+      <p><strong>Bookingen din ble underkjent av følgende grunn:</strong></p>
+      <p>{{ admin_comment }}</p>
       {% endif %}
 
       <p>Du er velkommen til å søke om et annet tidspunkt.</p>
 
-      <p>
-        Dette er en "no-reply"-mail. Har du spørsmål om avgjørelsen, send mail til
-        <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
-      </p>
+      {% include "janhus_signature.html" %}
     </div>
   </body>
 </html>

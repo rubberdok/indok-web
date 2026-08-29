@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html lang="no">
+  <head>
+    <title>Leiekontrakt</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      span {
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body
+    style="
+      font-family:
+        Open Sans,
+        sans-serif;
+    "
+  >
+    <div>
+      <h2 style="font-size: 250%">Leiekontrakt</h2>
+    </div>
+    På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått følgende
+    leiekontrakt mellom <strong>Janus Eiendom</strong> og <strong>{{ booker_name }}</strong>. <br /><br />
+
+    Gjeldende leieobjekt: <strong>{{ area_name }}</strong>, JanHus
+    <br />
+    Leieperiode: <strong>{{ starts_at }}</strong> - <strong>{{ ends_at }}</strong>
+    <br />
+    Bookingreferanse: <strong>{{ reference }}</strong>
+    <br />
+    {% if show_price %}Leiesum: <strong>{{ total_price }}</strong> NOK{% if deposit_amount %}, i tillegg til et
+    depositum på <strong>{{ deposit_amount }}</strong> NOK{% endif %}.{% endif %}
+    <br /><br />
+
+    {% comment %}
+    TODO: Resten av kontraktsvilkårene mangler, og skal fylles ut av Janus Eiendom.
+    Bruk contract_template.html (hyttene) som mønster. Punkter som må på plass:
+      - adressen til JanHus
+      - depositum, skader og mangelfull vask
+      - fremleie og bruk av leieobjektet
+      - avbestilling
+      - signatur fra leietager
+    {% endcomment %}
+  </body>
+</html>

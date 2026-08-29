@@ -34,28 +34,35 @@
     >
       <h2>Hei {{ requester_name }}!</h2>
       <p>
-        Vi har mottatt søknaden din om booking av <strong>{{ area_name }}</strong> fra
-        <span><strong>{{ starts_at }}</strong></span> til <span><strong>{{ ends_at }}</strong></span>.
+        Din søknad for booking av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til
+        <span><strong>{{ ends_at }}</strong> er mottatt.</span>
       </p>
+
+      {% if comment %}
+      <p><strong>Du har sendt med følgende kommentar:</strong></p>
+      <p>{{ comment }}</p>
+      {% endif %}
 
       <p>
-        Søknaden er <strong>ikke bekreftet ennå</strong>. JanHus-styret tar stilling til den, og du får en ny mail med
-        bookingreferansen din når den er behandlet.
+        <strong
+          >Janus Eiendom kommer til å ta stilling til søknaden din snart. Når de har gjort det får du en mail med
+          beslutningen deres, og bookingreferansen din.</strong
+        >
       </p>
-
       <p>
         <strong>Område:</strong> {{ area_name }}<br />
         <strong>Arrangementstype:</strong> {{ event_type }}<br />
         {% if show_cleaning %}<strong>Innleid renhold:</strong> {{ cleaning_requested }}<br />{% endif %}
-        <strong>Ansvarlig:</strong> {{ responsible_name }} ({{ responsible_email }})
+        <strong>Ansvarlig person oppgitt:</strong> {{ responsible_name }} ({{ responsible_email }})
       </p>
 
       <p>
-        Dette er en "no-reply"-mail. Ved spørsmål om søknaden, send mail til
-        <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+        JanHus skal forlates i minst like god stand som den ble funnet. Dere står selv ansvarlig for eventuelle skader
+        som måtte forekomme.
       </p>
 
-      <h2>Takk for søknaden!</h2>
+      {% include "janhus_signature.html" %}
     </div>
   </body>
 </html>

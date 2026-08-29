@@ -17,7 +17,6 @@ from apps.janhus.mail import (
     send_booking_declined,
     send_booking_request_received,
     send_booking_request_rejected,
-    send_pending_review_notification,
 )
 from apps.janhus.models import (
     JanHusArea,
@@ -631,7 +630,7 @@ class CreateJanHusBooking(graphene.Mutation):
 
         _full_clean_or_error(booking)
 
-        displaced = _apply_overlap_rules(
+        _apply_overlap_rules(
             booking=booking,
             booking_level=booking_level,
             actor=actor,
@@ -639,9 +638,6 @@ class CreateJanHusBooking(graphene.Mutation):
         )
 
         booking.save()
-
-        if displaced:
-            send_pending_review_notification([*displaced, booking])
 
         _notify_status_change(booking)
 
@@ -782,7 +778,7 @@ class UpdateJanHusBooking(graphene.Mutation):
             _ensure_non_org_booking_paid_before_confirmation(booking)
 
         settings = get_or_create_settings()
-        displaced = _apply_overlap_rules(
+        _apply_overlap_rules(
             booking=booking,
             booking_level=booking.booking_level,
             actor=actor,
@@ -793,9 +789,6 @@ class UpdateJanHusBooking(graphene.Mutation):
         _full_clean_or_error(booking)
         booking.save()
         _sync_existing_vipps_product(booking)
-
-        if displaced:
-            send_pending_review_notification([*displaced, booking])
 
         _notify_status_change(booking, previous_status)
 
@@ -1021,7 +1014,7 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 guest_list=booking_request.guest_list,
                 status=initial_status,
             )
-            displaced = _apply_overlap_rules(
+            _apply_overlap_rules(
                 booking=created_booking,
                 booking_level=booking_level,
                 actor=actor,
@@ -1030,9 +1023,6 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
             _full_clean_or_error(created_booking)
             created_booking.save()
             booking_request.converted_booking = created_booking
-
-            if displaced:
-                send_pending_review_notification([*displaced, created_booking])
 
             _notify_status_change(created_booking)
 

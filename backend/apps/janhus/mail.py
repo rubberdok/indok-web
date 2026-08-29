@@ -1,20 +1,30 @@
+import io
+import logging
 import re
-from collections.abc import Iterable
 
 from django.conf import settings
-from django.core.mail import send_mail
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
+from weasyprint import HTML
 
 from apps.janhus.models import JanHusBooking
 from apps.janhus.rules import get_or_create_settings
 from utils.mail.streams import TransactionalEmail
 
+logger = logging.getLogger(__name__)
+
 CONFIRMATION_TEMPLATE = "janhus_confirmation_template.html"
 REQUEST_RECEIVED_TEMPLATE = "janhus_request_received_template.html"
 ADMIN_REQUEST_TEMPLATE = "janhus_admin_request_template.html"
 REJECTED_TEMPLATE = "janhus_rejected_template.html"
+CONTRACT_TEMPLATE = "janhus_contract_template.html"
 CONFIRMATION_STREAM = "janhus-booking-confirmations"
+
+SUBJECTS = {
+    "reserve": "Bekreftelse på mottatt søknad om booking av ",
+    "admin_reserve": "Booking av ",
+    "decision": "Janus Eiendom har tatt stilling til søknaden din om booking av ",
+}
 
 EVENT_TYPE_LABELS = {
     "INTERNAL": "Intern",
@@ -22,31 +32,6 @@ EVENT_TYPE_LABELS = {
     "PRIVATE": "Privat",
     "EXTERNAL": "Eksternt",
 }
-
-
-def send_pending_review_notification(bookings: Iterable[JanHusBooking]) -> None:
-    recipients_by_key: dict[str, str] = {}
-    for booking in bookings:
-        for email in [booking.responsible_email, booking.booker_email]:
-            clean_email = (email or "").strip()
-            if clean_email:
-                recipients_by_key[clean_email.lower()] = clean_email
-
-    recipients = list(recipients_by_key.values())
-
-    if not recipients:
-        return
-
-    send_mail(
-        subject="JanHus booking set to pending admin review",
-        message=(
-            "A booking in your selected timeframe has been moved to pending admin review. "
-            "A JanHus booking admin will follow up shortly."
-        ),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=list(recipients),
-        fail_silently=True,
-    )
 
 
 def _booking_recipients(booking: JanHusBooking) -> list[str]:
@@ -77,6 +62,44 @@ def _html_to_plain_text(html: str) -> str:
     return "\n".join(line for line in lines if line)
 
 
+def _signature_context() -> dict:
+    """
+    Sign-off details shared by every JanHus email through janhus_signature.html.
+    Falls back to the site contact address when no JanHus contact is configured.
+    """
+    booking_settings = get_or_create_settings()
+    return {
+        "contact_name": booking_settings.booking_contact_name,
+        "contact_email": (
+            booking_settings.booking_contact_email or settings.CONTACT_EMAIL
+        ),
+        "contact_phone": booking_settings.booking_contact_phone,
+    }
+
+
+def html_to_pdf(template_src: str, context_dict={}):
+    """
+    Same helper as apps/cabins/mail.py, used to attach the contract as a PDF.
+    """
+    html_string = render_to_string(template_src, context_dict)
+    html = HTML(string=html_string)
+    buffer = io.BytesIO()
+    html.write_pdf(target=buffer)
+    return buffer.getvalue()
+
+
+def _deliver(email) -> None:
+    """
+    Mail is a side effect of booking mutations that have already committed, so a
+    delivery failure must not surface as a mutation error or roll anything back.
+    It is logged instead of silently dropped, so Sentry still reports it.
+    """
+    try:
+        email.send()
+    except Exception:
+        logger.exception("Could not send JanHus email: %s", email.subject)
+
+
 def _send(*, template: str, subject: str, recipients: list, content: dict) -> None:
     """
     Render an HTML template and send it as a transactional mail with a plain-text
@@ -85,7 +108,7 @@ def _send(*, template: str, subject: str, recipients: list, content: dict) -> No
     if not recipients:
         return
 
-    html_content = get_template(template).render(content)
+    html_content = get_template(template).render({**_signature_context(), **content})
 
     email = TransactionalEmail(
         stream=CONFIRMATION_STREAM,
@@ -94,7 +117,7 @@ def _send(*, template: str, subject: str, recipients: list, content: dict) -> No
         bcc=recipients,
     )
     email.attach_alternative(html_content, "text/html")
-    email.send(fail_silently=True)
+    _deliver(email)
 
 
 def _cleaning_context(*, cleaning_requested: bool) -> dict:
@@ -139,7 +162,6 @@ def _request_content(booking_request) -> dict:
         "responsible_email": booking_request.responsible_email,
         "responsible_phone": booking_request.responsible_phone,
         "comment": booking_request.comment,
-        "contact_email": settings.CONTACT_EMAIL,
         **_cleaning_context(cleaning_requested=booking_request.cleaning_requested),
     }
 
@@ -153,7 +175,7 @@ def send_booking_request_received(booking_request) -> None:
 
     _send(
         template=REQUEST_RECEIVED_TEMPLATE,
-        subject=f"Vi har mottatt JanHus-søknaden din ({content['area_name']})",
+        subject=SUBJECTS["reserve"] + content["area_name"],
         recipients=_request_recipients(booking_request),
         content=content,
     )
@@ -165,14 +187,13 @@ def send_booking_request_received(booking_request) -> None:
     owner_organization = booking_request.owner_organization
     _send(
         template=ADMIN_REQUEST_TEMPLATE,
-        subject=f"Ny JanHus-søknad: {content['area_name']} {content['starts_at']}",
+        subject=SUBJECTS["admin_reserve"] + content["area_name"],
         recipients=[admin_email],
         content={
             **content,
             "owner_label": (
                 owner_organization.name if owner_organization else "Personlig"
             ),
-            "admin_url": f"{settings.FRONTEND_BASE_URL}/janhus/admin",
         },
     )
 
@@ -186,7 +207,7 @@ def send_booking_request_rejected(booking_request) -> None:
 
     _send(
         template=REJECTED_TEMPLATE,
-        subject=f"JanHus-søknaden din ble dessverre ikke godkjent ({content['area_name']})",
+        subject=SUBJECTS["decision"] + content["area_name"],
         recipients=_request_recipients(booking_request),
         content={**content, "admin_comment": booking_request.admin_comment},
     )
@@ -198,7 +219,7 @@ def send_booking_declined(booking: JanHusBooking) -> None:
     """
     _send(
         template=REJECTED_TEMPLATE,
-        subject=f"JanHus-bookingen din er avlyst ({booking.reference})",
+        subject=SUBJECTS["decision"] + booking.area.name,
         recipients=_booking_recipients(booking),
         content={
             "requester_name": (
@@ -208,7 +229,6 @@ def send_booking_declined(booking: JanHusBooking) -> None:
             "starts_at": booking.starts_at.strftime("%d.%m.%Y kl. %H:%M"),
             "ends_at": booking.ends_at.strftime("%d.%m.%Y kl. %H:%M"),
             "admin_comment": booking.admin_comment,
-            "contact_email": settings.CONTACT_EMAIL,
         },
     )
 
@@ -235,29 +255,29 @@ def send_booking_confirmation(booking: JanHusBooking) -> None:
         "show_price": booking.owner_organization_id is None,
         "total_price": booking.total_price,
         "deposit_amount": booking.outstanding_deposit_amount or None,
-        "contact_email": settings.CONTACT_EMAIL,
         **_cleaning_context(cleaning_requested=booking.cleaning_requested),
     }
 
-    html_content = get_template(CONFIRMATION_TEMPLATE).render(content)
+    html_content = get_template(CONFIRMATION_TEMPLATE).render(
+        {**_signature_context(), **content}
+    )
 
     email = TransactionalEmail(
         stream=CONFIRMATION_STREAM,
-        subject=f"JanHus-bookingen din er bekreftet ({booking.reference})",
+        subject=SUBJECTS["decision"] + booking.area.name,
         body=_html_to_plain_text(html_content),
         bcc=recipients,
     )
     email.attach_alternative(html_content, "text/html")
 
-    # TODO: attach the JanHus documents once they exist, the way the cabins
-    # approval mail does. Requires these files to be added to the repo first:
-    #   static/janhus/Reglement.pdf      - house rules
-    #   static/janhus/Sjekkliste.pdf     - cleaning/checkout checklist
-    #   templates/janhus_contract_template.html - contract rendered per booking,
-    #       replacing the acceptedContractPlaceholder step in the booking flow
+    contract_pdf = html_to_pdf(CONTRACT_TEMPLATE, content)
+    email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
+
+    # TODO: attach the remaining JanHus documents once they exist, the way the
+    # cabins approval mail does. Both files still need adding to the repo:
+    #   static/janhus/Reglement.pdf   - house rules
+    #   static/janhus/Sjekkliste.pdf  - cleaning/checkout checklist
     # email.attach_file("static/janhus/Reglement.pdf")
     # email.attach_file("static/janhus/Sjekkliste.pdf")
-    # contract_pdf = html_to_pdf("janhus_contract_template.html", content)
-    # email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
 
-    email.send(fail_silently=True)
+    _deliver(email)

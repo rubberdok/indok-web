@@ -14,7 +14,6 @@ from apps.janhus.mail import (
     send_booking_confirmation,
     send_booking_request_received,
     send_booking_request_rejected,
-    send_pending_review_notification,
 )
 from apps.janhus.models import (
     JanHusArea,
@@ -2018,31 +2017,6 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
 
 
 class JanHusMailTestCase(TestCase):
-    def test_pending_review_notification_includes_booker_and_responsible(self):
-        start_dt = timezone.make_aware(
-            datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
-        )
-        area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
-        booking = JanHusBooking.objects.create(
-            starts_at=start_dt,
-            ends_at=start_dt + timedelta(hours=1),
-            area=area,
-            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
-            responsible_name="Responsible",
-            responsible_email="responsible@example.com",
-            responsible_phone="41234567",
-            booker_email="booker@example.com",
-        )
-
-        with patch("apps.janhus.mail.send_mail") as mocked_send_mail:
-            send_pending_review_notification([booking])
-
-        mocked_send_mail.assert_called_once()
-        recipient_list = mocked_send_mail.call_args.kwargs["recipient_list"]
-        self.assertCountEqual(
-            ["responsible@example.com", "booker@example.com"], recipient_list
-        )
-
     def _confirmed_booking(self, **overrides):
         start_dt = timezone.make_aware(
             datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
@@ -2072,7 +2046,9 @@ class JanHusMailTestCase(TestCase):
         kwargs = mocked_email.call_args.kwargs
 
         self.assertEqual("janhus-booking-confirmations", kwargs["stream"])
-        self.assertIn(booking.reference, kwargs["subject"])
+        self.assertEqual(
+            mail.SUBJECTS["decision"] + booking.area.name, kwargs["subject"]
+        )
         self.assertIn(booking.reference, kwargs["body"])
         # bcc, so the two contacts do not see each other's address
         self.assertCountEqual(
@@ -2160,7 +2136,7 @@ class JanHusMailTestCase(TestCase):
         self.assertCountEqual(
             ["kari@example.com", "ola@example.com"], kwargs["bcc"]
         )
-        self.assertIn("mottatt", kwargs["subject"].lower())
+        self.assertTrue(kwargs["subject"].startswith(mail.SUBJECTS["reserve"]))
 
     def test_request_receipt_also_notifies_the_configured_admin_address(self):
         JanHusBookingSettings.objects.create(
@@ -2174,7 +2150,9 @@ class JanHusMailTestCase(TestCase):
         self.assertEqual(2, mocked_email.call_count)
         admin_kwargs = mocked_email.call_args_list[1].kwargs
         self.assertEqual(["janhus@example.com"], admin_kwargs["bcc"])
-        self.assertIn("Ny JanHus-søknad", admin_kwargs["subject"])
+        self.assertTrue(
+            admin_kwargs["subject"].startswith(mail.SUBJECTS["admin_reserve"])
+        )
         # The admin copy carries the contact details the board needs to follow up.
         self.assertIn("kari@example.com", admin_kwargs["body"])
 
@@ -2187,7 +2165,7 @@ class JanHusMailTestCase(TestCase):
             send_booking_request_rejected(booking_request)
 
         kwargs = mocked_email.call_args.kwargs
-        self.assertIn("ikke godkjent", kwargs["subject"].lower())
+        self.assertTrue(kwargs["subject"].startswith(mail.SUBJECTS["decision"]))
         self.assertIn("Huset er allerede booket denne helgen.", kwargs["body"])
         self.assertCountEqual(
             ["kari@example.com", "ola@example.com"], kwargs["bcc"]
@@ -2216,3 +2194,91 @@ class JanHusMailTestCase(TestCase):
                 self.assertIn(EMAIL_COLORS["surface"], html)
                 # Nothing should reach the client as an unrendered tag.
                 self.assertNotIn("email_color", html)
+
+    def test_delivery_failure_is_logged_and_does_not_propagate(self):
+        """
+        Mail is sent after the booking has already been saved, so a Postmark
+        outage must not surface as a mutation error — but it must not vanish
+        either.
+        """
+        booking = self._confirmed_booking()
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            mocked_email.return_value.send.side_effect = RuntimeError("postmark down")
+
+            with self.assertLogs("apps.janhus.mail", level="ERROR") as logs:
+                send_booking_confirmation(booking)
+
+        self.assertTrue(
+            any("Could not send JanHus email" in line for line in logs.output)
+        )
+
+    def test_every_mail_carries_the_configured_signature(self):
+        JanHusBookingSettings.objects.create(
+            booking_contact_name="Test Bookingansvarlig",
+            booking_contact_email="janhus@rubberdok.no",
+            booking_contact_phone="41234567",
+        )
+        booking = self._confirmed_booking()
+        booking_request = self._booking_request()
+
+        cases = [
+            (send_booking_confirmation, booking),
+            (send_booking_request_received, booking_request),
+            (send_booking_request_rejected, booking_request),
+        ]
+
+        for fn, arg in cases:
+            with self.subTest(mail=fn.__name__):
+                with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+                    fn(arg)
+
+                body = mocked_email.call_args_list[0].kwargs["body"]
+                self.assertIn("Med vennlig hilsen", body)
+                self.assertIn("Test Bookingansvarlig", body)
+                self.assertIn("janhus@rubberdok.no", body)
+                self.assertIn("41234567", body)
+                self.assertIn("https://indokntnu.no/janhus", body)
+
+    def test_signature_falls_back_when_no_contact_is_configured(self):
+        booking = self._confirmed_booking()
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        body = mocked_email.call_args.kwargs["body"]
+        self.assertIn("Med vennlig hilsen", body)
+        self.assertIn("Bookingansvarlig JanHus", body)
+        # No dangling name or phone line when they are unset.
+        self.assertNotIn("tlf.", body)
+
+    def test_confirmation_mail_attaches_the_contract_pdf(self):
+        booking = self._confirmed_booking()
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        mocked_email.return_value.attach.assert_called_once()
+        name, content, mimetype = mocked_email.return_value.attach.call_args.args
+
+        self.assertEqual("Kontrakt.pdf", name)
+        self.assertEqual("application/pdf", mimetype)
+        self.assertTrue(content.startswith(b"%PDF-"))
+
+    def test_contract_pdf_contains_the_booking_reference(self):
+        from apps.janhus.mail import CONTRACT_TEMPLATE, html_to_pdf
+        from django.template.loader import get_template
+
+        booking = self._confirmed_booking()
+        html = get_template(CONTRACT_TEMPLATE).render(
+            {
+                "booker_name": booking.booker_name,
+                "area_name": booking.area.name,
+                "reference": booking.reference,
+            }
+        )
+
+        self.assertIn(booking.reference, html)
+        self.assertIn("Janus Eiendom", html)
+        # Generating the PDF must not raise for a half-filled contract.
+        self.assertTrue(html_to_pdf(CONTRACT_TEMPLATE, {}).startswith(b"%PDF-"))
