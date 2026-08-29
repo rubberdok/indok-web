@@ -3,6 +3,17 @@ fragment JanHusGuestListEntry on JanHusGuestListEntryType {
   displayName
 }
 
+fragment JanHusBookingAvailability on JanHusBookingType {
+  id
+  startsAt
+  endsAt
+  status
+  area {
+    id
+    name
+  }
+}
+
 fragment JanHusBooking on JanHusBookingType {
   id
   startsAt

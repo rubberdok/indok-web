@@ -1,6 +1,6 @@
 query JanHusBookings($startsAt: DateTime, $endsAt: DateTime, $area: ID) {
   janhusBookings(startsAt: $startsAt, endsAt: $endsAt, area: $area) {
-    ...JanHusBooking
+    ...JanHusBookingAvailability
   }
 }
 

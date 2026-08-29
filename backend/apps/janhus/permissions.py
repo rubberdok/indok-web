@@ -116,7 +116,11 @@ def is_booking_owner(user: AbstractBaseUser, booking) -> bool:
     return False
 
 
-def can_edit_guest_list(user: AbstractBaseUser, booking) -> bool:
+def is_connected_to_booking(user: AbstractBaseUser, booking) -> bool:
+    """
+    Whether the user is a JanHus admin, owns the booking, or is listed on it as
+    booker or responsible person.
+    """
     if not user:
         return False
 
@@ -135,3 +139,16 @@ def can_edit_guest_list(user: AbstractBaseUser, booking) -> bool:
         return True
 
     return False
+
+
+def can_edit_guest_list(user: AbstractBaseUser, booking) -> bool:
+    return is_connected_to_booking(user, booking)
+
+
+def can_view_booking_details(user: AbstractBaseUser, booking) -> bool:
+    """
+    Contact details, guest lists, comments and pricing are only visible to people
+    connected to the booking. Everyone else may see availability only
+    (time, area, status).
+    """
+    return is_connected_to_booking(user, booking)

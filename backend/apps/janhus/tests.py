@@ -1571,6 +1571,109 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         self.assertEqual([], content["data"]["janhusBookableOrganizations"])
 
 
+    DETAILS_QUERY = """
+        query {
+          janhusBookings {
+            id
+            bookerEmail
+            bookerPhone
+            guestList
+            comment
+          }
+        }
+    """
+
+    AVAILABILITY_QUERY = """
+        query {
+          janhusBookings {
+            id
+            startsAt
+            endsAt
+            status
+            area {
+              id
+              name
+            }
+          }
+        }
+    """
+
+    def _booking_with_contact_details(self, **overrides):
+        defaults = dict(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            booker_name="Booker",
+            booker_email="booker@example.com",
+            booker_phone="41234567",
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            guest_list='["Gjest Gjestesen"]',
+            comment="Privat kommentar",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+        defaults.update(overrides)
+        return JanHusBooking.objects.create(**defaults)
+
+    def test_anonymous_user_cannot_read_booking_contact_details(self):
+        self._booking_with_contact_details()
+
+        response = self.query(self.DETAILS_QUERY)
+
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIsNone(content["data"]["janhusBookings"])
+        self.assertNotIn("booker@example.com", response.content.decode())
+        self.assertNotIn("Gjest Gjestesen", response.content.decode())
+
+    def test_anonymous_user_can_read_booking_availability(self):
+        booking = self._booking_with_contact_details()
+
+        response = self.query(self.AVAILABILITY_QUERY)
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        returned = content["data"]["janhusBookings"]
+        self.assertEqual([str(booking.id)], [entry["id"] for entry in returned])
+        self.assertNotIn("booker@example.com", response.content.decode())
+
+    def test_unrelated_user_cannot_read_booking_contact_details(self):
+        self._booking_with_contact_details()
+
+        response = self.query(self.DETAILS_QUERY, user=self.other_user)
+
+        self.assertResponseHasErrors(response)
+        self.assertNotIn("booker@example.com", response.content.decode())
+
+    def test_booking_owner_can_read_own_contact_details(self):
+        self._booking_with_contact_details()
+
+        response = self.query(self.DETAILS_QUERY, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        self.assertEqual(
+            "booker@example.com",
+            content["data"]["janhusBookings"][0]["bookerEmail"],
+        )
+
+    def test_admin_can_read_booking_contact_details(self):
+        self._booking_with_contact_details(owner_user=self.other_user)
+        self.add_booking_permission(self.user)
+
+        response = self.query(self.DETAILS_QUERY, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        self.assertEqual(
+            "booker@example.com",
+            content["data"]["janhusBookings"][0]["bookerEmail"],
+        )
+
+
 class JanHusAreaTestCase(JanHusBaseTestCase):
     def test_conflicting_area_ids_include_ancestors_and_descendants(self):
         self.assertCountEqual(
