@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client/react";
 import { Alert, Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
@@ -9,6 +10,7 @@ import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus
 import {
   CreateJanhusBookingRequestDocument,
   JanHusAreasDocument,
+  JanHusBookableOrganizationsDocument,
   JanHusBookingsDocument,
   JanHusBookingSettingsDocument,
   UserOrganizationsDocument,
@@ -32,6 +34,7 @@ const DEFAULT_SETTINGS = {
   springSemesterActive: true,
   externalBookingsEnabled: true,
   privateBookingsEnabled: true,
+  cleaningOptionEnabled: true,
 };
 
 const NORWEGIAN_PHONE_REGEX = /^(0047|\+47|47)?[49]\d{7}$/;
@@ -42,35 +45,6 @@ const toManualGuestEntry = (displayName: string): JanHusGuestListEntry => ({
   feideUserId: `manual:${displayName.trim().toLowerCase().replace(/\s+/g, "-")}`,
   displayName: displayName.trim(),
 });
-
-const formatSubmissionError = (rawMessage: string) => {
-  const fieldLabelMap: Record<string, string> = {
-    requester_email: "E-post bestiller",
-    responsible_email: "E-post ansvarlig",
-    requester_phone: "Telefon bestiller",
-    responsible_phone: "Telefon ansvarlig",
-  };
-
-  if (rawMessage.includes('null value in column "responsible_first_name"')) {
-    return "Kunne ikke sende forespørselen på grunn av en midlertidig serverfeil. Prøv igjen om noen sekunder.";
-  }
-
-  const parsedFieldErrors = Array.from(rawMessage.matchAll(/'([^']+)'\s*:\s*\['([^']+)'\]/g)).map(
-    ([, field, message]) => ({ field, message })
-  );
-
-  if (parsedFieldErrors.length > 0) {
-    return parsedFieldErrors
-      .map(({ field, message }) => {
-        const readableField = fieldLabelMap[field] ?? field;
-        const readableMessage = message === "Enter a valid email address." ? "Ugyldig e-postadresse." : message;
-        return `${readableField}: ${readableMessage}`;
-      })
-      .join(" ");
-  }
-
-  return rawMessage;
-};
 
 const formatSlotLabel = (slot: dayjs.Dayjs, baseDay?: dayjs.Dayjs) => {
   const nextDay = baseDay ? !slot.isSame(baseDay, "day") : false;
@@ -102,6 +76,7 @@ function isDateInActiveSemester(date: dayjs.Dayjs, bookingSettings: SemesterAvai
 }
 
 const JanHusBookingPage: NextPageWithLayout = () => {
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const [bookingDate, setBookingDate] = useState<dayjs.Dayjs | undefined>();
@@ -109,7 +84,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [endsAt, setEndsAt] = useState("");
   const [area, setArea] = useState("");
 
-  const [ownerType, setOwnerType] = useState<JanHusOwnerType>("PERSONAL"); //("EXTERNAL");
+  const [ownerType, setOwnerType] = useState<JanHusOwnerType>("ORGANIZATION");
   const [organizationId, setOrganizationId] = useState("");
 
   const [requesterName, setRequesterName] = useState("");
@@ -137,6 +112,9 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const { data: orgData } = useQuery(UserOrganizationsDocument, {
     fetchPolicy: "cache-and-network",
   });
+  const { data: bookableOrganizationsData } = useQuery(JanHusBookableOrganizationsDocument, {
+    fetchPolicy: "cache-and-network",
+  });
 
   const [createBookingRequest, { loading }] = useMutation(CreateJanhusBookingRequestDocument, {
     onCompleted: (data) => {
@@ -150,20 +128,25 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       setGuestList("");
     },
     onError: (error) => {
-      setErrorMessage(formatSubmissionError(error.message));
+      setErrorMessage(error.message);
     },
   });
 
   const hasResolvedUser = orgData !== undefined;
+  const hasResolvedSettings = settingsData !== undefined;
   const isAuthenticated = Boolean(orgData?.user);
   const isIndokStudent = orgData?.user?.isIndok ?? false;
   const canCreateNonExternalBooking = isAuthenticated && isIndokStudent;
-  const organizations = useMemo(() => orgData?.user?.organizations ?? [], [orgData]);
+  const organizations = useMemo(
+    () => bookableOrganizationsData?.janhusBookableOrganizations ?? [],
+    [bookableOrganizationsData]
+  );
   const areas = useMemo(() => areasData?.janhusAreas ?? [], [areasData]);
 
   const bookingSettings = settingsData?.janhusBookingSettings ?? DEFAULT_SETTINGS;
   const externalBookingsEnabled = bookingSettings.externalBookingsEnabled ?? true;
   const privateBookingsEnabled = bookingSettings.privateBookingsEnabled ?? true;
+  const cleaningOptionEnabled = bookingSettings.cleaningOptionEnabled ?? true;
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
   const slotGranularityMinutes = Math.max(bookingSettings.slotGranularityMinutes, 1);
   const openingHour = bookingSettings.openingHour;
@@ -356,30 +339,37 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     setIsGuestListDialogOpen(false);
   }, []);
 
+  // Ikke indøkere, kan kun sende forespørsler om det er aktivt, ellers sendes de vekk.
+  useEffect(() => {
+    if (!hasResolvedUser || !hasResolvedSettings) {
+      return;
+    }
+
+    if (!canCreateNonExternalBooking && !externalBookingsEnabled) {
+      router.replace("/janhus");
+    }
+  }, [canCreateNonExternalBooking, externalBookingsEnabled, hasResolvedSettings, hasResolvedUser, router]);
+
   useEffect(() => {
     if (!hasResolvedUser) {
       return;
     }
 
-    // if (!canCreateNonExternalBooking) {
-    //   if (ownerType !== "EXTERNAL") {
-    //     setOwnerType("EXTERNAL");
-    //   }
-    //   return;
-    // }
+    if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
+      setOwnerType("EXTERNAL");
+    }
   }, [canCreateNonExternalBooking, hasResolvedUser, ownerType]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && organizations.length === 0) {
-      setOwnerType("PERSONAL");
-      //setOwnerType(isAuthenticated ? "PERSONAL" : "EXTERNAL");
+      setOwnerType(canCreateNonExternalBooking ? "PERSONAL" : "EXTERNAL");
       return;
     }
 
     if (ownerType !== "ORGANIZATION" && organizationId) {
       setOrganizationId("");
     }
-  }, [isAuthenticated, organizationId, organizations, ownerType]);
+  }, [canCreateNonExternalBooking, organizationId, organizations, ownerType]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && !organizationId && organizations.length > 0) {
@@ -496,20 +486,20 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
-    // if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
-    //   setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
-    //   return false;
-    // }
+    if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
+      setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
+      return false;
+    }
 
-    // if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
-    //   setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
-    //   return false;
-    // }
+    if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
+      setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
+      return false;
+    }
 
     return true;
   }, [
-    // canCreateNonExternalBooking,
-    // externalBookingsEnabled,
+    canCreateNonExternalBooking,
+    externalBookingsEnabled,
     eventType,
     hasDifferentResponsible,
     organizationId,
@@ -573,8 +563,8 @@ const JanHusBookingPage: NextPageWithLayout = () => {
           responsibleName: resolvedResponsibleName,
           responsibleEmail: resolvedResponsibleEmail,
           responsiblePhone: normalizedResponsiblePhone,
-          eventType, //: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
-          cleaningRequested,
+          eventType: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
+          cleaningRequested: cleaningOptionEnabled && cleaningRequested,
           comment,
           guestList,
         },
@@ -582,6 +572,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     });
   }, [
     area,
+    cleaningOptionEnabled,
     cleaningRequested,
     comment,
     createBookingRequest,
@@ -646,6 +637,10 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     [privateBookingsEnabled]
   );
 
+  // Members without a leader (HR) role in any organization can only book PRIVATE.
+  const showPrivateBookingsDisabledNotice =
+    canCreateNonExternalBooking && !privateBookingsEnabled && organizations.length === 0;
+
   return (
     <>
       <Container>
@@ -659,6 +654,13 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               ))}
             </Stepper>
           </Box>
+
+          {showPrivateBookingsDisabledNotice ? (
+            <Alert severity="info">
+              Private bookinger er midlertidig deaktivert. Du kan fortsatt sende forespørsel om interne arrangementer og
+              arrangementer som er åpne for Indøk-studenter.
+            </Alert>
+          ) : null}
 
           {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
 
@@ -681,8 +683,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               organizations={organizations}
               canCreateNonExternalBooking={canCreateNonExternalBooking}
               externalBookingsEnabled={externalBookingsEnabled}
-              isAuthenticated={isAuthenticated}
-              isIndokStudent={isIndokStudent}
+              cleaningOptionEnabled={cleaningOptionEnabled}
               requesterName={requesterName}
               requesterEmail={requesterEmail}
               requesterPhone={requesterPhone}

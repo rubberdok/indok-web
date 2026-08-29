@@ -124,6 +124,8 @@ class JanHusBookingSettingsAdmin(admin.ModelAdmin):
         "organization_booking_opens_weeks_before",
         "general_booking_opens_weeks_before",
         "external_bookings_enabled",
+        "private_bookings_enabled",
+        "cleaning_option_enabled",
     )
 
 

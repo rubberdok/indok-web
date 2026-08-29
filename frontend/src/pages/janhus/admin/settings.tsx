@@ -54,6 +54,7 @@ type SettingsForm = {
   springSemesterActive: boolean;
   externalBookingsEnabled: boolean;
   privateBookingsEnabled: boolean;
+  cleaningOptionEnabled: boolean;
 };
 
 const JanHusSettingsPage: NextPageWithLayout = () => {
@@ -80,6 +81,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
     springSemesterActive: true,
     externalBookingsEnabled: true,
     privateBookingsEnabled: true,
+    cleaningOptionEnabled: true,
   });
 
   const [areaForms, setAreaForms] = useState<
@@ -163,6 +165,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
       springSemesterActive: settings.springSemesterActive,
       externalBookingsEnabled: settings.externalBookingsEnabled ?? true,
       privateBookingsEnabled: settings.privateBookingsEnabled ?? true,
+      cleaningOptionEnabled: settings.cleaningOptionEnabled ?? true,
     });
   }, [settingsData]);
 
@@ -238,6 +241,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
           springSemesterActive: settingsForm.springSemesterActive,
           externalBookingsEnabled: settingsForm.externalBookingsEnabled,
           privateBookingsEnabled: settingsForm.privateBookingsEnabled,
+          cleaningOptionEnabled: settingsForm.cleaningOptionEnabled,
         },
       },
     });
@@ -522,6 +526,18 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
                     />
                   }
                   label="Tillat private bookingforespørsler"
+                />
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={settingsForm.cleaningOptionEnabled}
+                      onChange={(event) =>
+                        setSettingsForm((prev) => ({ ...prev, cleaningOptionEnabled: event.target.checked }))
+                      }
+                    />
+                  }
+                  label="Tillat valg av innleid renhold"
                 />
 
                 <Box>

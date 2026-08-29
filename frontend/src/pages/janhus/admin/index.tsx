@@ -47,7 +47,7 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
-type OwnerType = "PERSONAL" | "ORGANIZATION"; // | "EXTERNAL";
+type OwnerType = "PERSONAL" | "ORGANIZATION" | "EXTERNAL";
 type SortDirection = "asc" | "desc";
 
 const REQUEST_STATUS_LABELS: Record<string, string> = {
@@ -84,7 +84,7 @@ const MANUAL_ENTRY_PREFIX = "manual:";
 const OWNER_TYPE_LABELS: Record<OwnerType, string> = {
   PERSONAL: "Personlig",
   ORGANIZATION: "Forening",
-  // EXTERNAL: "Ekstern",
+  EXTERNAL: "Ekstern",
 };
 
 const statusChipColor = (status: string): "default" | "success" | "warning" | "error" | "info" => {
@@ -136,17 +136,16 @@ const requestOwnerType = (request: {
   if (request.requesterUser) {
     return "PERSONAL";
   }
-  // return "EXTERNAL";
-  return "PERSONAL";
+  return "EXTERNAL";
 };
 
 const bookingOwnerType = (booking: {
   isExternalBooking: boolean;
   ownerOrganization?: { id: string; name: string } | null;
 }): OwnerType => {
-  // if (booking.isExternalBooking) {
-  //   return "EXTERNAL";
-  // }
+  if (booking.isExternalBooking) {
+    return "EXTERNAL";
+  }
   if (booking.ownerOrganization) {
     return "ORGANIZATION";
   }
@@ -714,9 +713,8 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                 {request.ownerOrganization?.name ? ` · ${request.ownerOrganization.name}` : ""}
                               </Typography>
                               <Typography variant="body2">
-                                Arrangement: {JANHUS_EVENT_TYPE_LABELS[request.eventType] ?? request.eventType}
-                                {/* · Innleid
-                              renhold: {request.cleaningRequested ? "Ja" : "Nei"} */}
+                                Arrangement: {JANHUS_EVENT_TYPE_LABELS[request.eventType] ?? request.eventType} ·
+                                Innleid renhold: {request.cleaningRequested ? "Ja" : "Nei"}
                               </Typography>
                               <Typography variant="body2">
                                 Bestiller: {request.requesterName} ({request.requesterEmail || "-"})
@@ -1163,23 +1161,23 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                       ))}
                                     </Select>
                                   </FormControl>
-                                  {/* <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={edit.cleaningRequested}
-                                      onChange={(event) =>
-                                        setBookingEdits((prev) => ({
-                                          ...prev,
-                                          [booking.id]: {
-                                            ...prev[booking.id],
-                                            cleaningRequested: event.target.checked,
-                                          },
-                                        }))
-                                      }
-                                    />
-                                  }
-                                  label="Innleid renhold"
-                                /> */}
+                                  <FormControlLabel
+                                    control={
+                                      <Switch
+                                        checked={edit.cleaningRequested}
+                                        onChange={(event) =>
+                                          setBookingEdits((prev) => ({
+                                            ...prev,
+                                            [booking.id]: {
+                                              ...prev[booking.id],
+                                              cleaningRequested: event.target.checked,
+                                            },
+                                          }))
+                                        }
+                                      />
+                                    }
+                                    label="Innleid renhold"
+                                  />
                                   <FormControlLabel
                                     control={
                                       <Switch

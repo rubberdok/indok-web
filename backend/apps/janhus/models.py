@@ -135,6 +135,7 @@ class JanHusBookingSettings(models.Model):
 
     external_bookings_enabled = models.BooleanField(default=True)
     private_bookings_enabled = models.BooleanField(default=True)
+    cleaning_option_enabled = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "JanHus booking settings"

@@ -2,6 +2,7 @@ from decimal import Decimal
 
 import graphene
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db.models import Sum
 from graphql import GraphQLError
 
@@ -38,6 +39,7 @@ from apps.janhus.types import (
     JanHusBookingType,
 )
 from apps.janhus.permissions import (
+    can_book_for_organization as _can_book_for_organization,
     can_edit_guest_list as _can_edit_guest_list,
     has_manage_booking_permission as _has_manage_booking_permission,
     has_manage_settings_permission as _has_manage_settings_permission,
@@ -55,6 +57,64 @@ JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG = "janus-eiendom"
 JANHUS_PAYMENT_PROVIDER_PRIMARY_NAME = "Janus Eiendom"
 JANHUS_PAYMENT_PROVIDER_FALLBACK_SLUG = "hovedstyret"
 JANHUS_PAYMENT_PROVIDER_FALLBACK_NAME = "Hovedstyret"
+
+# Norsk oversettelse som brukes for valideringsfeilmeldinger.
+VALIDATION_FIELD_LABELS = {
+    "requester_name": "Navn bestiller",
+    "requester_email": "E-post bestiller",
+    "requester_phone": "Telefon bestiller",
+    "booker_name": "Navn bestiller",
+    "booker_email": "E-post bestiller",
+    "booker_phone": "Telefon bestiller",
+    "responsible_name": "Navn ansvarlig",
+    "responsible_email": "E-post ansvarlig",
+    "responsible_phone": "Telefon ansvarlig",
+    "starts_at": "Starttid",
+    "ends_at": "Sluttid",
+    "area": "Område",
+    "event_type": "Arrangementstype",
+    "comment": "Kommentar",
+}
+
+VALIDATION_MESSAGE_TRANSLATIONS = {
+    "Enter a valid email address.": "Ugyldig e-postadresse.",
+    "This field cannot be blank.": "Feltet kan ikke være tomt.",
+    "This field cannot be null.": "Feltet kan ikke være tomt.",
+}
+
+
+def _translate_validation_message(message: str) -> str:
+    return VALIDATION_MESSAGE_TRANSLATIONS.get(message, message)
+
+
+def _format_validation_error(error: ValidationError) -> str:
+    """
+    Turn a Django ValidationError into a readable Norwegian string.
+
+    Without this, `full_clean()` failures reach the client as a stringified
+    Python dict (e.g. "{'requester_email': ['Enter a valid email address.']}").
+    """
+    if hasattr(error, "message_dict"):
+        parts = []
+        for field, messages in error.message_dict.items():
+            translated = " ".join(
+                _translate_validation_message(message) for message in messages
+            )
+            if field == "__all__":
+                parts.append(translated)
+            else:
+                label = VALIDATION_FIELD_LABELS.get(field, field)
+                parts.append(f"{label}: {translated}")
+        return " ".join(parts)
+
+    return " ".join(_translate_validation_message(message) for message in error.messages)
+
+
+def _full_clean_or_error(instance) -> None:
+    try:
+        instance.full_clean()
+    except ValidationError as error:
+        raise GraphQLError(_format_validation_error(error)) from error
 
 
 def _get_actor(info):
@@ -87,6 +147,18 @@ def _ensure_event_type_enabled(*, event_type: str, settings: JanHusBookingSettin
         raise GraphQLError("Eksterne JanHus-bookinger er midlertidig deaktivert")
 
 
+def _resolve_cleaning_requested(*, data: dict, settings: JanHusBookingSettings) -> bool:
+    """
+    The cleaning checkbox is hidden when disabled, but the mutation still
+    accepts the field, so the setting is enforced here as well.
+    """
+    cleaning_requested = data.get("cleaning_requested", False)
+    if cleaning_requested and not settings.cleaning_option_enabled:
+        raise GraphQLError("Innleid renhold er midlertidig deaktivert")
+
+    return cleaning_requested
+
+
 def _ensure_non_indok_external_only(
     *, actor, is_external_booking: bool, event_type: str, owner_organization
 ) -> None:
@@ -100,6 +172,22 @@ def _ensure_non_indok_external_only(
     ):
         raise GraphQLError(
             "Only Indøk students can create non-external JanHus bookings"
+        )
+
+
+def _ensure_can_book_for_organization(*, actor, owner_organization) -> None:
+    """
+    Booking on behalf of an organization requires the HR ("leader") group in
+    that organization, or JanHus admin rights. The client only offers the
+    user's own organizations, but the mutation accepts any ID,
+    so this must be enforced here.
+    """
+    if owner_organization is None:
+        return
+
+    if not _can_book_for_organization(actor, owner_organization):
+        raise GraphQLError(
+            "Du må være leder i foreningen for å booke JanHus på vegne av den"
         )
 
 
@@ -395,6 +483,7 @@ class JanHusBookingSettingsInput(graphene.InputObjectType):
 
     external_bookings_enabled = graphene.Boolean(required=False)
     private_bookings_enabled = graphene.Boolean(required=False)
+    cleaning_option_enabled = graphene.Boolean(required=False)
 
 
 class JanHusAreaInput(graphene.InputObjectType):
@@ -449,6 +538,10 @@ class CreateJanHusBooking(graphene.Mutation):
             ).first()
             if not owner_organization:
                 raise GraphQLError("Organization not found")
+
+        _ensure_can_book_for_organization(
+            actor=actor, owner_organization=owner_organization
+        )
 
         _ensure_non_indok_external_only(
             actor=actor,
@@ -508,7 +601,9 @@ class CreateJanHusBooking(graphene.Mutation):
             responsible_email=booking_data["responsible_email"],
             responsible_phone=booking_data["responsible_phone"],
             event_type=resolved_event_type,
-            cleaning_requested=booking_data.get("cleaning_requested", False),
+            cleaning_requested=_resolve_cleaning_requested(
+                data=booking_data, settings=settings
+            ),
             deposit_status=booking_data.get(
                 "deposit_status", JanHusDepositStatus.REQUIRED
             ),
@@ -524,7 +619,7 @@ class CreateJanHusBooking(graphene.Mutation):
             settings=settings,
         )
 
-        booking.full_clean()
+        _full_clean_or_error(booking)
 
         displaced = _apply_overlap_rules(
             booking=booking,
@@ -683,7 +778,7 @@ class UpdateJanHusBooking(graphene.Mutation):
             exclude_booking_id=booking.id,
         )
 
-        booking.full_clean()
+        _full_clean_or_error(booking)
         booking.save()
         _sync_existing_vipps_product(booking)
 
@@ -739,7 +834,7 @@ class ReviewJanHusBooking(graphene.Mutation):
         ):
             _ensure_non_org_booking_paid_before_confirmation(booking)
 
-        booking.full_clean()
+        _full_clean_or_error(booking)
         booking.save()
         _sync_existing_vipps_product(booking)
 
@@ -764,6 +859,10 @@ class CreateJanHusBookingRequest(graphene.Mutation):
             ).first()
             if not owner_organization:
                 raise GraphQLError("Organization not found")
+
+        _ensure_can_book_for_organization(
+            actor=actor, owner_organization=owner_organization
+        )
 
         resolved_event_type = request_data.get("event_type", JanHusEventType.INTERNAL)
         _ensure_event_type_enabled(event_type=resolved_event_type, settings=settings)
@@ -810,11 +909,13 @@ class CreateJanHusBookingRequest(graphene.Mutation):
             responsible_email=request_data["responsible_email"],
             responsible_phone=request_data["responsible_phone"],
             event_type=resolved_event_type,
-            cleaning_requested=request_data.get("cleaning_requested", False),
+            cleaning_requested=_resolve_cleaning_requested(
+                data=request_data, settings=settings
+            ),
             comment=request_data.get("comment", ""),
             guest_list=request_data.get("guest_list", ""),
         )
-        booking_request.full_clean()
+        _full_clean_or_error(booking_request)
         booking_request.save()
 
         return CreateJanHusBookingRequest(ok=True, booking_request=booking_request)
@@ -908,7 +1009,7 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 actor=actor,
                 settings=settings,
             )
-            created_booking.full_clean()
+            _full_clean_or_error(created_booking)
             created_booking.save()
             booking_request.converted_booking = created_booking
 
@@ -946,7 +1047,7 @@ class UpdateJanHusBookingSettings(graphene.Mutation):
         for field, value in settings_data.items():
             setattr(booking_settings, field, value)
 
-        booking_settings.full_clean()
+        _full_clean_or_error(booking_settings)
         booking_settings.save()
 
         return UpdateJanHusBookingSettings(ok=True, booking_settings=booking_settings)
@@ -976,7 +1077,7 @@ class CreateJanHusArea(graphene.Mutation):
             cleaning_fee=area_data.get("cleaning_fee", 0),
             default_deposit_amount=area_data.get("default_deposit_amount", 0),
         )
-        area.full_clean()
+        _full_clean_or_error(area)
         area.save()
 
         return CreateJanHusArea(ok=True, area=area)
@@ -1017,7 +1118,7 @@ class UpdateJanHusArea(graphene.Mutation):
             if area_data.get(field) is not None:
                 setattr(area, field, area_data.get(field))
 
-        area.full_clean()
+        _full_clean_or_error(area)
         area.save()
 
         return UpdateJanHusArea(ok=True, area=area)

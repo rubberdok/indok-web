@@ -1,8 +1,6 @@
-//import { useQuery } from "@apollo/client/react";
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
-//import { Alert } from "@/mui/material";
 
 import { PermissionRequired } from "@/components/Auth";
 import { NextLinkComposed } from "@/components/Link";
@@ -13,12 +11,6 @@ import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
-  // const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
-  // const { data: areaData } = useQuery(JanHusAreasDocument);
-
-  // const settings = settingsData?.janhusBookingSettings;
-  // const configuredAreaCount = areaData?.janhusAreas?.length ?? 0;
-
   return (
     <>
       <Title
@@ -47,11 +39,6 @@ const JanHusPage: NextPageWithLayout = () => {
           <Typography color="text.secondary">
             Her kan du sende bookingforespørsler for 1. etasje, 2. etasje eller hele huset.
           </Typography>
-
-          {/* <Alert severity="info">
-            Booking gjøres via eget skjema med dato og tidsintervall, mens admin håndterer godkjenning, priser og
-            oppsett.
-          </Alert> */}
 
           {/* {settings ? (
             <Alert severity="success">

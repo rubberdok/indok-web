@@ -11,6 +11,7 @@ from apps.janhus.models import (
 )
 from apps.janhus.permissions import (
     can_edit_guest_list,
+    get_hr_organizations,
     get_user_email_candidates,
     normalize_phone_number,
 )
@@ -148,6 +149,13 @@ class JanHusResolvers:
         if kwargs.get("status"):
             query = query.filter(status=kwargs.get("status"))
         return query
+
+    def resolve_janhus_bookable_organizations(self, info):
+        """
+        Organizations the current user may book JanHus for, i.e. the ones
+        where they hold the HR ("leader") group.
+        """
+        return get_hr_organizations(info.context.user).order_by("name")
 
     def resolve_janhus_booking_settings(self, info):
         return get_or_create_settings()

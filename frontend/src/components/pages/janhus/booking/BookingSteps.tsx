@@ -24,9 +24,16 @@ import { useState } from "react";
 import { Calendar } from "@/components/Calendar";
 import { useStepContext } from "@/components/pages/cabins/booking/StepContext";
 import { Stepper as BookingStepNavigation } from "@/components/pages/cabins/booking/Steps/Stepper";
+import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
 import dayjs from "@/lib/date";
 
-export type JanHusOwnerType = "PERSONAL" | "ORGANIZATION"; // | "EXTERNAL";
+export type JanHusOwnerType = "PERSONAL" | "ORGANIZATION" | "EXTERNAL";
+
+export const JANHUS_OWNER_TYPE_LABELS: Record<JanHusOwnerType, string> = {
+  PERSONAL: "Personlig booking",
+  ORGANIZATION: "Booking på vegne av forening",
+  EXTERNAL: "Ekstern forespørsel",
+};
 
 type SelectOption = {
   value: string;
@@ -57,8 +64,7 @@ type Props = {
   organizations: OrganizationOption[];
   canCreateNonExternalBooking: boolean;
   externalBookingsEnabled: boolean;
-  isAuthenticated: boolean;
-  isIndokStudent: boolean;
+  cleaningOptionEnabled: boolean;
 
   requesterName: string;
   requesterEmail: string;
@@ -121,7 +127,6 @@ export const BookingSteps: React.FC<Props> = ({
   startOptions,
   endOptions,
   minDurationMinutes,
-  //slotGranularityMinutes,
   openingHour,
   closingHour,
   selectedDurationMinutes,
@@ -129,9 +134,8 @@ export const BookingSteps: React.FC<Props> = ({
   organizationId,
   organizations,
   canCreateNonExternalBooking,
-  //externalBookingsEnabled,
-  //isAuthenticated,
-  //isIndokStudent,
+  externalBookingsEnabled,
+  cleaningOptionEnabled,
   requesterName,
   requesterEmail,
   requesterPhone,
@@ -143,7 +147,7 @@ export const BookingSteps: React.FC<Props> = ({
   eventTypeOptions,
   comment,
   guestListEntries,
-  //cleaningRequested,
+  cleaningRequested,
   acceptedGuidelines,
   acceptedContractPlaceholder,
   selectedAreaLabel,
@@ -165,7 +169,7 @@ export const BookingSteps: React.FC<Props> = ({
   onResponsiblePhoneChange,
   onEventTypeChange,
   onCommentChange,
-  //onCleaningRequestedChange,
+  onCleaningRequestedChange,
   onAcceptedGuidelinesChange,
   onAcceptedContractPlaceholderChange,
   onOpenGuestListDialog,
@@ -189,10 +193,6 @@ export const BookingSteps: React.FC<Props> = ({
               Minimum {minDurationMinutes / 60} time per booking, kan kun bookes mellom {openingHour}:00–{closingHour}
               :00.
             </Typography>
-            {/* <Alert severity="info">
-              Regler: minimum {minDurationMinutes} minutter, granularitet {slotGranularityMinutes} minutter, åpningstid{" "}
-              {openingHour}:00–{closingHour}:00.
-            </Alert> */}
 
             {startsAt && endsAt && selectedDurationMinutes ? (
               <Alert severity="success">
@@ -297,21 +297,21 @@ export const BookingSteps: React.FC<Props> = ({
                 label="Eiertype"
                 onChange={(event) => onOwnerTypeChange(event.target.value as JanHusOwnerType)}
               >
-                {canCreateNonExternalBooking ? <MenuItem value="PERSONAL">Personlig booking</MenuItem> : null}
-                {canCreateNonExternalBooking && organizations.length > 0 ? (
-                  <MenuItem value="ORGANIZATION">Booking på vegne av forening</MenuItem>
+                {canCreateNonExternalBooking ? (
+                  <MenuItem value="PERSONAL">{JANHUS_OWNER_TYPE_LABELS.PERSONAL}</MenuItem>
                 ) : null}
-                {/* {externalBookingsEnabled || !isAuthenticated || !isIndokStudent ? (
-                  <MenuItem value="EXTERNAL" disabled={!externalBookingsEnabled}>
-                    Ekstern forespørsel
-                  </MenuItem>
-                ) : null} */}
+                {canCreateNonExternalBooking && organizations.length > 0 ? (
+                  <MenuItem value="ORGANIZATION">{JANHUS_OWNER_TYPE_LABELS.ORGANIZATION}</MenuItem>
+                ) : null}
+                {externalBookingsEnabled ? (
+                  <MenuItem value="EXTERNAL">{JANHUS_OWNER_TYPE_LABELS.EXTERNAL}</MenuItem>
+                ) : null}
               </Select>
-              {/* {!externalBookingsEnabled ? (
-                <FormHelperText>Eksterne forespørsler er midlertidig deaktivert i innstillinger.</FormHelperText>
-              ) : !canCreateNonExternalBooking ? (
-                <FormHelperText>Kun eksterne forespørsler er tilgjengelig for ikke Indøk studenter.</FormHelperText>
-              ) : null} */}
+              {!canCreateNonExternalBooking ? (
+                <FormHelperText>Kun eksterne forespørsler er tilgjengelig for ikke Indøk-studenter.</FormHelperText>
+              ) : organizations.length === 0 ? (
+                <FormHelperText>Du må være leder i en forening for å booke på vegne av den.</FormHelperText>
+              ) : null}
             </FormControl>
 
             {ownerType === "ORGANIZATION" ? (
@@ -387,29 +387,29 @@ export const BookingSteps: React.FC<Props> = ({
               </Box>
             ) : null}
 
-            {/* {ownerType === "EXTERNAL" ? (
+            {ownerType === "EXTERNAL" ? (
               <TextField
                 label="Arrangementstype"
-                value="Ekstern"
+                value="Eksternt"
                 disabled
-                helperText="Eksterne forespørsler settes alltid som ekstern hendelse. Logg inn for interne/private valg."
+                helperText="Eksterne forespørsler settes alltid som ekstern booking. Logg inn for interne/private bookinger."
               />
-            ) : ( */}
-            <FormControl>
-              <InputLabel>Arrangementstype</InputLabel>
-              <Select
-                value={eventType}
-                label="Arrangementstype"
-                onChange={(event) => onEventTypeChange(event.target.value)}
-              >
-                {eventTypeOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {/* )} */}
+            ) : (
+              <FormControl>
+                <InputLabel>Arrangementstype</InputLabel>
+                <Select
+                  value={eventType}
+                  label="Arrangementstype"
+                  onChange={(event) => onEventTypeChange(event.target.value)}
+                >
+                  {eventTypeOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
 
             <BookingStepNavigation
               nextButton={
@@ -455,15 +455,17 @@ export const BookingSteps: React.FC<Props> = ({
               ) : null}
             </Stack>
 
-            {/* <FormControlLabel
-              control={
-                <Checkbox
-                  checked={cleaningRequested}
-                  onChange={(event) => onCleaningRequestedChange(event.target.checked)}
-                />
-              }
-              label="Ønsker innleid renhold (kostnad kommer i etterkant)"
-            /> */}
+            {cleaningOptionEnabled ? (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={cleaningRequested}
+                    onChange={(event) => onCleaningRequestedChange(event.target.checked)}
+                  />
+                }
+                label="Ønsker innleid renhold (kostnad kommer i etterkant)"
+              />
+            ) : null}
 
             <BookingStepNavigation />
           </Stack>
@@ -564,16 +566,19 @@ export const BookingSteps: React.FC<Props> = ({
                 <strong>Telefon:</strong> {requesterPhone || "-"}
               </Typography>
               <Typography variant="body1">
-                <strong>Eiertype:</strong> {ownerType}
-                {/* TODO: bedre håndtering av eiertype slik den oversettes */}
+                <strong>Eiertype:</strong> {JANHUS_OWNER_TYPE_LABELS[ownerType]}
               </Typography>
               <Typography variant="body1">
-                <strong>Arrangementstype:</strong> {eventType} {/* ownerType === "EXTERNAL" ? "EKSTERN" : eventType */}
-                {/* TODO: bedre håndtering av arrangementstype slik den oversettes */}
+                <strong>Arrangementstype:</strong>{" "}
+                {ownerType === "EXTERNAL"
+                  ? JANHUS_EVENT_TYPE_LABELS.EXTERNAL
+                  : (JANHUS_EVENT_TYPE_LABELS[eventType] ?? eventType)}
               </Typography>
-              {/* <Typography variant="body1">
-                <strong>Renhold:</strong> {cleaningRequested ? "Ja" : "Nei"}
-              </Typography> */}
+              {cleaningOptionEnabled ? (
+                <Typography variant="body1">
+                  <strong>Renhold:</strong> {cleaningRequested ? "Ja" : "Nei"}
+                </Typography>
+              ) : null}
               <Typography variant="body1">
                 <strong>Gjesteliste:</strong>{" "}
                 {guestListEntries.length > 0 ? `${guestListEntries.length} registrerte` : "Ingen"}

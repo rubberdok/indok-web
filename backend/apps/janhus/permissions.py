@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from django.db.models import QuerySet
+
+from apps.organizations.models import Organization
 from apps.permissions.constants import HR_TYPE
 
 if TYPE_CHECKING:
@@ -27,6 +30,33 @@ def has_manage_settings_permission(user: AbstractBaseUser) -> bool:
             or user.has_perm(MANAGE_BOOKING_PERMISSION)
         )
     )
+
+
+def get_hr_organizations(user: AbstractBaseUser) -> QuerySet[Organization]:
+    """
+    Organizations where the user holds the HR ("leader") group, i.e. the
+    organizations they may book JanHus for.
+    """
+    if not user or not getattr(user, "is_authenticated", False):
+        return Organization.objects.none()
+
+    return Organization.objects.filter(
+        members__user_id=user.id,
+        members__group__group_type=HR_TYPE,
+    ).distinct()
+
+
+def can_book_for_organization(user: AbstractBaseUser, organization) -> bool:
+    if not user or not organization:
+        return False
+
+    if has_manage_booking_permission(user):
+        return True
+
+    return organization.members.filter(
+        user_id=user.id,
+        group__group_type=HR_TYPE,
+    ).exists()
 
 
 def normalize_phone_number(phone_number: str | None) -> str:

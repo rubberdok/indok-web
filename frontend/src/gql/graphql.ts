@@ -782,6 +782,7 @@ export type JanHusBookingRequestType = {
 
 export type JanHusBookingSettingsInput = {
   bufferMinutes: InputMaybe<Scalars['Int']['input']>;
+  cleaningOptionEnabled: InputMaybe<Scalars['Boolean']['input']>;
   closingHour: InputMaybe<Scalars['Int']['input']>;
   externalBookingsEnabled: InputMaybe<Scalars['Boolean']['input']>;
   fallEndDate: InputMaybe<Scalars['Date']['input']>;
@@ -801,6 +802,7 @@ export type JanHusBookingSettingsInput = {
 export type JanHusBookingSettingsType = {
   __typename?: 'JanHusBookingSettingsType';
   bufferMinutes: Scalars['Int']['output'];
+  cleaningOptionEnabled: Scalars['Boolean']['output'];
   closingHour: Scalars['Int']['output'];
   externalBookingsEnabled: Scalars['Boolean']['output'];
   fallEndDate: Scalars['Date']['output'];
@@ -1723,6 +1725,7 @@ export type Queries = {
   forms: Maybe<Array<FormType>>;
   hasPermission: Maybe<Scalars['Boolean']['output']>;
   janhusAreas: Maybe<Array<JanHusAreaType>>;
+  janhusBookableOrganizations: Maybe<Array<OrganizationType>>;
   janhusBookingLevels: Maybe<Array<JanHusBookingLevelType>>;
   janhusBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
   janhusBookingSettings: Maybe<JanHusBookingSettingsType>;

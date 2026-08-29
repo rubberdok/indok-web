@@ -1104,6 +1104,26 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
+              "name": "janhusBookableOrganizations",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "OrganizationType",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
               "name": "janhusBookingSettings",
               "type": {
                 "kind": "OBJECT",
@@ -8378,6 +8398,22 @@
                   "ofType": null
                 }
               }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "cleaningOptionEnabled",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
             }
           ],
           "inputFields": null,
@@ -14704,6 +14740,16 @@
               "defaultValue": null,
               "description": null,
               "name": "privateBookingsEnabled",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "cleaningOptionEnabled",
               "type": {
                 "kind": "SCALAR",
                 "name": "Boolean",

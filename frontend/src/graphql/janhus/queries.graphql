@@ -28,6 +28,13 @@ query AdminJanHusBookings($status: String) {
   }
 }
 
+query JanHusBookableOrganizations {
+  janhusBookableOrganizations {
+    id
+    name
+  }
+}
+
 query JanHusBookingSettings {
   janhusBookingSettings {
     ...JanHusBookingSettings

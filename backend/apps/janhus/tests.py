@@ -1024,6 +1024,192 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertEqual([guest_user.feide_userid], json.loads(booking.guest_list))
 
 
+    def _org_booking_request_query(self, organization):
+        return f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "{self.first_floor_area.id}"
+                  ownerOrganizationId: "{organization.id}"
+                  requesterName: "Requester"
+                  requesterEmail: "requester@example.com"
+                  requesterPhone: "41234567"
+                  responsibleName: "Responsible User"
+                  responsibleEmail: "responsible@example.com"
+                  responsiblePhone: "41234567"
+                }}
+              ) {{
+                ok
+                bookingRequest {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+    def test_create_booking_request_rejects_non_member_of_organization(self):
+        organization = OrganizationFactory()
+        outsider = UserFactory(is_indok=True)
+
+        response = self.query(
+            self._org_booking_request_query(organization), user=outsider
+        )
+
+        self.assertResponseHasErrors(response)
+        self.assertFalse(
+            JanHusBookingRequest.objects.filter(
+                owner_organization=organization
+            ).exists()
+        )
+
+    def test_create_booking_request_rejects_organization_member_without_hr_group(self):
+        organization = OrganizationFactory()
+        plain_member = UserFactory(is_indok=True)
+        MembershipFactory(organization=organization, user=plain_member, group=None)
+
+        response = self.query(
+            self._org_booking_request_query(organization), user=plain_member
+        )
+
+        self.assertResponseHasErrors(response)
+        self.assertFalse(
+            JanHusBookingRequest.objects.filter(
+                owner_organization=organization
+            ).exists()
+        )
+
+    def test_create_booking_request_allows_organization_hr_member(self):
+        organization = OrganizationFactory()
+        org_leader = UserFactory(is_indok=True)
+        MembershipFactory(
+            organization=organization,
+            user=org_leader,
+            group=organization.hr_group,
+        )
+
+        response = self.query(
+            self._org_booking_request_query(organization), user=org_leader
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertTrue(
+            JanHusBookingRequest.objects.filter(
+                owner_organization=organization
+            ).exists()
+        )
+
+    def test_create_booking_request_allows_janhus_admin_for_any_organization(self):
+        organization = OrganizationFactory()
+        admin_user = UserFactory(is_indok=True)
+        self.add_booking_permission(admin_user)
+
+        response = self.query(
+            self._org_booking_request_query(organization), user=admin_user
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertTrue(
+            JanHusBookingRequest.objects.filter(
+                owner_organization=organization
+            ).exists()
+        )
+
+    def test_create_booking_rejects_organization_member_without_hr_group(self):
+        organization = OrganizationFactory()
+        plain_member = UserFactory(is_indok=True)
+        MembershipFactory(organization=organization, user=plain_member, group=None)
+
+        query = f"""
+            mutation {{
+              createJanhusBooking(
+                bookingData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "{self.first_floor_area.id}"
+                  ownerOrganizationId: "{organization.id}"
+                  responsibleName: "Responsible User"
+                  responsibleEmail: "responsible@example.com"
+                  responsiblePhone: "41234567"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                }}
+              }}
+            }}
+        """
+
+        response = self.query(query, user=plain_member)
+
+        self.assertResponseHasErrors(response)
+        self.assertFalse(
+            JanHusBooking.objects.filter(owner_organization=organization).exists()
+        )
+
+    def test_create_booking_request_rejects_cleaning_when_option_disabled(self):
+        JanHusBookingSettings.objects.create(cleaning_option_enabled=False)
+
+        query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "{self.first_floor_area.id}"
+                  requesterName: "Requester"
+                  requesterEmail: "requester@example.com"
+                  requesterPhone: "41234567"
+                  responsibleName: "Responsible User"
+                  responsibleEmail: "responsible@example.com"
+                  responsiblePhone: "41234567"
+                  cleaningRequested: true
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+
+        self.assertResponseHasErrors(response)
+        self.assertFalse(JanHusBookingRequest.objects.exists())
+
+    def test_invalid_email_returns_readable_validation_error(self):
+        query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "{self.first_floor_area.id}"
+                  requesterName: "Requester"
+                  requesterEmail: "not-an-email"
+                  requesterPhone: "41234567"
+                  responsibleName: "Responsible User"
+                  responsibleEmail: "responsible@example.com"
+                  responsiblePhone: "41234567"
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseHasErrors(response)
+
+        content = json.loads(response.content)
+        message = content["errors"][0]["message"]
+
+        self.assertEqual("E-post bestiller: Ugyldig e-postadresse.", message)
+        self.assertNotIn("requester_email", message)
+        self.assertNotIn("{", message)
+
+
 class JanHusResolversTestCase(JanHusBaseTestCase):
     def test_admin_query_requires_permission(self):
         booking = JanHusBooking.objects.create(
@@ -1247,6 +1433,65 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
                 for result in results
             )
         )
+
+
+    def test_bookable_organizations_returns_only_hr_organizations(self):
+        lead_organization = OrganizationFactory(name="Leder i forening")
+        member_organization = OrganizationFactory(name="Medlem i forening")
+        unrelated_organization = OrganizationFactory(name="Uten tilknytning")
+
+        MembershipFactory(
+            organization=lead_organization,
+            user=self.user,
+            group=lead_organization.hr_group,
+        )
+        MembershipFactory(
+            organization=member_organization, user=self.user, group=None
+        )
+
+        query = """
+            query {
+              janhusBookableOrganizations {
+                id
+                name
+              }
+            }
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        returned_ids = [
+            organization["id"]
+            for organization in content["data"]["janhusBookableOrganizations"]
+        ]
+
+        self.assertEqual([str(lead_organization.id)], returned_ids)
+        self.assertNotIn(str(member_organization.id), returned_ids)
+        self.assertNotIn(str(unrelated_organization.id), returned_ids)
+
+    def test_bookable_organizations_empty_for_anonymous_user(self):
+        organization = OrganizationFactory()
+        MembershipFactory(
+            organization=organization,
+            user=self.user,
+            group=organization.hr_group,
+        )
+
+        query = """
+            query {
+              janhusBookableOrganizations {
+                id
+              }
+            }
+        """
+
+        response = self.query(query)
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        self.assertEqual([], content["data"]["janhusBookableOrganizations"])
 
 
 class JanHusAreaTestCase(JanHusBaseTestCase):
