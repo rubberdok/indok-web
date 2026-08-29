@@ -813,6 +813,7 @@ export type JanHusBookingSettingsType = {
   minDurationMinutes: Scalars['Int']['output'];
   openingHour: Scalars['Int']['output'];
   organizationBookingOpensWeeksBefore: Scalars['Int']['output'];
+  paymentProviderOrganization: Maybe<OrganizationType>;
   privateBookingsEnabled: Scalars['Boolean']['output'];
   slotGranularityMinutes: Scalars['Int']['output'];
   springEndDate: Scalars['Date']['output'];
@@ -1222,7 +1223,6 @@ export type MutationsCreateJanhusBookingRequestArgs = {
 
 export type MutationsCreateJanhusPaymentProductArgs = {
   bookingId: Scalars['ID']['input'];
-  organizationId: InputMaybe<Scalars['ID']['input']>;
 };
 
 

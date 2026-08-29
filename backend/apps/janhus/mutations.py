@@ -53,10 +53,9 @@ SUCCESSFUL_PAYMENT_STATUSES = [
     Order.PaymentStatus.CAPTURED,
 ]
 
-JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG = "janus-eiendom"
-JANHUS_PAYMENT_PROVIDER_PRIMARY_NAME = "Janus Eiendom"
-JANHUS_PAYMENT_PROVIDER_FALLBACK_SLUG = "hovedstyret"
-JANHUS_PAYMENT_PROVIDER_FALLBACK_NAME = "Hovedstyret"
+# Used only until a Django admin picks the selling organization in the JanHus
+# settings. Organization 4 is the intended default where it exists.
+JANHUS_DEFAULT_PAYMENT_PROVIDER_ORGANIZATION_ID = 4
 
 # Norsk oversettelse som brukes for valideringsfeilmeldinger.
 VALIDATION_FIELD_LABELS = {
@@ -278,45 +277,35 @@ def _build_payment_product_data(booking: JanHusBooking) -> dict:
     }
 
 
-# MÅ SJEKKES OVER - CHRISTIAN R
-def _resolve_janhus_payment_provider_organization():
+def _resolve_payment_product_organization(
+    *, settings: JanHusBookingSettings
+) -> Organization:
+    """
+    The organization credited as the seller of a JanHus payment product.
+
+    Set by a Django admin on JanHusBookingSettings. Until that happens we fall back
+    to a Hovedstyret (id: 4) so payment products can still be created.
+    If that organization does not exist, fall back to the lowest-id organization.
+
+    Note this is the seller, never the buyer. Bookings owned by an organization are
+    settled internally and never reach Vipps at all.
+    """
+    if settings.payment_provider_organization:
+        return settings.payment_provider_organization
+
     organization = Organization.objects.filter(
-        slug=JANHUS_PAYMENT_PROVIDER_PRIMARY_SLUG
+        pk=JANHUS_DEFAULT_PAYMENT_PROVIDER_ORGANIZATION_ID
     ).first()
     if organization:
         return organization
 
-    organization = Organization.objects.filter(
-        name__iexact=JANHUS_PAYMENT_PROVIDER_PRIMARY_NAME
-    ).first()
+    organization = Organization.objects.order_by("id").first()
     if organization:
         return organization
-
-    # TODO: Janus Eiendom is not present in current test fixtures. Replace this fallback when fixtures are updated.
-    organization = Organization.objects.filter(
-        slug=JANHUS_PAYMENT_PROVIDER_FALLBACK_SLUG
-    ).first()
-    if organization:
-        return organization
-
-    return Organization.objects.filter(
-        name__iexact=JANHUS_PAYMENT_PROVIDER_FALLBACK_NAME
-    ).first()
-
-
-def _resolve_payment_product_organization(*, organization_id=None):
-    if organization_id:
-        organization = Organization.objects.filter(id=organization_id).first()
-        if not organization:
-            raise GraphQLError("Organization not found")
-        return organization
-
-    provider_organization = _resolve_janhus_payment_provider_organization()
-    if provider_organization:
-        return provider_organization
 
     raise GraphQLError(
-        "Could not find JanHus payment provider organization (Janus Eiendom, fallback Hovedstyret)"
+        "Ingen forening er satt som selger av JanHus-betalinger. "
+        "Kontakt Rubberdøk"
     )
 
 
@@ -1149,13 +1138,12 @@ class DeleteJanHusArea(graphene.Mutation):
 class CreateJanHusPaymentProduct(graphene.Mutation):
     class Arguments:
         booking_id = graphene.ID(required=True)
-        organization_id = graphene.ID(required=False)
 
     ok = graphene.Boolean()
     booking = graphene.Field(JanHusBookingType)
     product_id = graphene.ID()
 
-    def mutate(self, info, booking_id, organization_id=None):
+    def mutate(self, info, booking_id):
         actor = _get_actor(info)
         if not _has_manage_booking_permission(actor):
             raise GraphQLError("JanHus booking admin permission required")
@@ -1185,7 +1173,7 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
             )
 
         organization = _resolve_payment_product_organization(
-            organization_id=organization_id
+            settings=get_or_create_settings()
         )
 
         product = Product.objects.create(

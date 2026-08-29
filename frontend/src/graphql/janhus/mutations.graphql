@@ -79,8 +79,8 @@ mutation DeleteJanhusArea($id: ID!) {
   }
 }
 
-mutation CreateJanhusPaymentProduct($bookingId: ID!, $organizationId: ID) {
-  createJanhusPaymentProduct(bookingId: $bookingId, organizationId: $organizationId) {
+mutation CreateJanhusPaymentProduct($bookingId: ID!) {
+  createJanhusPaymentProduct(bookingId: $bookingId) {
     ok
     productId
     booking {

@@ -506,11 +506,10 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     });
   }
 
-  async function handleCreatePaymentProduct(bookingId: string, organizationId?: string) {
+  async function handleCreatePaymentProduct(bookingId: string) {
     await createPaymentProduct({
       variables: {
         bookingId,
-        organizationId,
       },
     });
   }
@@ -1361,9 +1360,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                   <Button
                                     size="small"
                                     variant="outlined"
-                                    onClick={() =>
-                                      handleCreatePaymentProduct(booking.id, booking.ownerOrganization?.id)
-                                    }
+                                    onClick={() => handleCreatePaymentProduct(booking.id)}
                                     disabled={creatingPaymentProduct || Boolean(booking.ownerOrganization)}
                                   >
                                     {booking.ownerOrganization

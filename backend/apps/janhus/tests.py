@@ -18,6 +18,7 @@ from apps.janhus.models import (
     JanHusBookingSettings,
     JanHusBookingStatus,
 )
+from apps.organizations.models import Organization
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.ecommerce import ProductFactory
@@ -809,14 +810,8 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertIn("handled internally", content["errors"][0]["message"])
 
-    def test_create_payment_product_uses_provider_fallback_for_user_without_org(self):
-        self.add_booking_permission(self.user)
-
-        provider_organization = OrganizationFactory(
-            name="Hovedstyret", slug="hovedstyret"
-        )
-
-        booking = JanHusBooking.objects.create(
+    def _payment_booking(self, **overrides):
+        defaults = dict(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
             area=self.first_floor_area,
@@ -828,8 +823,11 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             deposit_status="REQUIRED",
             deposit_amount=Decimal("500"),
         )
+        defaults.update(overrides)
+        return JanHusBooking.objects.create(**defaults)
 
-        query = f"""
+    def _create_payment_product_query(self, booking):
+        return f"""
             mutation {{
               createJanhusPaymentProduct(bookingId: "{booking.id}") {{
                 ok
@@ -838,14 +836,93 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             }}
         """
 
-        response = self.query(query, user=self.user)
+    def test_payment_product_uses_organization_configured_by_admin(self):
+        self.add_booking_permission(self.user)
+
+        configured_organization = OrganizationFactory(name="Janus Eiendom")
+        OrganizationFactory(name="Ikke selger")
+
+        JanHusBookingSettings.objects.create(
+            payment_provider_organization=configured_organization
+        )
+
+        booking = self._payment_booking()
+
+        response = self.query(self._create_payment_product_query(booking), user=self.user)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        self.assertEqual(
+            configured_organization.id, booking.vipps_product.organization_id
+        )
+
+    def test_payment_product_falls_back_to_default_organization_when_unset(self):
+        self.add_booking_permission(self.user)
+
+        fallback_organization = OrganizationFactory(name="Laveste id")
+
+        booking = self._payment_booking()
+
+        response = self.query(self._create_payment_product_query(booking), user=self.user)
         self.assertResponseNoErrors(response)
 
         booking.refresh_from_db()
         self.assertIsNotNone(booking.vipps_product_id)
-        self.assertEqual(
-            provider_organization.id, booking.vipps_product.organization_id
+
+        expected_organization = (
+            Organization.objects.filter(pk=4).first()
+            or Organization.objects.order_by("id").first()
         )
+        self.assertEqual(
+            expected_organization.id, booking.vipps_product.organization_id
+        )
+        self.assertEqual(fallback_organization.id, expected_organization.id)
+
+    def test_payment_product_seller_ignores_booking_owner_organization(self):
+        """
+        Product.organization is the seller, never the buyer. A booking made by a
+        user who leads an organization must not credit that organization.
+        """
+        self.add_booking_permission(self.user)
+
+        configured_organization = OrganizationFactory(name="Janus Eiendom")
+        buyer_organization = OrganizationFactory(name="Indøl")
+        MembershipFactory(
+            organization=buyer_organization,
+            user=self.user,
+            group=buyer_organization.hr_group,
+        )
+
+        JanHusBookingSettings.objects.create(
+            payment_provider_organization=configured_organization
+        )
+
+        booking = self._payment_booking()
+
+        response = self.query(self._create_payment_product_query(booking), user=self.user)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        self.assertEqual(
+            configured_organization.id, booking.vipps_product.organization_id
+        )
+        self.assertNotEqual(
+            buyer_organization.id, booking.vipps_product.organization_id
+        )
+
+    def test_organization_booking_records_price_without_vipps_payment(self):
+        """
+        Organization rentals are settled internally: they carry a price for sales
+        reporting, but nothing is collectable through Vipps.
+        """
+        organization = OrganizationFactory()
+        self.first_floor_area.internal_price_per_hour = Decimal("100")
+        self.first_floor_area.save(update_fields=["internal_price_per_hour"])
+
+        booking = self._payment_booking(owner_user=None, owner_organization=organization)
+
+        self.assertEqual(Decimal("200"), booking.total_price)
+        self.assertIsNone(booking.vipps_product_id)
 
     def test_update_booking_guest_list_access_and_policy_admin_only(self):
         guest_user = UserFactory(is_indok=True)

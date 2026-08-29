@@ -137,6 +137,16 @@ class JanHusBookingSettings(models.Model):
     private_bookings_enabled = models.BooleanField(default=True)
     cleaning_option_enabled = models.BooleanField(default=True)
 
+    # The organization credited as the seller of JanHus payment products.
+    # Set by a Django admin.
+    payment_provider_organization = models.ForeignKey(
+        "organizations.Organization",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="janhus_payment_settings",
+    )
+
     class Meta:
         verbose_name = "JanHus booking settings"
         verbose_name_plural = "JanHus booking settings"
