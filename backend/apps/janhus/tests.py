@@ -9,7 +9,12 @@ from django.test import TestCase
 from django.utils import timezone
 
 from apps.ecommerce.models import Order
-from apps.janhus.mail import send_pending_review_notification
+from apps.janhus.mail import (
+    send_booking_confirmation,
+    send_booking_request_received,
+    send_booking_request_rejected,
+    send_pending_review_notification,
+)
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
@@ -1287,6 +1292,259 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertNotIn("{", message)
 
 
+    def test_booking_gets_a_unique_readable_reference_on_creation(self):
+        first = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+        )
+        second = JanHusBooking.objects.create(
+            starts_at=self.start_dt + timedelta(days=1),
+            ends_at=self.end_dt + timedelta(days=1),
+            area=self.second_floor_area,
+            owner_user=self.other_user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+        )
+
+        self.assertRegex(first.reference, r"^JH-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$")
+        self.assertNotEqual(first.reference, second.reference)
+
+        # The alphabet deliberately excludes characters that are easy to confuse.
+        for confusable in "01ILO":
+            self.assertNotIn(confusable, first.reference.replace("JH-", ""))
+
+    def test_booking_reference_is_stable_when_booking_is_edited(self):
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+        )
+        original_reference = booking.reference
+
+        booking.starts_at = self.start_dt + timedelta(days=3)
+        booking.ends_at = self.end_dt + timedelta(days=3)
+        booking.area = self.second_floor_area
+        booking.responsible_email = "someone-else@example.com"
+        booking.save()
+        booking.refresh_from_db()
+
+        self.assertEqual(original_reference, booking.reference)
+
+
+    def _review_to_confirmed_query(self, booking):
+        return f"""
+            mutation {{
+              reviewJanhusBooking(
+                reviewData: {{
+                  id: "{booking.id}"
+                  status: "CONFIRMED"
+                }}
+              ) {{
+                ok
+                booking {{
+                  id
+                  status
+                }}
+              }}
+            }}
+        """
+
+    def test_confirming_a_booking_sends_the_confirmation_mail(self):
+        self.add_booking_permission(self.user)
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.other_user,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
+            booker_email="booker@example.com",
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            manually_marked_as_paid=True,
+        )
+
+        with patch("apps.janhus.mutations.send_booking_confirmation") as mocked_send:
+            response = self.query(
+                self._review_to_confirmed_query(booking), user=self.user
+            )
+
+        self.assertResponseNoErrors(response)
+        mocked_send.assert_called_once()
+        self.assertEqual(booking.id, mocked_send.call_args.args[0].id)
+
+    def test_confirmation_mail_is_not_resent_when_already_confirmed(self):
+        self.add_booking_permission(self.user)
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.other_user,
+            status=JanHusBookingStatus.CONFIRMED,
+            booker_email="booker@example.com",
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            manually_marked_as_paid=True,
+        )
+
+        with patch("apps.janhus.mutations.send_booking_confirmation") as mocked_send:
+            response = self.query(
+                self._review_to_confirmed_query(booking), user=self.user
+            )
+
+        self.assertResponseNoErrors(response)
+        mocked_send.assert_not_called()
+
+
+    def test_submitting_a_request_sends_the_receipt_mail(self):
+        query = f"""
+            mutation {{
+              createJanhusBookingRequest(
+                requestData: {{
+                  startsAt: "{self.start_dt.isoformat()}"
+                  endsAt: "{self.end_dt.isoformat()}"
+                  area: "{self.first_floor_area.id}"
+                  requesterName: "Kari"
+                  requesterEmail: "kari@example.com"
+                  requesterPhone: "41234567"
+                  responsibleName: "Ola"
+                  responsibleEmail: "ola@example.com"
+                  responsiblePhone: "41234567"
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        with patch(
+            "apps.janhus.mutations.send_booking_request_received"
+        ) as mocked_send:
+            response = self.query(query, user=self.user)
+
+        self.assertResponseNoErrors(response)
+        mocked_send.assert_called_once()
+
+    def test_rejecting_a_request_sends_the_rejection_mail(self):
+        self.add_booking_permission(self.user)
+
+        booking_request = JanHusBookingRequest.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            requester_user=self.other_user,
+            requester_email="kari@example.com",
+            responsible_name="Ola",
+            responsible_email="ola@example.com",
+            responsible_phone="41234567",
+        )
+
+        query = f"""
+            mutation {{
+              reviewJanhusBookingRequest(
+                reviewData: {{
+                  id: "{booking_request.id}"
+                  status: "REJECTED"
+                  adminComment: "Opptatt"
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        with patch(
+            "apps.janhus.mutations.send_booking_request_rejected"
+        ) as mocked_send:
+            response = self.query(query, user=self.user)
+
+        self.assertResponseNoErrors(response)
+        mocked_send.assert_called_once()
+
+    def test_approving_a_request_does_not_send_the_rejection_mail(self):
+        self.add_booking_permission(self.user)
+
+        booking_request = JanHusBookingRequest.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            requester_user=self.other_user,
+            requester_email="kari@example.com",
+            responsible_name="Ola",
+            responsible_email="ola@example.com",
+            responsible_phone="41234567",
+        )
+
+        query = f"""
+            mutation {{
+              reviewJanhusBookingRequest(
+                reviewData: {{
+                  id: "{booking_request.id}"
+                  status: "APPROVED"
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        with patch(
+            "apps.janhus.mutations.send_booking_request_rejected"
+        ) as mocked_send:
+            response = self.query(query, user=self.user)
+
+        self.assertResponseNoErrors(response)
+        mocked_send.assert_not_called()
+
+    def test_declining_a_booking_sends_the_decline_mail(self):
+        self.add_booking_permission(self.user)
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.other_user,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
+            booker_email="kari@example.com",
+            responsible_name="Ola",
+            responsible_email="ola@example.com",
+            responsible_phone="41234567",
+        )
+
+        query = f"""
+            mutation {{
+              reviewJanhusBooking(
+                reviewData: {{
+                  id: "{booking.id}"
+                  status: "DECLINED"
+                  adminComment: "Opptatt"
+                }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        with patch("apps.janhus.mutations.send_booking_declined") as mocked_send:
+            response = self.query(query, user=self.user)
+
+        self.assertResponseNoErrors(response)
+        mocked_send.assert_called_once()
+
+
 class JanHusResolversTestCase(JanHusBaseTestCase):
     def test_admin_query_requires_permission(self):
         booking = JanHusBooking.objects.create(
@@ -1782,4 +2040,154 @@ class JanHusMailTestCase(TestCase):
         recipient_list = mocked_send_mail.call_args.kwargs["recipient_list"]
         self.assertCountEqual(
             ["responsible@example.com", "booker@example.com"], recipient_list
+        )
+
+    def _confirmed_booking(self, **overrides):
+        start_dt = timezone.make_aware(
+            datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
+        )
+        area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
+        defaults = dict(
+            starts_at=start_dt,
+            ends_at=start_dt + timedelta(hours=2),
+            area=area,
+            status=JanHusBookingStatus.CONFIRMED,
+            booker_name="Booker Bookersen",
+            booker_email="booker@example.com",
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+        )
+        defaults.update(overrides)
+        return JanHusBooking.objects.create(**defaults)
+
+    def test_confirmation_mail_contains_reference_and_reaches_both_contacts(self):
+        booking = self._confirmed_booking()
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        mocked_email.assert_called_once()
+        kwargs = mocked_email.call_args.kwargs
+
+        self.assertEqual("janhus-booking-confirmations", kwargs["stream"])
+        self.assertIn(booking.reference, kwargs["subject"])
+        self.assertIn(booking.reference, kwargs["body"])
+        # bcc, so the two contacts do not see each other's address
+        self.assertCountEqual(
+            ["booker@example.com", "responsible@example.com"], kwargs["bcc"]
+        )
+
+    def test_confirmation_mail_omits_cleaning_when_option_disabled(self):
+        JanHusBookingSettings.objects.create(cleaning_option_enabled=False)
+        booking = self._confirmed_booking(cleaning_requested=False)
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        self.assertNotIn("Innleid renhold", mocked_email.call_args.kwargs["body"])
+
+    def test_confirmation_mail_includes_cleaning_when_option_enabled(self):
+        JanHusBookingSettings.objects.create(cleaning_option_enabled=True)
+        booking = self._confirmed_booking(cleaning_requested=True)
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        body = mocked_email.call_args.kwargs["body"]
+        self.assertIn("Innleid renhold: Ja", body)
+
+    def test_confirmation_mail_still_shows_cleaning_the_booking_paid_for(self):
+        """
+        The option can be turned off after a booking already requested cleaning.
+        That booking is still getting the service, so the mail must not hide it.
+        """
+        JanHusBookingSettings.objects.create(cleaning_option_enabled=False)
+        booking = self._confirmed_booking(cleaning_requested=True)
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        self.assertIn("Innleid renhold: Ja", mocked_email.call_args.kwargs["body"])
+
+    def test_confirmation_mail_deduplicates_a_single_contact(self):
+        booking = self._confirmed_booking(
+            booker_email="same@example.com", responsible_email="Same@example.com"
+        )
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        self.assertEqual(1, len(mocked_email.call_args.kwargs["bcc"]))
+
+    def test_confirmation_mail_is_skipped_without_recipients(self):
+        booking = self._confirmed_booking(booker_email="", responsible_email="")
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_confirmation(booking)
+
+        mocked_email.assert_not_called()
+
+    def _booking_request(self, **overrides):
+        start_dt = timezone.make_aware(
+            datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
+        )
+        area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
+        defaults = dict(
+            starts_at=start_dt,
+            ends_at=start_dt + timedelta(hours=2),
+            area=area,
+            requester_name="Kari Nordmann",
+            requester_email="kari@example.com",
+            requester_phone="41234567",
+            responsible_name="Ola Nordmann",
+            responsible_email="ola@example.com",
+            responsible_phone="41234567",
+        )
+        defaults.update(overrides)
+        return JanHusBookingRequest.objects.create(**defaults)
+
+    def test_request_receipt_goes_to_requester_and_responsible(self):
+        booking_request = self._booking_request()
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_request_received(booking_request)
+
+        # No admin contact configured, so only the receipt is sent.
+        mocked_email.assert_called_once()
+        kwargs = mocked_email.call_args.kwargs
+        self.assertCountEqual(
+            ["kari@example.com", "ola@example.com"], kwargs["bcc"]
+        )
+        self.assertIn("mottatt", kwargs["subject"].lower())
+
+    def test_request_receipt_also_notifies_the_configured_admin_address(self):
+        JanHusBookingSettings.objects.create(
+            booking_contact_email="janhus@example.com"
+        )
+        booking_request = self._booking_request()
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_request_received(booking_request)
+
+        self.assertEqual(2, mocked_email.call_count)
+        admin_kwargs = mocked_email.call_args_list[1].kwargs
+        self.assertEqual(["janhus@example.com"], admin_kwargs["bcc"])
+        self.assertIn("Ny JanHus-søknad", admin_kwargs["subject"])
+        # The admin copy carries the contact details the board needs to follow up.
+        self.assertIn("kari@example.com", admin_kwargs["body"])
+
+    def test_rejection_mail_includes_the_admin_comment(self):
+        booking_request = self._booking_request(
+            admin_comment="Huset er allerede booket denne helgen."
+        )
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_request_rejected(booking_request)
+
+        kwargs = mocked_email.call_args.kwargs
+        self.assertIn("ikke godkjent", kwargs["subject"].lower())
+        self.assertIn("Huset er allerede booket denne helgen.", kwargs["body"])
+        self.assertCountEqual(
+            ["kari@example.com", "ola@example.com"], kwargs["bcc"]
         )

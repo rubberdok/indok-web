@@ -21,6 +21,7 @@ class JanHusGuestListEntryType(graphene.ObjectType):
 
 
 PROTECTED_BOOKING_FIELDS = [
+    "reference",
     "booker_name",
     "booker_email",
     "booker_phone",
@@ -118,6 +119,7 @@ class JanHusOrganizationBookingLevelType(DjangoObjectType):
 class JanHusBookingSettingsType(DjangoObjectType):
     class Meta:
         model = JanHusBookingSettings
+        exclude = ("booking_contact_email",)
 
 
 class JanHusAreaType(DjangoObjectType):

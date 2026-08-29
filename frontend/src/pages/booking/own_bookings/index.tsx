@@ -292,6 +292,9 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                       <Typography variant="h6">
                                         {formatTime(booking.startsAt)}–{formatTime(booking.endsAt)}
                                       </Typography>
+                                      <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
+                                        {booking.reference}
+                                      </Typography>
                                     </Box>
                                     <Chip
                                       size="small"

@@ -1,3 +1,4 @@
+import secrets
 from datetime import date
 from decimal import Decimal
 
@@ -6,6 +7,18 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from apps.organizations.models import Organization
+
+
+BOOKING_REFERENCE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"
+BOOKING_REFERENCE_LENGTH = 8
+
+
+def generate_booking_reference() -> str:
+    body = "".join(
+        secrets.choice(BOOKING_REFERENCE_ALPHABET)
+        for _ in range(BOOKING_REFERENCE_LENGTH)
+    )
+    return f"JH-{body[:4]}-{body[4:]}"
 
 
 class JanHusBookingStatus(models.TextChoices):
@@ -137,6 +150,8 @@ class JanHusBookingSettings(models.Model):
     private_bookings_enabled = models.BooleanField(default=True)
     cleaning_option_enabled = models.BooleanField(default=True)
 
+    booking_contact_email = models.EmailField(blank=True, default="")
+
     # The organization credited as the seller of JanHus payment products.
     # Set by a Django admin.
     payment_provider_organization = models.ForeignKey(
@@ -232,6 +247,10 @@ class JanHusBooking(models.Model):
             ("manage_settings", "Can manage JanHus booking settings"),
             ("review_booking", "Can review JanHus bookings"),
         ]
+
+    reference = models.CharField(
+        max_length=16, unique=True, blank=True, editable=False, default=""
+    )
 
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
@@ -335,6 +354,14 @@ class JanHusBooking(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.reference:
+            reference = generate_booking_reference()
+            while JanHusBooking.objects.filter(reference=reference).exists():
+                reference = generate_booking_reference()
+            self.reference = reference
+        return super().save(*args, **kwargs)
 
     def clean(self):
         if self.starts_at and self.ends_at and self.starts_at >= self.ends_at:

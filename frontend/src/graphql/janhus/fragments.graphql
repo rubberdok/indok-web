@@ -16,6 +16,7 @@ fragment JanHusBookingAvailability on JanHusBookingType {
 
 fragment JanHusBooking on JanHusBookingType {
   id
+  reference
   startsAt
   endsAt
   area {

@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      font-family:
+        Open Sans,
+        sans-serif;
+    "
+  >
+    <div
+      style="border: 5px solid #065a5a; text-align: center; padding: 50px; background-color: #f5f0eb; width: 80%"
+      class="contentDiv"
+    >
+      <h2>Hei {{ requester_name }}!</h2>
+      <p>
+        Søknaden din om booking av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til <span><strong>{{ ends_at }}</strong></span> har dessverre
+        <strong>ikke blitt godkjent</strong>.
+      </p>
+
+      {% if admin_comment %}
+      <p><strong>Begrunnelse fra JanHus-styret:</strong><br />{{ admin_comment }}</p>
+      {% endif %}
+
+      <p>Du er velkommen til å søke om et annet tidspunkt.</p>
+
+      <p>
+        Dette er en "no-reply"-mail. Har du spørsmål om avgjørelsen, send mail til
+        <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+      </p>
+    </div>
+  </body>
+</html>

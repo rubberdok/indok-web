@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      font-family:
+        Open Sans,
+        sans-serif;
+    "
+  >
+    <div
+      style="border: 5px solid #065a5a; text-align: center; padding: 50px; background-color: #f5f0eb; width: 80%"
+      class="contentDiv"
+    >
+      <h2>Hei {{ requester_name }}!</h2>
+      <p>
+        Vi har mottatt søknaden din om booking av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til <span><strong>{{ ends_at }}</strong></span>.
+      </p>
+
+      <p>
+        Søknaden er <strong>ikke bekreftet ennå</strong>. JanHus-styret tar stilling til den, og du får en ny mail med
+        bookingreferansen din når den er behandlet.
+      </p>
+
+      <p>
+        <strong>Område:</strong> {{ area_name }}<br />
+        <strong>Arrangementstype:</strong> {{ event_type }}<br />
+        {% if show_cleaning %}<strong>Innleid renhold:</strong> {{ cleaning_requested }}<br />{% endif %}
+        <strong>Ansvarlig:</strong> {{ responsible_name }} ({{ responsible_email }})
+      </p>
+
+      <p>
+        Dette er en "no-reply"-mail. Ved spørsmål om søknaden, send mail til
+        <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+      </p>
+
+      <h2>Takk for søknaden!</h2>
+    </div>
+  </body>
+</html>

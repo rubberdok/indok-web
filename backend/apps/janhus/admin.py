@@ -15,6 +15,7 @@ from apps.janhus.models import (
 class JanHusBookingAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "reference",
         "starts_at",
         "ends_at",
         "area",
@@ -34,6 +35,7 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "is_external_booking",
     )
     search_fields = (
+        "reference",
         "responsible_name",
         "responsible_email",
         "booker_name",
@@ -126,6 +128,7 @@ class JanHusBookingSettingsAdmin(admin.ModelAdmin):
         "external_bookings_enabled",
         "private_bookings_enabled",
         "cleaning_option_enabled",
+        "booking_contact_email",
         "payment_provider_organization",
     )
     raw_id_fields = ("payment_provider_organization",)

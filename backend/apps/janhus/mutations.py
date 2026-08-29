@@ -12,7 +12,13 @@ from apps.janhus.guest_list import (
     normalize_guest_list_user_feide_ids,
     serialize_guest_list_user_feide_ids,
 )
-from apps.janhus.mail import send_pending_review_notification
+from apps.janhus.mail import (
+    send_booking_confirmation,
+    send_booking_declined,
+    send_booking_request_received,
+    send_booking_request_rejected,
+    send_pending_review_notification,
+)
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
@@ -188,6 +194,21 @@ def _ensure_can_book_for_organization(*, actor, owner_organization) -> None:
         raise GraphQLError(
             "Du må være leder i foreningen for å booke JanHus på vegne av den"
         )
+
+
+def _notify_status_change(booking: JanHusBooking, previous_status=None) -> None:
+    """
+    Send the confirmation or decline mail when a booking reaches that status,
+    whether on creation or on a later change. `previous_status` is None for a
+    newly created booking. Nothing is sent if the status did not actually change.
+    """
+    if booking.status == previous_status:
+        return
+
+    if booking.status == JanHusBookingStatus.CONFIRMED:
+        send_booking_confirmation(booking)
+    elif booking.status == JanHusBookingStatus.DECLINED:
+        send_booking_declined(booking)
 
 
 def _is_non_organization_booking(booking: JanHusBooking) -> bool:
@@ -622,6 +643,8 @@ class CreateJanHusBooking(graphene.Mutation):
         if displaced:
             send_pending_review_notification([*displaced, booking])
 
+        _notify_status_change(booking)
+
         return CreateJanHusBooking(ok=True, booking=booking)
 
 
@@ -774,6 +797,8 @@ class UpdateJanHusBooking(graphene.Mutation):
         if displaced:
             send_pending_review_notification([*displaced, booking])
 
+        _notify_status_change(booking, previous_status)
+
         return UpdateJanHusBooking(ok=True, booking=booking)
 
 
@@ -826,6 +851,8 @@ class ReviewJanHusBooking(graphene.Mutation):
         _full_clean_or_error(booking)
         booking.save()
         _sync_existing_vipps_product(booking)
+
+        _notify_status_change(booking, previous_status)
 
         return ReviewJanHusBooking(ok=True, booking=booking)
 
@@ -906,6 +933,8 @@ class CreateJanHusBookingRequest(graphene.Mutation):
         )
         _full_clean_or_error(booking_request)
         booking_request.save()
+
+        send_booking_request_received(booking_request)
 
         return CreateJanHusBookingRequest(ok=True, booking_request=booking_request)
 
@@ -1005,12 +1034,17 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
             if displaced:
                 send_pending_review_notification([*displaced, created_booking])
 
+            _notify_status_change(created_booking)
+
             booking_request.delete()
             return ReviewJanHusBookingRequest(
                 ok=True, booking_request=None, booking=created_booking
             )
 
         booking_request.save()
+
+        if status == JanHusBookingRequest.RequestStatus.REJECTED:
+            send_booking_request_rejected(booking_request)
 
         return ReviewJanHusBookingRequest(
             ok=True, booking_request=booking_request, booking=created_booking

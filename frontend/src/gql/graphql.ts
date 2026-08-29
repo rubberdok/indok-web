@@ -849,6 +849,7 @@ export type JanHusBookingType = {
   ownerUser: Maybe<UserType>;
   priceOverrideAmount: Maybe<Scalars['Decimal']['output']>;
   priceOverrideTier: Maybe<JanhusJanHusBookingPriceOverrideTierChoices>;
+  reference: Scalars['String']['output'];
   responsibleEmail: Scalars['String']['output'];
   responsibleName: Scalars['String']['output'];
   responsiblePhone: Scalars['String']['output'];

@@ -1024,6 +1024,9 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                                   {formatTime(booking.endsAt)} · {booking.area.name} ·{" "}
                                   {OWNER_TYPE_LABELS[bookingOwnerType(booking)]}
                                 </Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ fontFamily: "monospace" }}>
+                                  Referanse: {booking.reference}
+                                </Typography>
                               </Stack>
                             </AccordionSummary>
                             <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
