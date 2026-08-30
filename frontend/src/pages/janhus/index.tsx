@@ -14,9 +14,8 @@ import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
   // const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
-  // const { data: areaData } = useQuery(JanHusAreasDocument);
   // const settings = settingsData?.janhusBookingSettings;
-  // const configuredAreaCount = areaData?.janhusAreas?.length ?? 0;
+  // const { data: areaData } = useQuery(JanHusAreasDocument);
 
   return (
     <>
@@ -43,9 +42,7 @@ const JanHusPage: NextPageWithLayout = () => {
       <Container sx={{ py: 4 }}>
         <Stack spacing={3}>
           <Typography variant="h4">Book JanHus</Typography>
-          <Typography color="text.secondary">
-            Her kan du sende bookingforespørsler for 1. etasje, 2. etasje eller hele huset.
-          </Typography>
+          <Typography color="text.secondary">Her kan du sende bookingforespørsler for JanHus.</Typography>
 
           {/* {settings ? (
             <Alert severity="success">

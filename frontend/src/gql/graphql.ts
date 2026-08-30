@@ -355,12 +355,6 @@ export type CreateFormInput = {
   organizationId: Scalars['ID']['input'];
 };
 
-export type CreateJanHusArea = {
-  __typename?: 'CreateJanHusArea';
-  area: Maybe<JanHusAreaType>;
-  ok: Maybe<Scalars['Boolean']['output']>;
-};
-
 export type CreateJanHusBooking = {
   __typename?: 'CreateJanHusBooking';
   booking: Maybe<JanHusBookingType>;
@@ -676,15 +670,6 @@ export type InitiateOrder = {
   redirect: Maybe<Scalars['String']['output']>;
 };
 
-export type JanHusAreaInput = {
-  cleaningFee: InputMaybe<Scalars['Decimal']['input']>;
-  defaultDepositAmount: InputMaybe<Scalars['Decimal']['input']>;
-  externalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
-  internalPricePerHour: InputMaybe<Scalars['Decimal']['input']>;
-  name: Scalars['String']['input'];
-  parentId: InputMaybe<Scalars['ID']['input']>;
-};
-
 export type JanHusAreaType = {
   __typename?: 'JanHusAreaType';
   bookingRequests: Array<JanHusBookingRequestType>;
@@ -768,6 +753,7 @@ export type JanHusBookingRequestType = {
   guestList: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   ownerOrganization: Maybe<OrganizationType>;
+  reference: Scalars['String']['output'];
   requesterEmail: Scalars['String']['output'];
   requesterName: Scalars['String']['output'];
   requesterPhone: Scalars['String']['output'];
@@ -1044,7 +1030,6 @@ export type Mutations = {
   /** Create a new event */
   createEvent: Maybe<CreateEvent>;
   createForm: Maybe<CreateForm>;
-  createJanhusArea: Maybe<CreateJanHusArea>;
   createJanhusBooking: Maybe<CreateJanHusBooking>;
   createJanhusBookingRequest: Maybe<CreateJanHusBookingRequest>;
   createJanhusPaymentProduct: Maybe<CreateJanHusPaymentProduct>;
@@ -1206,11 +1191,6 @@ export type MutationsCreateEventArgs = {
 export type MutationsCreateFormArgs = {
   formData: CreateFormInput;
   listingId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type MutationsCreateJanhusAreaArgs = {
-  areaData: JanHusAreaInput;
 };
 
 

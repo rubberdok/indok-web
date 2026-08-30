@@ -75,27 +75,12 @@ mutation UpdateJanhusBookingSettings($settingsData: JanHusBookingSettingsInput!)
   }
 }
 
-mutation CreateJanhusArea($areaData: JanHusAreaInput!) {
-  createJanhusArea(areaData: $areaData) {
-    ok
-    area {
-      ...JanHusArea
-    }
-  }
-}
-
 mutation UpdateJanhusArea($areaData: UpdateJanHusAreaInput!) {
   updateJanhusArea(areaData: $areaData) {
     ok
     area {
       ...JanHusArea
     }
-  }
-}
-
-mutation DeleteJanhusArea($id: ID!) {
-  deleteJanhusArea(id: $id) {
-    ok
   }
 }
 

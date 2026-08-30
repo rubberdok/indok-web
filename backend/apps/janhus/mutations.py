@@ -53,10 +53,14 @@ from apps.janhus.permissions import (
 from apps.organizations.models import Organization
 
 
-SUCCESSFUL_PAYMENT_STATUSES = [
-    Order.PaymentStatus.RESERVED,
-    Order.PaymentStatus.CAPTURED,
-]
+from apps.janhus.payments import (  # noqa: E402  (kept as private aliases)
+    attach_latest_successful_order as _attach_latest_successful_order,
+    is_non_organization_booking as _is_non_organization_booking,
+    outstanding_payment_amount_for_booking as _outstanding_payment_amount_for_booking,
+    paid_amount_for_booking as _paid_amount_for_booking,
+    required_payment_amount_for_non_org_booking as _required_payment_amount_for_non_org_booking,
+    successful_payment_orders_for_booking as _successful_payment_orders_for_booking,
+)
 
 # Used only until a Django admin picks the selling organization in the JanHus
 # settings. Organization 4 is the intended default where it exists.
@@ -127,7 +131,10 @@ def _get_actor(info):
 
 
 def _resolve_area(area_id) -> JanHusArea:
-    area = JanHusArea.objects.filter(id=area_id).first()
+    try:
+        area = JanHusArea.objects.filter(id=area_id).first()
+    except (ValueError, TypeError, ValidationError):
+        raise GraphQLError("Area not found")
     if not area:
         raise GraphQLError("Area not found")
     return area
@@ -208,53 +215,6 @@ def _notify_status_change(booking: JanHusBooking, previous_status=None) -> None:
         send_booking_confirmation(booking)
     elif booking.status == JanHusBookingStatus.DECLINED:
         send_booking_declined(booking)
-
-
-def _is_non_organization_booking(booking: JanHusBooking) -> bool:
-    return booking.owner_organization_id is None
-
-
-def _required_payment_amount_for_non_org_booking(booking: JanHusBooking) -> Decimal:
-    required_deposit = max(booking.deposit_amount or Decimal("0"), Decimal("0"))
-    return booking.total_price + required_deposit
-
-
-def _successful_payment_orders_for_booking(booking: JanHusBooking):
-    if not booking.vipps_product_id:
-        return Order.objects.none()
-
-    return Order.objects.filter(
-        product_id=booking.vipps_product_id,
-        payment_status__in=SUCCESSFUL_PAYMENT_STATUSES,
-    )
-
-
-def _paid_amount_for_booking(booking: JanHusBooking) -> Decimal:
-    paid_amount = _successful_payment_orders_for_booking(booking).aggregate(
-        total_paid=Sum("total_price")
-    )["total_paid"]
-    return paid_amount or Decimal("0")
-
-
-def _outstanding_payment_amount_for_booking(booking: JanHusBooking) -> Decimal:
-    if booking.manually_marked_as_paid:
-        return Decimal("0")
-
-    if not _is_non_organization_booking(booking):
-        return Decimal("0")
-
-    outstanding_amount = _required_payment_amount_for_non_org_booking(
-        booking
-    ) - _paid_amount_for_booking(booking)
-    return max(outstanding_amount, Decimal("0"))
-
-
-def _attach_latest_successful_order(booking: JanHusBooking) -> None:
-    latest_successful_order = (
-        _successful_payment_orders_for_booking(booking).order_by("-timestamp").first()
-    )
-    if latest_successful_order and booking.vipps_order_id != latest_successful_order.id:
-        booking.vipps_order = latest_successful_order
 
 
 def _ensure_non_org_booking_paid_before_confirmation(booking: JanHusBooking) -> None:
@@ -507,15 +467,6 @@ class JanHusBookingSettingsInput(graphene.InputObjectType):
     cleaning_option_enabled = graphene.Boolean(required=False)
 
 
-class JanHusAreaInput(graphene.InputObjectType):
-    name = graphene.String(required=True)
-    parent_id = graphene.ID(required=False)
-    internal_price_per_hour = graphene.Decimal(required=False)
-    external_price_per_hour = graphene.Decimal(required=False)
-    cleaning_fee = graphene.Decimal(required=False)
-    default_deposit_amount = graphene.Decimal(required=False)
-
-
 class UpdateJanHusAreaInput(graphene.InputObjectType):
     id = graphene.ID(required=True)
     name = graphene.String(required=False)
@@ -604,6 +555,7 @@ class CreateJanHusBooking(graphene.Mutation):
             starts_at=booking_data["starts_at"],
             is_external_booking=is_external_booking,
             settings=settings,
+            requires_payment=not is_external_booking and owner_organization is None,
         )
 
         area = _resolve_area(booking_data["area"])
@@ -1013,6 +965,7 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 initial_status = JanHusBookingStatus.PROVISIONAL
 
             created_booking = JanHusBooking(
+                reference=booking_request.reference,
                 starts_at=booking_request.starts_at,
                 ends_at=booking_request.ends_at,
                 area=booking_request.area,
@@ -1092,36 +1045,6 @@ class UpdateJanHusBookingSettings(graphene.Mutation):
         booking_settings.save()
 
         return UpdateJanHusBookingSettings(ok=True, booking_settings=booking_settings)
-
-
-class CreateJanHusArea(graphene.Mutation):
-    class Arguments:
-        area_data = JanHusAreaInput(required=True)
-
-    ok = graphene.Boolean()
-    area = graphene.Field(JanHusAreaType)
-
-    def mutate(self, info, area_data):
-        actor = _get_actor(info)
-        if not _has_manage_settings_permission(actor):
-            raise GraphQLError("JanHus settings admin permission required")
-
-        parent = None
-        if area_data.get("parent_id"):
-            parent = _resolve_area(area_data.get("parent_id"))
-
-        area = JanHusArea(
-            name=area_data["name"],
-            parent=parent,
-            internal_price_per_hour=area_data.get("internal_price_per_hour", 0),
-            external_price_per_hour=area_data.get("external_price_per_hour", 0),
-            cleaning_fee=area_data.get("cleaning_fee", 0),
-            default_deposit_amount=area_data.get("default_deposit_amount", 0),
-        )
-        _full_clean_or_error(area)
-        area.save()
-
-        return CreateJanHusArea(ok=True, area=area)
 
 
 class UpdateJanHusArea(graphene.Mutation):

@@ -25,6 +25,7 @@ import { Calendar } from "@/components/Calendar";
 import { useStepContext } from "@/components/pages/cabins/booking/StepContext";
 import { Stepper as BookingStepNavigation } from "@/components/pages/cabins/booking/Steps/Stepper";
 import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
+import { ContactFieldErrors } from "@/components/pages/janhus/validation";
 import dayjs from "@/lib/date";
 
 export type JanHusOwnerType = "PERSONAL" | "ORGANIZATION" | "EXTERNAL";
@@ -85,7 +86,9 @@ type Props = {
 
   selectedAreaLabel: string;
   loading: boolean;
-  submittedBookingRequestId: string | undefined;
+  submittedBookingReference: string | undefined;
+  contactFieldErrors: ContactFieldErrors;
+  showAllContactErrors: boolean;
   isBookingDateDisabled: (date: dayjs.Dayjs) => boolean;
 
   onAreaChange: (value: string) => void;
@@ -152,7 +155,9 @@ export const BookingSteps: React.FC<Props> = ({
   acceptedContractPlaceholder,
   selectedAreaLabel,
   loading,
-  submittedBookingRequestId,
+  submittedBookingReference,
+  contactFieldErrors,
+  showAllContactErrors,
   isBookingDateDisabled,
   onAreaChange,
   onBookingDateChange,
@@ -180,6 +185,10 @@ export const BookingSteps: React.FC<Props> = ({
 }) => {
   const { activeStep } = useStepContext();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const markTouched = (key: string) => setTouched((prev) => ({ ...prev, [key]: true }));
+  const fieldError = (key: keyof ContactFieldErrors) =>
+    touched[key] || showAllContactErrors ? contactFieldErrors[key] : undefined;
 
   switch (activeStep) {
     case 0:
@@ -315,12 +324,13 @@ export const BookingSteps: React.FC<Props> = ({
             </FormControl>
 
             {ownerType === "ORGANIZATION" ? (
-              <FormControl>
+              <FormControl error={Boolean(fieldError("organizationId"))}>
                 <InputLabel>Forening</InputLabel>
                 <Select
                   value={organizationId}
                   label="Forening"
                   onChange={(event) => onOrganizationChange(event.target.value)}
+                  onBlur={() => markTouched("organizationId")}
                 >
                   {organizations.map((organization) => (
                     <MenuItem key={organization.id} value={organization.id}>
@@ -328,6 +338,7 @@ export const BookingSteps: React.FC<Props> = ({
                     </MenuItem>
                   ))}
                 </Select>
+                {fieldError("organizationId") ? <FormHelperText>{fieldError("organizationId")}</FormHelperText> : null}
               </FormControl>
             ) : null}
 
@@ -336,6 +347,9 @@ export const BookingSteps: React.FC<Props> = ({
                 label="Navn på bestiller"
                 value={requesterName}
                 onChange={(event) => onRequesterNameChange(event.target.value)}
+                onBlur={() => markTouched("requesterName")}
+                error={Boolean(fieldError("requesterName"))}
+                helperText={fieldError("requesterName")}
                 required
               />
               <TextField
@@ -343,12 +357,18 @@ export const BookingSteps: React.FC<Props> = ({
                 type="email"
                 value={requesterEmail}
                 onChange={(event) => onRequesterEmailChange(event.target.value)}
+                onBlur={() => markTouched("requesterEmail")}
+                error={Boolean(fieldError("requesterEmail"))}
+                helperText={fieldError("requesterEmail")}
                 required
               />
               <TextField
                 label="Telefon bestiller"
                 value={requesterPhone}
                 onChange={(event) => onRequesterPhoneChange(event.target.value)}
+                onBlur={() => markTouched("requesterPhone")}
+                error={Boolean(fieldError("requesterPhone"))}
+                helperText={fieldError("requesterPhone")}
                 required
               />
             </Box>
@@ -369,6 +389,9 @@ export const BookingSteps: React.FC<Props> = ({
                   label="Ansvarlig navn"
                   value={responsibleName}
                   onChange={(event) => onResponsibleNameChange(event.target.value)}
+                  onBlur={() => markTouched("responsibleName")}
+                  error={Boolean(fieldError("responsibleName"))}
+                  helperText={fieldError("responsibleName")}
                   required
                 />
                 <TextField
@@ -376,12 +399,18 @@ export const BookingSteps: React.FC<Props> = ({
                   type="email"
                   value={responsibleEmail}
                   onChange={(event) => onResponsibleEmailChange(event.target.value)}
+                  onBlur={() => markTouched("responsibleEmail")}
+                  error={Boolean(fieldError("responsibleEmail"))}
+                  helperText={fieldError("responsibleEmail")}
                   required
                 />
                 <TextField
                   label="Ansvarlig telefon"
                   value={responsiblePhone}
                   onChange={(event) => onResponsiblePhoneChange(event.target.value)}
+                  onBlur={() => markTouched("responsiblePhone")}
+                  error={Boolean(fieldError("responsiblePhone"))}
+                  helperText={fieldError("responsiblePhone")}
                   required
                 />
               </Box>
@@ -613,7 +642,10 @@ export const BookingSteps: React.FC<Props> = ({
             <Typography variant="h4">Kvittering</Typography>
             <Typography variant="body1">Din bookingforespørsel er sendt til Janus Eiendom.</Typography>
             <Typography variant="body1">
-              <strong>Booking-ID:</strong> {submittedBookingRequestId ?? "Ikke tilgjengelig"}
+              <strong>Referanse:</strong> {submittedBookingReference ?? "Ikke tilgjengelig"}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Ta vare på referansen — oppgi den hvis du kontakter Janus Eiendom om bookingen.
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Du får oppfølging på e-post når forespørselen er behandlet.

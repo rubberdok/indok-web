@@ -2,7 +2,6 @@ import graphene
 from graphene import NonNull
 
 from apps.janhus.mutations import (
-    CreateJanHusArea,
     CreateJanHusBooking,
     CreateJanHusBookingRequest,
     CreateJanHusPaymentProduct,
@@ -38,7 +37,6 @@ class JanHusMutations(graphene.ObjectType):
     delete_janhus_booking_request = DeleteJanHusBookingRequest.Field()
 
     update_janhus_booking_settings = UpdateJanHusBookingSettings.Field()
-    create_janhus_area = CreateJanHusArea.Field()
     update_janhus_area = UpdateJanHusArea.Field()
     delete_janhus_area = DeleteJanHusArea.Field()
 

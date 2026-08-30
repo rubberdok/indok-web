@@ -1,17 +1,18 @@
 import { useMutation, useQuery } from "@apollo/client/react";
-import { Alert, Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
+import { Alert, Box, Container, Stack, Step, StepButton, StepLabel, Stepper } from "@mui/material";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { BookingSteps, JanHusOwnerType } from "@/components/pages/janhus/booking/BookingSteps";
+import { useBookingSlots } from "@/components/pages/janhus/booking/useBookingSlots";
 import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
 import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
+import { ContactFieldErrors, normalizePhoneNumber, validateContactFields } from "@/components/pages/janhus/validation";
 import {
   CreateJanhusBookingRequestDocument,
   JanHusAreasDocument,
   JanHusBookableOrganizationsDocument,
-  JanHusBookingsDocument,
   JanHusBookingSettingsDocument,
   UserOrganizationsDocument,
 } from "@/generated/graphql";
@@ -38,19 +39,10 @@ const DEFAULT_SETTINGS = {
   cleaningOptionEnabled: true,
 };
 
-const NORWEGIAN_PHONE_REGEX = /^(0047|\+47|47)?[49]\d{7}$/;
-
-const normalizePhoneNumber = (value: string) => value.replace(/\s/g, "");
-
 const toManualGuestEntry = (displayName: string): JanHusGuestListEntry => ({
   feideUserId: `manual:${displayName.trim().toLowerCase().replace(/\s+/g, "-")}`,
   displayName: displayName.trim(),
 });
-
-const formatSlotLabel = (slot: dayjs.Dayjs, baseDay?: dayjs.Dayjs) => {
-  const nextDay = baseDay ? !slot.isSame(baseDay, "day") : false;
-  return `${slot.format("HH:mm")}${nextDay ? " (+1 dag)" : ""}`;
-};
 
 type SemesterAvailabilitySettings = {
   fallStartDate?: string | null;
@@ -106,7 +98,8 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [acceptedContractPlaceholder, setAcceptedContractPlaceholder] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const [submittedBookingRequestId, setSubmittedBookingRequestId] = useState<string | undefined>();
+  const [submittedBookingReference, setSubmittedBookingReference] = useState<string | undefined>();
+  const [showAllContactErrors, setShowAllContactErrors] = useState(false);
 
   const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
   const { data: areasData } = useQuery(JanHusAreasDocument);
@@ -120,7 +113,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [createBookingRequest, { loading }] = useMutation(CreateJanhusBookingRequestDocument, {
     onCompleted: (data) => {
       setErrorMessage(undefined);
-      setSubmittedBookingRequestId(data?.createJanhusBookingRequest?.bookingRequest?.id);
+      setSubmittedBookingReference(data?.createJanhusBookingRequest?.bookingRequest?.reference);
       setActiveStep(steps.length - 1);
 
       setEndsAt("");
@@ -173,110 +166,17 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     [bookingSettings]
   );
 
-  const bookingWindow = useMemo(() => {
-    if (!bookingDay) {
-      return undefined;
-    }
-
-    const windowStart = bookingDay.hour(openingHour).minute(0).second(0).millisecond(0);
-    let windowEnd = bookingDay.hour(closingHour).minute(0).second(0).millisecond(0);
-
-    if (openingHour >= closingHour) {
-      windowEnd = windowEnd.add(1, "day");
-    }
-
-    return { windowStart, windowEnd };
-  }, [bookingDay, closingHour, openingHour]);
-
-  const { data: overlappingBookingsData } = useQuery(JanHusBookingsDocument, {
-    skip: !bookingWindow,
-    variables: bookingWindow
-      ? {
-          startsAt: bookingWindow.windowStart.toISOString(),
-          endsAt: bookingWindow.windowEnd.toISOString(),
-        }
-      : undefined,
-    fetchPolicy: "cache-and-network",
+  const { startOptions, endOptions } = useBookingSlots({
+    bookingDay,
+    area,
+    areas,
+    startsAt,
+    openingHour,
+    closingHour,
+    minDurationMinutes,
+    slotGranularityMinutes,
+    bufferMinutes,
   });
-
-  const overlappingBookings = useMemo(() => overlappingBookingsData?.janhusBookings ?? [], [overlappingBookingsData]);
-
-  const relevantBookings = useMemo(() => {
-    const selectedArea = areas.find((candidate) => candidate.id === area);
-    const conflictingAreaIds = selectedArea?.conflictingAreaIds ?? [area];
-    return overlappingBookings
-      .filter((booking) => conflictingAreaIds.includes(booking.area.id))
-      .map((booking) => ({
-        startsAt: dayjs(booking.startsAt).subtract(bufferMinutes, "minute"),
-        endsAt: dayjs(booking.endsAt).add(bufferMinutes, "minute"),
-      }));
-  }, [area, areas, bufferMinutes, overlappingBookings]);
-
-  const hasOverlap = useCallback(
-    (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
-      return relevantBookings.some((booking) => booking.startsAt.isBefore(end) && booking.endsAt.isAfter(start));
-    },
-    [relevantBookings]
-  );
-
-  const timeBoundaries = useMemo(() => {
-    if (!bookingWindow) {
-      return [];
-    }
-
-    const boundaries = [bookingWindow.windowStart];
-    let current = bookingWindow.windowStart;
-
-    while (current.add(slotGranularityMinutes, "minute").isSameOrBefore(bookingWindow.windowEnd)) {
-      const next = current.add(slotGranularityMinutes, "minute");
-      boundaries.push(next);
-      current = next;
-    }
-
-    if (!boundaries[boundaries.length - 1].isSame(bookingWindow.windowEnd)) {
-      boundaries.push(bookingWindow.windowEnd);
-    }
-
-    return boundaries;
-  }, [bookingWindow, slotGranularityMinutes]);
-
-  const possibleEndOptionsFor = useCallback(
-    (start: dayjs.Dayjs) => {
-      return timeBoundaries
-        .filter(
-          (slot) =>
-            slot.isAfter(start) &&
-            slot.diff(start, "minute") >= minDurationMinutes &&
-            slot.diff(start, "minute") % slotGranularityMinutes === 0 &&
-            !hasOverlap(start, slot)
-        )
-        .map((slot) => ({
-          value: slot.toISOString(),
-          label: formatSlotLabel(slot, bookingDay),
-        }));
-    },
-    [bookingDay, hasOverlap, minDurationMinutes, slotGranularityMinutes, timeBoundaries]
-  );
-
-  const startOptions = useMemo(() => {
-    return timeBoundaries
-      .slice(0, -1)
-      .filter((slot) => possibleEndOptionsFor(slot).length > 0)
-      .map((slot) => ({
-        value: slot.toISOString(),
-        label: formatSlotLabel(slot, bookingDay),
-      }));
-  }, [bookingDay, possibleEndOptionsFor, timeBoundaries]);
-
-  const endOptions = useMemo(() => {
-    if (!startsAt) {
-      return [];
-    }
-
-    const selectedStart = dayjs(startsAt);
-
-    return possibleEndOptionsFor(selectedStart);
-  }, [startsAt, possibleEndOptionsFor]);
 
   const selectedDurationMinutes = useMemo(() => {
     if (!startsAt || !endsAt) {
@@ -452,36 +352,40 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return true;
   }, [bookingDate, bookingSettings, endsAt, startsAt]);
 
+  const contactFieldErrors: ContactFieldErrors = useMemo(
+    () =>
+      validateContactFields({
+        requesterName,
+        requesterEmail,
+        requesterPhone,
+        hasDifferentResponsible,
+        responsibleName,
+        responsibleEmail,
+        responsiblePhone,
+        ownerType,
+        organizationId,
+      }),
+    [
+      hasDifferentResponsible,
+      organizationId,
+      ownerType,
+      requesterEmail,
+      requesterName,
+      requesterPhone,
+      responsibleEmail,
+      responsibleName,
+      responsiblePhone,
+    ]
+  );
+
   const validateContactStep = useCallback(() => {
-    if (!requesterName || !requesterEmail || !requesterPhone) {
-      setErrorMessage("Fyll ut bestillerinformasjon.");
+    if (Object.keys(contactFieldErrors).length > 0) {
+      setShowAllContactErrors(true);
+      setErrorMessage("Rett feltene som er markert i rødt.");
       return false;
     }
 
-    const normalizedRequesterPhone = normalizePhoneNumber(requesterPhone);
-    const normalizedResponsiblePhone = normalizePhoneNumber(
-      hasDifferentResponsible ? responsiblePhone : requesterPhone
-    );
-
-    if (!NORWEGIAN_PHONE_REGEX.test(normalizedRequesterPhone)) {
-      setErrorMessage("Telefon bestiller må være et gyldig norsk telefonnummer.");
-      return false;
-    }
-
-    if (hasDifferentResponsible && (!responsibleName || !responsibleEmail || !responsiblePhone)) {
-      setErrorMessage("Fyll ut ansvarliginformasjon når ansvarlig er en annen person.");
-      return false;
-    }
-
-    if (hasDifferentResponsible && !NORWEGIAN_PHONE_REGEX.test(normalizedResponsiblePhone)) {
-      setErrorMessage("Telefon ansvarlig må være et gyldig norsk telefonnummer.");
-      return false;
-    }
-
-    if (ownerType === "ORGANIZATION" && !organizationId) {
-      setErrorMessage("Velg forening for booking på vegne av forening.");
-      return false;
-    }
+    setShowAllContactErrors(false);
 
     if (eventType === "PRIVATE" && !privateBookingsEnabled) {
       setErrorMessage("Private JanHus-bookinger er midlertidig deaktivert.");
@@ -501,18 +405,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return true;
   }, [
     canCreateNonExternalBooking,
+    contactFieldErrors,
     externalBookingsEnabled,
     eventType,
-    hasDifferentResponsible,
-    organizationId,
     ownerType,
     privateBookingsEnabled,
-    requesterEmail,
-    requesterName,
-    requesterPhone,
-    responsibleEmail,
-    responsibleName,
-    responsiblePhone,
   ]);
 
   const validateContractStep = useCallback(() => {
@@ -648,12 +545,20 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       <Container>
         <Stack spacing={{ xs: 3, md: 5 }}>
           <Box display={{ xs: "none", md: "block" }}>
-            <Stepper activeStep={activeStep}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
+            <Stepper activeStep={activeStep} nonLinear>
+              {steps.map((label, index) => {
+                const isReceipt = index === steps.length - 1;
+                const canNavigate = !submittedBookingReference && !isReceipt;
+                return (
+                  <Step key={label} completed={!submittedBookingReference && activeStep > index}>
+                    {canNavigate ? (
+                      <StepButton onClick={() => setActiveStep(index)}>{label}</StepButton>
+                    ) : (
+                      <StepLabel>{label}</StepLabel>
+                    )}
+                  </Step>
+                );
+              })}
             </Stepper>
           </Box>
 
@@ -702,7 +607,9 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               acceptedContractPlaceholder={acceptedContractPlaceholder}
               selectedAreaLabel={selectedAreaLabel}
               loading={loading}
-              submittedBookingRequestId={submittedBookingRequestId}
+              submittedBookingReference={submittedBookingReference}
+              contactFieldErrors={contactFieldErrors}
+              showAllContactErrors={showAllContactErrors}
               isBookingDateDisabled={isBookingDateDisabled}
               onAreaChange={setArea}
               onBookingDateChange={setBookingDate}

@@ -141,6 +141,36 @@ def determine_initial_status(
     starts_at,
     is_external_booking: bool,
     settings: JanHusBookingSettings,
+    requires_payment: bool = False,
+) -> str:
+    """
+    `requires_payment` marks a booking that nobody has paid for yet, which is every
+    personal booking at the moment it is created. Those start PROVISIONAL and become
+    CONFIRMED once payment lands, so the direct path cannot hand out a confirmed
+    booking (and a contract) that the request path would have charged for.
+
+    Note this deliberately ignores `can_create_provisional`: that flag governs how
+    early a level may book, not whether it may wait for payment.
+    """
+    status = _initial_status_for_level(
+        booking_level=booking_level,
+        starts_at=starts_at,
+        is_external_booking=is_external_booking,
+        settings=settings,
+    )
+
+    if requires_payment and status == JanHusBookingStatus.CONFIRMED:
+        return JanHusBookingStatus.PROVISIONAL
+
+    return status
+
+
+def _initial_status_for_level(
+    *,
+    booking_level: JanHusBookingLevel,
+    starts_at,
+    is_external_booking: bool,
+    settings: JanHusBookingSettings,
 ) -> str:
     if is_external_booking:
         return JanHusBookingStatus.PENDING_ADMIN_REVIEW

@@ -13,6 +13,23 @@ BOOKING_REFERENCE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"
 BOOKING_REFERENCE_LENGTH = 8
 
 
+def generate_unique_booking_reference() -> str:
+    """
+    A reference that is free in both tables, so a request and an unrelated booking
+    can never show the same code to two different people. A request that converts
+    into a booking deliberately keeps its own reference, which is why the check
+    only runs when a reference is being generated.
+    """
+    while True:
+        reference = generate_booking_reference()
+        taken = (
+            JanHusBooking.objects.filter(reference=reference).exists()
+            or JanHusBookingRequest.objects.filter(reference=reference).exists()
+        )
+        if not taken:
+            return reference
+
+
 def generate_booking_reference() -> str:
     body = "".join(
         secrets.choice(BOOKING_REFERENCE_ALPHABET)
@@ -361,10 +378,7 @@ class JanHusBooking(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.reference:
-            reference = generate_booking_reference()
-            while JanHusBooking.objects.filter(reference=reference).exists():
-                reference = generate_booking_reference()
-            self.reference = reference
+            self.reference = generate_unique_booking_reference()
         return super().save(*args, **kwargs)
 
     def clean(self):
@@ -451,6 +465,10 @@ class JanHusBookingRequest(models.Model):
         APPROVED = "APPROVED", "Approved"
         REJECTED = "REJECTED", "Rejected"
 
+    reference = models.CharField(
+        max_length=16, unique=True, blank=True, editable=False, default=""
+    )
+
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     area = models.ForeignKey(
@@ -508,5 +526,10 @@ class JanHusBookingRequest(models.Model):
         verbose_name = "JanHus booking request"
         verbose_name_plural = "JanHus booking requests"
 
+    def save(self, *args, **kwargs):
+        if not self.reference:
+            self.reference = generate_unique_booking_reference()
+        return super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"JanHus request {self.id} ({self.status})"
+        return f"JanHus request {self.reference or self.id} ({self.status})"

@@ -12,6 +12,7 @@ from graphql import GraphQLError
 
 from apps.ecommerce.models import Order
 from apps.janhus import mail
+from apps.janhus.mutations import _resolve_area
 from apps.janhus.mail import (
     send_booking_confirmation,
     send_booking_request_received,
@@ -654,7 +655,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         booking = JanHusBooking.objects.first()
         self.assertIsNotNone(booking)
-        self.assertEqual(JanHusBookingStatus.CONFIRMED, booking.status)
+        self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
         self.assertEqual(self.user.id, booking.owner_user_id)
 
         overlap_query = f"""
@@ -1843,21 +1844,20 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
             self.entire_house_area.conflicting_area_ids,
         )
 
-    def test_create_and_update_area_requires_settings_permission(self):
+    def test_update_area_requires_settings_permission(self):
+        """Areas are created in Django admin; the API may only edit them."""
         query = f"""
             mutation {{
-              createJanhusArea(
+              updateJanhusArea(
                 areaData: {{
-                  name: "Kjeller"
-                  parentId: "{self.entire_house_area.id}"
+                  id: "{self.first_floor_area.id}"
                   internalPricePerHour: "50"
-                  externalPricePerHour: "100"
                 }}
               ) {{
                 ok
                 area {{
                   id
-                  name
+                  internalPricePerHour
                 }}
               }}
             }}
@@ -1875,8 +1875,39 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         allowed_response = self.query(query, user=self.user)
         self.assertResponseNoErrors(allowed_response)
 
-        content = json.loads(allowed_response.content)
-        self.assertEqual("Kjeller", content["data"]["createJanhusArea"]["area"]["name"])
+        self.first_floor_area.refresh_from_db()
+        self.assertEqual(50, self.first_floor_area.internal_price_per_hour)
+
+
+    def test_area_can_be_archived_and_restored(self):
+        """The frontend archives via is_active so the action stays reversible."""
+        content_type = ContentType.objects.get_for_model(JanHusBooking)
+        self.user.user_permissions.add(
+            Permission.objects.get(
+                codename="manage_settings", content_type=content_type
+            )
+        )
+
+        def set_active(is_active):
+            response = self.query(
+                f"""
+                    mutation {{
+                      updateJanhusArea(
+                        areaData: {{ id: "{self.first_floor_area.id}", isActive: {str(is_active).lower()} }}
+                      ) {{ ok }}
+                    }}
+                """,
+                user=self.user,
+            )
+            self.assertResponseNoErrors(response)
+            self.first_floor_area.refresh_from_db()
+
+        set_active(False)
+        self.assertFalse(self.first_floor_area.is_active)
+
+        set_active(True)
+        self.assertTrue(self.first_floor_area.is_active)
+
 
     def test_delete_area_soft_deletes_when_referenced(self):
         JanHusBooking.objects.create(
@@ -1910,6 +1941,76 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
 
         self.first_floor_area.refresh_from_db()
         self.assertFalse(self.first_floor_area.is_active)
+
+
+    def test_resolve_area_rejects_non_numeric_id(self):
+        """A stale pre-0011 area code must read as "not found", not a Django error."""
+        with self.assertRaises(GraphQLError) as ctx:
+            _resolve_area("FIRST_FLOOR")
+        self.assertEqual("Area not found", str(ctx.exception))
+
+
+    def test_successful_payment_confirms_a_provisional_booking(self):
+        """Paying is what confirms a personal booking; no admin step in between."""
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            booking_level=ensure_default_levels()[GENERAL_LEVEL],
+            responsible_name="Test User",
+            responsible_email="test.user@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+            deposit_status=JanHusDepositStatus.REQUIRED,
+            deposit_amount=Decimal("300"),
+        )
+        required_payment_amount = booking.total_price + booking.deposit_amount
+        product = ProductFactory(price=required_payment_amount)
+        booking.vipps_product = product
+        booking.save(update_fields=["vipps_product", "updated_at"])
+
+        Order.objects.create(
+            product=product,
+            user=self.user,
+            quantity=1,
+            total_price=required_payment_amount,
+            payment_status=Order.PaymentStatus.CAPTURED,
+        )
+
+        booking.refresh_from_db()
+        self.assertEqual(JanHusBookingStatus.CONFIRMED, booking.status)
+        self.assertEqual(JanHusDepositStatus.PAID, booking.deposit_status)
+
+    def test_partial_payment_leaves_a_booking_provisional(self):
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            booking_level=ensure_default_levels()[GENERAL_LEVEL],
+            responsible_name="Test User",
+            responsible_email="test.user@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+            deposit_status=JanHusDepositStatus.REQUIRED,
+            deposit_amount=Decimal("300"),
+        )
+        required_payment_amount = booking.total_price + booking.deposit_amount
+        product = ProductFactory(price=required_payment_amount)
+        booking.vipps_product = product
+        booking.save(update_fields=["vipps_product", "updated_at"])
+
+        Order.objects.create(
+            product=product,
+            user=self.user,
+            quantity=1,
+            total_price=required_payment_amount - Decimal("1"),
+            payment_status=Order.PaymentStatus.CAPTURED,
+        )
+
+        booking.refresh_from_db()
+        self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
 
 
 class JanHusMailTestCase(TestCase):
