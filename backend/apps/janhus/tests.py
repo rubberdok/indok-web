@@ -581,6 +581,65 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             Decimal(content["data"]["updateJanhusBooking"]["booking"]["totalPrice"]),
         )
 
+    def test_price_override_tier_can_be_cleared_with_an_empty_string(self):
+        """Null means "leave unchanged", so "" is the only way to remove an override."""
+        self.add_booking_permission(self.user)
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+            price_override_tier="EXTERNAL",
+        )
+
+        query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{ id: "{booking.id}", priceOverrideTier: "" }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        self.assertEqual("", booking.price_override_tier)
+
+    def test_price_override_tier_rejects_an_unknown_value(self):
+        self.add_booking_permission(self.user)
+
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PROVISIONAL,
+        )
+
+        query = f"""
+            mutation {{
+              updateJanhusBooking(
+                bookingData: {{ id: "{booking.id}", priceOverrideTier: "GRATIS" }}
+              ) {{
+                ok
+              }}
+            }}
+        """
+
+        self.assertResponseHasErrors(self.query(query, user=self.user))
+
+
     def test_price_override_tier_switches_to_external_pricing(self):
         self.add_booking_permission(self.user)
 

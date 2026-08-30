@@ -340,8 +340,8 @@ class JanHusBooking(models.Model):
     price_override_tier = models.CharField(
         max_length=16,
         choices=[("INTERNAL", "Internal"), ("EXTERNAL", "External")],
-        null=True,
         blank=True,
+        default="",
     )
     price_override_amount = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True

@@ -384,7 +384,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
           bookerPhone: edit.bookerPhone,
           depositStatus: edit.depositStatus,
           depositAmount: Number(edit.depositAmount),
-          priceOverrideTier: edit.priceOverrideTier || null,
+          priceOverrideTier: edit.priceOverrideTier,
           priceOverrideAmount: edit.priceOverrideAmount ? Number(edit.priceOverrideAmount) : null,
           manuallyMarkedAsPaid: edit.manuallyMarkedAsPaid,
           guestList: serializeGuestListForUpdate(edit.guestListEntries),

@@ -66,6 +66,8 @@ from apps.janhus.payments import (  # noqa: E402  (kept as private aliases)
 # settings. Organization 4 is the intended default where it exists.
 JANHUS_DEFAULT_PAYMENT_PROVIDER_ORGANIZATION_ID = 4
 
+SETTINGS_PERMISSION_ERROR = "JanHus settings admin permission required"
+
 # Norsk oversettelse som brukes for valideringsfeilmeldinger.
 VALIDATION_FIELD_LABELS = {
     "requester_name": "Navn bestiller",
@@ -724,7 +726,7 @@ class UpdateJanHusBooking(graphene.Mutation):
             booking.deposit_amount = booking_data.get("deposit_amount")
 
         if booking_data.get("price_override_tier") is not None:
-            valid_tiers = {"INTERNAL", "EXTERNAL"}
+            valid_tiers = {"", "INTERNAL", "EXTERNAL"}
             if booking_data.get("price_override_tier") not in valid_tiers:
                 raise GraphQLError("Invalid price override tier")
             booking.price_override_tier = booking_data.get("price_override_tier")
@@ -1032,7 +1034,7 @@ class UpdateJanHusBookingSettings(graphene.Mutation):
     def mutate(self, info, settings_data):
         actor = _get_actor(info)
         if not _has_manage_settings_permission(actor):
-            raise GraphQLError("JanHus settings admin permission required")
+            raise GraphQLError(SETTINGS_PERMISSION_ERROR)
 
         booking_settings = (
             JanHusBookingSettings.objects.first() or JanHusBookingSettings()
@@ -1057,7 +1059,7 @@ class UpdateJanHusArea(graphene.Mutation):
     def mutate(self, info, area_data):
         actor = _get_actor(info)
         if not _has_manage_settings_permission(actor):
-            raise GraphQLError("JanHus settings admin permission required")
+            raise GraphQLError(SETTINGS_PERMISSION_ERROR)
 
         area = _resolve_area(area_data["id"])
 
@@ -1097,7 +1099,7 @@ class DeleteJanHusArea(graphene.Mutation):
     def mutate(self, info, id):
         actor = _get_actor(info)
         if not _has_manage_settings_permission(actor):
-            raise GraphQLError("JanHus settings admin permission required")
+            raise GraphQLError(SETTINGS_PERMISSION_ERROR)
 
         area = _resolve_area(id)
 

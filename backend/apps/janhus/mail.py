@@ -19,6 +19,7 @@ ADMIN_REQUEST_TEMPLATE = "janhus_admin_request_template.html"
 REJECTED_TEMPLATE = "janhus_rejected_template.html"
 CONTRACT_TEMPLATE = "janhus_contract_template.html"
 CONFIRMATION_STREAM = "janhus-booking-confirmations"
+TIME_FORMAT_TEXT = "%d.%m.%Y kl. %H:%M"
 
 SUBJECTS = {
     "reserve": "Bekreftelse på mottatt søknad om booking av ",
@@ -153,8 +154,8 @@ def _request_content(booking_request) -> dict:
         "requester_email": booking_request.requester_email or "-",
         "requester_phone": booking_request.requester_phone or "-",
         "area_name": booking_request.area.name,
-        "starts_at": booking_request.starts_at.strftime("%d.%m.%Y kl. %H:%M"),
-        "ends_at": booking_request.ends_at.strftime("%d.%m.%Y kl. %H:%M"),
+        "starts_at": booking_request.starts_at.strftime(TIME_FORMAT_TEXT),
+        "ends_at": booking_request.ends_at.strftime(TIME_FORMAT_TEXT),
         "event_type": EVENT_TYPE_LABELS.get(
             booking_request.event_type, booking_request.event_type
         ),
@@ -226,8 +227,8 @@ def send_booking_declined(booking: JanHusBooking) -> None:
                 booking.booker_name or booking.responsible_name or ""
             ).strip(),
             "area_name": booking.area.name,
-            "starts_at": booking.starts_at.strftime("%d.%m.%Y kl. %H:%M"),
-            "ends_at": booking.ends_at.strftime("%d.%m.%Y kl. %H:%M"),
+            "starts_at": booking.starts_at.strftime(TIME_FORMAT_TEXT),
+            "ends_at": booking.ends_at.strftime(TIME_FORMAT_TEXT),
             "admin_comment": booking.admin_comment,
         },
     )
@@ -246,8 +247,8 @@ def send_booking_confirmation(booking: JanHusBooking) -> None:
         "booker_name": (booking.booker_name or booking.responsible_name or "").strip(),
         "reference": booking.reference,
         "area_name": booking.area.name,
-        "starts_at": booking.starts_at.strftime("%d.%m.%Y kl. %H:%M"),
-        "ends_at": booking.ends_at.strftime("%d.%m.%Y kl. %H:%M"),
+        "starts_at": booking.starts_at.strftime(TIME_FORMAT_TEXT),
+        "ends_at": booking.ends_at.strftime(TIME_FORMAT_TEXT),
         "event_type": EVENT_TYPE_LABELS.get(booking.event_type, booking.event_type),
         "responsible_name": booking.responsible_name,
         "responsible_email": booking.responsible_email,

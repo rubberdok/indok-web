@@ -121,6 +121,24 @@ type Props = {
   onSubmitBooking: () => Promise<void>;
 };
 
+const startTimeHelperText = (hasDate: boolean, optionCount: number) => {
+  if (!hasDate) return "Velg dato i kalenderen for å vise starttider.";
+  if (optionCount === 0) return "Ingen ledige starttider på valgt dato/område.";
+  return "Viser kun tider som har minst én gyldig og ledig sluttid.";
+};
+
+const endTimeHelperText = (hasStart: boolean, optionCount: number, minDurationMinutes: number) => {
+  if (!hasStart) return `Velg starttid først (minst ${minDurationMinutes} min varighet).`;
+  if (optionCount === 0) return "Ingen gyldige ledige sluttider for valgt starttid.";
+  return "Sluttid må følge granularitet og være ledig.";
+};
+
+const ownerTypeHelperText = (canCreateNonExternal: boolean, organizationCount: number) => {
+  if (!canCreateNonExternal) return "Kun eksterne forespørsler er tilgjengelig for ikke Indøk-studenter.";
+  if (organizationCount === 0) return "Du må være leder i en forening for å booke på vegne av den.";
+  return undefined;
+};
+
 export const BookingSteps: React.FC<Props> = ({
   bookingDate,
   startsAt,
@@ -189,6 +207,7 @@ export const BookingSteps: React.FC<Props> = ({
   const markTouched = (key: string) => setTouched((prev) => ({ ...prev, [key]: true }));
   const fieldError = (key: keyof ContactFieldErrors) =>
     touched[key] || showAllContactErrors ? contactFieldErrors[key] : undefined;
+  const ownerHelperText = ownerTypeHelperText(canCreateNonExternalBooking, organizations.length);
 
   switch (activeStep) {
     case 0:
@@ -249,13 +268,7 @@ export const BookingSteps: React.FC<Props> = ({
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>
-                  {!bookingDate
-                    ? "Velg dato i kalenderen for å vise starttider."
-                    : startOptions.length === 0
-                      ? "Ingen ledige starttider på valgt dato/område."
-                      : "Viser kun tider som har minst én gyldig og ledig sluttid."}
-                </FormHelperText>
+                <FormHelperText>{startTimeHelperText(Boolean(bookingDate), startOptions.length)}</FormHelperText>
               </FormControl>
 
               <FormControl>
@@ -273,11 +286,7 @@ export const BookingSteps: React.FC<Props> = ({
                   ))}
                 </Select>
                 <FormHelperText>
-                  {!startsAt
-                    ? `Velg starttid først (minst ${minDurationMinutes} min varighet).`
-                    : endOptions.length === 0
-                      ? "Ingen gyldige ledige sluttider for valgt starttid."
-                      : "Sluttid må følge granularitet og være ledig."}
+                  {endTimeHelperText(Boolean(startsAt), endOptions.length, minDurationMinutes)}
                 </FormHelperText>
               </FormControl>
             </Box>
@@ -316,11 +325,7 @@ export const BookingSteps: React.FC<Props> = ({
                   <MenuItem value="EXTERNAL">{JANHUS_OWNER_TYPE_LABELS.EXTERNAL}</MenuItem>
                 ) : null}
               </Select>
-              {!canCreateNonExternalBooking ? (
-                <FormHelperText>Kun eksterne forespørsler er tilgjengelig for ikke Indøk-studenter.</FormHelperText>
-              ) : organizations.length === 0 ? (
-                <FormHelperText>Du må være leder i en forening for å booke på vegne av den.</FormHelperText>
-              ) : null}
+              {ownerHelperText ? <FormHelperText>{ownerHelperText}</FormHelperText> : null}
             </FormControl>
 
             {ownerType === "ORGANIZATION" ? (

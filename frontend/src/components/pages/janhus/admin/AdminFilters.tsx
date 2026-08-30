@@ -1,7 +1,6 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 
-import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
-import { OwnerType, SortBy, SortDirection } from "@/components/pages/janhus/constants";
+import { JANHUS_EVENT_TYPE_LABELS, OwnerType, SortBy, SortDirection } from "@/components/pages/janhus/constants";
 
 type AreaOption = { id: string; name: string };
 

@@ -96,7 +96,8 @@ export function useBookingSlots({
       current = next;
     }
 
-    if (!boundaries[boundaries.length - 1].isSame(bookingWindow.windowEnd)) {
+    const lastBoundary = boundaries.at(-1);
+    if (!lastBoundary?.isSame(bookingWindow.windowEnd)) {
       boundaries.push(bookingWindow.windowEnd);
     }
 

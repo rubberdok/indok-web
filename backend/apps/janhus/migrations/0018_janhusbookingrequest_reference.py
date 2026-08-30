@@ -18,19 +18,19 @@ def backfill_references(apps, schema_editor):
     """
     import random as _random
 
-    JanHusBookingRequest = apps.get_model("janhus", "JanHusBookingRequest")
-    JanHusBooking = apps.get_model("janhus", "JanHusBooking")
+    booking_request_model = apps.get_model("janhus", "JanHusBookingRequest")
+    booking_model = apps.get_model("janhus", "JanHusBooking")
 
     taken = set(
-        JanHusBooking.objects.exclude(reference="").values_list("reference", flat=True)
+        booking_model.objects.exclude(reference="").values_list("reference", flat=True)
     )
     taken.update(
-        JanHusBookingRequest.objects.exclude(reference="").values_list(
+        booking_request_model.objects.exclude(reference="").values_list(
             "reference", flat=True
         )
     )
 
-    for request in JanHusBookingRequest.objects.filter(reference=""):
+    for request in booking_request_model.objects.filter(reference=""):
         reference = _generate(_random)
         while reference in taken:
             reference = _generate(_random)

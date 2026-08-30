@@ -19,11 +19,11 @@ import {
 } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
-import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
 import {
   BOOKING_STATUS_LABELS,
   DEPOSIT_STATUS_LABELS,
   DOOR_ACCESS_POLICY_LABELS,
+  JANHUS_EVENT_TYPE_LABELS,
   OWNER_TYPE_LABELS,
 } from "@/components/pages/janhus/constants";
 import { JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";

@@ -9,13 +9,13 @@ def assign_booking_references(apps, schema_editor):
     a field default, because a default would give every existing row the same value
     and break the unique constraint added below.
     """
-    JanHusBooking = apps.get_model("janhus", "JanHusBooking")
+    booking_model = apps.get_model("janhus", "JanHusBooking")
 
     taken = set(
-        JanHusBooking.objects.exclude(reference="").values_list("reference", flat=True)
+        booking_model.objects.exclude(reference="").values_list("reference", flat=True)
     )
 
-    for booking in JanHusBooking.objects.filter(reference="").only("id"):
+    for booking in booking_model.objects.filter(reference="").only("id"):
         reference = generate_booking_reference()
         while reference in taken:
             reference = generate_booking_reference()
@@ -26,8 +26,8 @@ def assign_booking_references(apps, schema_editor):
 
 
 def clear_booking_references(apps, schema_editor):
-    JanHusBooking = apps.get_model("janhus", "JanHusBooking")
-    JanHusBooking.objects.update(reference="")
+    booking_model = apps.get_model("janhus", "JanHusBooking")
+    booking_model.objects.update(reference="")
 
 
 class Migration(migrations.Migration):

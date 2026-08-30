@@ -93,15 +93,15 @@ export const bookingOwnerType = (booking: {
 
 export const isPast = (endsAt: string) => new Date(endsAt).getTime() < Date.now();
 
-export const CLOSED_BOOKING_STATUSES = ["DECLINED", "CANCELLED"];
+export const CLOSED_BOOKING_STATUSES = new Set(["DECLINED", "CANCELLED"]);
 
 export const isClosedBooking = (booking: { status: string; endsAt: string }) =>
-  CLOSED_BOOKING_STATUSES.includes(booking.status) || isPast(booking.endsAt);
+  CLOSED_BOOKING_STATUSES.has(booking.status) || isPast(booking.endsAt);
 
-const AWAITING_DECISION_STATUSES = ["PENDING", "PENDING_ADMIN_REVIEW"];
+const AWAITING_DECISION_STATUSES = new Set(["PENDING", "PENDING_ADMIN_REVIEW"]);
 
 export const isExpired = (item: { status: string; endsAt: string }) =>
-  AWAITING_DECISION_STATUSES.includes(item.status) && isPast(item.endsAt);
+  AWAITING_DECISION_STATUSES.has(item.status) && isPast(item.endsAt);
 
 export const statusLabel = (item: { status: string; endsAt: string }, labels: Record<string, string>) =>
   isExpired(item) ? "Utgått" : (labels[item.status] ?? item.status);

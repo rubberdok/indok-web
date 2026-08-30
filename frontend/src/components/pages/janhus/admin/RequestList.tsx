@@ -1,7 +1,10 @@
 import { Button, Card, CardContent, Chip, Grid, Stack, TextField, Typography } from "@mui/material";
 
-import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
-import { OWNER_TYPE_LABELS, REQUEST_STATUS_LABELS } from "@/components/pages/janhus/constants";
+import {
+  JANHUS_EVENT_TYPE_LABELS,
+  OWNER_TYPE_LABELS,
+  REQUEST_STATUS_LABELS,
+} from "@/components/pages/janhus/constants";
 import { formatDate, formatTime, requestOwnerType, statusColor, statusLabel } from "@/components/pages/janhus/helpers";
 import { JanHusBookingRequestFragment } from "@/generated/graphql";
 

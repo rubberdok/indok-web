@@ -5,10 +5,10 @@ from django.db import migrations, models
 
 
 def migrate_area_data(apps, schema_editor):
-    JanHusArea = apps.get_model("janhus", "JanHusArea")
-    JanHusAreaConfiguration = apps.get_model("janhus", "JanHusAreaConfiguration")
-    JanHusBooking = apps.get_model("janhus", "JanHusBooking")
-    JanHusBookingRequest = apps.get_model("janhus", "JanHusBookingRequest")
+    area_model = apps.get_model("janhus", "JanHusArea")
+    area_configuration_model = apps.get_model("janhus", "JanHusAreaConfiguration")
+    booking_model = apps.get_model("janhus", "JanHusBooking")
+    booking_request_model = apps.get_model("janhus", "JanHusBookingRequest")
 
     name_by_code = {
         "ENTIRE_HOUSE": "Hele huset",
@@ -21,13 +21,13 @@ def migrate_area_data(apps, schema_editor):
     }
 
     configs_by_code = {
-        config.area: config for config in JanHusAreaConfiguration.objects.all()
+        config.area: config for config in area_configuration_model.objects.all()
     }
 
     areas_by_code = {}
     for code in ["ENTIRE_HOUSE", "FIRST_FLOOR", "SECOND_FLOOR"]:
         config = configs_by_code.get(code)
-        areas_by_code[code] = JanHusArea.objects.create(
+        areas_by_code[code] = area_model.objects.create(
             name=name_by_code[code],
             internal_price_per_hour=(
                 config.internal_price_per_hour if config else Decimal("0")
@@ -46,13 +46,13 @@ def migrate_area_data(apps, schema_editor):
         area.parent = areas_by_code[parent_code]
         area.save(update_fields=["parent"])
 
-    for booking in JanHusBooking.objects.all():
+    for booking in booking_model.objects.all():
         area = areas_by_code.get(booking.area)
         if area:
             booking.area_new = area
             booking.save(update_fields=["area_new"])
 
-    for booking_request in JanHusBookingRequest.objects.all():
+    for booking_request in booking_request_model.objects.all():
         area = areas_by_code.get(booking_request.area)
         if area:
             booking_request.area_new = area
@@ -60,7 +60,13 @@ def migrate_area_data(apps, schema_editor):
 
 
 def noop_reverse(apps, schema_editor):
-    pass
+    """
+    Deliberately does nothing. Reversing this migration drops the area_model
+    table and restores the old `area` code column, which already holds the
+    original value for every row — the forward pass copied out of it rather
+    than clearing it. There is therefore nothing to undo here, and re-deriving
+    the codes from area names would guess at any area an admin added since.
+    """
 
 
 class Migration(migrations.Migration):
