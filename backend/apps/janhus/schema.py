@@ -51,6 +51,7 @@ class JanHusQueries(graphene.ObjectType, JanHusResolvers):
         area=graphene.ID(required=False),
     )
     janhus_my_bookings = graphene.List(NonNull(JanHusBookingType))
+    janhus_my_booking_requests = graphene.List(NonNull(JanHusBookingRequestType))
     janhus_guest_search = graphene.List(
         NonNull(JanHusGuestListEntryType),
         booking_id=graphene.ID(required=True),

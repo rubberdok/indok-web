@@ -90,3 +90,21 @@ export const bookingOwnerType = (booking: {
   }
   return "PERSONAL";
 };
+
+export const isPast = (endsAt: string) => new Date(endsAt).getTime() < Date.now();
+
+export const CLOSED_BOOKING_STATUSES = ["DECLINED", "CANCELLED"];
+
+export const isClosedBooking = (booking: { status: string; endsAt: string }) =>
+  CLOSED_BOOKING_STATUSES.includes(booking.status) || isPast(booking.endsAt);
+
+const AWAITING_DECISION_STATUSES = ["PENDING", "PENDING_ADMIN_REVIEW"];
+
+export const isExpired = (item: { status: string; endsAt: string }) =>
+  AWAITING_DECISION_STATUSES.includes(item.status) && isPast(item.endsAt);
+
+export const statusLabel = (item: { status: string; endsAt: string }, labels: Record<string, string>) =>
+  isExpired(item) ? "Utgått" : (labels[item.status] ?? item.status);
+
+export const statusColor = (item: { status: string; endsAt: string }) =>
+  isExpired(item) ? "default" : statusChipColor(item.status);

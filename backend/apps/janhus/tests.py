@@ -1591,6 +1591,71 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         self.assertIn(str(booker_booking.id), booking_ids)
         self.assertIn(str(responsible_booking.id), booking_ids)
 
+    def test_my_bookings_include_declined_so_the_owner_can_look_them_up(self):
+        """A declined booking still has to be findable by the person who made it."""
+        declined = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="40000000",
+            status=JanHusBookingStatus.DECLINED,
+        )
+
+        response = self.query("{ janhusMyBookings { id status } }", user=self.user)
+        self.assertResponseNoErrors(response)
+
+        returned = json.loads(response.content)["data"]["janhusMyBookings"]
+        self.assertIn(str(declined.id), [item["id"] for item in returned])
+
+    def test_my_booking_requests_returns_only_the_users_own(self):
+        mine = JanHusBookingRequest.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            requester_user=self.user,
+            requester_name="Me",
+            requester_email="me@example.com",
+            requester_phone="41111111",
+            responsible_name="Me",
+            responsible_email="me@example.com",
+            responsible_phone="41111111",
+            status=JanHusBookingRequest.RequestStatus.REJECTED,
+        )
+        theirs = JanHusBookingRequest.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.second_floor_area,
+            requester_user=self.other_user,
+            requester_name="Someone else",
+            requester_email="else@example.com",
+            requester_phone="42222222",
+            responsible_name="Someone else",
+            responsible_email="else@example.com",
+            responsible_phone="42222222",
+        )
+
+        query = "{ janhusMyBookingRequests { id status } }"
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        ids = [
+            item["id"]
+            for item in json.loads(response.content)["data"]["janhusMyBookingRequests"]
+        ]
+        self.assertIn(str(mine.id), ids)
+        self.assertNotIn(str(theirs.id), ids)
+
+    def test_my_booking_requests_is_empty_for_anonymous(self):
+        response = self.query("{ janhusMyBookingRequests { id } }")
+        self.assertResponseNoErrors(response)
+        self.assertEqual(
+            [], json.loads(response.content)["data"]["janhusMyBookingRequests"]
+        )
+
+
     def test_guest_search_requires_access_and_returns_name_and_feide(self):
         searchable_user = UserFactory(
             is_indok=True,

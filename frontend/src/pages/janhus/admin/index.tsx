@@ -30,6 +30,8 @@ import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus
 import {
   bookingOwnerType,
   describeOverlaps,
+  isClosedBooking,
+  isPast,
   requestOwnerType,
   serializeGuestListForUpdate,
   toDateKey,
@@ -283,12 +285,12 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   ]);
 
   const openRequests = useMemo(
-    () => filteredRequests.filter((request) => request.status !== "REJECTED"),
+    () => filteredRequests.filter((request) => request.status !== "REJECTED" && !isPast(request.endsAt)),
     [filteredRequests]
   );
 
-  const rejectedRequests = useMemo(
-    () => filteredRequests.filter((request) => request.status === "REJECTED"),
+  const archivedRequests = useMemo(
+    () => filteredRequests.filter((request) => request.status === "REJECTED" || isPast(request.endsAt)),
     [filteredRequests]
   );
 
@@ -339,6 +341,13 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     bookingStatusFilter,
     bookings,
   ]);
+
+  const openBookings = useMemo(
+    () => filteredBookings.filter((booking) => !isClosedBooking(booking)),
+    [filteredBookings]
+  );
+
+  const archivedBookings = useMemo(() => filteredBookings.filter(isClosedBooking), [filteredBookings]);
 
   async function handleReviewRequest(id: string, status: "APPROVED" | "REJECTED", convertToBooking: boolean) {
     await reviewRequest({
@@ -491,7 +500,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                     <Typography color="text.secondary">Ingen forespørsler å behandle.</Typography>
                   )}
 
-                  {rejectedRequests.length ? (
+                  {archivedRequests.length ? (
                     <Accordion
                       disableGutters
                       elevation={0}
@@ -499,11 +508,13 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                       defaultExpanded={requestStatusFilter === "REJECTED"}
                     >
                       <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography variant="subtitle1">Avslåtte forespørsler ({rejectedRequests.length})</Typography>
+                        <Typography variant="subtitle1">
+                          Tidligere og avslåtte forespørsler ({archivedRequests.length})
+                        </Typography>
                       </AccordionSummary>
                       <AccordionDetails>
                         <RequestList
-                          requests={rejectedRequests}
+                          requests={archivedRequests}
                           comments={requestComments}
                           reviewing={requestReviewing}
                           deleting={deletingRequest}
@@ -547,21 +558,57 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                     onSortDirectionChange={setBookingSortDirection}
                   />
 
-                  <BookingList
-                    bookings={filteredBookings}
-                    areas={areas}
-                    edits={bookingEdits}
-                    setEdits={setBookingEdits}
-                    expanded={expandedBookingIds}
-                    setExpanded={setExpandedBookingIds}
-                    updating={bookingUpdating}
-                    deleting={deletingBooking}
-                    creatingPaymentProduct={creatingPaymentProduct}
-                    onSave={handleSaveBooking}
-                    onCreatePaymentProduct={handleCreatePaymentProduct}
-                    onDelete={handleDeleteBooking}
-                    onOpenGuestList={setActiveGuestListBookingId}
-                  />
+                  {openBookings.length ? (
+                    <BookingList
+                      bookings={openBookings}
+                      areas={areas}
+                      edits={bookingEdits}
+                      setEdits={setBookingEdits}
+                      expanded={expandedBookingIds}
+                      setExpanded={setExpandedBookingIds}
+                      updating={bookingUpdating}
+                      deleting={deletingBooking}
+                      creatingPaymentProduct={creatingPaymentProduct}
+                      onSave={handleSaveBooking}
+                      onCreatePaymentProduct={handleCreatePaymentProduct}
+                      onDelete={handleDeleteBooking}
+                      onOpenGuestList={setActiveGuestListBookingId}
+                    />
+                  ) : (
+                    <Typography color="text.secondary">Ingen aktive bookinger.</Typography>
+                  )}
+
+                  {archivedBookings.length ? (
+                    <Accordion
+                      disableGutters
+                      elevation={0}
+                      variant="outlined"
+                      defaultExpanded={["DECLINED", "CANCELLED"].includes(bookingStatusFilter)}
+                    >
+                      <AccordionSummary expandIcon={<ExpandMore />}>
+                        <Typography variant="subtitle1">
+                          Tidligere og avslåtte bookinger ({archivedBookings.length})
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <BookingList
+                          bookings={archivedBookings}
+                          areas={areas}
+                          edits={bookingEdits}
+                          setEdits={setBookingEdits}
+                          expanded={expandedBookingIds}
+                          setExpanded={setExpandedBookingIds}
+                          updating={bookingUpdating}
+                          deleting={deletingBooking}
+                          creatingPaymentProduct={creatingPaymentProduct}
+                          onSave={handleSaveBooking}
+                          onCreatePaymentProduct={handleCreatePaymentProduct}
+                          onDelete={handleDeleteBooking}
+                          onOpenGuestList={setActiveGuestListBookingId}
+                        />
+                      </AccordionDetails>
+                    </Accordion>
+                  ) : null}
                 </Stack>
               </TabPanel>
             </Box>

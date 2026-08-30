@@ -2,7 +2,7 @@ import { Button, Card, CardContent, Chip, Grid, Stack, TextField, Typography } f
 
 import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
 import { OWNER_TYPE_LABELS, REQUEST_STATUS_LABELS } from "@/components/pages/janhus/constants";
-import { formatDate, formatTime, requestOwnerType, statusChipColor } from "@/components/pages/janhus/helpers";
+import { formatDate, formatTime, requestOwnerType, statusColor, statusLabel } from "@/components/pages/janhus/helpers";
 import { JanHusBookingRequestFragment } from "@/generated/graphql";
 
 type Props = {
@@ -38,11 +38,7 @@ export const RequestList: React.FC<Props> = ({
             <Stack spacing={1.5}>
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography variant="h6">Forespørsel #{request.id}</Typography>
-                <Chip
-                  size="small"
-                  color={statusChipColor(request.status)}
-                  label={REQUEST_STATUS_LABELS[request.status] ?? request.status}
-                />
+                <Chip size="small" color={statusColor(request)} label={statusLabel(request, REQUEST_STATUS_LABELS)} />
               </Stack>
               <Typography variant="body2" color="text.secondary">
                 {formatDate(request.startsAt)} kl. {formatTime(request.startsAt)}–{formatTime(request.endsAt)} ·{" "}

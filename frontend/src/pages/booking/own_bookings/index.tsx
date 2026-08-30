@@ -30,15 +30,20 @@ import {
   BOOKING_STATUS_LABELS,
   DEPOSIT_STATUS_LABELS,
   JANHUS_EVENT_TYPE_LABELS,
+  REQUEST_STATUS_LABELS,
 } from "@/components/pages/janhus/constants";
 import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
 import {
   formatDate,
   formatTime,
+  isClosedBooking,
+  isPast,
   serializeGuestListForUpdate,
-  statusChipColor,
+  statusColor,
+  statusLabel,
 } from "@/components/pages/janhus/helpers";
 import {
+  JanHusMyBookingRequestsDocument,
   JanHusMyBookingsDocument,
   MyCabinBookingsDocument,
   PaymentStatus,
@@ -74,6 +79,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
   const [activeGuestListBookingId, setActiveGuestListBookingId] = useState<string | undefined>();
 
   const { data: janhusData, loading: janhusLoading, error: janhusError } = useQuery(JanHusMyBookingsDocument);
+  const { data: janhusRequestData } = useQuery(JanHusMyBookingRequestsDocument);
   const { data: cabinsData, loading: cabinsLoading, error: cabinsError } = useQuery(MyCabinBookingsDocument);
   const { data: ordersData, loading: ordersLoading } = useQuery(UserOrdersDocument);
   const [updateBooking] = useMutation(UpdateJanhusBookingDocument);
@@ -81,12 +87,50 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
   const janhusBookings = useMemo(() => janhusData?.janhusMyBookings ?? [], [janhusData]);
 
   const confirmedBookings = useMemo(
-    () => janhusBookings.filter((booking) => booking.status === "CONFIRMED"),
+    () => janhusBookings.filter((booking) => booking.status === "CONFIRMED" && !isClosedBooking(booking)),
     [janhusBookings]
   );
   const pendingBookings = useMemo(
-    () => janhusBookings.filter((booking) => booking.status !== "CONFIRMED"),
+    () => janhusBookings.filter((booking) => booking.status !== "CONFIRMED" && !isClosedBooking(booking)),
     [janhusBookings]
+  );
+  const archivedBookings = useMemo(() => janhusBookings.filter(isClosedBooking), [janhusBookings]);
+
+  const archivedRequests = useMemo(
+    () =>
+      (janhusRequestData?.janhusMyBookingRequests ?? []).filter(
+        (request) => request.status === "REJECTED" || isPast(request.endsAt)
+      ),
+    [janhusRequestData]
+  );
+
+  const archivedEntries = useMemo(
+    () =>
+      [
+        ...archivedBookings.map((booking) => ({
+          kind: "Booking" as const,
+          id: `booking-${booking.id}`,
+          startsAt: booking.startsAt,
+          endsAt: booking.endsAt,
+          areaName: booking.area.name,
+          reference: booking.reference,
+          adminComment: booking.adminComment,
+          chip: statusLabel(booking, BOOKING_STATUS_LABELS),
+          color: statusColor(booking),
+        })),
+        ...archivedRequests.map((request) => ({
+          kind: "Forespørsel" as const,
+          id: `request-${request.id}`,
+          startsAt: request.startsAt,
+          endsAt: request.endsAt,
+          areaName: request.area.name,
+          reference: request.reference,
+          adminComment: request.adminComment,
+          chip: statusLabel(request, REQUEST_STATUS_LABELS),
+          color: statusColor(request),
+        })),
+      ].sort((a, b) => new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()),
+    [archivedBookings, archivedRequests]
   );
   const cabinBookings = useMemo(() => cabinsData?.myCabinBookings ?? [], [cabinsData]);
 
@@ -259,8 +303,8 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                         </Box>
                                         <Chip
                                           size="small"
-                                          color={statusChipColor(booking.status)}
-                                          label={BOOKING_STATUS_LABELS[booking.status] ?? booking.status}
+                                          color={statusColor(booking)}
+                                          label={statusLabel(booking, BOOKING_STATUS_LABELS)}
                                         />
                                       </Stack>
 
@@ -345,7 +389,11 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                           Rediger gjesteliste
                                         </Button>
                                       </Stack>
-
+                                      {booking.comment && (
+                                        <Typography variant="body2" color="text.secondary">
+                                          Din kommentar: {booking.comment}
+                                        </Typography>
+                                      )}
                                       {isOrganizationBooking ? (
                                         <Alert severity="info">
                                           Denne bookingen er gjort på vegne av forening. Kostnad håndteres internt.
@@ -408,6 +456,46 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                 </Typography>
                               </AccordionSummary>
                               <AccordionDetails>{renderGrid(pendingBookings)}</AccordionDetails>
+                            </Accordion>
+                          ) : null}
+
+                          {archivedEntries.length ? (
+                            <Accordion disableGutters elevation={0} variant="outlined" sx={{ mt: 2 }}>
+                              <AccordionSummary expandIcon={<ExpandMore />}>
+                                <Typography variant="subtitle1">
+                                  Tidligere og avslåtte ({archivedEntries.length})
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Stack spacing={1}>
+                                  {archivedEntries.map((entry) => (
+                                    <Card key={entry.id} variant="outlined">
+                                      <CardContent>
+                                        <Stack
+                                          direction="row"
+                                          justifyContent="space-between"
+                                          alignItems="center"
+                                          spacing={1}
+                                        >
+                                          <Typography variant="body2">
+                                            {entry.kind} · {formatDate(entry.startsAt)} kl. {formatTime(entry.startsAt)}
+                                            –{formatTime(entry.endsAt)} · {entry.areaName}
+                                          </Typography>
+                                          <Chip size="small" color={entry.color} label={entry.chip} />
+                                        </Stack>
+                                        <Typography variant="caption" color="text.secondary">
+                                          Referanse: {entry.reference}
+                                        </Typography>
+                                        {entry.adminComment ? (
+                                          <Typography variant="body2" sx={{ mt: 1 }}>
+                                            Kommentar fra Janus Eiendom: {entry.adminComment}
+                                          </Typography>
+                                        ) : null}
+                                      </CardContent>
+                                    </Card>
+                                  ))}
+                                </Stack>
+                              </AccordionDetails>
                             </Accordion>
                           ) : null}
                         </>

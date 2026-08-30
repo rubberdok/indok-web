@@ -1716,6 +1716,7 @@ export type Queries = {
   janhusGuestSearch: Maybe<Array<JanHusGuestListEntryType>>;
   janhusGuestSearchForRequest: Maybe<Array<JanHusGuestListEntryType>>;
   janhusMyBookingLevel: Maybe<JanHusBookingLevelType>;
+  janhusMyBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
   janhusMyBookings: Maybe<Array<JanHusBookingType>>;
   listing: Maybe<ListingType>;
   listings: Maybe<Array<ListingType>>;

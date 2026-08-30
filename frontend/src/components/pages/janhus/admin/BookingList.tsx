@@ -27,7 +27,7 @@ import {
   OWNER_TYPE_LABELS,
 } from "@/components/pages/janhus/constants";
 import { JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
-import { bookingOwnerType, formatDate, formatTime, statusChipColor } from "@/components/pages/janhus/helpers";
+import { bookingOwnerType, formatDate, formatTime, statusColor, statusLabel } from "@/components/pages/janhus/helpers";
 import { JanhusJanHusBookingDepositStatusChoices, JanHusBookingFragment } from "@/generated/graphql";
 
 export type BookingEdit = {
@@ -134,8 +134,8 @@ export const BookingList: React.FC<Props> = ({
                   <Typography variant="h6">Booking #{booking.id}</Typography>
                   <Chip
                     size="small"
-                    color={statusChipColor(edit.status)}
-                    label={BOOKING_STATUS_LABELS[edit.status] ?? edit.status}
+                    color={statusColor({ status: edit.status, endsAt: booking.endsAt })}
+                    label={statusLabel({ status: edit.status, endsAt: booking.endsAt }, BOOKING_STATUS_LABELS)}
                   />
                 </Stack>
                 <Typography variant="body2" color="text.secondary">

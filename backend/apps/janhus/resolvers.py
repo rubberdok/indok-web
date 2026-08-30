@@ -114,8 +114,40 @@ class JanHusResolvers:
         )
 
         return (
-            JanHusBooking.objects.exclude(status__in=["DECLINED", "CANCELLED"])
-            .filter(Q(owner_user=user) | organization_leader_filter | contact_filters)
+            JanHusBooking.objects.filter(
+                Q(owner_user=user) | organization_leader_filter | contact_filters
+            )
+            .distinct()
+            .order_by("-starts_at")
+        )
+
+    def resolve_janhus_my_booking_requests(self, info):
+        user = info.context.user
+        if not user or not user.is_authenticated:
+            return JanHusBookingRequest.objects.none()
+
+        contact_filters = Q(pk__in=[])
+
+        for email in {email for email in get_user_email_candidates(user) if email}:
+            contact_filters |= Q(requester_email__iexact=email)
+            contact_filters |= Q(responsible_email__iexact=email)
+
+        normalized_phone_number = normalize_phone_number(
+            getattr(user, "phone_number", "")
+        )
+        if normalized_phone_number:
+            contact_filters |= Q(requester_phone__icontains=normalized_phone_number)
+            contact_filters |= Q(responsible_phone__icontains=normalized_phone_number)
+
+        organization_leader_filter = Q(
+            owner_organization__members__user=user,
+            owner_organization__members__group__group_type=HR_TYPE,
+        )
+
+        return (
+            JanHusBookingRequest.objects.filter(
+                Q(requester_user=user) | organization_leader_filter | contact_filters
+            )
             .distinct()
             .order_by("-starts_at")
         )
