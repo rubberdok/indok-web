@@ -65,9 +65,7 @@ class JanHusBookingLevel(models.Model):
     can_book_anytime = models.BooleanField(default=False)
     can_create_provisional = models.BooleanField(default=False)
     can_create_confirmed = models.BooleanField(default=True)
-    can_override_lower_levels = models.BooleanField(default=False)
-    can_edit_own_bookings_only = models.BooleanField(default=True)
-    can_edit_all_bookings = models.BooleanField(default=False)
+    can_challenge_provisionals = models.BooleanField(default=False)
 
     booking_opens_weeks_before = models.PositiveIntegerField(
         null=True,
@@ -176,6 +174,10 @@ class JanHusBookingSettings(models.Model):
         if self.min_duration_minutes % self.slot_granularity_minutes != 0:
             raise ValidationError(
                 "Minimum duration must be divisible by slot granularity"
+            )
+        if self.buffer_minutes % self.slot_granularity_minutes != 0:
+            raise ValidationError(
+                "Buffer between bookings must be divisible by slot granularity"
             )
         if self.opening_hour > 23 or self.closing_hour > 23:
             raise ValidationError("Opening and closing hour must be between 0 and 23")

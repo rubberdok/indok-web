@@ -155,8 +155,6 @@ fragment JanHusBookingLevel on JanHusBookingLevelType {
   canBookAnytime
   canCreateProvisional
   canCreateConfirmed
-  canOverrideLowerLevels
-  canEditOwnBookingsOnly
-  canEditAllBookings
+  canChallengeProvisionals
   bookingOpensWeeksBefore
 }

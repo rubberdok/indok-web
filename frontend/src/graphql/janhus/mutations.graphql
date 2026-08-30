@@ -13,6 +13,16 @@ mutation UpdateJanhusBooking($bookingData: UpdateJanHusBookingInput!) {
     booking {
       ...JanHusBooking
     }
+    overlappingBookings {
+      id
+      reference
+      startsAt
+      endsAt
+      area {
+        id
+        name
+      }
+    }
   }
 }
 
@@ -42,6 +52,16 @@ mutation ReviewJanhusBookingRequest($reviewData: ReviewJanHusBookingRequestInput
     }
     booking {
       ...JanHusBooking
+    }
+    overlappingBookings {
+      id
+      reference
+      startsAt
+      endsAt
+      area {
+        id
+        name
+      }
     }
   }
 }

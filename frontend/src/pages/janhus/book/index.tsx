@@ -32,6 +32,7 @@ const DEFAULT_SETTINGS = {
   springEndDate: "2100-12-31",
   fallSemesterActive: true,
   springSemesterActive: true,
+  bufferMinutes: 0,
   externalBookingsEnabled: true,
   privateBookingsEnabled: true,
   cleaningOptionEnabled: true,
@@ -147,6 +148,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const externalBookingsEnabled = bookingSettings.externalBookingsEnabled ?? true;
   const privateBookingsEnabled = bookingSettings.privateBookingsEnabled ?? true;
   const cleaningOptionEnabled = bookingSettings.cleaningOptionEnabled ?? true;
+  const bufferMinutes = Math.max(bookingSettings.bufferMinutes ?? 0, 0);
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
   const slotGranularityMinutes = Math.max(bookingSettings.slotGranularityMinutes, 1);
   const openingHour = bookingSettings.openingHour;
@@ -205,10 +207,10 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return overlappingBookings
       .filter((booking) => conflictingAreaIds.includes(booking.area.id))
       .map((booking) => ({
-        startsAt: dayjs(booking.startsAt),
-        endsAt: dayjs(booking.endsAt),
+        startsAt: dayjs(booking.startsAt).subtract(bufferMinutes, "minute"),
+        endsAt: dayjs(booking.endsAt).add(bufferMinutes, "minute"),
       }));
-  }, [area, areas, overlappingBookings]);
+  }, [area, areas, bufferMinutes, overlappingBookings]);
 
   const hasOverlap = useCallback(
     (start: dayjs.Dayjs, end: dayjs.Dayjs) => {

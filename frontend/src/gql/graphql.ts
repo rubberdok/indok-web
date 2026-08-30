@@ -365,6 +365,8 @@ export type CreateJanHusBooking = {
   __typename?: 'CreateJanHusBooking';
   booking: Maybe<JanHusBookingType>;
   ok: Maybe<Scalars['Boolean']['output']>;
+  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review. */
+  overlappingBookings: Maybe<Array<JanHusBookingType>>;
 };
 
 export type CreateJanHusBookingRequest = {
@@ -725,11 +727,9 @@ export type JanHusBookingLevelType = {
   bookingOpensWeeksBefore: Maybe<Scalars['Int']['output']>;
   bookings: Array<JanHusBookingType>;
   canBookAnytime: Scalars['Boolean']['output'];
+  canChallengeProvisionals: Scalars['Boolean']['output'];
   canCreateConfirmed: Scalars['Boolean']['output'];
   canCreateProvisional: Scalars['Boolean']['output'];
-  canEditAllBookings: Scalars['Boolean']['output'];
-  canEditOwnBookingsOnly: Scalars['Boolean']['output'];
-  canOverrideLowerLevels: Scalars['Boolean']['output'];
   description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
@@ -801,6 +801,8 @@ export type JanHusBookingSettingsInput = {
 
 export type JanHusBookingSettingsType = {
   __typename?: 'JanHusBookingSettingsType';
+  bookingContactName: Scalars['String']['output'];
+  bookingContactPhone: Scalars['String']['output'];
   bufferMinutes: Scalars['Int']['output'];
   cleaningOptionEnabled: Scalars['Boolean']['output'];
   closingHour: Scalars['Int']['output'];
@@ -2043,6 +2045,8 @@ export type ReviewJanHusBookingRequest = {
   booking: Maybe<JanHusBookingType>;
   bookingRequest: Maybe<JanHusBookingRequestType>;
   ok: Maybe<Scalars['Boolean']['output']>;
+  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review. */
+  overlappingBookings: Maybe<Array<JanHusBookingType>>;
 };
 
 export type ReviewJanHusBookingRequestInput = {
@@ -2269,6 +2273,8 @@ export type UpdateJanHusBooking = {
   __typename?: 'UpdateJanHusBooking';
   booking: Maybe<JanHusBookingType>;
   ok: Maybe<Scalars['Boolean']['output']>;
+  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review. */
+  overlappingBookings: Maybe<Array<JanHusBookingType>>;
 };
 
 export type UpdateJanHusBookingInput = {

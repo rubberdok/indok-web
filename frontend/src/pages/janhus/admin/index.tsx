@@ -87,6 +87,29 @@ const OWNER_TYPE_LABELS: Record<OwnerType, string> = {
   EXTERNAL: "Ekstern",
 };
 
+type OverlappingBooking = {
+  reference: string;
+  startsAt: string;
+  endsAt: string;
+  area: { name: string };
+};
+
+function describeOverlaps(overlaps: OverlappingBooking[] | null | undefined): string | undefined {
+  if (!overlaps?.length) {
+    return undefined;
+  }
+
+  const details = overlaps
+    .map(
+      (booking) =>
+        `${booking.reference} (${booking.area.name}, ${formatDate(booking.startsAt)} ` +
+        `${formatTime(booking.startsAt)}–${formatTime(booking.endsAt)})`
+    )
+    .join(", ");
+
+  return `Obs: overlapper ${overlaps.length === 1 ? "bookingen" : "bookingene"} ${details}.`;
+}
+
 const statusChipColor = (status: string): "default" | "success" | "warning" | "error" | "info" => {
   if (status === "CONFIRMED" || status === "APPROVED") {
     return "success";
@@ -274,11 +297,17 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   const [reviewRequest, { loading: requestReviewing }] = useMutation(ReviewJanhusBookingRequestDocument, {
     onCompleted: async (result) => {
       const createdBookingId = result.reviewJanhusBookingRequest?.booking?.id;
+      const overlapWarning = describeOverlaps(result.reviewJanhusBookingRequest?.overlappingBookings);
       setAlert({
-        severity: "success",
-        message: createdBookingId
-          ? `Forespørsel behandlet. Opprettet booking #${createdBookingId}.`
-          : "Forespørsel behandlet.",
+        severity: overlapWarning ? "error" : "success",
+        message: [
+          createdBookingId
+            ? `Forespørsel behandlet. Opprettet booking #${createdBookingId}.`
+            : "Forespørsel behandlet.",
+          overlapWarning,
+        ]
+          .filter(Boolean)
+          .join(" "),
       });
       await Promise.all([refetchRequests(), refetchBookings()]);
     },
@@ -286,8 +315,12 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   });
 
   const [updateBooking, { loading: bookingUpdating }] = useMutation(UpdateJanhusBookingDocument, {
-    onCompleted: async () => {
-      setAlert({ severity: "success", message: "Booking oppdatert." });
+    onCompleted: async (result) => {
+      const overlapWarning = describeOverlaps(result.updateJanhusBooking?.overlappingBookings);
+      setAlert({
+        severity: overlapWarning ? "error" : "success",
+        message: ["Booking oppdatert.", overlapWarning].filter(Boolean).join(" "),
+      });
       await refetchBookings();
     },
     onError: (error) => setAlert({ severity: "error", message: error.message }),
@@ -721,6 +754,13 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                               <Typography variant="body2">
                                 Ansvarlig: {request.responsibleName} ({request.responsibleEmail})
                               </Typography>
+                              {request.comment ? (
+                                <Alert severity="info" sx={{ py: 0.5 }}>
+                                  <Typography variant="body2">
+                                    <strong>Kommentar fra bestiller:</strong> {request.comment}
+                                  </Typography>
+                                </Alert>
+                              ) : null}
                               <TextField
                                 size="small"
                                 label="Adminkommentar"

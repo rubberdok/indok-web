@@ -7732,39 +7732,7 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
-              "name": "canOverrideLowerLevels",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "canEditOwnBookingsOnly",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "canEditAllBookings",
+              "name": "canChallengeProvisionals",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -8427,6 +8395,38 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "bookingContactName",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "bookingContactPhone",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               }
@@ -13611,6 +13611,26 @@
                 "name": "JanHusBookingType",
                 "ofType": null
               }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review.",
+              "isDeprecated": false,
+              "name": "overlappingBookings",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "JanHusBookingType",
+                    "ofType": null
+                  }
+                }
+              }
             }
           ],
           "inputFields": null,
@@ -13850,6 +13870,26 @@
                 "kind": "OBJECT",
                 "name": "JanHusBookingType",
                 "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review.",
+              "isDeprecated": false,
+              "name": "overlappingBookings",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "JanHusBookingType",
+                    "ofType": null
+                  }
+                }
               }
             }
           ],
@@ -14483,6 +14523,26 @@
                 "kind": "OBJECT",
                 "name": "JanHusBookingType",
                 "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review.",
+              "isDeprecated": false,
+              "name": "overlappingBookings",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "JanHusBookingType",
+                    "ofType": null
+                  }
+                }
               }
             }
           ],

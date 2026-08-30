@@ -81,16 +81,14 @@ class JanHusBookingLevelAdmin(admin.ModelAdmin):
         "can_book_anytime",
         "can_create_provisional",
         "can_create_confirmed",
-        "can_override_lower_levels",
-        "can_edit_own_bookings_only",
-        "can_edit_all_bookings",
+        "can_challenge_provisionals",
         "booking_opens_weeks_before",
     )
     list_filter = (
         "can_book_anytime",
         "can_create_provisional",
         "can_create_confirmed",
-        "can_override_lower_levels",
+        "can_challenge_provisionals",
     )
     search_fields = ("name", "description")
 

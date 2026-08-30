@@ -50,9 +50,7 @@ def ensure_default_levels(
                 "can_book_anytime": True,
                 "can_create_provisional": False,
                 "can_create_confirmed": True,
-                "can_override_lower_levels": True,
-                "can_edit_own_bookings_only": True,
-                "can_edit_all_bookings": False,
+                "can_challenge_provisionals": True,
                 "booking_opens_weeks_before": None,
             },
         },
@@ -64,9 +62,7 @@ def ensure_default_levels(
                 "can_book_anytime": False,
                 "can_create_provisional": True,
                 "can_create_confirmed": True,
-                "can_override_lower_levels": False,
-                "can_edit_own_bookings_only": True,
-                "can_edit_all_bookings": False,
+                "can_challenge_provisionals": False,
                 "booking_opens_weeks_before": settings.organization_booking_opens_weeks_before,
             },
         },
@@ -78,9 +74,7 @@ def ensure_default_levels(
                 "can_book_anytime": False,
                 "can_create_provisional": False,
                 "can_create_confirmed": True,
-                "can_override_lower_levels": False,
-                "can_edit_own_bookings_only": True,
-                "can_edit_all_bookings": False,
+                "can_challenge_provisionals": False,
                 "booking_opens_weeks_before": settings.general_booking_opens_weeks_before,
             },
         },
@@ -92,9 +86,7 @@ def ensure_default_levels(
                 "can_book_anytime": False,
                 "can_create_provisional": False,
                 "can_create_confirmed": False,
-                "can_override_lower_levels": False,
-                "can_edit_own_bookings_only": False,
-                "can_edit_all_bookings": False,
+                "can_challenge_provisionals": False,
                 "booking_opens_weeks_before": None,
             },
         },
@@ -174,16 +166,36 @@ def determine_initial_status(
     raise GraphQLError("This booking level cannot create bookings")
 
 
-def can_override_provisionals(
+def challenges_provisionals(
     *,
     booking_level: JanHusBookingLevel,
     starts_at,
     settings: JanHusBookingSettings,
+    provisionals=None,
 ) -> bool:
-    if not booking_level.can_override_lower_levels:
+    """
+    Whether this level may push the given provisionals into admin review.
+
+    Only before the organization booking window opens: once everyone can book,
+    provisional reservations are settled and no longer challengeable. A level
+    can only challenge strictly lower-priority ones, so two levels with the same
+    priority leave each other alone.
+    """
+    if not booking_level.can_challenge_provisionals:
         return False
+
     weeks_in_advance = booking_weeks_in_advance(starts_at)
-    return weeks_in_advance > settings.organization_booking_opens_weeks_before
+    if weeks_in_advance <= settings.organization_booking_opens_weeks_before:
+        return False
+
+    if provisionals is None:
+        return True
+
+    return all(
+        provisional.booking_level is None
+        or provisional.booking_level.priority < booking_level.priority
+        for provisional in provisionals
+    )
 
 
 def get_conflicting_areas(area: JanHusArea) -> list:
@@ -191,8 +203,24 @@ def get_conflicting_areas(area: JanHusArea) -> list:
 
 
 def get_overlapping_bookings(
-    *, starts_at, ends_at, area: JanHusArea, exclude_booking_id: Optional[int] = None
+    *,
+    starts_at,
+    ends_at,
+    area: JanHusArea,
+    exclude_booking_id: Optional[int] = None,
+    settings: Optional[JanHusBookingSettings] = None,
 ):
+    """
+    Bookings that clash with this time range in this area or any area above or
+    below it. When a buffer is configured the range is widened by that many
+    minutes at each end, so back-to-back bookings clash and leave a gap for
+    cleaning and handover.
+    """
+    buffer_minutes = settings.buffer_minutes if settings else 0
+    if buffer_minutes:
+        starts_at = starts_at - timedelta(minutes=buffer_minutes)
+        ends_at = ends_at + timedelta(minutes=buffer_minutes)
+
     query = JanHusBooking.objects.filter(
         starts_at__lt=ends_at,
         ends_at__gt=starts_at,

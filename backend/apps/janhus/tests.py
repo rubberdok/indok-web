@@ -4,6 +4,7 @@ from datetime import date, datetime, time, timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
@@ -46,7 +47,7 @@ from apps.janhus.rules import (
     ORGANIZATION_LEVEL,
     PRIORITY_LEVEL,
     booking_weeks_in_advance,
-    can_override_provisionals,
+    challenges_provisionals,
     determine_initial_status,
     ensure_default_areas,
     ensure_default_levels,
@@ -2120,7 +2121,7 @@ class JanHusRulesTestCase(TestCase):
             with self.subTest(case=label):
                 self.assertEqual(
                     expected,
-                    can_override_provisionals(
+                    challenges_provisionals(
                         booking_level=self.levels[level],
                         starts_at=self._at(days=days),
                         settings=self.settings,
@@ -2237,6 +2238,82 @@ class JanHusRulesTestCase(TestCase):
                     settings=self.settings,
                 )
 
+    def test_a_buffer_forces_a_gap_between_bookings(self):
+        booking = self._booking(area=self.first_floor)
+        back_to_back = {
+            "starts_at": booking.ends_at,
+            "ends_at": booking.ends_at + timedelta(hours=2),
+            "area": self.first_floor,
+        }
+
+        self.assertNotIn(
+            booking, get_overlapping_bookings(settings=self.settings, **back_to_back)
+        )
+
+        self.settings.buffer_minutes = 60
+        self.settings.save()
+
+        self.assertIn(
+            booking, get_overlapping_bookings(settings=self.settings, **back_to_back)
+        )
+        self.assertNotIn(
+            booking,
+            get_overlapping_bookings(
+                starts_at=booking.ends_at + timedelta(hours=2),
+                ends_at=booking.ends_at + timedelta(hours=4),
+                area=self.first_floor,
+                settings=self.settings,
+            ),
+        )
+
+    def test_buffer_must_align_with_slot_granularity(self):
+        self.settings.buffer_minutes = 45  # granularity is 30
+        with self.assertRaises(DjangoValidationError):
+            self.settings.full_clean()
+
+        self.settings.buffer_minutes = 60
+        self.settings.full_clean()
+
+    def test_a_level_only_challenges_strictly_lower_priorities(self):
+        far_ahead = self._at(days=70)
+        priority = self.levels[PRIORITY_LEVEL]
+
+        def provisional_at(level):
+            booking = self._booking(
+                area=self.first_floor, status=JanHusBookingStatus.PROVISIONAL
+            )
+            booking.booking_level = level
+            booking.save(update_fields=["booking_level"])
+            return booking
+
+        lower = provisional_at(self.levels[ORGANIZATION_LEVEL])
+        same = provisional_at(priority)
+
+        self.assertTrue(
+            challenges_provisionals(
+                booking_level=priority,
+                starts_at=far_ahead,
+                settings=self.settings,
+                provisionals=[lower],
+            )
+        )
+
+        self.assertFalse(
+            challenges_provisionals(
+                booking_level=priority,
+                starts_at=far_ahead,
+                settings=self.settings,
+                provisionals=[same],
+            )
+        )
+        self.assertFalse(
+            challenges_provisionals(
+                booking_level=priority,
+                starts_at=far_ahead,
+                settings=self.settings,
+                provisionals=[lower, same],
+            )
+        )
 
 class JanHusPermissionsTestCase(TestCase):
     def setUp(self) -> None:
