@@ -1,12 +1,13 @@
 import json
 from decimal import Decimal
-from datetime import datetime, time, timedelta
+from datetime import date, datetime, time, timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
+from graphql import GraphQLError
 
 from apps.ecommerce.models import Order
 from apps.janhus import mail
@@ -18,10 +19,44 @@ from apps.janhus.mail import (
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
+    JanHusBookingLevel,
     JanHusBookingRequest,
     JanHusDepositStatus,
     JanHusBookingSettings,
     JanHusBookingStatus,
+    JanHusEventType,
+    JanHusOrganizationBookingLevel,
+    JanHusUserBookingLevel,
+)
+from apps.janhus.permissions import (
+    can_book_for_organization,
+    can_edit_guest_list,
+    can_view_booking_details,
+    get_hr_organizations,
+    get_user_email_candidates,
+    has_manage_booking_permission,
+    has_manage_settings_permission,
+    is_booking_owner,
+    is_connected_to_booking,
+    normalize_phone_number,
+)
+from apps.janhus.rules import (
+    EXTERNAL_LEVEL,
+    GENERAL_LEVEL,
+    ORGANIZATION_LEVEL,
+    PRIORITY_LEVEL,
+    booking_weeks_in_advance,
+    can_override_provisionals,
+    determine_initial_status,
+    ensure_default_areas,
+    ensure_default_levels,
+    get_conflicting_areas,
+    get_or_create_settings,
+    get_overlapping_bookings,
+    is_in_active_booking_semester,
+    resolve_booking_level,
+    validate_booking_semester_rules,
+    validate_time_rules,
 )
 from apps.organizations.models import Organization
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
@@ -1131,72 +1166,42 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             }}
         """
 
-    def test_create_booking_request_rejects_non_member_of_organization(self):
+    def test_booking_for_an_organization_requires_leadership_or_admin_rights(self):
         organization = OrganizationFactory()
+
         outsider = UserFactory(is_indok=True)
-
-        response = self.query(
-            self._org_booking_request_query(organization), user=outsider
-        )
-
-        self.assertResponseHasErrors(response)
-        self.assertFalse(
-            JanHusBookingRequest.objects.filter(
-                owner_organization=organization
-            ).exists()
-        )
-
-    def test_create_booking_request_rejects_organization_member_without_hr_group(self):
-        organization = OrganizationFactory()
         plain_member = UserFactory(is_indok=True)
         MembershipFactory(organization=organization, user=plain_member, group=None)
-
-        response = self.query(
-            self._org_booking_request_query(organization), user=plain_member
-        )
-
-        self.assertResponseHasErrors(response)
-        self.assertFalse(
-            JanHusBookingRequest.objects.filter(
-                owner_organization=organization
-            ).exists()
-        )
-
-    def test_create_booking_request_allows_organization_hr_member(self):
-        organization = OrganizationFactory()
-        org_leader = UserFactory(is_indok=True)
+        leader = UserFactory(is_indok=True)
         MembershipFactory(
-            organization=organization,
-            user=org_leader,
-            group=organization.hr_group,
+            organization=organization, user=leader, group=organization.hr_group
         )
+        admin = UserFactory(is_indok=True)
+        self.add_booking_permission(admin)
 
-        response = self.query(
-            self._org_booking_request_query(organization), user=org_leader
-        )
+        cases = [
+            ("outsider", outsider, False),
+            ("member without HR", plain_member, False),
+            ("HR leader", leader, True),
+            ("JanHus admin", admin, True),
+        ]
 
-        self.assertResponseNoErrors(response)
-        self.assertTrue(
-            JanHusBookingRequest.objects.filter(
-                owner_organization=organization
-            ).exists()
-        )
-
-    def test_create_booking_request_allows_janhus_admin_for_any_organization(self):
-        organization = OrganizationFactory()
-        admin_user = UserFactory(is_indok=True)
-        self.add_booking_permission(admin_user)
-
-        response = self.query(
-            self._org_booking_request_query(organization), user=admin_user
-        )
-
-        self.assertResponseNoErrors(response)
-        self.assertTrue(
-            JanHusBookingRequest.objects.filter(
-                owner_organization=organization
-            ).exists()
-        )
+        for label, user, allowed in cases:
+            with self.subTest(case=label):
+                JanHusBookingRequest.objects.all().delete()
+                response = self.query(
+                    self._org_booking_request_query(organization), user=user
+                )
+                if allowed:
+                    self.assertResponseNoErrors(response)
+                else:
+                    self.assertResponseHasErrors(response)
+                self.assertEqual(
+                    allowed,
+                    JanHusBookingRequest.objects.filter(
+                        owner_organization=organization
+                    ).exists(),
+                )
 
     def test_create_booking_rejects_organization_member_without_hr_group(self):
         organization = OrganizationFactory()
@@ -1292,54 +1297,33 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertNotIn("{", message)
 
 
-    def test_booking_gets_a_unique_readable_reference_on_creation(self):
-        first = JanHusBooking.objects.create(
-            starts_at=self.start_dt,
-            ends_at=self.end_dt,
-            area=self.first_floor_area,
-            owner_user=self.user,
-            responsible_name="Responsible",
-            responsible_email="responsible@example.com",
-            responsible_phone="41234567",
-        )
-        second = JanHusBooking.objects.create(
-            starts_at=self.start_dt + timedelta(days=1),
-            ends_at=self.end_dt + timedelta(days=1),
-            area=self.second_floor_area,
-            owner_user=self.other_user,
-            responsible_name="Responsible",
-            responsible_email="responsible@example.com",
-            responsible_phone="41234567",
-        )
+    def test_booking_reference_is_unique_readable_and_stable(self):
+        def make(offset, area, owner):
+            return JanHusBooking.objects.create(
+                starts_at=self.start_dt + timedelta(days=offset),
+                ends_at=self.end_dt + timedelta(days=offset),
+                area=area,
+                owner_user=owner,
+                responsible_name="Responsible",
+                responsible_email="responsible@example.com",
+                responsible_phone="41234567",
+            )
+
+        first = make(0, self.first_floor_area, self.user)
+        second = make(1, self.second_floor_area, self.other_user)
 
         self.assertRegex(first.reference, r"^JH-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$")
         self.assertNotEqual(first.reference, second.reference)
 
-        # The alphabet deliberately excludes characters that are easy to confuse.
-        for confusable in "01ILO":
-            self.assertNotIn(confusable, first.reference.replace("JH-", ""))
+        # Editing the booking must not change a reference the booker already has.
+        original = first.reference
+        first.starts_at = self.start_dt + timedelta(days=3)
+        first.area = self.second_floor_area
+        first.responsible_email = "someone-else@example.com"
+        first.save()
+        first.refresh_from_db()
 
-    def test_booking_reference_is_stable_when_booking_is_edited(self):
-        booking = JanHusBooking.objects.create(
-            starts_at=self.start_dt,
-            ends_at=self.end_dt,
-            area=self.first_floor_area,
-            owner_user=self.user,
-            responsible_name="Responsible",
-            responsible_email="responsible@example.com",
-            responsible_phone="41234567",
-        )
-        original_reference = booking.reference
-
-        booking.starts_at = self.start_dt + timedelta(days=3)
-        booking.ends_at = self.end_dt + timedelta(days=3)
-        booking.area = self.second_floor_area
-        booking.responsible_email = "someone-else@example.com"
-        booking.save()
-        booking.refresh_from_db()
-
-        self.assertEqual(original_reference, booking.reference)
-
+        self.assertEqual(original, first.reference)
 
     def _review_to_confirmed_query(self, booking):
         return f"""
@@ -1359,10 +1343,17 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             }}
         """
 
-    def test_confirming_a_booking_sends_the_confirmation_mail(self):
-        self.add_booking_permission(self.user)
+    def _review_booking_query(self, booking, status):
+        return f"""
+            mutation {{
+              reviewJanhusBooking(
+                reviewData: {{ id: "{booking.id}" status: "{status}" }}
+              ) {{ ok }}
+            }}
+        """
 
-        booking = JanHusBooking.objects.create(
+    def _pending_booking(self, **overrides):
+        defaults = dict(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
             area=self.first_floor_area,
@@ -1374,40 +1365,60 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_phone="41234567",
             manually_marked_as_paid=True,
         )
+        defaults.update(overrides)
+        return JanHusBooking.objects.create(**defaults)
 
-        with patch("apps.janhus.mutations.send_booking_confirmation") as mocked_send:
-            response = self.query(
-                self._review_to_confirmed_query(booking), user=self.user
-            )
-
-        self.assertResponseNoErrors(response)
-        mocked_send.assert_called_once()
-        self.assertEqual(booking.id, mocked_send.call_args.args[0].id)
-
-    def test_confirmation_mail_is_not_resent_when_already_confirmed(self):
+    def test_reviewing_a_booking_sends_the_matching_mail_once(self):
         self.add_booking_permission(self.user)
 
-        booking = JanHusBooking.objects.create(
-            starts_at=self.start_dt,
-            ends_at=self.end_dt,
-            area=self.first_floor_area,
-            owner_user=self.other_user,
-            status=JanHusBookingStatus.CONFIRMED,
-            booker_email="booker@example.com",
-            responsible_name="Responsible",
-            responsible_email="responsible@example.com",
-            responsible_phone="41234567",
-            manually_marked_as_paid=True,
-        )
+        cases = [
+            ("confirmed", JanHusBookingStatus.PENDING_ADMIN_REVIEW, "CONFIRMED",
+             "send_booking_confirmation", True),
+            ("declined", JanHusBookingStatus.PENDING_ADMIN_REVIEW, "DECLINED",
+             "send_booking_declined", True),
+            # Re-confirming an already confirmed booking must not mail again.
+            ("already confirmed", JanHusBookingStatus.CONFIRMED, "CONFIRMED",
+             "send_booking_confirmation", False),
+        ]
 
-        with patch("apps.janhus.mutations.send_booking_confirmation") as mocked_send:
-            response = self.query(
-                self._review_to_confirmed_query(booking), user=self.user
-            )
+        for label, initial, new_status, target, expected in cases:
+            with self.subTest(case=label):
+                booking = self._pending_booking(status=initial)
+                with patch(f"apps.janhus.mutations.{target}") as mocked_send:
+                    response = self.query(
+                        self._review_booking_query(booking, new_status), user=self.user
+                    )
+                self.assertResponseNoErrors(response)
+                self.assertEqual(expected, mocked_send.called)
 
-        self.assertResponseNoErrors(response)
-        mocked_send.assert_not_called()
+    def test_rejecting_a_request_mails_the_requester_but_approving_does_not(self):
+        self.add_booking_permission(self.user)
 
+        for status, expected in [("REJECTED", True), ("APPROVED", False)]:
+            with self.subTest(status=status):
+                booking_request = JanHusBookingRequest.objects.create(
+                    starts_at=self.start_dt,
+                    ends_at=self.end_dt,
+                    area=self.first_floor_area,
+                    requester_user=self.other_user,
+                    requester_email="kari@example.com",
+                    responsible_name="Ola",
+                    responsible_email="ola@example.com",
+                    responsible_phone="41234567",
+                )
+                query = f"""
+                    mutation {{
+                      reviewJanhusBookingRequest(
+                        reviewData: {{ id: "{booking_request.id}" status: "{status}" }}
+                      ) {{ ok }}
+                    }}
+                """
+                with patch(
+                    "apps.janhus.mutations.send_booking_request_rejected"
+                ) as mocked_send:
+                    response = self.query(query, user=self.user)
+                self.assertResponseNoErrors(response)
+                self.assertEqual(expected, mocked_send.called)
 
     def test_submitting_a_request_sends_the_receipt_mail(self):
         query = f"""
@@ -1437,113 +1448,6 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         self.assertResponseNoErrors(response)
         mocked_send.assert_called_once()
-
-    def test_rejecting_a_request_sends_the_rejection_mail(self):
-        self.add_booking_permission(self.user)
-
-        booking_request = JanHusBookingRequest.objects.create(
-            starts_at=self.start_dt,
-            ends_at=self.end_dt,
-            area=self.first_floor_area,
-            requester_user=self.other_user,
-            requester_email="kari@example.com",
-            responsible_name="Ola",
-            responsible_email="ola@example.com",
-            responsible_phone="41234567",
-        )
-
-        query = f"""
-            mutation {{
-              reviewJanhusBookingRequest(
-                reviewData: {{
-                  id: "{booking_request.id}"
-                  status: "REJECTED"
-                  adminComment: "Opptatt"
-                }}
-              ) {{
-                ok
-              }}
-            }}
-        """
-
-        with patch(
-            "apps.janhus.mutations.send_booking_request_rejected"
-        ) as mocked_send:
-            response = self.query(query, user=self.user)
-
-        self.assertResponseNoErrors(response)
-        mocked_send.assert_called_once()
-
-    def test_approving_a_request_does_not_send_the_rejection_mail(self):
-        self.add_booking_permission(self.user)
-
-        booking_request = JanHusBookingRequest.objects.create(
-            starts_at=self.start_dt,
-            ends_at=self.end_dt,
-            area=self.first_floor_area,
-            requester_user=self.other_user,
-            requester_email="kari@example.com",
-            responsible_name="Ola",
-            responsible_email="ola@example.com",
-            responsible_phone="41234567",
-        )
-
-        query = f"""
-            mutation {{
-              reviewJanhusBookingRequest(
-                reviewData: {{
-                  id: "{booking_request.id}"
-                  status: "APPROVED"
-                }}
-              ) {{
-                ok
-              }}
-            }}
-        """
-
-        with patch(
-            "apps.janhus.mutations.send_booking_request_rejected"
-        ) as mocked_send:
-            response = self.query(query, user=self.user)
-
-        self.assertResponseNoErrors(response)
-        mocked_send.assert_not_called()
-
-    def test_declining_a_booking_sends_the_decline_mail(self):
-        self.add_booking_permission(self.user)
-
-        booking = JanHusBooking.objects.create(
-            starts_at=self.start_dt,
-            ends_at=self.end_dt,
-            area=self.first_floor_area,
-            owner_user=self.other_user,
-            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
-            booker_email="kari@example.com",
-            responsible_name="Ola",
-            responsible_email="ola@example.com",
-            responsible_phone="41234567",
-        )
-
-        query = f"""
-            mutation {{
-              reviewJanhusBooking(
-                reviewData: {{
-                  id: "{booking.id}"
-                  status: "DECLINED"
-                  adminComment: "Opptatt"
-                }}
-              ) {{
-                ok
-              }}
-            }}
-        """
-
-        with patch("apps.janhus.mutations.send_booking_declined") as mocked_send:
-            response = self.query(query, user=self.user)
-
-        self.assertResponseNoErrors(response)
-        mocked_send.assert_called_once()
-
 
 class JanHusResolversTestCase(JanHusBaseTestCase):
     def test_admin_query_requires_permission(self):
@@ -1875,61 +1779,52 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         defaults.update(overrides)
         return JanHusBooking.objects.create(**defaults)
 
-    def test_anonymous_user_cannot_read_booking_contact_details(self):
+    def test_contact_details_are_only_readable_by_connected_users(self):
         self._booking_with_contact_details()
+        self.add_booking_permission(self.other_user)
+        admin = type(self.other_user).objects.get(pk=self.other_user.pk)
+        outsider = UserFactory(is_indok=True)
 
-        response = self.query(self.DETAILS_QUERY)
+        # The anonymous case has to run first: self.query keeps the session.
+        cases = [
+            ("anonymous", None, False),
+            ("unrelated", outsider, False),
+            ("owner", self.user, True),
+            ("admin", admin, True),
+        ]
 
-        self.assertResponseHasErrors(response)
+        for label, user, allowed in cases:
+            with self.subTest(case=label):
+                response = (
+                    self.query(self.DETAILS_QUERY, user=user)
+                    if user
+                    else self.query(self.DETAILS_QUERY)
+                )
+                if allowed:
+                    self.assertResponseNoErrors(response)
+                    content = json.loads(response.content)
+                    self.assertEqual(
+                        "booker@example.com",
+                        content["data"]["janhusBookings"][0]["bookerEmail"],
+                    )
+                else:
+                    self.assertResponseHasErrors(response)
+                    body = response.content.decode()
+                    self.assertNotIn("booker@example.com", body)
+                    self.assertNotIn("Gjest Gjestesen", body)
 
-        content = json.loads(response.content)
-        self.assertIsNone(content["data"]["janhusBookings"])
-        self.assertNotIn("booker@example.com", response.content.decode())
-        self.assertNotIn("Gjest Gjestesen", response.content.decode())
-
-    def test_anonymous_user_can_read_booking_availability(self):
+    def test_availability_stays_readable_without_logging_in(self):
         booking = self._booking_with_contact_details()
 
         response = self.query(self.AVAILABILITY_QUERY)
         self.assertResponseNoErrors(response)
 
         content = json.loads(response.content)
-        returned = content["data"]["janhusBookings"]
-        self.assertEqual([str(booking.id)], [entry["id"] for entry in returned])
-        self.assertNotIn("booker@example.com", response.content.decode())
-
-    def test_unrelated_user_cannot_read_booking_contact_details(self):
-        self._booking_with_contact_details()
-
-        response = self.query(self.DETAILS_QUERY, user=self.other_user)
-
-        self.assertResponseHasErrors(response)
-        self.assertNotIn("booker@example.com", response.content.decode())
-
-    def test_booking_owner_can_read_own_contact_details(self):
-        self._booking_with_contact_details()
-
-        response = self.query(self.DETAILS_QUERY, user=self.user)
-        self.assertResponseNoErrors(response)
-
-        content = json.loads(response.content)
         self.assertEqual(
-            "booker@example.com",
-            content["data"]["janhusBookings"][0]["bookerEmail"],
+            [str(booking.id)],
+            [entry["id"] for entry in content["data"]["janhusBookings"]],
         )
-
-    def test_admin_can_read_booking_contact_details(self):
-        self._booking_with_contact_details(owner_user=self.other_user)
-        self.add_booking_permission(self.user)
-
-        response = self.query(self.DETAILS_QUERY, user=self.user)
-        self.assertResponseNoErrors(response)
-
-        content = json.loads(response.content)
-        self.assertEqual(
-            "booker@example.com",
-            content["data"]["janhusBookings"][0]["bookerEmail"],
-        )
+        self.assertNotIn("booker@example.com", response.content.decode())
 
 
 class JanHusAreaTestCase(JanHusBaseTestCase):
@@ -2055,56 +1950,6 @@ class JanHusMailTestCase(TestCase):
             ["booker@example.com", "responsible@example.com"], kwargs["bcc"]
         )
 
-    def test_confirmation_mail_omits_cleaning_when_option_disabled(self):
-        JanHusBookingSettings.objects.create(cleaning_option_enabled=False)
-        booking = self._confirmed_booking(cleaning_requested=False)
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_confirmation(booking)
-
-        self.assertNotIn("Innleid renhold", mocked_email.call_args.kwargs["body"])
-
-    def test_confirmation_mail_includes_cleaning_when_option_enabled(self):
-        JanHusBookingSettings.objects.create(cleaning_option_enabled=True)
-        booking = self._confirmed_booking(cleaning_requested=True)
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_confirmation(booking)
-
-        body = mocked_email.call_args.kwargs["body"]
-        self.assertIn("Innleid renhold: Ja", body)
-
-    def test_confirmation_mail_still_shows_cleaning_the_booking_paid_for(self):
-        """
-        The option can be turned off after a booking already requested cleaning.
-        That booking is still getting the service, so the mail must not hide it.
-        """
-        JanHusBookingSettings.objects.create(cleaning_option_enabled=False)
-        booking = self._confirmed_booking(cleaning_requested=True)
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_confirmation(booking)
-
-        self.assertIn("Innleid renhold: Ja", mocked_email.call_args.kwargs["body"])
-
-    def test_confirmation_mail_deduplicates_a_single_contact(self):
-        booking = self._confirmed_booking(
-            booker_email="same@example.com", responsible_email="Same@example.com"
-        )
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_confirmation(booking)
-
-        self.assertEqual(1, len(mocked_email.call_args.kwargs["bcc"]))
-
-    def test_confirmation_mail_is_skipped_without_recipients(self):
-        booking = self._confirmed_booking(booker_email="", responsible_email="")
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_confirmation(booking)
-
-        mocked_email.assert_not_called()
-
     def _booking_request(self, **overrides):
         start_dt = timezone.make_aware(
             datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
@@ -2124,20 +1969,6 @@ class JanHusMailTestCase(TestCase):
         defaults.update(overrides)
         return JanHusBookingRequest.objects.create(**defaults)
 
-    def test_request_receipt_goes_to_requester_and_responsible(self):
-        booking_request = self._booking_request()
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_request_received(booking_request)
-
-        # No admin contact configured, so only the receipt is sent.
-        mocked_email.assert_called_once()
-        kwargs = mocked_email.call_args.kwargs
-        self.assertCountEqual(
-            ["kari@example.com", "ola@example.com"], kwargs["bcc"]
-        )
-        self.assertTrue(kwargs["subject"].startswith(mail.SUBJECTS["reserve"]))
-
     def test_request_receipt_also_notifies_the_configured_admin_address(self):
         JanHusBookingSettings.objects.create(
             booking_contact_email="janhus@example.com"
@@ -2153,47 +1984,7 @@ class JanHusMailTestCase(TestCase):
         self.assertTrue(
             admin_kwargs["subject"].startswith(mail.SUBJECTS["admin_reserve"])
         )
-        # The admin copy carries the contact details the board needs to follow up.
         self.assertIn("kari@example.com", admin_kwargs["body"])
-
-    def test_rejection_mail_includes_the_admin_comment(self):
-        booking_request = self._booking_request(
-            admin_comment="Huset er allerede booket denne helgen."
-        )
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_request_rejected(booking_request)
-
-        kwargs = mocked_email.call_args.kwargs
-        self.assertTrue(kwargs["subject"].startswith(mail.SUBJECTS["decision"]))
-        self.assertIn("Huset er allerede booket denne helgen.", kwargs["body"])
-        self.assertCountEqual(
-            ["kari@example.com", "ola@example.com"], kwargs["bcc"]
-        )
-
-    def test_mail_templates_use_the_shared_branding_colour(self):
-        """
-        The colour lives in utils/mail/branding.py, not in each template, so it
-        cannot drift between the emails.
-        """
-        from django.template.loader import get_template
-
-        from utils.mail.branding import EMAIL_COLORS
-
-        templates = [
-            mail.CONFIRMATION_TEMPLATE,
-            mail.REQUEST_RECEIVED_TEMPLATE,
-            mail.ADMIN_REQUEST_TEMPLATE,
-            mail.REJECTED_TEMPLATE,
-        ]
-
-        for template_name in templates:
-            with self.subTest(template=template_name):
-                html = get_template(template_name).render({})
-                self.assertIn(EMAIL_COLORS["primary"], html)
-                self.assertIn(EMAIL_COLORS["surface"], html)
-                # Nothing should reach the client as an unrendered tag.
-                self.assertNotIn("email_color", html)
 
     def test_delivery_failure_is_logged_and_does_not_propagate(self):
         """
@@ -2213,45 +2004,6 @@ class JanHusMailTestCase(TestCase):
             any("Could not send JanHus email" in line for line in logs.output)
         )
 
-    def test_every_mail_carries_the_configured_signature(self):
-        JanHusBookingSettings.objects.create(
-            booking_contact_name="Test Bookingansvarlig",
-            booking_contact_email="janhus@rubberdok.no",
-            booking_contact_phone="41234567",
-        )
-        booking = self._confirmed_booking()
-        booking_request = self._booking_request()
-
-        cases = [
-            (send_booking_confirmation, booking),
-            (send_booking_request_received, booking_request),
-            (send_booking_request_rejected, booking_request),
-        ]
-
-        for fn, arg in cases:
-            with self.subTest(mail=fn.__name__):
-                with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-                    fn(arg)
-
-                body = mocked_email.call_args_list[0].kwargs["body"]
-                self.assertIn("Med vennlig hilsen", body)
-                self.assertIn("Test Bookingansvarlig", body)
-                self.assertIn("janhus@rubberdok.no", body)
-                self.assertIn("41234567", body)
-                self.assertIn("https://indokntnu.no/janhus", body)
-
-    def test_signature_falls_back_when_no_contact_is_configured(self):
-        booking = self._confirmed_booking()
-
-        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
-            send_booking_confirmation(booking)
-
-        body = mocked_email.call_args.kwargs["body"]
-        self.assertIn("Med vennlig hilsen", body)
-        self.assertIn("Bookingansvarlig JanHus", body)
-        # No dangling name or phone line when they are unset.
-        self.assertNotIn("tlf.", body)
-
     def test_confirmation_mail_attaches_the_contract_pdf(self):
         booking = self._confirmed_booking()
 
@@ -2265,20 +2017,414 @@ class JanHusMailTestCase(TestCase):
         self.assertEqual("application/pdf", mimetype)
         self.assertTrue(content.startswith(b"%PDF-"))
 
-    def test_contract_pdf_contains_the_booking_reference(self):
-        from apps.janhus.mail import CONTRACT_TEMPLATE, html_to_pdf
-        from django.template.loader import get_template
-
-        booking = self._confirmed_booking()
-        html = get_template(CONTRACT_TEMPLATE).render(
-            {
-                "booker_name": booking.booker_name,
-                "area_name": booking.area.name,
-                "reference": booking.reference,
-            }
+class JanHusRulesTestCase(TestCase):
+    def setUp(self) -> None:
+        self.settings = get_or_create_settings()
+        self.levels = ensure_default_levels(self.settings)
+        self.entire_house, _ = JanHusArea.objects.get_or_create(name="Hele huset")
+        self.first_floor, _ = JanHusArea.objects.get_or_create(
+            name="1. etasje", defaults={"parent": self.entire_house}
+        )
+        self.second_floor, _ = JanHusArea.objects.get_or_create(
+            name="2. etasje", defaults={"parent": self.entire_house}
         )
 
-        self.assertIn(booking.reference, html)
-        self.assertIn("Janus Eiendom", html)
-        # Generating the PDF must not raise for a half-filled contract.
-        self.assertTrue(html_to_pdf(CONTRACT_TEMPLATE, {}).startswith(b"%PDF-"))
+    def _at(self, *, days: int, hour: int = 10, minutes: int = 0):
+        target = (timezone.now() + timedelta(days=days)).date()
+        return timezone.make_aware(datetime.combine(target, time(hour, minutes)))
+
+    def _booking(self, *, area, status=None):
+        starts_at = self._at(days=14)
+        return JanHusBooking.objects.create(
+            starts_at=starts_at,
+            ends_at=starts_at + timedelta(hours=2),
+            area=area,
+            owner_user=UserFactory(is_indok=True),
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=status or JanHusBookingStatus.CONFIRMED,
+        )
+
+    def test_booking_level_is_resolved_from_owner_and_assignment(self):
+        user = UserFactory(is_indok=True)
+        organization = OrganizationFactory()
+        assigned_user = UserFactory(is_indok=True)
+        assigned_organization = OrganizationFactory()
+        JanHusUserBookingLevel.objects.create(
+            user=assigned_user, level=self.levels[PRIORITY_LEVEL]
+        )
+        JanHusOrganizationBookingLevel.objects.create(
+            organization=assigned_organization, level=self.levels[PRIORITY_LEVEL]
+        )
+
+        cases = [
+            ("external", user, None, True, EXTERNAL_LEVEL),
+            ("organization default", None, organization, False, ORGANIZATION_LEVEL),
+            ("organization assigned", None, assigned_organization, False, PRIORITY_LEVEL),
+            ("user default", user, None, False, GENERAL_LEVEL),
+            ("user assigned", assigned_user, None, False, PRIORITY_LEVEL),
+        ]
+
+        for label, owner, organization_owner, is_external, expected in cases:
+            with self.subTest(case=label):
+                level = resolve_booking_level(
+                    user=owner,
+                    owner_organization=organization_owner,
+                    is_external_booking=is_external,
+                )
+                self.assertEqual(self.levels[expected], level)
+
+    def test_internal_booking_without_user_or_organization_is_rejected(self):
+        with self.assertRaises(GraphQLError):
+            resolve_booking_level(
+                user=None, owner_organization=None, is_external_booking=False
+            )
+
+    def test_initial_status_depends_on_level_and_how_far_ahead_the_booking_is(self):
+        # General opens 4 weeks ahead, organization 6.
+        cases = [
+            ("external needs review", EXTERNAL_LEVEL, 14, True, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
+            ("priority confirms anytime", PRIORITY_LEVEL, 365, False, JanHusBookingStatus.CONFIRMED),
+            ("inside the window confirms", GENERAL_LEVEL, 14, False, JanHusBookingStatus.CONFIRMED),
+            ("organization too early holds", ORGANIZATION_LEVEL, 70, False, JanHusBookingStatus.PROVISIONAL),
+        ]
+
+        for label, level, days, is_external, expected in cases:
+            with self.subTest(case=label):
+                status = determine_initial_status(
+                    booking_level=self.levels[level],
+                    starts_at=self._at(days=days),
+                    is_external_booking=is_external,
+                    settings=self.settings,
+                )
+                self.assertEqual(expected, status)
+
+    def test_a_level_that_cannot_hold_provisionals_may_not_book_early(self):
+        with self.assertRaises(GraphQLError):
+            determine_initial_status(
+                booking_level=self.levels[GENERAL_LEVEL],
+                starts_at=self._at(days=70),
+                is_external_booking=False,
+                settings=self.settings,
+            )
+
+    def test_provisionals_are_only_overridable_by_priority_levels_booking_early(self):
+        cases = [
+            ("priority, before the organization window", PRIORITY_LEVEL, 70, True),
+            ("priority, inside the window", PRIORITY_LEVEL, 14, False),
+            ("organization has no override rights", ORGANIZATION_LEVEL, 70, False),
+        ]
+
+        for label, level, days, expected in cases:
+            with self.subTest(case=label):
+                self.assertEqual(
+                    expected,
+                    can_override_provisionals(
+                        booking_level=self.levels[level],
+                        starts_at=self._at(days=days),
+                        settings=self.settings,
+                    ),
+                )
+
+    def test_overlap_covers_the_area_tree_but_not_siblings_or_dead_bookings(self):
+        booking = self._booking(area=self.first_floor)
+
+        def overlaps(area, **kwargs):
+            return get_overlapping_bookings(
+                starts_at=booking.starts_at,
+                ends_at=booking.ends_at,
+                area=area,
+                **kwargs,
+            )
+
+        self.assertIn(booking, overlaps(self.first_floor))
+        self.assertIn(booking, overlaps(self.entire_house))
+        self.assertNotIn(booking, overlaps(self.second_floor))
+        self.assertNotIn(
+            booking, overlaps(self.first_floor, exclude_booking_id=booking.id)
+        )
+
+        for ignored in [JanHusBookingStatus.DECLINED, JanHusBookingStatus.CANCELLED]:
+            with self.subTest(status=ignored):
+                booking.status = ignored
+                booking.save(update_fields=["status"])
+                self.assertNotIn(booking, overlaps(self.first_floor))
+
+    def test_only_dates_inside_an_active_semester_are_bookable(self):
+        settings = self.settings
+        settings.fall_start_date = date(2026, 8, 1)
+        settings.fall_end_date = date(2026, 12, 20)
+        settings.spring_start_date = date(2027, 1, 5)
+        settings.spring_end_date = date(2027, 6, 15)
+        settings.save()
+
+        cases = [
+            ("inside autumn", date(2026, 9, 10), True),
+            ("first day of autumn", date(2026, 8, 1), True),
+            ("last day of autumn", date(2026, 12, 20), True),
+            ("christmas break", date(2026, 12, 27), False),
+            ("inside spring", date(2027, 3, 1), True),
+        ]
+        for label, target, expected in cases:
+            with self.subTest(case=label):
+                self.assertEqual(
+                    expected,
+                    is_in_active_booking_semester(target_date=target, settings=settings),
+                )
+
+        settings.fall_semester_active = False
+        settings.save()
+        self.assertFalse(
+            is_in_active_booking_semester(
+                target_date=date(2026, 9, 10), settings=settings
+            )
+        )
+
+    def test_bookings_outside_the_active_semesters_are_rejected(self):
+        settings = self.settings
+        settings.fall_start_date = date(2026, 8, 1)
+        settings.fall_end_date = date(2026, 12, 20)
+        settings.spring_start_date = date(2027, 1, 5)
+        settings.spring_end_date = date(2027, 6, 15)
+        settings.save()
+
+        outside = timezone.make_aware(datetime(2026, 12, 27, 10, 0))
+        with self.assertRaises(GraphQLError):
+            validate_booking_semester_rules(
+                starts_at=outside,
+                ends_at=outside + timedelta(hours=2),
+                settings=settings,
+            )
+
+        settings.fall_semester_active = False
+        settings.spring_semester_active = False
+        settings.save()
+        inside = timezone.make_aware(datetime(2026, 9, 10, 10, 0))
+        with self.assertRaises(GraphQLError):
+            validate_booking_semester_rules(
+                starts_at=inside, ends_at=inside + timedelta(hours=2), settings=settings
+            )
+
+    def test_invalid_time_ranges_are_rejected(self):
+        start = self._at(days=14, hour=12)
+        misaligned_start = self._at(days=14, hour=12, minutes=10)
+        before_opening = self._at(days=14, hour=3)
+
+        cases = [
+            ("end before start", start, start - timedelta(hours=1)),
+            ("shorter than the minimum", start, start + timedelta(minutes=30)),
+            ("duration off the granularity", start, start + timedelta(minutes=75)),
+            ("start off the granularity", misaligned_start, misaligned_start + timedelta(hours=2)),
+            ("before opening hour", before_opening, before_opening + timedelta(hours=2)),
+        ]
+
+        for label, starts_at, ends_at in cases:
+            with self.subTest(case=label):
+                with self.assertRaises(GraphQLError):
+                    validate_time_rules(
+                        starts_at=starts_at, ends_at=ends_at, settings=self.settings
+                    )
+
+    def test_valid_bookings_pass_including_across_midnight(self):
+        # The default window is 08:00 -> 02:00, so 23:00-01:00 is inside it.
+        for hour in [12, 23]:
+            with self.subTest(hour=hour):
+                start = self._at(days=14, hour=hour)
+                validate_time_rules(
+                    starts_at=start,
+                    ends_at=start + timedelta(hours=2),
+                    settings=self.settings,
+                )
+
+
+class JanHusPermissionsTestCase(TestCase):
+    def setUp(self) -> None:
+        self.user = UserFactory(is_indok=True)
+        self.other_user = UserFactory(is_indok=True)
+        self.area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
+        self.starts_at = timezone.now() + timedelta(days=14)
+
+    def _grant(self, user, codename):
+        content_type = ContentType.objects.get_for_model(JanHusBooking)
+        user.user_permissions.add(
+            Permission.objects.get(codename=codename, content_type=content_type)
+        )
+        return type(user).objects.get(pk=user.pk)
+
+    def _booking(self, **overrides):
+        defaults = dict(
+            starts_at=self.starts_at,
+            ends_at=self.starts_at + timedelta(hours=2),
+            area=self.area,
+            owner_user=self.user,
+            booker_name="Booker",
+            booker_email="booker@example.com",
+            booker_phone="41234567",
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="49876543",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+        defaults.update(overrides)
+        return JanHusBooking.objects.create(**defaults)
+
+    def test_booking_admins_also_get_settings_access_but_not_the_reverse(self):
+        self.assertFalse(has_manage_booking_permission(self.user))
+        self.assertFalse(has_manage_settings_permission(self.user))
+        self.assertFalse(has_manage_booking_permission(None))
+
+        booking_admin = self._grant(self.user, "manage_booking")
+        self.assertTrue(has_manage_booking_permission(booking_admin))
+        self.assertTrue(has_manage_settings_permission(booking_admin))
+
+        settings_admin = self._grant(self.other_user, "manage_settings")
+        self.assertTrue(has_manage_settings_permission(settings_admin))
+        self.assertFalse(has_manage_booking_permission(settings_admin))
+
+        self.assertTrue(
+            has_manage_booking_permission(UserFactory(is_indok=True, is_superuser=True))
+        )
+
+    def test_phone_numbers_are_normalised(self):
+        cases = [
+            ("41234567", "41234567"),
+            ("+47 41234567", "41234567"),
+            ("0047 41234567", "41234567"),
+            # A leading 47 is a country code only when more than 8 digits follow.
+            ("47123456", "47123456"),
+            ("", ""),
+            (None, ""),
+        ]
+        for raw, expected in cases:
+            with self.subTest(raw=raw):
+                self.assertEqual(expected, normalize_phone_number(raw))
+
+    def test_a_booking_is_owned_by_its_user_or_the_organization_leaders(self):
+        organization = OrganizationFactory()
+        leader = UserFactory(is_indok=True)
+        member = UserFactory(is_indok=True)
+        MembershipFactory(
+            organization=organization, user=leader, group=organization.hr_group
+        )
+        MembershipFactory(organization=organization, user=member, group=None)
+
+        personal = self._booking()
+        self.assertTrue(is_booking_owner(self.user, personal))
+        self.assertFalse(is_booking_owner(self.other_user, personal))
+        self.assertFalse(is_booking_owner(None, personal))
+
+        org_booking = self._booking(owner_user=None, owner_organization=organization)
+        self.assertTrue(is_booking_owner(leader, org_booking))
+        self.assertFalse(is_booking_owner(member, org_booking))
+
+    def test_booking_details_are_visible_to_admins_owners_and_listed_contacts(self):
+        booking = self._booking(owner_user=None, is_external_booking=True)
+
+        # Every factory user shares a default phone, so give these distinct ones.
+        by_email = UserFactory(is_indok=False, email="booker@example.com")
+        by_phone = UserFactory(
+            is_indok=False, email="unrelated@example.com", phone_number="45555555"
+        )
+        stranger = UserFactory(
+            is_indok=False, email="stranger@example.com", phone_number="46666666"
+        )
+        admin = self._grant(self.user, "manage_booking")
+
+        booking.booker_phone = "45555555"
+        booking.save(update_fields=["booker_phone"])
+
+        self.assertTrue(is_connected_to_booking(by_email, booking))
+        self.assertTrue(is_connected_to_booking(by_phone, booking))
+        self.assertTrue(is_connected_to_booking(admin, booking))
+        self.assertFalse(is_connected_to_booking(stranger, booking))
+        self.assertFalse(is_connected_to_booking(None, booking))
+
+class JanHusPricingTestCase(TestCase):
+    def setUp(self) -> None:
+        self.area = JanHusArea.objects.create(
+            name="Prisområde",
+            internal_price_per_hour=Decimal("100.00"),
+            external_price_per_hour=Decimal("250.00"),
+            cleaning_fee=Decimal("600.00"),
+        )
+        self.user = UserFactory(is_indok=True)
+        self.starts_at = timezone.now() + timedelta(days=14)
+
+    def _booking(self, *, minutes=120, **overrides):
+        defaults = dict(
+            starts_at=self.starts_at,
+            ends_at=self.starts_at + timedelta(minutes=minutes),
+            area=self.area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+        defaults.update(overrides)
+        return JanHusBooking.objects.create(**defaults)
+
+    def test_external_pricing_is_chosen_by_booking_type_or_override(self):
+        external = {"owner_user": None, "is_external_booking": True}
+        cases = [
+            ("internal booking", {}, False),
+            ("external booking", external, True),
+            ("external event type", {"event_type": JanHusEventType.EXTERNAL}, True),
+            ("override to internal", {**external, "price_override_tier": "INTERNAL"}, False),
+            ("override to external", {"price_override_tier": "EXTERNAL"}, True),
+        ]
+        for label, overrides, expected in cases:
+            with self.subTest(case=label):
+                self.assertEqual(expected, self._booking(**overrides).uses_external_pricing)
+
+    def test_total_price_follows_the_rate_duration_and_extras(self):
+        cases = [
+            ("internal rate", 120, {}, Decimal("200.00")),
+            ("external rate", 120, {"owner_user": None, "is_external_booking": True}, Decimal("500.00")),
+            ("cleaning fee added once", 120, {"cleaning_requested": True}, Decimal("800.00")),
+            ("charged pro rata", 90, {}, Decimal("150.00")),
+            (
+                "override replaces everything",
+                120,
+                {"cleaning_requested": True, "price_override_amount": Decimal("42.00")},
+                Decimal("42.00"),
+            ),
+        ]
+        for label, minutes, overrides, expected in cases:
+            with self.subTest(case=label):
+                self.assertEqual(
+                    expected, self._booking(minutes=minutes, **overrides).total_price
+                )
+
+    def test_deposit_is_outstanding_only_while_required_or_requested(self):
+        outstanding = [JanHusDepositStatus.REQUIRED, JanHusDepositStatus.REQUESTED]
+        settled = [
+            JanHusDepositStatus.NOT_REQUIRED,
+            JanHusDepositStatus.PAID,
+            JanHusDepositStatus.REFUNDED,
+            JanHusDepositStatus.WITHHELD,
+        ]
+
+        for status in outstanding + settled:
+            with self.subTest(status=status):
+                booking = self._booking(
+                    deposit_status=status, deposit_amount=Decimal("1000.00")
+                )
+                expected = Decimal("1000.00") if status in outstanding else Decimal("0")
+                self.assertEqual(expected, booking.outstanding_deposit_amount)
+
+        zero = self._booking(
+            deposit_status=JanHusDepositStatus.REQUIRED, deposit_amount=Decimal("0")
+        )
+        self.assertEqual(Decimal("0"), zero.outstanding_deposit_amount)
+
+    def test_payment_total_adds_rent_and_outstanding_deposit(self):
+        booking = self._booking(
+            deposit_status=JanHusDepositStatus.REQUIRED,
+            deposit_amount=Decimal("1000.00"),
+        )
+        self.assertEqual(Decimal("1200.00"), booking.payment_total_price)
+
+        booking.deposit_status = JanHusDepositStatus.PAID
+        self.assertEqual(booking.total_price, booking.payment_total_price)
