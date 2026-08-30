@@ -1,4 +1,6 @@
+import { useQuery } from "@apollo/client/react";
 import { ArrowForward } from "@mui/icons-material";
+import { Alert } from "@mui/material";
 import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 
@@ -11,6 +13,11 @@ import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
+  const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
+  const { data: areaData } = useQuery(JanHusAreasDocument);
+  const settings = settingsData?.janhusBookingSettings;
+  const configuredAreaCount = areaData?.janhusAreas?.length ?? 0;
+
   return (
     <>
       <Title
