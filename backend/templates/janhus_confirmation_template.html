@@ -1,0 +1,73 @@
+{% load email_branding %}<!doctype html>
+
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      font-family:
+        Open Sans,
+        sans-serif;
+    "
+  >
+    <div
+      style="border: 5px solid {% email_color 'primary' %}; text-align: center; padding: 50px; background-color: {% email_color 'surface' %}; width: 80%"
+      class="contentDiv"
+    >
+      <h2>Hei {{ booker_name }}!</h2>
+      <p>
+        Din søknad for booking av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til
+        <span><strong>{{ ends_at }}</strong> har blitt <strong>godkjent</strong> av Janus Eiendom.</span>
+      </p>
+
+      <p>Referansen din er:</p>
+      <p style="font-size: 24px; letter-spacing: 2px"><strong>{{ reference }}</strong></p>
+      <p>Ta vare på denne. Oppgi den hvis du kontakter oss om bookingen.</p>
+
+      <p>
+        <strong>Område:</strong> {{ area_name }}<br />
+        <strong>Arrangementstype:</strong> {{ event_type }}<br />
+        {% if show_cleaning %}<strong>Innleid renhold:</strong> {{ cleaning_requested }}<br />{% endif %}
+        <strong>Ansvarlig person oppgitt:</strong> {{ responsible_name }} ({{ responsible_email }})
+      </p>
+
+      {% if show_price %}
+      <p>
+        Prisen kommer på <strong>{{ total_price }} kr</strong>.{% if deposit_amount %} Depositum kommer i tillegg på
+        <strong>{{ deposit_amount }} kr</strong>.{% endif %}
+      </p>
+      {% endif %}
+
+      <p>
+        JanHus skal forlates i minst like god stand som den ble funnet. Dere står selv ansvarlig for eventuelle skader
+        som måtte forekomme.
+      </p>
+
+      <p>
+        Dette er en "no-reply"-mail. Ved spørsmål om booking, send mail til
+        <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> og oppgi referansen
+        <strong>{{ reference }}</strong>.
+      </p>
+      {% include "janhus_signature.html" %}
+    </div>
+  </body>
+</html>

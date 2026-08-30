@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% load email_branding %}<!DOCTYPE html>
 
 <html lang="no">
   <head>
@@ -25,10 +25,10 @@
   <body style="font-family: Open Sans, sans-serif">
     <div
       style="
-        border: 5px solid #065a5a;
+        border: 5px solid {% email_color 'primary' %};
         text-align: center;
         padding: 50px;
-        background-color: #f5f0eb;
+        background-color: {% email_color 'surface' %};
         width: 80%;
       "
       class="contentDiv"

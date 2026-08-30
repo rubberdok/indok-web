@@ -13,6 +13,16 @@ mutation UpdateJanhusBooking($bookingData: UpdateJanHusBookingInput!) {
     booking {
       ...JanHusBooking
     }
+    overlappingBookings {
+      id
+      reference
+      startsAt
+      endsAt
+      area {
+        id
+        name
+      }
+    }
   }
 }
 
@@ -43,6 +53,16 @@ mutation ReviewJanhusBookingRequest($reviewData: ReviewJanHusBookingRequestInput
     booking {
       ...JanHusBooking
     }
+    overlappingBookings {
+      id
+      reference
+      startsAt
+      endsAt
+      area {
+        id
+        name
+      }
+    }
   }
 }
 
@@ -55,17 +75,17 @@ mutation UpdateJanhusBookingSettings($settingsData: JanHusBookingSettingsInput!)
   }
 }
 
-mutation UpdateJanhusAreaConfiguration($areaData: JanHusAreaConfigurationInput!) {
-  updateJanhusAreaConfiguration(areaData: $areaData) {
+mutation UpdateJanhusArea($areaData: UpdateJanHusAreaInput!) {
+  updateJanhusArea(areaData: $areaData) {
     ok
-    areaConfiguration {
-      ...JanHusAreaConfiguration
+    area {
+      ...JanHusArea
     }
   }
 }
 
-mutation CreateJanhusPaymentProduct($bookingId: ID!, $organizationId: ID) {
-  createJanhusPaymentProduct(bookingId: $bookingId, organizationId: $organizationId) {
+mutation CreateJanhusPaymentProduct($bookingId: ID!) {
+  createJanhusPaymentProduct(bookingId: $bookingId) {
     ok
     productId
     booking {

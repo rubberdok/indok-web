@@ -63,9 +63,9 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const currentUserId = currentUserData?.user?.id;
   const isHrMember = Boolean(
     currentUserId &&
-      memberships.some(
-        (membership) => membership.user.id === currentUserId && membership?.group?.uuid === organization.hrGroup?.uuid
-      )
+    memberships.some(
+      (membership) => membership.user.id === currentUserId && membership?.group?.uuid === organization.hrGroup?.uuid
+    )
   );
   const canEditMemberships = isHrMember || Boolean(manageOrganizationPermissionData?.hasPermission);
 
@@ -251,7 +251,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                   {membership.user.firstName} {membership.user.lastName}
                 </TableCell>
                 <TableCell>
-                  {membership?.group?.name === "HR" ? "Administrator" : membership?.group?.name ?? "--"}
+                  {membership?.group?.name === "HR" ? "Administrator" : (membership?.group?.name ?? "--")}
                 </TableCell>
                 {canEditMemberships ? (
                   <TableCell>

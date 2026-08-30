@@ -1,0 +1,94 @@
+{% load email_branding %}<!doctype html>
+
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body style="font-family: Open Sans, sans-serif">
+    <div
+      style="
+        border: 5px solid {% email_color 'primary' %};
+        text-align: center;
+        padding: 50px;
+        background-color: {% email_color 'surface' %};
+        width: 80%;
+      "
+      class="contentDiv"
+    >
+      <h2>Søknad om booking av {{ area_name }}</h2>
+      <p>
+        Det har kommet en søknad om opprettelse av en booking av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til
+        <span><strong>{{ ends_at }}</strong>.</span>
+      </p>
+      <p>
+        <strong
+          >Dere må gå inn på adminsiden og ta stilling til om dere vil godkjenne bookingen eller ikke. Når dere har
+          gjort det, får vedkommende en mail om avgjørelsen deres.</strong
+        >
+      </p>
+
+      <h3>Bookinginfo</h3>
+      <p>Område: {{ area_name }}</p>
+      <p>Arrangementstype: {{ event_type }}</p>
+      {% if show_cleaning %}
+      <p>Innleid renhold: {{ cleaning_requested }}</p>
+      {% endif %}
+      <p>Eiertype: {{ owner_label }}</p>
+
+      <h3>Kontaktinfo</h3>
+      <p>Navn: {{ requester_name }}</p>
+      <p>Mobilnummer: {{ requester_phone }}</p>
+      <p>E-post: {{ requester_email }}</p>
+      <p>Ansvarlig: {{ responsible_name }} ({{ responsible_email }}, {{ responsible_phone }})</p>
+
+      {% if comment %}
+      <p><strong>{{ requester_name }} har sendt med følgende kommentar:</strong></p>
+      <p>{{ comment }}</p>
+      <a href="mailto:{{ requester_email }}">Dere kan sende en mail til {{ requester_name }} for å spørre om mer.</a>
+      <br />
+      {% endif %}
+
+      <a
+        href="https://indokntnu.no/janhus/admin"
+        style="
+          color: white;
+          background-color: {% email_color 'primary' %};
+          display: inline-block;
+          margin: 10px;
+          padding: 15px;
+          text-decoration: none;
+        "
+        >Link til admin-sider</a
+      >
+      <p>
+        På admin-sidene kan dere administrere alle bookinger (dere må være logget inn med en admin-bruker). Vennligst
+        kontakt Rubberdøk hvis det skulle oppstå spørsmål.
+      </p>
+      <strong>
+        <p>Med vennlig hilsen,</p>
+        <p>
+          Rubberdøk
+          <br />contact@rubberdok.no <br /><a href="https://www.indokntnu.no/">indokntnu.no </a>
+        </p>
+      </strong>
+    </div>
+  </body>
+</html>

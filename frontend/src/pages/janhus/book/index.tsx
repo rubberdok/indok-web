@@ -1,14 +1,18 @@
 import { useMutation, useQuery } from "@apollo/client/react";
-import { Alert, Box, Container, Stack, Step, StepLabel, Stepper } from "@mui/material";
+import { Alert, Box, Container, Stack, Step, StepButton, StepLabel, Stepper } from "@mui/material";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { BookingSteps, JanHusOwnerType } from "@/components/pages/janhus/booking/BookingSteps";
+import { useBookingSlots } from "@/components/pages/janhus/booking/useBookingSlots";
+import { JANHUS_EVENT_TYPE_LABELS } from "@/components/pages/janhus/constants";
 import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
+import { ContactFieldErrors, normalizePhoneNumber, validateContactFields } from "@/components/pages/janhus/validation";
 import {
   CreateJanhusBookingRequestDocument,
-  JanHusAreaConfigurationsDocument,
-  JanHusBookingsDocument,
+  JanHusAreasDocument,
+  JanHusBookableOrganizationsDocument,
   JanHusBookingSettingsDocument,
   UserOrganizationsDocument,
 } from "@/generated/graphql";
@@ -29,73 +33,16 @@ const DEFAULT_SETTINGS = {
   springEndDate: "2100-12-31",
   fallSemesterActive: true,
   springSemesterActive: true,
+  bufferMinutes: 0,
   externalBookingsEnabled: true,
+  privateBookingsEnabled: true,
+  cleaningOptionEnabled: true,
 };
-
-const AREA_LABELS: Record<string, string> = {
-  FIRST_FLOOR: "1. etasje",
-  SECOND_FLOOR: "2. etasje",
-  ENTIRE_HOUSE: "Hele huset",
-};
-
-const EVENT_TYPE_LABELS: Record<string, string> = {
-  INTERNAL: "Intern",
-  OPEN_FOR_INDOK: "Åpent for Indøk-studenter",
-  PRIVATE: "Privat",
-};
-
-const NORWEGIAN_PHONE_REGEX = /^(0047|\+47|47)?[49]\d{7}$/;
-
-const normalizePhoneNumber = (value: string) => value.replace(/\s/g, "");
 
 const toManualGuestEntry = (displayName: string): JanHusGuestListEntry => ({
   feideUserId: `manual:${displayName.trim().toLowerCase().replace(/\s+/g, "-")}`,
   displayName: displayName.trim(),
 });
-
-const formatSubmissionError = (rawMessage: string) => {
-  const fieldLabelMap: Record<string, string> = {
-    requester_email: "E-post bestiller",
-    responsible_email: "E-post ansvarlig",
-    requester_phone: "Telefon bestiller",
-    responsible_phone: "Telefon ansvarlig",
-  };
-
-  if (rawMessage.includes('null value in column "responsible_first_name"')) {
-    return "Kunne ikke sende forespørselen på grunn av en midlertidig serverfeil. Prøv igjen om noen sekunder.";
-  }
-
-  const parsedFieldErrors = Array.from(rawMessage.matchAll(/'([^']+)'\s*:\s*\['([^']+)'\]/g)).map(
-    ([, field, message]) => ({ field, message })
-  );
-
-  if (parsedFieldErrors.length > 0) {
-    return parsedFieldErrors
-      .map(({ field, message }) => {
-        const readableField = fieldLabelMap[field] ?? field;
-        const readableMessage = message === "Enter a valid email address." ? "Ugyldig e-postadresse." : message;
-        return `${readableField}: ${readableMessage}`;
-      })
-      .join(" ");
-  }
-
-  return rawMessage;
-};
-
-const getConflictingAreas = (area: string) => {
-  if (area === "ENTIRE_HOUSE") {
-    return ["ENTIRE_HOUSE", "FIRST_FLOOR", "SECOND_FLOOR"];
-  }
-  if (area === "FIRST_FLOOR") {
-    return ["FIRST_FLOOR", "ENTIRE_HOUSE"];
-  }
-  return ["SECOND_FLOOR", "ENTIRE_HOUSE"];
-};
-
-const formatSlotLabel = (slot: dayjs.Dayjs, baseDay?: dayjs.Dayjs) => {
-  const nextDay = baseDay ? !slot.isSame(baseDay, "day") : false;
-  return `${slot.format("HH:mm")}${nextDay ? " (+1 dag)" : ""}`;
-};
 
 type SemesterAvailabilitySettings = {
   fallStartDate?: string | null;
@@ -122,14 +69,15 @@ function isDateInActiveSemester(date: dayjs.Dayjs, bookingSettings: SemesterAvai
 }
 
 const JanHusBookingPage: NextPageWithLayout = () => {
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const [bookingDate, setBookingDate] = useState<dayjs.Dayjs | undefined>();
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
-  const [area, setArea] = useState("FIRST_FLOOR");
+  const [area, setArea] = useState("");
 
-  const [ownerType, setOwnerType] = useState<JanHusOwnerType>("PERSONAL"); //("EXTERNAL");
+  const [ownerType, setOwnerType] = useState<JanHusOwnerType>("ORGANIZATION");
   const [organizationId, setOrganizationId] = useState("");
 
   const [requesterName, setRequesterName] = useState("");
@@ -150,18 +98,22 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [acceptedContractPlaceholder, setAcceptedContractPlaceholder] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const [submittedBookingRequestId, setSubmittedBookingRequestId] = useState<string | undefined>();
+  const [submittedBookingReference, setSubmittedBookingReference] = useState<string | undefined>();
+  const [showAllContactErrors, setShowAllContactErrors] = useState(false);
 
   const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
-  const { data: areasData } = useQuery(JanHusAreaConfigurationsDocument);
+  const { data: areasData } = useQuery(JanHusAreasDocument);
   const { data: orgData } = useQuery(UserOrganizationsDocument, {
+    fetchPolicy: "cache-and-network",
+  });
+  const { data: bookableOrganizationsData } = useQuery(JanHusBookableOrganizationsDocument, {
     fetchPolicy: "cache-and-network",
   });
 
   const [createBookingRequest, { loading }] = useMutation(CreateJanhusBookingRequestDocument, {
     onCompleted: (data) => {
       setErrorMessage(undefined);
-      setSubmittedBookingRequestId(data?.createJanhusBookingRequest?.bookingRequest?.id);
+      setSubmittedBookingReference(data?.createJanhusBookingRequest?.bookingRequest?.reference);
       setActiveStep(steps.length - 1);
 
       setEndsAt("");
@@ -170,19 +122,26 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       setGuestList("");
     },
     onError: (error) => {
-      setErrorMessage(formatSubmissionError(error.message));
+      setErrorMessage(error.message);
     },
   });
 
   const hasResolvedUser = orgData !== undefined;
+  const hasResolvedSettings = settingsData !== undefined;
   const isAuthenticated = Boolean(orgData?.user);
   const isIndokStudent = orgData?.user?.isIndok ?? false;
   const canCreateNonExternalBooking = isAuthenticated && isIndokStudent;
-  const organizations = useMemo(() => orgData?.user?.organizations ?? [], [orgData]);
-  const areaConfigurations = useMemo(() => areasData?.janhusAreaConfigurations ?? [], [areasData]);
+  const organizations = useMemo(
+    () => bookableOrganizationsData?.janhusBookableOrganizations ?? [],
+    [bookableOrganizationsData]
+  );
+  const areas = useMemo(() => areasData?.janhusAreas ?? [], [areasData]);
 
   const bookingSettings = settingsData?.janhusBookingSettings ?? DEFAULT_SETTINGS;
   const externalBookingsEnabled = bookingSettings.externalBookingsEnabled ?? true;
+  const privateBookingsEnabled = bookingSettings.privateBookingsEnabled ?? true;
+  const cleaningOptionEnabled = bookingSettings.cleaningOptionEnabled ?? true;
+  const bufferMinutes = Math.max(bookingSettings.bufferMinutes ?? 0, 0);
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
   const slotGranularityMinutes = Math.max(bookingSettings.slotGranularityMinutes, 1);
   const openingHour = bookingSettings.openingHour;
@@ -207,109 +166,17 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     [bookingSettings]
   );
 
-  const bookingWindow = useMemo(() => {
-    if (!bookingDay) {
-      return undefined;
-    }
-
-    const windowStart = bookingDay.hour(openingHour).minute(0).second(0).millisecond(0);
-    let windowEnd = bookingDay.hour(closingHour).minute(0).second(0).millisecond(0);
-
-    if (openingHour >= closingHour) {
-      windowEnd = windowEnd.add(1, "day");
-    }
-
-    return { windowStart, windowEnd };
-  }, [bookingDay, closingHour, openingHour]);
-
-  const { data: overlappingBookingsData } = useQuery(JanHusBookingsDocument, {
-    skip: !bookingWindow,
-    variables: bookingWindow
-      ? {
-          startsAt: bookingWindow.windowStart.toISOString(),
-          endsAt: bookingWindow.windowEnd.toISOString(),
-        }
-      : undefined,
-    fetchPolicy: "cache-and-network",
+  const { startOptions, endOptions } = useBookingSlots({
+    bookingDay,
+    area,
+    areas,
+    startsAt,
+    openingHour,
+    closingHour,
+    minDurationMinutes,
+    slotGranularityMinutes,
+    bufferMinutes,
   });
-
-  const overlappingBookings = useMemo(() => overlappingBookingsData?.janhusBookings ?? [], [overlappingBookingsData]);
-
-  const relevantBookings = useMemo(() => {
-    const conflictingAreas = getConflictingAreas(area);
-    return overlappingBookings
-      .filter((booking) => conflictingAreas.includes(booking.area))
-      .map((booking) => ({
-        startsAt: dayjs(booking.startsAt),
-        endsAt: dayjs(booking.endsAt),
-      }));
-  }, [area, overlappingBookings]);
-
-  const hasOverlap = useCallback(
-    (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
-      return relevantBookings.some((booking) => booking.startsAt.isBefore(end) && booking.endsAt.isAfter(start));
-    },
-    [relevantBookings]
-  );
-
-  const timeBoundaries = useMemo(() => {
-    if (!bookingWindow) {
-      return [];
-    }
-
-    const boundaries = [bookingWindow.windowStart];
-    let current = bookingWindow.windowStart;
-
-    while (current.add(slotGranularityMinutes, "minute").isSameOrBefore(bookingWindow.windowEnd)) {
-      const next = current.add(slotGranularityMinutes, "minute");
-      boundaries.push(next);
-      current = next;
-    }
-
-    if (!boundaries[boundaries.length - 1].isSame(bookingWindow.windowEnd)) {
-      boundaries.push(bookingWindow.windowEnd);
-    }
-
-    return boundaries;
-  }, [bookingWindow, slotGranularityMinutes]);
-
-  const possibleEndOptionsFor = useCallback(
-    (start: dayjs.Dayjs) => {
-      return timeBoundaries
-        .filter(
-          (slot) =>
-            slot.isAfter(start) &&
-            slot.diff(start, "minute") >= minDurationMinutes &&
-            slot.diff(start, "minute") % slotGranularityMinutes === 0 &&
-            !hasOverlap(start, slot)
-        )
-        .map((slot) => ({
-          value: slot.toISOString(),
-          label: formatSlotLabel(slot, bookingDay),
-        }));
-    },
-    [bookingDay, hasOverlap, minDurationMinutes, slotGranularityMinutes, timeBoundaries]
-  );
-
-  const startOptions = useMemo(() => {
-    return timeBoundaries
-      .slice(0, -1)
-      .filter((slot) => possibleEndOptionsFor(slot).length > 0)
-      .map((slot) => ({
-        value: slot.toISOString(),
-        label: formatSlotLabel(slot, bookingDay),
-      }));
-  }, [bookingDay, possibleEndOptionsFor, timeBoundaries]);
-
-  const endOptions = useMemo(() => {
-    if (!startsAt) {
-      return [];
-    }
-
-    const selectedStart = dayjs(startsAt);
-
-    return possibleEndOptionsFor(selectedStart);
-  }, [startsAt, possibleEndOptionsFor]);
 
   const selectedDurationMinutes = useMemo(() => {
     if (!startsAt || !endsAt) {
@@ -374,30 +241,37 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     setIsGuestListDialogOpen(false);
   }, []);
 
+  // Ikke indøkere, kan kun sende forespørsler om det er aktivt, ellers sendes de vekk.
+  useEffect(() => {
+    if (!hasResolvedUser || !hasResolvedSettings) {
+      return;
+    }
+
+    if (!canCreateNonExternalBooking && !externalBookingsEnabled) {
+      router.replace("/janhus");
+    }
+  }, [canCreateNonExternalBooking, externalBookingsEnabled, hasResolvedSettings, hasResolvedUser, router]);
+
   useEffect(() => {
     if (!hasResolvedUser) {
       return;
     }
 
-    // if (!canCreateNonExternalBooking) {
-    //   if (ownerType !== "EXTERNAL") {
-    //     setOwnerType("EXTERNAL");
-    //   }
-    //   return;
-    // }
+    if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
+      setOwnerType("EXTERNAL");
+    }
   }, [canCreateNonExternalBooking, hasResolvedUser, ownerType]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && organizations.length === 0) {
-      setOwnerType("PERSONAL");
-      //setOwnerType(isAuthenticated ? "PERSONAL" : "EXTERNAL");
+      setOwnerType(canCreateNonExternalBooking ? "PERSONAL" : "EXTERNAL");
       return;
     }
 
     if (ownerType !== "ORGANIZATION" && organizationId) {
       setOrganizationId("");
     }
-  }, [isAuthenticated, organizationId, organizations, ownerType]);
+  }, [canCreateNonExternalBooking, organizationId, organizations, ownerType]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && !organizationId && organizations.length > 0) {
@@ -409,6 +283,18 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     setStartsAt("");
     setEndsAt("");
   }, [bookingDate, area]);
+
+  useEffect(() => {
+    if (!area && areas.length > 0) {
+      setArea(areas[0].id);
+    }
+  }, [area, areas]);
+
+  useEffect(() => {
+    if (eventType === "PRIVATE" && !privateBookingsEnabled) {
+      setEventType("INTERNAL");
+    }
+  }, [eventType, privateBookingsEnabled]);
 
   useEffect(() => {
     if (startsAt && !startOptions.some((option) => option.value === startsAt)) {
@@ -466,60 +352,64 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return true;
   }, [bookingDate, bookingSettings, endsAt, startsAt]);
 
+  const contactFieldErrors: ContactFieldErrors = useMemo(
+    () =>
+      validateContactFields({
+        requesterName,
+        requesterEmail,
+        requesterPhone,
+        hasDifferentResponsible,
+        responsibleName,
+        responsibleEmail,
+        responsiblePhone,
+        ownerType,
+        organizationId,
+      }),
+    [
+      hasDifferentResponsible,
+      organizationId,
+      ownerType,
+      requesterEmail,
+      requesterName,
+      requesterPhone,
+      responsibleEmail,
+      responsibleName,
+      responsiblePhone,
+    ]
+  );
+
   const validateContactStep = useCallback(() => {
-    if (!requesterName || !requesterEmail || !requesterPhone) {
-      setErrorMessage("Fyll ut bestillerinformasjon.");
+    if (Object.keys(contactFieldErrors).length > 0) {
+      setShowAllContactErrors(true);
+      setErrorMessage("Rett feltene som er markert i rødt.");
       return false;
     }
 
-    const normalizedRequesterPhone = normalizePhoneNumber(requesterPhone);
-    const normalizedResponsiblePhone = normalizePhoneNumber(
-      hasDifferentResponsible ? responsiblePhone : requesterPhone
-    );
+    setShowAllContactErrors(false);
 
-    if (!NORWEGIAN_PHONE_REGEX.test(normalizedRequesterPhone)) {
-      setErrorMessage("Telefon bestiller må være et gyldig norsk telefonnummer.");
+    if (eventType === "PRIVATE" && !privateBookingsEnabled) {
+      setErrorMessage("Private JanHus-bookinger er midlertidig deaktivert.");
       return false;
     }
 
-    if (hasDifferentResponsible && (!responsibleName || !responsibleEmail || !responsiblePhone)) {
-      setErrorMessage("Fyll ut ansvarliginformasjon når ansvarlig er en annen person.");
+    if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
+      setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
       return false;
     }
 
-    if (hasDifferentResponsible && !NORWEGIAN_PHONE_REGEX.test(normalizedResponsiblePhone)) {
-      setErrorMessage("Telefon ansvarlig må være et gyldig norsk telefonnummer.");
+    if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
+      setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
       return false;
     }
-
-    if (ownerType === "ORGANIZATION" && !organizationId) {
-      setErrorMessage("Velg forening for booking på vegne av forening.");
-      return false;
-    }
-
-    // if (!canCreateNonExternalBooking && ownerType !== "EXTERNAL") {
-    //   setErrorMessage("Kun Indøk-studenter kan sende interne eller personlige JanHus-bookinger.");
-    //   return false;
-    // }
-
-    // if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
-    //   setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
-    //   return false;
-    // }
 
     return true;
   }, [
-    // canCreateNonExternalBooking,
-    // externalBookingsEnabled,
-    hasDifferentResponsible,
-    organizationId,
+    canCreateNonExternalBooking,
+    contactFieldErrors,
+    externalBookingsEnabled,
+    eventType,
     ownerType,
-    requesterEmail,
-    requesterName,
-    requesterPhone,
-    responsibleEmail,
-    responsibleName,
-    responsiblePhone,
+    privateBookingsEnabled,
   ]);
 
   const validateContractStep = useCallback(() => {
@@ -572,8 +462,8 @@ const JanHusBookingPage: NextPageWithLayout = () => {
           responsibleName: resolvedResponsibleName,
           responsibleEmail: resolvedResponsibleEmail,
           responsiblePhone: normalizedResponsiblePhone,
-          eventType, //: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
-          cleaningRequested,
+          eventType: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
+          cleaningRequested: cleaningOptionEnabled && cleaningRequested,
           comment,
           guestList,
         },
@@ -581,6 +471,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     });
   }, [
     area,
+    cleaningOptionEnabled,
     cleaningRequested,
     comment,
     createBookingRequest,
@@ -629,41 +520,54 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     setActiveStep((prev) => prev + 1);
   }, [validateContractStep]);
 
-  const selectedAreaLabel = AREA_LABELS[area] ?? area;
+  const selectedAreaLabel = areas.find((candidate) => candidate.id === area)?.name ?? "";
 
   const areaOptions = useMemo(
-    () =>
-      areaConfigurations.length
-        ? areaConfigurations.map((configuration) => ({
-            value: configuration.area,
-            label: AREA_LABELS[configuration.area] ?? configuration.area,
-          }))
-        : [
-            { value: "FIRST_FLOOR", label: AREA_LABELS.FIRST_FLOOR },
-            { value: "SECOND_FLOOR", label: AREA_LABELS.SECOND_FLOOR },
-            { value: "ENTIRE_HOUSE", label: AREA_LABELS.ENTIRE_HOUSE },
-          ],
-    [areaConfigurations]
+    () => areas.map((candidate) => ({ value: candidate.id, label: candidate.name })),
+    [areas]
   );
 
   const eventTypeOptions = useMemo(
-    () => Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => ({ value, label })),
-    []
+    () =>
+      Object.entries(JANHUS_EVENT_TYPE_LABELS)
+        .filter(([value]) => value !== "EXTERNAL")
+        .filter(([value]) => value !== "PRIVATE" || privateBookingsEnabled)
+        .map(([value, label]) => ({ value, label })),
+    [privateBookingsEnabled]
   );
+
+  // Members without a leader (HR) role in any organization can only book PRIVATE.
+  const showPrivateBookingsDisabledNotice =
+    canCreateNonExternalBooking && !privateBookingsEnabled && organizations.length === 0;
 
   return (
     <>
       <Container>
         <Stack spacing={{ xs: 3, md: 5 }}>
           <Box display={{ xs: "none", md: "block" }}>
-            <Stepper activeStep={activeStep}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
+            <Stepper activeStep={activeStep} nonLinear>
+              {steps.map((label, index) => {
+                const isReceipt = index === steps.length - 1;
+                const canNavigate = !submittedBookingReference && !isReceipt;
+                return (
+                  <Step key={label} completed={!submittedBookingReference && activeStep > index}>
+                    {canNavigate ? (
+                      <StepButton onClick={() => setActiveStep(index)}>{label}</StepButton>
+                    ) : (
+                      <StepLabel>{label}</StepLabel>
+                    )}
+                  </Step>
+                );
+              })}
             </Stepper>
           </Box>
+
+          {showPrivateBookingsDisabledNotice ? (
+            <Alert severity="info">
+              Private bookinger er midlertidig deaktivert. Du kan fortsatt sende forespørsel om interne arrangementer og
+              arrangementer som er åpne for Indøk-studenter.
+            </Alert>
+          ) : null}
 
           {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
 
@@ -686,8 +590,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               organizations={organizations}
               canCreateNonExternalBooking={canCreateNonExternalBooking}
               externalBookingsEnabled={externalBookingsEnabled}
-              isAuthenticated={isAuthenticated}
-              isIndokStudent={isIndokStudent}
+              cleaningOptionEnabled={cleaningOptionEnabled}
               requesterName={requesterName}
               requesterEmail={requesterEmail}
               requesterPhone={requesterPhone}
@@ -704,7 +607,9 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               acceptedContractPlaceholder={acceptedContractPlaceholder}
               selectedAreaLabel={selectedAreaLabel}
               loading={loading}
-              submittedBookingRequestId={submittedBookingRequestId}
+              submittedBookingReference={submittedBookingReference}
+              contactFieldErrors={contactFieldErrors}
+              showAllContactErrors={showAllContactErrors}
               isBookingDateDisabled={isBookingDateDisabled}
               onAreaChange={setArea}
               onBookingDateChange={setBookingDate}

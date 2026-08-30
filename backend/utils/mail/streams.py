@@ -23,6 +23,7 @@ from django.core.mail import EmailMultiAlternatives
 TransactionalStream = Literal[
     "order-confirmations",
     "cabin-booking-confirmations",
+    "janhus-booking-confirmations",
     "wait-list-notifications",
     "event-updates",
 ]

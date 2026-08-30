@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from apps.janhus.models import (
-    JanHusAreaConfiguration,
+    JanHusArea,
     JanHusBooking,
     JanHusBookingLevel,
     JanHusBookingRequest,
@@ -15,6 +15,7 @@ from apps.janhus.models import (
 class JanHusBookingAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "reference",
         "starts_at",
         "ends_at",
         "area",
@@ -34,6 +35,7 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "is_external_booking",
     )
     search_fields = (
+        "reference",
         "responsible_name",
         "responsible_email",
         "booker_name",
@@ -45,6 +47,7 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "owner_organization",
         "booking_level",
         "created_by_user",
+        "area",
     )
 
 
@@ -67,7 +70,7 @@ class JanHusBookingRequestAdmin(admin.ModelAdmin):
         "responsible_name",
         "responsible_email",
     )
-    raw_id_fields = ("requester_user", "owner_organization", "converted_booking")
+    raw_id_fields = ("requester_user", "owner_organization", "converted_booking", "area")
 
 
 @admin.register(JanHusBookingLevel)
@@ -78,16 +81,14 @@ class JanHusBookingLevelAdmin(admin.ModelAdmin):
         "can_book_anytime",
         "can_create_provisional",
         "can_create_confirmed",
-        "can_override_lower_levels",
-        "can_edit_own_bookings_only",
-        "can_edit_all_bookings",
+        "can_challenge_provisionals",
         "booking_opens_weeks_before",
     )
     list_filter = (
         "can_book_anytime",
         "can_create_provisional",
         "can_create_confirmed",
-        "can_override_lower_levels",
+        "can_challenge_provisionals",
     )
     search_fields = ("name", "description")
 
@@ -123,15 +124,25 @@ class JanHusBookingSettingsAdmin(admin.ModelAdmin):
         "organization_booking_opens_weeks_before",
         "general_booking_opens_weeks_before",
         "external_bookings_enabled",
+        "private_bookings_enabled",
+        "cleaning_option_enabled",
+        "booking_contact_name",
+        "booking_contact_email",
+        "booking_contact_phone",
+        "payment_provider_organization",
     )
+    raw_id_fields = ("payment_provider_organization",)
 
 
-@admin.register(JanHusAreaConfiguration)
-class JanHusAreaConfigurationAdmin(admin.ModelAdmin):
+@admin.register(JanHusArea)
+class JanHusAreaAdmin(admin.ModelAdmin):
     list_display = (
-        "area",
+        "name",
+        "parent",
+        "is_active",
         "internal_price_per_hour",
         "external_price_per_hour",
         "cleaning_fee",
     )
-    list_filter = ("area",)
+    list_filter = ("is_active",)
+    search_fields = ("name",)

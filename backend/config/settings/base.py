@@ -152,6 +152,9 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "libraries": {
+                "email_branding": "utils.mail.branding",
+            },
         },
     }
 ]

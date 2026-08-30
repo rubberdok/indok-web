@@ -1,12 +1,18 @@
-query JanHusBookings($startsAt: DateTime, $endsAt: DateTime, $area: String) {
+query JanHusBookings($startsAt: DateTime, $endsAt: DateTime, $area: ID) {
   janhusBookings(startsAt: $startsAt, endsAt: $endsAt, area: $area) {
-    ...JanHusBooking
+    ...JanHusBookingAvailability
   }
 }
 
 query JanHusMyBookings {
   janhusMyBookings {
     ...JanHusBooking
+  }
+}
+
+query JanHusMyBookingRequests {
+  janhusMyBookingRequests {
+    ...JanHusBookingRequest
   }
 }
 
@@ -28,15 +34,22 @@ query AdminJanHusBookings($status: String) {
   }
 }
 
+query JanHusBookableOrganizations {
+  janhusBookableOrganizations {
+    id
+    name
+  }
+}
+
 query JanHusBookingSettings {
   janhusBookingSettings {
     ...JanHusBookingSettings
   }
 }
 
-query JanHusAreaConfigurations {
-  janhusAreaConfigurations {
-    ...JanHusAreaConfiguration
+query JanHusAreas($includeInactive: Boolean) {
+  janhusAreas(includeInactive: $includeInactive) {
+    ...JanHusArea
   }
 }
 

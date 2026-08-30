@@ -1,23 +1,21 @@
-//import { useQuery } from "@apollo/client/react";
+// import { useQuery } from "@apollo/client/react";
 import { ArrowForward } from "@mui/icons-material";
+// import { Alert } from "@mui/material";
 import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
-//import { Alert } from "@/mui/material";
 
 import { PermissionRequired } from "@/components/Auth";
 import { NextLinkComposed } from "@/components/Link";
 import { Title } from "@/components/Title";
-import { JanHusAreaConfigurationsDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
+import { JanHusAreasDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
   // const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
-  // const { data: areaData } = useQuery(JanHusAreaConfigurationsDocument);
-
   // const settings = settingsData?.janhusBookingSettings;
-  // const configuredAreaCount = areaData?.janhusAreaConfigurations?.length ?? 0;
+  // const { data: areaData } = useQuery(JanHusAreasDocument);
 
   return (
     <>
@@ -44,14 +42,7 @@ const JanHusPage: NextPageWithLayout = () => {
       <Container sx={{ py: 4 }}>
         <Stack spacing={3}>
           <Typography variant="h4">Book JanHus</Typography>
-          <Typography color="text.secondary">
-            Her kan du sende bookingforespørsler for 1. etasje, 2. etasje eller hele huset.
-          </Typography>
-
-          {/* <Alert severity="info">
-            Booking gjøres via eget skjema med dato og tidsintervall, mens admin håndterer godkjenning, priser og
-            oppsett.
-          </Alert> */}
+          <Typography color="text.secondary">Her kan du sende bookingforespørsler for JanHus.</Typography>
 
           {/* {settings ? (
             <Alert severity="success">
@@ -109,7 +100,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   await Promise.all([
     client.query({ query: JanHusBookingSettingsDocument }),
-    client.query({ query: JanHusAreaConfigurationsDocument }),
+    client.query({ query: JanHusAreasDocument }),
   ]);
 
   return addApolloState(client, {

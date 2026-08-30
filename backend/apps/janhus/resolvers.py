@@ -5,16 +5,18 @@ from graphql import GraphQLError
 from apps.permissions.constants import HR_TYPE
 
 from apps.janhus.models import (
+    JanHusArea,
     JanHusBooking,
     JanHusBookingRequest,
 )
 from apps.janhus.permissions import (
     can_edit_guest_list,
+    get_hr_organizations,
     get_user_email_candidates,
     normalize_phone_number,
 )
 from apps.janhus.rules import (
-    ensure_area_configurations,
+    ensure_default_areas,
     ensure_default_levels,
     get_or_create_settings,
     resolve_booking_level,
@@ -84,7 +86,7 @@ class JanHusResolvers:
         if kwargs.get("ends_at"):
             query = query.filter(starts_at__lte=kwargs.get("ends_at"))
         if kwargs.get("area"):
-            query = query.filter(area=kwargs.get("area"))
+            query = query.filter(area_id=kwargs.get("area"))
 
         return query
 
@@ -112,8 +114,40 @@ class JanHusResolvers:
         )
 
         return (
-            JanHusBooking.objects.exclude(status__in=["DECLINED", "CANCELLED"])
-            .filter(Q(owner_user=user) | organization_leader_filter | contact_filters)
+            JanHusBooking.objects.filter(
+                Q(owner_user=user) | organization_leader_filter | contact_filters
+            )
+            .distinct()
+            .order_by("-starts_at")
+        )
+
+    def resolve_janhus_my_booking_requests(self, info):
+        user = info.context.user
+        if not user or not user.is_authenticated:
+            return JanHusBookingRequest.objects.none()
+
+        contact_filters = Q(pk__in=[])
+
+        for email in {email for email in get_user_email_candidates(user) if email}:
+            contact_filters |= Q(requester_email__iexact=email)
+            contact_filters |= Q(responsible_email__iexact=email)
+
+        normalized_phone_number = normalize_phone_number(
+            getattr(user, "phone_number", "")
+        )
+        if normalized_phone_number:
+            contact_filters |= Q(requester_phone__icontains=normalized_phone_number)
+            contact_filters |= Q(responsible_phone__icontains=normalized_phone_number)
+
+        organization_leader_filter = Q(
+            owner_organization__members__user=user,
+            owner_organization__members__group__group_type=HR_TYPE,
+        )
+
+        return (
+            JanHusBookingRequest.objects.filter(
+                Q(requester_user=user) | organization_leader_filter | contact_filters
+            )
             .distinct()
             .order_by("-starts_at")
         )
@@ -148,11 +182,21 @@ class JanHusResolvers:
             query = query.filter(status=kwargs.get("status"))
         return query
 
+    def resolve_janhus_bookable_organizations(self, info):
+        """
+        Organizations the current user may book JanHus for, i.e. the ones
+        where they hold the HR ("leader") group.
+        """
+        return get_hr_organizations(info.context.user).order_by("name")
+
     def resolve_janhus_booking_settings(self, info):
         return get_or_create_settings()
 
-    def resolve_janhus_area_configurations(self, info):
-        return ensure_area_configurations()
+    def resolve_janhus_areas(self, include_inactive=False):
+        ensure_default_areas()
+        if include_inactive:
+            return JanHusArea.objects.all()
+        return JanHusArea.objects.filter(is_active=True)
 
     def resolve_janhus_booking_levels(self, info):
         settings = get_or_create_settings()

@@ -1,3 +1,4 @@
+import secrets
 from datetime import date
 from decimal import Decimal
 
@@ -8,10 +9,33 @@ from django.db import models
 from apps.organizations.models import Organization
 
 
-class JanHusArea(models.TextChoices):
-    FIRST_FLOOR = "FIRST_FLOOR", "1st floor"
-    SECOND_FLOOR = "SECOND_FLOOR", "2nd floor"
-    ENTIRE_HOUSE = "ENTIRE_HOUSE", "Entire house"
+BOOKING_REFERENCE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"
+BOOKING_REFERENCE_LENGTH = 8
+
+
+def generate_unique_booking_reference() -> str:
+    """
+    A reference that is free in both tables, so a request and an unrelated booking
+    can never show the same code to two different people. A request that converts
+    into a booking deliberately keeps its own reference, which is why the check
+    only runs when a reference is being generated.
+    """
+    while True:
+        reference = generate_booking_reference()
+        taken = (
+            JanHusBooking.objects.filter(reference=reference).exists()
+            or JanHusBookingRequest.objects.filter(reference=reference).exists()
+        )
+        if not taken:
+            return reference
+
+
+def generate_booking_reference() -> str:
+    body = "".join(
+        secrets.choice(BOOKING_REFERENCE_ALPHABET)
+        for _ in range(BOOKING_REFERENCE_LENGTH)
+    )
+    return f"JH-{body[:4]}-{body[4:]}"
 
 
 class JanHusBookingStatus(models.TextChoices):
@@ -58,9 +82,7 @@ class JanHusBookingLevel(models.Model):
     can_book_anytime = models.BooleanField(default=False)
     can_create_provisional = models.BooleanField(default=False)
     can_create_confirmed = models.BooleanField(default=True)
-    can_override_lower_levels = models.BooleanField(default=False)
-    can_edit_own_bookings_only = models.BooleanField(default=True)
-    can_edit_all_bookings = models.BooleanField(default=False)
+    can_challenge_provisionals = models.BooleanField(default=False)
 
     booking_opens_weeks_before = models.PositiveIntegerField(
         null=True,
@@ -70,6 +92,8 @@ class JanHusBookingLevel(models.Model):
 
     class Meta:
         ordering = ["-priority", "name"]
+        verbose_name = "JanHus booking level"
+        verbose_name_plural = "JanHus booking levels"
 
     def __str__(self):
         return self.name
@@ -138,6 +162,22 @@ class JanHusBookingSettings(models.Model):
     spring_semester_active = models.BooleanField(default=True)
 
     external_bookings_enabled = models.BooleanField(default=True)
+    private_bookings_enabled = models.BooleanField(default=True)
+    cleaning_option_enabled = models.BooleanField(default=True)
+
+    booking_contact_name = models.CharField(max_length=200, blank=True, default="")
+    booking_contact_email = models.EmailField(blank=True, default="")
+    booking_contact_phone = models.CharField(max_length=32, blank=True, default="")
+
+    # The organization credited as the seller of JanHus payment products.
+    # Set by a Django admin.
+    payment_provider_organization = models.ForeignKey(
+        "organizations.Organization",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="janhus_payment_settings",
+    )
 
     class Meta:
         verbose_name = "JanHus booking settings"
@@ -152,6 +192,10 @@ class JanHusBookingSettings(models.Model):
             raise ValidationError(
                 "Minimum duration must be divisible by slot granularity"
             )
+        if self.buffer_minutes % self.slot_granularity_minutes != 0:
+            raise ValidationError(
+                "Buffer between bookings must be divisible by slot granularity"
+            )
         if self.opening_hour > 23 or self.closing_hour > 23:
             raise ValidationError("Opening and closing hour must be between 0 and 23")
         if self.fall_end_date < self.fall_start_date:
@@ -163,8 +207,17 @@ class JanHusBookingSettings(models.Model):
         return "JanHus booking settings"
 
 
-class JanHusAreaConfiguration(models.Model):
-    area = models.CharField(max_length=32, choices=JanHusArea.choices, unique=True)
+class JanHusArea(models.Model):
+    """
+    A bookable area. Areas can be nested (e.g. "Entire house" contains "1st floor"),
+    conflicts_with a booking of any ancestor or descendant area.
+    """
+
+    name = models.CharField(max_length=100, unique=True)
+    parent = models.ForeignKey(
+        "self", on_delete=models.PROTECT, null=True, blank=True, related_name="children"
+    )
+    is_active = models.BooleanField(default=True)
 
     internal_price_per_hour = models.DecimalField(
         max_digits=10, decimal_places=2, default=Decimal("0")
@@ -180,24 +233,49 @@ class JanHusAreaConfiguration(models.Model):
     )
 
     class Meta:
-        ordering = ["area"]
+        ordering = ["name"]
+        verbose_name = "JanHus area"
+        verbose_name_plural = "JanHus areas"
 
     def __str__(self):
-        return f"{self.get_area_display()} configuration"
+        return self.name
+
+    @property
+    def conflicting_area_ids(self) -> list:
+        ids = {self.id}
+        node = self.parent
+        while node is not None:
+            ids.add(node.id)
+            node = node.parent
+        ids.update(self._descendant_ids())
+        return sorted(ids)
+
+    def _descendant_ids(self) -> set:
+        ids = set()
+        for child in self.children.all():
+            ids.add(child.id)
+            ids.update(child._descendant_ids())
+        return ids
 
 
 class JanHusBooking(models.Model):
     class Meta:
         ordering = ["starts_at"]
+        verbose_name = "JanHus booking"
+        verbose_name_plural = "JanHus bookings"
         permissions = [
             ("manage_booking", "Can manage JanHus bookings"),
             ("manage_settings", "Can manage JanHus booking settings"),
             ("review_booking", "Can review JanHus bookings"),
         ]
 
+    reference = models.CharField(
+        max_length=16, unique=True, blank=True, editable=False, default=""
+    )
+
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
-    area = models.CharField(max_length=32, choices=JanHusArea.choices)
+    area = models.ForeignKey(JanHusArea, on_delete=models.PROTECT, related_name="bookings")
 
     status = models.CharField(
         max_length=32,
@@ -258,6 +336,18 @@ class JanHusBooking(models.Model):
         max_digits=10, decimal_places=2, default=Decimal("0")
     )
 
+    # Admin overrides for pricing; price_override_amount takes precedence over price_override_tier
+    price_override_tier = models.CharField(
+        max_length=16,
+        choices=[("INTERNAL", "Internal"), ("EXTERNAL", "External")],
+        blank=True,
+        default="",
+    )
+    price_override_amount = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    manually_marked_as_paid = models.BooleanField(default=False)
+
     comment = models.TextField(blank=True, default="")
     admin_comment = models.TextField(blank=True, default="")
 
@@ -285,6 +375,11 @@ class JanHusBooking(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.reference:
+            self.reference = generate_unique_booking_reference()
+        return super().save(*args, **kwargs)
 
     def clean(self):
         if self.starts_at and self.ends_at and self.starts_at >= self.ends_at:
@@ -317,24 +412,28 @@ class JanHusBooking(models.Model):
 
     @property
     def uses_external_pricing(self) -> bool:
+        if self.price_override_tier:
+            return self.price_override_tier == "EXTERNAL"
         return self.is_external_booking or self.event_type == JanHusEventType.EXTERNAL
 
     @property
     def total_price(self) -> Decimal:
-        config = JanHusAreaConfiguration.objects.filter(area=self.area).first()
-        if not config:
+        if self.price_override_amount is not None:
+            return self.price_override_amount
+
+        if not self.area_id:
             return Decimal("0")
 
         duration = Decimal(self.duration_minutes)
         hourly_price = (
-            config.external_price_per_hour
+            self.area.external_price_per_hour
             if self.uses_external_pricing
-            else config.internal_price_per_hour
+            else self.area.internal_price_per_hour
         )
         base_price = (hourly_price * duration) / Decimal("60")
 
         if self.cleaning_requested:
-            base_price += config.cleaning_fee
+            base_price += self.area.cleaning_fee
 
         return base_price
 
@@ -366,9 +465,15 @@ class JanHusBookingRequest(models.Model):
         APPROVED = "APPROVED", "Approved"
         REJECTED = "REJECTED", "Rejected"
 
+    reference = models.CharField(
+        max_length=16, unique=True, blank=True, editable=False, default=""
+    )
+
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
-    area = models.CharField(max_length=32, choices=JanHusArea.choices)
+    area = models.ForeignKey(
+        JanHusArea, on_delete=models.PROTECT, related_name="booking_requests"
+    )
 
     requester_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -418,6 +523,13 @@ class JanHusBookingRequest(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name = "JanHus booking request"
+        verbose_name_plural = "JanHus booking requests"
+
+    def save(self, *args, **kwargs):
+        if not self.reference:
+            self.reference = generate_unique_booking_reference()
+        return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"JanHus request {self.id} ({self.status})"
+        return f"JanHus request {self.reference or self.id} ({self.status})"

@@ -1,0 +1,19 @@
+{% comment %}
+Shared sign-off for the JanHus emails that go to bookers, mirroring the
+signature block in the cabins user templates. Values come from
+JanHusBookingSettings (booking_contact_*), set by a Django admin; each line is
+skipped when it has not been filled in.
+
+Not used by the admin notification: like the cabins admin template, that one
+signs off from Rubberdøk instead.
+
+Keep each {{ }} on a single line - Django does not allow a variable tag to span
+line breaks.
+{% endcomment %}
+<p>Ikke nøl med å ta kontakt hvis dere skulle ha spørsmål.</p>
+<p>Med vennlig hilsen,</p>
+<p>
+  {% if contact_name %}{{ contact_name }} <br />{% endif %}Bookingansvarlig JanHus, <br />Janus Eiendom
+  <br />{{ contact_email }}{% if contact_phone %} / tlf. {{ contact_phone }}{% endif %}
+  <br /><a href="https://indokntnu.no/janhus">https://indokntnu.no/janhus</a>
+</p>

@@ -5,17 +5,19 @@ from apps.janhus.mutations import (
     CreateJanHusBooking,
     CreateJanHusBookingRequest,
     CreateJanHusPaymentProduct,
+    DeleteJanHusArea,
     DeleteJanHusBooking,
     DeleteJanHusBookingRequest,
     ReviewJanHusBooking,
     ReviewJanHusBookingRequest,
-    UpdateJanHusAreaConfiguration,
+    UpdateJanHusArea,
     UpdateJanHusBooking,
     UpdateJanHusBookingSettings,
 )
 from apps.janhus.resolvers import JanHusResolvers
+from apps.organizations.types import OrganizationType
 from apps.janhus.types import (
-    JanHusAreaConfigurationType,
+    JanHusAreaType,
     JanHusBookingLevelType,
     JanHusBookingRequestType,
     JanHusBookingSettingsType,
@@ -35,7 +37,8 @@ class JanHusMutations(graphene.ObjectType):
     delete_janhus_booking_request = DeleteJanHusBookingRequest.Field()
 
     update_janhus_booking_settings = UpdateJanHusBookingSettings.Field()
-    update_janhus_area_configuration = UpdateJanHusAreaConfiguration.Field()
+    update_janhus_area = UpdateJanHusArea.Field()
+    delete_janhus_area = DeleteJanHusArea.Field()
 
     create_janhus_payment_product = CreateJanHusPaymentProduct.Field()
 
@@ -45,9 +48,10 @@ class JanHusQueries(graphene.ObjectType, JanHusResolvers):
         NonNull(JanHusBookingType),
         starts_at=graphene.DateTime(required=False),
         ends_at=graphene.DateTime(required=False),
-        area=graphene.String(required=False),
+        area=graphene.ID(required=False),
     )
     janhus_my_bookings = graphene.List(NonNull(JanHusBookingType))
+    janhus_my_booking_requests = graphene.List(NonNull(JanHusBookingRequestType))
     janhus_guest_search = graphene.List(
         NonNull(JanHusGuestListEntryType),
         booking_id=graphene.ID(required=True),
@@ -64,8 +68,12 @@ class JanHusQueries(graphene.ObjectType, JanHusResolvers):
         status=graphene.String(required=False),
     )
 
+    janhus_bookable_organizations = graphene.List(NonNull(OrganizationType))
+
     janhus_booking_settings = graphene.Field(JanHusBookingSettingsType)
-    janhus_area_configurations = graphene.List(NonNull(JanHusAreaConfigurationType))
+    janhus_areas = graphene.List(
+        NonNull(JanHusAreaType), include_inactive=graphene.Boolean(required=False)
+    )
 
     janhus_booking_levels = graphene.List(NonNull(JanHusBookingLevelType))
     janhus_my_booking_level = graphene.Field(JanHusBookingLevelType)

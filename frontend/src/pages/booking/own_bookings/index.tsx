@@ -1,5 +1,9 @@
 import { useMutation, useQuery } from "@apollo/client/react";
+import { ExpandMore } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   Box,
   Button,
@@ -22,8 +26,24 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
 import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
+import {
+  BOOKING_STATUS_LABELS,
+  DEPOSIT_STATUS_LABELS,
+  JANHUS_EVENT_TYPE_LABELS,
+  REQUEST_STATUS_LABELS,
+} from "@/components/pages/janhus/constants";
 import { GuestListDialog, JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
 import {
+  formatDate,
+  formatTime,
+  isClosedBooking,
+  isPast,
+  serializeGuestListForUpdate,
+  statusColor,
+  statusLabel,
+} from "@/components/pages/janhus/helpers";
+import {
+  JanHusMyBookingRequestsDocument,
   JanHusMyBookingsDocument,
   MyCabinBookingsDocument,
   PaymentStatus,
@@ -33,49 +53,13 @@ import {
 } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
-
-const AREA_LABELS: Record<string, string> = {
-  FIRST_FLOOR: "1. etasje",
-  SECOND_FLOOR: "2. etasje",
-  ENTIRE_HOUSE: "Hele huset",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  PROVISIONAL: "Foreløpig",
-  PENDING_ADMIN_REVIEW: "Venter behandling",
-  CONFIRMED: "Godkjent",
-  DECLINED: "Avslått",
-  CANCELLED: "Kansellert",
-  BLOCKED: "Blokkert",
-};
-
-const DEPOSIT_STATUS_LABELS: Record<string, string> = {
-  NOT_REQUIRED: "Ikke nødvendig",
-  REQUIRED: "Påkrevd",
-  REQUESTED: "Etterspurt",
-  PAID: "Betalt",
-  REFUNDED: "Refundert",
-  WITHHELD: "Holdt tilbake",
-};
-
-const EVENT_TYPE_LABELS: Record<string, string> = {
-  INTERNAL: "Intern",
-  OPEN_FOR_INDOK: "Åpent for Indøk",
-  PRIVATE: "Privat",
-  EXTERNAL: "Ekstern",
-};
 
 const DOOR_ACCESS_POLICY_LABELS: Record<string, string> = {
   BOOKER_ONLY: "Kun bestiller",
   ALL_PARTICIPANTS: "Bestiller + gjesteliste",
 };
 
-const MANUAL_ENTRY_PREFIX = "manual:";
-
-const formatDate = (dateTime: string) => dayjs(dateTime).format("DD.MM.YYYY");
-const formatTime = (dateTime: string) => dayjs(dateTime).format("HH:mm");
 const formatNok = (amount: number | null | undefined) =>
   new Intl.NumberFormat("nb-NO", {
     style: "currency",
@@ -83,40 +67,6 @@ const formatNok = (amount: number | null | undefined) =>
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(Number(amount ?? 0));
-
-const serializeGuestListForUpdate = (guests: JanHusGuestListEntry[]) => {
-  const normalizedGuests = guests
-    .map((guest) => {
-      const displayName = guest.displayName.trim();
-      const feideUserId = guest.feideUserId.trim();
-
-      if (!displayName) {
-        return null;
-      }
-
-      const isManualEntry = feideUserId.startsWith(MANUAL_ENTRY_PREFIX) || feideUserId === displayName;
-      return isManualEntry ? displayName : feideUserId;
-    })
-    .filter((value): value is string => Boolean(value));
-
-  return JSON.stringify(normalizedGuests);
-};
-
-const statusChipColor = (status: string): "default" | "success" | "warning" | "error" | "info" => {
-  if (status === "CONFIRMED") {
-    return "success";
-  }
-  if (status === "PENDING_ADMIN_REVIEW" || status === "PROVISIONAL") {
-    return "warning";
-  }
-  if (status === "DECLINED" || status === "CANCELLED") {
-    return "error";
-  }
-  if (status === "BLOCKED") {
-    return "info";
-  }
-  return "default";
-};
 
 const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
@@ -129,11 +79,59 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
   const [activeGuestListBookingId, setActiveGuestListBookingId] = useState<string | undefined>();
 
   const { data: janhusData, loading: janhusLoading, error: janhusError } = useQuery(JanHusMyBookingsDocument);
+  const { data: janhusRequestData } = useQuery(JanHusMyBookingRequestsDocument);
   const { data: cabinsData, loading: cabinsLoading, error: cabinsError } = useQuery(MyCabinBookingsDocument);
   const { data: ordersData, loading: ordersLoading } = useQuery(UserOrdersDocument);
   const [updateBooking] = useMutation(UpdateJanhusBookingDocument);
 
   const janhusBookings = useMemo(() => janhusData?.janhusMyBookings ?? [], [janhusData]);
+
+  const confirmedBookings = useMemo(
+    () => janhusBookings.filter((booking) => booking.status === "CONFIRMED" && !isClosedBooking(booking)),
+    [janhusBookings]
+  );
+  const pendingBookings = useMemo(
+    () => janhusBookings.filter((booking) => booking.status !== "CONFIRMED" && !isClosedBooking(booking)),
+    [janhusBookings]
+  );
+  const archivedBookings = useMemo(() => janhusBookings.filter(isClosedBooking), [janhusBookings]);
+
+  const archivedRequests = useMemo(
+    () =>
+      (janhusRequestData?.janhusMyBookingRequests ?? []).filter(
+        (request) => request.status === "REJECTED" || isPast(request.endsAt)
+      ),
+    [janhusRequestData]
+  );
+
+  const archivedEntries = useMemo(
+    () =>
+      [
+        ...archivedBookings.map((booking) => ({
+          kind: "Booking" as const,
+          id: `booking-${booking.id}`,
+          startsAt: booking.startsAt,
+          endsAt: booking.endsAt,
+          areaName: booking.area.name,
+          reference: booking.reference,
+          adminComment: booking.adminComment,
+          chip: statusLabel(booking, BOOKING_STATUS_LABELS),
+          color: statusColor(booking),
+        })),
+        ...archivedRequests.map((request) => ({
+          kind: "Forespørsel" as const,
+          id: `request-${request.id}`,
+          startsAt: request.startsAt,
+          endsAt: request.endsAt,
+          areaName: request.area.name,
+          reference: request.reference,
+          adminComment: request.adminComment,
+          chip: statusLabel(request, REQUEST_STATUS_LABELS),
+          color: statusColor(request),
+        })),
+      ].sort((a, b) => new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()),
+    [archivedBookings, archivedRequests]
+  );
   const cabinBookings = useMemo(() => cabinsData?.myCabinBookings ?? [], [cabinsData]);
 
   const orderByProductId = useMemo(() => {
@@ -230,214 +228,279 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
 
                   <Alert severity="info">
                     Trenger du mer informasjon om en booking eller betaling? Kontakt Janus Eiendom og oppgi
-                    bookingreferansen (ID).
+                    bookingreferansen.
                   </Alert>
 
                   {janhusBookings.length === 0 ? (
                     <Typography color="text.secondary">Ingen JanHus-bookinger funnet.</Typography>
                   ) : (
-                    <Grid
-                      container
-                      spacing={2}
-                      justifyContent="center"
-                      alignItems="flex-start"
-                      sx={{ width: "100%", m: 0 }}
-                    >
-                      {janhusBookings.map((booking) => {
-                        const productId = booking.vippsProduct?.id;
-                        const linkedOrder =
-                          booking.vippsOrder ?? (productId ? orderByProductId.get(productId) : undefined);
-                        const isPaid =
-                          linkedOrder?.paymentStatus === PaymentStatus.Captured ||
-                          linkedOrder?.paymentStatus === PaymentStatus.Reserved;
+                    (() => {
+                      const renderGrid = (list: typeof janhusBookings) => (
+                        <Grid
+                          container
+                          spacing={2}
+                          justifyContent="center"
+                          alignItems="flex-start"
+                          sx={{ width: "100%", m: 0 }}
+                        >
+                          {list.map((booking) => {
+                            const productId = booking.vippsProduct?.id;
+                            const linkedOrder =
+                              booking.vippsOrder ?? (productId ? orderByProductId.get(productId) : undefined);
+                            const isPaid =
+                              linkedOrder?.paymentStatus === PaymentStatus.Captured ||
+                              linkedOrder?.paymentStatus === PaymentStatus.Reserved;
 
-                        const isOrganizationBooking = Boolean(booking.ownerOrganization);
+                            const isOrganizationBooking = Boolean(booking.ownerOrganization);
 
-                        const rentalPrice = Number(booking.totalPrice ?? 0);
-                        const registeredDeposit = Number(booking.depositAmount ?? 0);
-                        const outstandingDeposit = Number(booking.outstandingDepositAmount ?? 0);
-                        const configuredVippsAmount = Number(booking.vippsProduct?.price ?? 0);
-                        const fullPaymentAmount = rentalPrice + registeredDeposit;
-                        const payableAmount = isOrganizationBooking
-                          ? 0
-                          : configuredVippsAmount > 0
-                            ? configuredVippsAmount
-                            : fullPaymentAmount;
-                        const guestEntries = guestListEdits[booking.id] ?? [];
+                            const rentalPrice = Number(booking.totalPrice ?? 0);
+                            const registeredDeposit = Number(booking.depositAmount ?? 0);
+                            const configuredVippsAmount = Number(booking.vippsProduct?.price ?? 0);
+                            const fullPaymentAmount = rentalPrice + registeredDeposit;
+                            const payableAmount = isOrganizationBooking
+                              ? 0
+                              : configuredVippsAmount > 0
+                                ? configuredVippsAmount
+                                : fullPaymentAmount;
+                            const guestEntries = guestListEdits[booking.id] ?? [];
 
-                        const bookerName =
-                          booking.bookerName ||
-                          `${booking.ownerUser?.firstName ?? ""} ${booking.ownerUser?.lastName ?? ""}`.trim();
-                        const bookerEmail = booking.bookerEmail || "-";
-                        const bookerPhone = booking.bookerPhone || "-";
-                        const bookerSignature = `${bookerName}|${bookerEmail}|${bookerPhone}`;
-                        const responsibleSignature = `${booking.responsibleName}|${booking.responsibleEmail}|${booking.responsiblePhone}`;
-                        const showResponsibleContact =
-                          responsibleSignature.toLowerCase() !== bookerSignature.toLowerCase();
+                            const bookerName =
+                              booking.bookerName ||
+                              `${booking.ownerUser?.firstName ?? ""} ${booking.ownerUser?.lastName ?? ""}`.trim();
+                            const bookerEmail = booking.bookerEmail || "-";
+                            const bookerPhone = booking.bookerPhone || "-";
+                            const bookerSignature = `${bookerName}|${bookerEmail}|${bookerPhone}`;
+                            const responsibleSignature = `${booking.responsibleName}|${booking.responsibleEmail}|${booking.responsiblePhone}`;
+                            const showResponsibleContact =
+                              responsibleSignature.toLowerCase() !== bookerSignature.toLowerCase();
 
-                        return (
-                          <Grid
-                            item
-                            xs={12}
-                            md={6}
-                            key={booking.id}
-                            sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
-                          >
-                            <Card
-                              variant="outlined"
-                              elevation={0}
-                              sx={{ width: "100%", display: "flex", flexDirection: "column" }}
-                            >
-                              <CardContent sx={{ width: "100%", p: 2.5, "&:last-child": { pb: 2.5 } }}>
-                                <Stack spacing={1.5}>
-                                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-                                    <Box>
-                                      <Typography variant="overline" color="text.secondary">
-                                        {formatDate(booking.startsAt)}
+                            return (
+                              <Grid
+                                item
+                                xs={12}
+                                md={6}
+                                key={booking.id}
+                                sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
+                              >
+                                <Card
+                                  variant="outlined"
+                                  elevation={0}
+                                  sx={{ width: "100%", display: "flex", flexDirection: "column" }}
+                                >
+                                  <CardContent sx={{ width: "100%", p: 2.5, "&:last-child": { pb: 2.5 } }}>
+                                    <Stack spacing={1.5}>
+                                      <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                                        <Box>
+                                          <Typography variant="overline" color="text.secondary">
+                                            {formatDate(booking.startsAt)}
+                                          </Typography>
+                                          <Typography variant="h6">
+                                            {formatTime(booking.startsAt)}–{formatTime(booking.endsAt)}
+                                          </Typography>
+                                          <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
+                                            {booking.reference}
+                                          </Typography>
+                                        </Box>
+                                        <Chip
+                                          size="small"
+                                          color={statusColor(booking)}
+                                          label={statusLabel(booking, BOOKING_STATUS_LABELS)}
+                                        />
+                                      </Stack>
+
+                                      <Typography variant="body2">{booking.area.name}</Typography>
+
+                                      <Typography variant="body2" color="text.secondary">
+                                        Forening: {booking.ownerOrganization?.name ?? "Ingen"}
                                       </Typography>
-                                      <Typography variant="h6">
-                                        {formatTime(booking.startsAt)}–{formatTime(booking.endsAt)}
+                                      <Typography variant="body2" color="text.secondary">
+                                        Arrangementstype:{" "}
+                                        {JANHUS_EVENT_TYPE_LABELS[booking.eventType] ?? booking.eventType}
                                       </Typography>
-                                    </Box>
-                                    <Chip
-                                      size="small"
-                                      color={statusChipColor(booking.status)}
-                                      label={STATUS_LABELS[booking.status] ?? booking.status}
-                                    />
-                                  </Stack>
-
-                                  <Typography variant="body2">
-                                    {AREA_LABELS[booking.area] ?? booking.area} ·{" "}
-                                    {booking.cleaningRequested ? "Med" : "Uten"} innleid renhold
-                                  </Typography>
-
-                                  <Typography variant="body2" color="text.secondary">
-                                    Forening: {booking.ownerOrganization?.name ?? "Ingen"}
-                                  </Typography>
-                                  <Typography variant="body2" color="text.secondary">
-                                    Arrangementstype: {EVENT_TYPE_LABELS[booking.eventType] ?? booking.eventType}
-                                  </Typography>
-                                  <Typography variant="body2" color="text.secondary">
-                                    Status: {STATUS_LABELS[booking.status] ?? booking.status}
-                                  </Typography>
-                                  <Typography variant="body2" color="text.secondary">
-                                    Bestiller: {bookerName || "-"} ({bookerEmail}, {bookerPhone})
-                                  </Typography>
-                                  {showResponsibleContact ? (
-                                    <Typography variant="body2" color="text.secondary">
-                                      Ansvarlig: {booking.responsibleName} ({booking.responsibleEmail},{" "}
-                                      {booking.responsiblePhone})
-                                    </Typography>
-                                  ) : null}
-
-                                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                                    <Chip
-                                      size="small"
-                                      variant="outlined"
-                                      label={`Depositumstatus: ${DEPOSIT_STATUS_LABELS[booking.depositStatus] ?? booking.depositStatus}`}
-                                    />
-                                    <Chip
-                                      size="small"
-                                      variant="outlined"
-                                      color={isPaid ? "success" : "default"}
-                                      label={`Betaling: ${isPaid ? "Betalt" : (linkedOrder?.paymentStatus ?? "Ikke betalt")}`}
-                                    />
-                                    <Chip
-                                      size="small"
-                                      variant="outlined"
-                                      label={`Åpningspolicy: ${DOOR_ACCESS_POLICY_LABELS[booking.doorAccessPolicy] ?? booking.doorAccessPolicy}`}
-                                    />
-                                  </Stack>
-
-                                  <Box
-                                    sx={{
-                                      display: "grid",
-                                      gridTemplateColumns: "1fr auto",
-                                      columnGap: 2,
-                                      rowGap: 0.5,
-                                    }}
-                                  >
-                                    <Typography variant="body2" color="text.secondary">
-                                      Leiepris
-                                    </Typography>
-                                    <Typography variant="body2">{formatNok(rentalPrice)}</Typography>
-
-                                    <Typography variant="body2" color="text.secondary">
-                                      Registrert depositum
-                                    </Typography>
-                                    <Typography variant="body2">{formatNok(registeredDeposit)}</Typography>
-
-                                    <Typography variant="body2" color="text.secondary">
-                                      Utestående depositum
-                                    </Typography>
-                                    <Typography variant="body2">{formatNok(outstandingDeposit)}</Typography>
-
-                                    <Typography variant="subtitle2">Sum å betale</Typography>
-                                    <Typography variant="subtitle2">{formatNok(payableAmount)}</Typography>
-                                  </Box>
-
-                                  <Typography variant="body2" color="text.secondary">
-                                    Gjesteliste: {guestEntries.length} registrert
-                                  </Typography>
-                                  {guestEntries.length ? (
-                                    <Typography variant="caption" color="text.secondary">
-                                      {guestEntries.map((guest) => guest.displayName).join(", ")}
-                                    </Typography>
-                                  ) : null}
-                                  <Stack direction="row" spacing={1} alignItems="center">
-                                    <Button
-                                      size="small"
-                                      variant="outlined"
-                                      onClick={() => setActiveGuestListBookingId(booking.id)}
-                                      disabled={savingGuestListBookingId === booking.id}
-                                    >
-                                      Rediger gjesteliste
-                                    </Button>
-                                  </Stack>
-
-                                  {isOrganizationBooking ? (
-                                    <Alert severity="info">
-                                      Denne bookingen er gjort på vegne av forening. Kostnad håndteres internt.
-                                    </Alert>
-                                  ) : null}
-
-                                  {productId && !isOrganizationBooking ? (
-                                    configuredVippsAmount > 0 ? (
-                                      <PayWithVipps
-                                        productId={productId}
-                                        quantity={1}
-                                        disabled={Boolean(isPaid)}
-                                        fallbackRedirect="/booking/own_bookings"
-                                        onError={(apolloError) =>
-                                          setPaymentError(
-                                            apolloError?.message ??
-                                              "Kunne ikke opprette Vipps-betaling. Sjekk bookingpris/depositum og prøv igjen."
-                                          )
-                                        }
-                                      />
-                                    ) : (
-                                      <Typography variant="caption" color="warning.main">
-                                        Vipps-produktet står med 0 kr. Kontakt Janus Eiendom for å oppdatere depositum.
+                                      <Typography variant="body2" color="text.secondary">
+                                        Status: {BOOKING_STATUS_LABELS[booking.status] ?? booking.status}
                                       </Typography>
-                                    )
-                                  ) : (
-                                    <Typography variant="body2" color="text.secondary">
-                                      {isOrganizationBooking
-                                        ? "Ingen Vipps-betaling for foreningsbooking"
-                                        : "Ingen Vipps-forespørsel ennå"}
-                                    </Typography>
-                                  )}
+                                      <Typography variant="body2" color="text.secondary">
+                                        Bestiller: {bookerName || "-"} ({bookerEmail}, {bookerPhone})
+                                      </Typography>
+                                      {showResponsibleContact ? (
+                                        <Typography variant="body2" color="text.secondary">
+                                          Ansvarlig: {booking.responsibleName} ({booking.responsibleEmail},{" "}
+                                          {booking.responsiblePhone})
+                                        </Typography>
+                                      ) : null}
 
-                                  <Typography variant="caption" color="text.secondary">
-                                    Bookingreferanse (ID): #{booking.id}
-                                  </Typography>
+                                      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                                        <Chip
+                                          size="small"
+                                          variant="outlined"
+                                          label={`Depositumstatus: ${DEPOSIT_STATUS_LABELS[booking.depositStatus] ?? booking.depositStatus}`}
+                                        />
+                                        <Chip
+                                          size="small"
+                                          variant="outlined"
+                                          color={isPaid ? "success" : "default"}
+                                          label={`Betaling: ${isPaid ? "Betalt" : (linkedOrder?.paymentStatus ?? "Ikke betalt")}`}
+                                        />
+                                        <Chip
+                                          size="small"
+                                          variant="outlined"
+                                          label={`Åpningspolicy: ${DOOR_ACCESS_POLICY_LABELS[booking.doorAccessPolicy] ?? booking.doorAccessPolicy}`}
+                                        />
+                                      </Stack>
+
+                                      <Box
+                                        sx={{
+                                          display: "grid",
+                                          gridTemplateColumns: "1fr auto",
+                                          columnGap: 2,
+                                          rowGap: 0.5,
+                                        }}
+                                      >
+                                        <Typography variant="body2" color="text.secondary">
+                                          Leiepris
+                                        </Typography>
+                                        <Typography variant="body2">{formatNok(rentalPrice)}</Typography>
+
+                                        <Typography variant="body2" color="text.secondary">
+                                          Depositum
+                                        </Typography>
+                                        <Typography variant="body2">{formatNok(registeredDeposit)}</Typography>
+
+                                        <Typography variant="subtitle2">Sum å betale</Typography>
+                                        <Typography variant="subtitle2">{formatNok(payableAmount)}</Typography>
+                                      </Box>
+
+                                      <Typography variant="body2" color="text.secondary">
+                                        Gjesteliste: {guestEntries.length} registrert
+                                      </Typography>
+                                      {guestEntries.length ? (
+                                        <Typography variant="caption" color="text.secondary">
+                                          {guestEntries.map((guest) => guest.displayName).join(", ")}
+                                        </Typography>
+                                      ) : null}
+                                      <Stack direction="row" spacing={1} alignItems="center">
+                                        <Button
+                                          size="small"
+                                          variant="outlined"
+                                          onClick={() => setActiveGuestListBookingId(booking.id)}
+                                          disabled={savingGuestListBookingId === booking.id}
+                                        >
+                                          Rediger gjesteliste
+                                        </Button>
+                                      </Stack>
+                                      {booking.comment && (
+                                        <Typography variant="body2" color="text.secondary">
+                                          Din kommentar: {booking.comment}
+                                        </Typography>
+                                      )}
+                                      {isOrganizationBooking ? (
+                                        <Alert severity="info">
+                                          Denne bookingen er gjort på vegne av forening. Kostnad håndteres internt.
+                                        </Alert>
+                                      ) : null}
+
+                                      {productId && !isOrganizationBooking ? (
+                                        configuredVippsAmount > 0 ? (
+                                          <PayWithVipps
+                                            productId={productId}
+                                            quantity={1}
+                                            disabled={Boolean(isPaid)}
+                                            fallbackRedirect="/booking/own_bookings"
+                                            onError={(apolloError) =>
+                                              setPaymentError(
+                                                apolloError?.message ??
+                                                  "Kunne ikke opprette Vipps-betaling. Sjekk bookingpris/depositum og prøv igjen."
+                                              )
+                                            }
+                                          />
+                                        ) : (
+                                          <Typography variant="caption" color="warning.main">
+                                            Vipps-produktet står med 0 kr. Kontakt Janus Eiendom for å oppdatere
+                                            depositum.
+                                          </Typography>
+                                        )
+                                      ) : (
+                                        <Typography variant="body2" color="text.secondary">
+                                          {isOrganizationBooking
+                                            ? "Ingen Vipps-betaling for foreningsbooking"
+                                            : "Ingen Vipps-forespørsel ennå"}
+                                        </Typography>
+                                      )}
+
+                                      <Typography variant="caption" color="text.secondary">
+                                        Bookingreferanse (ID): {booking.reference} (#{booking.id})
+                                      </Typography>
+                                    </Stack>
+                                  </CardContent>
+                                </Card>
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                      );
+
+                      return (
+                        <>
+                          {confirmedBookings.length ? (
+                            renderGrid(confirmedBookings)
+                          ) : (
+                            <Typography color="text.secondary">Ingen godkjente JanHus-bookinger.</Typography>
+                          )}
+
+                          {pendingBookings.length ? (
+                            <Accordion disableGutters elevation={0} variant="outlined" sx={{ mt: 2 }}>
+                              <AccordionSummary expandIcon={<ExpandMore />}>
+                                <Typography variant="subtitle1">
+                                  Bookinger som er til vurdering ({pendingBookings.length})
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>{renderGrid(pendingBookings)}</AccordionDetails>
+                            </Accordion>
+                          ) : null}
+
+                          {archivedEntries.length ? (
+                            <Accordion disableGutters elevation={0} variant="outlined" sx={{ mt: 2 }}>
+                              <AccordionSummary expandIcon={<ExpandMore />}>
+                                <Typography variant="subtitle1">
+                                  Tidligere og avslåtte ({archivedEntries.length})
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Stack spacing={1}>
+                                  {archivedEntries.map((entry) => (
+                                    <Card key={entry.id} variant="outlined">
+                                      <CardContent>
+                                        <Stack
+                                          direction="row"
+                                          justifyContent="space-between"
+                                          alignItems="center"
+                                          spacing={1}
+                                        >
+                                          <Typography variant="body2">
+                                            {entry.kind} · {formatDate(entry.startsAt)} kl. {formatTime(entry.startsAt)}
+                                            –{formatTime(entry.endsAt)} · {entry.areaName}
+                                          </Typography>
+                                          <Chip size="small" color={entry.color} label={entry.chip} />
+                                        </Stack>
+                                        <Typography variant="caption" color="text.secondary">
+                                          Referanse: {entry.reference}
+                                        </Typography>
+                                        {entry.adminComment ? (
+                                          <Typography variant="body2" sx={{ mt: 1 }}>
+                                            Kommentar fra Janus Eiendom: {entry.adminComment}
+                                          </Typography>
+                                        ) : null}
+                                      </CardContent>
+                                    </Card>
+                                  ))}
                                 </Stack>
-                              </CardContent>
-                            </Card>
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
+                              </AccordionDetails>
+                            </Accordion>
+                          ) : null}
+                        </>
+                      );
+                    })()
                   )}
                 </Stack>
               </CardContent>

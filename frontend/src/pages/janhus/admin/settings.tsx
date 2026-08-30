@@ -1,29 +1,15 @@
 import { useMutation, useQuery } from "@apollo/client/react";
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  Switch,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Container, Divider, Stack } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
+import { AreaSettings, BookingRulesSettings, SemesterSettings } from "@/components/pages/janhus/admin";
+import type { AreaForm, SettingsForm } from "@/components/pages/janhus/constants";
 import { Title } from "@/components/Title";
 import {
-  JanHusAreaConfigurationsDocument,
+  JanHusAreasDocument,
   JanHusBookingSettingsDocument,
-  UpdateJanhusAreaConfigurationDocument,
+  UpdateJanhusAreaDocument,
   UpdateJanhusBookingSettingsDocument,
 } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
@@ -36,34 +22,13 @@ function formatDate(date: string) {
   return dayjs(date).tz("Europe/Oslo").format(DATE_FORMAT);
 }
 
-type SettingsForm = {
-  minDurationMinutes: number;
-  slotGranularityMinutes: number;
-  openingHour: number;
-  closingHour: number;
-  bufferMinutes: number;
-  organizationBookingOpensWeeksBefore: number;
-  generalBookingOpensWeeksBefore: number;
-  fallStartDate: string;
-  fallEndDate: string;
-  springStartDate: string;
-  springEndDate: string;
-  fallSemesterActive: boolean;
-  springSemesterActive: boolean;
-  externalBookingsEnabled: boolean;
-};
-
-const AREA_LABELS: Record<string, string> = {
-  FIRST_FLOOR: "1. etasje",
-  SECOND_FLOOR: "2. etasje",
-  ENTIRE_HOUSE: "Hele huset",
-};
-
 const JanHusSettingsPage: NextPageWithLayout = () => {
   const [alert, setAlert] = useState<{ severity: "success" | "error"; message: string } | undefined>();
 
   const { data: settingsData, refetch: refetchSettings } = useQuery(JanHusBookingSettingsDocument);
-  const { data: areaData, refetch: refetchAreas } = useQuery(JanHusAreaConfigurationsDocument);
+  const { data: areaData, refetch: refetchAreas } = useQuery(JanHusAreasDocument, {
+    variables: { includeInactive: true },
+  });
 
   const [settingsForm, setSettingsForm] = useState<SettingsForm>({
     minDurationMinutes: 60,
@@ -80,19 +45,11 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
     fallSemesterActive: true,
     springSemesterActive: true,
     externalBookingsEnabled: true,
+    privateBookingsEnabled: true,
+    cleaningOptionEnabled: true,
   });
 
-  const [areaForms, setAreaForms] = useState<
-    Record<
-      string,
-      {
-        internalPricePerHour: string;
-        externalPricePerHour: string;
-        cleaningFee: string;
-        defaultDepositAmount: string;
-      }
-    >
-  >({});
+  const [areaForms, setAreaForms] = useState<Record<string, AreaForm>>({});
 
   const openingHourOptions = useMemo(() => {
     const slotGranularityMinutes = Math.max(settingsForm.slotGranularityMinutes, 1);
@@ -160,22 +117,24 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
       fallSemesterActive: settings.fallSemesterActive,
       springSemesterActive: settings.springSemesterActive,
       externalBookingsEnabled: settings.externalBookingsEnabled ?? true,
+      privateBookingsEnabled: settings.privateBookingsEnabled ?? true,
+      cleaningOptionEnabled: settings.cleaningOptionEnabled ?? true,
     });
   }, [settingsData]);
 
   useEffect(() => {
-    const configurations = areaData?.janhusAreaConfigurations;
-    if (!configurations) return;
+    const areas = areaData?.janhusAreas;
+    if (!areas) return;
 
     setAreaForms(
       Object.fromEntries(
-        configurations.map((configuration) => [
-          configuration.area,
+        areas.map((area) => [
+          area.id,
           {
-            internalPricePerHour: String(configuration.internalPricePerHour),
-            externalPricePerHour: String(configuration.externalPricePerHour),
-            cleaningFee: String(configuration.cleaningFee),
-            defaultDepositAmount: String(configuration.defaultDepositAmount ?? 0),
+            internalPricePerHour: String(area.internalPricePerHour),
+            externalPricePerHour: String(area.externalPricePerHour),
+            cleaningFee: String(area.cleaningFee),
+            defaultDepositAmount: String(area.defaultDepositAmount ?? 0),
           },
         ])
       )
@@ -190,9 +149,25 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
     onError: (error) => setAlert({ severity: "error", message: error.message }),
   });
 
-  const [updateArea, { loading: areaSaving }] = useMutation(UpdateJanhusAreaConfigurationDocument, {
+  const [updateArea, { loading: areaSaving }] = useMutation(UpdateJanhusAreaDocument, {
     onCompleted: async () => {
       setAlert({ severity: "success", message: "Prisinnstillinger oppdatert" });
+      await refetchAreas();
+    },
+    onError: (error) => setAlert({ severity: "error", message: error.message }),
+  });
+
+  const [archiveArea] = useMutation(UpdateJanhusAreaDocument, {
+    onCompleted: async () => {
+      setAlert({ severity: "success", message: "Område arkivert" });
+      await refetchAreas();
+    },
+    onError: (error) => setAlert({ severity: "error", message: error.message }),
+  });
+
+  const [restoreArea] = useMutation(UpdateJanhusAreaDocument, {
+    onCompleted: async () => {
+      setAlert({ severity: "success", message: "Område gjenopprettet" });
       await refetchAreas();
     },
     onError: (error) => setAlert({ severity: "error", message: error.message }),
@@ -216,19 +191,21 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
           fallSemesterActive: settingsForm.fallSemesterActive,
           springSemesterActive: settingsForm.springSemesterActive,
           externalBookingsEnabled: settingsForm.externalBookingsEnabled,
+          privateBookingsEnabled: settingsForm.privateBookingsEnabled,
+          cleaningOptionEnabled: settingsForm.cleaningOptionEnabled,
         },
       },
     });
   }
 
-  async function saveArea(area: string) {
-    const form = areaForms[area];
+  async function saveArea(id: string) {
+    const form = areaForms[id];
     if (!form) return;
 
     await updateArea({
       variables: {
         areaData: {
-          area,
+          id,
           internalPricePerHour: Number(form.internalPricePerHour),
           externalPricePerHour: Number(form.externalPricePerHour),
           cleaningFee: Number(form.cleaningFee),
@@ -236,6 +213,14 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
         },
       },
     });
+  }
+
+  async function handleArchiveArea(id: string) {
+    await archiveArea({ variables: { areaData: { id, isActive: false } } });
+  }
+
+  async function handleRestoreArea(id: string) {
+    await restoreArea({ variables: { areaData: { id, isActive: true } } });
   }
 
   return (
@@ -268,329 +253,35 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
           <Stack direction="column" spacing={4}>
             {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}
 
-            <Paper sx={{ p: 3 }} elevation={0}>
-              <Stack direction="column" spacing={2}>
-                <Typography variant="h4" component="h2">
-                  Start- og sluttdato for høst- og vårsemester
-                </Typography>
-                <Typography>Det vil kun være mulig for brukere å søke om bookinger i disse periodene.</Typography>
-
-                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
-                  <Stack spacing={2}>
-                    <Typography variant="h6">Høstsemester</Typography>
-                    <TextField
-                      label="Start"
-                      type="date"
-                      value={settingsForm.fallStartDate}
-                      onChange={(event) =>
-                        setSettingsForm((prev) => ({
-                          ...prev,
-                          fallStartDate: event.target.value,
-                        }))
-                      }
-                      InputLabelProps={{ shrink: true }}
-                    />
-                    <TextField
-                      label="Slutt"
-                      type="date"
-                      value={settingsForm.fallEndDate}
-                      onChange={(event) =>
-                        setSettingsForm((prev) => ({
-                          ...prev,
-                          fallEndDate: event.target.value,
-                        }))
-                      }
-                      InputLabelProps={{ shrink: true }}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settingsForm.fallSemesterActive}
-                          onChange={(event) =>
-                            setSettingsForm((prev) => ({
-                              ...prev,
-                              fallSemesterActive: event.target.checked,
-                            }))
-                          }
-                        />
-                      }
-                      label="Åpent for bestillinger"
-                    />
-                  </Stack>
-
-                  <Stack spacing={2}>
-                    <Typography variant="h6">Vårsemester</Typography>
-                    <TextField
-                      label="Start"
-                      type="date"
-                      value={settingsForm.springStartDate}
-                      onChange={(event) =>
-                        setSettingsForm((prev) => ({
-                          ...prev,
-                          springStartDate: event.target.value,
-                        }))
-                      }
-                      InputLabelProps={{ shrink: true }}
-                    />
-                    <TextField
-                      label="Slutt"
-                      type="date"
-                      value={settingsForm.springEndDate}
-                      onChange={(event) =>
-                        setSettingsForm((prev) => ({
-                          ...prev,
-                          springEndDate: event.target.value,
-                        }))
-                      }
-                      InputLabelProps={{ shrink: true }}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={settingsForm.springSemesterActive}
-                          onChange={(event) =>
-                            setSettingsForm((prev) => ({
-                              ...prev,
-                              springSemesterActive: event.target.checked,
-                            }))
-                          }
-                        />
-                      }
-                      label="Åpent for bestillinger"
-                    />
-                  </Stack>
-                </Box>
-
-                <Box>
-                  <Button variant="contained" onClick={saveSettings} disabled={settingsSaving}>
-                    Lagre semestre og regler
-                  </Button>
-                </Box>
-              </Stack>
-            </Paper>
+            <SemesterSettings
+              settingsForm={settingsForm}
+              setSettingsForm={setSettingsForm}
+              settingsSaving={settingsSaving}
+              saveSettings={saveSettings}
+            />
 
             <Divider />
 
-            <Paper sx={{ p: 3 }} elevation={0}>
-              <Stack direction="column" spacing={2}>
-                <Typography variant="h4" component="h2">
-                  Bookingregler
-                </Typography>
-                <Typography>
-                  Konfigurer varighet, granularitet og åpningstider som styrer hvilke tider som kan bookes i JanHus.
-                </Typography>
-
-                <Box display="grid" gap={2} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}>
-                  <TextField
-                    label="Minimum varighet (min)"
-                    type="number"
-                    value={settingsForm.minDurationMinutes}
-                    onChange={(event) =>
-                      setSettingsForm((prev) => ({ ...prev, minDurationMinutes: Number(event.target.value) }))
-                    }
-                  />
-                  <TextField
-                    label="Granularitet (min)"
-                    type="number"
-                    value={settingsForm.slotGranularityMinutes}
-                    onChange={(event) =>
-                      setSettingsForm((prev) => ({ ...prev, slotGranularityMinutes: Number(event.target.value) }))
-                    }
-                  />
-                  <TextField
-                    label="Buffer (min)"
-                    type="number"
-                    value={settingsForm.bufferMinutes}
-                    onChange={(event) =>
-                      setSettingsForm((prev) => ({ ...prev, bufferMinutes: Number(event.target.value) }))
-                    }
-                  />
-                  <FormControl>
-                    <InputLabel>Åpningstime</InputLabel>
-                    <Select
-                      label="Åpningstime"
-                      value={settingsForm.openingHour}
-                      onChange={(event) =>
-                        setSettingsForm((prev) => ({ ...prev, openingHour: Number(event.target.value) }))
-                      }
-                    >
-                      {openingHourOptions.map((value) => (
-                        <MenuItem key={value} value={value}>
-                          {value.toString().padStart(2, "0")}:00
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <InputLabel>Stengetime</InputLabel>
-                    <Select
-                      label="Stengetime"
-                      value={settingsForm.closingHour}
-                      onChange={(event) =>
-                        setSettingsForm((prev) => ({ ...prev, closingHour: Number(event.target.value) }))
-                      }
-                    >
-                      {closingHourOptions.map((option) => (
-                        <MenuItem key={`${option.value}-${option.label}`} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <TextField
-                    label="Forenings bookinger åpner (uker før):"
-                    type="number"
-                    value={settingsForm.organizationBookingOpensWeeksBefore}
-                    onChange={(event) =>
-                      setSettingsForm((prev) => ({
-                        ...prev,
-                        organizationBookingOpensWeeksBefore: Number(event.target.value),
-                      }))
-                    }
-                  />
-                  <TextField
-                    label="Personlige bookinger åpner (uker før):"
-                    type="number"
-                    value={settingsForm.generalBookingOpensWeeksBefore}
-                    onChange={(event) =>
-                      setSettingsForm((prev) => ({
-                        ...prev,
-                        generalBookingOpensWeeksBefore: Number(event.target.value),
-                      }))
-                    }
-                  />
-                </Box>
-
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={settingsForm.externalBookingsEnabled}
-                      onChange={(event) =>
-                        setSettingsForm((prev) => ({ ...prev, externalBookingsEnabled: event.target.checked }))
-                      }
-                    />
-                  }
-                  label="Tillat eksterne bookingforespørsler"
-                />
-
-                <Box>
-                  <Button variant="contained" onClick={saveSettings} disabled={settingsSaving}>
-                    Lagre regler
-                  </Button>
-                </Box>
-              </Stack>
-            </Paper>
+            <BookingRulesSettings
+              openingHourOptions={openingHourOptions}
+              closingHourOptions={closingHourOptions}
+              settingsForm={settingsForm}
+              setSettingsForm={setSettingsForm}
+              settingsSaving={settingsSaving}
+              saveSettings={saveSettings}
+            />
 
             <Divider />
 
-            <Paper sx={{ p: 3 }} elevation={0}>
-              <Stack direction="column" spacing={2}>
-                <Typography variant="h4" component="h2">
-                  Pris per område
-                </Typography>
-                <Typography>Her kan dere oppdatere intern-/eksternpris og renholdsgebyr for hvert område.</Typography>
-
-                <Stack spacing={2}>
-                  {(areaData?.janhusAreaConfigurations ?? []).map((configuration) => {
-                    const form = areaForms[configuration.area];
-                    return (
-                      <Box key={configuration.id} p={2} border={1} borderColor="divider" borderRadius={2}>
-                        <Stack spacing={2}>
-                          <Typography variant="h6">{AREA_LABELS[configuration.area] ?? configuration.area}</Typography>
-                          <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-                            <TextField
-                              label="Internpris per time"
-                              type="number"
-                              value={form?.internalPricePerHour ?? ""}
-                              onChange={(event) =>
-                                setAreaForms((prev) => ({
-                                  ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
-                                      internalPricePerHour: "0",
-                                      externalPricePerHour: "0",
-                                      cleaningFee: "0",
-                                      defaultDepositAmount: "0",
-                                    }),
-                                    internalPricePerHour: event.target.value,
-                                  },
-                                }))
-                              }
-                            />
-                            <TextField
-                              label="Eksternpris per time"
-                              type="number"
-                              value={form?.externalPricePerHour ?? ""}
-                              onChange={(event) =>
-                                setAreaForms((prev) => ({
-                                  ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
-                                      internalPricePerHour: "0",
-                                      externalPricePerHour: "0",
-                                      cleaningFee: "0",
-                                      defaultDepositAmount: "0",
-                                    }),
-                                    externalPricePerHour: event.target.value,
-                                  },
-                                }))
-                              }
-                            />
-                            {/* <TextField
-                              label="Renholdsgebyr"
-                              type="number"
-                              value={form?.cleaningFee ?? ""}
-                              onChange={(event) =>
-                                setAreaForms((prev) => ({
-                                  ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
-                                      internalPricePerHour: "0",
-                                      externalPricePerHour: "0",
-                                      cleaningFee: "0",
-                                      defaultDepositAmount: "0",
-                                    }),
-                                    cleaningFee: event.target.value,
-                                  },
-                                }))
-                              }
-                            /> */}
-                            <TextField
-                              label="Depositum"
-                              type="number"
-                              value={form?.defaultDepositAmount ?? ""}
-                              onChange={(event) =>
-                                setAreaForms((prev) => ({
-                                  ...prev,
-                                  [configuration.area]: {
-                                    ...(prev[configuration.area] ?? {
-                                      internalPricePerHour: "0",
-                                      externalPricePerHour: "0",
-                                      cleaningFee: "0",
-                                      defaultDepositAmount: "0",
-                                    }),
-                                    defaultDepositAmount: event.target.value,
-                                  },
-                                }))
-                              }
-                            />
-                          </Stack>
-                          <Box>
-                            <Button
-                              variant="outlined"
-                              onClick={() => saveArea(configuration.area)}
-                              disabled={areaSaving}
-                            >
-                              Lagre priser
-                            </Button>
-                          </Box>
-                        </Stack>
-                      </Box>
-                    );
-                  })}
-                </Stack>
-              </Stack>
-            </Paper>
+            <AreaSettings
+              saveArea={saveArea}
+              handleArchiveArea={handleArchiveArea}
+              handleRestoreArea={handleRestoreArea}
+              areas={areaData?.janhusAreas ?? []}
+              areaForms={areaForms}
+              setAreaForms={setAreaForms}
+              areaSaving={areaSaving}
+            />
           </Stack>
         </PermissionRequired>
       </Container>
