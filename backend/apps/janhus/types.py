@@ -20,9 +20,7 @@ class JanHusGuestListEntryType(graphene.ObjectType):
     display_name = graphene.String(required=True)
 
 
-NO_ACCESS_TO_BOOOKING_MESSAGE = """
-Du har ikke tilgang til detaljene for denne bookingen
-"""
+NO_ACCESS_TO_BOOKING_MESSAGE = "Du har ikke tilgang til detaljene for denne bookingen"
 PROTECTED_BOOKING_FIELDS = [
     "reference",
     "booker_name",
@@ -50,7 +48,7 @@ def _protected_booking_field_resolver(field_name):
     def resolver(parent: JanHusBooking, info):
         if not can_view_booking_details(info.context.user, parent):
             raise PermissionDenied(
-                NO_ACCESS_TO_BOOOKING_MESSAGE
+                NO_ACCESS_TO_BOOKING_MESSAGE
             )
         return getattr(parent, field_name)
 
@@ -70,7 +68,7 @@ class JanHusBookingType(DjangoObjectType):
     def resolve_guest_list_entries(parent, info):
         if not can_view_booking_details(info.context.user, parent):
             raise PermissionDenied(
-                NO_ACCESS_TO_BOOOKING_MESSAGE
+                NO_ACCESS_TO_BOOKING_MESSAGE
             )
         return build_guest_list_entries(parent.guest_list)
 
@@ -78,7 +76,7 @@ class JanHusBookingType(DjangoObjectType):
     def resolve_total_price(parent: JanHusBooking, info):
         if not can_view_booking_details(info.context.user, parent):
             raise PermissionDenied(
-                NO_ACCESS_TO_BOOOKING_MESSAGE
+                NO_ACCESS_TO_BOOKING_MESSAGE
             )
         return parent.total_price
 
@@ -86,7 +84,7 @@ class JanHusBookingType(DjangoObjectType):
     def resolve_outstanding_deposit_amount(parent: JanHusBooking, info):
         if not can_view_booking_details(info.context.user, parent):
             raise PermissionDenied(
-                NO_ACCESS_TO_BOOOKING_MESSAGE
+                NO_ACCESS_TO_BOOKING_MESSAGE
             )
         return parent.outstanding_deposit_amount
 

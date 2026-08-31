@@ -52,8 +52,8 @@ export const RequestList: React.FC<Props> = ({
                 {request.ownerOrganization?.name ? ` · ${request.ownerOrganization.name}` : ""}
               </Typography>
               <Typography variant="body2">
-                Arrangement: {JANHUS_EVENT_TYPE_LABELS[request.eventType] ?? request.eventType} · Innleid renhold:{" "}
-                {request.cleaningRequested ? "Ja" : "Nei"}
+                Arrangement: {JANHUS_EVENT_TYPE_LABELS[request.eventType] ?? request.eventType}{" "}
+                {request.cleaningRequested ? "· Innleid renhold: Ja" : ""}
               </Typography>
               <Typography variant="body2">
                 Bestiller: {request.requesterName} ({request.requesterEmail || "-"})
