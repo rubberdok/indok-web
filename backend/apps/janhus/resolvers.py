@@ -192,7 +192,7 @@ class JanHusResolvers:
     def resolve_janhus_booking_settings(self, info):
         return get_or_create_settings()
 
-    def resolve_janhus_areas(self, include_inactive=False):
+    def resolve_janhus_areas(self, _info, include_inactive=False):
         ensure_default_areas()
         if include_inactive:
             return JanHusArea.objects.all()

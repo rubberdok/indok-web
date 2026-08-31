@@ -1968,6 +1968,34 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
             self.entire_house_area.conflicting_area_ids,
         )
 
+    def test_areas_query_hides_archived_areas_by_default(self):
+        self.first_floor_area.is_active = False
+        self.first_floor_area.save(update_fields=["is_active"])
+
+        response = self.query("{ janhusAreas { id } }")
+        self.assertResponseNoErrors(response)
+
+        ids = [item["id"] for item in json.loads(response.content)["data"]["janhusAreas"]]
+        self.assertNotIn(str(self.first_floor_area.id), ids)
+        self.assertIn(str(self.second_floor_area.id), ids)
+
+    def test_areas_query_accepts_include_inactive(self):
+        """
+        Guards the resolver signature. Graphene passes (root, info, **args)
+        positionally, so dropping the unused `info` parameter silently binds it to
+        `include_inactive` and breaks every areas query.
+        """
+        self.first_floor_area.is_active = False
+        self.first_floor_area.save(update_fields=["is_active"])
+
+        query = "query Q($i: Boolean) { janhusAreas(includeInactive: $i) { id } }"
+        response = self.query(query, variables={"i": True})
+        self.assertResponseNoErrors(response)
+
+        ids = [item["id"] for item in json.loads(response.content)["data"]["janhusAreas"]]
+        self.assertIn(str(self.first_floor_area.id), ids)
+
+
     def test_update_area_requires_settings_permission(self):
         """Areas are created in Django admin; the API may only edit them."""
         query = f"""
