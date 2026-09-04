@@ -1,8 +1,6 @@
-from datetime import datetime
-
 import graphene
 from django.shortcuts import get_object_or_404
-from decorators import login_required
+from decorators import permission_required
 
 from .models import ArchiveDocument as ArchiveDocumentModel
 from .types import ArchiveDocumentType
@@ -17,14 +15,13 @@ class CreateArchiveDocument(graphene.Mutation):
         web_link = graphene.String()
 
     ok = graphene.Boolean()
-    arhiveDocument = graphene.Field(ArchiveDocumentType)
+    archiveDocument = graphene.Field(ArchiveDocumentType)
 
-    @login_required
+    @permission_required("archive.add_archivedocument")
     def mutate(self, info, title, date, type_doc, file_location):
         archiveDocument = ArchiveDocumentModel.objects.create(
             title=title,
-            date=date,
-            uploaded_date=datetime.now(),
+            year=date.year if date else None,
             type_doc=type_doc,
             file_location=file_location,
         )
@@ -42,12 +39,20 @@ class UpdateArchiveDocument(graphene.Mutation):
         web_link = graphene.String()
 
     ok = graphene.Boolean()
-    event = graphene.Field(ArchiveDocumentType)
+    archiveDocument = graphene.Field(ArchiveDocumentType)
 
-    @login_required
-    def mutate(self, info, id, title=None):
+    @permission_required("archive.change_archivedocument")
+    def mutate(self, info, id, title=None, date=None, type_doc=None, file_location=None, web_link=None):
         archiveDocument = ArchiveDocumentModel.objects.get(pk=id)
-        archiveDocument.title = title if title is not None else archiveDocument.title
+        if title is not None:
+            archiveDocument.title = title
+        if type_doc is not None:
+            archiveDocument.type_doc = type_doc
+        if file_location is not None:
+            archiveDocument.file_location = file_location
+        if web_link is not None:
+            archiveDocument.web_link = web_link
+        archiveDocument.save()
 
         ok = True
         return UpdateArchiveDocument(archiveDocument=archiveDocument, ok=ok)
@@ -60,7 +65,7 @@ class DeleteArchiveDocument(graphene.Mutation):
     ok = graphene.Boolean()
     archiveDocument = graphene.Field(ArchiveDocumentType)
 
-    @login_required
+    @permission_required("archive.delete_archivedocument")
     def mutate(self, info, id):
         archiveDocument = get_object_or_404(ArchiveDocumentModel, pk=id)
         archiveDocument.delete()
