@@ -467,17 +467,32 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
             )
         )
 
+    def do_attempt_capture_denied_test(self, user) -> None:
+        # Denied callers must not change the order; capture is handled by the Vipps callback
+        response = self.query(
+            self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user
+        )
+        self.assert_permission_error(response)
+        self.initiated_order.refresh_from_db()
+        self.assertEqual(
+            self.initiated_order.payment_status, Order.PaymentStatus.INITIATED
+        )
+
     def test_unauthenticated_user_attempt_capture_order(self) -> None:
-        # Unauthenticated users should be able to capture orders
-        self.do_attempt_capture_order_test(user=None)
+        # Unauthenticated users may not capture orders
+        self.do_attempt_capture_denied_test(user=None)
 
     def test_unauthorized_user_attempt_capture_order(self) -> None:
-        # Unauthorized users should be able to capture orders
-        self.do_attempt_capture_order_test(user=self.indok_user_2)
+        # Users who do not own the order may not capture it
+        self.do_attempt_capture_denied_test(user=self.indok_user_2)
 
     def test_authorized_user_reserve_initiated_order(self) -> None:
-        # Authorized users should be able to capture orders
+        # The order owner should be able to capture their order
         self.do_attempt_capture_order_test(user=self.indok_user)
+
+    def test_staff_user_attempt_capture_order(self) -> None:
+        # Staff should be able to capture any order
+        self.do_attempt_capture_order_test(user=self.staff_user)
 
     @patch(
         "requests.get",
@@ -511,12 +526,12 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.assertEqual(data["attemptCapturePayment"]["status"], "CANCELLED")
 
     def test_unauthenticated_user_attempt_capture_cancelled_order(self) -> None:
-        # Unauthenticated users should be able to update cancelled orders from INITIATED -> CANCELLED
-        self.do_attempt_capture_cancelled_order_test(user=None)
+        # Unauthenticated users may not poll order status
+        self.do_attempt_capture_denied_test(user=None)
 
     def test_unauthorized_user_attempt_capture_cancelled_order(self) -> None:
-        # Unauthorized users should be able to update cancelled orders from INITIATED -> CANCELLED
-        self.do_attempt_capture_cancelled_order_test(user=self.indok_user_2)
+        # Users who do not own the order may not poll its status
+        self.do_attempt_capture_denied_test(user=self.indok_user_2)
 
     def test_authorized_user_attempt_capture_cancelled_order(self) -> None:
         # Authorized users should be able to update cancelled orders from INITIATED -> CANCELLED
