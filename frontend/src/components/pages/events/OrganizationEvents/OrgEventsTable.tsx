@@ -21,17 +21,20 @@ export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
         </TableHead>
         <TableBody>
           {(organization.events ?? []).map((event) => (
-            <TableRow
-              hover
-              underline="none"
-              component={Link}
-              key={event.id}
-              href={{
-                pathname: "[organizationId]/events/[eventId]",
-                query: { organizationId: organization.id, eventId: event.id },
-              }}
-            >
-              <TableCell>{dayjs(event.startTime).tz("Europe/Oslo").format("HH:mm DD-MM-YYYY")}</TableCell>
+            <TableRow hover key={event.id} sx={{ position: "relative" }}>
+              <TableCell>
+                <Link
+                  href={{
+                    pathname: "[organizationId]/events/[eventId]",
+                    query: { organizationId: organization.id, eventId: event.id },
+                  }}
+                  underline="none"
+                  color="inherit"
+                  aria-label={event.title}
+                  sx={{ position: "absolute", inset: 0 }}
+                />
+                {dayjs(event.startTime).tz("Europe/Oslo").format("HH:mm DD-MM-YYYY")}
+              </TableCell>
               <TableCell>{event.title}</TableCell>
               <TableCell>{event.availableSlots}</TableCell>
               <TableCell>{event.usersAttending?.length}</TableCell>
