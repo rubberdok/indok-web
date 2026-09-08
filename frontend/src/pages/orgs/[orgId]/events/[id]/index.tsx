@@ -9,14 +9,16 @@ import { NextPageWithLayout } from "@/lib/next";
 
 const AdminEventPage: NextPageWithLayout = () => {
   const { id } = useRouter().query;
+  const eventId = typeof id === "string" && id.trim().length > 0 ? id : null;
 
   const { loading, data } = useQuery(AdminEventDocument, {
-    variables: { id: typeof id === "string" ? id : "" },
+    variables: { id: eventId ?? "" },
+    skip: !eventId,
   });
 
   const event = data?.event;
 
-  if (loading) {
+  if (loading || !eventId) {
     return (
       <Title
         overline="Administrer arrangement"

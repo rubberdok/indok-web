@@ -104,7 +104,7 @@ class EventResolvers:
     def resolve_event(self, info, id):
         try:
             return Event.objects.get(id=id)
-        except Event.DoesNotExist:
+        except (Event.DoesNotExist, ValueError, TypeError):
             return None
 
     def resolve_all_categories(self, info):
@@ -113,13 +113,13 @@ class EventResolvers:
     def resolve_category(self, info, id):
         try:
             return Category.objects.get(id=id)
-        except Category.DoesNotExist:
+        except (Category.DoesNotExist, ValueError, TypeError):
             return None
 
     def resolve_attendee_report(self, info, event_id, fields=None, filetype="xlsx"):
         try:
             event = Event.objects.get(id=event_id)
-        except Event.DoesNotExist:
+        except (Event.DoesNotExist, ValueError, TypeError):
             return None
         check_user_membership(info.context.user, event.organization)
 
@@ -131,7 +131,7 @@ class EventResolvers:
         for event_id in event_ids:
             try:
                 event = Event.objects.get(id=event_id)
-            except Event.DoesNotExist:
+            except (Event.DoesNotExist, ValueError, TypeError):
                 return None
             check_user_membership(info.context.user, event.organization)
 
@@ -144,11 +144,11 @@ class EventResolvers:
     def resolve_attendee_report_org(self, info, org_id, fields=None, filetype="xlsx"):
         try:
             org = Organization.objects.get(id=org_id)
-        except Organization.DoesNotExist:
+        except (Organization.DoesNotExist, ValueError, TypeError):
             return None
         check_user_membership(info.context.user, org)
 
-        event_ids = Organization.objects.get(id=org_id).events.values_list(
+        event_ids = org.events.values_list(
             "id", flat=True
         )
         df = create_attendee_report(event_ids, fields)
@@ -158,7 +158,7 @@ class EventResolvers:
     def resolve_sign_ups(self, info, event_id):
         try:
             event = Event.objects.get(id=event_id)
-        except Event.DoesNotExist:
+        except (Event.DoesNotExist, ValueError, TypeError):
             return None
 
         check_user_membership(info.context.user, event.organization)
