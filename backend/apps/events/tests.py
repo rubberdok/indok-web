@@ -192,6 +192,86 @@ class HiddenEventTestCase(EventsBaseTestCase):
         self.assertTrue(response.json()["data"]["updateEvent"]["event"]["isHidden"])
 
 
+class EventQueryValidationTestCase(EventsBaseTestCase):
+    def test_event_query_with_empty_string_id_returns_null_without_errors(self):
+        query = """
+            query {
+                event(id: "") {
+                    id
+                }
+            }
+        """
+
+        response = self.query(query)
+
+        self.assertResponseNoErrors(response)
+        self.assertIsNone(response.json()["data"]["event"])
+
+    def test_category_query_with_empty_string_id_returns_null_without_errors(self):
+        query = """
+            query {
+                category(id: "") {
+                    id
+                }
+            }
+        """
+
+        response = self.query(query)
+
+        self.assertResponseNoErrors(response)
+        self.assertIsNone(response.json()["data"]["category"])
+
+    def test_attendee_report_with_empty_event_id_returns_null_without_errors(self):
+        query = """
+            query {
+                attendeeReport(eventId: "")
+            }
+        """
+
+        response = self.query(query)
+
+        self.assertResponseNoErrors(response)
+        self.assertIsNone(response.json()["data"]["attendeeReport"])
+
+    def test_attendee_reports_with_empty_event_id_returns_null_without_errors(self):
+        query = """
+            query {
+                attendeeReports(eventIds: [""])
+            }
+        """
+
+        response = self.query(query)
+
+        self.assertResponseNoErrors(response)
+        self.assertIsNone(response.json()["data"]["attendeeReports"])
+
+    def test_attendee_report_org_with_empty_org_id_returns_null_without_errors(self):
+        query = """
+            query {
+                attendeeReportOrg(orgId: "")
+            }
+        """
+
+        response = self.query(query)
+
+        self.assertResponseNoErrors(response)
+        self.assertIsNone(response.json()["data"]["attendeeReportOrg"])
+
+    def test_sign_ups_with_empty_event_id_returns_null_without_errors(self):
+        query = """
+            query {
+                signUps(eventId: "") {
+                    id
+                }
+            }
+        """
+
+        response = self.query(query)
+
+        self.assertResponseNoErrors(response)
+        self.assertIsNone(response.json()["data"]["signUps"])
+
+
 class AttendeeReportExportTestCase(EventsBaseTestCase):
     def test_wrap_attendee_report_as_json_supports_xlsx(self):
         dataframe = pd.DataFrame(

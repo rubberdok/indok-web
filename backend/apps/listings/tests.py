@@ -101,6 +101,19 @@ class ListingResolverTestCase(ListingBaseTestCase):
         listing = data["listing"]
         self.deep_assert_equal(listing, self.visible_listing)
 
+    def test_resolve_listing_with_invalid_id_returns_null_without_errors(self):
+        query = """
+            query {
+                listing(id: "_next") {
+                    id
+                }
+            }
+        """
+        response = self.query(query)
+
+        self.assertResponseNoErrors(response)
+        self.assertIsNone(json.loads(response.content)["data"]["listing"])
+
     def test_view_counter(self):
         query = f"""
             query {{
