@@ -24,5 +24,5 @@ class ListingResolvers:
             listing.save()
             listing.refresh_from_db()
             return listing
-        except Listing.DoesNotExist:
+        except (Listing.DoesNotExist, ValueError, TypeError):
             return None
