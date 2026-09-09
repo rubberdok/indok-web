@@ -1,12 +1,14 @@
 import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { useRouter } from "next/router";
 
-import { Link } from "@/components";
 import { AdminOrganizationFragment } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 
 type Props = { organization: AdminOrganizationFragment };
 
 export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
+  const router = useRouter();
+
   return (
     <TableContainer>
       <Table>
@@ -21,20 +23,22 @@ export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
         </TableHead>
         <TableBody>
           {(organization.events ?? []).map((event) => (
-            <TableRow hover key={event.id} sx={{ position: "relative" }}>
-              <TableCell>
-                <Link
-                  href={{
-                    pathname: "[organizationId]/events/[eventId]",
-                    query: { organizationId: organization.id, eventId: event.id },
-                  }}
-                  underline="none"
-                  color="inherit"
-                  aria-label={event.title}
-                  sx={{ position: "absolute", inset: 0 }}
-                />
-                {dayjs(event.startTime).tz("Europe/Oslo").format("HH:mm DD-MM-YYYY")}
-              </TableCell>
+            <TableRow
+              hover
+              key={event.id}
+              role="link"
+              tabIndex={0}
+              aria-label={`Administrer ${event.title}`}
+              sx={{ cursor: "pointer" }}
+              onClick={() => void router.push(`/orgs/${organization.id}/events/${event.id}`)}
+              onKeyDown={(keyboardEvent) => {
+                if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") {
+                  keyboardEvent.preventDefault();
+                  void router.push(`/orgs/${organization.id}/events/${event.id}`);
+                }
+              }}
+            >
+              <TableCell>{dayjs(event.startTime).tz("Europe/Oslo").format("HH:mm DD-MM-YYYY")}</TableCell>
               <TableCell>{event.title}</TableCell>
               <TableCell>{event.availableSlots}</TableCell>
               <TableCell>{event.usersAttending?.length}</TableCell>

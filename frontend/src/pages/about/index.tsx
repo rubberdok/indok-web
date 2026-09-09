@@ -116,32 +116,35 @@ const AboutPage: NextPageWithLayout = () => {
               { year: "2023-2024", names: "Olav Bjørlykke, Tord Johan Espe og Arnas Tribusininas" },
               { year: "2024-2025", names: "Kristoffer Grude, Branny Lin og Markus Kile Søyland" },
               { year: "2025-2026", names: "Jens Eggen Skaug, Herman Hytta Gunnarsen og Simen Petersson" },
-            ].map((item, idx, arr) => (
-              <Box key={item.year}>
-                <ListItem
-                  sx={{
-                    px: 3,
-                    py: 1.5,
-                    display: "flex",
-                    gap: 2,
-                    alignItems: "baseline",
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                        {item.names}
-                      </Typography>
-                    }
-                  />
-                  <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "nowrap" }}>
-                    {item.year}
-                  </Typography>
-                </ListItem>
+              { year: "2026-2027", names: "Hans Bertil Olsson, Solveig Aarmo og Johannes Kvåle" },
+            ]
+              .reverse()
+              .map((item, idx, arr) => (
+                <Box key={item.year}>
+                  <ListItem
+                    sx={{
+                      px: 3,
+                      py: 1.5,
+                      display: "flex",
+                      gap: 2,
+                      alignItems: "baseline",
+                    }}
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {item.names}
+                        </Typography>
+                      }
+                    />
+                    <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "nowrap" }}>
+                      {item.year}
+                    </Typography>
+                  </ListItem>
 
-                {idx !== arr.length - 1 && <Divider />}
-              </Box>
-            ))}
+                  {idx !== arr.length - 1 && <Divider />}
+                </Box>
+              ))}
           </List>
         </Paper>
       </Template>
