@@ -151,6 +151,22 @@ class Order(models.Model):
         ]
 
 
+class OrderPaymentAttempt(models.Model):
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="payment_attempts"
+    )
+    payment_attempt = models.PositiveIntegerField()
+    refunded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["order", "payment_attempt"],
+                name="unique_order_payment_attempt",
+            )
+        ]
+
+
 class VippsAccessToken(models.Model):
     """
     Stores access tokens from Vipps to use upon Vipps requests.

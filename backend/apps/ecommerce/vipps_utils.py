@@ -16,7 +16,7 @@ except ModuleNotFoundError:
         pass
 
 
-from .models import Order, VippsAccessToken
+from .models import Order, OrderPaymentAttempt, VippsAccessToken
 
 # Types
 BaseHeaders = TypedDict(
@@ -106,6 +106,42 @@ def refund_order(
         return locked_order
 
 
+def refund_order_payment_attempt(
+    order: Order,
+    payment_attempt: int,
+    vipps_api: Optional["VippsApi"] = None,
+) -> OrderPaymentAttempt:
+    """Refund one Vipps payment attempt without changing the order status."""
+    if payment_attempt < 1:
+        raise ValueError("Payment attempt must be positive.")
+
+    with transaction.atomic():
+        locked_order = Order.objects.select_for_update().get(pk=order.pk)
+        if locked_order.payment_status != Order.PaymentStatus.CAPTURED:
+            raise ValueError("Only captured orders can be refunded.")
+        if payment_attempt > locked_order.payment_attempt:
+            raise ValueError("Payment attempt does not exist for this order.")
+
+        refund_attempt, created = OrderPaymentAttempt.objects.get_or_create(
+            order=locked_order,
+            payment_attempt=payment_attempt,
+        )
+        if not created:
+            return refund_attempt
+
+        refund_response = (vipps_api or VippsApi()).refund_payment(
+            locked_order, payment_attempt=payment_attempt
+        )
+        refunded_amount = (
+            refund_response.get("transactionSummary", {}).get("refundedAmount")
+        )
+        expected_amount = int(locked_order.total_price * 100)
+        if refunded_amount != expected_amount:
+            raise ValueError("Vipps did not confirm the full refund amount.")
+
+        return refund_attempt
+
+
 class VippsApi:
 
     """
@@ -189,10 +225,13 @@ class VippsApi:
             json.dumps(capture_data),
         )
 
-    def refund_payment(self, order: Order) -> dict:
+    def refund_payment(
+        self, order: Order, payment_attempt: Optional[int] = None
+    ) -> dict:
+        payment_attempt = payment_attempt or order.payment_attempt
         headers = self._build_headers()
         headers["X-Request-Id"] = hashlib.sha256(
-            f"refund:{order.id}:{order.payment_attempt}".encode()
+            f"refund:{order.id}:{payment_attempt}".encode()
         ).hexdigest()[:40]
         refund_data = {
             "merchantInfo": {"merchantSerialNumber": self.merchant_serial_number},
@@ -206,7 +245,7 @@ class VippsApi:
 
         return self._make_call(
             "POST",
-            f"/ecomm/v2/payments/{order.id}-{order.payment_attempt}/refund",
+            f"/ecomm/v2/payments/{order.id}-{payment_attempt}/refund",
             headers,
             json.dumps(refund_data),
         )

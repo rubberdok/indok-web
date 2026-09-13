@@ -15,7 +15,11 @@ from apps.organizations.permissions import check_user_membership
 
 from .models import Order, Product
 from .types import OrderType, PaymentStatus, ProductType
-from .vipps_utils import VippsApi, refund_order
+from .vipps_utils import (
+    VippsApi,
+    refund_order,
+    refund_order_payment_attempt,
+)
 
 
 class InitiateOrder(graphene.Mutation):
@@ -181,6 +185,35 @@ class RefundOrder(graphene.Mutation):
 
         order = refund_order(order, vipps_api=RefundOrder.vipps_api)
         return RefundOrder(ok=True, order=order)
+
+
+class RefundOrderAttempt(graphene.Mutation):
+    ok = graphene.Boolean()
+    order = graphene.Field(OrderType)
+    payment_attempt = graphene.Int()
+    vipps_api = VippsApi()
+
+    class Arguments:
+        order_id = graphene.ID(required=True)
+        payment_attempt = graphene.Int(required=True)
+
+    @superuser_required
+    def mutate(self, info, order_id, payment_attempt):
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            raise ValueError("Ugyldig ordre")
+
+        refunded_attempt = refund_order_payment_attempt(
+            order,
+            payment_attempt,
+            vipps_api=RefundOrderAttempt.vipps_api,
+        )
+        return RefundOrderAttempt(
+            ok=True,
+            order=order,
+            payment_attempt=refunded_attempt.payment_attempt,
+        )
 
 
 class CreateProductInput(graphene.InputObjectType):
