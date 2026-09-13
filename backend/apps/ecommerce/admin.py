@@ -42,6 +42,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "product", "user", "payment_status", "timestamp")
     list_filter = ("payment_status",)
     search_fields = (
+        "id",
         "user__username",
         "user__first_name",
         "user__last_name",
