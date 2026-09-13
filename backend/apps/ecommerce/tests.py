@@ -479,6 +479,21 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         # Authorized users should be able to capture orders
         self.do_attempt_capture_order_test(user=self.indok_user)
 
+    @patch("apps.ecommerce.mail.TransactionalEmail.send", side_effect=RuntimeError)
+    def test_captured_order_is_saved_when_confirmation_email_fails(
+        self, send_mock: MagicMock
+    ) -> None:
+        with self.captureOnCommitCallbacks(execute=True):
+            self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
+            self.initiated_order.save()
+
+        send_mock.assert_called_once_with()
+        self.initiated_order.refresh_from_db()
+        self.assertEqual(
+            self.initiated_order.payment_status,
+            Order.PaymentStatus.CAPTURED,
+        )
+
     @patch(
         "requests.get",
         side_effect=setup_mock_get(
