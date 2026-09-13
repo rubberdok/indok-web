@@ -6,12 +6,14 @@ from typing import Optional, TypedDict, Union
 from unittest.mock import MagicMock, patch
 
 import requests
+from django.test import TestCase
+from django.urls import reverse
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.ecommerce import OrderFactory, ProductFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory, StaffUserFactory
 
-from apps.ecommerce.models import Order, Product
+from apps.ecommerce.models import Order, OrderPaymentAttempt, Product
 from apps.ecommerce.vipps_utils import VippsApi, refund_order
 
 
@@ -156,19 +158,12 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
             payment_status=Order.PaymentStatus.INITIATED,
         )
 
-        # Queries used several times:
-
         self.RETRIEVE_ORDER_QUERY = f"""
                 query Order{{
                         order(orderId: "{self.initiated_order.id}") {{
                             id
-                            product {{
-                                id
-                                name
-                            }}
-                            user {{
-                                username
-                            }}
+                            product {{ id name }}
+                            user {{ username }}
                             quantity
                             totalPrice
                             paymentStatus
@@ -180,17 +175,12 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
                 query userOrders {
                     userOrders {
                         id
-                            product {
-                                id
-                                name
-                            }
-                            user {
-                                username
-                            }
-                            quantity
-                            totalPrice
-                            paymentStatus
-                            timestamp
+                        product { id name }
+                        user { username }
+                        quantity
+                        totalPrice
+                        paymentStatus
+                        timestamp
                     }
                 }
                 """
@@ -203,29 +193,34 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         }}
         """
         )
-
         self.ATTEMPT_CAPTURE_PAYMENT_MUTATION = (
             lambda order_id: f"""
         mutation AttemptCapturePayment {{
             attemptCapturePayment(orderId: "{order_id}") {{
                 status
-                order {{
-                    id
-                    product {{
-                        id
-                        name
-                        description
-                        price
-                    }}
-                    quantity
-                    totalPrice
-                    paymentStatus
-                    timestamp
-                }}
+                order {{ id paymentStatus }}
             }}
         }}
         """
         )
+
+
+class EcommerceAdminTestCase(TestCase):
+    def setUp(self) -> None:
+        self.superuser = StaffUserFactory(is_staff=True, is_superuser=True)
+        self.user = IndokUserFactory()
+        self.product = ProductFactory()
+        self.order = OrderFactory(product=self.product, user=self.user)
+        self.client.force_login(self.superuser)
+
+    def test_order_admin_can_search_by_uuid(self) -> None:
+        response = self.client.get(
+            reverse("admin:ecommerce_order_changelist"),
+            {"q": str(self.order.id)},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, str(self.order.id))
 
 
 class EcommerceResolversTestCase(EcommerceBaseTestCase):
@@ -284,6 +279,30 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     """
     Testing all mutations for ecommerce-app.
     """
+
+    def refund_order_query(self) -> str:
+        return f"""
+            mutation {{
+                refundOrder(orderId: "{self.initiated_order.id}") {{
+                    ok
+                    order {{ paymentStatus }}
+                }}
+            }}
+        """
+
+    def refund_order_attempt_query(self, payment_attempt: int = 1) -> str:
+        return f"""
+            mutation {{
+                refundOrderAttempt(
+                    orderId: "{self.initiated_order.id}"
+                    paymentAttempt: {payment_attempt}
+                ) {{
+                    ok
+                    paymentAttempt
+                    order {{ paymentStatus }}
+                }}
+            }}
+        """
 
     def test_create_product(self) -> None:
         product = ProductFactory.build()
@@ -508,15 +527,7 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
         self.initiated_order.save()
 
-        query = f"""
-            mutation {{
-                refundOrder(orderId: "{self.initiated_order.id}") {{
-                    ok
-                    order {{ paymentStatus }}
-                }}
-            }}
-        """
-        response = self.query(query, user=superuser)
+        response = self.query(self.refund_order_query(), user=superuser)
 
         self.assertResponseNoErrors(response)
         self.assertTrue(response.json()["data"]["refundOrder"]["ok"])
@@ -530,12 +541,62 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
         self.initiated_order.save()
 
-        query = f"""
-            mutation {{
-                refundOrder(orderId: "{self.initiated_order.id}") {{ ok }}
-            }}
-        """
-        response = self.query(query, user=self.indok_user)
+        response = self.query(self.refund_order_query(), user=self.indok_user)
+
+        self.assert_permission_error(response)
+
+    @patch(
+        "apps.ecommerce.mutations.RefundOrderAttempt.vipps_api.refund_payment",
+        return_value={"transactionSummary": {"refundedAmount": 10000}},
+    )
+    def test_superuser_can_refund_specific_payment_attempt(
+        self, refund_mock: MagicMock
+    ) -> None:
+        superuser = StaffUserFactory(is_staff=True, is_superuser=True)
+        self.initiated_order.total_price = 100
+        self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
+        self.initiated_order.payment_attempt = 3
+        self.initiated_order.save()
+
+        response = self.query(
+            self.refund_order_attempt_query(payment_attempt=2),
+            user=superuser,
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertEqual(
+            response.json()["data"]["refundOrderAttempt"]["paymentAttempt"],
+            2,
+        )
+        self.assertEqual(
+            response.json()["data"]["refundOrderAttempt"]["order"]["paymentStatus"],
+            "CAPTURED",
+        )
+        self.assertEqual(
+            OrderPaymentAttempt.objects.filter(
+                order=self.initiated_order,
+                payment_attempt=2,
+            ).count(),
+            1,
+        )
+        refund_mock.assert_called_once()
+        self.assertEqual(
+            refund_mock.call_args.kwargs["payment_attempt"],
+            2,
+        )
+
+        response = self.query(
+            self.refund_order_attempt_query(payment_attempt=2),
+            user=superuser,
+        )
+        self.assertResponseNoErrors(response)
+        refund_mock.assert_called_once()
+
+    def test_non_superuser_cannot_refund_specific_payment_attempt(self) -> None:
+        response = self.query(
+            self.refund_order_attempt_query(),
+            user=self.indok_user,
+        )
 
         self.assert_permission_error(response)
 
@@ -749,38 +810,38 @@ class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
                 user=self.staff_user,
                 payment_status=Order.PaymentStatus.INITIATED,
             )
-            for i in range(10)
-        ]
+                        for _ in range(10)
+                ]
 
-    def test_paginated_shop_orders_with_fragment_and_product(self):
-        query = """
-        query paginatedShopOrders($limit: Int, $offset: Int) {
-          paginatedShopOrders(limit: $limit, offset: $offset) {
-            ...Order
-          }
-        }
+        def test_paginated_shop_orders_with_fragment_and_product(self):
+                query = """
+                query paginatedShopOrders($limit: Int, $offset: Int) {
+                    paginatedShopOrders(limit: $limit, offset: $offset) {
+                        ...Order
+                    }
+                }
 
-        fragment Order on OrderType {
-          id
-          quantity
-          totalPrice
-          paymentStatus
-          timestamp
-          deliveredProduct
-          product {
-            ...Product
-          }
-        }
+                fragment Order on OrderType {
+                    id
+                    quantity
+                    totalPrice
+                    paymentStatus
+                    timestamp
+                    deliveredProduct
+                    product {
+                        ...Product
+                    }
+                }
 
-        fragment Product on ProductType {
-          id
-          name
-          price
-          description
-          maxBuyableQuantity
-          shopItem
-        }
-        """
+                fragment Product on ProductType {
+                    id
+                    name
+                    price
+                    description
+                    maxBuyableQuantity
+                    shopItem
+                }
+                """
 
         # Execute the query using the query method from ExtendedGraphQLTestCase
         response = self.query(

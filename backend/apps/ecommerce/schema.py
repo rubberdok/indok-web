@@ -7,6 +7,7 @@ from .mutations import (
     DeliveredProduct,
     InitiateOrder,
     RefundOrder,
+    RefundOrderAttempt,
 )
 from .resolvers import EcommerceResolvers
 from .types import OrdersByStatusType, OrderType, ProductType
@@ -18,6 +19,7 @@ class EcommerceMutations(graphene.ObjectType):
     create_product = CreateProduct.Field()
     delivered_product = DeliveredProduct.Field()
     refund_order = RefundOrder.Field()
+    refund_order_attempt = RefundOrderAttempt.Field()
 
 
 class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):
