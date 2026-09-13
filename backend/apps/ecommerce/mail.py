@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from utils.mail.streams import TemplateVariables, TransactionalEmail
 
@@ -5,11 +7,13 @@ from apps.users.models import User
 
 from .models import Order
 
+logger = logging.getLogger(__name__)
+
 
 def send_order_confirmation_mail(order: Order) -> None:
     """
-    Send an order confirmation upon capturing an order. The email is sent to the
-    preferred email adress stored on the user that initiated the order.
+    Send an order confirmation upon capturing an order. The email is sent to
+    the preferred email adress stored on the user that initiated the order.
 
     Args:
         order (Order): Order to send confirmation for
@@ -44,4 +48,11 @@ def send_order_confirmation_mail(order: Order) -> None:
         template_variables=template_variables,
         to=[order.user.email],
     )
-    email.send()
+    try:
+        email.send()
+    except Exception:
+        logger.warning(
+            "Unable to send order confirmation email for order %s",
+            order.id,
+            exc_info=True,
+        )

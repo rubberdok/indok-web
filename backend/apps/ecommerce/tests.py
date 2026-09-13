@@ -1,4 +1,5 @@
 import decimal
+import hashlib
 import json
 from datetime import datetime, timedelta
 from typing import Optional, TypedDict, Union
@@ -11,6 +12,7 @@ from utils.testing.factories.organizations import MembershipFactory, Organizatio
 from utils.testing.factories.users import IndokUserFactory, StaffUserFactory
 
 from apps.ecommerce.models import Order, Product
+from apps.ecommerce.vipps_utils import VippsApi, refund_order
 
 
 class TransactionLogEntry(TypedDict):
@@ -478,6 +480,177 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     def test_authorized_user_reserve_initiated_order(self) -> None:
         # Authorized users should be able to capture orders
         self.do_attempt_capture_order_test(user=self.indok_user)
+
+    @patch("apps.ecommerce.mail.TransactionalEmail.send", side_effect=RuntimeError)
+    def test_captured_order_is_saved_when_confirmation_email_fails(
+        self, send_mock: MagicMock
+    ) -> None:
+        with self.captureOnCommitCallbacks(execute=True):
+            self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
+            self.initiated_order.save()
+
+        send_mock.assert_called_once_with()
+        self.initiated_order.refresh_from_db()
+        self.assertEqual(
+            self.initiated_order.payment_status,
+            Order.PaymentStatus.CAPTURED,
+        )
+
+    @patch(
+        "apps.ecommerce.mutations.RefundOrder.vipps_api.refund_payment",
+        return_value={"transactionSummary": {"refundedAmount": 10000}},
+    )
+    def test_superuser_can_fully_refund_captured_order(
+        self, refund_mock: MagicMock
+    ) -> None:
+        superuser = StaffUserFactory(is_staff=True, is_superuser=True)
+        self.initiated_order.total_price = 100
+        self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
+        self.initiated_order.save()
+
+        query = f"""
+            mutation {{
+                refundOrder(orderId: "{self.initiated_order.id}") {{
+                    ok
+                    order {{ paymentStatus }}
+                }}
+            }}
+        """
+        response = self.query(query, user=superuser)
+
+        self.assertResponseNoErrors(response)
+        self.assertTrue(response.json()["data"]["refundOrder"]["ok"])
+        self.assertEqual(
+            response.json()["data"]["refundOrder"]["order"]["paymentStatus"],
+            "REFUNDED",
+        )
+        refund_mock.assert_called_once()
+
+    def test_non_superuser_cannot_refund_captured_order(self) -> None:
+        self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
+        self.initiated_order.save()
+
+        query = f"""
+            mutation {{
+                refundOrder(orderId: "{self.initiated_order.id}") {{ ok }}
+            }}
+        """
+        response = self.query(query, user=self.indok_user)
+
+        self.assert_permission_error(response)
+
+    def test_refund_of_already_refunded_order_is_idempotent(self) -> None:
+        order = self.initiated_order
+        order.payment_status = Order.PaymentStatus.REFUNDED
+        order.save()
+
+        result = refund_order(order)
+
+        self.assertEqual(result.payment_status, Order.PaymentStatus.REFUNDED)
+
+    def test_only_captured_orders_can_be_refunded(self) -> None:
+        with self.assertRaises(ValueError):
+            refund_order(self.initiated_order)
+
+    def test_refund_mutation_rejects_unknown_order(self) -> None:
+        superuser = StaffUserFactory(is_staff=True, is_superuser=True)
+        query = """
+            mutation {
+                refundOrder(orderId: "00000000-0000-0000-0000-000000000000") {
+                    ok
+                }
+            }
+        """
+
+        response = self.query(query, user=superuser)
+
+        self.assertResponseHasErrors(response)
+
+    @patch(
+        "apps.ecommerce.vipps_utils.VippsApi._build_headers",
+        return_value={"Authorization": "Bearer token"},
+    )
+    @patch("requests.post")
+    def test_vipps_refund_request_matches_ecom_contract(
+        self, post_mock: MagicMock, headers_mock: MagicMock
+    ) -> None:
+        order = self.initiated_order
+        order.payment_status = Order.PaymentStatus.CAPTURED
+        order.save()
+        post_mock.return_value = MockResponse(
+            {"transactionSummary": {"refundedAmount": 10000}}, 200
+        )
+
+        VippsApi().refund_payment(order)
+
+        request = post_mock.call_args
+        self.assertTrue(
+            request.args[0].endswith(
+                f"/ecomm/v2/payments/{order.id}-{order.payment_attempt}/refund"
+            )
+        )
+        self.assertEqual(request.kwargs["timeout"], (1, 5))
+        self.assertEqual(
+            json.loads(request.kwargs["data"])["transaction"]["amount"],
+            int(order.total_price * 100),
+        )
+        self.assertEqual(
+            request.kwargs["headers"]["X-Request-Id"],
+            hashlib.sha256(
+                f"refund:{order.id}:{order.payment_attempt}".encode()
+            ).hexdigest()[:40],
+        )
+
+    @patch("requests.post")
+    def test_vipps_http_error_with_json_list_is_captured(
+        self, post_mock: MagicMock
+    ):
+        response = MagicMock()
+        response.raise_for_status.side_effect = requests.exceptions.HTTPError()
+        response.json.return_value = [{"errorCode": "74"}]
+        post_mock.return_value = response
+
+        with self.assertRaises(requests.exceptions.HTTPError):
+            VippsApi()._make_call("POST", "/refund", {}, "{}")
+
+    @patch("requests.post")
+    def test_vipps_http_error_with_invalid_json_is_captured(
+        self, post_mock: MagicMock
+    ):
+        response = MagicMock()
+        response.status_code = 500
+        response.raise_for_status.side_effect = requests.exceptions.HTTPError()
+        response.json.side_effect = ValueError()
+        post_mock.return_value = response
+
+        with self.assertRaises(requests.exceptions.HTTPError):
+            VippsApi()._make_call("POST", "/refund", {}, "{}")
+
+    @patch(
+        "apps.ecommerce.mutations.RefundOrder.vipps_api.refund_payment",
+        return_value={"transactionSummary": {"refundedAmount": 1}},
+    )
+    def test_refund_requires_vipps_full_amount_confirmation(
+        self, refund_mock: MagicMock
+    ) -> None:
+        superuser = StaffUserFactory(is_staff=True, is_superuser=True)
+        self.initiated_order.total_price = 100
+        self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
+        self.initiated_order.save()
+
+        query = f"""
+            mutation {{
+                refundOrder(orderId: "{self.initiated_order.id}") {{ ok }}
+            }}
+        """
+        response = self.query(query, user=superuser)
+
+        self.assertResponseHasErrors(response)
+        self.initiated_order.refresh_from_db()
+        self.assertEqual(
+            self.initiated_order.payment_status,
+            Order.PaymentStatus.CAPTURED,
+        )
 
     @patch(
         "requests.get",

@@ -1,9 +1,11 @@
 import datetime
+import hashlib
 import json
 from typing import Literal, Optional, Tuple, TypedDict, Union
 
 import requests
 from django.conf import settings
+from django.db import transaction
 from django.utils import timezone
 
 try:
@@ -73,7 +75,39 @@ class CancelPaymentBody(TypedDict):
     transaction: TransactionInfo
 
 
+def refund_order(
+    order: Order, vipps_api: Optional["VippsApi"] = None
+) -> Order:
+    """Refund a CAPTURED order in Vipps and persist the local status."""
+
+    with transaction.atomic():
+        locked_order = Order.objects.select_for_update().get(pk=order.pk)
+        if locked_order.payment_status == Order.PaymentStatus.REFUNDED:
+            return locked_order
+        if locked_order.payment_status != Order.PaymentStatus.CAPTURED:
+            raise ValueError("Only captured orders can be refunded.")
+
+        refund_response = (vipps_api or VippsApi()).refund_payment(
+            locked_order
+        )
+        refunded_amount = (
+            refund_response.get("transactionSummary", {}).get("refundedAmount")
+        )
+        # Dette virker feil, men VIPPS API forventer en pris i Ører!
+        # https://developer.vippsmobilepay.com/docs/APIs/ecom-api/vipps-ecom-api/#initiate
+        expected_amount = int(locked_order.total_price * 100)
+        if refunded_amount != expected_amount:
+            raise ValueError("Vipps did not confirm the full refund amount.")
+        locked_order.payment_status = Order.PaymentStatus.REFUNDED
+        locked_order.save(update_fields=["payment_status"])
+
+        # CHRISTIAN: Skal en full refund "product quantity"?
+        # CHRISTIAN: Skal leverte produkter blokkere redusjoner?
+        return locked_order
+
+
 class VippsApi:
+
     """
     API for handling Vipps payments.
     Class structure inspired by https://github.com/almazkun/vipps-python
@@ -126,16 +160,20 @@ class VippsApi:
 
         url = f"{self.vipps_server}{endpoint}"
 
-        r = req(url, headers=headers, data=data)
+        r = req(url, headers=headers, data=data, timeout=(1, 5))
 
         try:
             r.raise_for_status()
             return r.json()
         except requests.exceptions.HTTPError as e:
-            if isinstance(r.json(), list):
-                set_context("vipps_error", r.json()[0])
-            elif isinstance(r.json(), dict):
-                set_context("vipps_error", r.json())
+            try:
+                error_body = r.json()
+            except ValueError:
+                error_body = {"status_code": r.status_code}
+            if isinstance(error_body, list) and error_body:
+                set_context("vipps_error", error_body[0])
+            elif isinstance(error_body, dict):
+                set_context("vipps_error", error_body)
             raise e
 
     # Public methods:
@@ -149,6 +187,28 @@ class VippsApi:
             f"/ecomm/v2/payments/{order.id}-{order.payment_attempt}/capture",
             headers,
             json.dumps(capture_data),
+        )
+
+    def refund_payment(self, order: Order) -> dict:
+        headers = self._build_headers()
+        headers["X-Request-Id"] = hashlib.sha256(
+            f"refund:{order.id}:{order.payment_attempt}".encode()
+        ).hexdigest()[:40]
+        refund_data = {
+            "merchantInfo": {"merchantSerialNumber": self.merchant_serial_number},
+            "transaction": {
+                # Dette virker feil, men VIPPS API forventer en pris i Ører!
+                # https://developer.vippsmobilepay.com/docs/APIs/ecom-api/vipps-ecom-api/#initiate
+                "amount": int(order.total_price * 100),
+                "transactionText": f"Refund for order {order.id}",
+            },
+        }
+
+        return self._make_call(
+            "POST",
+            f"/ecomm/v2/payments/{order.id}-{order.payment_attempt}/refund",
+            headers,
+            json.dumps(refund_data),
         )
 
     def initiate_payment(
