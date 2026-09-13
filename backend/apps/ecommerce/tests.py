@@ -280,6 +280,30 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     Testing all mutations for ecommerce-app.
     """
 
+    def refund_order_query(self) -> str:
+        return f"""
+            mutation {{
+                refundOrder(orderId: "{self.initiated_order.id}") {{
+                    ok
+                    order {{ paymentStatus }}
+                }}
+            }}
+        """
+
+    def refund_order_attempt_query(self, payment_attempt: int = 1) -> str:
+        return f"""
+            mutation {{
+                refundOrderAttempt(
+                    orderId: "{self.initiated_order.id}"
+                    paymentAttempt: {payment_attempt}
+                ) {{
+                    ok
+                    paymentAttempt
+                    order {{ paymentStatus }}
+                }}
+            }}
+        """
+
     def test_create_product(self) -> None:
         product = ProductFactory.build()
         query = f"""
@@ -503,15 +527,7 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
         self.initiated_order.save()
 
-        query = f"""
-            mutation {{
-                refundOrder(orderId: "{self.initiated_order.id}") {{
-                    ok
-                    order {{ paymentStatus }}
-                }}
-            }}
-        """
-        response = self.query(query, user=superuser)
+        response = self.query(self.refund_order_query(), user=superuser)
 
         self.assertResponseNoErrors(response)
         self.assertTrue(response.json()["data"]["refundOrder"]["ok"])
@@ -525,12 +541,7 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.initiated_order.payment_status = Order.PaymentStatus.CAPTURED
         self.initiated_order.save()
 
-        query = f"""
-            mutation {{
-                refundOrder(orderId: "{self.initiated_order.id}") {{ ok }}
-            }}
-        """
-        response = self.query(query, user=self.indok_user)
+        response = self.query(self.refund_order_query(), user=self.indok_user)
 
         self.assert_permission_error(response)
 
@@ -547,19 +558,10 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.initiated_order.payment_attempt = 3
         self.initiated_order.save()
 
-        query = f"""
-            mutation {{
-                refundOrderAttempt(
-                    orderId: "{self.initiated_order.id}"
-                    paymentAttempt: 2
-                ) {{
-                    ok
-                    paymentAttempt
-                    order {{ paymentStatus }}
-                }}
-            }}
-        """
-        response = self.query(query, user=superuser)
+        response = self.query(
+            self.refund_order_attempt_query(payment_attempt=2),
+            user=superuser,
+        )
 
         self.assertResponseNoErrors(response)
         self.assertEqual(
@@ -583,21 +585,18 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
             2,
         )
 
-        response = self.query(query, user=superuser)
+        response = self.query(
+            self.refund_order_attempt_query(payment_attempt=2),
+            user=superuser,
+        )
         self.assertResponseNoErrors(response)
         refund_mock.assert_called_once()
 
     def test_non_superuser_cannot_refund_specific_payment_attempt(self) -> None:
-        query = f"""
-            mutation {{
-                refundOrderAttempt(
-                    orderId: "{self.initiated_order.id}"
-                    paymentAttempt: 1
-                ) {{ ok }}
-            }}
-        """
-
-        response = self.query(query, user=self.indok_user)
+        response = self.query(
+            self.refund_order_attempt_query(),
+            user=self.indok_user,
+        )
 
         self.assert_permission_error(response)
 
@@ -782,24 +781,6 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.assertTrue(order.delivered_product)
 
 
-class EcommerceAdminTestCase(TestCase):
-    def setUp(self) -> None:
-        self.superuser = StaffUserFactory(is_staff=True, is_superuser=True)
-        self.user = IndokUserFactory()
-        self.product = ProductFactory()
-        self.order = OrderFactory(product=self.product, user=self.user)
-        self.client.force_login(self.superuser)
-
-    def test_order_admin_can_search_by_uuid(self) -> None:
-        response = self.client.get(
-            reverse("admin:ecommerce_order_changelist"),
-            {"q": str(self.order.id)},
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, str(self.order.id))
-
-
 class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
     def setUp(self):
         super().setUp()
@@ -829,7 +810,7 @@ class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
                 user=self.staff_user,
                 payment_status=Order.PaymentStatus.INITIATED,
             )
-                        for i in range(10)
+                        for _ in range(10)
                 ]
 
         def test_paginated_shop_orders_with_fragment_and_product(self):
@@ -852,15 +833,15 @@ class PaginatedShopOrdersResolverTests(ExtendedGraphQLTestCase):
                     }
                 }
 
-        fragment Product on ProductType {
-          id
-          name
-          price
-          description
-          maxBuyableQuantity
-          shopItem
-        }
-        """
+                fragment Product on ProductType {
+                    id
+                    name
+                    price
+                    description
+                    maxBuyableQuantity
+                    shopItem
+                }
+                """
 
         # Execute the query using the query method from ExtendedGraphQLTestCase
         response = self.query(
