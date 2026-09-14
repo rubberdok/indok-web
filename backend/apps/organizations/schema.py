@@ -2,6 +2,7 @@ import graphene
 from graphene import NonNull
 
 from .mutations import (
+    AddMembershipByIdentifier,
     AssignMembership,
     CreateOrganization,
     DeleteOrganization,
@@ -20,6 +21,7 @@ class OrganizationMutations(graphene.ObjectType):
 
     assign_membership = AssignMembership.Field()
     upsert_membership = UpsertMembership.Field()
+    add_membership_by_identifier = AddMembershipByIdentifier.Field()
     remove_membership = RemoveMembership.Field()
 
 

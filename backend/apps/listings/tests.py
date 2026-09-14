@@ -14,10 +14,16 @@ from apps.listings.models import Listing
 class ListingBaseTestCase(ExtendedGraphQLTestCase):
     def setUp(self) -> None:
         self.authorized_user = UserFactory()
+        self.normal_member = UserFactory()
         self.unauthorized_user = UserFactory()
 
         self.organization = OrganizationFactory()
-        MembershipFactory(user=self.authorized_user, organization=self.organization)
+        MembershipFactory(
+            user=self.authorized_user,
+            organization=self.organization,
+            group=self.organization.hr_group,
+        )
+        MembershipFactory(user=self.normal_member, organization=self.organization)
 
         self.now = timezone.now()
         self.one_day_ago = timezone.now() - timedelta(days=1)
@@ -211,6 +217,8 @@ class ListingMutationTestCase(ListingBaseTestCase):
         self.assert_permission_error(response)
         response = self.query(self.create_mutation, user=self.unauthorized_user)
         self.assert_permission_error(response)
+        response = self.query(self.create_mutation, user=self.normal_member)
+        self.assert_permission_error(response)
 
     def test_unauthorized_change_listing(self):
         response = self.query(self.update_mutation)
@@ -223,6 +231,8 @@ class ListingMutationTestCase(ListingBaseTestCase):
         self.assert_permission_error(response)
         response = self.query(self.delete_mutation, user=self.unauthorized_user)
         self.assert_permission_error(response)
+        response = self.query(self.delete_mutation, user=self.normal_member)
+        self.assert_permission_error(response)
 
     def test_authorized_create_listing(self):
         response = self.query(self.create_mutation, user=self.authorized_user)
@@ -234,7 +244,7 @@ class ListingMutationTestCase(ListingBaseTestCase):
         self.deep_assert_equal(listing_data, listing)
 
     def test_authorized_change_listing(self):
-        response = self.query(self.update_mutation, user=self.authorized_user)
+        response = self.query(self.update_mutation, user=self.normal_member)
         self.assertResponseNoErrors(response)
 
         data = json.loads(response.content)["data"]
@@ -252,3 +262,17 @@ class ListingMutationTestCase(ListingBaseTestCase):
             self.fail("Expected the listing to be deleted, but it was not.")
         except Listing.DoesNotExist:
             pass
+
+    def test_hr_member_cannot_edit_listing_in_another_organization(self):
+        other_listing = ListingFactory(organization=OrganizationFactory())
+        mutation = f"""
+            mutation {{
+                updateListing(id: {other_listing.id}, listingData: {{ title: "Updated" }}) {{
+                    ok
+                }}
+            }}
+        """
+
+        response = self.query(mutation, user=self.authorized_user)
+
+        self.assert_permission_error(response)
