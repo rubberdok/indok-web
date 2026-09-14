@@ -6,11 +6,27 @@ from decorators.constants import PERMISSION_REQUIRED_ERROR
 
 
 def check_user_membership(user: User, organization: Organization):
-    membership = Membership.objects.filter(user=user, organization=organization)
-    if not membership:
-        raise PermissionDenied(
-            f"{user.username}({user.id}) is not a member of {organization.name}({organization.id})"
-        )
+    if not user or not user.is_authenticated:
+        raise PermissionDenied(PERMISSION_REQUIRED_ERROR)
+
+    if user.is_superuser:
+        return
+
+    if not Membership.objects.filter(user=user, organization=organization).exists():
+        raise PermissionDenied(PERMISSION_REQUIRED_ERROR)
+
+
+def check_user_hr_membership(user: User, organization: Organization):
+    if not user or not user.is_authenticated:
+        raise PermissionDenied(PERMISSION_REQUIRED_ERROR)
+
+    if user.is_superuser:
+        return
+
+    if not Membership.objects.filter(
+        user=user, organization=organization, group__group_type=HR_TYPE
+    ).exists():
+        raise PermissionDenied(PERMISSION_REQUIRED_ERROR)
 
 
 def can_manage_memberships(user: User, organization: Organization) -> bool:
