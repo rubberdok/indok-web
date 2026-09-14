@@ -42,6 +42,11 @@ export type Scalars = {
   UUID: { input: string; output: string; }
 };
 
+export type AddMembershipByIdentifier = {
+  __typename?: 'AddMembershipByIdentifier';
+  ok: Scalars['Boolean']['output'];
+};
+
 /** Booking type for admin users */
 export type AdminBookingType = {
   __typename?: 'AdminBookingType';
@@ -1007,6 +1012,7 @@ export type MembershipType = {
 
 export type Mutations = {
   __typename?: 'Mutations';
+  addMembershipByIdentifier: Maybe<AddMembershipByIdentifier>;
   /**
    * Sets the field is_attending to False in the Sign Up for the user with the
    * given ID, for the event with the given ID
@@ -1075,6 +1081,8 @@ export type Mutations = {
   initiateOrder: Maybe<InitiateOrder>;
   logNfcAccessEvent: Maybe<LogNfcAccessEvent>;
   logout: Maybe<Logout>;
+  refundOrder: Maybe<RefundOrder>;
+  refundOrderAttempt: Maybe<RefundOrderAttempt>;
   removeMembership: Maybe<RemoveMembership>;
   reviewJanhusBooking: Maybe<ReviewJanHusBooking>;
   reviewJanhusBookingRequest: Maybe<ReviewJanHusBookingRequest>;
@@ -1108,6 +1116,12 @@ export type Mutations = {
   updateUser: Maybe<UpdateUser>;
   upsertMembership: Maybe<UpsertMembership>;
   upsertNfcCard: Maybe<UpsertNfcCard>;
+};
+
+
+export type MutationsAddMembershipByIdentifierArgs = {
+  identifier: Scalars['String']['input'];
+  organizationId: Scalars['ID']['input'];
 };
 
 
@@ -1341,6 +1355,17 @@ export type MutationsInitiateOrderArgs = {
 
 export type MutationsLogNfcAccessEventArgs = {
   eventData: LogNfcAccessEventInput;
+};
+
+
+export type MutationsRefundOrderArgs = {
+  orderId: Scalars['ID']['input'];
+};
+
+
+export type MutationsRefundOrderAttemptArgs = {
+  orderId: Scalars['ID']['input'];
+  paymentAttempt: Scalars['Int']['input'];
 };
 
 
@@ -1978,6 +2003,19 @@ export enum QuestionTypeEnum {
   ShortAnswer = 'SHORT_ANSWER',
   Slider = 'SLIDER'
 }
+
+export type RefundOrder = {
+  __typename?: 'RefundOrder';
+  ok: Maybe<Scalars['Boolean']['output']>;
+  order: Maybe<OrderType>;
+};
+
+export type RefundOrderAttempt = {
+  __typename?: 'RefundOrderAttempt';
+  ok: Maybe<Scalars['Boolean']['output']>;
+  order: Maybe<OrderType>;
+  paymentAttempt: Maybe<Scalars['Int']['output']>;
+};
 
 export type RemoveMembership = {
   __typename?: 'RemoveMembership';

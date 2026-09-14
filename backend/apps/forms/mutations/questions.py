@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from apps.forms.models import Answer, Option, Question, Response, Form
 from apps.forms.types import OptionType, QuestionType, QuestionTypeEnum
+from apps.organizations.permissions import check_user_membership
 
 
 class BaseQuestionInput(graphene.InputObjectType):
@@ -29,14 +30,14 @@ class CreateQuestion(graphene.Mutation):
         form_id = graphene.ID()
         question_data = CreateQuestionInput(required=True)
 
-    @permission_required("forms.change_form", (Form, ("pk", "form_id")))
+    @login_required
     def mutate(self, info, form_id, question_data):
+        form = Form.objects.get(pk=form_id)
+        check_user_membership(info.context.user, form.organization)
+
         question = Question()
         for k, v in question_data.items():
-            # Necessary as graphene-django passes None into kwargs if no value is submitted.
-            # Can be removed if https://github.com/graphql-python/graphene/pull/1300 is merged
-            if v is not None:
-                setattr(question, k, v)
+            setattr(question, k, v)
         question.form_id = form_id
         question.save()
         return CreateQuestion(question=question, ok=True)
@@ -50,12 +51,13 @@ class UpdateQuestion(graphene.Mutation):
         id = graphene.ID(required=True)
         question_data = BaseQuestionInput(required=True)
 
-    @permission_required("forms.change_form", (Form, ("questions__pk", "id")))
+    @login_required
     def mutate(self, info, id, question_data):
         try:
             question = Question.objects.get(pk=id)
         except Question.DoesNotExist:
             return UpdateQuestion(question=None, ok=False)
+        check_user_membership(info.context.user, question.form.organization)
         for (
             k,
             v,
@@ -72,12 +74,13 @@ class DeleteQuestion(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @permission_required("forms.change_form", (Form, ("questions__pk", "id")))
+    @login_required
     def mutate(self, info, id):
         try:
             question = Question.objects.get(pk=id)
         except Question.DoesNotExist:
             return DeleteQuestion(ok=False, deleted_id=None)
+        check_user_membership(info.context.user, question.form.organization)
         deleted_id = question.id
         question.delete()
         ok = True
@@ -234,7 +237,7 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
         question_id = graphene.ID(required=True)
         option_data = graphene.List(NonNull(OptionInput))
 
-    @permission_required("forms.change_form", (Form, ("questions__pk", "question_id")))
+    @login_required
     def mutate(self, info, question_id, option_data):
         """Bulk operation to refresh the options to a given question. Has three main operations:
         (1): Creates new options for inputs without an option_id
@@ -249,7 +252,9 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
             The question for which the options are submitted
         option_data : list[OptionInput]
         """
-        existing_options = Option.objects.filter(question__pk=question_id)
+        question = Question.objects.select_related("form__organization").get(pk=question_id)
+        check_user_membership(info.context.user, question.form.organization)
+        existing_options = Option.objects.filter(question=question)
         submitted_ids = [option.get("id", -1) for option in option_data]
 
         existing_options.filter(~Q(pk__in=submitted_ids)).delete()

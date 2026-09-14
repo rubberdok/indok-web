@@ -8,7 +8,7 @@ from django.utils import timezone
 from decorators import login_required, staff_member_required, permission_required
 
 from apps.organizations.models import Organization
-from apps.organizations.permissions import check_user_membership
+from apps.organizations.permissions import check_user_hr_membership, check_user_membership
 
 from .mail import EventEmail
 from .models import Category, Event, SignUp
@@ -68,7 +68,7 @@ class CreateEvent(graphene.Mutation):
         except Organization.DoesNotExist:
             raise ValueError("Ugyldig forening oppgitt")
 
-        check_user_membership(info.context.user, organization)
+        check_user_hr_membership(info.context.user, organization)
 
         event = Event()
         for k, v in event_data.items():
@@ -99,6 +99,11 @@ class UpdateEvent(graphene.Mutation):
             raise ValueError("Ugyldig arrangement")
 
         check_user_membership(info.context.user, event.organization)
+        if event_data.get("organization_id"):
+            destination_organization = Organization.objects.get(
+                pk=event_data["organization_id"]
+            )
+            check_user_membership(info.context.user, destination_organization)
 
         for k, v in event_data.items():
             setattr(event, k, v)
@@ -125,7 +130,7 @@ class DeleteEvent(graphene.Mutation):
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
-        check_user_membership(info.context.user, event.organization)
+        check_user_hr_membership(info.context.user, event.organization)
 
         event.delete()
         ok = True

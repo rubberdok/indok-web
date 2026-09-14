@@ -25,7 +25,9 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
 
         # Create users and an organization
         self.authorized_user = IndokUserFactory()
+        self.normal_member = IndokUserFactory()
         self.unauthorized_user = IndokUserFactory()
+        self.superuser = IndokUserFactory(is_superuser=True)
         self.preexisting_user = IndokUserFactory()
         self.organization = OrganizationFactory()
         MembershipFactory(
@@ -33,6 +35,7 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
             organization=self.organization,
             group=self.organization.hr_group,
         )
+        MembershipFactory(user=self.normal_member, organization=self.organization)
 
         # Create the form
         self.form = FormFactory(organization=self.organization)
@@ -171,6 +174,8 @@ class FormsMutationTestCase(FormBaseTestCase):
     def test_unauthorized_create_form(self):
         response = self.query(self.CREATE_MUTATION, user=self.unauthorized_user)
         self.assert_permission_error(response)
+        response = self.query(self.CREATE_MUTATION, user=self.normal_member)
+        self.assert_permission_error(response)
 
     def test_unauthorized_change_form(self):
         response = self.query(self.UPDATE_MUTATION, user=self.unauthorized_user)
@@ -182,6 +187,9 @@ class FormsMutationTestCase(FormBaseTestCase):
 
     def test_unauthorized_delete_form(self):
         response = self.query(self.DELETE_MUTATION, user=self.unauthorized_user)
+        self.assert_permission_error(response)
+
+        response = self.query(self.DELETE_MUTATION, user=self.normal_member)
         self.assert_permission_error(response)
 
         assign_perm("forms.delete_form", self.unauthorized_user)
@@ -201,7 +209,7 @@ class FormsMutationTestCase(FormBaseTestCase):
             self.deep_assert_equal(response_form, form)
 
     def test_update_form(self):
-        response = self.query(self.UPDATE_MUTATION, user=self.authorized_user)
+        response = self.query(self.UPDATE_MUTATION, user=self.normal_member)
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
         response_form = data["updateForm"]["form"]
@@ -215,6 +223,77 @@ class FormsMutationTestCase(FormBaseTestCase):
         data = json.loads(response.content)["data"]
         self.assertTrue(data["deleteForm"]["ok"])
         self.assertFalse(Form.objects.filter(pk=self.form.id).exists())
+
+    def test_hr_member_cannot_edit_form_in_another_organization(self):
+        other_form = FormFactory(organization=OrganizationFactory())
+        mutation = f"""
+            mutation {{
+                updateForm(id: {other_form.id}, formData: {{ name: "UPDATED" }}) {{
+                    ok
+                }}
+            }}
+        """
+
+        response = self.query(mutation, user=self.authorized_user)
+
+        self.assert_permission_error(response)
+
+    def test_superuser_can_manage_form_without_membership(self):
+        self.assertResponseNoErrors(
+            self.query(self.CREATE_MUTATION, user=self.superuser)
+        )
+        self.assertResponseNoErrors(
+            self.query(self.UPDATE_MUTATION, user=self.superuser)
+        )
+        self.assertResponseNoErrors(
+            self.query(self.DELETE_MUTATION, user=self.superuser)
+        )
+
+    def test_normal_member_can_edit_form_contents(self):
+        option_mutation = f"""
+            mutation {{
+                createUpdateAndDeleteOptions(
+                    questionId: {self.mcq.id}
+                    optionData: [{{ answer: "Option" }}]
+                ) {{ ok }}
+            }}
+        """
+
+        self.assertResponseNoErrors(
+            self.query(self.CREATE_QUESTION_MUTATION, user=self.normal_member)
+        )
+        self.assertResponseNoErrors(
+            self.query(self.UPDATE_QUESTION_MUTATION, user=self.normal_member)
+        )
+        self.assertResponseNoErrors(
+            self.query(option_mutation, user=self.normal_member)
+        )
+        self.assertResponseNoErrors(
+            self.query(self.DELETE_QUESTION_MUTATION, user=self.normal_member)
+        )
+
+    def test_non_member_cannot_edit_form_contents(self):
+        option_mutation = f"""
+            mutation {{
+                createUpdateAndDeleteOptions(
+                    questionId: {self.mcq.id}
+                    optionData: [{{ answer: "Option" }}]
+                ) {{ ok }}
+            }}
+        """
+
+        self.assert_permission_error(
+            self.query(self.CREATE_QUESTION_MUTATION, user=self.unauthorized_user)
+        )
+        self.assert_permission_error(
+            self.query(self.UPDATE_QUESTION_MUTATION, user=self.unauthorized_user)
+        )
+        self.assert_permission_error(
+            self.query(self.DELETE_QUESTION_MUTATION, user=self.unauthorized_user)
+        )
+        self.assert_permission_error(
+            self.query(option_mutation, user=self.unauthorized_user)
+        )
 
     def test_authorized_add_question(self):
         response = self.query(self.CREATE_QUESTION_MUTATION, user=self.authorized_user)

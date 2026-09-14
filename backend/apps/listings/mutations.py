@@ -4,6 +4,9 @@ import graphene
 from django.utils.text import slugify
 from decorators import login_required, permission_required
 
+from apps.organizations.models import Organization
+from apps.organizations.permissions import check_user_hr_membership, check_user_membership
+
 from .models import Listing
 from .types import ListingType
 
@@ -42,6 +45,9 @@ class CreateListing(graphene.Mutation):
     @login_required
     @permission_required("listings.add_listing")
     def mutate(self, info, listing_data):
+        organization = Organization.objects.get(pk=listing_data["organization_id"])
+        check_user_hr_membership(info.context.user, organization)
+
         listing = Listing()
 
         for k, v in listing_data.items():
@@ -76,6 +82,7 @@ class DeleteListing(graphene.Mutation):
             listing = Listing.objects.get(pk=kwargs["id"])
         except Listing.DoesNotExist:
             return DeleteListing(ok=False, listing_id=kwargs["id"])
+        check_user_hr_membership(info.context.user, listing.organization)
         listing_id = kwargs["id"]
         listing.delete()
         return DeleteListing(ok=True, listing_id=listing_id)
@@ -96,6 +103,7 @@ class UpdateListing(graphene.Mutation):
             listing = Listing.objects.get(pk=id)
         except Listing.DoesNotExist:
             return UpdateListing(listing=None, ok=False)
+        check_user_membership(info.context.user, listing.organization)
 
         for k, v in listing_data.items():
             setattr(listing, k, v)

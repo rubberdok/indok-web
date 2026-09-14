@@ -1,8 +1,11 @@
 import graphene
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.utils.text import slugify
 from decorators import login_required, permission_required
 
 from apps.users.types import UserType
+from apps.permissions.constants import PRIMARY_TYPE
 from apps.permissions.models import ResponsibleGroup
 
 from apps.organizations import permissions as perms
@@ -150,6 +153,45 @@ class UpsertMembership(graphene.Mutation):
             defaults={"group": group},
         )
         return UpsertMembership(membership=membership, ok=True)
+
+
+class AddMembershipByIdentifier(graphene.Mutation):
+    ok = graphene.Boolean(required=True)
+
+    class Arguments:
+        organization_id = graphene.ID(required=True)
+        identifier = graphene.String(required=True)
+
+    @login_required
+    def mutate(self, info, organization_id, identifier):
+        organization = Organization.objects.prefetch_related("permission_groups").get(
+            pk=organization_id
+        )
+        perms.require_manage_memberships(info.context.user, organization)
+
+        normalized_identifier = identifier.strip()
+        if not normalized_identifier:
+            return AddMembershipByIdentifier(ok=False)
+
+        users = get_user_model().objects.filter(
+            Q(username__iexact=normalized_identifier)
+            | Q(email__iexact=normalized_identifier)
+            | Q(feide_email__iexact=normalized_identifier)
+        ).distinct()
+        if users.count() != 1:
+            return AddMembershipByIdentifier(ok=False)
+
+        try:
+            primary_group = organization.permission_groups.get(group_type=PRIMARY_TYPE)
+        except ResponsibleGroup.DoesNotExist:
+            return AddMembershipByIdentifier(ok=False)
+
+        Membership.objects.update_or_create(
+            organization=organization,
+            user=users.first(),
+            defaults={"group": primary_group},
+        )
+        return AddMembershipByIdentifier(ok=True)
 
 
 class RemoveMembership(graphene.Mutation):

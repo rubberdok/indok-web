@@ -20,6 +20,11 @@ export type Scalars = {
   UUID: { input: string; output: string; }
 };
 
+export type AddMembershipByIdentifier = {
+  __typename?: 'AddMembershipByIdentifier';
+  ok: Scalars['Boolean']['output'];
+};
+
 /** Booking type for admin users */
 export type AdminBookingType = {
   __typename?: 'AdminBookingType';
@@ -985,6 +990,7 @@ export type MembershipType = {
 
 export type Mutations = {
   __typename?: 'Mutations';
+  addMembershipByIdentifier?: Maybe<AddMembershipByIdentifier>;
   /**
    * Sets the field is_attending to False in the Sign Up for the user with the
    * given ID, for the event with the given ID
@@ -1053,6 +1059,8 @@ export type Mutations = {
   initiateOrder?: Maybe<InitiateOrder>;
   logNfcAccessEvent?: Maybe<LogNfcAccessEvent>;
   logout?: Maybe<Logout>;
+  refundOrder?: Maybe<RefundOrder>;
+  refundOrderAttempt?: Maybe<RefundOrderAttempt>;
   removeMembership?: Maybe<RemoveMembership>;
   reviewJanhusBooking?: Maybe<ReviewJanHusBooking>;
   reviewJanhusBookingRequest?: Maybe<ReviewJanHusBookingRequest>;
@@ -1086,6 +1094,12 @@ export type Mutations = {
   updateUser?: Maybe<UpdateUser>;
   upsertMembership?: Maybe<UpsertMembership>;
   upsertNfcCard?: Maybe<UpsertNfcCard>;
+};
+
+
+export type MutationsAddMembershipByIdentifierArgs = {
+  identifier: Scalars['String']['input'];
+  organizationId: Scalars['ID']['input'];
 };
 
 
@@ -1319,6 +1333,17 @@ export type MutationsInitiateOrderArgs = {
 
 export type MutationsLogNfcAccessEventArgs = {
   eventData: LogNfcAccessEventInput;
+};
+
+
+export type MutationsRefundOrderArgs = {
+  orderId: Scalars['ID']['input'];
+};
+
+
+export type MutationsRefundOrderAttemptArgs = {
+  orderId: Scalars['ID']['input'];
+  paymentAttempt: Scalars['Int']['input'];
 };
 
 
@@ -1956,6 +1981,19 @@ export enum QuestionTypeEnum {
   ShortAnswer = 'SHORT_ANSWER',
   Slider = 'SLIDER'
 }
+
+export type RefundOrder = {
+  __typename?: 'RefundOrder';
+  ok?: Maybe<Scalars['Boolean']['output']>;
+  order?: Maybe<OrderType>;
+};
+
+export type RefundOrderAttempt = {
+  __typename?: 'RefundOrderAttempt';
+  ok?: Maybe<Scalars['Boolean']['output']>;
+  order?: Maybe<OrderType>;
+  paymentAttempt?: Maybe<Scalars['Int']['output']>;
+};
 
 export type RemoveMembership = {
   __typename?: 'RemoveMembership';
@@ -3071,6 +3109,14 @@ export type UpsertMembershipMutationVariables = Exact<{
 
 export type UpsertMembershipMutation = { __typename?: 'Mutations', upsertMembership?: { __typename?: 'UpsertMembership', ok?: boolean | null, membership?: { __typename?: 'MembershipType', id: string, organization: { __typename?: 'OrganizationType', id: string, name: string }, user: { __typename?: 'UserType', id: string, username: string, firstName: string, lastName: string }, group?: { __typename?: 'ResponsibleGroupType', id: string, name: string, uuid: string } | null } | null } | null };
 
+export type AddMembershipByIdentifierMutationVariables = Exact<{
+  organizationId: Scalars['ID']['input'];
+  identifier: Scalars['String']['input'];
+}>;
+
+
+export type AddMembershipByIdentifierMutation = { __typename?: 'Mutations', addMembershipByIdentifier?: { __typename?: 'AddMembershipByIdentifier', ok: boolean } | null };
+
 export type RemoveMembershipMutationVariables = Exact<{
   membershipId: Scalars['ID']['input'];
 }>;
@@ -3345,6 +3391,7 @@ export const MyNfcCardAssignmentDocument = {"kind":"Document","definitions":[{"k
 export const NfcAccessGrantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"nfcAccessGrants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"activeOnly"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nfcAccessGrants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"activeOnly"},"value":{"kind":"Variable","name":{"kind":"Name","value":"activeOnly"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcAccessGrant"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NfcUserLite"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NfcCardLite"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NfcCardType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"mifareCsn"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"isEnabled"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NfcAccessGrant"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NfcAccessGrantType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"scope"}},{"kind":"Field","name":{"kind":"Name","value":"participantPolicy"}},{"kind":"Field","name":{"kind":"Name","value":"accessStart"}},{"kind":"Field","name":{"kind":"Name","value":"accessEnd"}},{"kind":"Field","name":{"kind":"Name","value":"permanentAccess"}},{"kind":"Field","name":{"kind":"Name","value":"revokedAt"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"hasAccessNow"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"booking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"checkIn"}},{"kind":"Field","name":{"kind":"Name","value":"checkOut"}}]}},{"kind":"Field","name":{"kind":"Name","value":"grantedToUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcUserLite"}}]}},{"kind":"Field","name":{"kind":"Name","value":"grantedToCard"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcCardLite"}}]}},{"kind":"Field","name":{"kind":"Name","value":"grantedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcUserLite"}}]}},{"kind":"Field","name":{"kind":"Name","value":"revokedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcUserLite"}}]}}]}}]} as unknown as DocumentNode<NfcAccessGrantsQuery, NfcAccessGrantsQueryVariables>;
 export const NfcAccessEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"nfcAccessEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doorIdentifier"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nfcAccessEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"doorIdentifier"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doorIdentifier"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcAccessEvent"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NfcCardLite"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NfcCardType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"mifareCsn"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"isEnabled"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NfcUserLite"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NfcAccessEvent"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NfcAccessEventType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"source"}},{"kind":"Field","name":{"kind":"Name","value":"doorIdentifier"}},{"kind":"Field","name":{"kind":"Name","value":"mifareCsnReported"}},{"kind":"Field","name":{"kind":"Name","value":"occurredAt"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"rawPayload"}},{"kind":"Field","name":{"kind":"Name","value":"card"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcCardLite"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cardAssignment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"externalHolderName"}},{"kind":"Field","name":{"kind":"Name","value":"permanentAccess"}},{"kind":"Field","name":{"kind":"Name","value":"accessStart"}},{"kind":"Field","name":{"kind":"Name","value":"accessEnd"}},{"kind":"Field","name":{"kind":"Name","value":"revokedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"resolvedUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"NfcUserLite"}}]}}]}}]} as unknown as DocumentNode<NfcAccessEventsQuery, NfcAccessEventsQueryVariables>;
 export const UpsertMembershipDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"upsertMembership"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"membershipData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MembershipInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upsertMembership"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"membershipData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"membershipData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"membership"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MembershipWithOrganization"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Membership"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MembershipType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MembershipWithOrganization"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MembershipType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Membership"}},{"kind":"Field","name":{"kind":"Name","value":"organization"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<UpsertMembershipMutation, UpsertMembershipMutationVariables>;
+export const AddMembershipByIdentifierDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addMembershipByIdentifier"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"identifier"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addMembershipByIdentifier"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"organizationId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}}},{"kind":"Argument","name":{"kind":"Name","value":"identifier"},"value":{"kind":"Variable","name":{"kind":"Name","value":"identifier"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<AddMembershipByIdentifierMutation, AddMembershipByIdentifierMutationVariables>;
 export const RemoveMembershipDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeMembership"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"membershipId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeMembership"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"membershipId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"membershipId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"removedMember"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]}}]} as unknown as DocumentNode<RemoveMembershipMutation, RemoveMembershipMutationVariables>;
 export const AdminOrganizationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"adminOrganization"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"organization"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AdminOrganization"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgAdminEvent"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"shortDescription"}},{"kind":"Field","name":{"kind":"Name","value":"availableSlots"}},{"kind":"Field","name":{"kind":"Name","value":"isFull"}},{"kind":"Field","name":{"kind":"Name","value":"usersAttending"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgAdminListing"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"deadline"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AdminOrganization"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrganizationType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"hrGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"primaryGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgAdminEvent"}}]}},{"kind":"Field","name":{"kind":"Name","value":"listings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgAdminListing"}}]}}]}}]} as unknown as DocumentNode<AdminOrganizationQuery, AdminOrganizationQueryVariables>;
 export const MembershipsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"memberships"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"memberships"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"organizationId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"organizationId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Membership"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Membership"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MembershipType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}}]}}]} as unknown as DocumentNode<MembershipsQuery, MembershipsQueryVariables>;

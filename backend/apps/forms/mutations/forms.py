@@ -1,10 +1,12 @@
 import graphene
 
-from apps.listings.models import Listing
 from apps.forms.models import Form
 from apps.forms.types import FormType
+from apps.listings.models import Listing
+from apps.organizations.models import Organization
+from apps.organizations.permissions import check_user_hr_membership, check_user_membership
 
-from decorators import permission_required
+from decorators import login_required
 
 
 class FormInput(graphene.InputObjectType):
@@ -32,14 +34,19 @@ class CreateForm(graphene.Mutation):
         listing_id = graphene.ID()
         form_data = CreateFormInput(required=True)
 
-    @permission_required("forms.add_form")
+    @login_required
     def mutate(self, info, form_data, listing_id=None):
+        organization = Organization.objects.get(pk=form_data["organization_id"])
+        check_user_hr_membership(info.context.user, organization)
+
         form = Form()
         for key, value in form_data.items():
             setattr(form, key, value)
         form.save()
         if listing_id:
             listing = Listing.objects.get(pk=listing_id)
+            if listing.organization_id != organization.id:
+                raise ValueError("Skjema og utlysning må tilhøre samme forening")
             listing.form = form
             listing.save()
         return CreateForm(form=form, ok=True)
@@ -53,10 +60,13 @@ class UpdateForm(graphene.Mutation):
         id = graphene.ID()
         form_data = BaseFormInput(required=True)
 
-    @permission_required("forms.change_form", (Form, ("pk", "id")))
+    @login_required
     def mutate(self, info, id, form_data):
         form = Form.objects.get(pk=id)
+        check_user_membership(info.context.user, form.organization)
         for key, value in form_data.items():
+            if key == "organization_id" and int(value) != form.organization_id:
+                raise ValueError("Et skjema kan ikke flyttes til en annen forening")
             setattr(form, key, value)
         form.save()
         return UpdateForm(form=form, ok=True)
@@ -69,9 +79,10 @@ class DeleteForm(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @permission_required("forms.delete_form", (Form, ("pk", "id")))
+    @login_required
     def mutate(self, info, id):
         form = Form.objects.get(pk=id)
+        check_user_hr_membership(info.context.user, form.organization)
         deleted_id = form.id
         form.delete()
         return DeleteForm(deleted_id=deleted_id, ok=True)

@@ -7,7 +7,7 @@ import pandas as pd
 from django.utils import timezone
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.events import EventFactory
-from utils.testing.factories.organizations import MembershipFactory
+from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory
 
 from .resolvers import wrap_attendee_report_as_json
@@ -270,6 +270,86 @@ class EventQueryValidationTestCase(EventsBaseTestCase):
 
         self.assertResponseNoErrors(response)
         self.assertIsNone(response.json()["data"]["signUps"])
+
+
+class EventMutationAuthorizationTestCase(ExtendedGraphQLTestCase):
+    def setUp(self):
+        super().setUp()
+        self.organization = OrganizationFactory()
+        self.hr_user = IndokUserFactory()
+        self.normal_member = IndokUserFactory()
+        self.superuser = IndokUserFactory(is_superuser=True)
+        MembershipFactory(
+            user=self.hr_user,
+            organization=self.organization,
+            group=self.organization.hr_group,
+        )
+        MembershipFactory(user=self.normal_member, organization=self.organization)
+        self.event = EventFactory(
+            organization=self.organization,
+            is_attendable=False,
+        )
+
+    def test_event_mutation_role_matrix(self):
+        create_mutation = f'''
+            mutation {{
+                createEvent(eventData: {{
+                    title: "New event"
+                    description: "Description"
+                    startTime: "{timezone.now().isoformat()}"
+                    isAttendable: false
+                    organizationId: {self.organization.id}
+                }}) {{ ok }}
+            }}
+        '''
+        update_mutation = f'''
+            mutation {{ updateEvent(id: {self.event.id}, eventData: {{ title: "Updated" }}) {{ ok }} }}
+        '''
+        delete_mutation = f'''
+            mutation {{ deleteEvent(id: {self.event.id}) {{ ok }} }}
+        '''
+
+        self.assert_permission_error(self.query(create_mutation, user=self.normal_member))
+        self.assertResponseNoErrors(self.query(create_mutation, user=self.hr_user))
+        self.assertResponseNoErrors(self.query(update_mutation, user=self.normal_member))
+        self.assert_permission_error(self.query(delete_mutation, user=self.normal_member))
+        self.assertResponseNoErrors(self.query(delete_mutation, user=self.hr_user))
+
+    def test_superuser_can_manage_events_without_membership(self):
+        create_mutation = f'''
+            mutation {{
+                createEvent(eventData: {{
+                    title: "New event"
+                    description: "Description"
+                    startTime: "{timezone.now().isoformat()}"
+                    isAttendable: false
+                    organizationId: {self.organization.id}
+                }}) {{ ok }}
+            }}
+        '''
+        update_mutation = f'''
+            mutation {{ updateEvent(id: {self.event.id}, eventData: {{ title: "Updated" }}) {{ ok }} }}
+        '''
+        delete_mutation = f'''
+            mutation {{ deleteEvent(id: {self.event.id}) {{ ok }} }}
+        '''
+
+        self.assertResponseNoErrors(self.query(create_mutation, user=self.superuser))
+        self.assertResponseNoErrors(self.query(update_mutation, user=self.superuser))
+        self.assertResponseNoErrors(self.query(delete_mutation, user=self.superuser))
+
+    def test_hr_member_cannot_update_event_in_another_organization(self):
+        other_event = EventFactory(
+            organization=OrganizationFactory(),
+            is_attendable=False,
+        )
+        mutation = f'''
+            mutation {{ updateEvent(id: {other_event.id}, eventData: {{ title: "Updated" }}) {{ ok }} }}
+        '''
+
+        response = self.query(mutation, user=self.hr_user)
+
+        self.assert_permission_error(response)
 
 
 class AttendeeReportExportTestCase(EventsBaseTestCase):
