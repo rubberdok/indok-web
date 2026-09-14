@@ -107,7 +107,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
       const result = await addMembershipByIdentifier({
         variables: { organizationId: organization.id, identifier: input },
       });
-      if (!result.data?.addMembershipByIdentifier.ok) {
+      if (!result.data?.addMembershipByIdentifier?.ok) {
         setFeedbackError("Kunne ikke legge til bruker. Kontroller brukernavn eller e-postadresse.");
         return;
       }
