@@ -37,10 +37,7 @@ class CreateQuestion(graphene.Mutation):
 
         question = Question()
         for k, v in question_data.items():
-            # Necessary as graphene-django passes None into kwargs if no value is submitted.
-            # Can be removed if https://github.com/graphql-python/graphene/pull/1300 is merged
-            if v is not None:
-                setattr(question, k, v)
+            setattr(question, k, v)
         question.form_id = form_id
         question.save()
         return CreateQuestion(question=question, ok=True)
