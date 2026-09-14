@@ -7,6 +7,12 @@ mutation upsertMembership($membershipData: MembershipInput!) {
   }
 }
 
+mutation addMembershipByIdentifier($organizationId: ID!, $identifier: String!) {
+  addMembershipByIdentifier(organizationId: $organizationId, identifier: $identifier) {
+    ok
+  }
+}
+
 mutation removeMembership($membershipId: ID!) {
   removeMembership(membershipId: $membershipId) {
     ok
