@@ -86,7 +86,10 @@ class ArchiveMutationsTestCase(ExtendedGraphQLTestCase):
         self.add_archive_permission("add_archivedocument")
         response = self.create_document(user=self.user)
         self.assertResponseNoErrors(response)
-        self.assertTrue(ArchiveDocument.objects.filter(title="New document").exists())
+        created = ArchiveDocument.objects.get(title="New document")
+        self.assertEqual(created.year, 2026)
+        self.assertEqual(created.type_doc, "Annet")
+        self.assertEqual(created.file_location, "new-file-id")
 
     def test_update_requires_permission(self):
         response = self.update_document("Hacked title", user=None)
@@ -106,6 +109,30 @@ class ArchiveMutationsTestCase(ExtendedGraphQLTestCase):
         # Regression: UpdateArchiveDocument used to modify the object without saving
         self.document.refresh_from_db()
         self.assertEqual(self.document.title, "Updated title")
+
+    def test_update_persists_remaining_fields(self):
+        self.add_archive_permission("change_archivedocument")
+        query = f"""
+            mutation {{
+              updateArchivedocument(
+                id: "{self.document.id}",
+                date: "2024-06-15T00:00:00+00:00",
+                typeDoc: "Januscript",
+                fileLocation: "updated-file-id",
+                webLink: "https://drive.example/updated",
+              ) {{
+                ok
+              }}
+            }}
+        """
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+
+        self.document.refresh_from_db()
+        self.assertEqual(self.document.year, 2024)
+        self.assertEqual(self.document.type_doc, "Januscript")
+        self.assertEqual(self.document.file_location, "updated-file-id")
+        self.assertEqual(self.document.web_link, "https://drive.example/updated")
 
     def test_delete_requires_permission(self):
         response = self.delete_document(user=None)

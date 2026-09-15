@@ -46,6 +46,8 @@ class UpdateArchiveDocument(graphene.Mutation):
         archiveDocument = ArchiveDocumentModel.objects.get(pk=id)
         if title is not None:
             archiveDocument.title = title
+        if date is not None:
+            archiveDocument.year = date.year
         if type_doc is not None:
             archiveDocument.type_doc = type_doc
         if file_location is not None:
