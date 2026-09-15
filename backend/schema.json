@@ -70,8 +70,7 @@
             "FIELD_DEFINITION",
             "ARGUMENT_DEFINITION",
             "INPUT_FIELD_DEFINITION",
-            "ENUM_VALUE",
-            "DIRECTIVE_DEFINITION"
+            "ENUM_VALUE"
           ],
           "name": "deprecated"
         },
@@ -18201,12 +18200,6 @@
               "description": "Location adjacent to an input object field definition.",
               "isDeprecated": false,
               "name": "INPUT_FIELD_DEFINITION"
-            },
-            {
-              "deprecationReason": null,
-              "description": "Location adjacent to a directive definition.",
-              "isDeprecated": false,
-              "name": "DIRECTIVE_DEFINITION"
             }
           ],
           "fields": null,
