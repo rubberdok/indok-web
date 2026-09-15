@@ -172,6 +172,10 @@ class JanHusResolvers:
         user = info.context.user
         if not user or not user.is_authenticated:
             raise GraphQLError("Authentication required")
+        if not getattr(user, "is_indok", False):
+            raise GraphQLError(
+                "You do not have permission to search guests for a booking request"
+            )
 
         return _search_guest_candidates(query=query, limit=limit)
 
