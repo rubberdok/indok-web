@@ -195,6 +195,94 @@ class OrganizationMembershipAuthorizationTests(ExtendedGraphQLTestCase):
 
         self.assert_permission_error(response)
 
+    def test_add_membership_by_identifier_allows_hr_member_by_username(self):
+        response = self.query(
+            f"""
+            mutation {{
+                addMembershipByIdentifier(
+                    organizationId: "{self.organization.id}"
+                    identifier: "{self.target_user.username}"
+                ) {{
+                    ok
+                }}
+            }}
+            """,
+            user=self.hr_user,
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertTrue(response.json()["data"]["addMembershipByIdentifier"]["ok"])
+        self.assertTrue(
+            Membership.objects.filter(
+                organization=self.organization,
+                user=self.target_user,
+                group=self.organization.primary_group,
+            ).exists()
+        )
+
+    def test_add_membership_by_identifier_allows_hr_member_by_email(self):
+        self.target_user.email = "target@example.com"
+        self.target_user.save(update_fields=["email"])
+
+        response = self.query(
+            f"""
+            mutation {{
+                addMembershipByIdentifier(
+                    organizationId: "{self.organization.id}"
+                    identifier: "{self.target_user.email}"
+                ) {{
+                    ok
+                }}
+            }}
+            """,
+            user=self.hr_user,
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertTrue(response.json()["data"]["addMembershipByIdentifier"]["ok"])
+        self.assertTrue(
+            Membership.objects.filter(
+                organization=self.organization,
+                user=self.target_user,
+                group=self.organization.primary_group,
+            ).exists()
+        )
+
+    def test_add_membership_by_identifier_returns_generic_failure_for_unknown_user(self):
+        response = self.query(
+            f"""
+            mutation {{
+                addMembershipByIdentifier(
+                    organizationId: "{self.organization.id}"
+                    identifier: "unknown@example.com"
+                ) {{
+                    ok
+                }}
+            }}
+            """,
+            user=self.hr_user,
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertFalse(response.json()["data"]["addMembershipByIdentifier"]["ok"])
+
+    def test_add_membership_by_identifier_denies_regular_member(self):
+        response = self.query(
+            f"""
+            mutation {{
+                addMembershipByIdentifier(
+                    organizationId: "{self.organization.id}"
+                    identifier: "{self.target_user.username}"
+                ) {{
+                    ok
+                }}
+            }}
+            """,
+            user=self.regular_member,
+        )
+
+        self.assert_permission_error(response)
+
 
 class OrganizationListingsResolverTests(ExtendedGraphQLTestCase):
     def test_organization_listings_query_returns_data_without_errors(self):

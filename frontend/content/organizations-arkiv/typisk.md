@@ -10,6 +10,8 @@ board:
 tag: kultur
 ---
 
+Denne foreningen eksisterer ikke lenger...
+
 ##### Hvem er vi?
 
 Et av Indøk-universets ferskeste kulturtilbud er podkasten Typisk Indøk. Årets programledere heter Jakob og Håkon, begge femteklassinger med en rekke Indøk-verv under beltet. I hver episode inviterer de artige og interessante indøkere fra alle trinn som gjest for å dele fra sin studenthverdag, fortelle sin historie og åpne opp om hvem man er.

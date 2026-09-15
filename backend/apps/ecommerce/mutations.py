@@ -1,9 +1,15 @@
 from typing import Optional
-from urllib.error import HTTPError
+from requests.exceptions import HTTPError
 
 import graphene
 from django.db import transaction
-from decorators import login_required, staff_member_required, PermissionDenied, PERMISSION_REQUIRED_ERROR
+from decorators import (
+    login_required,
+    staff_member_required,
+    superuser_required,
+    PermissionDenied,
+    PERMISSION_REQUIRED_ERROR,
+)
 
 from apps.ecommerce.exceptions import PurchaseNotAllowedError
 from apps.organizations.models import Organization
@@ -11,7 +17,11 @@ from apps.organizations.permissions import check_user_membership
 
 from .models import Order, Product
 from .types import OrderType, PaymentStatus, ProductType
-from .vipps_utils import VippsApi
+from .vipps_utils import (
+    VippsApi,
+    refund_order,
+    refund_order_payment_attempt,
+)
 
 
 class InitiateOrder(graphene.Mutation):
@@ -163,6 +173,54 @@ class AttemptCapturePayment(graphene.Mutation):
                     pass
 
         return AttemptCapturePayment(status=order.payment_status, order=order)
+
+
+class RefundOrder(graphene.Mutation):
+    ok = graphene.Boolean()
+    order = graphene.Field(OrderType)
+    vipps_api = VippsApi()
+
+    class Arguments:
+        order_id = graphene.ID(required=True)
+
+    @superuser_required
+    def mutate(self, info, order_id):
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            raise ValueError("Ugyldig ordre")
+
+        order = refund_order(order, vipps_api=RefundOrder.vipps_api)
+        return RefundOrder(ok=True, order=order)
+
+
+class RefundOrderAttempt(graphene.Mutation):
+    ok = graphene.Boolean()
+    order = graphene.Field(OrderType)
+    payment_attempt = graphene.Int()
+    vipps_api = VippsApi()
+
+    class Arguments:
+        order_id = graphene.ID(required=True)
+        payment_attempt = graphene.Int(required=True)
+
+    @superuser_required
+    def mutate(self, info, order_id, payment_attempt):
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            raise ValueError("Ugyldig ordre")
+
+        refunded_attempt = refund_order_payment_attempt(
+            order,
+            payment_attempt,
+            vipps_api=RefundOrderAttempt.vipps_api,
+        )
+        return RefundOrderAttempt(
+            ok=True,
+            order=order,
+            payment_attempt=refunded_attempt.payment_attempt,
+        )
 
 
 class CreateProductInput(graphene.InputObjectType):

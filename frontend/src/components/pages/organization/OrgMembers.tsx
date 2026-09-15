@@ -20,13 +20,13 @@ import { orderBy } from "lodash";
 import { useState } from "react";
 
 import {
+  AddMembershipByIdentifierDocument,
   AdminOrganizationFragment,
   HasPermissionDocument,
   MembershipsDocument,
   RemoveMembershipDocument,
   UpsertMembershipDocument,
   UserDocument,
-  UserSearchDocument,
 } from "@/generated/graphql";
 
 type Props = {
@@ -42,11 +42,9 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
     variables: { permission: "organizations.manage_organization" },
   });
 
-  const { refetch: refetchUserSearch } = useQuery(UserSearchDocument, {
-    variables: { query: "", limit: 10 },
-    skip: true,
-  });
-
+  const [addMembershipByIdentifier, { loading: addingMembershipByIdentifier }] = useMutation(
+    AddMembershipByIdentifierDocument
+  );
   const [upsertMembership, { loading: upsertingMembership }] = useMutation(UpsertMembershipDocument);
   const [removeMembership, { loading: removingMembership }] = useMutation(RemoveMembershipDocument);
 
@@ -101,67 +99,18 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
 
     const input = userInput.trim();
     if (!input) {
-      setFeedbackError("Skriv inn brukernavn, bruker-ID eller fullt navn.");
-      return;
-    }
-
-    const memberGroupId = getMemberGroupId();
-    if (!memberGroupId) {
-      setFeedbackError("Organisasjonen mangler standard medlemsgruppe.");
+      setFeedbackError("Skriv inn brukernavn eller e-postadresse.");
       return;
     }
 
     try {
-      let userId: string | undefined;
-
-      if (/^\d+$/.test(input)) {
-        userId = input;
-      } else {
-        const result = await refetchUserSearch({ query: input, limit: 10 });
-        const candidates = result.data?.userSearch ?? [];
-
-        const normalize = (value: string) => value.trim().toLowerCase().replace(/\s+/g, " ");
-        const normalizedInput = normalize(input);
-
-        const exactUsernameMatch = candidates.find((candidate) => normalize(candidate.username) === normalizedInput);
-        if (exactUsernameMatch) {
-          userId = exactUsernameMatch.id;
-        } else {
-          const exactFullNameMatches = candidates.filter(
-            (candidate) => normalize(`${candidate.firstName} ${candidate.lastName}`) === normalizedInput
-          );
-
-          if (exactFullNameMatches.length === 1) {
-            userId = exactFullNameMatches[0].id;
-          } else if (exactFullNameMatches.length > 1) {
-            setFeedbackError(`Fant flere brukere med navnet "${input}". Bruk brukernavn for å velge riktig person.`);
-            return;
-          } else if (candidates.length === 1) {
-            userId = candidates[0].id;
-          }
-        }
-      }
-
-      if (!userId) {
-        setFeedbackError("Fant ingen unik bruker som matcher søket. Prøv brukernavn.");
-        return;
-      }
-
-      const alreadyMember = memberships.some((membership) => membership.user.id === userId);
-      if (alreadyMember) {
-        setFeedbackError("Brukeren er allerede medlem i organisasjonen.");
-        return;
-      }
-
-      await upsertMembership({
-        variables: {
-          membershipData: {
-            userId,
-            organizationId: organization.id,
-            groupId: memberGroupId,
-          },
-        },
+      const result = await addMembershipByIdentifier({
+        variables: { organizationId: organization.id, identifier: input },
       });
+      if (!result.data?.addMembershipByIdentifier?.ok) {
+        setFeedbackError("Kunne ikke legge til bruker. Kontroller brukernavn eller e-postadresse.");
+        return;
+      }
 
       setUserInput("");
       setFeedbackSuccess("Bruker lagt til som medlem.");
@@ -223,13 +172,17 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             <TextField
               fullWidth
               variant="standard"
-              placeholder="Skriv inn brukernavn, bruker-ID eller fullt navn"
+              placeholder="Skriv inn brukernavn eller e-postadresse"
               onChange={(e) => setUserInput(e.target.value)}
               value={userInput}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <Button startIcon={<GroupAdd />} onClick={() => void addUser()} disabled={upsertingMembership}>
+            <Button
+              startIcon={<GroupAdd />}
+              onClick={() => void addUser()}
+              disabled={addingMembershipByIdentifier || upsertingMembership}
+            >
               Legg til
             </Button>
           </Grid>
