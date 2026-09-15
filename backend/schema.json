@@ -107,9 +107,11 @@
         }
       ],
       "mutationType": {
+        "kind": "OBJECT",
         "name": "Mutations"
       },
       "queryType": {
+        "kind": "OBJECT",
         "name": "Queries"
       },
       "subscriptionType": null,
@@ -2547,22 +2549,6 @@
               "description": null,
               "isDeprecated": false,
               "name": "feideEmail",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "idToken",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -16163,7 +16149,7 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
-              "name": "arhiveDocument",
+              "name": "archiveDocument",
               "type": {
                 "kind": "OBJECT",
                 "name": "ArchiveDocumentType",
@@ -16198,7 +16184,7 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
-              "name": "event",
+              "name": "archiveDocument",
               "type": {
                 "kind": "OBJECT",
                 "name": "ArchiveDocumentType",
@@ -17134,7 +17120,22 @@
               }
             },
             {
-              "args": [],
+              "args": [
+                {
+                  "defaultValue": "false",
+                  "description": null,
+                  "name": "includeDeprecated",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  }
+                }
+              ],
               "deprecationReason": null,
               "description": "A list of all directives supported by this server.",
               "isDeprecated": false,
@@ -17828,6 +17829,34 @@
                     }
                   }
                 }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "isDeprecated",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "deprecationReason",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               }
             }
           ],
