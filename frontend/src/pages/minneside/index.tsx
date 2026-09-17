@@ -27,7 +27,7 @@ const ReportsPage: NextPageWithLayout = () => {
                 Til minne
               </Typography>
               <Typography variant="h2" component="h1" sx={{ mt: 1 }}>
-                Tim Torvatn
+                Tim Kristian Andreas Torvatn
               </Typography>
               <Typography variant="h5" component="p" color="text.secondary" sx={{ mt: 2 }}>
                 UNDERTITTEL
@@ -58,7 +58,7 @@ const ReportsPage: NextPageWithLayout = () => {
               </Typography>
               <Divider />
               <Typography variant="body1" sx={{ fontSize: "1.1rem", lineHeight: 1.8 }}>
-                Tim har vært en sentral skikkelse på vårt institutt over mange år - både som underviser og som ansvarlig
+                Tim har vært en sentral skikkelse på Indøk over mange år - både som underviser og som ansvarlig
                 for våre studieprogram og undervisningsaktiviteter. Det er liten tvil om at IndØk er et program som har
                 ligget Tims hjerte nært, og vi høster alle frukter av det utrettelige arbeidet som Tim har lagt ned i å
                 utvikle IndØk til det det er i dag. Vi kommer til å savne ham dypt og er evig takknemlig.
