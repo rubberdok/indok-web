@@ -1,40 +1,53 @@
 ---
 title: Janus Eiendom
-description: Gjengen som passer på hyttene våre
+description: Gjengen som passer på eiendommene våre
 logo: /static/cabins/logo.svg
 image: /img/hy1.jpg
 board:
   leder:
     name: Andreas Kolderup Eidsvig
     phoneNumber: 465 15 125
+    mail: andrke@stud.ntnu.no
     title: Leder
-  øko_nestleder:
-    name: A
-    phoneNumber: 0
-    title: Nestleder og økonomiansvarlig
+  øko:
+    name: Leander Kvithyll
+    mail: leandekv@stud.ntnu.no
+    title: Økonomiansvarlig
   pr:
-    name: A
-    phoneNumber: 0
+    name: Melissa Marealle Lien
+    mail: melissl@stud.ntnu.no
     title: PR- og sosialansvarlig
   drift1:
-    name: A
-    phoneNumber: 0
+    name: Marius Lund Halland
+    mail: marlhal@stud.ntnu.no
     title: Driftsansvarlig
   drift2:
-    name: A
-    phoneNumber: 0
+    name: Arian Karabeg
+    mail: ariank@stud.ntnu.no
+    title: Driftsansvarlig
+  drift3:
+    name: Ole Magnus Hjortland
+    mail: olemhjo@stud.ntnu.no
     title: Driftsansvarlig
   book1:
-    name: A
-    phoneNumber: 0
+    name: Lisa Husevåg Kuvås
+    mail: lisahku@stud.ntnu.no
     title: Bookingansvarlig
   book2:
-    name: A
-    phoneNumber: 0
+    name: Sarah Leyla Fennefoss
+    mail: sarahlf@stud.ntnu.no
+    title: Bookingansvarlig
+  book3:
+    name: Edvard Martinius Ustad
+    mail: edvardmu@stud.ntnu.no
+    title: Bookingansvarlig
+  book4:
+    name: Louis Alwin Langag
+    mail: latacis@ntnu.no
     title: Bookingansvarlig
   log:
-    name: A
-    phoneNumber: 0
+    name: Amanda Marie Grimseid
+    mail: amandmgr@stud.ntnu.no
     title: Logistikkansvarlig
 
 tag: annet
