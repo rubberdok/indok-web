@@ -1799,6 +1799,10 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
             )
         )
 
+        non_indok_user = UserFactory(is_indok=False)
+        non_indok_response = self.query(query, user=non_indok_user)
+        self.assertResponseHasErrors(non_indok_response)
+
 
     def test_bookable_organizations_returns_only_hr_organizations(self):
         lead_organization = OrganizationFactory(name="Leder i forening")
