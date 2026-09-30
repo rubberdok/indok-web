@@ -5,10 +5,9 @@ import Script from "next/script";
 
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
+import MaccuPiccuBilde from "~/public/img/timtorvatn/maccupiccutim-bilde.jpg";
 import BunadBilde from "~/public/img/timtorvatn/tim17mai.jpg";
 import PortrettBilde from "~/public/img/timtorvatn/timhalvfigur.jpg";
-
-import MaccuPiccuBilde from "~/public/img/timtorvatn/maccupiccutim-bilde.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   return (
@@ -32,6 +31,9 @@ const ReportsPage: NextPageWithLayout = () => {
               </Typography>
               <Typography variant="h3" component="h1" sx={{ mt: 1, fontWeight: 600 }}>
                 Tim Kristian Andreas Torvatn
+              </Typography>
+              <Typography variant="h6" color="text.secondary" sx={{ mt: 1 }}>
+                09.11.1965 - 13.09.2026
               </Typography>
             </Box>
 
