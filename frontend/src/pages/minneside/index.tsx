@@ -5,9 +5,10 @@ import Script from "next/script";
 
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import MaccuPiccuBilde from "~/public/img/timtorvatn/maccupiccutim.jpg";
 import BunadBilde from "~/public/img/timtorvatn/tim17mai.jpg";
 import PortrettBilde from "~/public/img/timtorvatn/timhalvfigur.jpg";
+
+import MaccuPiccuBilde from "~/public/img/timtorvatn/maccupiccutim-bilde.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   return (
