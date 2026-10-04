@@ -1,4 +1,5 @@
 import base64
+from decimal import Decimal
 import json
 from datetime import timedelta
 from unittest.mock import MagicMock, patch
@@ -7,9 +8,11 @@ import pandas as pd
 from django.utils import timezone
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.events import EventFactory
+from utils.testing.factories.ecommerce import ProductFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory
 
+from .mail import EventEmail
 from .resolvers import wrap_attendee_report_as_json
 
 
@@ -67,7 +70,8 @@ class EventsMailTestCase(EventsBaseTestCase):
                     }}
                 """
         # Sign off a user from the event
-        self.query(admin_event_signoff_query, user=self.org_user)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.query(admin_event_signoff_query, user=self.org_user)
 
         # Check that we only attempt to send one email
         self.assertEqual(len(send_mail_mock.call_args_list), 1)
@@ -90,7 +94,8 @@ class EventsMailTestCase(EventsBaseTestCase):
                     }}
                 """
         # A user signs off an event "by themselves"
-        self.query(event_signoff_query, user=self.user1)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.query(event_signoff_query, user=self.user1)
 
         # Check that we only attempt to send one email
         self.assertEqual(len(send_mail_mock.call_args_list), 1)
@@ -109,7 +114,8 @@ class EventsMailTestCase(EventsBaseTestCase):
             }}
             """
         # Increase available slots to 3
-        self.query(expand_slots_mutation, user=self.org_user)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.query(expand_slots_mutation, user=self.org_user)
 
         # Check that we attempt to send an email to two users
         self.assertEqual(len(send_mail_mock.call_args_list), 2)
@@ -118,6 +124,42 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.assertEqual(send_mail_mock.call_args_list[0].args[1], self.event)
         self.assertEqual(send_mail_mock.call_args_list[1].args[0], self.user3)
         self.assertEqual(send_mail_mock.call_args_list[1].args[1], self.event)
+
+    @patch("apps.events.mail.TransactionalEmail")
+    def test_waitlist_email_serializes_product_price(self, email_mock: MagicMock):
+        ProductFactory(
+            related_object=self.event,
+            organization=self.event.organization,
+            price=Decimal("12.34"),
+        )
+
+        EventEmail.send_waitlist_notification_email(self.user1, self.event)
+
+        template_variables = email_mock.call_args.kwargs["template_variables"]
+        self.assertEqual(template_variables[self.user1.email]["price"], "12.34")
+
+    @patch(
+        "apps.events.signals.EventEmail.send_waitlist_notification_email",
+        side_effect=RuntimeError("mail service unavailable"),
+    )
+    def test_waitlist_email_failure_does_not_fail_slot_update(
+        self, send_mail_mock: MagicMock
+    ):
+        mutation = f"""
+            mutation {{
+                updateEvent(id: {self.event.id}, eventData: {{ availableSlots: 3 }}) {{
+                    ok
+                }}
+            }}
+        """
+
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.query(mutation, user=self.org_user)
+
+        self.assertResponseNoErrors(response)
+        self.event.refresh_from_db()
+        self.assertEqual(self.event.available_slots, 3)
+        self.assertEqual(send_mail_mock.call_count, 2)
 
 
 class HiddenEventTestCase(EventsBaseTestCase):
