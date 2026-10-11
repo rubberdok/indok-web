@@ -350,6 +350,15 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
             ).exists()
         )
 
+    def test_create_booking_sends_confirmation_emails(self):
+        mail.outbox = []
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.bjornen_cabin.id}"
+        )
+        self.assertResponseNoErrors(response)
+        # One mail to the booker and one to the booking responsible
+        self.assertEqual(len(mail.outbox), 2)
+
     def test_add_invalid_booking(self):
         # Try to add booking before current time
         self.first_booking.check_in = timezone.now() - datetime.timedelta(days=10)
@@ -531,6 +540,19 @@ class EmailTestCase(CabinsBaseTestCase):
             }}
         """
         return self.query(query, user=user)
+
+    def test_send_email_requires_manage_booking_permission(self):
+        # Anonymous users must not be able to trigger mail
+        response = self.send_email(self.first_booking, "reserve_booking")
+        self.assert_permission_error(response)
+
+        # Regular logged-in users must not be able to trigger mail either
+        response = self.send_email(
+            self.first_booking, "reserve_booking", user=self.user
+        )
+        self.assert_permission_error(response)
+
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_outbox_size_reservation(self):
         # Check outbox size when sending reservation mails to both admin and user

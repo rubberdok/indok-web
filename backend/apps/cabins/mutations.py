@@ -19,6 +19,44 @@ from .types import (
 from .validators import create_booking_validation
 
 
+def _send_cabin_booking_emails(email_input: EmailInputType) -> None:
+    cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
+
+    booking_price = price(
+        cabins,
+        email_input["check_in"],
+        email_input["check_out"],
+        email_input["internal_participants"],
+        email_input["external_participants"],
+    )
+
+    booking_info: BookingInfoType = {
+        "first_name": email_input["first_name"],
+        "last_name": email_input["last_name"],
+        "receiver_email": email_input["receiver_email"],
+        "phone": email_input["phone"],
+        "internal_participants": email_input["internal_participants"],
+        "external_participants": email_input["external_participants"],
+        "email_type": email_input["email_type"],
+        "check_in": email_input["check_in"],
+        "check_out": email_input["check_out"],
+        "cabins": cabins,
+        "price": booking_price,
+        "extra_info": email_input.get("extra_info", ""),
+    }
+
+    send_mail(
+        booking_info=booking_info, email_type=email_input["email_type"], admin=False
+    )
+
+    if email_input["email_type"] not in [APPROVE_BOOKING, DISAPPROVE_BOOKING]:
+        send_mail(
+            booking_info=booking_info,
+            email_type=email_input["email_type"],
+            admin=True,
+        )
+
+
 class BookingInput(graphene.InputObjectType):
     """
     Basic booking object type used as a base for other types and as a standalone
@@ -93,6 +131,22 @@ class CreateBooking(graphene.Mutation):
         booking.is_tentative = True
         booking.save()
         booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
+
+        _send_cabin_booking_emails(
+            {
+                "first_name": booking.first_name,
+                "last_name": booking.last_name,
+                "receiver_email": booking.receiver_email,
+                "phone": booking.phone,
+                "internal_participants": booking.internal_participants,
+                "external_participants": booking.external_participants,
+                "email_type": "reserve_booking",
+                "cabins": booking_data.cabins,
+                "check_in": booking.check_in,
+                "check_out": booking.check_out,
+                "extra_info": getattr(booking, "extra_info", "") or "",
+            }
+        )
 
         return CreateBooking(booking=booking, ok=ok)
 
@@ -170,45 +224,9 @@ class SendEmail(graphene.Mutation):
 
     ok = graphene.Boolean()
 
+    @permission_required("cabins.manage_booking")
     def mutate(self, info, email_input: EmailInputType):
-        cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
-
-        booking_price = price(
-            cabins,
-            email_input["check_in"],
-            email_input["check_out"],
-            email_input["internal_participants"],
-            email_input["external_participants"],
-        )
-
-        booking_info: BookingInfoType = {
-            "first_name": email_input["first_name"],
-            "last_name": email_input["last_name"],
-            "receiver_email": email_input["receiver_email"],
-            "phone": email_input["phone"],
-            "internal_participants": email_input["internal_participants"],
-            "external_participants": email_input["external_participants"],
-            "email_type": email_input["email_type"],
-            "check_in": email_input["check_in"],
-            "check_out": email_input["check_out"],
-            "cabins": cabins,
-            "price": booking_price,
-            "extra_info": email_input.get("extra_info", ""),
-        }
-
-        # Sends an email to the user
-        send_mail(
-            booking_info=booking_info, email_type=email_input["email_type"], admin=False
-        )
-
-        # Don't send mail to admin when approving or disapproving.
-        if email_input["email_type"] not in [APPROVE_BOOKING, DISAPPROVE_BOOKING]:
-            send_mail(
-                booking_info=booking_info,
-                email_type=email_input["email_type"],
-                admin=True,
-            )
-
+        _send_cabin_booking_emails(email_input)
         return SendEmail(ok=True)
 
 

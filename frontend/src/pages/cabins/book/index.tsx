@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { BookingSteps } from "@/components/pages/cabins/booking/BookingSteps";
 import { StepContext } from "@/components/pages/cabins/booking/StepContext";
 import { ContactInfo } from "@/components/pages/cabins/booking/Steps/ContactInfo";
-import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
+import { CabinFragment, CabinsDocument, CreateBookingDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
@@ -33,9 +33,8 @@ const CabinBookingPage: NextPageWithLayout = () => {
   // The contact info the user has given
   const [contactInfo, setContactInfo] = useState<ContactInfo | undefined>();
 
-  // Booking creation and email mutations
+  // Booking creation mutation; the backend sends confirmation emails
   const [createBooking] = useMutation(CreateBookingDocument);
-  const [sendEmail] = useMutation(SendEmailDocument);
 
   // Extra info from the user, sent to Janus Eiendom
   const [extraInfo, setExtraInfo] = useState("");
@@ -102,24 +101,10 @@ const CabinBookingPage: NextPageWithLayout = () => {
   }
 
   /**
-   * Send the booking to Janus Eiendom and create a booking in the database.
-   * The booking is sent to Janus Eiendom and the user by email.
-   *
-   * @todo move the email sendout to the backend. It should absolutely not be done on the client like this :)
+   * Create the booking in the database. The backend emails the booking
+   * confirmation to Janus Eiendom and the user.
    */
   function onSubmitBooking() {
-    sendEmail({
-      variables: {
-        emailInput: {
-          ...contactInfo,
-          cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
-          checkIn: dateRange.start?.format("YYYY-MM-DD"),
-          checkOut: dateRange.end?.format("YYYY-MM-DD"),
-          extraInfo: extraInfo,
-          emailType: "reserve_booking",
-        },
-      },
-    });
     createBooking({
       variables: {
         bookingData: {

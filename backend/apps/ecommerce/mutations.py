@@ -7,6 +7,8 @@ from decorators import (
     login_required,
     staff_member_required,
     superuser_required,
+    PermissionDenied,
+    PERMISSION_REQUIRED_ERROR,
 )
 
 from apps.ecommerce.exceptions import PurchaseNotAllowedError
@@ -129,6 +131,7 @@ class AttemptCapturePayment(graphene.Mutation):
     class Arguments:
         order_id = graphene.ID(required=True)
 
+    @login_required
     def mutate(self, info, order_id):
         with transaction.atomic():
             try:
@@ -136,6 +139,10 @@ class AttemptCapturePayment(graphene.Mutation):
                 order = Order.objects.select_for_update().get(pk=order_id)
             except Order.DoesNotExist:
                 raise ValueError("Ugyldig ordre")
+
+            user = info.context.user
+            if order.user_id != user.id and not user.is_staff:
+                raise PermissionDenied(PERMISSION_REQUIRED_ERROR)
 
             if order.payment_status == Order.PaymentStatus.INITIATED:
                 # Update status according to Vipps payment details

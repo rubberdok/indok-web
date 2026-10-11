@@ -70,8 +70,7 @@
             "FIELD_DEFINITION",
             "ARGUMENT_DEFINITION",
             "INPUT_FIELD_DEFINITION",
-            "ENUM_VALUE",
-            "DIRECTIVE_DEFINITION"
+            "ENUM_VALUE"
           ],
           "name": "deprecated"
         },
@@ -2550,22 +2549,6 @@
               "description": null,
               "isDeprecated": false,
               "name": "feideEmail",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "idToken",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -16384,7 +16367,7 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
-              "name": "arhiveDocument",
+              "name": "archiveDocument",
               "type": {
                 "kind": "OBJECT",
                 "name": "ArchiveDocumentType",
@@ -16419,7 +16402,7 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
-              "name": "event",
+              "name": "archiveDocument",
               "type": {
                 "kind": "OBJECT",
                 "name": "ArchiveDocumentType",
@@ -18217,12 +18200,6 @@
               "description": "Location adjacent to an input object field definition.",
               "isDeprecated": false,
               "name": "INPUT_FIELD_DEFINITION"
-            },
-            {
-              "deprecationReason": null,
-              "description": "Location adjacent to a directive definition.",
-              "isDeprecated": false,
-              "name": "DIRECTIVE_DEFINITION"
             }
           ],
           "fields": null,
