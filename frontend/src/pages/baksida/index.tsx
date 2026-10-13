@@ -21,7 +21,7 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
 
 import Felix from "~/public/img/baksida/FelixSun.jpg";
-import Ingebjorg from "~/public/img/baksida/IngebjørgBjoerneraa-Svenningsen.jpg";
+import Ingebjoerg from "~/public/img/baksida/IngebjørgBjoernaraa-Svenningsen.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
@@ -40,10 +40,10 @@ const ReportsPage: NextPageWithLayout = () => {
     },
     {
       id: 2,
-      name: "Ingebjørg Bjørneraa-Svenningsen",
+      name: "Ingebjørg Bjørnaraa-Svenningsen",
       initials: "IBS",
       color: amber[500],
-      image: Ingebjorg,
+      image: Ingebjoerg,
       email: "ingebjbj@stud.ntnu.no",
     },
   ];
