@@ -2,7 +2,7 @@
 title: Indøks Ølbryggerlaug
 description: Et helt lovlig bryggeri
 logo: /img/indollogo.png
-image: /img/indolbilde.jpg
+image: /img/indol20261.png
 board:
   ceo:
     name: Emil Andreas Midelfart
@@ -18,6 +18,6 @@ Indøk Ølbryggelaug (Ind. Øl) er en sosial gjeng som samles regelmessig for å
 
 Er du en ølelsker? Lyst til å lære mer om hvordan øl brygges? Ta kontakt med oss! Finn oss på facebook eller send oss en mail.indo
 
-![Indølgjengen](/img/indol20262.jpg)
+![Indølgjengen](/img/indol20262.png)
 
-![Indølgjengen](/img/indol20261.jpg)
+![Indølgjengen](/img/indol20261.png)
