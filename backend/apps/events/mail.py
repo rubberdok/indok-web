@@ -49,7 +49,7 @@ class EventEmail:
                     "body": "Du har fått plass på følgende arrangement",
                     "start_time": event.start_time.strftime("%d.%m.%y kl. %H:%M"),
                     "location": event.location,
-                    "price": product.price if product is not None else "",
+                    "price": str(product.price) if product is not None else "",
                     "reason": "Du har fått plass fra ventelisten.",
                     "subject": "Du har fått plass på arrangementet",
                 }
