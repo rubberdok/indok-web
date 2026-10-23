@@ -10,8 +10,8 @@ board:
     title: CEO
   cto:
     name: Alver Brennersted
-    mail: cto@klingendemynt.no
-    title: CTO
+    mail: cfo@klingendemynt.no
+    title: Ginger
 tag: kultur
 ---
 
