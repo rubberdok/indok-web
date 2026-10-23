@@ -11,7 +11,7 @@ board:
   cto:
     name: Alver Brennersted
     mail: cfo@klingendemynt.no
-    title: Ginger
+    title: CFO
 tag: kultur
 ---
 
