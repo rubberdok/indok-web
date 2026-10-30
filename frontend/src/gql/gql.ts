@@ -20,7 +20,7 @@ type Documents = {
     "\n  mutation Logout {\n    logout {\n      idToken\n    }\n  }\n": typeof types.LogoutDocument,
     "\n  query Profile {\n    user {\n      id\n      feideEmail\n      email\n      username\n      firstName\n      lastName\n      dateJoined\n      graduationYear\n      gradeYear\n      allergies\n      phoneNumber\n      firstLogin\n    }\n  }\n": typeof types.ProfileDocument,
     "\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n": typeof types.CabinPermissionDocument,
-    "\n  query JanHusPermission {\n    hasPermission(permission: \"janhus.manage_booking\")\n  }\n": typeof types.JanHusPermissionDocument,
+    "\n  query JanHusPermission {\n    canManage: hasPermission(permission: \"janhus.manage_booking\")\n    canView: hasPermission(permission: \"janhus.view_all_bookings\")\n  }\n": typeof types.JanHusPermissionDocument,
     "\n  query ProfileAdminEditCapabilities {\n    canManageUserProfiles\n    canManageUserNfc\n  }\n": typeof types.ProfileAdminEditCapabilitiesDocument,
 };
 const documents: Documents = {
@@ -30,7 +30,7 @@ const documents: Documents = {
     "\n  mutation Logout {\n    logout {\n      idToken\n    }\n  }\n": types.LogoutDocument,
     "\n  query Profile {\n    user {\n      id\n      feideEmail\n      email\n      username\n      firstName\n      lastName\n      dateJoined\n      graduationYear\n      gradeYear\n      allergies\n      phoneNumber\n      firstLogin\n    }\n  }\n": types.ProfileDocument,
     "\n  query CabinPermission {\n    hasPermission(permission: \"cabins.manage_booking\")\n  }\n": types.CabinPermissionDocument,
-    "\n  query JanHusPermission {\n    hasPermission(permission: \"janhus.manage_booking\")\n  }\n": types.JanHusPermissionDocument,
+    "\n  query JanHusPermission {\n    canManage: hasPermission(permission: \"janhus.manage_booking\")\n    canView: hasPermission(permission: \"janhus.view_all_bookings\")\n  }\n": types.JanHusPermissionDocument,
     "\n  query ProfileAdminEditCapabilities {\n    canManageUserProfiles\n    canManageUserNfc\n  }\n": types.ProfileAdminEditCapabilitiesDocument,
 };
 
@@ -75,7 +75,7 @@ export function graphql(source: "\n  query CabinPermission {\n    hasPermission(
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query JanHusPermission {\n    hasPermission(permission: \"janhus.manage_booking\")\n  }\n"): (typeof documents)["\n  query JanHusPermission {\n    hasPermission(permission: \"janhus.manage_booking\")\n  }\n"];
+export function graphql(source: "\n  query JanHusPermission {\n    canManage: hasPermission(permission: \"janhus.manage_booking\")\n    canView: hasPermission(permission: \"janhus.view_all_bookings\")\n  }\n"): (typeof documents)["\n  query JanHusPermission {\n    canManage: hasPermission(permission: \"janhus.manage_booking\")\n    canView: hasPermission(permission: \"janhus.view_all_bookings\")\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

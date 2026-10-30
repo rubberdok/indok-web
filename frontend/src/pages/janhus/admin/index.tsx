@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client/react";
-import { ExpandMore, Settings } from "@mui/icons-material";
+import { ExpandMore, History, Settings } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -43,6 +43,7 @@ import {
   CreateJanhusPaymentProductDocument,
   DeleteJanhusBookingDocument,
   DeleteJanhusBookingRequestDocument,
+  JanHusAdminAccessDocument,
   JanHusAreasDocument,
   JanHusBookingRequestsDocument,
   ReviewJanhusBookingRequestDocument,
@@ -56,6 +57,12 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   const router = useRouter();
   const [tabValue, setTabValue] = useState<number>(0);
   const [alert, setAlert] = useState<{ severity: "success" | "error"; message: string } | undefined>();
+
+  // janhus.manage_booking may change everything. janhus.view_all_bookings only sees the same page with
+  // every field disabled and every action hidden; the backend refuses their mutations regardless.
+  const { data: accessData } = useQuery(JanHusAdminAccessDocument);
+  const canManage = accessData?.canManage ?? false;
+  const canView = canManage || (accessData?.canView ?? false);
 
   const { data: bookingsData, refetch: refetchBookings } = useQuery(AdminJanHusBookingsDocument);
   const { data: requestsData, refetch: refetchRequests } = useQuery(JanHusBookingRequestsDocument);
@@ -433,215 +440,233 @@ const JanHusAdminPage: NextPageWithLayout = () => {
         ]}
       />
       <Container sx={{ py: 4 }}>
-        <PermissionRequired permission="janhus.manage_booking">
-          <Stack spacing={0.75} mb={3}>
-            <Box>
-              <Button startIcon={<Settings />} onClick={() => router.push("/janhus/admin/settings")}>
-                Innstillinger
-              </Button>
-            </Box>
-          </Stack>
-
-          {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}
-
-          <Box sx={(theme) => ({ width: "100%", overflowX: "auto", mb: theme.spacing(4) })} component="div">
-            <Box sx={{ width: "100%" }}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs
-                  onChange={(_e, newValue) => setTabValue(newValue)}
-                  value={tabValue}
-                  indicatorColor="primary"
-                  variant="fullWidth"
-                >
-                  <Tab label="Forespørsler" />
-                  <Tab label="Bookinger" />
-                </Tabs>
+        {canView ? (
+          <>
+            <Stack spacing={0.75} mb={3}>
+              {!canManage ? (
+                <Alert severity="info">
+                  Du har lesetilgang: du kan se alle bookinger og forespørsler, men kan ikke endre dem.
+                </Alert>
+              ) : null}
+              <Box>
+                {canManage ? (
+                  <Button startIcon={<Settings />} onClick={() => router.push("/janhus/admin/settings")}>
+                    Innstillinger
+                  </Button>
+                ) : null}
+                <PermissionRequired permission="nfc.view_door_log">
+                  <Button startIcon={<History />} onClick={() => router.push("/janhus/admin/logs")}>
+                    Dørlogg
+                  </Button>
+                </PermissionRequired>
               </Box>
+            </Stack>
 
-              <TabPanel value={tabValue} index={0}>
-                <Stack spacing={2} mt={2}>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h5">Bookingforespørsler</Typography>
-                    <Button variant="text" onClick={() => refetchRequests()}>
-                      Oppdater
-                    </Button>
-                  </Stack>
+            {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}
 
-                  <AdminFilters
-                    areas={areas}
-                    statusLabels={REQUEST_STATUS_LABELS}
-                    dateFilter={requestDateFilter}
-                    areaFilter={requestAreaFilter}
-                    ownerTypeFilter={requestOwnerTypeFilter}
-                    eventTypeFilter={requestEventTypeFilter}
-                    statusFilter={requestStatusFilter}
-                    sortBy={requestSortBy}
-                    sortDirection={requestSortDirection}
-                    onDateFilterChange={setRequestDateFilter}
-                    onAreaFilterChange={setRequestAreaFilter}
-                    onOwnerTypeFilterChange={setRequestOwnerTypeFilter}
-                    onEventTypeFilterChange={setRequestEventTypeFilter}
-                    onStatusFilterChange={setRequestStatusFilter}
-                    onSortByChange={setRequestSortBy}
-                    onSortDirectionChange={setRequestSortDirection}
-                  />
+            <Box sx={(theme) => ({ width: "100%", overflowX: "auto", mb: theme.spacing(4) })} component="div">
+              <Box sx={{ width: "100%" }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <Tabs
+                    onChange={(_e, newValue) => setTabValue(newValue)}
+                    value={tabValue}
+                    indicatorColor="primary"
+                    variant="fullWidth"
+                  >
+                    <Tab label="Forespørsler" />
+                    <Tab label="Bookinger" />
+                  </Tabs>
+                </Box>
 
-                  {openRequests.length ? (
-                    <RequestList
-                      requests={openRequests}
-                      comments={requestComments}
-                      reviewing={requestReviewing}
-                      deleting={deletingRequest}
-                      onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
-                      onReview={handleReviewRequest}
-                      onDelete={handleDeleteRequest}
-                    />
-                  ) : (
-                    <Typography color="text.secondary">Ingen forespørsler å behandle.</Typography>
-                  )}
+                <TabPanel value={tabValue} index={0}>
+                  <Stack spacing={2} mt={2}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                      <Typography variant="h5">Bookingforespørsler</Typography>
+                      <Button variant="text" onClick={() => refetchRequests()}>
+                        Oppdater
+                      </Button>
+                    </Stack>
 
-                  {archivedRequests.length ? (
-                    <Accordion
-                      disableGutters
-                      elevation={0}
-                      variant="outlined"
-                      defaultExpanded={requestStatusFilter === "REJECTED"}
-                    >
-                      <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography variant="subtitle1">
-                          Tidligere og avslåtte forespørsler ({archivedRequests.length})
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <RequestList
-                          requests={archivedRequests}
-                          comments={requestComments}
-                          reviewing={requestReviewing}
-                          deleting={deletingRequest}
-                          onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
-                          onReview={handleReviewRequest}
-                          onDelete={handleDeleteRequest}
-                        />
-                      </AccordionDetails>
-                    </Accordion>
-                  ) : null}
-                </Stack>
-              </TabPanel>
-
-              <TabPanel value={tabValue} index={1}>
-                <Stack spacing={2} mt={2}>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h5">Bookinger</Typography>
-                    <Button variant="text" onClick={() => refetchBookings()}>
-                      Oppdater
-                    </Button>
-                  </Stack>
-
-                  <AvailabilityOverview areas={areas} bookings={bookings} />
-
-                  <AdminFilters
-                    areas={areas}
-                    statusLabels={BOOKING_STATUS_LABELS}
-                    dateFilter={bookingDateFilter}
-                    areaFilter={bookingAreaFilter}
-                    ownerTypeFilter={bookingOwnerTypeFilter}
-                    eventTypeFilter={bookingEventTypeFilter}
-                    statusFilter={bookingStatusFilter}
-                    sortBy={bookingSortBy}
-                    sortDirection={bookingSortDirection}
-                    onDateFilterChange={setBookingDateFilter}
-                    onAreaFilterChange={setBookingAreaFilter}
-                    onOwnerTypeFilterChange={setBookingOwnerTypeFilter}
-                    onEventTypeFilterChange={setBookingEventTypeFilter}
-                    onStatusFilterChange={setBookingStatusFilter}
-                    onSortByChange={setBookingSortBy}
-                    onSortDirectionChange={setBookingSortDirection}
-                  />
-
-                  {openBookings.length ? (
-                    <BookingList
-                      bookings={openBookings}
+                    <AdminFilters
                       areas={areas}
-                      edits={bookingEdits}
-                      setEdits={setBookingEdits}
-                      expanded={expandedBookingIds}
-                      setExpanded={setExpandedBookingIds}
-                      updating={bookingUpdating}
-                      deleting={deletingBooking}
-                      creatingPaymentProduct={creatingPaymentProduct}
-                      onSave={handleSaveBooking}
-                      onCreatePaymentProduct={handleCreatePaymentProduct}
-                      onDelete={handleDeleteBooking}
-                      onOpenGuestList={setActiveGuestListBookingId}
+                      statusLabels={REQUEST_STATUS_LABELS}
+                      dateFilter={requestDateFilter}
+                      areaFilter={requestAreaFilter}
+                      ownerTypeFilter={requestOwnerTypeFilter}
+                      eventTypeFilter={requestEventTypeFilter}
+                      statusFilter={requestStatusFilter}
+                      sortBy={requestSortBy}
+                      sortDirection={requestSortDirection}
+                      onDateFilterChange={setRequestDateFilter}
+                      onAreaFilterChange={setRequestAreaFilter}
+                      onOwnerTypeFilterChange={setRequestOwnerTypeFilter}
+                      onEventTypeFilterChange={setRequestEventTypeFilter}
+                      onStatusFilterChange={setRequestStatusFilter}
+                      onSortByChange={setRequestSortBy}
+                      onSortDirectionChange={setRequestSortDirection}
                     />
-                  ) : (
-                    <Typography color="text.secondary">Ingen aktive bookinger.</Typography>
-                  )}
 
-                  {archivedBookings.length ? (
-                    <Accordion
-                      disableGutters
-                      elevation={0}
-                      variant="outlined"
-                      defaultExpanded={["DECLINED", "CANCELLED"].includes(bookingStatusFilter)}
-                    >
-                      <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography variant="subtitle1">
-                          Tidligere og avslåtte bookinger ({archivedBookings.length})
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <BookingList
-                          bookings={archivedBookings}
-                          areas={areas}
-                          edits={bookingEdits}
-                          setEdits={setBookingEdits}
-                          expanded={expandedBookingIds}
-                          setExpanded={setExpandedBookingIds}
-                          updating={bookingUpdating}
-                          deleting={deletingBooking}
-                          creatingPaymentProduct={creatingPaymentProduct}
-                          onSave={handleSaveBooking}
-                          onCreatePaymentProduct={handleCreatePaymentProduct}
-                          onDelete={handleDeleteBooking}
-                          onOpenGuestList={setActiveGuestListBookingId}
-                        />
-                      </AccordionDetails>
-                    </Accordion>
-                  ) : null}
-                </Stack>
-              </TabPanel>
+                    {openRequests.length ? (
+                      <RequestList
+                        requests={openRequests}
+                        comments={requestComments}
+                        reviewing={requestReviewing}
+                        deleting={deletingRequest}
+                        onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
+                        onReview={handleReviewRequest}
+                        onDelete={handleDeleteRequest}
+                        readOnly={!canManage}
+                      />
+                    ) : (
+                      <Typography color="text.secondary">Ingen forespørsler å behandle.</Typography>
+                    )}
+
+                    {archivedRequests.length ? (
+                      <Accordion
+                        disableGutters
+                        elevation={0}
+                        variant="outlined"
+                        defaultExpanded={requestStatusFilter === "REJECTED"}
+                      >
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                          <Typography variant="subtitle1">
+                            Tidligere og avslåtte forespørsler ({archivedRequests.length})
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <RequestList
+                            requests={archivedRequests}
+                            comments={requestComments}
+                            reviewing={requestReviewing}
+                            deleting={deletingRequest}
+                            onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
+                            onReview={handleReviewRequest}
+                            onDelete={handleDeleteRequest}
+                            readOnly={!canManage}
+                          />
+                        </AccordionDetails>
+                      </Accordion>
+                    ) : null}
+                  </Stack>
+                </TabPanel>
+
+                <TabPanel value={tabValue} index={1}>
+                  <Stack spacing={2} mt={2}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                      <Typography variant="h5">Bookinger</Typography>
+                      <Button variant="text" onClick={() => refetchBookings()}>
+                        Oppdater
+                      </Button>
+                    </Stack>
+
+                    <AvailabilityOverview areas={areas} bookings={bookings} />
+
+                    <AdminFilters
+                      areas={areas}
+                      statusLabels={BOOKING_STATUS_LABELS}
+                      dateFilter={bookingDateFilter}
+                      areaFilter={bookingAreaFilter}
+                      ownerTypeFilter={bookingOwnerTypeFilter}
+                      eventTypeFilter={bookingEventTypeFilter}
+                      statusFilter={bookingStatusFilter}
+                      sortBy={bookingSortBy}
+                      sortDirection={bookingSortDirection}
+                      onDateFilterChange={setBookingDateFilter}
+                      onAreaFilterChange={setBookingAreaFilter}
+                      onOwnerTypeFilterChange={setBookingOwnerTypeFilter}
+                      onEventTypeFilterChange={setBookingEventTypeFilter}
+                      onStatusFilterChange={setBookingStatusFilter}
+                      onSortByChange={setBookingSortBy}
+                      onSortDirectionChange={setBookingSortDirection}
+                    />
+
+                    {openBookings.length ? (
+                      <BookingList
+                        bookings={openBookings}
+                        areas={areas}
+                        edits={bookingEdits}
+                        setEdits={setBookingEdits}
+                        expanded={expandedBookingIds}
+                        setExpanded={setExpandedBookingIds}
+                        updating={bookingUpdating}
+                        deleting={deletingBooking}
+                        creatingPaymentProduct={creatingPaymentProduct}
+                        onSave={handleSaveBooking}
+                        onCreatePaymentProduct={handleCreatePaymentProduct}
+                        onDelete={handleDeleteBooking}
+                        onOpenGuestList={setActiveGuestListBookingId}
+                        readOnly={!canManage}
+                      />
+                    ) : (
+                      <Typography color="text.secondary">Ingen aktive bookinger.</Typography>
+                    )}
+
+                    {archivedBookings.length ? (
+                      <Accordion
+                        disableGutters
+                        elevation={0}
+                        variant="outlined"
+                        defaultExpanded={["DECLINED", "CANCELLED"].includes(bookingStatusFilter)}
+                      >
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                          <Typography variant="subtitle1">
+                            Tidligere og avslåtte bookinger ({archivedBookings.length})
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <BookingList
+                            bookings={archivedBookings}
+                            areas={areas}
+                            edits={bookingEdits}
+                            setEdits={setBookingEdits}
+                            expanded={expandedBookingIds}
+                            setExpanded={setExpandedBookingIds}
+                            updating={bookingUpdating}
+                            deleting={deletingBooking}
+                            creatingPaymentProduct={creatingPaymentProduct}
+                            onSave={handleSaveBooking}
+                            onCreatePaymentProduct={handleCreatePaymentProduct}
+                            onDelete={handleDeleteBooking}
+                            onOpenGuestList={setActiveGuestListBookingId}
+                            readOnly={!canManage}
+                          />
+                        </AccordionDetails>
+                      </Accordion>
+                    ) : null}
+                  </Stack>
+                </TabPanel>
+              </Box>
             </Box>
-          </Box>
 
-          {activeGuestListBooking ? (
-            <GuestListDialog
-              bookingId={activeGuestListBooking.id}
-              open={Boolean(activeGuestListBooking)}
-              allowManualEntries
-              initialGuests={bookingEdits[activeGuestListBooking.id]?.guestListEntries ?? []}
-              saving={bookingUpdating}
-              onClose={() => setActiveGuestListBookingId(undefined)}
-              onSave={(guests) => {
-                setBookingEdits((current) => {
-                  const currentBookingEdit = current[activeGuestListBooking.id];
-                  if (!currentBookingEdit) {
-                    return current;
-                  }
+            {canManage && activeGuestListBooking ? (
+              <GuestListDialog
+                bookingId={activeGuestListBooking.id}
+                open={Boolean(activeGuestListBooking)}
+                allowManualEntries
+                initialGuests={bookingEdits[activeGuestListBooking.id]?.guestListEntries ?? []}
+                saving={bookingUpdating}
+                onClose={() => setActiveGuestListBookingId(undefined)}
+                onSave={(guests) => {
+                  setBookingEdits((current) => {
+                    const currentBookingEdit = current[activeGuestListBooking.id];
+                    if (!currentBookingEdit) {
+                      return current;
+                    }
 
-                  return {
-                    ...current,
-                    [activeGuestListBooking.id]: {
-                      ...currentBookingEdit,
-                      guestListEntries: guests,
-                    },
-                  };
-                });
-                setActiveGuestListBookingId(undefined);
-              }}
-            />
-          ) : null}
-        </PermissionRequired>
+                    return {
+                      ...current,
+                      [activeGuestListBooking.id]: {
+                        ...currentBookingEdit,
+                        guestListEntries: guests,
+                      },
+                    };
+                  });
+                  setActiveGuestListBookingId(undefined);
+                }}
+              />
+            ) : null}
+          </>
+        ) : null}
       </Container>
     </>
   );

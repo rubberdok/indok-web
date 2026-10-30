@@ -1,18 +1,19 @@
-// import { useQuery } from "@apollo/client/react";
+import { useQuery } from "@apollo/client/react";
 import { ArrowForward } from "@mui/icons-material";
 // import { Alert } from "@mui/material";
 import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 
-import { PermissionRequired } from "@/components/Auth";
 import { NextLinkComposed } from "@/components/Link";
 import { Title } from "@/components/Title";
-import { JanHusAreasDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
+import { JanHusAdminAccessDocument, JanHusAreasDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
+  // The admin page is open to managers and to read-only viewers (janhus.view_all_bookings).
+  const { data: adminAccess } = useQuery(JanHusAdminAccessDocument);
   // const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
   // const settings = settingsData?.janhusBookingSettings;
   // const { data: areaData } = useQuery(JanHusAreasDocument);
@@ -69,7 +70,7 @@ const JanHusPage: NextPageWithLayout = () => {
               </Card>
             </Grid>
 
-            <PermissionRequired permission="janhus.manage_booking">
+            {adminAccess?.canManage || adminAccess?.canView ? (
               <Grid item xs={12} md={6}>
                 <Card sx={{ height: "100%" }}>
                   <CardContent>
@@ -87,7 +88,7 @@ const JanHusPage: NextPageWithLayout = () => {
                   </CardActions>
                 </Card>
               </Grid>
-            </PermissionRequired>
+            ) : null}
           </Grid>
         </Stack>
       </Container>

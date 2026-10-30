@@ -38,6 +38,7 @@ from apps.janhus.permissions import (
     get_user_email_candidates,
     has_manage_booking_permission,
     has_manage_settings_permission,
+    has_view_all_bookings_permission,
     is_booking_owner,
     is_connected_to_booking,
     normalize_phone_number,
@@ -74,15 +75,11 @@ class JanHusBaseTestCase(ExtendedGraphQLTestCase):
         self.other_user = UserFactory(is_indok=True)
 
         self.start_dt = timezone.make_aware(
-            datetime.combine(
-                (timezone.now() + timedelta(days=14)).date(), time(hour=10, minute=0)
-            )
+            datetime.combine((timezone.now() + timedelta(days=14)).date(), time(hour=10, minute=0))
         )
         self.end_dt = self.start_dt + timedelta(hours=2)
 
-        self.entire_house_area, _ = JanHusArea.objects.get_or_create(
-            name="Hele huset"
-        )
+        self.entire_house_area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
         self.first_floor_area, _ = JanHusArea.objects.get_or_create(
             name="1. etasje", defaults={"parent": self.entire_house_area}
         )
@@ -92,9 +89,7 @@ class JanHusBaseTestCase(ExtendedGraphQLTestCase):
 
     def add_booking_permission(self, user):
         content_type = ContentType.objects.get_for_model(JanHusBooking)
-        user.user_permissions.add(
-            Permission.objects.get(codename="manage_booking", content_type=content_type)
-        )
+        user.user_permissions.add(Permission.objects.get(codename="manage_booking", content_type=content_type))
 
 
 class JanHusMutationsTestCase(JanHusBaseTestCase):
@@ -204,9 +199,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertEqual(
             "EXTERNAL",
-            content["data"]["createJanhusBookingRequest"]["bookingRequest"][
-                "eventType"
-            ],
+            content["data"]["createJanhusBookingRequest"]["bookingRequest"]["eventType"],
         )
 
     def test_non_indok_user_cannot_create_non_external_booking(self):
@@ -338,14 +331,10 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(create_response)
 
         create_content = json.loads(create_response.content)
-        request_id = create_content["data"]["createJanhusBookingRequest"][
-            "bookingRequest"
-        ]["id"]
+        request_id = create_content["data"]["createJanhusBookingRequest"]["bookingRequest"]["id"]
         self.assertEqual(
             guest_list_value,
-            create_content["data"]["createJanhusBookingRequest"]["bookingRequest"][
-                "guestList"
-            ],
+            create_content["data"]["createJanhusBookingRequest"]["bookingRequest"]["guestList"],
         )
 
         review_query = f"""
@@ -373,9 +362,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         review_content = json.loads(review_response.content)
         self.assertEqual(
             guest_list_value,
-            review_content["data"]["reviewJanhusBookingRequest"]["booking"][
-                "guestList"
-            ],
+            review_content["data"]["reviewJanhusBookingRequest"]["booking"]["guestList"],
         )
         self.assertEqual(
             JanHusBookingStatus.PROVISIONAL,
@@ -639,7 +626,6 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         self.assertResponseHasErrors(self.query(query, user=self.user))
 
-
     def test_price_override_tier_switches_to_external_pricing(self):
         self.add_booking_permission(self.user)
 
@@ -823,9 +809,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseHasErrors(response)
 
         content = json.loads(response.content)
-        self.assertIn(
-            "outside of active booking semesters", content["errors"][0]["message"]
-        )
+        self.assertIn("outside of active booking semesters", content["errors"][0]["message"])
 
     def test_update_booking_syncs_existing_vipps_product_price(self):
         self.add_booking_permission(self.user)
@@ -943,9 +927,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         configured_organization = OrganizationFactory(name="Janus Eiendom")
         OrganizationFactory(name="Ikke selger")
 
-        JanHusBookingSettings.objects.create(
-            payment_provider_organization=configured_organization
-        )
+        JanHusBookingSettings.objects.create(payment_provider_organization=configured_organization)
 
         booking = self._payment_booking()
 
@@ -953,9 +935,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(response)
 
         booking.refresh_from_db()
-        self.assertEqual(
-            configured_organization.id, booking.vipps_product.organization_id
-        )
+        self.assertEqual(configured_organization.id, booking.vipps_product.organization_id)
 
     def test_payment_product_falls_back_to_default_organization_when_unset(self):
         self.add_booking_permission(self.user)
@@ -970,13 +950,8 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         booking.refresh_from_db()
         self.assertIsNotNone(booking.vipps_product_id)
 
-        expected_organization = (
-            Organization.objects.filter(pk=4).first()
-            or Organization.objects.order_by("id").first()
-        )
-        self.assertEqual(
-            expected_organization.id, booking.vipps_product.organization_id
-        )
+        expected_organization = Organization.objects.filter(pk=4).first() or Organization.objects.order_by("id").first()
+        self.assertEqual(expected_organization.id, booking.vipps_product.organization_id)
         self.assertEqual(fallback_organization.id, expected_organization.id)
 
     def test_payment_product_seller_ignores_booking_owner_organization(self):
@@ -994,9 +969,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             group=buyer_organization.hr_group,
         )
 
-        JanHusBookingSettings.objects.create(
-            payment_provider_organization=configured_organization
-        )
+        JanHusBookingSettings.objects.create(payment_provider_organization=configured_organization)
 
         booking = self._payment_booking()
 
@@ -1004,12 +977,8 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(response)
 
         booking.refresh_from_db()
-        self.assertEqual(
-            configured_organization.id, booking.vipps_product.organization_id
-        )
-        self.assertNotEqual(
-            buyer_organization.id, booking.vipps_product.organization_id
-        )
+        self.assertEqual(configured_organization.id, booking.vipps_product.organization_id)
+        self.assertNotEqual(buyer_organization.id, booking.vipps_product.organization_id)
 
     def test_organization_booking_records_price_without_vipps_payment(self):
         """
@@ -1108,9 +1077,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             }}
         """
 
-        responsible_comment_response = self.query(
-            responsible_comment_query, user=responsible_user
-        )
+        responsible_comment_response = self.query(responsible_comment_query, user=responsible_user)
         self.assertResponseHasErrors(responsible_comment_response)
 
         owner_policy_query = f"""
@@ -1201,7 +1168,6 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         booking.refresh_from_db()
         self.assertEqual([guest_user.feide_userid], json.loads(booking.guest_list))
 
-
     def _org_booking_request_query(self, organization):
         return f"""
             mutation {{
@@ -1234,9 +1200,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         plain_member = UserFactory(is_indok=True)
         MembershipFactory(organization=organization, user=plain_member, group=None)
         leader = UserFactory(is_indok=True)
-        MembershipFactory(
-            organization=organization, user=leader, group=organization.hr_group
-        )
+        MembershipFactory(organization=organization, user=leader, group=organization.hr_group)
         admin = UserFactory(is_indok=True)
         self.add_booking_permission(admin)
 
@@ -1250,18 +1214,14 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         for label, user, allowed in cases:
             with self.subTest(case=label):
                 JanHusBookingRequest.objects.all().delete()
-                response = self.query(
-                    self._org_booking_request_query(organization), user=user
-                )
+                response = self.query(self._org_booking_request_query(organization), user=user)
                 if allowed:
                     self.assertResponseNoErrors(response)
                 else:
                     self.assertResponseHasErrors(response)
                 self.assertEqual(
                     allowed,
-                    JanHusBookingRequest.objects.filter(
-                        owner_organization=organization
-                    ).exists(),
+                    JanHusBookingRequest.objects.filter(owner_organization=organization).exists(),
                 )
 
     def test_create_booking_rejects_organization_member_without_hr_group(self):
@@ -1293,9 +1253,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         response = self.query(query, user=plain_member)
 
         self.assertResponseHasErrors(response)
-        self.assertFalse(
-            JanHusBooking.objects.filter(owner_organization=organization).exists()
-        )
+        self.assertFalse(JanHusBooking.objects.filter(owner_organization=organization).exists())
 
     def test_create_booking_request_rejects_cleaning_when_option_disabled(self):
         JanHusBookingSettings.objects.create(cleaning_option_enabled=False)
@@ -1356,7 +1314,6 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertEqual("E-post bestiller: Ugyldig e-postadresse.", message)
         self.assertNotIn("requester_email", message)
         self.assertNotIn("{", message)
-
 
     def test_booking_reference_is_unique_readable_and_stable(self):
         def make(offset, area, owner):
@@ -1433,22 +1390,17 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.add_booking_permission(self.user)
 
         cases = [
-            ("confirmed", JanHusBookingStatus.PENDING_ADMIN_REVIEW, "CONFIRMED",
-             "send_booking_confirmation", True),
-            ("declined", JanHusBookingStatus.PENDING_ADMIN_REVIEW, "DECLINED",
-             "send_booking_declined", True),
+            ("confirmed", JanHusBookingStatus.PENDING_ADMIN_REVIEW, "CONFIRMED", "send_booking_confirmation", True),
+            ("declined", JanHusBookingStatus.PENDING_ADMIN_REVIEW, "DECLINED", "send_booking_declined", True),
             # Re-confirming an already confirmed booking must not mail again.
-            ("already confirmed", JanHusBookingStatus.CONFIRMED, "CONFIRMED",
-             "send_booking_confirmation", False),
+            ("already confirmed", JanHusBookingStatus.CONFIRMED, "CONFIRMED", "send_booking_confirmation", False),
         ]
 
         for label, initial, new_status, target, expected in cases:
             with self.subTest(case=label):
                 booking = self._pending_booking(status=initial)
                 with patch(f"apps.janhus.mutations.{target}") as mocked_send:
-                    response = self.query(
-                        self._review_booking_query(booking, new_status), user=self.user
-                    )
+                    response = self.query(self._review_booking_query(booking, new_status), user=self.user)
                 self.assertResponseNoErrors(response)
                 self.assertEqual(expected, mocked_send.called)
 
@@ -1474,9 +1426,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                       ) {{ ok }}
                     }}
                 """
-                with patch(
-                    "apps.janhus.mutations.send_booking_request_rejected"
-                ) as mocked_send:
+                with patch("apps.janhus.mutations.send_booking_request_rejected") as mocked_send:
                     response = self.query(query, user=self.user)
                 self.assertResponseNoErrors(response)
                 self.assertEqual(expected, mocked_send.called)
@@ -1502,13 +1452,12 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             }}
         """
 
-        with patch(
-            "apps.janhus.mutations.send_booking_request_received"
-        ) as mocked_send:
+        with patch("apps.janhus.mutations.send_booking_request_received") as mocked_send:
             response = self.query(query, user=self.user)
 
         self.assertResponseNoErrors(response)
         mocked_send.assert_called_once()
+
 
 class JanHusResolversTestCase(JanHusBaseTestCase):
     def test_admin_query_requires_permission(self):
@@ -1589,19 +1538,13 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
 
         member_response = self.query(query, user=member_user)
         self.assertResponseNoErrors(member_response)
-        member_ids = [
-            item["id"]
-            for item in json.loads(member_response.content)["data"]["janhusMyBookings"]
-        ]
+        member_ids = [item["id"] for item in json.loads(member_response.content)["data"]["janhusMyBookings"]]
         self.assertIn(str(personal_booking.id), member_ids)
         self.assertNotIn(str(org_booking.id), member_ids)
 
         leader_response = self.query(query, user=leader_user)
         self.assertResponseNoErrors(leader_response)
-        leader_ids = [
-            item["id"]
-            for item in json.loads(leader_response.content)["data"]["janhusMyBookings"]
-        ]
+        leader_ids = [item["id"] for item in json.loads(leader_response.content)["data"]["janhusMyBookings"]]
         self.assertIn(str(org_booking.id), leader_ids)
 
     def test_my_bookings_include_booker_or_responsible_contacts(self):
@@ -1643,10 +1586,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         response = self.query(query, user=self.other_user)
         self.assertResponseNoErrors(response)
 
-        booking_ids = [
-            item["id"]
-            for item in json.loads(response.content)["data"]["janhusMyBookings"]
-        ]
+        booking_ids = [item["id"] for item in json.loads(response.content)["data"]["janhusMyBookings"]]
         self.assertIn(str(booker_booking.id), booking_ids)
         self.assertIn(str(responsible_booking.id), booking_ids)
 
@@ -1700,20 +1640,14 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
 
-        ids = [
-            item["id"]
-            for item in json.loads(response.content)["data"]["janhusMyBookingRequests"]
-        ]
+        ids = [item["id"] for item in json.loads(response.content)["data"]["janhusMyBookingRequests"]]
         self.assertIn(str(mine.id), ids)
         self.assertNotIn(str(theirs.id), ids)
 
     def test_my_booking_requests_is_empty_for_anonymous(self):
         response = self.query("{ janhusMyBookingRequests { id } }")
         self.assertResponseNoErrors(response)
-        self.assertEqual(
-            [], json.loads(response.content)["data"]["janhusMyBookingRequests"]
-        )
-
+        self.assertEqual([], json.loads(response.content)["data"]["janhusMyBookingRequests"])
 
     def test_guest_search_requires_access_and_returns_name_and_feide(self):
         searchable_user = UserFactory(
@@ -1750,15 +1684,8 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(allowed_response)
 
         results = json.loads(allowed_response.content)["data"]["janhusGuestSearch"]
-        self.assertTrue(
-            any(
-                result["feideUserid"] == searchable_user.feide_userid
-                for result in results
-            )
-        )
-        self.assertTrue(
-            any(result["displayName"] == "Siri Nordmann" for result in results)
-        )
+        self.assertTrue(any(result["feideUserid"] == searchable_user.feide_userid for result in results))
+        self.assertTrue(any(result["displayName"] == "Siri Nordmann" for result in results))
 
     def test_guest_search_for_request_requires_auth_and_returns_name_and_feide(self):
         searchable_user = UserFactory(
@@ -1783,22 +1710,9 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         allowed_response = self.query(query, user=self.user)
         self.assertResponseNoErrors(allowed_response)
 
-        results = json.loads(allowed_response.content)["data"][
-            "janhusGuestSearchForRequest"
-        ]
-        self.assertTrue(
-            any(
-                result["feideUserid"] == searchable_user.feide_userid
-                for result in results
-            )
-        )
-        self.assertTrue(
-            any(
-                result["displayName"] == "ReqSearchUnique Nordmann"
-                for result in results
-            )
-        )
-
+        results = json.loads(allowed_response.content)["data"]["janhusGuestSearchForRequest"]
+        self.assertTrue(any(result["feideUserid"] == searchable_user.feide_userid for result in results))
+        self.assertTrue(any(result["displayName"] == "ReqSearchUnique Nordmann" for result in results))
 
     def test_bookable_organizations_returns_only_hr_organizations(self):
         lead_organization = OrganizationFactory(name="Leder i forening")
@@ -1810,9 +1724,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
             user=self.user,
             group=lead_organization.hr_group,
         )
-        MembershipFactory(
-            organization=member_organization, user=self.user, group=None
-        )
+        MembershipFactory(organization=member_organization, user=self.user, group=None)
 
         query = """
             query {
@@ -1827,10 +1739,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         self.assertResponseNoErrors(response)
 
         content = json.loads(response.content)
-        returned_ids = [
-            organization["id"]
-            for organization in content["data"]["janhusBookableOrganizations"]
-        ]
+        returned_ids = [organization["id"] for organization in content["data"]["janhusBookableOrganizations"]]
 
         self.assertEqual([str(lead_organization.id)], returned_ids)
         self.assertNotIn(str(member_organization.id), returned_ids)
@@ -1857,7 +1766,6 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
 
         content = json.loads(response.content)
         self.assertEqual([], content["data"]["janhusBookableOrganizations"])
-
 
     DETAILS_QUERY = """
         query {
@@ -1921,11 +1829,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
 
         for label, user, allowed in cases:
             with self.subTest(case=label):
-                response = (
-                    self.query(self.DETAILS_QUERY, user=user)
-                    if user
-                    else self.query(self.DETAILS_QUERY)
-                )
+                response = self.query(self.DETAILS_QUERY, user=user) if user else self.query(self.DETAILS_QUERY)
                 if allowed:
                     self.assertResponseNoErrors(response)
                     content = json.loads(response.content)
@@ -1995,7 +1899,6 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         ids = [item["id"] for item in json.loads(response.content)["data"]["janhusAreas"]]
         self.assertIn(str(self.first_floor_area.id), ids)
 
-
     def test_update_area_requires_settings_permission(self):
         """Areas are created in Django admin; the API may only edit them."""
         query = f"""
@@ -2019,26 +1922,17 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         self.assertResponseHasErrors(denied_response)
 
         content_type = ContentType.objects.get_for_model(JanHusBooking)
-        self.user.user_permissions.add(
-            Permission.objects.get(
-                codename="manage_settings", content_type=content_type
-            )
-        )
+        self.user.user_permissions.add(Permission.objects.get(codename="manage_settings", content_type=content_type))
         allowed_response = self.query(query, user=self.user)
         self.assertResponseNoErrors(allowed_response)
 
         self.first_floor_area.refresh_from_db()
         self.assertEqual(50, self.first_floor_area.internal_price_per_hour)
 
-
     def test_area_can_be_archived_and_restored(self):
         """The frontend archives via is_active so the action stays reversible."""
         content_type = ContentType.objects.get_for_model(JanHusBooking)
-        self.user.user_permissions.add(
-            Permission.objects.get(
-                codename="manage_settings", content_type=content_type
-            )
-        )
+        self.user.user_permissions.add(Permission.objects.get(codename="manage_settings", content_type=content_type))
 
         def set_active(is_active):
             response = self.query(
@@ -2060,7 +1954,6 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         set_active(True)
         self.assertTrue(self.first_floor_area.is_active)
 
-
     def test_delete_area_soft_deletes_when_referenced(self):
         JanHusBooking.objects.create(
             starts_at=self.start_dt,
@@ -2074,11 +1967,7 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         )
 
         content_type = ContentType.objects.get_for_model(JanHusBooking)
-        self.user.user_permissions.add(
-            Permission.objects.get(
-                codename="manage_settings", content_type=content_type
-            )
-        )
+        self.user.user_permissions.add(Permission.objects.get(codename="manage_settings", content_type=content_type))
 
         query = f"""
             mutation {{
@@ -2094,13 +1983,11 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         self.first_floor_area.refresh_from_db()
         self.assertFalse(self.first_floor_area.is_active)
 
-
     def test_resolve_area_rejects_non_numeric_id(self):
         """A stale pre-0011 area code must read as "not found", not a Django error."""
         with self.assertRaises(GraphQLError) as ctx:
             _resolve_area("FIRST_FLOOR")
         self.assertEqual("Area not found", str(ctx.exception))
-
 
     def test_successful_payment_confirms_a_provisional_booking(self):
         """Paying is what confirms a personal booking; no admin step in between."""
@@ -2167,9 +2054,7 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
 
 class JanHusMailTestCase(TestCase):
     def _confirmed_booking(self, **overrides):
-        start_dt = timezone.make_aware(
-            datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
-        )
+        start_dt = timezone.make_aware(datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0)))
         area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
         defaults = dict(
             starts_at=start_dt,
@@ -2195,19 +2080,13 @@ class JanHusMailTestCase(TestCase):
         kwargs = mocked_email.call_args.kwargs
 
         self.assertEqual("janhus-booking-confirmations", kwargs["stream"])
-        self.assertEqual(
-            mail.SUBJECTS["decision"] + booking.area.name, kwargs["subject"]
-        )
+        self.assertEqual(mail.SUBJECTS["decision"] + booking.area.name, kwargs["subject"])
         self.assertIn(booking.reference, kwargs["body"])
         # bcc, so the two contacts do not see each other's address
-        self.assertCountEqual(
-            ["booker@example.com", "responsible@example.com"], kwargs["bcc"]
-        )
+        self.assertCountEqual(["booker@example.com", "responsible@example.com"], kwargs["bcc"])
 
     def _booking_request(self, **overrides):
-        start_dt = timezone.make_aware(
-            datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0))
-        )
+        start_dt = timezone.make_aware(datetime.combine((timezone.now() + timedelta(days=7)).date(), time(12, 0)))
         area, _ = JanHusArea.objects.get_or_create(name="Hele huset")
         defaults = dict(
             starts_at=start_dt,
@@ -2224,9 +2103,7 @@ class JanHusMailTestCase(TestCase):
         return JanHusBookingRequest.objects.create(**defaults)
 
     def test_request_receipt_also_notifies_the_configured_admin_address(self):
-        JanHusBookingSettings.objects.create(
-            booking_contact_email="janhus@example.com"
-        )
+        JanHusBookingSettings.objects.create(booking_contact_email="janhus@example.com")
         booking_request = self._booking_request()
 
         with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
@@ -2235,9 +2112,7 @@ class JanHusMailTestCase(TestCase):
         self.assertEqual(2, mocked_email.call_count)
         admin_kwargs = mocked_email.call_args_list[1].kwargs
         self.assertEqual(["janhus@example.com"], admin_kwargs["bcc"])
-        self.assertTrue(
-            admin_kwargs["subject"].startswith(mail.SUBJECTS["admin_reserve"])
-        )
+        self.assertTrue(admin_kwargs["subject"].startswith(mail.SUBJECTS["admin_reserve"]))
         self.assertIn("kari@example.com", admin_kwargs["body"])
 
     def test_delivery_failure_is_logged_and_does_not_propagate(self):
@@ -2254,9 +2129,7 @@ class JanHusMailTestCase(TestCase):
             with self.assertLogs("apps.janhus.mail", level="ERROR") as logs:
                 send_booking_confirmation(booking)
 
-        self.assertTrue(
-            any("Could not send JanHus email" in line for line in logs.output)
-        )
+        self.assertTrue(any("Could not send JanHus email" in line for line in logs.output))
 
     def test_confirmation_mail_attaches_the_contract_pdf(self):
         booking = self._confirmed_booking()
@@ -2271,14 +2144,13 @@ class JanHusMailTestCase(TestCase):
         self.assertEqual("application/pdf", mimetype)
         self.assertTrue(content.startswith(b"%PDF-"))
 
+
 class JanHusRulesTestCase(TestCase):
     def setUp(self) -> None:
         self.settings = get_or_create_settings()
         self.levels = ensure_default_levels(self.settings)
         self.entire_house, _ = JanHusArea.objects.get_or_create(name="Hele huset")
-        self.first_floor, _ = JanHusArea.objects.get_or_create(
-            name="1. etasje", defaults={"parent": self.entire_house}
-        )
+        self.first_floor, _ = JanHusArea.objects.get_or_create(name="1. etasje", defaults={"parent": self.entire_house})
         self.second_floor, _ = JanHusArea.objects.get_or_create(
             name="2. etasje", defaults={"parent": self.entire_house}
         )
@@ -2305,9 +2177,7 @@ class JanHusRulesTestCase(TestCase):
         organization = OrganizationFactory()
         assigned_user = UserFactory(is_indok=True)
         assigned_organization = OrganizationFactory()
-        JanHusUserBookingLevel.objects.create(
-            user=assigned_user, level=self.levels[PRIORITY_LEVEL]
-        )
+        JanHusUserBookingLevel.objects.create(user=assigned_user, level=self.levels[PRIORITY_LEVEL])
         JanHusOrganizationBookingLevel.objects.create(
             organization=assigned_organization, level=self.levels[PRIORITY_LEVEL]
         )
@@ -2331,9 +2201,7 @@ class JanHusRulesTestCase(TestCase):
 
     def test_internal_booking_without_user_or_organization_is_rejected(self):
         with self.assertRaises(GraphQLError):
-            resolve_booking_level(
-                user=None, owner_organization=None, is_external_booking=False
-            )
+            resolve_booking_level(user=None, owner_organization=None, is_external_booking=False)
 
     def test_initial_status_depends_on_level_and_how_far_ahead_the_booking_is(self):
         # General opens 4 weeks ahead, organization 6.
@@ -2395,9 +2263,7 @@ class JanHusRulesTestCase(TestCase):
         self.assertIn(booking, overlaps(self.first_floor))
         self.assertIn(booking, overlaps(self.entire_house))
         self.assertNotIn(booking, overlaps(self.second_floor))
-        self.assertNotIn(
-            booking, overlaps(self.first_floor, exclude_booking_id=booking.id)
-        )
+        self.assertNotIn(booking, overlaps(self.first_floor, exclude_booking_id=booking.id))
 
         for ignored in [JanHusBookingStatus.DECLINED, JanHusBookingStatus.CANCELLED]:
             with self.subTest(status=ignored):
@@ -2429,11 +2295,7 @@ class JanHusRulesTestCase(TestCase):
 
         settings.fall_semester_active = False
         settings.save()
-        self.assertFalse(
-            is_in_active_booking_semester(
-                target_date=date(2026, 9, 10), settings=settings
-            )
-        )
+        self.assertFalse(is_in_active_booking_semester(target_date=date(2026, 9, 10), settings=settings))
 
     def test_bookings_outside_the_active_semesters_are_rejected(self):
         settings = self.settings
@@ -2456,9 +2318,7 @@ class JanHusRulesTestCase(TestCase):
         settings.save()
         inside = timezone.make_aware(datetime(2026, 9, 10, 10, 0))
         with self.assertRaises(GraphQLError):
-            validate_booking_semester_rules(
-                starts_at=inside, ends_at=inside + timedelta(hours=2), settings=settings
-            )
+            validate_booking_semester_rules(starts_at=inside, ends_at=inside + timedelta(hours=2), settings=settings)
 
     def test_invalid_time_ranges_are_rejected(self):
         start = self._at(days=14, hour=12)
@@ -2476,9 +2336,7 @@ class JanHusRulesTestCase(TestCase):
         for label, starts_at, ends_at in cases:
             with self.subTest(case=label):
                 with self.assertRaises(GraphQLError):
-                    validate_time_rules(
-                        starts_at=starts_at, ends_at=ends_at, settings=self.settings
-                    )
+                    validate_time_rules(starts_at=starts_at, ends_at=ends_at, settings=self.settings)
 
     def test_valid_bookings_pass_including_across_midnight(self):
         # The default window is 08:00 -> 02:00, so 23:00-01:00 is inside it.
@@ -2499,16 +2357,12 @@ class JanHusRulesTestCase(TestCase):
             "area": self.first_floor,
         }
 
-        self.assertNotIn(
-            booking, get_overlapping_bookings(settings=self.settings, **back_to_back)
-        )
+        self.assertNotIn(booking, get_overlapping_bookings(settings=self.settings, **back_to_back))
 
         self.settings.buffer_minutes = 60
         self.settings.save()
 
-        self.assertIn(
-            booking, get_overlapping_bookings(settings=self.settings, **back_to_back)
-        )
+        self.assertIn(booking, get_overlapping_bookings(settings=self.settings, **back_to_back))
         self.assertNotIn(
             booking,
             get_overlapping_bookings(
@@ -2532,9 +2386,7 @@ class JanHusRulesTestCase(TestCase):
         priority = self.levels[PRIORITY_LEVEL]
 
         def provisional_at(level):
-            booking = self._booking(
-                area=self.first_floor, status=JanHusBookingStatus.PROVISIONAL
-            )
+            booking = self._booking(area=self.first_floor, status=JanHusBookingStatus.PROVISIONAL)
             booking.booking_level = level
             booking.save(update_fields=["booking_level"])
             return booking
@@ -2568,6 +2420,7 @@ class JanHusRulesTestCase(TestCase):
             )
         )
 
+
 class JanHusPermissionsTestCase(TestCase):
     def setUp(self) -> None:
         self.user = UserFactory(is_indok=True)
@@ -2577,9 +2430,7 @@ class JanHusPermissionsTestCase(TestCase):
 
     def _grant(self, user, codename):
         content_type = ContentType.objects.get_for_model(JanHusBooking)
-        user.user_permissions.add(
-            Permission.objects.get(codename=codename, content_type=content_type)
-        )
+        user.user_permissions.add(Permission.objects.get(codename=codename, content_type=content_type))
         return type(user).objects.get(pk=user.pk)
 
     def _booking(self, **overrides):
@@ -2612,9 +2463,7 @@ class JanHusPermissionsTestCase(TestCase):
         self.assertTrue(has_manage_settings_permission(settings_admin))
         self.assertFalse(has_manage_booking_permission(settings_admin))
 
-        self.assertTrue(
-            has_manage_booking_permission(UserFactory(is_indok=True, is_superuser=True))
-        )
+        self.assertTrue(has_manage_booking_permission(UserFactory(is_indok=True, is_superuser=True)))
 
     def test_phone_numbers_are_normalised(self):
         cases = [
@@ -2634,9 +2483,7 @@ class JanHusPermissionsTestCase(TestCase):
         organization = OrganizationFactory()
         leader = UserFactory(is_indok=True)
         member = UserFactory(is_indok=True)
-        MembershipFactory(
-            organization=organization, user=leader, group=organization.hr_group
-        )
+        MembershipFactory(organization=organization, user=leader, group=organization.hr_group)
         MembershipFactory(organization=organization, user=member, group=None)
 
         personal = self._booking()
@@ -2653,12 +2500,8 @@ class JanHusPermissionsTestCase(TestCase):
 
         # Every factory user shares a default phone, so give these distinct ones.
         by_email = UserFactory(is_indok=False, email="booker@example.com")
-        by_phone = UserFactory(
-            is_indok=False, email="unrelated@example.com", phone_number="45555555"
-        )
-        stranger = UserFactory(
-            is_indok=False, email="stranger@example.com", phone_number="46666666"
-        )
+        by_phone = UserFactory(is_indok=False, email="unrelated@example.com", phone_number="45555555")
+        stranger = UserFactory(is_indok=False, email="stranger@example.com", phone_number="46666666")
         admin = self._grant(self.user, "manage_booking")
 
         booking.booker_phone = "45555555"
@@ -2669,6 +2512,7 @@ class JanHusPermissionsTestCase(TestCase):
         self.assertTrue(is_connected_to_booking(admin, booking))
         self.assertFalse(is_connected_to_booking(stranger, booking))
         self.assertFalse(is_connected_to_booking(None, booking))
+
 
 class JanHusPricingTestCase(TestCase):
     def setUp(self) -> None:
@@ -2723,9 +2567,7 @@ class JanHusPricingTestCase(TestCase):
         ]
         for label, minutes, overrides, expected in cases:
             with self.subTest(case=label):
-                self.assertEqual(
-                    expected, self._booking(minutes=minutes, **overrides).total_price
-                )
+                self.assertEqual(expected, self._booking(minutes=minutes, **overrides).total_price)
 
     def test_deposit_is_outstanding_only_while_required_or_requested(self):
         outstanding = [JanHusDepositStatus.REQUIRED, JanHusDepositStatus.REQUESTED]
@@ -2738,15 +2580,11 @@ class JanHusPricingTestCase(TestCase):
 
         for status in outstanding + settled:
             with self.subTest(status=status):
-                booking = self._booking(
-                    deposit_status=status, deposit_amount=Decimal("1000.00")
-                )
+                booking = self._booking(deposit_status=status, deposit_amount=Decimal("1000.00"))
                 expected = Decimal("1000.00") if status in outstanding else Decimal("0")
                 self.assertEqual(expected, booking.outstanding_deposit_amount)
 
-        zero = self._booking(
-            deposit_status=JanHusDepositStatus.REQUIRED, deposit_amount=Decimal("0")
-        )
+        zero = self._booking(deposit_status=JanHusDepositStatus.REQUIRED, deposit_amount=Decimal("0"))
         self.assertEqual(Decimal("0"), zero.outstanding_deposit_amount)
 
     def test_payment_total_adds_rent_and_outstanding_deposit(self):
@@ -2758,3 +2596,114 @@ class JanHusPricingTestCase(TestCase):
 
         booking.deposit_status = JanHusDepositStatus.PAID
         self.assertEqual(booking.total_price, booking.payment_total_price)
+
+
+class JanHusViewAllBookingsPermissionTestCase(JanHusBaseTestCase):
+    """
+    janhus.view_all_bookings: everything the admin page shows, read-only.
+    The viewer below is not connected to any booking, so whatever they can see
+    or do comes from the permission alone.
+    """
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.viewer = UserFactory(is_indok=True)
+        self.viewer.user_permissions.add(
+            Permission.objects.get(
+                codename="view_all_bookings",
+                content_type=ContentType.objects.get_for_model(JanHusBooking),
+            )
+        )
+        self.booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.other_user,
+            booker_email="booker@example.com",
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            admin_comment="Only for admins",
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
+        )
+        self.request = JanHusBookingRequest.objects.create(
+            starts_at=self.start_dt + timedelta(days=1),
+            ends_at=self.end_dt + timedelta(days=1),
+            area=self.first_floor_area,
+            requester_user=self.other_user,
+            requester_email="kari@example.com",
+            responsible_name="Kari",
+            responsible_email="kari@example.com",
+            responsible_phone="41234567",
+        )
+
+    def test_helpers_grant_viewing_and_nothing_else(self):
+        self.assertTrue(has_view_all_bookings_permission(self.viewer))
+        self.assertTrue(can_view_booking_details(self.viewer, self.booking))
+        self.assertFalse(has_manage_booking_permission(self.viewer))
+        self.assertFalse(has_manage_settings_permission(self.viewer))
+        self.assertFalse(can_edit_guest_list(self.viewer, self.booking))
+        self.assertFalse(is_connected_to_booking(self.viewer, self.booking))
+
+    def test_viewer_sees_all_bookings_with_details_and_all_requests(self):
+        bookings_response = self.query(
+            """
+            query {
+              adminJanhusBookings { id bookerEmail adminComment totalPrice guestListEntries { displayName } }
+            }
+            """,
+            user=self.viewer,
+        )
+        self.assertResponseNoErrors(bookings_response)
+        bookings = json.loads(bookings_response.content)["data"]["adminJanhusBookings"]
+        (booking,) = [b for b in bookings if b["id"] == str(self.booking.id)]
+        self.assertEqual(booking["bookerEmail"], "booker@example.com")
+        self.assertEqual(booking["adminComment"], "Only for admins")
+
+        requests_response = self.query("query { janhusBookingRequests { id requesterEmail } }", user=self.viewer)
+        self.assertResponseNoErrors(requests_response)
+        requests = json.loads(requests_response.content)["data"]["janhusBookingRequests"]
+        self.assertIn(str(self.request.id), [r["id"] for r in requests])
+
+    def test_viewer_cannot_change_anything(self):
+        def mutation(field, arguments, result="ok"):
+            return f"mutation {{ {field}({arguments}) {{ {result} }} }}"
+
+        booking_id, request_id = self.booking.id, self.request.id
+        settings_before = get_or_create_settings().min_duration_minutes
+        attempts = {
+            "update booking": mutation(
+                "updateJanhusBooking", f'bookingData: {{ id: "{booking_id}" status: "CANCELLED" }}'
+            ),
+            "review booking": mutation(
+                "reviewJanhusBooking", f'reviewData: {{ id: "{booking_id}" status: "CONFIRMED" }}'
+            ),
+            "delete booking": mutation("deleteJanhusBooking", f'bookingId: "{booking_id}"'),
+            "payment product": mutation("createJanhusPaymentProduct", f'bookingId: "{booking_id}"', "productId"),
+            "review request": mutation(
+                "reviewJanhusBookingRequest",
+                f'reviewData: {{ id: "{request_id}" status: "APPROVED" convertToBooking: true }}',
+            ),
+            "delete request": mutation("deleteJanhusBookingRequest", f'requestId: "{request_id}"'),
+            "settings": mutation("updateJanhusBookingSettings", "settingsData: { minDurationMinutes: 15 }"),
+            "guest search": f'query {{ janhusGuestSearch(bookingId: "{booking_id}", query: "ab") {{ displayName }} }}',
+        }
+        for name, query in attempts.items():
+            with self.subTest(name):
+                response = self.query(query, user=self.viewer)
+                self.assertResponseHasErrors(response)
+                # refused for lack of permission, not because the query itself is wrong
+                messages = " ".join(e["message"] for e in json.loads(response.content)["errors"])
+                for invalid in ("Cannot query field", "Unknown argument", "Expected type"):
+                    self.assertNotIn(invalid, messages)
+
+        self.booking.refresh_from_db()
+        self.request.refresh_from_db()
+        self.assertEqual(self.booking.status, JanHusBookingStatus.PENDING_ADMIN_REVIEW)
+        self.assertEqual(self.request.status, JanHusBookingRequest.RequestStatus.PENDING)
+        self.assertEqual(get_or_create_settings().min_duration_minutes, settings_before)
+
+    def test_without_the_permission_the_admin_queries_stay_closed(self):
+        for query in ("query { adminJanhusBookings { id } }", "query { janhusBookingRequests { id } }"):
+            with self.subTest(query):
+                self.assert_permission_error(self.query(query, user=self.other_user))

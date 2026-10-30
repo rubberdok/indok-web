@@ -60,9 +60,7 @@ def _search_guest_candidates(query, limit=20):
 
         seen_feide_ids.add(feide_userid)
         display_name = (
-            f"{search_result.first_name} {search_result.last_name}".strip()
-            or search_result.username
-            or feide_userid
+            f"{search_result.first_name} {search_result.last_name}".strip() or search_result.username or feide_userid
         )
 
         results.append(
@@ -77,9 +75,7 @@ def _search_guest_candidates(query, limit=20):
 
 class JanHusResolvers:
     def resolve_janhus_bookings(self, info, **kwargs):
-        query = JanHusBooking.objects.exclude(
-            status__in=["DECLINED", "CANCELLED"]
-        ).order_by("starts_at")
+        query = JanHusBooking.objects.exclude(status__in=["DECLINED", "CANCELLED"]).order_by("starts_at")
 
         if kwargs.get("starts_at"):
             query = query.filter(ends_at__gte=kwargs.get("starts_at"))
@@ -101,9 +97,7 @@ class JanHusResolvers:
             contact_filters |= Q(booker_email__iexact=email)
             contact_filters |= Q(responsible_email__iexact=email)
 
-        normalized_phone_number = normalize_phone_number(
-            getattr(user, "phone_number", "")
-        )
+        normalized_phone_number = normalize_phone_number(getattr(user, "phone_number", ""))
         if normalized_phone_number:
             contact_filters |= Q(booker_phone__icontains=normalized_phone_number)
             contact_filters |= Q(responsible_phone__icontains=normalized_phone_number)
@@ -114,9 +108,7 @@ class JanHusResolvers:
         )
 
         return (
-            JanHusBooking.objects.filter(
-                Q(owner_user=user) | organization_leader_filter | contact_filters
-            )
+            JanHusBooking.objects.filter(Q(owner_user=user) | organization_leader_filter | contact_filters)
             .distinct()
             .order_by("-starts_at")
         )
@@ -132,9 +124,7 @@ class JanHusResolvers:
             contact_filters |= Q(requester_email__iexact=email)
             contact_filters |= Q(responsible_email__iexact=email)
 
-        normalized_phone_number = normalize_phone_number(
-            getattr(user, "phone_number", "")
-        )
+        normalized_phone_number = normalize_phone_number(getattr(user, "phone_number", ""))
         if normalized_phone_number:
             contact_filters |= Q(requester_phone__icontains=normalized_phone_number)
             contact_filters |= Q(responsible_phone__icontains=normalized_phone_number)
@@ -145,9 +135,7 @@ class JanHusResolvers:
         )
 
         return (
-            JanHusBookingRequest.objects.filter(
-                Q(requester_user=user) | organization_leader_filter | contact_filters
-            )
+            JanHusBookingRequest.objects.filter(Q(requester_user=user) | organization_leader_filter | contact_filters)
             .distinct()
             .order_by("-starts_at")
         )
@@ -162,9 +150,7 @@ class JanHusResolvers:
             raise GraphQLError("Booking not found")
 
         if not can_edit_guest_list(user, booking):
-            raise GraphQLError(
-                "You do not have permission to edit the guest list for this booking"
-            )
+            raise GraphQLError("You do not have permission to edit the guest list for this booking")
 
         return _search_guest_candidates(query=query, limit=limit)
 
@@ -175,7 +161,7 @@ class JanHusResolvers:
 
         return _search_guest_candidates(query=query, limit=limit)
 
-    @permission_required("janhus.manage_booking")
+    @permission_required(["janhus.manage_booking", "janhus.view_all_bookings"], any_perm=True)
     def resolve_admin_janhus_bookings(self, root, **kwargs):
         query = JanHusBooking.objects.all().order_by("starts_at")
         if kwargs.get("status"):
@@ -207,11 +193,9 @@ class JanHusResolvers:
         user = info.context.user
         if not user.is_authenticated:
             return None
-        return resolve_booking_level(
-            user=user, owner_organization=None, is_external_booking=False
-        )
+        return resolve_booking_level(user=user, owner_organization=None, is_external_booking=False)
 
-    @permission_required("janhus.manage_booking")
+    @permission_required(["janhus.manage_booking", "janhus.view_all_bookings"], any_perm=True)
     def resolve_janhus_booking_requests(self, root, **kwargs):
         query = JanHusBookingRequest.objects.all().order_by("-created_at")
         if kwargs.get("status"):

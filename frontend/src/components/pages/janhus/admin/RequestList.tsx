@@ -16,6 +16,8 @@ type Props = {
   onCommentChange: (id: string, value: string) => void;
   onReview: (id: string, status: "APPROVED" | "REJECTED", convertToBooking: boolean) => void;
   onDelete: (id: string) => void;
+  /** View-only users (janhus.view_all_bookings): the comment is shown disabled and every action is hidden. */
+  readOnly?: boolean;
 };
 
 export const RequestList: React.FC<Props> = ({
@@ -26,6 +28,7 @@ export const RequestList: React.FC<Props> = ({
   onCommentChange,
   onReview,
   onDelete,
+  readOnly = false,
 }) => (
   <Grid container spacing={2} justifyContent="center" alignItems="flex-start" sx={{ width: "100%", m: 0 }}>
     {requests.map((request) => (
@@ -74,37 +77,40 @@ export const RequestList: React.FC<Props> = ({
               <TextField
                 size="small"
                 label="Adminkommentar"
+                disabled={readOnly}
                 value={comments[request.id] ?? ""}
                 onChange={(event) => onCommentChange(request.id, event.target.value)}
               />
-              <Stack direction="row" spacing={1} flexWrap="wrap">
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => onReview(request.id, "APPROVED", true)}
-                  disabled={reviewing}
-                >
-                  Godkjenn + booking (Foreløpig)
-                </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  variant="outlined"
-                  onClick={() => onReview(request.id, "REJECTED", false)}
-                  disabled={reviewing}
-                >
-                  Avvis
-                </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  variant="text"
-                  onClick={() => onDelete(request.id)}
-                  disabled={deleting}
-                >
-                  Slett
-                </Button>
-              </Stack>
+              {readOnly ? null : (
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => onReview(request.id, "APPROVED", true)}
+                    disabled={reviewing}
+                  >
+                    Godkjenn + booking (Foreløpig)
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    onClick={() => onReview(request.id, "REJECTED", false)}
+                    disabled={reviewing}
+                  >
+                    Avvis
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="text"
+                    onClick={() => onDelete(request.id)}
+                    disabled={deleting}
+                  >
+                    Slett
+                  </Button>
+                </Stack>
+              )}
             </Stack>
           </CardContent>
         </Card>

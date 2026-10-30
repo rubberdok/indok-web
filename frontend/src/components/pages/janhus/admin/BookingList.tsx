@@ -68,6 +68,8 @@ type Props = {
   onCreatePaymentProduct: (id: string) => void;
   onDelete: (id: string) => void;
   onOpenGuestList: (id: string) => void;
+  /** View-only users (janhus.view_all_bookings): fields are shown disabled and every action is hidden. */
+  readOnly?: boolean;
 };
 
 export const BookingList: React.FC<Props> = ({
@@ -84,6 +86,7 @@ export const BookingList: React.FC<Props> = ({
   onCreatePaymentProduct,
   onDelete,
   onOpenGuestList,
+  readOnly = false,
 }) => (
   <Grid container spacing={2} justifyContent="center" alignItems="flex-start" sx={{ width: "100%", m: 0 }}>
     {bookings.map((booking) => {
@@ -151,6 +154,7 @@ export const BookingList: React.FC<Props> = ({
               <Stack spacing={1.5}>
                 <Box display="grid" gap={1.5} gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}>
                   <TextField
+                    disabled={readOnly}
                     label="Fra"
                     type="datetime-local"
                     InputLabelProps={{ shrink: true }}
@@ -163,6 +167,7 @@ export const BookingList: React.FC<Props> = ({
                     }
                   />
                   <TextField
+                    disabled={readOnly}
                     label="Til"
                     type="datetime-local"
                     InputLabelProps={{ shrink: true }}
@@ -174,7 +179,7 @@ export const BookingList: React.FC<Props> = ({
                       }))
                     }
                   />
-                  <FormControl>
+                  <FormControl disabled={readOnly}>
                     <InputLabel>Område</InputLabel>
                     <Select
                       label="Område"
@@ -198,7 +203,7 @@ export const BookingList: React.FC<Props> = ({
                       ))}
                     </Select>
                   </FormControl>
-                  <FormControl>
+                  <FormControl disabled={readOnly}>
                     <InputLabel>Status</InputLabel>
                     <Select
                       label="Status"
@@ -217,7 +222,7 @@ export const BookingList: React.FC<Props> = ({
                       ))}
                     </Select>
                   </FormControl>
-                  <FormControl>
+                  <FormControl disabled={readOnly}>
                     <InputLabel>Arrangementstype</InputLabel>
                     <Select
                       label="Arrangementstype"
@@ -236,7 +241,7 @@ export const BookingList: React.FC<Props> = ({
                       ))}
                     </Select>
                   </FormControl>
-                  <FormControl>
+                  <FormControl disabled={readOnly}>
                     <InputLabel>Depositumstatus</InputLabel>
                     <Select
                       label="Depositumstatus"
@@ -256,6 +261,7 @@ export const BookingList: React.FC<Props> = ({
                     </Select>
                   </FormControl>
                   <TextField
+                    disabled={readOnly}
                     label="Depositum"
                     type="number"
                     value={edit.depositAmount}
@@ -266,7 +272,7 @@ export const BookingList: React.FC<Props> = ({
                       }))
                     }
                   />
-                  <FormControl>
+                  <FormControl disabled={readOnly}>
                     <InputLabel>Åpningspolicy</InputLabel>
                     <Select
                       label="Åpningspolicy"
@@ -291,6 +297,7 @@ export const BookingList: React.FC<Props> = ({
                   <FormControlLabel
                     control={
                       <Switch
+                        disabled={readOnly}
                         checked={edit.cleaningRequested}
                         onChange={(event) =>
                           setEdits((prev) => ({
@@ -308,6 +315,7 @@ export const BookingList: React.FC<Props> = ({
                   <FormControlLabel
                     control={
                       <Switch
+                        disabled={readOnly}
                         checked={depositPaid}
                         onChange={(event) =>
                           setEdits((prev) => ({
@@ -324,7 +332,7 @@ export const BookingList: React.FC<Props> = ({
                     }
                     label="Depositum betalt"
                   />
-                  <FormControl>
+                  <FormControl disabled={readOnly}>
                     <InputLabel>Prisoverstyring</InputLabel>
                     <Select
                       label="Prisoverstyring"
@@ -342,6 +350,7 @@ export const BookingList: React.FC<Props> = ({
                     </Select>
                   </FormControl>
                   <TextField
+                    disabled={readOnly}
                     label="Fast pris (overstyrer alt annet)"
                     type="number"
                     value={edit.priceOverrideAmount}
@@ -355,6 +364,7 @@ export const BookingList: React.FC<Props> = ({
                   <FormControlLabel
                     control={
                       <Switch
+                        disabled={readOnly}
                         checked={edit.manuallyMarkedAsPaid}
                         onChange={(event) =>
                           setEdits((prev) => ({
@@ -370,6 +380,7 @@ export const BookingList: React.FC<Props> = ({
                     label="Betalt utenfor Vipps (manuelt bekreftet)"
                   />
                   <TextField
+                    disabled={readOnly}
                     label="Bestiller navn"
                     value={edit.bookerName}
                     onChange={(event) =>
@@ -380,6 +391,7 @@ export const BookingList: React.FC<Props> = ({
                     }
                   />
                   <TextField
+                    disabled={readOnly}
                     label="Ansvarlig navn"
                     value={edit.responsibleName}
                     onChange={(event) =>
@@ -390,6 +402,7 @@ export const BookingList: React.FC<Props> = ({
                     }
                   />
                   <TextField
+                    disabled={readOnly}
                     label="Bestiller e-post"
                     value={edit.bookerEmail}
                     onChange={(event) =>
@@ -400,6 +413,7 @@ export const BookingList: React.FC<Props> = ({
                     }
                   />
                   <TextField
+                    disabled={readOnly}
                     label="Ansvarlig e-post"
                     value={edit.responsibleEmail}
                     onChange={(event) =>
@@ -410,6 +424,7 @@ export const BookingList: React.FC<Props> = ({
                     }
                   />
                   <TextField
+                    disabled={readOnly}
                     label="Bestiller telefon"
                     value={edit.bookerPhone}
                     onChange={(event) =>
@@ -420,6 +435,7 @@ export const BookingList: React.FC<Props> = ({
                     }
                   />
                   <TextField
+                    disabled={readOnly}
                     label="Ansvarlig telefon"
                     value={edit.responsiblePhone}
                     onChange={(event) =>
@@ -432,6 +448,7 @@ export const BookingList: React.FC<Props> = ({
                 </Box>
 
                 <TextField
+                  disabled={readOnly}
                   label="Kommentar"
                   multiline
                   minRows={2}
@@ -452,14 +469,19 @@ export const BookingList: React.FC<Props> = ({
                       {edit.guestListEntries.map((guest) => guest.displayName).join(", ")}
                     </Typography>
                   ) : null}
-                  <Button size="small" variant="outlined" onClick={() => onOpenGuestList(booking.id)}>
-                    Rediger gjesteliste
-                  </Button>
-                  <Typography variant="caption" color="text.secondary" display="block" mt={0.5}>
-                    Endringen lagres når du klikker «Lagre endringer».
-                  </Typography>
+                  {readOnly ? null : (
+                    <>
+                      <Button size="small" variant="outlined" onClick={() => onOpenGuestList(booking.id)}>
+                        Rediger gjesteliste
+                      </Button>
+                      <Typography variant="caption" color="text.secondary" display="block" mt={0.5}>
+                        Endringen lagres når du klikker «Lagre endringer».
+                      </Typography>
+                    </>
+                  )}
                 </Box>
                 <TextField
+                  disabled={readOnly}
                   label="Adminkommentar"
                   multiline
                   minRows={2}
@@ -472,28 +494,30 @@ export const BookingList: React.FC<Props> = ({
                   }
                 />
 
-                <Stack direction="row" spacing={1} flexWrap="wrap">
-                  <Button size="small" variant="contained" onClick={() => onSave(booking.id)} disabled={updating}>
-                    Lagre endringer
-                  </Button>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    onClick={() => onCreatePaymentProduct(booking.id)}
-                    disabled={creatingPaymentProduct || Boolean(booking.ownerOrganization)}
-                  >
-                    {booking.ownerOrganization ? "Intern håndtering (ingen Vipps)" : "Opprett Vipps-betaling"}
-                  </Button>
-                  <Button
-                    size="small"
-                    color="error"
-                    variant="outlined"
-                    onClick={() => onDelete(booking.id)}
-                    disabled={deleting}
-                  >
-                    Slett booking
-                  </Button>
-                </Stack>
+                {readOnly ? null : (
+                  <Stack direction="row" spacing={1} flexWrap="wrap">
+                    <Button size="small" variant="contained" onClick={() => onSave(booking.id)} disabled={updating}>
+                      Lagre endringer
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => onCreatePaymentProduct(booking.id)}
+                      disabled={creatingPaymentProduct || Boolean(booking.ownerOrganization)}
+                    >
+                      {booking.ownerOrganization ? "Intern håndtering (ingen Vipps)" : "Opprett Vipps-betaling"}
+                    </Button>
+                    <Button
+                      size="small"
+                      color="error"
+                      variant="outlined"
+                      onClick={() => onDelete(booking.id)}
+                      disabled={deleting}
+                    >
+                      Slett booking
+                    </Button>
+                  </Stack>
+                )}
 
                 <Typography variant="caption" color="text.secondary">
                   Prisberegning nå: {booking.totalPrice ?? "-"}

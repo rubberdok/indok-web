@@ -70,3 +70,9 @@ query JanHusBookingRequests($status: String) {
     ...JanHusBookingRequest
   }
 }
+
+query JanHusAdminAccess {
+  canManage: hasPermission(permission: "janhus.manage_booking")
+  canView: hasPermission(permission: "janhus.view_all_bookings")
+  canViewDoorLog: hasPermission(permission: "nfc.view_door_log")
+}

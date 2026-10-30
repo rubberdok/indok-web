@@ -13,22 +13,24 @@ if TYPE_CHECKING:
 
 MANAGE_BOOKING_PERMISSION = "janhus.manage_booking"
 MANAGE_SETTINGS_PERMISSION = "janhus.manage_settings"
+# Read-only access to everything the admin page shows. It never grants a change:
+# every mutation checks MANAGE_BOOKING_PERMISSION or MANAGE_SETTINGS_PERMISSION.
+VIEW_ALL_BOOKINGS_PERMISSION = "janhus.view_all_bookings"
 
 
 def has_manage_booking_permission(user: AbstractBaseUser) -> bool:
-    return bool(
-        user and (user.is_superuser or user.has_perm(MANAGE_BOOKING_PERMISSION))
-    )
+    return bool(user and (user.is_superuser or user.has_perm(MANAGE_BOOKING_PERMISSION)))
+
+
+def has_view_all_bookings_permission(user: AbstractBaseUser) -> bool:
+    """Admins see everything; so do users who may only look."""
+    return bool(user and (has_manage_booking_permission(user) or user.has_perm(VIEW_ALL_BOOKINGS_PERMISSION)))
 
 
 def has_manage_settings_permission(user: AbstractBaseUser) -> bool:
     return bool(
         user
-        and (
-            user.is_superuser
-            or user.has_perm(MANAGE_SETTINGS_PERMISSION)
-            or user.has_perm(MANAGE_BOOKING_PERMISSION)
-        )
+        and (user.is_superuser or user.has_perm(MANAGE_SETTINGS_PERMISSION) or user.has_perm(MANAGE_BOOKING_PERMISSION))
     )
 
 
@@ -81,9 +83,7 @@ def get_user_email_candidates(user: AbstractBaseUser) -> set[str]:
     }
 
 
-def _booking_contact_matches_user(
-    booking_email: str, booking_phone: str, user: AbstractBaseUser
-) -> bool:
+def _booking_contact_matches_user(booking_email: str, booking_phone: str, user: AbstractBaseUser) -> bool:
     user_emails = get_user_email_candidates(user)
     booking_email_lower = (booking_email or "").strip().lower()
 
@@ -95,9 +95,7 @@ def _booking_contact_matches_user(
         normalize_phone_number(getattr(user, "phone_number", "")),
     }
 
-    return bool(
-        normalized_booking_phone and normalized_booking_phone in normalized_user_phones
-    )
+    return bool(normalized_booking_phone and normalized_booking_phone in normalized_user_phones)
 
 
 def is_booking_owner(user: AbstractBaseUser, booking) -> bool:
@@ -133,9 +131,7 @@ def is_connected_to_booking(user: AbstractBaseUser, booking) -> bool:
     if _booking_contact_matches_user(booking.booker_email, booking.booker_phone, user):
         return True
 
-    if _booking_contact_matches_user(
-        booking.responsible_email, booking.responsible_phone, user
-    ):
+    if _booking_contact_matches_user(booking.responsible_email, booking.responsible_phone, user):
         return True
 
     return False
@@ -148,7 +144,10 @@ def can_edit_guest_list(user: AbstractBaseUser, booking) -> bool:
 def can_view_booking_details(user: AbstractBaseUser, booking) -> bool:
     """
     Contact details, guest lists, comments and pricing are only visible to people
-    connected to the booking. Everyone else may see availability only
-    (time, area, status).
+    connected to the booking and to those who may view all bookings. Everyone
+    else may see availability only (time, area, status).
+
+    Read-only on purpose: it is not is_connected_to_booking, which also decides
+    who may edit the guest list.
     """
-    return is_connected_to_booking(user, booking)
+    return has_view_all_bookings_permission(user) or is_connected_to_booking(user, booking)
