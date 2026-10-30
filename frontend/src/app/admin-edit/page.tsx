@@ -23,7 +23,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { currentGradeYear, maxGraduationYear } from "@/components/pages/profile/UserForm/helpers";
+import { currentGradeYear, isAcceptedCardNumber, maxGraduationYear } from "@/components/pages/profile/UserForm/helpers";
 import {
   AdminEditCapabilitiesDocument,
   AdminUpdateUserDocument,
@@ -51,7 +51,8 @@ type AdminEditableUser = {
   feideUserid?: string | null;
   feideEmail?: string | null;
   nfcMifareCsn?: string | null;
-  nfcPinCode?: string | null;
+  nfcCardNumber?: string | null;
+  nfcHasPin?: boolean | null;
   nfcPermanentAccess?: boolean | null;
 };
 
@@ -67,15 +68,6 @@ function toErrorMessage(error: unknown, fallback: string): string {
   }
 
   return fallback;
-}
-
-function normalizeMifareCsn(identifier: string): string {
-  return identifier.replace(/\D/g, "");
-}
-
-function isLegacyMifareHexCandidate(identifier: string): boolean {
-  const compact = identifier.replace(/[^0-9a-fA-F]/g, "");
-  return /^[0-9a-fA-F]{8}$/.test(compact);
 }
 
 export default function AdminEditPage() {
@@ -125,7 +117,7 @@ export default function AdminEditPage() {
   const hasAnyAccess = canManageProfiles || canManageNfc;
   const nfcOnlyMode = canManageNfc && !canManageProfiles;
 
-  const mifareCsnRuleText = "MIFARE CSN må være 10 sifre langt.";
+  const mifareCsnRuleText = "Sifrene etter «UID» på kortet, eller de 10 sifrene etter «mS» eller «M» på eldre kort.";
 
   useEffect(() => {
     if (!isClientReady) {
@@ -229,7 +221,8 @@ export default function AdminEditPage() {
           feideUserid: u.feideUserid,
           feideEmail: u.feideEmail,
           nfcMifareCsn: u.nfcMifareCsn,
-          nfcPinCode: u.nfcPinCode,
+          nfcCardNumber: u.nfcCardNumber,
+          nfcHasPin: u.nfcHasPin,
           nfcPermanentAccess: u.nfcPermanentAccess,
         })) ?? []
       );
@@ -243,7 +236,8 @@ export default function AdminEditPage() {
         lastName: u.lastName,
         feideEmail: u.feideEmail,
         nfcMifareCsn: u.nfcMifareCsn,
-        nfcPinCode: u.nfcPinCode,
+        nfcCardNumber: u.nfcCardNumber,
+        nfcHasPin: u.nfcHasPin,
         nfcPermanentAccess: u.nfcPermanentAccess,
       })) ?? []
     );
@@ -267,8 +261,8 @@ export default function AdminEditPage() {
       phoneNumber: user.phoneNumber ?? "",
       allergies: user.allergies ?? "",
       graduationYear: user.graduationYear?.toString() ?? "",
-      nfcMifareCsn: user.nfcMifareCsn ?? "",
-      nfcPinCode: user.nfcPinCode ?? "",
+      nfcMifareCsn: user.nfcCardNumber ?? user.nfcMifareCsn ?? "",
+      nfcPinCode: "",
       nfcPermanentAccess: Boolean(user.nfcPermanentAccess),
     });
   };
@@ -305,7 +299,8 @@ export default function AdminEditPage() {
       feideUserid: user.feideUserid,
       feideEmail: user.feideEmail,
       nfcMifareCsn: user.nfcMifareCsn,
-      nfcPinCode: user.nfcPinCode,
+      nfcCardNumber: user.nfcCardNumber,
+      nfcHasPin: user.nfcHasPin,
       nfcPermanentAccess: user.nfcPermanentAccess,
     });
   };
@@ -346,7 +341,8 @@ export default function AdminEditPage() {
             feideUserid: user.feideUserid,
             feideEmail: user.feideEmail,
             nfcMifareCsn: user.nfcMifareCsn,
-            nfcPinCode: user.nfcPinCode,
+            nfcCardNumber: user.nfcCardNumber,
+            nfcHasPin: user.nfcHasPin,
             nfcPermanentAccess: user.nfcPermanentAccess,
           };
         }
@@ -361,7 +357,8 @@ export default function AdminEditPage() {
             lastName: user.lastName,
             feideEmail: user.feideEmail,
             nfcMifareCsn: user.nfcMifareCsn,
-            nfcPinCode: user.nfcPinCode,
+            nfcCardNumber: user.nfcCardNumber,
+            nfcHasPin: user.nfcHasPin,
             nfcPermanentAccess: user.nfcPermanentAccess,
           };
         }
@@ -395,14 +392,11 @@ export default function AdminEditPage() {
       return "Velg en bruker først.";
     }
 
-    const normalizedDigits = normalizeMifareCsn(formData.nfcMifareCsn);
     const hasNewMifareCsn = formData.nfcMifareCsn.trim().length > 0;
     const hasExistingMifareCsn = Boolean(selectedUser.nfcMifareCsn);
     const pin = formData.nfcPinCode.trim();
 
-    const isValidCsnInput = /^\d{10}$/.test(normalizedDigits);
-    const isValidLegacyMifareHexInput = isLegacyMifareHexCandidate(formData.nfcMifareCsn);
-    if (hasNewMifareCsn && !isValidCsnInput && !isValidLegacyMifareHexInput) {
+    if (hasNewMifareCsn && !isAcceptedCardNumber(formData.nfcMifareCsn)) {
       return mifareCsnRuleText;
     }
 
@@ -464,7 +458,7 @@ export default function AdminEditPage() {
           userId: selectedUser.id,
           nfcData: {
             mifareCsn: formData.nfcMifareCsn.trim() || null,
-            pinCode: formData.nfcPinCode.trim(),
+            pinCode: formData.nfcPinCode.trim() || null, // empty = keep the current PIN
             permanentAccess: formData.nfcPermanentAccess,
           },
         },
@@ -491,7 +485,8 @@ export default function AdminEditPage() {
             feideUserid: updatedUser.feideUserid,
             feideEmail: updatedUser.feideEmail,
             nfcMifareCsn: updatedUser.nfcMifareCsn,
-            nfcPinCode: updatedUser.nfcPinCode,
+            nfcCardNumber: updatedUser.nfcCardNumber,
+            nfcHasPin: updatedUser.nfcHasPin,
             nfcPermanentAccess: updatedUser.nfcPermanentAccess,
           });
         }
@@ -599,7 +594,7 @@ export default function AdminEditPage() {
                   >
                     <ListItemText
                       primary={`${user.firstName} ${user.lastName} (${user.username})`}
-                      secondary={`ID: ${user.id} ・ Epost/Feide: ${user.feideUserid || user.feideEmail || "-"} ・ Kortnummer: ${user.nfcMifareCsn || "-"}`}
+                      secondary={`ID: ${user.id} ・ Epost/Feide: ${user.feideUserid || user.feideEmail || "-"} ・ Kortnummer: ${user.nfcCardNumber || user.nfcMifareCsn || "-"}`}
                     />
                   </ListItemButton>
                 ))}
@@ -739,7 +734,7 @@ export default function AdminEditPage() {
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="MIFARE kortnummer"
+                        label="Kortnummer"
                         fullWidth
                         value={formData.nfcMifareCsn}
                         onChange={(e) => {
@@ -748,7 +743,12 @@ export default function AdminEditPage() {
                           setFormData((prev) => ({ ...prev, nfcMifareCsn: e.target.value }));
                         }}
                         placeholder="F.eks. 1234567890"
-                        helperText={mifareCsnRuleText}
+                        inputProps={{ inputMode: "numeric" }}
+                        helperText={
+                          selectedUser?.nfcMifareCsn
+                            ? `${mifareCsnRuleText} Dørnummer i ARX: ${selectedUser.nfcMifareCsn}`
+                            : mifareCsnRuleText
+                        }
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -762,7 +762,11 @@ export default function AdminEditPage() {
                           setFormData((prev) => ({ ...prev, nfcPinCode: e.target.value }));
                         }}
                         inputProps={{ maxLength: 4, inputMode: "numeric", pattern: "[0-9]{4}" }}
-                        helperText="PIN krever at bruker har kortnummer (eksisterende eller nytt)."
+                        helperText={
+                          selectedUser?.nfcHasPin
+                            ? "PIN er satt. Skriv inn en ny PIN for å endre den."
+                            : "PIN krever at bruker har kortnummer (eksisterende eller nytt)."
+                        }
                       />
                     </Grid>
                   </Grid>
@@ -780,7 +784,11 @@ export default function AdminEditPage() {
                             }}
                           />
                         }
-                        label={formData.nfcPermanentAccess ? "Tilgang aktiv" : "Tilgang deaktivert"}
+                        label={
+                          formData.nfcPermanentAccess
+                            ? "Tilgang til JanHus hele tiden (krever kort og PIN)"
+                            : "Bare tilgang under egne bookinger"
+                        }
                       />
                     </Box>
                   )}

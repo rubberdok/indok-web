@@ -2,6 +2,7 @@
   pk: 1
   fields:
     mifare_csn: "1234567890"
+    card_number: ""
     label: "Eva sitt kort"
     notes: "Primærkort for testbruker"
     is_enabled: true
@@ -12,132 +13,52 @@
   pk: 2
   fields:
     mifare_csn: "1234567891"
+    card_number: ""
     label: "Gjestekort A"
-    notes: "Midlertidig gjestekort"
+    notes: "Ikke tildelt"
     is_enabled: true
     created_at: 2026-04-20 10:00:00+00:00
     updated_at: 2026-04-20 10:00:00+00:00
 
+# A newer DESFire card: card_number is the made-up "UID" printed on it,
+# mifare_csn the door number derived from it (first 4 UID bytes).
 - model: nfc.nfccard
   pk: 3
   fields:
-    mifare_csn: "1234567892"
+    mifare_csn: "3434850820"
+    card_number: "14392683656882692"
     label: "Asbjørn sitt kort"
     notes: "Reservekort"
     is_enabled: true
     created_at: 2026-05-03 09:00:00+00:00
     updated_at: 2026-05-03 09:00:00+00:00
 
+# No PINs here: they are stored encrypted. Set one on the profile page.
 - model: nfc.nfccardassignment
   pk: 1
   fields:
     card: 1
     user: 3
-    external_holder_name: ""
     assigned_by: 4
     assigned_at: 2026-05-01 08:00:00+00:00
-    access_start: 2026-05-01 08:00:00+00:00
-    access_end: null
     permanent_access: true
-    pin_code: "1234"
+    pin_code_encrypted: ""
     revoked_at: null
     revoked_by: null
     revocation_reason: ""
-    metadata:
-      source: "fixtures"
-      role: "student"
-
-- model: nfc.nfccardassignment
-  pk: 2
-  fields:
-    card: 2
-    user: null
-    external_holder_name: "Bedpres Gjest"
-    assigned_by: 4
-    assigned_at: 2026-04-20 10:00:00+00:00
-    access_start: 2026-04-20 10:00:00+00:00
-    access_end: 2026-04-22 16:00:00+00:00
-    permanent_access: false
-    pin_code: ""
-    revoked_at: 2026-04-22 17:00:00+00:00
-    revoked_by: 4
-    revocation_reason: "Besøk avsluttet"
-    metadata:
-      source: "fixtures"
-      purpose: "guest-access"
 
 - model: nfc.nfccardassignment
   pk: 3
   fields:
     card: 3
     user: 2
-    external_holder_name: ""
     assigned_by: 4
     assigned_at: 2026-05-03 09:00:00+00:00
-    access_start: 2026-05-03 09:00:00+00:00
-    access_end: 2026-06-03 09:00:00+00:00
     permanent_access: false
-    pin_code: "5678"
+    pin_code_encrypted: ""
     revoked_at: null
     revoked_by: null
     revocation_reason: ""
-    metadata:
-      source: "fixtures"
-      role: "member"
-
-- model: nfc.nfcaccessgrant
-  pk: 1
-  fields:
-    scope: MANUAL
-    participant_policy: BOOKER_ONLY
-    booking: null
-    granted_to_user: 3
-    granted_to_card: null
-    granted_by: 4
-    access_start: 2026-05-01 08:00:00+00:00
-    access_end: 2026-07-01 08:00:00+00:00
-    permanent_access: false
-    revoked_at: null
-    revoked_by: null
-    notes: "Manuell tilgang til hoveddør"
-    created_at: 2026-05-01 08:00:00+00:00
-    updated_at: 2026-05-01 08:00:00+00:00
-
-- model: nfc.nfcaccessgrant
-  pk: 2
-  fields:
-    scope: MANUAL
-    participant_policy: ALL_PARTICIPANTS
-    booking: null
-    granted_to_user: null
-    granted_to_card: 1
-    granted_by: 4
-    access_start: null
-    access_end: null
-    permanent_access: true
-    revoked_at: null
-    revoked_by: null
-    notes: "Permanent tilgang knyttet til kort"
-    created_at: 2026-05-01 09:00:00+00:00
-    updated_at: 2026-05-01 09:00:00+00:00
-
-- model: nfc.nfcaccessgrant
-  pk: 3
-  fields:
-    scope: MANUAL
-    participant_policy: BOOKER_ONLY
-    booking: null
-    granted_to_user: 2
-    granted_to_card: null
-    granted_by: 4
-    access_start: 2026-04-15 08:00:00+00:00
-    access_end: 2026-04-30 20:00:00+00:00
-    permanent_access: false
-    revoked_at: 2026-04-28 12:00:00+00:00
-    revoked_by: 4
-    notes: "Tilgang trukket tilbake før slutt"
-    created_at: 2026-04-15 08:00:00+00:00
-    updated_at: 2026-04-28 12:00:00+00:00
 
 - model: nfc.nfcaccessevent
   pk: 1
@@ -146,6 +67,7 @@
     source: NFC_READER
     door_identifier: janus-main-door
     mifare_csn_reported: "1234567890"
+    person_name: "Eva Student Åsen"
     card: 1
     card_assignment: 1
     resolved_user: 3
@@ -161,7 +83,8 @@
     event_type: ACCESS_DENIED
     source: NFC_READER
     door_identifier: janus-main-door
-    mifare_csn_reported: "9999999999"
+    mifare_csn_reported: "1234567899"
+    person_name: ""
     card: null
     card_assignment: null
     resolved_user: null
@@ -178,6 +101,7 @@
     source: MANUAL_KEY
     door_identifier: janus-main-door
     mifare_csn_reported: ""
+    person_name: ""
     card: null
     card_assignment: null
     resolved_user: 2

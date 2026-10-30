@@ -88,6 +88,27 @@ const JanHusPage: NextPageWithLayout = () => {
                   </CardActions>
                 </Card>
               </Grid>
+            ) : adminAccess?.canViewDoorLog ? (
+              // Admins reach the door log from the admin page; this is for those who may only read the log.
+              <Grid item xs={12} md={6}>
+                <Card sx={{ height: "100%" }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Dørlogg
+                    </Typography>
+                    <Typography color="text.secondary">Se hvem som har brukt kortleseren på JanHus.</Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      component={NextLinkComposed}
+                      to={{ pathname: "/janhus/admin/logs" }}
+                      endIcon={<ArrowForward />}
+                    >
+                      Gå til dørloggen
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
             ) : null}
           </Grid>
         </Stack>

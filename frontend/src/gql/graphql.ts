@@ -29,13 +29,6 @@ export type Scalars = {
   /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: { input: number; output: number; }
   /**
-   * Allows use of a JSON String for input / output from the GraphQL schema.
-   *
-   * Use of this type is *not recommended* as you lose the benefits of having a defined, static
-   * schema (one of the key benefits of GraphQL).
-   */
-  JSONString: { input: unknown; output: unknown; }
-  /**
    * Leverages the internal Python implementation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
@@ -63,7 +56,6 @@ export type AdminBookingType = {
   isInternalPrice: Maybe<Scalars['Int']['output']>;
   isTentative: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
-  nfcAccessGrants: Array<NfcAccessGrantType>;
   numberOfNights: Maybe<Scalars['Int']['output']>;
   phone: Scalars['String']['output'];
   price: Maybe<Scalars['Int']['output']>;
@@ -167,22 +159,6 @@ export type AssignMembership = {
   __typename?: 'AssignMembership';
   membership: Maybe<MembershipType>;
   ok: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type AssignNfcCard = {
-  __typename?: 'AssignNfcCard';
-  assignment: Maybe<NfcCardAssignmentType>;
-  ok: Scalars['Boolean']['output'];
-};
-
-export type AssignNfcCardInput = {
-  accessEnd: InputMaybe<Scalars['DateTime']['input']>;
-  accessStart: InputMaybe<Scalars['DateTime']['input']>;
-  externalHolderName: InputMaybe<Scalars['String']['input']>;
-  metadata: InputMaybe<Scalars['JSONString']['input']>;
-  mifareCsn: Scalars['String']['input'];
-  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
-  userId: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type AttemptCapturePayment = {
@@ -403,24 +379,6 @@ export type CreateListingInput = {
   title: Scalars['String']['input'];
 };
 
-export type CreateNfcAccessGrant = {
-  __typename?: 'CreateNfcAccessGrant';
-  accessGrant: Maybe<NfcAccessGrantType>;
-  ok: Scalars['Boolean']['output'];
-};
-
-export type CreateNfcAccessGrantInput = {
-  accessEnd: InputMaybe<Scalars['DateTime']['input']>;
-  accessStart: InputMaybe<Scalars['DateTime']['input']>;
-  bookingId: InputMaybe<Scalars['ID']['input']>;
-  grantedToMifareCsn: InputMaybe<Scalars['String']['input']>;
-  grantedToUserId: InputMaybe<Scalars['ID']['input']>;
-  notes: InputMaybe<Scalars['String']['input']>;
-  participantPolicy: InputMaybe<Scalars['String']['input']>;
-  permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
-  scope: Scalars['String']['input'];
-};
-
 export type CreateOrganization = {
   __typename?: 'CreateOrganization';
   ok: Maybe<Scalars['Boolean']['output']>;
@@ -553,6 +511,31 @@ export type DeliveredProduct = {
   __typename?: 'DeliveredProduct';
   ok: Maybe<Scalars['Boolean']['output']>;
   order: Maybe<OrderType>;
+};
+
+/** One door event imported from ARX, for the door log page. */
+export type DoorLogEventType = {
+  __typename?: 'DoorLogEventType';
+  /** The event name in ARX, e.g. controller.access.card.valid.pin */
+  arxEvent: Maybe<Scalars['String']['output']>;
+  cardFormat: Maybe<Scalars['String']['output']>;
+  doorIdentifier: Scalars['String']['output'];
+  eventType: NfcNfcAccessEventEventTypeChoices;
+  /** USER: a card registered to a website user. EXTERNAL_CARD: an external card from Django admin. ARX_ONLY: a card the website does not know; the name is the one ARX has. */
+  holderKind: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isWebsiteUser: Scalars['Boolean']['output'];
+  mifareCsnReported: Scalars['String']['output'];
+  /** The website user's name, or the name ARX has when the card is not registered on the website. */
+  name: Maybe<Scalars['String']['output']>;
+  occurredAt: Scalars['DateTime']['output'];
+  personName: Scalars['String']['output'];
+};
+
+export type DoorLogPage = {
+  __typename?: 'DoorLogPage';
+  events: Array<DoorLogEventType>;
+  total: Scalars['Int']['output'];
 };
 
 export type EmailInput = {
@@ -975,22 +958,6 @@ export type ListingType = {
   viewCount: Scalars['Int']['output'];
 };
 
-export type LogNfcAccessEvent = {
-  __typename?: 'LogNfcAccessEvent';
-  event: Maybe<NfcAccessEventType>;
-  ok: Scalars['Boolean']['output'];
-};
-
-export type LogNfcAccessEventInput = {
-  doorIdentifier: InputMaybe<Scalars['String']['input']>;
-  eventType: Scalars['String']['input'];
-  mifareCsnReported: InputMaybe<Scalars['String']['input']>;
-  notes: InputMaybe<Scalars['String']['input']>;
-  rawPayload: InputMaybe<Scalars['JSONString']['input']>;
-  resolvedUserId: InputMaybe<Scalars['ID']['input']>;
-  source: InputMaybe<Scalars['String']['input']>;
-};
-
 export type Logout = {
   __typename?: 'Logout';
   idToken: Maybe<Scalars['String']['output']>;
@@ -1023,7 +990,6 @@ export type Mutations = {
   adminUpdateUser: Maybe<AdminUpdateUser>;
   adminUpdateUserNfc: Maybe<AdminUpdateUserNfc>;
   assignMembership: Maybe<AssignMembership>;
-  assignNfcCard: Maybe<AssignNfcCard>;
   attemptCapturePayment: Maybe<AttemptCapturePayment>;
   authUser: AuthUser;
   createArchivedocument: Maybe<CreateArchiveDocument>;
@@ -1041,7 +1007,6 @@ export type Mutations = {
   createJanhusPaymentProduct: Maybe<CreateJanHusPaymentProduct>;
   /** Creates a new listing */
   createListing: Maybe<CreateListing>;
-  createNfcAccessGrant: Maybe<CreateNfcAccessGrant>;
   createOrganization: Maybe<CreateOrganization>;
   createProduct: Maybe<CreateProduct>;
   createQuestion: Maybe<CreateQuestion>;
@@ -1079,15 +1044,12 @@ export type Mutations = {
    */
   eventSignUp: Maybe<EventSignUp>;
   initiateOrder: Maybe<InitiateOrder>;
-  logNfcAccessEvent: Maybe<LogNfcAccessEvent>;
   logout: Maybe<Logout>;
   refundOrder: Maybe<RefundOrder>;
   refundOrderAttempt: Maybe<RefundOrderAttempt>;
   removeMembership: Maybe<RemoveMembership>;
   reviewJanhusBooking: Maybe<ReviewJanHusBooking>;
   reviewJanhusBookingRequest: Maybe<ReviewJanHusBookingRequest>;
-  revokeNfcAccessGrant: Maybe<RevokeNfcAccessGrant>;
-  revokeNfcAssignment: Maybe<RevokeNfcAssignment>;
   /** Sends email to the user or an admin (or both) */
   sendEmail: Maybe<SendEmail>;
   /** Send an email to all users signed up to an event */
@@ -1115,7 +1077,6 @@ export type Mutations = {
   updateQuestion: Maybe<UpdateQuestion>;
   updateUser: Maybe<UpdateUser>;
   upsertMembership: Maybe<UpsertMembership>;
-  upsertNfcCard: Maybe<UpsertNfcCard>;
 };
 
 
@@ -1145,11 +1106,6 @@ export type MutationsAdminUpdateUserNfcArgs = {
 
 export type MutationsAssignMembershipArgs = {
   membershipData: MembershipInput;
-};
-
-
-export type MutationsAssignNfcCardArgs = {
-  assignmentData: AssignNfcCardInput;
 };
 
 
@@ -1225,11 +1181,6 @@ export type MutationsCreateJanhusPaymentProductArgs = {
 
 export type MutationsCreateListingArgs = {
   listingData: CreateListingInput;
-};
-
-
-export type MutationsCreateNfcAccessGrantArgs = {
-  grantData: CreateNfcAccessGrantInput;
 };
 
 
@@ -1353,11 +1304,6 @@ export type MutationsInitiateOrderArgs = {
 };
 
 
-export type MutationsLogNfcAccessEventArgs = {
-  eventData: LogNfcAccessEventInput;
-};
-
-
 export type MutationsRefundOrderArgs = {
   orderId: Scalars['ID']['input'];
 };
@@ -1381,16 +1327,6 @@ export type MutationsReviewJanhusBookingArgs = {
 
 export type MutationsReviewJanhusBookingRequestArgs = {
   reviewData: ReviewJanHusBookingRequestInput;
-};
-
-
-export type MutationsRevokeNfcAccessGrantArgs = {
-  revokeData: RevokeNfcAccessGrantInput;
-};
-
-
-export type MutationsRevokeNfcAssignmentArgs = {
-  revokeData: RevokeNfcAssignmentInput;
 };
 
 
@@ -1508,83 +1444,6 @@ export type MutationsUpsertMembershipArgs = {
   membershipData: MembershipInput;
 };
 
-
-export type MutationsUpsertNfcCardArgs = {
-  cardData: NfcCardInput;
-};
-
-export type NfcAccessEventType = {
-  __typename?: 'NfcAccessEventType';
-  card: Maybe<NfcCardType>;
-  cardAssignment: Maybe<NfcCardAssignmentType>;
-  doorIdentifier: Scalars['String']['output'];
-  eventType: NfcNfcAccessEventEventTypeChoices;
-  id: Scalars['ID']['output'];
-  mifareCsnReported: Scalars['String']['output'];
-  notes: Scalars['String']['output'];
-  occurredAt: Scalars['DateTime']['output'];
-  rawPayload: Scalars['JSONString']['output'];
-  resolvedUser: Maybe<UserType>;
-  source: NfcNfcAccessEventSourceChoices;
-};
-
-export type NfcAccessGrantType = {
-  __typename?: 'NfcAccessGrantType';
-  accessEnd: Maybe<Scalars['DateTime']['output']>;
-  accessStart: Maybe<Scalars['DateTime']['output']>;
-  booking: Maybe<AdminBookingType>;
-  createdAt: Scalars['DateTime']['output'];
-  grantedBy: Maybe<UserType>;
-  grantedToCard: Maybe<NfcCardType>;
-  grantedToUser: Maybe<UserType>;
-  hasAccessNow: Maybe<Scalars['Boolean']['output']>;
-  id: Scalars['ID']['output'];
-  notes: Scalars['String']['output'];
-  participantPolicy: NfcNfcAccessGrantParticipantPolicyChoices;
-  permanentAccess: Scalars['Boolean']['output'];
-  revokedAt: Maybe<Scalars['DateTime']['output']>;
-  revokedBy: Maybe<UserType>;
-  scope: NfcNfcAccessGrantScopeChoices;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type NfcCardAssignmentType = {
-  __typename?: 'NfcCardAssignmentType';
-  accessEnd: Maybe<Scalars['DateTime']['output']>;
-  accessStart: Maybe<Scalars['DateTime']['output']>;
-  assignedAt: Scalars['DateTime']['output'];
-  assignedBy: Maybe<UserType>;
-  card: NfcCardType;
-  externalHolderName: Scalars['String']['output'];
-  hasAccessNow: Maybe<Scalars['Boolean']['output']>;
-  id: Scalars['ID']['output'];
-  metadata: Scalars['JSONString']['output'];
-  permanentAccess: Scalars['Boolean']['output'];
-  revocationReason: Scalars['String']['output'];
-  revokedAt: Maybe<Scalars['DateTime']['output']>;
-  revokedBy: Maybe<UserType>;
-  user: Maybe<UserType>;
-};
-
-export type NfcCardInput = {
-  isEnabled: InputMaybe<Scalars['Boolean']['input']>;
-  label: InputMaybe<Scalars['String']['input']>;
-  mifareCsn: Scalars['String']['input'];
-  notes: InputMaybe<Scalars['String']['input']>;
-};
-
-export type NfcCardType = {
-  __typename?: 'NfcCardType';
-  activeAssignment: Maybe<NfcCardAssignmentType>;
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
-  isEnabled: Scalars['Boolean']['output'];
-  label: Scalars['String']['output'];
-  mifareCsn: Scalars['String']['output'];
-  notes: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
-};
-
 /** An enumeration. */
 export enum NfcNfcAccessEventEventTypeChoices {
   /** Access denied */
@@ -1593,34 +1452,6 @@ export enum NfcNfcAccessEventEventTypeChoices {
   AccessGranted = 'ACCESS_GRANTED',
   /** Door opened */
   DoorOpened = 'DOOR_OPENED'
-}
-
-/** An enumeration. */
-export enum NfcNfcAccessEventSourceChoices {
-  /** Backend */
-  Backend = 'BACKEND',
-  /** Manual key */
-  ManualKey = 'MANUAL_KEY',
-  /** NFC reader */
-  NfcReader = 'NFC_READER',
-  /** Unknown */
-  Unknown = 'UNKNOWN'
-}
-
-/** An enumeration. */
-export enum NfcNfcAccessGrantParticipantPolicyChoices {
-  /** All participants */
-  AllParticipants = 'ALL_PARTICIPANTS',
-  /** Booker only */
-  BookerOnly = 'BOOKER_ONLY'
-}
-
-/** An enumeration. */
-export enum NfcNfcAccessGrantScopeChoices {
-  /** Booking */
-  Booking = 'BOOKING',
-  /** Manual */
-  Manual = 'MANUAL'
 }
 
 export type OptionInput = {
@@ -1726,6 +1557,8 @@ export type Queries = {
   canManageUserProfiles: Scalars['Boolean']['output'];
   category: Maybe<CategoryType>;
   defaultEvents: Maybe<Array<EventType>>;
+  /** Door events from ARX, newest first. Needs nfc.view_door_log. */
+  doorLog: Maybe<DoorLogPage>;
   event: Maybe<EventType>;
   eventFilteredOrganizations: Maybe<Array<OrganizationType>>;
   featuredArchive: Array<ArchiveDocumentType>;
@@ -1748,12 +1581,6 @@ export type Queries = {
   logout: Scalars['String']['output'];
   memberships: Maybe<Array<MembershipType>>;
   myCabinBookings: Maybe<Array<AdminBookingType>>;
-  myNfcCardAssignment: Maybe<NfcCardAssignmentType>;
-  nfcAccessEvents: Maybe<Array<NfcAccessEventType>>;
-  nfcAccessGrants: Maybe<Array<NfcAccessGrantType>>;
-  nfcCard: Maybe<NfcCardType>;
-  nfcCardAssignments: Maybe<Array<NfcCardAssignmentType>>;
-  nfcCards: Maybe<Array<NfcCardType>>;
   nfcSelfServiceEnabled: Scalars['Boolean']['output'];
   nfcUserSearch: Maybe<Array<UserType>>;
   order: Maybe<OrderType>;
@@ -1839,6 +1666,16 @@ export type QueriesCategoryArgs = {
 };
 
 
+export type QueriesDoorLogArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+  result: InputMaybe<Scalars['String']['input']>;
+  search: InputMaybe<Scalars['String']['input']>;
+  since: InputMaybe<Scalars['DateTime']['input']>;
+  until: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+
 export type QueriesEventArgs = {
   id: Scalars['ID']['input'];
 };
@@ -1896,27 +1733,6 @@ export type QueriesListingsArgs = {
 
 export type QueriesMembershipsArgs = {
   organizationId: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type QueriesNfcAccessEventsArgs = {
-  doorIdentifier: InputMaybe<Scalars['String']['input']>;
-  limit: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueriesNfcAccessGrantsArgs = {
-  activeOnly: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-
-export type QueriesNfcCardArgs = {
-  mifareCsn: Scalars['String']['input'];
-};
-
-
-export type QueriesNfcCardAssignmentsArgs = {
-  activeOnly: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -2073,27 +1889,6 @@ export type ReviewJanHusBookingRequestInput = {
   convertToBooking: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['ID']['input'];
   status: Scalars['String']['input'];
-};
-
-export type RevokeNfcAccessGrant = {
-  __typename?: 'RevokeNfcAccessGrant';
-  accessGrant: Maybe<NfcAccessGrantType>;
-  ok: Scalars['Boolean']['output'];
-};
-
-export type RevokeNfcAccessGrantInput = {
-  accessGrantId: Scalars['ID']['input'];
-};
-
-export type RevokeNfcAssignment = {
-  __typename?: 'RevokeNfcAssignment';
-  assignment: Maybe<NfcCardAssignmentType>;
-  ok: Scalars['Boolean']['output'];
-};
-
-export type RevokeNfcAssignmentInput = {
-  assignmentId: Scalars['ID']['input'];
-  reason: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Sends email to the user or an admin (or both) */
@@ -2357,12 +2152,6 @@ export type UpsertMembership = {
   ok: Maybe<Scalars['Boolean']['output']>;
 };
 
-export type UpsertNfcCard = {
-  __typename?: 'UpsertNfcCard';
-  card: Maybe<NfcCardType>;
-  ok: Scalars['Boolean']['output'];
-};
-
 export type UserAttendingType = {
   __typename?: 'UserAttendingType';
   hasBoughtTicket: Maybe<Scalars['Boolean']['output']>;
@@ -2401,9 +2190,13 @@ export type UserType = {
   lastLogin: Maybe<Scalars['DateTime']['output']>;
   lastName: Scalars['String']['output'];
   memberships: Array<MembershipType>;
+  /** The card number as it appears on the user's card. Show this to the user. */
+  nfcCardNumber: Maybe<Scalars['String']['output']>;
+  /** Whether a door PIN is set. The PIN itself is never returned. */
+  nfcHasPin: Maybe<Scalars['Boolean']['output']>;
+  /** The number the door reads (10 digits). For admins and troubleshooting. */
   nfcMifareCsn: Maybe<Scalars['String']['output']>;
   nfcPermanentAccess: Maybe<Scalars['Boolean']['output']>;
-  nfcPinCode: Maybe<Scalars['String']['output']>;
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars['String']['output'];
   responses: Array<ResponseType>;

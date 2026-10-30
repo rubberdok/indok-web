@@ -57,10 +57,7 @@ def setup_mock_requests(
                 200,
             )
 
-        if (
-            args[0]
-            == "https://groups-api.dataporten.no/groups/me/groups/fc:fs:fs:prg:ntnu.no:MTIØT"
-        ):
+        if args[0] == "https://groups-api.dataporten.no/groups/me/groups/fc:fs:fs:prg:ntnu.no:MTIØT":
             if indok:
                 return MockResponse(
                     {
@@ -203,9 +200,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["userSearch"]
-        self.assertTrue(
-            any(user["username"] == self.indok_user.username for user in data)
-        )
+        self.assertTrue(any(user["username"] == self.indok_user.username for user in data))
 
         permission = Permission.objects.get(codename="manage_user_profiles")
         self.indok_user.user_permissions.add(permission)
@@ -218,9 +213,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["userSearch"]
-        self.assertTrue(
-            any(user["username"] == self.super_user.username for user in data)
-        )
+        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
 
     def test_profile_permission_allows_nfc_user_search(self):
         query = """
@@ -251,9 +244,47 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["nfcUserSearch"]
-        self.assertTrue(
-            any(user["username"] == self.super_user.username for user in data)
-        )
+        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
+
+    def test_nfc_user_search_costs_the_same_for_many_users(self):
+        """The four nfc fields used to cost four queries per user found."""
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+
+        from apps.nfc.models import NfcCard
+
+        query = """
+            query SearchNfcUsers($query: String!) {
+                nfcUserSearch(query: $query) {
+                    id
+                    nfcMifareCsn
+                    nfcCardNumber
+                    nfcHasPin
+                    nfcPermanentAccess
+                }
+            }
+        """
+
+        def search_with(count):
+            for i in range(count):
+                user = UserFactory(username=f"nplusone{count}x{i}")
+                card = NfcCard.objects.create(mifare_csn=f"{count * 100 + i:010d}")
+                NfcCardAssignment.objects.create(card=card, user=user, pin_code="1234")
+            with CaptureQueriesContext(connection) as queries:
+                response = self.query(
+                    query,
+                    user=self.super_user,
+                    operation_name="SearchNfcUsers",
+                    variables={"query": f"nplusone{count}x"},
+                )
+            self.assertResponseNoErrors(response)
+            found = response.json()["data"]["nfcUserSearch"]
+            self.assertEqual(len(found), count)
+            self.assertTrue(all(user["nfcHasPin"] for user in found))
+            return len(queries)
+
+        search_with(1)  # warms caches that are filled once per test
+        self.assertEqual(search_with(2), search_with(5))
 
 
 class UsersMutationsTestCase(UsersBaseTestCase):
@@ -262,8 +293,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
     """
 
     def setUp(self) -> None:
-        self.mutation = (
-            lambda year: f"""
+        self.mutation = lambda year: f"""
             mutation {{
                 updateUser(userData: {{
                     graduationYear: {year}
@@ -274,7 +304,6 @@ class UsersMutationsTestCase(UsersBaseTestCase):
                 }}
             }}
         """
-        )
         self.auth_user_mutation = """
             mutation auth {
                 authUser(code: "mocked") {
@@ -292,16 +321,12 @@ class UsersMutationsTestCase(UsersBaseTestCase):
                 }
             }
         """
-        self.registered_indok_user = IndokUserFactory(
-            feide_userid="a random ID", first_login=False
-        )
+        self.registered_indok_user = IndokUserFactory(feide_userid="a random ID", first_login=False)
         return super().setUp()
 
     @patch("requests.get", side_effect=setup_mock_requests())
     @patch("requests.post", side_effect=setup_mock_requests())
-    @patch(
-        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
-    )
+    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
     def test_register_new_indok_user(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -323,9 +348,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
 
     @patch("requests.get", side_effect=setup_mock_requests(indok=False))
     @patch("requests.post", side_effect=setup_mock_requests(indok=False))
-    @patch(
-        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
-    )
+    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
     def test_register_new_non_indok_user(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -347,9 +370,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
 
     @patch("requests.get", side_effect=setup_mock_requests(id="a random ID"))
     @patch("requests.post", side_effect=setup_mock_requests(id="a random ID"))
-    @patch(
-        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
-    )
+    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
     def test_registered_user_authentication(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -404,9 +425,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         )
 
     def test_update_graduation_year_after_registering(self):
-        newly_registered_user = IndokUserFactory(
-            first_login=True, graduation_year=timezone.now().year + 3
-        )
+        newly_registered_user = IndokUserFactory(first_login=True, graduation_year=timezone.now().year + 3)
         today = timezone.now().year
         query = self.mutation(today + 1)
         res = self.query(query, user=newly_registered_user)
@@ -500,11 +519,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             "Egenregistrering av kortnummer er deaktivert",
             content["errors"][0]["message"],
         )
-        self.assertFalse(
-            NfcCardAssignment.objects.filter(
-                user=self.indok_user, revoked_at__isnull=True
-            ).exists()
-        )
+        self.assertFalse(NfcCardAssignment.objects.filter(user=self.indok_user, revoked_at__isnull=True).exists())
 
     def test_update_user_nfc_mifare_csn_when_self_service_enabled(self):
         self.indok_user.first_name = "Ola"
@@ -551,7 +566,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertEqual(assignment.card.mifare_csn, "1234567890")
         self.assertEqual(assignment.card.label, "Ola Nordmann sitt kort (E)")
 
-    def test_update_user_nfc_mifare_csn_converts_hex_to_csn(self):
+    def test_update_user_nfc_mifare_csn_converts_printed_uid_to_door_number(self):
         settings_obj = NfcSettings.objects.create()
         settings_obj.allow_user_mifare_csn_self_service = True
         settings_obj.save(update_fields=["allow_user_mifare_csn_self_service"])
@@ -572,7 +587,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
-                    "nfcMifareCsn": "9B87BA1C",
+                    "nfcMifareCsn": "14392683656882692",  # made-up UID 04 AA BB CC 11 22 33
                 },
             },
         )
@@ -587,9 +602,10 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             .first()
         )
         if assignment is None:
-            self.fail("Expected active NFC assignment after hex to CSN conversion")
+            self.fail("Expected active NFC assignment after UID conversion")
         assignment = cast(NfcCardAssignment, assignment)
-        self.assertEqual(assignment.card.mifare_csn, "0481986459")
+        self.assertEqual(assignment.card.mifare_csn, "3434850820")
+        self.assertEqual(assignment.card.card_number, "14392683656882692")
 
     def test_update_user_nfc_mifare_csn_can_only_be_set_once(self):
         settings_obj = NfcSettings.objects.create()
