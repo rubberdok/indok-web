@@ -60,8 +60,18 @@ class JanHusEventType(models.TextChoices):
 
 
 class JanHusDoorAccessPolicy(models.TextChoices):
+    """Who opens the door at JanHus for a booking, besides the booker."""
+
     BOOKER_ONLY = "BOOKER_ONLY", "Booker only"
-    ALL_PARTICIPANTS = "ALL_PARTICIPANTS", "Booker and guest list"
+    BOOKER_AND_RESPONSIBLE = "BOOKER_AND_RESPONSIBLE", "Booker and responsible"
+    ALL_PARTICIPANTS = "ALL_PARTICIPANTS", "Booker, responsible and guest list"
+
+
+class JanHusOrganizationDoorAccess(models.TextChoices):
+    """Who in the organisation opens the door for an organisation booking."""
+
+    LEADERS = "LEADERS", "The organisation's leaders (HR)"
+    BOOKER_ONLY = "BOOKER_ONLY", "Only the booker"
 
 
 class JanHusBookingLevel(models.Model):
@@ -298,10 +308,27 @@ class JanHusBooking(models.Model):
     booker_name = models.CharField(max_length=200, blank=True, default="")
     booker_email = models.EmailField(blank=True, default="")
     booker_phone = models.CharField(max_length=32, blank=True, default="")
+    # The website user who booked: the requester of an approved request, or the
+    # person who booked directly. Not the admin who approved it (created_by_user).
+    booker_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="janhus_booker_bookings",
+    )
 
     responsible_name = models.CharField(max_length=200)
     responsible_email = models.EmailField()
     responsible_phone = models.CharField(max_length=32)
+    # Set by a JanHus admin by searching for the responsible person on the website.
+    responsible_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="janhus_responsible_bookings",
+    )
 
     event_type = models.CharField(max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL)
     cleaning_requested = models.BooleanField(default=False)
@@ -331,6 +358,12 @@ class JanHusBooking(models.Model):
         max_length=32,
         choices=JanHusDoorAccessPolicy.choices,
         default=JanHusDoorAccessPolicy.BOOKER_ONLY,
+    )
+    # Who counts as the booker of an organisation booking (apps.arx). JanHus admins only.
+    organization_door_access = models.CharField(
+        max_length=16,
+        choices=JanHusOrganizationDoorAccess.choices,
+        default=JanHusOrganizationDoorAccess.LEADERS,
     )
 
     vipps_product = models.ForeignKey(
@@ -369,6 +402,16 @@ class JanHusBooking(models.Model):
 
         if self.is_external_booking and owners_selected > 0:
             raise ValidationError("External bookings cannot have internal owners")
+
+        if self.door_access_policy == JanHusDoorAccessPolicy.BOOKER_AND_RESPONSIBLE and not self.responsible_user_id:
+            raise ValidationError("Ansvarlig må være en bruker på nettsiden for å få dørtilgang")
+
+        if (
+            self.owner_organization_id
+            and self.organization_door_access == JanHusOrganizationDoorAccess.BOOKER_ONLY
+            and not self.booker_user_id
+        ):
+            raise ValidationError("«Kun bestiller» krever at bestilleren er en bruker på nettsiden")
 
         if self.is_external_booking:
             self.event_type = JanHusEventType.EXTERNAL

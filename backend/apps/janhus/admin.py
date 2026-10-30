@@ -47,8 +47,11 @@ class JanHusBookingAdmin(admin.ModelAdmin):
         "owner_organization",
         "booking_level",
         "created_by_user",
+        "booker_user",
+        "responsible_user",
         "area",
     )
+    list_select_related = ("area", "owner_user", "owner_organization")
 
 
 @admin.register(JanHusBookingRequest)
@@ -71,6 +74,7 @@ class JanHusBookingRequestAdmin(admin.ModelAdmin):
         "responsible_email",
     )
     raw_id_fields = ("requester_user", "owner_organization", "converted_booking", "area")
+    list_select_related = ("area", "requester_user", "owner_organization")
 
 
 @admin.register(JanHusBookingLevel)

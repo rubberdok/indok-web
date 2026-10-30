@@ -29,6 +29,7 @@ import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
 import {
   BOOKING_STATUS_LABELS,
   DEPOSIT_STATUS_LABELS,
+  DOOR_ACCESS_POLICY_LABELS,
   JANHUS_EVENT_TYPE_LABELS,
   REQUEST_STATUS_LABELS,
 } from "@/components/pages/janhus/constants";
@@ -54,11 +55,6 @@ import {
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
-
-const DOOR_ACCESS_POLICY_LABELS: Record<string, string> = {
-  BOOKER_ONLY: "Kun bestiller",
-  ALL_PARTICIPANTS: "Bestiller + gjesteliste",
-};
 
 const formatNok = (amount: number | null | undefined) =>
   new Intl.NumberFormat("nb-NO", {

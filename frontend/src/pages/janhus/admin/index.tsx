@@ -53,6 +53,11 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
 
+/** A linked website user as the door access pickers show it. */
+function pickedUser(user: { id: string; firstName: string; lastName: string } | null | undefined) {
+  return user ? { id: user.id, displayName: `${user.firstName} ${user.lastName}`.trim() } : null;
+}
+
 const JanHusAdminPage: NextPageWithLayout = () => {
   const router = useRouter();
   const [tabValue, setTabValue] = useState<number>(0);
@@ -95,6 +100,9 @@ const JanHusAdminPage: NextPageWithLayout = () => {
         manuallyMarkedAsPaid: boolean;
         guestListEntries: JanHusGuestListEntry[];
         doorAccessPolicy: string;
+        organizationDoorAccess: string;
+        bookerUser: { id: string; displayName: string } | null;
+        responsibleUser: { id: string; displayName: string } | null;
         comment: string;
         adminComment: string;
       }
@@ -165,6 +173,9 @@ const JanHusAdminPage: NextPageWithLayout = () => {
               displayName: guest.displayName,
             })),
             doorAccessPolicy: booking.doorAccessPolicy,
+            organizationDoorAccess: booking.organizationDoorAccess,
+            bookerUser: pickedUser(booking.bookerUser),
+            responsibleUser: pickedUser(booking.responsibleUser),
             comment: booking.comment ?? "",
             adminComment: booking.adminComment ?? "",
           };
@@ -396,6 +407,9 @@ const JanHusAdminPage: NextPageWithLayout = () => {
           manuallyMarkedAsPaid: edit.manuallyMarkedAsPaid,
           guestList: serializeGuestListForUpdate(edit.guestListEntries),
           doorAccessPolicy: edit.doorAccessPolicy,
+          organizationDoorAccess: edit.organizationDoorAccess,
+          bookerUser: edit.bookerUser?.id ?? "",
+          responsibleUser: edit.responsibleUser?.id ?? "",
           comment: edit.comment,
           adminComment: edit.adminComment,
         },

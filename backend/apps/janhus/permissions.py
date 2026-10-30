@@ -149,5 +149,12 @@ def can_view_booking_details(user: AbstractBaseUser, booking) -> bool:
 
     Read-only on purpose: it is not is_connected_to_booking, which also decides
     who may edit the guest list.
+
+    Every protected field asks this, so the answer is kept on the booking object
+    for the rest of the request: one check per booking instead of one per field.
     """
-    return has_view_all_bookings_permission(user) or is_connected_to_booking(user, booking)
+    cache = booking.__dict__.setdefault("_can_view_details", {})
+    key = getattr(user, "pk", None)
+    if key not in cache:
+        cache[key] = has_view_all_bookings_permission(user) or is_connected_to_booking(user, booking)
+    return cache[key]

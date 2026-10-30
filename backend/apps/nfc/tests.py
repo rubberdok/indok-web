@@ -202,6 +202,7 @@ class DoorLogQueryTests(ExtendedGraphQLTestCase):
 
     def test_needs_the_door_log_permission(self):
         self.assert_permission_error(self.query(self.QUERY, user=UserFactory()))
+        self.client.logout()
         self.assert_permission_error(self.query(self.QUERY))
 
     def test_shows_website_name_first_and_arx_name_otherwise(self):

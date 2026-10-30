@@ -39,6 +39,11 @@ export const DOOR_ACCESS_POLICY_LABELS: Record<string, string> = {
   ALL_PARTICIPANTS: "Bestiller, ansvarlig og gjesteliste",
 };
 
+export const ORGANIZATION_DOOR_ACCESS_LABELS: Record<string, string> = {
+  LEADERS: "Organisasjonens ledere (HR)",
+  BOOKER_ONLY: "Kun personen som bestilte",
+};
+
 export const OWNER_TYPE_LABELS: Record<OwnerType, string> = {
   PERSONAL: "Personlig",
   ORGANIZATION: "Forening",

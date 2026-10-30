@@ -22,13 +22,15 @@ import { Dispatch, SetStateAction } from "react";
 import {
   BOOKING_STATUS_LABELS,
   DEPOSIT_STATUS_LABELS,
-  DOOR_ACCESS_POLICY_LABELS,
   JANHUS_EVENT_TYPE_LABELS,
   OWNER_TYPE_LABELS,
 } from "@/components/pages/janhus/constants";
 import { JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
 import { bookingOwnerType, formatDate, formatTime, statusColor, statusLabel } from "@/components/pages/janhus/helpers";
-import { JanhusJanHusBookingDepositStatusChoices, JanHusBookingFragment } from "@/generated/graphql";
+import { JanhusJanHusBookingDepositStatusChoices, JanHusAdminBookingFragment } from "@/generated/graphql";
+
+import { DoorAccessFields } from "./DoorAccessFields";
+import { PickedUser } from "./UserPicker";
 
 export type BookingEdit = {
   startsAt: string;
@@ -50,12 +52,15 @@ export type BookingEdit = {
   manuallyMarkedAsPaid: boolean;
   guestListEntries: JanHusGuestListEntry[];
   doorAccessPolicy: string;
+  organizationDoorAccess: string;
+  bookerUser: PickedUser | null;
+  responsibleUser: PickedUser | null;
   comment: string;
   adminComment: string;
 };
 
 type Props = {
-  bookings: readonly JanHusBookingFragment[];
+  bookings: readonly JanHusAdminBookingFragment[];
   areas: readonly { id: string; name: string; isActive: boolean }[];
   edits: Record<string, BookingEdit>;
   setEdits: Dispatch<SetStateAction<Record<string, BookingEdit>>>;
@@ -272,28 +277,6 @@ export const BookingList: React.FC<Props> = ({
                       }))
                     }
                   />
-                  <FormControl disabled={readOnly}>
-                    <InputLabel>Åpningspolicy</InputLabel>
-                    <Select
-                      label="Åpningspolicy"
-                      value={edit.doorAccessPolicy}
-                      onChange={(event) =>
-                        setEdits((prev) => ({
-                          ...prev,
-                          [booking.id]: {
-                            ...prev[booking.id],
-                            doorAccessPolicy: event.target.value,
-                          },
-                        }))
-                      }
-                    >
-                      {Object.entries(DOOR_ACCESS_POLICY_LABELS).map(([value, label]) => (
-                        <MenuItem key={value} value={value}>
-                          {label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
                   <FormControlLabel
                     control={
                       <Switch
@@ -480,6 +463,18 @@ export const BookingList: React.FC<Props> = ({
                     </>
                   )}
                 </Box>
+                <DoorAccessFields
+                  value={edit}
+                  onChange={(patch) =>
+                    setEdits((prev) => ({
+                      ...prev,
+                      [booking.id]: { ...prev[booking.id], ...patch },
+                    }))
+                  }
+                  isOrganizationBooking={Boolean(booking.ownerOrganization)}
+                  warnings={booking.doorAccessWarnings}
+                  readOnly={readOnly}
+                />
                 <TextField
                   disabled={readOnly}
                   label="Adminkommentar"

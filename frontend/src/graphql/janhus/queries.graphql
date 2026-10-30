@@ -30,7 +30,15 @@ query JanHusGuestSearchForRequest($query: String!, $limit: Int) {
 
 query AdminJanHusBookings($status: String) {
   adminJanhusBookings(status: $status) {
-    ...JanHusBooking
+    ...JanHusAdminBooking
+  }
+}
+
+query JanHusUserSearch($query: String!, $limit: Int) {
+  janhusUserSearch(query: $query, limit: $limit) {
+    id
+    displayName
+    email
   }
 }
 

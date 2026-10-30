@@ -804,6 +804,7 @@ export type JanHusBookingType = {
   bookerEmail: Scalars['String']['output'];
   bookerName: Scalars['String']['output'];
   bookerPhone: Scalars['String']['output'];
+  bookerUser: Maybe<UserType>;
   bookingLevel: Maybe<JanHusBookingLevelType>;
   cleaningRequested: Scalars['Boolean']['output'];
   comment: Scalars['String']['output'];
@@ -812,6 +813,8 @@ export type JanHusBookingType = {
   depositAmount: Scalars['Decimal']['output'];
   depositStatus: JanhusJanHusBookingDepositStatusChoices;
   doorAccessPolicy: JanhusJanHusBookingDoorAccessPolicyChoices;
+  /** Why the booker will not get the door, for JanHus admins. Empty when they will. */
+  doorAccessWarnings: Array<Scalars['String']['output']>;
   durationMinutes: Maybe<Scalars['Int']['output']>;
   endsAt: Scalars['DateTime']['output'];
   eventType: JanhusJanHusBookingEventTypeChoices;
@@ -820,6 +823,7 @@ export type JanHusBookingType = {
   id: Scalars['ID']['output'];
   isExternalBooking: Scalars['Boolean']['output'];
   manuallyMarkedAsPaid: Scalars['Boolean']['output'];
+  organizationDoorAccess: JanhusJanHusBookingOrganizationDoorAccessChoices;
   outstandingDepositAmount: Maybe<Scalars['Decimal']['output']>;
   ownerOrganization: Maybe<OrganizationType>;
   ownerUser: Maybe<UserType>;
@@ -829,6 +833,7 @@ export type JanHusBookingType = {
   responsibleEmail: Scalars['String']['output'];
   responsibleName: Scalars['String']['output'];
   responsiblePhone: Scalars['String']['output'];
+  responsibleUser: Maybe<UserType>;
   sourceRequests: Array<JanHusBookingRequestType>;
   startsAt: Scalars['DateTime']['output'];
   status: JanhusJanHusBookingStatusChoices;
@@ -858,6 +863,14 @@ export type JanHusUserBookingLevelType = {
   user: UserType;
 };
 
+/** A website user a JanHus admin can link to a booking (booker or responsible). */
+export type JanHusUserSearchResultType = {
+  __typename?: 'JanHusUserSearchResultType';
+  displayName: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
+
 /** An enumeration. */
 export enum JanhusJanHusBookingDepositStatusChoices {
   /** Not required */
@@ -876,8 +889,10 @@ export enum JanhusJanHusBookingDepositStatusChoices {
 
 /** An enumeration. */
 export enum JanhusJanHusBookingDoorAccessPolicyChoices {
-  /** Booker and guest list */
+  /** Booker, responsible and guest list */
   AllParticipants = 'ALL_PARTICIPANTS',
+  /** Booker and responsible */
+  BookerAndResponsible = 'BOOKER_AND_RESPONSIBLE',
   /** Booker only */
   BookerOnly = 'BOOKER_ONLY'
 }
@@ -892,6 +907,14 @@ export enum JanhusJanHusBookingEventTypeChoices {
   OpenForIndok = 'OPEN_FOR_INDOK',
   /** Private */
   Private = 'PRIVATE'
+}
+
+/** An enumeration. */
+export enum JanhusJanHusBookingOrganizationDoorAccessChoices {
+  /** Only the booker */
+  BookerOnly = 'BOOKER_ONLY',
+  /** The organisation's leaders (HR) */
+  Leaders = 'LEADERS'
 }
 
 /** An enumeration. */
@@ -1576,6 +1599,8 @@ export type Queries = {
   janhusMyBookingLevel: Maybe<JanHusBookingLevelType>;
   janhusMyBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
   janhusMyBookings: Maybe<Array<JanHusBookingType>>;
+  /** Website users to link to a booking as booker or responsible. JanHus admins only. */
+  janhusUserSearch: Maybe<Array<JanHusUserSearchResultType>>;
   listing: Maybe<ListingType>;
   listings: Maybe<Array<ListingType>>;
   logout: Scalars['String']['output'];
@@ -1716,6 +1741,12 @@ export type QueriesJanhusGuestSearchArgs = {
 
 
 export type QueriesJanhusGuestSearchForRequestArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  query: Scalars['String']['input'];
+};
+
+
+export type QueriesJanhusUserSearchArgs = {
   limit: InputMaybe<Scalars['Int']['input']>;
   query: Scalars['String']['input'];
 };
@@ -2097,6 +2128,7 @@ export type UpdateJanHusBookingInput = {
   bookerEmail: InputMaybe<Scalars['String']['input']>;
   bookerName: InputMaybe<Scalars['String']['input']>;
   bookerPhone: InputMaybe<Scalars['String']['input']>;
+  bookerUser: InputMaybe<Scalars['ID']['input']>;
   cleaningRequested: InputMaybe<Scalars['Boolean']['input']>;
   comment: InputMaybe<Scalars['String']['input']>;
   depositAmount: InputMaybe<Scalars['Decimal']['input']>;
@@ -2108,11 +2140,13 @@ export type UpdateJanHusBookingInput = {
   guestListUserFeideIds: InputMaybe<Array<Scalars['String']['input']>>;
   id: Scalars['ID']['input'];
   manuallyMarkedAsPaid: InputMaybe<Scalars['Boolean']['input']>;
+  organizationDoorAccess: InputMaybe<Scalars['String']['input']>;
   priceOverrideAmount: InputMaybe<Scalars['Decimal']['input']>;
   priceOverrideTier: InputMaybe<Scalars['String']['input']>;
   responsibleEmail: InputMaybe<Scalars['String']['input']>;
   responsibleName: InputMaybe<Scalars['String']['input']>;
   responsiblePhone: InputMaybe<Scalars['String']['input']>;
+  responsibleUser: InputMaybe<Scalars['ID']['input']>;
   startsAt: InputMaybe<Scalars['DateTime']['input']>;
   status: InputMaybe<Scalars['String']['input']>;
 };

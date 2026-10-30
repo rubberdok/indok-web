@@ -1034,6 +1034,51 @@
               }
             },
             {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": null,
+                  "name": "query",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": null,
+                  "name": "limit",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "deprecationReason": null,
+              "description": "Website users to link to a booking as booker or responsible. JanHus admins only.",
+              "isDeprecated": false,
+              "name": "janhusUserSearch",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "JanHusUserSearchResultType",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
               "args": [],
               "deprecationReason": null,
               "description": null,
@@ -5465,6 +5510,18 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
+              "name": "bookerUser",
+              "type": {
+                "kind": "OBJECT",
+                "name": "UserType",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
               "name": "responsibleName",
               "type": {
                 "kind": "NON_NULL",
@@ -5506,6 +5563,18 @@
                   "name": "String",
                   "ofType": null
                 }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "responsibleUser",
+              "type": {
+                "kind": "OBJECT",
+                "name": "UserType",
+                "ofType": null
               }
             },
             {
@@ -5681,6 +5750,22 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
+              "name": "organizationDoorAccess",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "JanhusJanHusBookingOrganizationDoorAccessChoices",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
               "name": "vippsProduct",
               "type": {
                 "kind": "OBJECT",
@@ -5790,6 +5875,30 @@
                 "kind": "SCALAR",
                 "name": "Decimal",
                 "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "Why the booker will not get the door, for JanHus admins. Empty when they will.",
+              "isDeprecated": false,
+              "name": "doorAccessWarnings",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
               }
             },
             {
@@ -6965,7 +7074,13 @@
             },
             {
               "deprecationReason": null,
-              "description": "Booker and guest list",
+              "description": "Booker and responsible",
+              "isDeprecated": false,
+              "name": "BOOKER_AND_RESPONSIBLE"
+            },
+            {
+              "deprecationReason": null,
+              "description": "Booker, responsible and guest list",
               "isDeprecated": false,
               "name": "ALL_PARTICIPANTS"
             }
@@ -6975,6 +7090,29 @@
           "interfaces": null,
           "kind": "ENUM",
           "name": "JanhusJanHusBookingDoorAccessPolicyChoices",
+          "possibleTypes": null
+        },
+        {
+          "description": "An enumeration.",
+          "enumValues": [
+            {
+              "deprecationReason": null,
+              "description": "The organisation's leaders (HR)",
+              "isDeprecated": false,
+              "name": "LEADERS"
+            },
+            {
+              "deprecationReason": null,
+              "description": "Only the booker",
+              "isDeprecated": false,
+              "name": "BOOKER_ONLY"
+            }
+          ],
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "ENUM",
+          "name": "JanhusJanHusBookingOrganizationDoorAccessChoices",
           "possibleTypes": null
         },
         {
@@ -7018,6 +7156,65 @@
           "interfaces": [],
           "kind": "OBJECT",
           "name": "JanHusGuestListEntryType",
+          "possibleTypes": null
+        },
+        {
+          "description": "A website user a JanHus admin can link to a booking (booker or responsible).",
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "id",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "displayName",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "email",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "JanHusUserSearchResultType",
           "possibleTypes": null
         },
         {
@@ -12870,6 +13067,36 @@
               "defaultValue": null,
               "description": null,
               "name": "adminComment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "bookerUser",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "responsibleUser",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "organizationDoorAccess",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
