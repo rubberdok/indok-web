@@ -130,7 +130,7 @@ class JanHusResolvers:
     def resolve_janhus_bookings(self, info, **kwargs):
         query = (
             JanHusBooking.objects.exclude(status__in=["DECLINED", "CANCELLED"])
-            .select_related("area")
+            .select_related("area", "owner_user", "owner_organization")
             .order_by("starts_at")
         )
 

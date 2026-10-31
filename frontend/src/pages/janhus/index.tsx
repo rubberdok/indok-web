@@ -5,6 +5,7 @@ import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typogra
 import { GetServerSideProps } from "next";
 
 import { NextLinkComposed } from "@/components/Link";
+import { BookingCalendar } from "@/components/pages/janhus/BookingCalendar";
 import { Title } from "@/components/Title";
 import { JanHusAdminAccessDocument, JanHusAreasDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
@@ -110,6 +111,20 @@ const JanHusPage: NextPageWithLayout = () => {
                 </Card>
               </Grid>
             ) : null}
+
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Kommende bookinger
+                  </Typography>
+                  <Typography color="text.secondary" gutterBottom>
+                    Trykk på en dato for å se hvilke områder som er ledige, og hvem som har booket når.
+                  </Typography>
+                  <BookingCalendar />
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Stack>
       </Container>

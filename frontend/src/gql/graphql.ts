@@ -825,6 +825,8 @@ export type JanHusBookingType = {
   manuallyMarkedAsPaid: Scalars['Boolean']['output'];
   organizationDoorAccess: JanhusJanHusBookingOrganizationDoorAccessChoices;
   outstandingDepositAmount: Maybe<Scalars['Decimal']['output']>;
+  /** Who has the booking, for the calendar: the organisation, the owner's first and last name, or the booker's name for an external booking. Only for logged-in users. */
+  ownerDisplayName: Maybe<Scalars['String']['output']>;
   ownerOrganization: Maybe<OrganizationType>;
   ownerUser: Maybe<UserType>;
   priceOverrideAmount: Maybe<Scalars['Decimal']['output']>;

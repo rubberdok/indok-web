@@ -4,6 +4,13 @@ query JanHusBookings($startsAt: DateTime, $endsAt: DateTime, $area: ID) {
   }
 }
 
+query JanHusBookingCalendar($startsAt: DateTime) {
+  janhusBookings(startsAt: $startsAt) {
+    ...JanHusBookingAvailability
+    ownerDisplayName
+  }
+}
+
 query JanHusMyBookings {
   janhusMyBookings {
     ...JanHusBooking

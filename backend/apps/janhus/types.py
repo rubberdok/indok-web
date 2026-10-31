@@ -11,6 +11,7 @@ from apps.janhus.models import (
     JanHusBookingLevel,
     JanHusBookingRequest,
     JanHusBookingSettings,
+    JanHusBookingStatus,
     JanHusOrganizationBookingLevel,
     JanHusUserBookingLevel,
 )
@@ -78,6 +79,10 @@ class JanHusBookingType(DjangoObjectType):
         description="Why the booker will not get the door, for JanHus admins. Empty when they will.",
     )
     guest_list_entries = graphene.List(graphene.NonNull(JanHusGuestListEntryType))
+    owner_display_name = graphene.String(
+        description="Who has the booking, for the calendar: the organisation, the owner's first and last name, "
+        "or the booker's name for an external booking. Only for logged-in users."
+    )
 
     class Meta:
         model = JanHusBooking
@@ -90,6 +95,21 @@ class JanHusBookingType(DjangoObjectType):
         if prefetched is not None:
             return prefetched
         return build_guest_list_entries(parent.guest_list)
+
+    @staticmethod
+    def resolve_owner_display_name(parent: JanHusBooking, info):
+        if not info.context.user.is_authenticated:
+            return None
+        if parent.status == JanHusBookingStatus.BLOCKED:
+            return "Stengt"
+        if parent.owner_organization_id:
+            return parent.owner_organization.name
+        if parent.owner_user_id:
+            return parent.owner_user.get_full_name() or parent.owner_user.username
+        # External bookers have no website user: the name they gave when booking.
+        if parent.is_external_booking and parent.booker_name.strip():
+            return parent.booker_name.strip()
+        return "Booket"
 
     @staticmethod
     def resolve_door_access_warnings(parent: JanHusBooking, info):

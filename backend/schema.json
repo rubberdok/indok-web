@@ -5920,6 +5920,18 @@
                   }
                 }
               }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "Who has the booking, for the calendar: the organisation, the owner's first and last name, or the booker's name for an external booking. Only for logged-in users.",
+              "isDeprecated": false,
+              "name": "ownerDisplayName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             }
           ],
           "inputFields": null,

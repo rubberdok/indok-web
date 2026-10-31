@@ -1856,6 +1856,92 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
         )
         self.assertNotIn("booker@example.com", response.content.decode())
 
+    CALENDAR_QUERY = """
+        query {
+          janhusBookings {
+            id
+            ownerDisplayName
+          }
+        }
+    """
+
+    def test_the_calendar_shows_who_has_the_booking_to_logged_in_users(self):
+        self.user.first_name, self.user.last_name = "Ola", "Nordmann"
+        self.user.save()
+        organization = OrganizationFactory(name="Hyttestyret")
+        personal = self._booking_with_contact_details()
+        for_organization = self._booking_with_contact_details(
+            owner_user=None,
+            owner_organization=organization,
+            starts_at=self.start_dt + timedelta(days=1),
+            ends_at=self.end_dt + timedelta(days=1),
+        )
+        external = self._booking_with_contact_details(
+            owner_user=None,
+            is_external_booking=True,
+            booker_name="Ekstern Person",
+            starts_at=self.start_dt + timedelta(days=2),
+            ends_at=self.end_dt + timedelta(days=2),
+        )
+        blocked = self._booking_with_contact_details(
+            owner_user=None,
+            status=JanHusBookingStatus.BLOCKED,
+            starts_at=self.start_dt + timedelta(days=3),
+            ends_at=self.end_dt + timedelta(days=3),
+        )
+
+        # anonymous first: self.query keeps the session
+        anonymous = self.query(self.CALENDAR_QUERY)
+        self.assertResponseNoErrors(anonymous)
+        self.assertEqual(
+            {None},
+            {entry["ownerDisplayName"] for entry in json.loads(anonymous.content)["data"]["janhusBookings"]},
+        )
+        self.assertNotIn("Ekstern Person", anonymous.content.decode())
+
+        response = self.query(self.CALENDAR_QUERY, user=UserFactory(is_indok=True))
+        self.assertResponseNoErrors(response)
+        bookings = json.loads(response.content)["data"]["janhusBookings"]
+        names = {entry["id"]: entry["ownerDisplayName"] for entry in bookings}
+        self.assertEqual(
+            {
+                str(personal.id): "Ola Nordmann",
+                str(for_organization.id): "Hyttestyret",
+                str(external.id): "Ekstern Person",
+                str(blocked.id): "Stengt",
+            },
+            names,
+        )
+
+    def test_the_calendar_costs_the_same_for_more_bookings(self):
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+
+        viewer = UserFactory(is_indok=True)
+        query = "query { janhusBookings { id ownerDisplayName area { id name } } }"
+
+        def queries_for_calendar():
+            with CaptureQueriesContext(connection) as queries:
+                self.assertResponseNoErrors(self.query(query, user=viewer))
+            return len(queries)
+
+        self._booking_with_contact_details()
+        queries_for_calendar()  # warms caches that are filled once per test
+        before = queries_for_calendar()
+        for i in range(3):
+            self._booking_with_contact_details(
+                owner_user=UserFactory(),
+                starts_at=self.start_dt + timedelta(days=i + 1),
+                ends_at=self.end_dt + timedelta(days=i + 1),
+            )
+            self._booking_with_contact_details(
+                owner_user=None,
+                owner_organization=OrganizationFactory(),
+                starts_at=self.start_dt + timedelta(days=i + 5),
+                ends_at=self.end_dt + timedelta(days=i + 5),
+            )
+        self.assertEqual(queries_for_calendar(), before)
+
 
 class JanHusAreaTestCase(JanHusBaseTestCase):
     def test_conflicting_area_ids_include_ancestors_and_descendants(self):
