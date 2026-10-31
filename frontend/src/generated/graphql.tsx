@@ -915,9 +915,7 @@ export enum JanhusJanHusBookingStatusChoices {
   /** Declined */
   Declined = 'DECLINED',
   /** Pending admin review */
-  PendingAdminReview = 'PENDING_ADMIN_REVIEW',
-  /** Provisional */
-  Provisional = 'PROVISIONAL'
+  PendingAdminReview = 'PENDING_ADMIN_REVIEW'
 }
 
 export type ListingType = {

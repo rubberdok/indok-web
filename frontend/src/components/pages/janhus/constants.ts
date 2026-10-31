@@ -16,7 +16,6 @@ export const REQUEST_STATUS_LABELS: Record<string, string> = {
 };
 
 export const BOOKING_STATUS_LABELS: Record<string, string> = {
-  PROVISIONAL: "Foreløpig",
   PENDING_ADMIN_REVIEW: "Venter behandling",
   CONFIRMED: "Godkjent",
   DECLINED: "Avslått",

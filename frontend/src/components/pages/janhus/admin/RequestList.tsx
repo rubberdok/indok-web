@@ -106,7 +106,7 @@ export const RequestList: React.FC<Props> = ({
                     onClick={() => onReview(request.id, "APPROVED", true)}
                     disabled={reviewing}
                   >
-                    Godkjenn + booking (Foreløpig)
+                    Godkjenn + lag booking
                   </Button>
                   <Button
                     size="small"

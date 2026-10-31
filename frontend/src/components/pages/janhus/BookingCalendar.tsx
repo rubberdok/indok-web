@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client/react";
-import { Alert, Chip, List, ListItem, ListItemText, Stack, Typography } from "@mui/material";
+import { Alert, List, ListItem, ListItemText, Stack, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 
 import { Calendar } from "@/components/Calendar";
@@ -12,8 +12,6 @@ import {
 } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 
-import { BOOKING_STATUS_LABELS } from "./constants";
-
 type CalendarBooking = NonNullable<JanHusBookingCalendarQuery["janhusBookings"]>[number];
 type Area = NonNullable<JanHusAreasQuery["janhusAreas"]>[number];
 type Interval = { start: dayjs.Dayjs; end: dayjs.Dayjs };
@@ -24,6 +22,8 @@ const bookingWindow = (day: dayjs.Dayjs, openingHour: number, closingHour: numbe
   const end = day.hour(closingHour).minute(0).second(0).millisecond(0);
   return { start, end: openingHour >= closingHour ? end.add(1, "day") : end };
 };
+
+const isListed = (booking: CalendarBooking) => booking.status === "CONFIRMED" || booking.status === "BLOCKED";
 
 const overlaps = (booking: CalendarBooking, window: Interval) =>
   dayjs(booking.startsAt).isBefore(window.end) && dayjs(booking.endsAt).isAfter(window.start);
@@ -117,7 +117,9 @@ export const BookingCalendar: React.FC = () => {
     [areaData, selectedBookings]
   );
 
-  const namesHidden = selectedBookings.some((booking) => !booking.ownerDisplayName && booking.status !== "BLOCKED");
+  const listedBookings = useMemo(() => selectedBookings.filter(isListed), [selectedBookings]);
+  const someAreWaiting = listedBookings.length < selectedBookings.length;
+  const namesHidden = listedBookings.some((booking) => !booking.ownerDisplayName && booking.status !== "BLOCKED");
 
   return (
     <Stack spacing={2}>
@@ -127,7 +129,7 @@ export const BookingCalendar: React.FC = () => {
         startDate={selectedDate}
         endDate={selectedDate}
         isDateDisabled={(date) => date.isBefore(today, "day")}
-        getMarkerCount={(date) => bookingsOn(date).length}
+        getMarkerCount={(date) => bookingsOn(date).filter(isListed).length}
       />
       {selectedDate ? (
         <Stack spacing={2}>
@@ -159,28 +161,22 @@ export const BookingCalendar: React.FC = () => {
                 ))}
               </List>
               <Typography variant="body2" color="text.secondary">
-                Et område er opptatt når det selv, et område det er en del av, eller et område i det er booket.
+                Et område er opptatt når det selv, et område det er en del av, eller et område i det er booket. (Tenk
+                CHILD-PARENT, eller google det om det ikke gir mening.)
                 {bufferMinutes > 0 ? ` I tillegg holdes ${bufferMinutes} minutter fri før og etter hver booking.` : ""}
+                {someAreWaiting ? " Noe av tiden er holdt av en booking som venter på betaling eller behandling." : ""}
               </Typography>
             </Stack>
           ) : null}
 
           <Stack spacing={0.5}>
             <Typography variant="subtitle2">Bookinger</Typography>
-            {selectedBookings.length === 0 ? (
+            {listedBookings.length === 0 ? (
               <Typography color="text.secondary">Ingen bookinger denne dagen.</Typography>
             ) : (
               <List dense disablePadding>
-                {selectedBookings.map((booking) => (
-                  <ListItem
-                    key={booking.id}
-                    disableGutters
-                    secondaryAction={
-                      booking.status === "PROVISIONAL" || booking.status === "PENDING_ADMIN_REVIEW" ? (
-                        <Chip size="small" label={BOOKING_STATUS_LABELS[booking.status]} />
-                      ) : undefined
-                    }
-                  >
+                {listedBookings.map((booking) => (
+                  <ListItem key={booking.id} disableGutters>
                     <ListItemText
                       primary={booking.status === "BLOCKED" ? "Stengt" : (booking.ownerDisplayName ?? "Booket")}
                       secondary={`${intervalLabel(

@@ -91,6 +91,7 @@ type Props = {
   contactFieldErrors: ContactFieldErrors;
   showAllContactErrors: boolean;
   isBookingDateDisabled: (date: dayjs.Dayjs) => boolean;
+  lastBookableDate?: dayjs.Dayjs;
 
   onAreaChange: (value: string) => void;
   onBookingDateChange: (value: dayjs.Dayjs) => void;
@@ -179,6 +180,7 @@ export const BookingSteps: React.FC<Props> = ({
   contactFieldErrors,
   showAllContactErrors,
   isBookingDateDisabled,
+  lastBookableDate,
   onAreaChange,
   onBookingDateChange,
   onStartsAtChange,
@@ -251,6 +253,9 @@ export const BookingSteps: React.FC<Props> = ({
               endDate={bookingDate}
               isDateDisabled={isBookingDateDisabled}
             />
+            {lastBookableDate ? (
+              <FormHelperText>Du kan velge datoer til og med {lastBookableDate.format("D. MMMM YYYY")}.</FormHelperText>
+            ) : null}
 
             <Divider />
 

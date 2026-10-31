@@ -157,15 +157,33 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return bookingDate.tz("Europe/Oslo").startOf("day");
   }, [bookingDate]);
 
+  const loadedSettings = settingsData?.janhusBookingSettings;
+  const windowWeeks =
+    ownerType === "ORGANIZATION"
+      ? loadedSettings?.organizationBookingOpensWeeksBefore
+      : loadedSettings?.generalBookingOpensWeeksBefore;
+  const lastBookableDate = useMemo(
+    () => (windowWeeks == null ? undefined : dayjs().tz("Europe/Oslo").startOf("day").add(windowWeeks, "week")),
+    [windowWeeks]
+  );
+  const isOutsideWindow = useCallback(
+    (date: dayjs.Dayjs) => Boolean(lastBookableDate && date.tz("Europe/Oslo").isAfter(lastBookableDate, "day")),
+    [lastBookableDate]
+  );
+  const windowMessage =
+    ownerType === "ORGANIZATION"
+      ? `Foreninger kan booke inntil ${windowWeeks} uker fram i tid.`
+      : `Du kan booke inntil ${windowWeeks} uker fram i tid.`;
+
   const isBookingDateDisabled = useCallback(
     (date: dayjs.Dayjs) => {
-      if (date.isBefore(dayjs().tz("Europe/Oslo"), "day")) {
+      if (date.isBefore(dayjs().tz("Europe/Oslo"), "day") || isOutsideWindow(date)) {
         return true;
       }
 
       return !isDateInActiveSemester(date, bookingSettings as SemesterAvailabilitySettings);
     },
-    [bookingSettings]
+    [bookingSettings, isOutsideWindow]
   );
 
   const { startOptions, endOptions } = useBookingSlots({
@@ -362,13 +380,18 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
+    if (isOutsideWindow(startDate)) {
+      setErrorMessage(windowMessage);
+      return false;
+    }
+
     if (!dayjs(endsAt).isAfter(dayjs(startsAt))) {
       setErrorMessage("Sluttid må være etter starttid.");
       return false;
     }
 
     return true;
-  }, [bookingDate, bookingSettings, endsAt, startsAt]);
+  }, [bookingDate, bookingSettings, endsAt, isOutsideWindow, startsAt, windowMessage]);
 
   const contactFieldErrors: ContactFieldErrors = useMemo(
     () =>
@@ -425,6 +448,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
+    if (startsAt && isOutsideWindow(dayjs(startsAt))) {
+      setErrorMessage(windowMessage);
+      return false;
+    }
+
     return true;
   }, [
     canBookPersonally,
@@ -432,8 +460,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     contactFieldErrors,
     externalBookingsEnabled,
     eventType,
+    isOutsideWindow,
     ownerType,
     privateBookingsEnabled,
+    startsAt,
+    windowMessage,
   ]);
 
   const validateContractStep = useCallback(() => {
@@ -636,6 +667,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               contactFieldErrors={contactFieldErrors}
               showAllContactErrors={showAllContactErrors}
               isBookingDateDisabled={isBookingDateDisabled}
+              lastBookableDate={lastBookableDate}
               onAreaChange={setArea}
               onBookingDateChange={setBookingDate}
               onStartsAtChange={setStartsAt}

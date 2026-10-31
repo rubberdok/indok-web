@@ -37,6 +37,7 @@ from apps.janhus.rules import (
     get_or_create_settings,
     get_overlapping_bookings,
     validate_booking_semester_rules,
+    validate_booking_window,
     validate_time_rules,
 )
 from apps.janhus.types import (
@@ -342,11 +343,9 @@ def _apply_overlap_rules(*, booking: JanHusBooking, actor, settings, exclude_boo
     if _has_manage_booking_permission(actor):
         return list(overlaps)
 
-    # The priority booking level could move provisional bookings to admin review here;
+    # The priority booking level could move overlapping bookings to admin review here;
     # see determine_initial_status for how it was removed.
-    if overlaps.exclude(status=JanHusBookingStatus.PROVISIONAL).exists():
-        raise GraphQLError("The selected timeslot overlaps with an existing non-provisional booking")
-    raise GraphQLError("The selected timeslot overlaps with a provisional booking")
+    raise GraphQLError("The selected timeslot overlaps with an existing booking")
 
 
 class JanHusBookingInput(graphene.InputObjectType):
@@ -850,6 +849,12 @@ class CreateJanHusBookingRequest(graphene.Mutation):
             ends_at=request_data["ends_at"],
             settings=settings,
         )
+        # The booking page offers only dates inside the window; this refuses the rest.
+        validate_booking_window(
+            starts_at=request_data["starts_at"],
+            owner_organization=owner_organization,
+            settings=settings,
+        )
 
         actor_phone = ""
         if actor:
@@ -926,7 +931,7 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
             )
 
             if _is_non_organization_booking(booking_request):
-                initial_status = JanHusBookingStatus.PROVISIONAL
+                initial_status = JanHusBookingStatus.PENDING_ADMIN_REVIEW  # until it is paid
 
             created_booking = JanHusBooking(
                 reference=booking_request.reference,
@@ -1120,7 +1125,6 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
 
 # A deleted booking the booker still expects to use; for the others they have heard enough.
 BOOKING_STATUSES_TO_NOTIFY_ON_DELETE = {
-    JanHusBookingStatus.PROVISIONAL,
     JanHusBookingStatus.PENDING_ADMIN_REVIEW,
     JanHusBookingStatus.CONFIRMED,
 }

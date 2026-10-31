@@ -439,12 +439,11 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     });
   }
 
-  // The backend mails the booker about a deleted booking only when it is still coming and not declined.
   const bookingToDelete =
     pendingDelete?.kind === "booking" ? bookings.find((booking) => booking.id === pendingDelete.id) : undefined;
   const deletionIsMailed = Boolean(
     bookingToDelete &&
-    ["PROVISIONAL", "PENDING_ADMIN_REVIEW", "CONFIRMED"].includes(bookingToDelete.status) &&
+    ["PENDING_ADMIN_REVIEW", "CONFIRMED"].includes(bookingToDelete.status) &&
     !isPast(bookingToDelete.endsAt)
   );
 

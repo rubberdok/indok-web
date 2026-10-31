@@ -6587,12 +6587,6 @@
           "enumValues": [
             {
               "deprecationReason": null,
-              "description": "Provisional",
-              "isDeprecated": false,
-              "name": "PROVISIONAL"
-            },
-            {
-              "deprecationReason": null,
               "description": "Pending admin review",
               "isDeprecated": false,
               "name": "PENDING_ADMIN_REVIEW"

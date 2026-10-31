@@ -35,7 +35,6 @@ def generate_booking_reference() -> str:
 
 
 class JanHusBookingStatus(models.TextChoices):
-    PROVISIONAL = "PROVISIONAL", "Provisional"
     PENDING_ADMIN_REVIEW = "PENDING_ADMIN_REVIEW", "Pending admin review"
     CONFIRMED = "CONFIRMED", "Confirmed"
     DECLINED = "DECLINED", "Declined"

@@ -27,9 +27,21 @@ def ensure_default_areas() -> QuerySet[JanHusArea]:
     return JanHusArea.objects.filter(is_active=True)
 
 
-def booking_weeks_in_advance(starts_at) -> float:
-    now = timezone.now()
-    return (starts_at - now).total_seconds() / (7 * 24 * 60 * 60)
+def validate_booking_window(*, starts_at, owner_organization, settings: JanHusBookingSettings) -> None:
+    """
+    How far ahead an end user may request a booking, from the booking settings, so a
+    change there counts at once: up to and including the day
+    `organization_booking_opens_weeks_before` weeks from today for an organisation, and
+    `general_booking_opens_weeks_before` for everyone else, personal and external. The
+    booking page offers no later dates. An admin's own booking or approval is not limited.
+    """
+    if owner_organization is not None:
+        who, weeks = "Organisation bookings", settings.organization_booking_opens_weeks_before
+    else:
+        who, weeks = "Bookings", settings.general_booking_opens_weeks_before
+    starts_on = timezone.localtime(starts_at).date() if timezone.is_aware(starts_at) else starts_at.date()
+    if starts_on > timezone.localdate() + timedelta(weeks=weeks):
+        raise GraphQLError(f"{who} can be made at most {weeks} weeks ahead")
 
 
 def determine_initial_status(
@@ -41,19 +53,15 @@ def determine_initial_status(
     requires_payment: bool = False,
 ) -> str:
     """
-    The status a new booking starts with, from the booking settings, so a change
-    there counts at once:
-
-    - External bookings wait for an admin.
-    - Organisation bookings are confirmed from `organization_booking_opens_weeks_before`
-      weeks ahead. Earlier ones are provisional.
-    - Personal bookings can be made at most `general_booking_opens_weeks_before`
-      weeks ahead.
+    The status a new booking starts with. It never refuses a booking for being far ahead:
+    the windows only limit what end users may request (validate_booking_window).
+    External bookings wait for an admin (PENDING_ADMIN_REVIEW, "Venter behandling"), and
+    so do bookings nobody has paid for yet. Everything else is CONFIRMED.
 
     `requires_payment` marks a booking that nobody has paid for yet, which is every
-    personal booking at the moment it is created. Those start PROVISIONAL and become
-    CONFIRMED once payment lands, so the direct path cannot hand out a confirmed
-    booking (and a contract) that the request path would have charged for.
+    personal booking at the moment it is created. It becomes CONFIRMED once payment lands
+    (signals.confirm_paid_janhus_bookings), so the direct path cannot hand out a
+    confirmed booking (and a contract) that the request path would have charged for.
 
     Booking levels (JanHusBookingLevel, assigned per user or organisation in Django
     admin) used to decide this, and let a "Priority Organization" book any time and
@@ -62,22 +70,8 @@ def determine_initial_status(
     To bring them back: revert that commit but keep its migration 0024, then run
     makemigrations janhus, which makes the tables again in a new migration.
     """
-    if is_external_booking:
+    if is_external_booking or requires_payment:
         return JanHusBookingStatus.PENDING_ADMIN_REVIEW
-
-    weeks_in_advance = booking_weeks_in_advance(starts_at)
-
-    if owner_organization is None:
-        if weeks_in_advance > settings.general_booking_opens_weeks_before:
-            raise GraphQLError(
-                "Personal bookings can be made at most " f"{settings.general_booking_opens_weeks_before} weeks ahead"
-            )
-    elif weeks_in_advance > settings.organization_booking_opens_weeks_before:
-        return JanHusBookingStatus.PROVISIONAL
-
-    if requires_payment:
-        return JanHusBookingStatus.PROVISIONAL
-
     return JanHusBookingStatus.CONFIRMED
 
 

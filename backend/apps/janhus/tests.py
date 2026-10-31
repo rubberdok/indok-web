@@ -43,7 +43,6 @@ from apps.janhus.permissions import (
     normalize_phone_number,
 )
 from apps.janhus.rules import (
-    booking_weeks_in_advance,
     determine_initial_status,
     ensure_default_areas,
     get_conflicting_areas,
@@ -51,6 +50,7 @@ from apps.janhus.rules import (
     get_overlapping_bookings,
     is_in_active_booking_semester,
     validate_booking_semester_rules,
+    validate_booking_window,
     validate_time_rules,
 )
 from apps.organizations.models import Organization
@@ -410,14 +410,14 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             review_content["data"]["reviewJanhusBookingRequest"]["booking"]["guestList"],
         )
         self.assertEqual(
-            JanHusBookingStatus.PROVISIONAL,
+            JanHusBookingStatus.PENDING_ADMIN_REVIEW,
             review_content["data"]["reviewJanhusBookingRequest"]["booking"]["status"],
         )
 
         booking = JanHusBooking.objects.first()
         self.assertIsNotNone(booking)
         self.assertEqual(guest_list_value, booking.guest_list)
-        self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
+        self.assertEqual(JanHusBookingStatus.PENDING_ADMIN_REVIEW, booking.status)
 
     def test_an_approved_request_keeps_when_it_was_sent_and_the_messages(self):
         self.add_booking_permission(self.user)
@@ -504,9 +504,9 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         cases = [
             ("coming", booking(), True),
             (
-                "provisional",
+                "waiting for payment",
                 booking(
-                    status=JanHusBookingStatus.PROVISIONAL,
+                    status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
                     starts_at=self.start_dt + 2 * tomorrow,
                     ends_at=self.end_dt + 2 * tomorrow,
                 ),
@@ -557,7 +557,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
             cleaning_requested=True,
             deposit_status=JanHusDepositStatus.REQUIRED,
             deposit_amount=Decimal("300"),
@@ -620,7 +620,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
             deposit_status=JanHusDepositStatus.REQUIRED,
             deposit_amount=Decimal("300"),
         )
@@ -670,7 +670,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
         )
 
         query = f"""
@@ -707,7 +707,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
         )
 
         query = f"""
@@ -747,7 +747,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
             price_override_tier="EXTERNAL",
         )
 
@@ -778,7 +778,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_name="Responsible",
             responsible_email="responsible@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
         )
 
         query = f"""
@@ -810,7 +810,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             responsible_email="responsible@example.com",
             responsible_phone="41234567",
             event_type="PRIVATE",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
         )
 
         self.assertEqual(Decimal("200"), booking.total_price)
@@ -876,7 +876,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         booking = JanHusBooking.objects.first()
         self.assertIsNotNone(booking)
-        self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
+        self.assertEqual(JanHusBookingStatus.PENDING_ADMIN_REVIEW, booking.status)
         self.assertEqual(self.user.id, booking.owner_user_id)
 
         # an admin may double-book on purpose; the answer says what it overlaps
@@ -968,6 +968,73 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         content = json.loads(response.content)
         self.assertIn("outside of active booking semesters", content["errors"][0]["message"])
+
+    def test_a_request_too_far_ahead_is_refused_when_it_is_sent(self):
+        starts_at = timezone.make_aware(datetime.combine(timezone.localdate() + timedelta(days=35), time(10, 0)))
+
+        def request(event_type):
+            return f"""
+                mutation {{
+                  createJanhusBookingRequest(
+                    requestData: {{
+                      startsAt: \"{starts_at.isoformat()}\"
+                      endsAt: \"{(starts_at + timedelta(hours=2)).isoformat()}\"
+                      area: \"{self.first_floor_area.id}\"
+                      requesterName: \"Some User\"
+                      requesterEmail: \"someone@example.com\"
+                      requesterPhone: \"41234567\"
+                      responsibleName: \"Responsible User\"
+                      responsibleEmail: \"responsible@example.com\"
+                      responsiblePhone: \"41234567\"
+                      eventType: \"{event_type}\"
+                    }}
+                  ) {{
+                    ok
+                  }}
+                }}
+            """
+
+        # a personal request from a member, and an external one without a login: the same window
+        for label, event_type, user in [("personal", "INTERNAL", self.user), ("external", "EXTERNAL", None)]:
+            with self.subTest(case=label):
+                self.client.logout()
+                response = self.query(request(event_type), user=user)
+                self.assertResponseHasErrors(response)
+                message = json.loads(response.content)["errors"][0]["message"]
+                self.assertIn("Bookings can be made at most 4 weeks ahead", message)
+        self.assertFalse(JanHusBookingRequest.objects.exists())
+
+    def test_an_admin_may_approve_a_request_beyond_the_window(self):
+        self.add_booking_permission(self.user)
+        starts_at = timezone.make_aware(datetime.combine(timezone.localdate() + timedelta(days=70), time(10, 0)))
+        booking_request = JanHusBookingRequest.objects.create(
+            starts_at=starts_at,
+            ends_at=starts_at + timedelta(hours=2),
+            area=self.first_floor_area,
+            requester_user=self.other_user,
+            responsible_name="Other User",
+            responsible_email="other.user@example.com",
+            responsible_phone="42222222",
+        )
+
+        response = self.query(
+            f"""
+            mutation {{
+              reviewJanhusBookingRequest(
+                reviewData: {{ id: \"{booking_request.id}\" status: \"APPROVED\" convertToBooking: true }}
+              ) {{
+                ok
+                booking {{
+                  status
+                }}
+              }}
+            }}
+            """,
+            user=self.user,
+        )
+        self.assertResponseNoErrors(response)
+        booking = json.loads(response.content)["data"]["reviewJanhusBookingRequest"]["booking"]
+        self.assertEqual(JanHusBookingStatus.PENDING_ADMIN_REVIEW, booking["status"])  # waits for payment
 
     def test_update_booking_syncs_existing_vipps_product_price(self):
         self.add_booking_permission(self.user)
@@ -2276,7 +2343,7 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
             _resolve_area("FIRST_FLOOR")
         self.assertEqual("Area not found", str(ctx.exception))
 
-    def test_successful_payment_confirms_a_provisional_booking(self):
+    def test_successful_payment_confirms_a_booking_waiting_for_it(self):
         """Paying is what confirms a personal booking; no admin step in between."""
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
@@ -2286,7 +2353,7 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
             responsible_name="Test User",
             responsible_email="test.user@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
             deposit_status=JanHusDepositStatus.REQUIRED,
             deposit_amount=Decimal("300"),
         )
@@ -2307,7 +2374,7 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         self.assertEqual(JanHusBookingStatus.CONFIRMED, booking.status)
         self.assertEqual(JanHusDepositStatus.PAID, booking.deposit_status)
 
-    def test_partial_payment_leaves_a_booking_provisional(self):
+    def test_partial_payment_leaves_a_booking_waiting(self):
         booking = JanHusBooking.objects.create(
             starts_at=self.start_dt,
             ends_at=self.end_dt,
@@ -2316,7 +2383,7 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
             responsible_name="Test User",
             responsible_email="test.user@example.com",
             responsible_phone="41234567",
-            status=JanHusBookingStatus.PROVISIONAL,
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
             deposit_status=JanHusDepositStatus.REQUIRED,
             deposit_amount=Decimal("300"),
         )
@@ -2334,7 +2401,7 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
         )
 
         booking.refresh_from_db()
-        self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
+        self.assertEqual(JanHusBookingStatus.PENDING_ADMIN_REVIEW, booking.status)
 
 
 class JanHusMailTestCase(TestCase):
@@ -2491,14 +2558,13 @@ class JanHusRulesTestCase(TestCase):
         )
 
     def test_initial_status_depends_on_the_owner_and_how_far_ahead_the_booking_is(self):
-        # The defaults: personal bookings open 4 weeks ahead, organisation bookings are confirmed from 6.
+        # The defaults: personal bookings open 4 weeks ahead, organisation bookings 6.
         organization = OrganizationFactory()
         cases = [
             ("external needs review", None, 14, True, False, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
             ("personal inside the window", None, 14, False, False, JanHusBookingStatus.CONFIRMED),
-            ("personal waits for payment", None, 14, False, True, JanHusBookingStatus.PROVISIONAL),
+            ("personal waits for payment", None, 14, False, True, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
             ("organisation inside the window", organization, 14, False, False, JanHusBookingStatus.CONFIRMED),
-            ("organisation too early holds", organization, 70, False, False, JanHusBookingStatus.PROVISIONAL),
         ]
 
         for label, owner_organization, days, is_external, requires_payment, expected in cases:
@@ -2512,50 +2578,73 @@ class JanHusRulesTestCase(TestCase):
                 )
                 self.assertEqual(expected, initial_status)
 
-    def test_personal_bookings_may_not_be_made_before_their_window(self):
-        with self.assertRaises(GraphQLError):
-            determine_initial_status(
-                starts_at=self._at(days=70),
-                owner_organization=None,
-                is_external_booking=False,
-                settings=self.settings,
-            )
+    def test_the_windows_limit_what_end_users_may_request(self):
+        def on(days):
+            return timezone.make_aware(datetime.combine(timezone.localdate() + timedelta(days=days), time(10, 0)))
+
+        organization = OrganizationFactory()
+
+        def check(days, owner_organization=None):
+            validate_booking_window(starts_at=on(days), owner_organization=owner_organization, settings=self.settings)
+
+        # The defaults: 4 weeks ahead for everyone but organisations, 6 for organisations. The last day counts.
+        check(28)
+        check(42, organization)
+        for label, days, owner_organization in [("personal or external", 29, None), ("organisation", 43, organization)]:
+            with self.subTest(case=label):
+                with self.assertRaises(GraphQLError):
+                    check(days, owner_organization)
+
+    def test_an_admins_booking_or_approval_is_never_refused_for_being_far_ahead(self):
+        organization = OrganizationFactory()
+        cases = [
+            ("personal", None, False, JanHusBookingStatus.CONFIRMED),
+            ("organisation", organization, False, JanHusBookingStatus.CONFIRMED),
+            ("external", None, True, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
+        ]
+        for label, owner_organization, is_external, expected in cases:
+            with self.subTest(case=label):
+                initial_status = determine_initial_status(
+                    starts_at=self._at(days=365),
+                    owner_organization=owner_organization,
+                    is_external_booking=is_external,
+                    settings=self.settings,
+                )
+                self.assertEqual(expected, initial_status)
 
     def test_the_windows_follow_the_settings(self):
-        # The values used in production on 2026-10-31. A change counts at once.
         self.settings.organization_booking_opens_weeks_before = 30
         self.settings.general_booking_opens_weeks_before = 4
         self.settings.save()
         organization = OrganizationFactory()
 
-        def initial_status(days, owner_organization=None):
-            return determine_initial_status(
-                starts_at=self._at(days=days),
-                owner_organization=owner_organization,
-                is_external_booking=False,
-                settings=self.settings,
-            )
+        def on(days):
+            return timezone.make_aware(datetime.combine(timezone.localdate() + timedelta(days=days), time(10, 0)))
 
-        self.assertEqual(JanHusBookingStatus.CONFIRMED, initial_status(29 * 7, organization))
-        self.assertEqual(JanHusBookingStatus.PROVISIONAL, initial_status(31 * 7, organization))
+        def check(days, owner_organization=None):
+            validate_booking_window(starts_at=on(days), owner_organization=owner_organization, settings=self.settings)
+
+        check(30 * 7, organization)
         with self.assertRaises(GraphQLError):
-            initial_status(5 * 7)
+            check(30 * 7 + 1, organization)
+        with self.assertRaises(GraphQLError):
+            check(5 * 7)
 
         self.settings.general_booking_opens_weeks_before = 6
         self.settings.save()
-        self.assertEqual(JanHusBookingStatus.CONFIRMED, initial_status(5 * 7))
+        check(5 * 7)
 
     def test_only_janhus_admins_may_book_over_another_booking(self):
-        existing = self._booking(area=self.first_floor, status=JanHusBookingStatus.PROVISIONAL)
+        existing = self._booking(area=self.first_floor, status=JanHusBookingStatus.PENDING_ADMIN_REVIEW)
 
         def over_it():
             return JanHusBooking(starts_at=existing.starts_at, ends_at=existing.ends_at, area=self.entire_house)
 
-        # Nobody moves a provisional booking to admin review any more: that was the priority booking level.
+        # Not even a booking that waits for payment gives way: that was the priority booking level.
         with self.assertRaises(GraphQLError):
             _apply_overlap_rules(booking=over_it(), actor=UserFactory(is_indok=True), settings=self.settings)
         existing.refresh_from_db()
-        self.assertEqual(JanHusBookingStatus.PROVISIONAL, existing.status)
+        self.assertEqual(JanHusBookingStatus.PENDING_ADMIN_REVIEW, existing.status)
 
         admin = UserFactory(is_indok=True, is_superuser=True)
         self.assertEqual([existing], _apply_overlap_rules(booking=over_it(), actor=admin, settings=self.settings))
