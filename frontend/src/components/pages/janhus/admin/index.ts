@@ -2,6 +2,7 @@ export { AreaSettings } from "./AreaSettings";
 export { BookingRulesSettings } from "./BookingRulesSettings";
 export { SemesterSettings } from "./SemesterSettings";
 export { AdminFilters } from "./AdminFilters";
+export { adminPanelStyles } from "./adminPanelStyles";
 export { AvailabilityOverview } from "./AvailabilityOverview";
 export { BookingList } from "./BookingList";
 export { DeleteDialog } from "./DeleteDialog";

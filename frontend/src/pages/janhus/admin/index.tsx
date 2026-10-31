@@ -14,12 +14,13 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ComponentProps, type Dispatch, type SetStateAction } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
 import { TabPanel } from "@/components/pages/about/TabPanel";
 import {
   AdminFilters,
+  adminPanelStyles,
   AvailabilityOverview,
   BookingList,
   DeleteDialog,
@@ -55,6 +56,7 @@ import {
   ReviewJanhusBookingRequestDocument,
   UpdateJanhusBookingDocument,
 } from "@/generated/graphql";
+import type { AdminJanHusBookingsQuery, JanHusBookingRequestsQuery } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import dayjs from "@/lib/date";
 import { NextPageWithLayout } from "@/lib/next";
@@ -62,6 +64,505 @@ import { NextPageWithLayout } from "@/lib/next";
 /** A linked website user as the door access pickers show it. */
 function pickedUser(user: { id: string; firstName: string; lastName: string } | null | undefined) {
   return user ? { id: user.id, displayName: `${user.firstName} ${user.lastName}`.trim() } : null;
+}
+
+function getDeletionDescription(kind: "booking" | "request", isMailed: boolean) {
+  if (kind === "request") {
+    return "Forespørselen slettes for godt, og bestilleren får ingen e-post. Vil du gi beskjed, bruk «Avvis».";
+  }
+  if (isMailed) {
+    return "Bookingen slettes for godt. Bestilleren og ansvarlig får en e-post om at den er slettet.";
+  }
+  return "Bookingen slettes for godt. Den er over, avslått eller kansellert, så ingen får e-post.";
+}
+
+type AdminFilterableRow = {
+  startsAt: string;
+  area: { id: string; name: string };
+  status: string;
+  eventType: string;
+};
+
+type AdminRowFilters = {
+  date: string;
+  area: string;
+  status: string;
+  eventType: string;
+  ownerType: "ALL" | OwnerType;
+};
+
+type AdminFilterState<T extends AdminFilterableRow> = {
+  filteredRows: T[];
+  dateFilter: string;
+  setDateFilter: Dispatch<SetStateAction<string>>;
+  areaFilter: string;
+  setAreaFilter: Dispatch<SetStateAction<string>>;
+  statusFilter: string;
+  setStatusFilter: Dispatch<SetStateAction<string>>;
+  eventTypeFilter: string;
+  setEventTypeFilter: Dispatch<SetStateAction<string>>;
+  ownerTypeFilter: "ALL" | OwnerType;
+  setOwnerTypeFilter: Dispatch<SetStateAction<"ALL" | OwnerType>>;
+  sortBy: SortBy;
+  setSortBy: Dispatch<SetStateAction<SortBy>>;
+  sortDirection: SortDirection;
+  setSortDirection: Dispatch<SetStateAction<SortDirection>>;
+};
+
+type AdminFilterAreas = ComponentProps<typeof BookingList>["areas"];
+type AdminBooking = NonNullable<AdminJanHusBookingsQuery["adminJanhusBookings"]>[number];
+type AdminBookingRequest = NonNullable<JanHusBookingRequestsQuery["janhusBookingRequests"]>[number];
+
+type BookingEdit = {
+  startsAt: string;
+  endsAt: string;
+  area: string;
+  status: string;
+  eventType: string;
+  cleaningRequested: boolean;
+  responsibleName: string;
+  responsibleEmail: string;
+  responsiblePhone: string;
+  bookerName: string;
+  bookerEmail: string;
+  bookerPhone: string;
+  depositStatus: string;
+  depositAmount: string;
+  priceOverrideTier: string;
+  priceOverrideAmount: string;
+  manuallyMarkedAsPaid: boolean;
+  guestListEntries: JanHusGuestListEntry[];
+  doorAccessPolicy: string;
+  organizationDoorAccess: string;
+  bookerUser: { id: string; displayName: string } | null;
+  responsibleUser: { id: string; displayName: string } | null;
+  comment: string;
+  adminComment: string;
+  bookerMessage: string;
+};
+
+type PendingDelete = { kind: "booking" | "request"; id: string };
+
+function mergeRequestComments(current: Record<string, string>, requests: readonly AdminBookingRequest[]) {
+  const next = { ...current };
+  for (const request of requests) {
+    if (next[request.id] === undefined) {
+      next[request.id] = request.adminComment || "";
+    }
+  }
+  return next;
+}
+
+function bookingEditFrom(booking: AdminBooking): BookingEdit {
+  return {
+    startsAt: toDateTimeInput(booking.startsAt),
+    endsAt: toDateTimeInput(booking.endsAt),
+    area: booking.area.id,
+    status: booking.status,
+    eventType: booking.eventType,
+    cleaningRequested: booking.cleaningRequested,
+    responsibleName: booking.responsibleName,
+    responsibleEmail: booking.responsibleEmail,
+    responsiblePhone: booking.responsiblePhone,
+    bookerName: booking.bookerName,
+    bookerEmail: booking.bookerEmail,
+    bookerPhone: booking.bookerPhone,
+    depositStatus: booking.depositStatus,
+    depositAmount: String(booking.depositAmount ?? 0),
+    priceOverrideTier: booking.priceOverrideTier ?? "",
+    priceOverrideAmount: booking.priceOverrideAmount != null ? String(booking.priceOverrideAmount) : "",
+    manuallyMarkedAsPaid: booking.manuallyMarkedAsPaid,
+    guestListEntries: (booking.guestListEntries ?? []).map((guest) => ({
+      feideUserId: guest.feideUserid,
+      displayName: guest.displayName,
+    })),
+    doorAccessPolicy: booking.doorAccessPolicy,
+    organizationDoorAccess: booking.organizationDoorAccess,
+    bookerUser: pickedUser(booking.bookerUser),
+    responsibleUser: pickedUser(booking.responsibleUser),
+    comment: booking.comment ?? "",
+    adminComment: booking.adminComment ?? "",
+    bookerMessage: booking.bookerMessage ?? "",
+  };
+}
+
+function mergeBookingEdits(current: Record<string, BookingEdit>, bookings: readonly AdminBooking[]) {
+  const next = { ...current };
+  for (const booking of bookings) {
+    if (next[booking.id] === undefined) {
+      next[booking.id] = bookingEditFrom(booking);
+    }
+  }
+  return next;
+}
+
+function matchesAdminFilters<T extends AdminFilterableRow>(
+  row: T,
+  filters: AdminRowFilters,
+  getOwnerType: (row: T) => OwnerType
+) {
+  if (filters.date && toDateKey(row.startsAt) !== filters.date) return false;
+  if (filters.area !== "ALL" && row.area.id !== filters.area) return false;
+  if (filters.status !== "ALL" && row.status !== filters.status) return false;
+  if (filters.eventType !== "ALL" && row.eventType !== filters.eventType) return false;
+  if (filters.ownerType !== "ALL" && getOwnerType(row) !== filters.ownerType) return false;
+  return true;
+}
+
+function compareAdminRows<T extends AdminFilterableRow>(
+  left: T,
+  right: T,
+  sortBy: SortBy,
+  getOwnerType: (row: T) => OwnerType
+) {
+  if (sortBy === "startsAt") {
+    return new Date(left.startsAt).getTime() - new Date(right.startsAt).getTime();
+  }
+  if (sortBy === "area") {
+    return left.area.name.localeCompare(right.area.name);
+  }
+  if (sortBy === "eventType") {
+    return left.eventType.localeCompare(right.eventType);
+  }
+  if (sortBy === "status") {
+    return left.status.localeCompare(right.status);
+  }
+  return getOwnerType(left).localeCompare(getOwnerType(right));
+}
+
+function filterAndSortAdminRows<T extends AdminFilterableRow>(
+  rows: T[],
+  filters: AdminRowFilters,
+  sortBy: SortBy,
+  sortDirection: SortDirection,
+  getOwnerType: (row: T) => OwnerType
+) {
+  const sortFactor = sortDirection === "asc" ? 1 : -1;
+  return [...rows]
+    .filter((row) => matchesAdminFilters(row, filters, getOwnerType))
+    .sort((left, right) => compareAdminRows(left, right, sortBy, getOwnerType) * sortFactor);
+}
+
+function useFilteredAdminRows<T extends AdminFilterableRow>(
+  rows: T[],
+  getOwnerType: (row: T) => OwnerType,
+  initialSortBy: SortBy
+) {
+  const [dateFilter, setDateFilter] = useState("");
+  const [areaFilter, setAreaFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [eventTypeFilter, setEventTypeFilter] = useState("ALL");
+  const [ownerTypeFilter, setOwnerTypeFilter] = useState<"ALL" | OwnerType>("ALL");
+  const [sortBy, setSortBy] = useState<SortBy>(initialSortBy);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const filteredRows = useMemo(
+    () =>
+      filterAndSortAdminRows(
+        rows,
+        {
+          date: dateFilter,
+          area: areaFilter,
+          status: statusFilter,
+          eventType: eventTypeFilter,
+          ownerType: ownerTypeFilter,
+        },
+        sortBy,
+        sortDirection,
+        getOwnerType
+      ),
+    [areaFilter, dateFilter, eventTypeFilter, getOwnerType, ownerTypeFilter, rows, sortBy, sortDirection, statusFilter]
+  );
+  return {
+    filteredRows,
+    dateFilter,
+    setDateFilter,
+    areaFilter,
+    setAreaFilter,
+    statusFilter,
+    setStatusFilter,
+    eventTypeFilter,
+    setEventTypeFilter,
+    ownerTypeFilter,
+    setOwnerTypeFilter,
+    sortBy,
+    setSortBy,
+    sortDirection,
+    setSortDirection,
+  };
+}
+
+type JanHusAdminDialogsProps = {
+  canManage: boolean;
+  pendingDelete: PendingDelete | undefined;
+  deletionIsMailed: boolean;
+  deletingBooking: boolean;
+  deletingRequest: boolean;
+  activeGuestListBooking: AdminBooking | undefined;
+  activeGuestListEntries: JanHusGuestListEntry[];
+  bookingUpdating: boolean;
+  onCancelDelete: () => void;
+  onConfirmDelete: (message: string) => void | Promise<void>;
+  onCloseGuestList: () => void;
+  onSaveGuestList: (bookingId: string, guests: JanHusGuestListEntry[]) => void;
+};
+
+type BookingRequestTabProps = {
+  areas: AdminFilterAreas;
+  filters: AdminFilterState<AdminBookingRequest>;
+  openRequests: AdminBookingRequest[];
+  archivedRequests: AdminBookingRequest[];
+  comments: Record<string, string>;
+  messages: Record<string, string>;
+  reviewing: boolean;
+  deleting: boolean;
+  readOnly: boolean;
+  onRefresh: () => void;
+  onCommentChange: (id: string, value: string) => void;
+  onMessageChange: (id: string, value: string) => void;
+  onReview: (id: string, status: "APPROVED" | "REJECTED", convertToBooking: boolean) => void;
+  onDelete: (id: string) => void;
+};
+
+function BookingRequestTab({
+  areas,
+  filters,
+  openRequests,
+  archivedRequests,
+  comments,
+  messages,
+  reviewing,
+  deleting,
+  readOnly,
+  onRefresh,
+  onCommentChange,
+  onMessageChange,
+  onReview,
+  onDelete,
+}: BookingRequestTabProps) {
+  const filtersPanel = (
+    <AdminFilters
+      areas={areas}
+      statusLabels={REQUEST_STATUS_LABELS}
+      dateFilter={filters.dateFilter}
+      areaFilter={filters.areaFilter}
+      ownerTypeFilter={filters.ownerTypeFilter}
+      eventTypeFilter={filters.eventTypeFilter}
+      statusFilter={filters.statusFilter}
+      sortBy={filters.sortBy}
+      sortDirection={filters.sortDirection}
+      onDateFilterChange={filters.setDateFilter}
+      onAreaFilterChange={filters.setAreaFilter}
+      onOwnerTypeFilterChange={filters.setOwnerTypeFilter}
+      onEventTypeFilterChange={filters.setEventTypeFilter}
+      onStatusFilterChange={filters.setStatusFilter}
+      onSortByChange={filters.setSortBy}
+      onSortDirectionChange={filters.setSortDirection}
+    />
+  );
+  const requestList = (requests: AdminBookingRequest[]) => (
+    <RequestList
+      requests={requests}
+      comments={comments}
+      reviewing={reviewing}
+      deleting={deleting}
+      onCommentChange={onCommentChange}
+      messages={messages}
+      onMessageChange={onMessageChange}
+      onReview={onReview}
+      onDelete={onDelete}
+      readOnly={readOnly}
+    />
+  );
+
+  return (
+    <Stack spacing={2} mt={2}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Typography variant="h5">Bookingforespørsler</Typography>
+        <Button variant="text" onClick={onRefresh}>
+          Oppdater
+        </Button>
+      </Stack>
+      {filtersPanel}
+      {openRequests.length ? (
+        requestList(openRequests)
+      ) : (
+        <Typography color="text.secondary">Ingen forespørsler å behandle.</Typography>
+      )}
+      {archivedRequests.length ? (
+        <Accordion
+          disableGutters
+          elevation={0}
+          variant="outlined"
+          defaultExpanded={filters.statusFilter === "REJECTED"}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography variant="subtitle1">Tidligere og avslåtte forespørsler ({archivedRequests.length})</Typography>
+          </AccordionSummary>
+          <AccordionDetails>{requestList(archivedRequests)}</AccordionDetails>
+        </Accordion>
+      ) : null}
+    </Stack>
+  );
+}
+
+type BookingTabProps = {
+  areas: AdminFilterAreas;
+  filters: AdminFilterState<AdminBooking>;
+  bookings: AdminBooking[];
+  openBookings: AdminBooking[];
+  archivedBookings: AdminBooking[];
+  edits: Record<string, BookingEdit>;
+  setEdits: Dispatch<SetStateAction<Record<string, BookingEdit>>>;
+  expandedBookingIds: Record<string, boolean>;
+  setExpandedBookingIds: Dispatch<SetStateAction<Record<string, boolean>>>;
+  updating: boolean;
+  deleting: boolean;
+  creatingPaymentProduct: boolean;
+  readOnly: boolean;
+  onRefresh: () => void;
+  onSave: (id: string) => void | Promise<void>;
+  onCreatePaymentProduct: (id: string) => void | Promise<void>;
+  onDelete: (id: string) => void;
+  onOpenGuestList: (id: string) => void;
+};
+
+function BookingTab({
+  areas,
+  filters,
+  bookings,
+  openBookings,
+  archivedBookings,
+  edits,
+  setEdits,
+  expandedBookingIds,
+  setExpandedBookingIds,
+  updating,
+  deleting,
+  creatingPaymentProduct,
+  readOnly,
+  onRefresh,
+  onSave,
+  onCreatePaymentProduct,
+  onDelete,
+  onOpenGuestList,
+}: BookingTabProps) {
+  const filtersPanel = (
+    <AdminFilters
+      areas={areas}
+      statusLabels={BOOKING_STATUS_LABELS}
+      dateFilter={filters.dateFilter}
+      areaFilter={filters.areaFilter}
+      ownerTypeFilter={filters.ownerTypeFilter}
+      eventTypeFilter={filters.eventTypeFilter}
+      statusFilter={filters.statusFilter}
+      sortBy={filters.sortBy}
+      sortDirection={filters.sortDirection}
+      onDateFilterChange={filters.setDateFilter}
+      onAreaFilterChange={filters.setAreaFilter}
+      onOwnerTypeFilterChange={filters.setOwnerTypeFilter}
+      onEventTypeFilterChange={filters.setEventTypeFilter}
+      onStatusFilterChange={filters.setStatusFilter}
+      onSortByChange={filters.setSortBy}
+      onSortDirectionChange={filters.setSortDirection}
+    />
+  );
+  const bookingList = (items: AdminBooking[]) => (
+    <BookingList
+      bookings={items}
+      areas={areas}
+      edits={edits}
+      setEdits={setEdits}
+      expanded={expandedBookingIds}
+      setExpanded={setExpandedBookingIds}
+      updating={updating}
+      deleting={deleting}
+      creatingPaymentProduct={creatingPaymentProduct}
+      onSave={onSave}
+      onCreatePaymentProduct={onCreatePaymentProduct}
+      onDelete={onDelete}
+      onOpenGuestList={onOpenGuestList}
+      readOnly={readOnly}
+    />
+  );
+
+  return (
+    <Stack spacing={2} mt={2}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Typography variant="h5">Bookinger</Typography>
+        <Button variant="text" onClick={onRefresh}>
+          Oppdater
+        </Button>
+      </Stack>
+      <AvailabilityOverview areas={areas} bookings={bookings} />
+      {filtersPanel}
+      {openBookings.length ? (
+        bookingList(openBookings)
+      ) : (
+        <Typography color="text.secondary">Ingen aktive bookinger.</Typography>
+      )}
+      {archivedBookings.length ? (
+        <Accordion
+          disableGutters
+          elevation={0}
+          variant="outlined"
+          defaultExpanded={["DECLINED", "CANCELLED"].includes(filters.statusFilter)}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography variant="subtitle1">Tidligere og avslåtte bookinger ({archivedBookings.length})</Typography>
+          </AccordionSummary>
+          <AccordionDetails>{bookingList(archivedBookings)}</AccordionDetails>
+        </Accordion>
+      ) : null}
+    </Stack>
+  );
+}
+
+function JanHusAdminDialogs({
+  canManage,
+  pendingDelete,
+  deletionIsMailed,
+  deletingBooking,
+  deletingRequest,
+  activeGuestListBooking,
+  activeGuestListEntries,
+  bookingUpdating,
+  onCancelDelete,
+  onConfirmDelete,
+  onCloseGuestList,
+  onSaveGuestList,
+}: JanHusAdminDialogsProps) {
+  return (
+    <>
+      {canManage && pendingDelete ? (
+        <DeleteDialog
+          key={`${pendingDelete.kind}-${pendingDelete.id}`}
+          open
+          title={
+            pendingDelete.kind === "booking"
+              ? `Slette booking #${pendingDelete.id}?`
+              : `Slette forespørsel #${pendingDelete.id}?`
+          }
+          description={getDeletionDescription(pendingDelete.kind, deletionIsMailed)}
+          allowMessage={deletionIsMailed}
+          deleting={deletingBooking || deletingRequest}
+          onCancel={onCancelDelete}
+          onConfirm={onConfirmDelete}
+        />
+      ) : null}
+
+      {canManage && activeGuestListBooking ? (
+        <GuestListDialog
+          bookingId={activeGuestListBooking.id}
+          open
+          allowManualEntries
+          initialGuests={activeGuestListEntries}
+          saving={bookingUpdating}
+          onClose={onCloseGuestList}
+          onSave={(guests) => onSaveGuestList(activeGuestListBooking.id, guests)}
+        />
+      ) : null}
+    </>
+  );
 }
 
 const JanHusAdminPage: NextPageWithLayout = () => {
@@ -84,115 +585,19 @@ const JanHusAdminPage: NextPageWithLayout = () => {
 
   const [requestComments, setRequestComments] = useState<Record<string, string>>({});
   const [requestMessages, setRequestMessages] = useState<Record<string, string>>({});
-  const [pendingDelete, setPendingDelete] = useState<{ kind: "booking" | "request"; id: string } | undefined>();
-  const [bookingEdits, setBookingEdits] = useState<
-    Record<
-      string,
-      {
-        startsAt: string;
-        endsAt: string;
-        area: string;
-        status: string;
-        eventType: string;
-        cleaningRequested: boolean;
-        responsibleName: string;
-        responsibleEmail: string;
-        responsiblePhone: string;
-        bookerName: string;
-        bookerEmail: string;
-        bookerPhone: string;
-        depositStatus: string;
-        depositAmount: string;
-        priceOverrideTier: string;
-        priceOverrideAmount: string;
-        manuallyMarkedAsPaid: boolean;
-        guestListEntries: JanHusGuestListEntry[];
-        doorAccessPolicy: string;
-        organizationDoorAccess: string;
-        bookerUser: { id: string; displayName: string } | null;
-        responsibleUser: { id: string; displayName: string } | null;
-        comment: string;
-        adminComment: string;
-        bookerMessage: string;
-      }
-    >
-  >({});
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | undefined>();
+  const [bookingEdits, setBookingEdits] = useState<Record<string, BookingEdit>>({});
   const [activeGuestListBookingId, setActiveGuestListBookingId] = useState<string | undefined>();
   const [expandedBookingIds, setExpandedBookingIds] = useState<Record<string, boolean>>({});
 
-  const [requestDateFilter, setRequestDateFilter] = useState("");
-  const [requestAreaFilter, setRequestAreaFilter] = useState("ALL");
-  const [requestStatusFilter, setRequestStatusFilter] = useState("ALL");
-  const [requestEventTypeFilter, setRequestEventTypeFilter] = useState("ALL");
-  const [requestOwnerTypeFilter, setRequestOwnerTypeFilter] = useState<"ALL" | OwnerType>("ALL");
-  const [requestSortBy, setRequestSortBy] = useState<SortBy>("startsAt");
-  const [requestSortDirection, setRequestSortDirection] = useState<SortDirection>("asc");
-
-  const [bookingDateFilter, setBookingDateFilter] = useState("");
-  const [bookingAreaFilter, setBookingAreaFilter] = useState("ALL");
-  const [bookingStatusFilter, setBookingStatusFilter] = useState("ALL");
-  const [bookingEventTypeFilter, setBookingEventTypeFilter] = useState("ALL");
-  const [bookingOwnerTypeFilter, setBookingOwnerTypeFilter] = useState<"ALL" | OwnerType>("ALL");
-  const [bookingSortBy, setBookingSortBy] = useState<SortBy>("startsAt");
-  const [bookingSortDirection, setBookingSortDirection] = useState<SortDirection>("asc");
-
   useEffect(() => {
     const requests = requestsData?.janhusBookingRequests;
-    if (!requests) return;
-
-    setRequestComments((current) => {
-      const next = { ...current };
-      requests.forEach((request) => {
-        if (next[request.id] === undefined) {
-          next[request.id] = request.adminComment || "";
-        }
-      });
-      return next;
-    });
+    if (requests) setRequestComments((current) => mergeRequestComments(current, requests));
   }, [requestsData]);
 
   useEffect(() => {
     const bookingList = bookingsData?.adminJanhusBookings;
-    if (!bookingList) return;
-
-    setBookingEdits((current) => {
-      const next = { ...current };
-      bookingList.forEach((booking) => {
-        if (next[booking.id] === undefined) {
-          next[booking.id] = {
-            startsAt: toDateTimeInput(booking.startsAt),
-            endsAt: toDateTimeInput(booking.endsAt),
-            area: booking.area.id,
-            status: booking.status,
-            eventType: booking.eventType,
-            cleaningRequested: booking.cleaningRequested,
-            responsibleName: booking.responsibleName,
-            responsibleEmail: booking.responsibleEmail,
-            responsiblePhone: booking.responsiblePhone,
-            bookerName: booking.bookerName,
-            bookerEmail: booking.bookerEmail,
-            bookerPhone: booking.bookerPhone,
-            depositStatus: booking.depositStatus,
-            depositAmount: String(booking.depositAmount ?? 0),
-            priceOverrideTier: booking.priceOverrideTier ?? "",
-            priceOverrideAmount: booking.priceOverrideAmount != null ? String(booking.priceOverrideAmount) : "",
-            manuallyMarkedAsPaid: booking.manuallyMarkedAsPaid,
-            guestListEntries: (booking.guestListEntries ?? []).map((guest) => ({
-              feideUserId: guest.feideUserid,
-              displayName: guest.displayName,
-            })),
-            doorAccessPolicy: booking.doorAccessPolicy,
-            organizationDoorAccess: booking.organizationDoorAccess,
-            bookerUser: pickedUser(booking.bookerUser),
-            responsibleUser: pickedUser(booking.responsibleUser),
-            comment: booking.comment ?? "",
-            adminComment: booking.adminComment ?? "",
-            bookerMessage: booking.bookerMessage ?? "",
-          };
-        }
-      });
-      return next;
-    });
+    if (bookingList) setBookingEdits((current) => mergeBookingEdits(current, bookingList));
   }, [bookingsData]);
 
   const [reviewRequest, { loading: requestReviewing }] = useMutation(ReviewJanhusBookingRequestDocument, {
@@ -264,53 +669,10 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     [activeGuestListBookingId, bookings]
   );
 
-  const filteredRequests = useMemo(() => {
-    const sortFactor = requestSortDirection === "asc" ? 1 : -1;
-
-    return [...bookingRequests]
-      .filter((request) => {
-        if (requestDateFilter && toDateKey(request.startsAt) !== requestDateFilter) {
-          return false;
-        }
-        if (requestAreaFilter !== "ALL" && request.area.id !== requestAreaFilter) {
-          return false;
-        }
-        if (requestStatusFilter !== "ALL" && request.status !== requestStatusFilter) {
-          return false;
-        }
-        if (requestEventTypeFilter !== "ALL" && request.eventType !== requestEventTypeFilter) {
-          return false;
-        }
-        if (requestOwnerTypeFilter !== "ALL" && requestOwnerType(request) !== requestOwnerTypeFilter) {
-          return false;
-        }
-        return true;
-      })
-      .sort((a, b) => {
-        if (requestSortBy === "startsAt") {
-          return (new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime()) * sortFactor;
-        }
-        if (requestSortBy === "area") {
-          return a.area.name.localeCompare(b.area.name) * sortFactor;
-        }
-        if (requestSortBy === "eventType") {
-          return a.eventType.localeCompare(b.eventType) * sortFactor;
-        }
-        if (requestSortBy === "status") {
-          return a.status.localeCompare(b.status) * sortFactor;
-        }
-        return requestOwnerType(a).localeCompare(requestOwnerType(b)) * sortFactor;
-      });
-  }, [
-    bookingRequests,
-    requestAreaFilter,
-    requestDateFilter,
-    requestEventTypeFilter,
-    requestOwnerTypeFilter,
-    requestSortBy,
-    requestSortDirection,
-    requestStatusFilter,
-  ]);
+  const requestFilterState = useFilteredAdminRows(bookingRequests, requestOwnerType, "startsAt");
+  const bookingFilterState = useFilteredAdminRows(bookings, bookingOwnerType, "startsAt");
+  const filteredRequests = requestFilterState.filteredRows;
+  const filteredBookings = bookingFilterState.filteredRows;
 
   const openRequests = useMemo(
     () => filteredRequests.filter((request) => request.status !== "REJECTED" && !isPast(request.endsAt)),
@@ -321,54 +683,6 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     () => filteredRequests.filter((request) => request.status === "REJECTED" || isPast(request.endsAt)),
     [filteredRequests]
   );
-
-  const filteredBookings = useMemo(() => {
-    const sortFactor = bookingSortDirection === "asc" ? 1 : -1;
-
-    return [...bookings]
-      .filter((booking) => {
-        if (bookingDateFilter && toDateKey(booking.startsAt) !== bookingDateFilter) {
-          return false;
-        }
-        if (bookingAreaFilter !== "ALL" && booking.area.id !== bookingAreaFilter) {
-          return false;
-        }
-        if (bookingStatusFilter !== "ALL" && booking.status !== bookingStatusFilter) {
-          return false;
-        }
-        if (bookingEventTypeFilter !== "ALL" && booking.eventType !== bookingEventTypeFilter) {
-          return false;
-        }
-        if (bookingOwnerTypeFilter !== "ALL" && bookingOwnerType(booking) !== bookingOwnerTypeFilter) {
-          return false;
-        }
-        return true;
-      })
-      .sort((a, b) => {
-        if (bookingSortBy === "startsAt") {
-          return (new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime()) * sortFactor;
-        }
-        if (bookingSortBy === "area") {
-          return a.area.name.localeCompare(b.area.name) * sortFactor;
-        }
-        if (bookingSortBy === "eventType") {
-          return a.eventType.localeCompare(b.eventType) * sortFactor;
-        }
-        if (bookingSortBy === "status") {
-          return a.status.localeCompare(b.status) * sortFactor;
-        }
-        return bookingOwnerType(a).localeCompare(bookingOwnerType(b)) * sortFactor;
-      });
-  }, [
-    bookingAreaFilter,
-    bookingDateFilter,
-    bookingEventTypeFilter,
-    bookingOwnerTypeFilter,
-    bookingSortBy,
-    bookingSortDirection,
-    bookingStatusFilter,
-    bookings,
-  ]);
 
   const openBookings = useMemo(
     () => filteredBookings.filter((booking) => !isClosedBooking(booking)),
@@ -458,6 +772,20 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     }
   }
 
+  function handleSaveGuestList(bookingId: string, guests: JanHusGuestListEntry[]) {
+    setBookingEdits((current) => {
+      const currentBookingEdit = current[bookingId];
+      if (!currentBookingEdit) {
+        return current;
+      }
+      return {
+        ...current,
+        [bookingId]: { ...currentBookingEdit, guestListEntries: guests },
+      };
+    });
+    setActiveGuestListBookingId(undefined);
+  }
+
   return (
     <>
       <Title
@@ -478,7 +806,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
           },
         ]}
       />
-      <Container sx={{ py: 4 }}>
+      <Container sx={(theme) => ({ py: 4, ...adminPanelStyles(theme) })}>
         {canView ? (
           <>
             <Stack spacing={0.75} mb={3}>
@@ -518,219 +846,65 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                 </Box>
 
                 <TabPanel value={tabValue} index={0}>
-                  <Stack spacing={2} mt={2}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <Typography variant="h5">Bookingforespørsler</Typography>
-                      <Button variant="text" onClick={() => refetchRequests()}>
-                        Oppdater
-                      </Button>
-                    </Stack>
-
-                    <AdminFilters
-                      areas={areas}
-                      statusLabels={REQUEST_STATUS_LABELS}
-                      dateFilter={requestDateFilter}
-                      areaFilter={requestAreaFilter}
-                      ownerTypeFilter={requestOwnerTypeFilter}
-                      eventTypeFilter={requestEventTypeFilter}
-                      statusFilter={requestStatusFilter}
-                      sortBy={requestSortBy}
-                      sortDirection={requestSortDirection}
-                      onDateFilterChange={setRequestDateFilter}
-                      onAreaFilterChange={setRequestAreaFilter}
-                      onOwnerTypeFilterChange={setRequestOwnerTypeFilter}
-                      onEventTypeFilterChange={setRequestEventTypeFilter}
-                      onStatusFilterChange={setRequestStatusFilter}
-                      onSortByChange={setRequestSortBy}
-                      onSortDirectionChange={setRequestSortDirection}
-                    />
-
-                    {openRequests.length ? (
-                      <RequestList
-                        requests={openRequests}
-                        comments={requestComments}
-                        reviewing={requestReviewing}
-                        deleting={deletingRequest}
-                        onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
-                        messages={requestMessages}
-                        onMessageChange={(id, value) => setRequestMessages((prev) => ({ ...prev, [id]: value }))}
-                        onReview={handleReviewRequest}
-                        onDelete={(id) => setPendingDelete({ kind: "request", id })}
-                        readOnly={!canManage}
-                      />
-                    ) : (
-                      <Typography color="text.secondary">Ingen forespørsler å behandle.</Typography>
-                    )}
-
-                    {archivedRequests.length ? (
-                      <Accordion
-                        disableGutters
-                        elevation={0}
-                        variant="outlined"
-                        defaultExpanded={requestStatusFilter === "REJECTED"}
-                      >
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                          <Typography variant="subtitle1">
-                            Tidligere og avslåtte forespørsler ({archivedRequests.length})
-                          </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <RequestList
-                            requests={archivedRequests}
-                            comments={requestComments}
-                            reviewing={requestReviewing}
-                            deleting={deletingRequest}
-                            onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
-                            messages={requestMessages}
-                            onMessageChange={(id, value) => setRequestMessages((prev) => ({ ...prev, [id]: value }))}
-                            onReview={handleReviewRequest}
-                            onDelete={(id) => setPendingDelete({ kind: "request", id })}
-                            readOnly={!canManage}
-                          />
-                        </AccordionDetails>
-                      </Accordion>
-                    ) : null}
-                  </Stack>
+                  <BookingRequestTab
+                    areas={areas}
+                    filters={requestFilterState}
+                    openRequests={openRequests}
+                    archivedRequests={archivedRequests}
+                    comments={requestComments}
+                    messages={requestMessages}
+                    reviewing={requestReviewing}
+                    deleting={deletingRequest}
+                    readOnly={!canManage}
+                    onRefresh={() => refetchRequests()}
+                    onCommentChange={(id, value) => setRequestComments((current) => ({ ...current, [id]: value }))}
+                    onMessageChange={(id, value) => setRequestMessages((current) => ({ ...current, [id]: value }))}
+                    onReview={handleReviewRequest}
+                    onDelete={(id) => setPendingDelete({ kind: "request", id })}
+                  />
                 </TabPanel>
 
                 <TabPanel value={tabValue} index={1}>
-                  <Stack spacing={2} mt={2}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <Typography variant="h5">Bookinger</Typography>
-                      <Button variant="text" onClick={() => refetchBookings()}>
-                        Oppdater
-                      </Button>
-                    </Stack>
-
-                    <AvailabilityOverview areas={areas} bookings={bookings} />
-
-                    <AdminFilters
-                      areas={areas}
-                      statusLabels={BOOKING_STATUS_LABELS}
-                      dateFilter={bookingDateFilter}
-                      areaFilter={bookingAreaFilter}
-                      ownerTypeFilter={bookingOwnerTypeFilter}
-                      eventTypeFilter={bookingEventTypeFilter}
-                      statusFilter={bookingStatusFilter}
-                      sortBy={bookingSortBy}
-                      sortDirection={bookingSortDirection}
-                      onDateFilterChange={setBookingDateFilter}
-                      onAreaFilterChange={setBookingAreaFilter}
-                      onOwnerTypeFilterChange={setBookingOwnerTypeFilter}
-                      onEventTypeFilterChange={setBookingEventTypeFilter}
-                      onStatusFilterChange={setBookingStatusFilter}
-                      onSortByChange={setBookingSortBy}
-                      onSortDirectionChange={setBookingSortDirection}
-                    />
-
-                    {openBookings.length ? (
-                      <BookingList
-                        bookings={openBookings}
-                        areas={areas}
-                        edits={bookingEdits}
-                        setEdits={setBookingEdits}
-                        expanded={expandedBookingIds}
-                        setExpanded={setExpandedBookingIds}
-                        updating={bookingUpdating}
-                        deleting={deletingBooking}
-                        creatingPaymentProduct={creatingPaymentProduct}
-                        onSave={handleSaveBooking}
-                        onCreatePaymentProduct={handleCreatePaymentProduct}
-                        onDelete={(id) => setPendingDelete({ kind: "booking", id })}
-                        onOpenGuestList={setActiveGuestListBookingId}
-                        readOnly={!canManage}
-                      />
-                    ) : (
-                      <Typography color="text.secondary">Ingen aktive bookinger.</Typography>
-                    )}
-
-                    {archivedBookings.length ? (
-                      <Accordion
-                        disableGutters
-                        elevation={0}
-                        variant="outlined"
-                        defaultExpanded={["DECLINED", "CANCELLED"].includes(bookingStatusFilter)}
-                      >
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                          <Typography variant="subtitle1">
-                            Tidligere og avslåtte bookinger ({archivedBookings.length})
-                          </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <BookingList
-                            bookings={archivedBookings}
-                            areas={areas}
-                            edits={bookingEdits}
-                            setEdits={setBookingEdits}
-                            expanded={expandedBookingIds}
-                            setExpanded={setExpandedBookingIds}
-                            updating={bookingUpdating}
-                            deleting={deletingBooking}
-                            creatingPaymentProduct={creatingPaymentProduct}
-                            onSave={handleSaveBooking}
-                            onCreatePaymentProduct={handleCreatePaymentProduct}
-                            onDelete={(id) => setPendingDelete({ kind: "booking", id })}
-                            onOpenGuestList={setActiveGuestListBookingId}
-                            readOnly={!canManage}
-                          />
-                        </AccordionDetails>
-                      </Accordion>
-                    ) : null}
-                  </Stack>
+                  <BookingTab
+                    areas={areas}
+                    filters={bookingFilterState}
+                    bookings={bookings}
+                    openBookings={openBookings}
+                    archivedBookings={archivedBookings}
+                    edits={bookingEdits}
+                    setEdits={setBookingEdits}
+                    expandedBookingIds={expandedBookingIds}
+                    setExpandedBookingIds={setExpandedBookingIds}
+                    updating={bookingUpdating}
+                    deleting={deletingBooking}
+                    creatingPaymentProduct={creatingPaymentProduct}
+                    readOnly={!canManage}
+                    onRefresh={() => refetchBookings()}
+                    onSave={handleSaveBooking}
+                    onCreatePaymentProduct={handleCreatePaymentProduct}
+                    onDelete={(id) => setPendingDelete({ kind: "booking", id })}
+                    onOpenGuestList={setActiveGuestListBookingId}
+                  />
                 </TabPanel>
               </Box>
             </Box>
 
-            {canManage && pendingDelete ? (
-              <DeleteDialog
-                key={`${pendingDelete.kind}-${pendingDelete.id}`}
-                open
-                title={
-                  pendingDelete.kind === "booking"
-                    ? `Slette booking #${pendingDelete.id}?`
-                    : `Slette forespørsel #${pendingDelete.id}?`
-                }
-                description={
-                  pendingDelete.kind === "request"
-                    ? "Forespørselen slettes for godt, og bestilleren får ingen e-post. Vil du gi beskjed, bruk «Avvis»."
-                    : deletionIsMailed
-                      ? "Bookingen slettes for godt. Bestilleren og ansvarlig får en e-post om at den er slettet."
-                      : "Bookingen slettes for godt. Den er over, avslått eller kansellert, så ingen får e-post."
-                }
-                allowMessage={deletionIsMailed}
-                deleting={deletingBooking || deletingRequest}
-                onCancel={() => setPendingDelete(undefined)}
-                onConfirm={handleConfirmDelete}
-              />
-            ) : null}
-
-            {canManage && activeGuestListBooking ? (
-              <GuestListDialog
-                bookingId={activeGuestListBooking.id}
-                open={Boolean(activeGuestListBooking)}
-                allowManualEntries
-                initialGuests={bookingEdits[activeGuestListBooking.id]?.guestListEntries ?? []}
-                saving={bookingUpdating}
-                onClose={() => setActiveGuestListBookingId(undefined)}
-                onSave={(guests) => {
-                  setBookingEdits((current) => {
-                    const currentBookingEdit = current[activeGuestListBooking.id];
-                    if (!currentBookingEdit) {
-                      return current;
-                    }
-
-                    return {
-                      ...current,
-                      [activeGuestListBooking.id]: {
-                        ...currentBookingEdit,
-                        guestListEntries: guests,
-                      },
-                    };
-                  });
-                  setActiveGuestListBookingId(undefined);
-                }}
-              />
-            ) : null}
+            <JanHusAdminDialogs
+              canManage={canManage}
+              pendingDelete={pendingDelete}
+              deletionIsMailed={deletionIsMailed}
+              deletingBooking={deletingBooking}
+              deletingRequest={deletingRequest}
+              activeGuestListBooking={activeGuestListBooking}
+              activeGuestListEntries={
+                activeGuestListBooking ? (bookingEdits[activeGuestListBooking.id]?.guestListEntries ?? []) : []
+              }
+              bookingUpdating={bookingUpdating}
+              onCancelDelete={() => setPendingDelete(undefined)}
+              onConfirmDelete={handleConfirmDelete}
+              onCloseGuestList={() => setActiveGuestListBookingId(undefined)}
+              onSaveGuestList={handleSaveGuestList}
+            />
           </>
         ) : null}
       </Container>

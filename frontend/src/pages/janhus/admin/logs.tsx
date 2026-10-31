@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
+import { adminPanelStyles } from "@/components/pages/janhus/admin";
 import { Title } from "@/components/Title";
 import { DoorLogDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
@@ -187,7 +188,7 @@ const DoorLog: React.FC = () => {
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={(e) => {
-            setRowsPerPage(parseInt(e.target.value, 10));
+            setRowsPerPage(Number.parseInt(e.target.value, 10));
             setPage(0);
           }}
           rowsPerPageOptions={[25, 50, 100, 200]}
@@ -212,7 +213,7 @@ const JanHusDoorLogPage: NextPageWithLayout = () => {
           { name: "Dørlogg", href: "/janhus/admin/logs" },
         ]}
       />
-      <Container sx={{ py: 4 }}>
+      <Container sx={(theme) => ({ py: 4, ...adminPanelStyles(theme) })}>
         <PermissionRequired
           permission="nfc.view_door_log"
           fallback={<Alert severity="info">Du har ikke tilgang til dørloggen.</Alert>}
