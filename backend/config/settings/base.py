@@ -72,6 +72,7 @@ LOCAL_APPS = [
     "apps.janhus",
     "apps.events",
     "apps.nfc",
+    "apps.arx",
     "apps.organizations",
     "apps.users",
     "apps.forms",
@@ -113,6 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # MIDDLEWARE
 MIDDLEWARE = [
+    "apps.arx.middleware.ArxAlertMiddleware",
     "config.middleware.health.HealthcheckMiddleware",
     "django_alive.middleware.healthcheck_bypass_host_check",
     "django.middleware.security.SecurityMiddleware",
@@ -205,10 +207,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
 
 # NFC
-# Encrypts the door PINs stored in the database (a Fernet key). Generate one with
-# python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-# To change it: "new,old" (the first encrypts, all decrypt), then manage.py nfc_pin_key --reencrypt.
+# Encrypts the door PINs stored in the database (a Fernet key). Generate one
+# with
+# python -c "from cryptography.fernet import Fernet;
+# print(Fernet.generate_key().decode())"
+# To change it: "new,old" (the first encrypts, all decrypt),
+# then manage.py nfc_pin_key --reencrypt.
 NFC_PIN_ENCRYPTION_KEY = env("NFC_PIN_ENCRYPTION_KEY", default="")
+
+# ARX (JanHus door access). The backend holds no ARX credentials: the runner at
+# JanHus calls /arx-runner/v1/ with a token whose SHA-256 is listed here
+# (current, # next during a rotation). Without ARX_STATE_HMAC_KEY the runner
+# API answers 503 # and nothing is synced; the rest of the site is unaffected.
+# The runner IP allowlist # is set by superusers in Django admin
+# (ARX settings), not here.
+ARX_RUNNER_TOKEN_SHA256S = env.list("ARX_RUNNER_TOKEN_SHA256S", default=[])
+ARX_STATE_HMAC_KEY = env("ARX_STATE_HMAC_KEY", default="")
 
 
 # GRAPHENE

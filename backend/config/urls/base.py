@@ -27,5 +27,6 @@ urlpatterns = [
     path("ping", Ping.as_view()),
     path("-/", include("django_alive.urls")),
     path("ecommerce/", include("apps.ecommerce.urls")),
+    path("arx-runner/v1/", include("apps.arx.urls")),
     path("csrf/", csrf_exempt(csrf.csrf)),
 ]
