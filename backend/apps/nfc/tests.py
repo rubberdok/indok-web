@@ -1,15 +1,20 @@
 import json
+import sys
+from datetime import timedelta
 from io import StringIO
+from types import ModuleType, SimpleNamespace
+from unittest.mock import Mock, patch
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.management import CommandError, call_command
 from django.db import connection
 from django.test import SimpleTestCase, TestCase
 from django.test.utils import CaptureQueriesContext
+from django.utils import timezone
 
-from config.sentry.scrubbing import SENSITIVE_KEYS, scrub_event
+from config.sentry.scrubbing import SENSITIVE_KEYS, build_event_scrubber, scrub_event
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.users import UserFactory
 
@@ -20,6 +25,8 @@ from .models import (
     NfcSettings,
     get_or_create_nfc_settings,
     normalize_card_identifier,
+    pin_cipher,
+    validate_card_identifier,
 )
 
 User = get_user_model()
@@ -44,6 +51,28 @@ class NfcCardAssignmentModelTests(TestCase):
         card = NfcCard.objects.create(mifare_csn="1234567892")
         with self.assertRaises(ValidationError):
             NfcCardAssignment(card=card).full_clean()
+
+    def test_assignment_status_and_deleted_user_string(self):
+        card = NfcCard.objects.create(mifare_csn="1234567893")
+        assignment = NfcCardAssignment.objects.create(card=card, user=self.user)
+        self.assertTrue(assignment.is_active_assignment)
+        self.assertIn(self.user.username, str(assignment))
+
+        assignment.revoke(reason="Card replaced")
+        self.assertFalse(assignment.is_active_assignment)
+        self.user.delete()
+        assignment.refresh_from_db()
+        self.assertIn("(deleted user)", str(assignment))
+
+
+class NfcValidationTests(SimpleTestCase):
+    def test_card_identifier_length_is_capped(self):
+        with self.assertRaises(ValidationError):
+            validate_card_identifier("1" * 65)
+
+    def test_pin_cipher_requires_encryption_key(self):
+        with self.settings(NFC_PIN_ENCRYPTION_KEY=""), self.assertRaises(ImproperlyConfigured):
+            pin_cipher()
 
 
 class NfcAccessEventModelTests(TestCase):
@@ -125,10 +154,11 @@ class PinCodeTests(TestCase):
         self.assertEqual(assignment.pin_code, "9876")
 
     def test_invalid_pin_is_refused(self):
-        with self.assertRaises(ValidationError) as refused:
-            NfcCardAssignment(card=self.card, user=self.user, pin_code="98765")
-        # Sentry never rewrites exception text, so the message must not repeat what was typed
-        self.assertNotIn("98765", str(refused.exception))
+        for pin_code in ("98765", "١٢٣٤"):
+            with self.subTest(pin_code=pin_code), self.assertRaises(ValidationError) as refused:
+                NfcCardAssignment(card=self.card, user=self.user, pin_code=pin_code)
+            # Sentry never rewrites exception text, so the message must not repeat what was typed.
+            self.assertNotIn(pin_code, str(refused.exception))
 
 
 class PinKeyChangeTests(TestCase):
@@ -173,13 +203,19 @@ class PinKeyChangeTests(TestCase):
         report = self.run_command(f"{self.NEW},{self.OLD}")
         self.assertIn("0 on the first key, 1 on an older key, 0 unreadable", report)
 
+    def test_command_requires_a_key_and_reports_unreadable_pins(self):
+        with self.assertRaises(CommandError):
+            self.run_command("")
+        with self.assertRaises(CommandError):
+            self.run_command(self.NEW)
+
 
 class DoorLogQueryTests(ExtendedGraphQLTestCase):
     QUERY = """
         query {
             doorLog(limit: 10) {
                 total
-                events { eventType name isWebsiteUser holderKind personName mifareCsnReported }
+                events { eventType name isWebsiteUser holderKind personName mifareCsnReported cardFormat arxEvent }
             }
         }
     """
@@ -198,12 +234,41 @@ class DoorLogQueryTests(ExtendedGraphQLTestCase):
             event_type=NfcAccessEvent.EventType.ACCESS_DENIED,
             person_name="Kari Hand-Registrert",
             mifare_csn_reported="0987654321",
+            raw_payload={"card_format": "Mifare CSN", "name": "controller.access.card.invalid.standard"},
         )
 
     def test_needs_the_door_log_permission(self):
         self.assert_permission_error(self.query(self.QUERY, user=UserFactory()))
         self.client.logout()
         self.assert_permission_error(self.query(self.QUERY))
+
+    def test_door_log_filters_by_result_search_and_time(self):
+        response = self.query(
+            """
+                query DoorLog($since: DateTime, $until: DateTime) {
+                    doorLog(
+                        result: "ACCESS_GRANTED"
+                        search: "Ola"
+                        since: $since
+                        until: $until
+                        offset: 0
+                        limit: 1
+                    ) {
+                        total
+                        events { id }
+                    }
+                }
+            """,
+            user=self.viewer,
+            variables={
+                "since": (timezone.now() - timedelta(minutes=5)).isoformat(),
+                "until": (timezone.now() + timedelta(minutes=5)).isoformat(),
+            },
+        )
+        self.assertResponseNoErrors(response)
+        page = json.loads(response.content)["data"]["doorLog"]
+        self.assertEqual(page["total"], 1)
+        self.assertEqual(len(page["events"]), 1)
 
     def test_shows_website_name_first_and_arx_name_otherwise(self):
         response = self.query(self.QUERY, user=self.viewer)
@@ -212,6 +277,10 @@ class DoorLogQueryTests(ExtendedGraphQLTestCase):
         self.assertEqual(log["total"], 2)
         names = {(e["name"], e["isWebsiteUser"], e["holderKind"]) for e in log["events"]}
         self.assertEqual(names, {("Ola Nordmann", True, "USER"), ("Kari Hand-Registrert", False, "ARX_ONLY")})
+        arx_event = next(event for event in log["events"] if event["name"] == "Kari Hand-Registrert")
+        self.assertEqual(
+            (arx_event["cardFormat"], arx_event["arxEvent"]), ("Mifare CSN", "controller.access.card.invalid.standard")
+        )
 
     def test_names_cost_no_query_per_event(self):
         self.client.force_login(self.viewer, backend="django.contrib.auth.backends.ModelBackend")
@@ -244,6 +313,26 @@ class SentryScrubbingTests(SimpleTestCase):
             "exception": {"values": [{"stacktrace": {"frames": [dict(f) for f in frames]}}]},
             "breadcrumbs": {"values": [dict(c) for c in crumbs]},
         }
+
+    def test_build_event_scrubber_adds_sensitive_keys(self):
+        constructor = Mock(return_value="configured")
+        scrubber_module = SimpleNamespace(DEFAULT_DENYLIST=("password",), EventScrubber=constructor)
+        sentry_module = ModuleType("sentry_sdk")
+        sentry_module.__path__ = []
+        with patch.dict(sys.modules, {"sentry_sdk": sentry_module, "sentry_sdk.scrubber": scrubber_module}):
+            self.assertEqual(build_event_scrubber(), "configured")
+        kwargs = constructor.call_args.kwargs
+        self.assertIn("password", kwargs["denylist"])
+        self.assertTrue(set(SENSITIVE_KEYS).issubset(kwargs["denylist"]))
+        self.assertTrue(kwargs["recursive"])
+
+    def test_build_event_scrubber_falls_back_when_sdk_signature_is_incompatible(self):
+        scrubber_module = SimpleNamespace(DEFAULT_DENYLIST=(), EventScrubber=Mock(side_effect=TypeError))
+        sentry_module = ModuleType("sentry_sdk")
+        sentry_module.__path__ = []
+        with patch.dict(sys.modules, {"sentry_sdk": sentry_module, "sentry_sdk.scrubber": scrubber_module}):
+            with self.assertLogs("config.sentry.scrubbing", level="ERROR"):
+                self.assertIsNone(build_event_scrubber())
 
     def test_graphql_request_with_a_pin_loses_its_body_and_every_frame_local(self):
         body = {
@@ -296,6 +385,25 @@ class SentryScrubbingTests(SimpleTestCase):
         ]
         out = scrub_event(self.event("https://api.example.org/graphql/", None, (), crumbs))
         self.assertEqual(["data" in c for c in out["breadcrumbs"]["values"]], [False, True])
+
+    def test_sql_spans_and_sensitive_frames_are_scrubbed(self):
+        event = self.event(
+            "https://api.example.org/other/",
+            frames=[
+                {"module": "apps.arx.services.sync", "vars": {"pin": "1234"}},
+                {"module": "apps.events.views", "vars": {"safe": True}},
+            ],
+        )
+        event["spans"] = [
+            {"description": "SELECT * FROM arx_personsync WHERE external_id = %s", "data": {"id": "indok-1"}},
+            {"description": "SELECT * FROM events_event", "data": {"id": 2}},
+        ]
+        out = scrub_event(event)
+        frames = out["exception"]["values"][0]["stacktrace"]["frames"]
+        self.assertNotIn("vars", frames[0])
+        self.assertIn("vars", frames[1])
+        self.assertNotIn("data", out["spans"][0])
+        self.assertIn("data", out["spans"][1])
 
     def test_denylist_keys_are_lower_case(self):
         self.assertEqual(list(SENSITIVE_KEYS), [k.lower() for k in SENSITIVE_KEYS])

@@ -9,10 +9,10 @@ const OLD_CARD_IMAGE: string | null = null;
 const PLACEHOLDER = { light: "/img/rubberdok_logo_black.svg", dark: "/img/rubberdok_logo_white.svg" };
 
 type CardExampleProps = {
-  title: string;
-  label: string;
-  image: string | null;
-  instruction: string;
+  readonly title: string;
+  readonly label: string;
+  readonly image: string | null;
+  readonly instruction: string;
 };
 
 function CardExample({ title, label, image, instruction }: CardExampleProps) {

@@ -54,6 +54,40 @@ type UserNfcSettingsQuery = {
   nfcSelfServiceEnabled?: boolean | null;
 };
 
+function getCardNumberHelperText(
+  errorMessage: string | undefined,
+  hasRegisteredCard: boolean,
+  selfServiceEnabled: boolean
+): string {
+  if (errorMessage) {
+    return errorMessage;
+  }
+  if (hasRegisteredCard) {
+    return "Kontakt Rubberdøk for endring av kort.";
+  }
+  if (selfServiceEnabled) {
+    return "Sifrene etter «UID» på NTNU-kortet ditt. På eldre kort: de 10 sifrene etter «mS» eller «M».";
+  }
+  return "Egenregistrering av kortnummer er deaktivert.";
+}
+
+function getPinCodeHelperText(
+  errorMessage: string | undefined,
+  hasCard: boolean,
+  hasPin: boolean | null | undefined
+): string {
+  if (errorMessage) {
+    return errorMessage;
+  }
+  if (!hasCard) {
+    return "PIN-kode kan kun settes når du har et aktivt kort.";
+  }
+  if (hasPin) {
+    return "PIN-koden er satt. Skriv inn en ny PIN-kode for å endre den.";
+  }
+  return "Denne PIN-koden brukes til å låse opp JanHus, når du skal ha tilgang.";
+}
+
 export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
   const [submitError, setSubmitError] = useState<string | undefined>();
 
@@ -336,14 +370,11 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                   }}
                   inputProps={{ inputMode: "numeric" }}
                   error={Boolean(errors.nfcMifareCsn)}
-                  helperText={
-                    errors.nfcMifareCsn?.message ||
-                    (hasRegisteredMifareCsn
-                      ? "Kontakt Rubberdøk for endring av kort."
-                      : nfcSelfServiceEnabled
-                        ? "Sifrene etter «UID» på NTNU-kortet ditt. På eldre kort: de 10 sifrene etter «mS» eller «M»."
-                        : "Egenregistrering av kortnummer er deaktivert.")
-                  }
+                  helperText={getCardNumberHelperText(
+                    errors.nfcMifareCsn?.message,
+                    hasRegisteredMifareCsn,
+                    nfcSelfServiceEnabled
+                  )}
                   data-test-id={`${ID_PREFIX}nfcMifareCsnTextField`}
                 />
                 {!hasRegisteredMifareCsn && <CardNumberHelp />}
@@ -359,14 +390,11 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                   {...register("nfcPinCode")}
                   label="PIN-kode (4 sifre)"
                   error={Boolean(errors.nfcPinCode)}
-                  helperText={
-                    errors.nfcPinCode?.message ||
-                    (hasMifareCsnForPin
-                      ? data?.user?.nfcHasPin
-                        ? "PIN-koden er satt. Skriv inn en ny PIN-kode for å endre den."
-                        : "Denne PIN-koden brukes til å låse opp JanHus, når du skal ha tilgang."
-                      : "PIN-kode kan kun settes når du har et aktivt kort.")
-                  }
+                  helperText={getPinCodeHelperText(
+                    errors.nfcPinCode?.message,
+                    hasMifareCsnForPin,
+                    data?.user?.nfcHasPin
+                  )}
                   inputProps={{
                     inputMode: "numeric",
                     maxLength: 4,

@@ -8,9 +8,9 @@ from django.db.models import Q
 from django.utils import timezone
 
 # Per nå er det kun 10-digit MIFARE CSN, men vi skal over til DESFire kort i framtiden, usikker på situasjonen da.
-PIN_CODE_RE = re.compile(r"^[0-9]{4}$")
-MIFARE_CSN_10_DIGIT_RE = re.compile(r"^[0-9]{10}$")
-PRINTED_UID_RE = re.compile(r"^[0-9]{15,17}$")
+PIN_CODE_RE = re.compile(r"^\d{4}$", flags=re.ASCII)
+MIFARE_CSN_10_DIGIT_RE = re.compile(r"^\d{10}$", flags=re.ASCII)
+PRINTED_UID_RE = re.compile(r"^\d{15,17}$", flags=re.ASCII)
 CARD_NUMBER_SEPARATORS_RE = re.compile(r"[\s.\-]")
 MAX_CARD_IDENTIFIER_LENGTH = 64
 

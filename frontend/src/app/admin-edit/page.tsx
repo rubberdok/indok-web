@@ -70,6 +70,27 @@ function toErrorMessage(error: unknown, fallback: string): string {
   return fallback;
 }
 
+function formatAdminDate(value: string | null | undefined): string {
+  return value ? new Date(value).toLocaleString() : "";
+}
+
+function findSelectedMembership<T extends { user: { id: string } }>(
+  memberships: T[] | null | undefined,
+  userId: string | null | undefined
+): T | null {
+  if (!userId || !memberships) {
+    return null;
+  }
+  return memberships.find((membership) => membership.user.id === userId) ?? null;
+}
+
+function getAdminAccessDescription(canManageProfiles: boolean): string {
+  if (canManageProfiles) {
+    return "Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon. ";
+  }
+  return "NFC-modus: Her kan du kun søke opp bruker og oppdatere kortnummer/PIN.";
+}
+
 export default function AdminEditPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -523,10 +544,7 @@ export default function AdminEditPage() {
     await refetchMemberships();
   };
 
-  const selectedMembership =
-    selectedUser && membershipsData?.memberships
-      ? (membershipsData.memberships.find((membership) => membership.user.id === selectedUser.id) ?? null)
-      : null;
+  const selectedMembership = findSelectedMembership(membershipsData?.memberships, selectedUser?.id);
 
   if (loadingCapabilities) {
     return (
@@ -554,11 +572,7 @@ export default function AdminEditPage() {
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
       <Typography variant="h4">Generell bruker og Forening/Organisasjon administasjon</Typography>
-      <Alert severity="info">
-        {canManageProfiles
-          ? "Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon. "
-          : "NFC-modus: Her kan du kun søke opp bruker og oppdatere kortnummer/PIN."}
-      </Alert>
+      <Alert severity="info">{getAdminAccessDescription(canManageProfiles)}</Alert>
 
       <Card>
         <CardContent>
@@ -704,7 +718,7 @@ export default function AdminEditPage() {
                       <TextField
                         label="Sist innlogget"
                         fullWidth
-                        value={selectedUser.lastLogin ? new Date(selectedUser.lastLogin).toLocaleString() : ""}
+                        value={formatAdminDate(selectedUser.lastLogin)}
                         InputProps={{ readOnly: true }}
                       />
                     </Grid>
@@ -712,7 +726,7 @@ export default function AdminEditPage() {
                       <TextField
                         label="Opprettet"
                         fullWidth
-                        value={selectedUser.dateJoined ? new Date(selectedUser.dateJoined).toLocaleString() : ""}
+                        value={formatAdminDate(selectedUser.dateJoined)}
                         InputProps={{ readOnly: true }}
                       />
                     </Grid>
