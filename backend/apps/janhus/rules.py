@@ -8,18 +8,9 @@ from graphql import GraphQLError
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
-    JanHusBookingLevel,
     JanHusBookingSettings,
     JanHusBookingStatus,
-    JanHusOrganizationBookingLevel,
-    JanHusUserBookingLevel,
 )
-
-
-PRIORITY_LEVEL = "Priority Organization"
-ORGANIZATION_LEVEL = "Organization"
-GENERAL_LEVEL = "General User"
-EXTERNAL_LEVEL = "External Request"
 
 
 def get_or_create_settings() -> JanHusBookingSettings:
@@ -36,100 +27,6 @@ def ensure_default_areas() -> QuerySet[JanHusArea]:
     return JanHusArea.objects.filter(is_active=True)
 
 
-def ensure_default_levels(
-    settings: Optional[JanHusBookingSettings] = None,
-) -> dict[str, JanHusBookingLevel]:
-    settings = settings or get_or_create_settings()
-
-    default_levels = [
-        {
-            "name": PRIORITY_LEVEL,
-            "defaults": {
-                "description": "Highest non-admin priority level (Big Four equivalent)",
-                "priority": 300,
-                "can_book_anytime": True,
-                "can_create_provisional": False,
-                "can_create_confirmed": True,
-                "can_challenge_provisionals": True,
-                "booking_opens_weeks_before": None,
-            },
-        },
-        {
-            "name": ORGANIZATION_LEVEL,
-            "defaults": {
-                "description": "Default level for organizations",
-                "priority": 200,
-                "can_book_anytime": False,
-                "can_create_provisional": True,
-                "can_create_confirmed": True,
-                "can_challenge_provisionals": False,
-                "booking_opens_weeks_before": settings.organization_booking_opens_weeks_before,
-            },
-        },
-        {
-            "name": GENERAL_LEVEL,
-            "defaults": {
-                "description": "Default level for personal bookings",
-                "priority": 100,
-                "can_book_anytime": False,
-                "can_create_provisional": False,
-                "can_create_confirmed": True,
-                "can_challenge_provisionals": False,
-                "booking_opens_weeks_before": settings.general_booking_opens_weeks_before,
-            },
-        },
-        {
-            "name": EXTERNAL_LEVEL,
-            "defaults": {
-                "description": "External users without login",
-                "priority": 50,
-                "can_book_anytime": False,
-                "can_create_provisional": False,
-                "can_create_confirmed": False,
-                "can_challenge_provisionals": False,
-                "booking_opens_weeks_before": None,
-            },
-        },
-    ]
-
-    levels: dict[str, JanHusBookingLevel] = {}
-    for level in default_levels:
-        obj, _ = JanHusBookingLevel.objects.get_or_create(
-            name=level["name"], defaults=level["defaults"]
-        )
-        levels[obj.name] = obj
-
-    return levels
-
-
-def resolve_booking_level(
-    *, user, owner_organization, is_external_booking: bool
-) -> JanHusBookingLevel:
-    settings = get_or_create_settings()
-    levels = ensure_default_levels(settings)
-
-    if is_external_booking:
-        return levels[EXTERNAL_LEVEL]
-
-    if owner_organization:
-        assignment = (
-            JanHusOrganizationBookingLevel.objects.select_related("level")
-            .filter(organization=owner_organization)
-            .first()
-        )
-        return assignment.level if assignment else levels[ORGANIZATION_LEVEL]
-
-    if user and user.is_authenticated:
-        assignment = (
-            JanHusUserBookingLevel.objects.select_related("level")
-            .filter(user=user)
-            .first()
-        )
-        return assignment.level if assignment else levels[GENERAL_LEVEL]
-
-    raise GraphQLError("Could not determine booking level")
-
-
 def booking_weeks_in_advance(starts_at) -> float:
     now = timezone.now()
     return (starts_at - now).total_seconds() / (7 * 24 * 60 * 60)
@@ -137,95 +34,51 @@ def booking_weeks_in_advance(starts_at) -> float:
 
 def determine_initial_status(
     *,
-    booking_level: JanHusBookingLevel,
     starts_at,
+    owner_organization,
     is_external_booking: bool,
     settings: JanHusBookingSettings,
     requires_payment: bool = False,
 ) -> str:
     """
+    The status a new booking starts with, from the booking settings, so a change
+    there counts at once:
+
+    - External bookings wait for an admin.
+    - Organisation bookings are confirmed from `organization_booking_opens_weeks_before`
+      weeks ahead. Earlier ones are provisional.
+    - Personal bookings can be made at most `general_booking_opens_weeks_before`
+      weeks ahead.
+
     `requires_payment` marks a booking that nobody has paid for yet, which is every
     personal booking at the moment it is created. Those start PROVISIONAL and become
     CONFIRMED once payment lands, so the direct path cannot hand out a confirmed
     booking (and a contract) that the request path would have charged for.
 
-    Note this deliberately ignores `can_create_provisional`: that flag governs how
-    early a level may book, not whether it may wait for payment.
+    Booking levels (JanHusBookingLevel, assigned per user or organisation in Django
+    admin) used to decide this, and let a "Priority Organization" book any time and
+    move provisional bookings to admin review. They were removed in the commit
+    "refactor(janhus): fjern bookingnivåer" (git log --grep "fjern bookingnivåer").
+    To bring them back: revert that commit but keep its migration 0024, then run
+    makemigrations janhus, which makes the tables again in a new migration.
     """
-    status = _initial_status_for_level(
-        booking_level=booking_level,
-        starts_at=starts_at,
-        is_external_booking=is_external_booking,
-        settings=settings,
-    )
-
-    if requires_payment and status == JanHusBookingStatus.CONFIRMED:
-        return JanHusBookingStatus.PROVISIONAL
-
-    return status
-
-
-def _initial_status_for_level(
-    *,
-    booking_level: JanHusBookingLevel,
-    starts_at,
-    is_external_booking: bool,
-    settings: JanHusBookingSettings,
-) -> str:
     if is_external_booking:
         return JanHusBookingStatus.PENDING_ADMIN_REVIEW
 
-    if booking_level.can_book_anytime and booking_level.can_create_confirmed:
-        return JanHusBookingStatus.CONFIRMED
-
     weeks_in_advance = booking_weeks_in_advance(starts_at)
 
-    open_weeks = booking_level.booking_opens_weeks_before
-
-    if open_weeks is not None and weeks_in_advance > open_weeks:
-        if booking_level.can_create_provisional:
-            return JanHusBookingStatus.PROVISIONAL
-        raise GraphQLError("This booking level cannot create bookings this early")
-
-    if booking_level.can_create_confirmed:
-        return JanHusBookingStatus.CONFIRMED
-
-    if booking_level.can_create_provisional:
+    if owner_organization is None:
+        if weeks_in_advance > settings.general_booking_opens_weeks_before:
+            raise GraphQLError(
+                "Personal bookings can be made at most " f"{settings.general_booking_opens_weeks_before} weeks ahead"
+            )
+    elif weeks_in_advance > settings.organization_booking_opens_weeks_before:
         return JanHusBookingStatus.PROVISIONAL
 
-    raise GraphQLError("This booking level cannot create bookings")
+    if requires_payment:
+        return JanHusBookingStatus.PROVISIONAL
 
-
-def challenges_provisionals(
-    *,
-    booking_level: JanHusBookingLevel,
-    starts_at,
-    settings: JanHusBookingSettings,
-    provisionals=None,
-) -> bool:
-    """
-    Whether this level may push the given provisionals into admin review.
-
-    Only before the organization booking window opens: once everyone can book,
-    provisional reservations are settled and no longer challengeable. A level
-    can only challenge strictly lower-priority ones, so two levels with the same
-    priority leave each other alone.
-    """
-    if not booking_level.can_challenge_provisionals:
-        return False
-
-    weeks_in_advance = booking_weeks_in_advance(starts_at)
-    if weeks_in_advance <= settings.organization_booking_opens_weeks_before:
-        return False
-
-    if provisionals is None:
-        return True
-
-    return all(
-        provisional.booking_level is None
-        or provisional.booking_level.priority < booking_level.priority
-        for provisional in provisionals
-    )
+    return JanHusBookingStatus.CONFIRMED
 
 
 def get_conflicting_areas(area: JanHusArea) -> list:
@@ -268,29 +121,21 @@ def get_overlapping_bookings(
     return query
 
 
-def is_in_active_booking_semester(
-    *, target_date: date, settings: JanHusBookingSettings
-) -> bool:
+def is_in_active_booking_semester(*, target_date: date, settings: JanHusBookingSettings) -> bool:
     in_fall_semester = (
-        settings.fall_semester_active
-        and settings.fall_start_date <= target_date <= settings.fall_end_date
+        settings.fall_semester_active and settings.fall_start_date <= target_date <= settings.fall_end_date
     )
     in_spring_semester = (
-        settings.spring_semester_active
-        and settings.spring_start_date <= target_date <= settings.spring_end_date
+        settings.spring_semester_active and settings.spring_start_date <= target_date <= settings.spring_end_date
     )
     return in_fall_semester or in_spring_semester
 
 
-def validate_booking_semester_rules(
-    *, starts_at, ends_at, settings: JanHusBookingSettings
-):
+def validate_booking_semester_rules(*, starts_at, ends_at, settings: JanHusBookingSettings):
     if not settings.fall_semester_active and not settings.spring_semester_active:
         raise GraphQLError("None of the booking semesters are active.")
 
-    start_local = (
-        timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
-    )
+    start_local = timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
     end_local = timezone.localtime(ends_at) if timezone.is_aware(ends_at) else ends_at
 
     start_date = start_local.date()
@@ -341,20 +186,14 @@ def validate_time_rules(*, starts_at, ends_at, settings: JanHusBookingSettings):
     if duration_minutes % settings.slot_granularity_minutes != 0:
         raise GraphQLError("Booking duration must align with slot granularity")
 
-    start_local = (
-        timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
-    )
+    start_local = timezone.localtime(starts_at) if timezone.is_aware(starts_at) else starts_at
     end_local = timezone.localtime(ends_at) if timezone.is_aware(ends_at) else ends_at
 
-    window_start = start_local.replace(
-        hour=settings.opening_hour, minute=0, second=0, microsecond=0
-    )
+    window_start = start_local.replace(hour=settings.opening_hour, minute=0, second=0, microsecond=0)
     if settings.opening_hour == settings.closing_hour:
         window_end = window_start + timedelta(days=1)
     else:
-        window_end = start_local.replace(
-            hour=settings.closing_hour, minute=0, second=0, microsecond=0
-        )
+        window_end = start_local.replace(hour=settings.closing_hour, minute=0, second=0, microsecond=0)
         if settings.opening_hour >= settings.closing_hour:
             window_end += timedelta(days=1)
 
@@ -389,9 +228,7 @@ def validate_time_rules(*, starts_at, ends_at, settings: JanHusBookingSettings):
 
     current = starts_at
     while current < ends_at:
-        current_local = (
-            timezone.localtime(current) if timezone.is_aware(current) else current
-        )
+        current_local = timezone.localtime(current) if timezone.is_aware(current) else current
         if not _is_allowed_boundary(
             current_local.hour,
             current_local.minute,

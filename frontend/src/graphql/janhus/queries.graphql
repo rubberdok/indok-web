@@ -68,18 +68,6 @@ query JanHusAreas($includeInactive: Boolean) {
   }
 }
 
-query JanHusBookingLevels {
-  janhusBookingLevels {
-    ...JanHusBookingLevel
-  }
-}
-
-query JanHusMyBookingLevel {
-  janhusMyBookingLevel {
-    ...JanHusBookingLevel
-  }
-}
-
 query JanHusBookingRequests($status: String) {
   janhusBookingRequests(status: $status) {
     ...JanHusAdminBookingRequest

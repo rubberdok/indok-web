@@ -33,11 +33,9 @@ from apps.janhus.models import (
     JanHusOrganizationDoorAccess,
 )
 from apps.janhus.rules import (
-    challenges_provisionals,
     determine_initial_status,
     get_or_create_settings,
     get_overlapping_bookings,
-    resolve_booking_level,
     validate_booking_semester_rules,
     validate_time_rules,
 )
@@ -323,13 +321,11 @@ def _sync_existing_vipps_product(booking: JanHusBooking) -> None:
 
 
 OVERLAP_FIELD_DESCRIPTION = (
-    "Existing bookings this booking overlaps. Non-empty when an admin has "
-    "deliberately double-booked, or when provisional bookings were moved to "
-    "admin review."
+    "Existing bookings this booking overlaps. Non-empty when an admin has " "deliberately double-booked."
 )
 
 
-def _apply_overlap_rules(*, booking: JanHusBooking, booking_level, actor, settings, exclude_booking_id=None):
+def _apply_overlap_rules(*, booking: JanHusBooking, actor, settings, exclude_booking_id=None):
     validate_time_rules(starts_at=booking.starts_at, ends_at=booking.ends_at, settings=settings)
 
     overlaps = get_overlapping_bookings(
@@ -340,31 +336,17 @@ def _apply_overlap_rules(*, booking: JanHusBooking, booking_level, actor, settin
         settings=settings,
     )
 
-    displaced = []
     if not overlaps.exists():
-        return displaced
+        return []
 
     if _has_manage_booking_permission(actor):
         return list(overlaps)
 
-    blocking = overlaps.exclude(status=JanHusBookingStatus.PROVISIONAL)
-    if blocking.exists():
+    # The priority booking level could move provisional bookings to admin review here;
+    # see determine_initial_status for how it was removed.
+    if overlaps.exclude(status=JanHusBookingStatus.PROVISIONAL).exists():
         raise GraphQLError("The selected timeslot overlaps with an existing non-provisional booking")
-
-    provisionals = list(overlaps)
-    if not challenges_provisionals(
-        booking_level=booking_level,
-        starts_at=booking.starts_at,
-        settings=settings,
-        provisionals=provisionals,
-    ):
-        raise GraphQLError("Your booking level cannot challenge these provisional reservations")
-
-    displaced = list(overlaps)
-    overlaps.update(status=JanHusBookingStatus.PENDING_ADMIN_REVIEW)
-    booking.status = JanHusBookingStatus.PENDING_ADMIN_REVIEW
-
-    return displaced
+    raise GraphQLError("The selected timeslot overlaps with a provisional booking")
 
 
 class JanHusBookingInput(graphene.InputObjectType):
@@ -508,9 +490,13 @@ class CreateJanHusBooking(graphene.Mutation):
 
     def mutate(self, info, booking_data):
         actor = _get_actor(info)
+        # Everyone else sends a booking request (createJanhusBookingRequest), which a
+        # JanHus admin turns into a booking.
+        if not _has_manage_booking_permission(actor):
+            raise GraphQLError("JanHus booking admin permission required")
         settings = get_or_create_settings()
 
-        is_external_booking = bool(booking_data.get("is_external_booking", False) or not actor)
+        is_external_booking = bool(booking_data.get("is_external_booking", False))
         resolved_event_type = booking_data.get(
             "event_type",
             (JanHusEventType.EXTERNAL if is_external_booking else JanHusEventType.INTERNAL),
@@ -551,15 +537,9 @@ class CreateJanHusBooking(graphene.Mutation):
         if actor and not owner_user and not owner_organization and not is_external_booking:
             owner_user = actor
 
-        booking_level = resolve_booking_level(
-            user=owner_user or actor,
-            owner_organization=owner_organization,
-            is_external_booking=is_external_booking,
-        )
-
         status = determine_initial_status(
-            booking_level=booking_level,
             starts_at=booking_data["starts_at"],
+            owner_organization=owner_organization,
             is_external_booking=is_external_booking,
             settings=settings,
             requires_payment=not is_external_booking and owner_organization is None,
@@ -574,7 +554,6 @@ class CreateJanHusBooking(graphene.Mutation):
             status=status,
             owner_user=owner_user,
             owner_organization=owner_organization,
-            booking_level=booking_level,
             created_by_user=actor,
             booker_user=actor,
             is_external_booking=is_external_booking,
@@ -603,7 +582,6 @@ class CreateJanHusBooking(graphene.Mutation):
 
         overlapping = _apply_overlap_rules(
             booking=booking,
-            booking_level=booking_level,
             actor=actor,
             settings=settings,
         )
@@ -760,7 +738,6 @@ class UpdateJanHusBooking(graphene.Mutation):
         settings = get_or_create_settings()
         overlapping = _apply_overlap_rules(
             booking=booking,
-            booking_level=booking.booking_level,
             actor=actor,
             settings=settings,
             exclude_booking_id=booking.id,
@@ -941,15 +918,9 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
             settings = get_or_create_settings()
             is_external_booking = booking_request.requester_user is None
 
-            booking_level = resolve_booking_level(
-                user=booking_request.requester_user,
-                owner_organization=booking_request.owner_organization,
-                is_external_booking=is_external_booking,
-            )
-
             initial_status = determine_initial_status(
-                booking_level=booking_level,
                 starts_at=booking_request.starts_at,
+                owner_organization=booking_request.owner_organization,
                 is_external_booking=is_external_booking,
                 settings=settings,
             )
@@ -964,7 +935,6 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 area=booking_request.area,
                 owner_user=(booking_request.requester_user if not booking_request.owner_organization else None),
                 owner_organization=booking_request.owner_organization,
-                booking_level=booking_level,
                 created_by_user=actor,
                 booker_user=booking_request.requester_user,
                 is_external_booking=is_external_booking,
@@ -988,7 +958,6 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
             )
             overlapping = _apply_overlap_rules(
                 booking=created_booking,
-                booking_level=booking_level,
                 actor=actor,
                 settings=settings,
             )

@@ -18,7 +18,6 @@ from apps.janhus.resolvers import JanHusResolvers
 from apps.organizations.types import OrganizationType
 from apps.janhus.types import (
     JanHusAreaType,
-    JanHusBookingLevelType,
     JanHusBookingRequestType,
     JanHusBookingSettingsType,
     JanHusBookingType,
@@ -79,9 +78,6 @@ class JanHusQueries(graphene.ObjectType, JanHusResolvers):
 
     janhus_booking_settings = graphene.Field(JanHusBookingSettingsType)
     janhus_areas = graphene.List(NonNull(JanHusAreaType), include_inactive=graphene.Boolean(required=False))
-
-    janhus_booking_levels = graphene.List(NonNull(JanHusBookingLevelType))
-    janhus_my_booking_level = graphene.Field(JanHusBookingLevelType)
 
     janhus_booking_requests = graphene.List(
         NonNull(JanHusBookingRequestType),

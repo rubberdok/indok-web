@@ -74,77 +74,6 @@ class JanHusOrganizationDoorAccess(models.TextChoices):
     BOOKER_ONLY = "BOOKER_ONLY", "Only the booker"
 
 
-class JanHusBookingLevel(models.Model):
-    """
-    Configurable booking level.
-
-    Levels should be managed from Django admin by superusers/privileged admins.
-    """
-
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True, default="")
-    priority = models.PositiveIntegerField(default=0)
-
-    can_book_anytime = models.BooleanField(default=False)
-    can_create_provisional = models.BooleanField(default=False)
-    can_create_confirmed = models.BooleanField(default=True)
-    can_challenge_provisionals = models.BooleanField(default=False)
-
-    booking_opens_weeks_before = models.PositiveIntegerField(
-        null=True,
-        blank=True,
-        help_text="If empty, the level can create bookings all year according to its flags.",
-    )
-
-    class Meta:
-        ordering = ["-priority", "name"]
-        verbose_name = "JanHus booking level"
-        verbose_name_plural = "JanHus booking levels"
-
-    def __str__(self):
-        return self.name
-
-
-class JanHusUserBookingLevel(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="janhus_booking_level",
-    )
-    level = models.ForeignKey(
-        JanHusBookingLevel,
-        on_delete=models.CASCADE,
-        related_name="user_assignments",
-    )
-
-    class Meta:
-        verbose_name = "JanHus user booking level"
-        verbose_name_plural = "JanHus user booking levels"
-
-    def __str__(self):
-        return f"{self.user}: {self.level.name}"
-
-
-class JanHusOrganizationBookingLevel(models.Model):
-    organization = models.OneToOneField(
-        Organization,
-        on_delete=models.CASCADE,
-        related_name="janhus_booking_level",
-    )
-    level = models.ForeignKey(
-        JanHusBookingLevel,
-        on_delete=models.CASCADE,
-        related_name="organization_assignments",
-    )
-
-    class Meta:
-        verbose_name = "JanHus organization booking level"
-        verbose_name_plural = "JanHus organization booking levels"
-
-    def __str__(self):
-        return f"{self.organization}: {self.level.name}"
-
-
 class JanHusBookingSettings(models.Model):
     """
     Singleton-ish settings model for booking constraints and windows.
@@ -287,13 +216,6 @@ class JanHusBooking(models.Model):
         null=True,
         blank=True,
         related_name="janhus_bookings",
-    )
-    booking_level = models.ForeignKey(
-        JanHusBookingLevel,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="bookings",
     )
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

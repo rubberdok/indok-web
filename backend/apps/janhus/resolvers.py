@@ -19,9 +19,7 @@ from apps.janhus.permissions import (
 )
 from apps.janhus.rules import (
     ensure_default_areas,
-    ensure_default_levels,
     get_or_create_settings,
-    resolve_booking_level,
 )
 
 # Everything the admin and "my bookings" lists show of a booking, in one query.
@@ -29,7 +27,6 @@ BOOKING_LIST_RELATIONS = (
     "area",
     "owner_user",
     "owner_organization",
-    "booking_level",
     "vipps_product",
     "vipps_order",
     "booker_user",
@@ -246,17 +243,6 @@ class JanHusResolvers:
         if include_inactive:
             return JanHusArea.objects.all()
         return JanHusArea.objects.filter(is_active=True)
-
-    def resolve_janhus_booking_levels(self, info):
-        settings = get_or_create_settings()
-        levels = ensure_default_levels(settings)
-        return sorted(levels.values(), key=lambda level: (-level.priority, level.name))
-
-    def resolve_janhus_my_booking_level(self, info):
-        user = info.context.user
-        if not user.is_authenticated:
-            return None
-        return resolve_booking_level(user=user, owner_organization=None, is_external_booking=False)
 
     @permission_required(["janhus.manage_booking", "janhus.view_all_bookings"], any_perm=True)
     def resolve_janhus_booking_requests(self, root, **kwargs):

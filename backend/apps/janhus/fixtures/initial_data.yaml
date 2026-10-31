@@ -54,7 +54,6 @@
     status: CONFIRMED
     owner_user: 3
     owner_organization: null
-    booking_level: null
     created_by_user: 3
     is_external_booking: false
     booker_name: Eva Student Åsen
@@ -87,7 +86,6 @@
     status: CONFIRMED
     owner_user: null
     owner_organization: 19
-    booking_level: null
     created_by_user: 4
     is_external_booking: false
     booker_name: Bindeleddet
@@ -120,7 +118,6 @@
     status: PROVISIONAL
     owner_user: 2
     owner_organization: null
-    booking_level: null
     created_by_user: 2
     is_external_booking: false
     booker_name: Asbjørn ElevG Hansen
@@ -153,7 +150,6 @@
     status: PENDING_ADMIN_REVIEW
     owner_user: null
     owner_organization: null
-    booking_level: null
     created_by_user: null
     is_external_booking: true
     booker_name: External Booker

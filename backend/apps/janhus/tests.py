@@ -12,7 +12,7 @@ from graphql import GraphQLError
 
 from apps.ecommerce.models import Order
 from apps.janhus import mail
-from apps.janhus.mutations import _resolve_area
+from apps.janhus.mutations import _apply_overlap_rules, _resolve_area
 from apps.janhus.mail import (
     send_booking_confirmation,
     send_booking_declined,
@@ -23,14 +23,11 @@ from apps.janhus.mail import (
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
-    JanHusBookingLevel,
     JanHusBookingRequest,
     JanHusDepositStatus,
     JanHusBookingSettings,
     JanHusBookingStatus,
     JanHusEventType,
-    JanHusOrganizationBookingLevel,
-    JanHusUserBookingLevel,
 )
 from apps.janhus.permissions import (
     can_book_for_organization,
@@ -46,20 +43,13 @@ from apps.janhus.permissions import (
     normalize_phone_number,
 )
 from apps.janhus.rules import (
-    EXTERNAL_LEVEL,
-    GENERAL_LEVEL,
-    ORGANIZATION_LEVEL,
-    PRIORITY_LEVEL,
     booking_weeks_in_advance,
-    challenges_provisionals,
     determine_initial_status,
     ensure_default_areas,
-    ensure_default_levels,
     get_conflicting_areas,
     get_or_create_settings,
     get_overlapping_bookings,
     is_in_active_booking_semester,
-    resolve_booking_level,
     validate_booking_semester_rules,
     validate_time_rules,
 )
@@ -204,7 +194,9 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             content["data"]["createJanhusBookingRequest"]["bookingRequest"]["eventType"],
         )
 
-    def test_non_indok_user_cannot_create_non_external_booking(self):
+    def test_only_janhus_admins_may_create_a_booking_directly(self):
+        # Everyone else sends a booking request, which a JanHus admin turns into a booking. The
+        # request has the same rules (test_non_indok_user_cannot_create_non_external_booking_request).
         non_indok_user = UserFactory(is_indok=False)
 
         query = f"""
@@ -228,22 +220,28 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             }}
         """
 
-        response = self.query(query, user=non_indok_user)
-        self.assertResponseHasErrors(response)
+        for label, user in [("not from Indøk", non_indok_user), ("from Indøk", self.user), ("not logged in", None)]:
+            with self.subTest(label):
+                self.client.logout()
+                response = self.query(query, user=user)
+                self.assertResponseHasErrors(response)
+                content = json.loads(response.content)
+                self.assertIn("JanHus booking admin permission required", content["errors"][0]["message"])
+        self.assertFalse(JanHusBooking.objects.exists())
 
-        content = json.loads(response.content)
-        self.assertIn("Only Indøk students", content["errors"][0]["message"])
-
-    def test_create_booking_rejects_private_event_type_when_disabled(self):
+    def test_create_booking_request_rejects_private_event_type_when_disabled(self):
         JanHusBookingSettings.objects.create(private_bookings_enabled=False)
 
         query = f"""
             mutation {{
-              createJanhusBooking(
-                bookingData: {{
+              createJanhusBookingRequest(
+                requestData: {{
                   startsAt: "{self.start_dt.isoformat()}"
                   endsAt: "{self.end_dt.isoformat()}"
                   area: "{self.first_floor_area.id}"
+                  requesterName: "Indok User"
+                  requesterEmail: "indok@example.com"
+                  requesterPhone: "41234567"
                   responsibleName: "Indok User"
                   responsibleEmail: "indok@example.com"
                   responsiblePhone: "41234567"
@@ -251,9 +249,6 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 }}
               ) {{
                 ok
-                booking {{
-                  id
-                }}
               }}
             }}
         """
@@ -263,6 +258,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
 
         content = json.loads(response.content)
         self.assertIn("Private JanHus-bookinger er midlertidig deaktivert", content["errors"][0]["message"])
+        self.assertFalse(JanHusBookingRequest.objects.exists())
 
     def test_with_private_bookings_off_organisation_leaders_book_for_the_organisation(self):
         JanHusBookingSettings.objects.create(private_bookings_enabled=False)
@@ -307,7 +303,9 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
             """,
             user=self.user,
         )
+        # and a booking made directly is for JanHus admins only
         self.assertResponseHasErrors(direct)
+        self.assertIn("JanHus booking admin permission required", json.loads(direct.content)["errors"][0]["message"])
 
     def test_create_booking_request_rejects_external_event_type_when_disabled(self):
         JanHusBookingSettings.objects.create(external_bookings_enabled=False)
@@ -839,32 +837,41 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         booking.refresh_from_db()
         self.assertEqual(Decimal("400"), booking.total_price)
 
-    def test_create_booking_and_block_overlap(self):
-        create_booking_query = f"""
-            mutation {{
-              createJanhusBooking(
-                bookingData: {{
-                  startsAt: \"{self.start_dt.isoformat()}\"
-                  endsAt: \"{self.end_dt.isoformat()}\"
-                  area: \"{self.entire_house_area.id}\"
-                  responsibleName: \"Test User\"
-                  responsibleEmail: \"test.user@example.com\"
-                  responsiblePhone: \"41234567\"
-                  eventType: \"PRIVATE\"
-                  cleaningRequested: false
-                  comment: \"Test booking\"
-                }}
-              ) {{
-                ok
-                booking {{
-                  id
-                  status
-                }}
-              }}
-            }}
-        """
+    def test_an_admins_direct_booking_shows_what_it_overlaps(self):
+        self.add_booking_permission(self.user)
 
-        response = self.query(create_booking_query, user=self.user)
+        def create(area, responsible_email):
+            return self.query(
+                f"""
+                mutation {{
+                  createJanhusBooking(
+                    bookingData: {{
+                      startsAt: \"{self.start_dt.isoformat()}\"
+                      endsAt: \"{self.end_dt.isoformat()}\"
+                      area: \"{area.id}\"
+                      responsibleName: \"Test User\"
+                      responsibleEmail: \"{responsible_email}\"
+                      responsiblePhone: \"41234567\"
+                      eventType: \"PRIVATE\"
+                      cleaningRequested: false
+                      comment: \"Test booking\"
+                    }}
+                  ) {{
+                    ok
+                    booking {{
+                      id
+                      status
+                    }}
+                    overlappingBookings {{
+                      id
+                    }}
+                  }}
+                }}
+                """,
+                user=self.user,
+            )
+
+        response = create(self.entire_house_area, "test.user@example.com")
         self.assertResponseNoErrors(response)
 
         booking = JanHusBooking.objects.first()
@@ -872,29 +879,11 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
         self.assertEqual(self.user.id, booking.owner_user_id)
 
-        overlap_query = f"""
-            mutation {{
-              createJanhusBooking(
-                bookingData: {{
-                  startsAt: \"{self.start_dt.isoformat()}\"
-                  endsAt: \"{self.end_dt.isoformat()}\"
-                  area: \"{self.first_floor_area.id}\"
-                  responsibleName: \"Other User\"
-                  responsibleEmail: \"other.user@example.com\"
-                  responsiblePhone: \"42222222\"
-                  eventType: \"PRIVATE\"
-                }}
-              ) {{
-                ok
-                booking {{
-                  id
-                }}
-              }}
-            }}
-        """
-
-        overlap_response = self.query(overlap_query, user=self.other_user)
-        self.assertResponseHasErrors(overlap_response)
+        # an admin may double-book on purpose; the answer says what it overlaps
+        overlap_response = create(self.first_floor_area, "other.user@example.com")
+        self.assertResponseNoErrors(overlap_response)
+        overlapping = json.loads(overlap_response.content)["data"]["createJanhusBooking"]["overlappingBookings"]
+        self.assertEqual([{"id": str(booking.id)}], overlapping)
 
     def test_create_booking_request_rejects_multi_day_window(self):
         JanHusBookingSettings.objects.create(
@@ -1393,28 +1382,28 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                     JanHusBookingRequest.objects.filter(owner_organization=organization).exists(),
                 )
 
-    def test_create_booking_rejects_organization_member_without_hr_group(self):
+    def test_create_booking_request_rejects_organization_member_without_hr_group(self):
         organization = OrganizationFactory()
         plain_member = UserFactory(is_indok=True)
         MembershipFactory(organization=organization, user=plain_member, group=None)
 
         query = f"""
             mutation {{
-              createJanhusBooking(
-                bookingData: {{
+              createJanhusBookingRequest(
+                requestData: {{
                   startsAt: "{self.start_dt.isoformat()}"
                   endsAt: "{self.end_dt.isoformat()}"
                   area: "{self.first_floor_area.id}"
                   ownerOrganizationId: "{organization.id}"
+                  requesterName: "Indok User"
+                  requesterEmail: "indok@example.com"
+                  requesterPhone: "41234567"
                   responsibleName: "Responsible User"
                   responsibleEmail: "responsible@example.com"
                   responsiblePhone: "41234567"
                 }}
               ) {{
                 ok
-                booking {{
-                  id
-                }}
               }}
             }}
         """
@@ -1422,7 +1411,7 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         response = self.query(query, user=plain_member)
 
         self.assertResponseHasErrors(response)
-        self.assertFalse(JanHusBooking.objects.filter(owner_organization=organization).exists())
+        self.assertFalse(JanHusBookingRequest.objects.filter(owner_organization=organization).exists())
 
     def test_create_booking_request_rejects_cleaning_when_option_disabled(self):
         JanHusBookingSettings.objects.create(cleaning_option_enabled=False)
@@ -2294,7 +2283,6 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
             ends_at=self.end_dt,
             area=self.first_floor_area,
             owner_user=self.user,
-            booking_level=ensure_default_levels()[GENERAL_LEVEL],
             responsible_name="Test User",
             responsible_email="test.user@example.com",
             responsible_phone="41234567",
@@ -2325,7 +2313,6 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
             ends_at=self.end_dt,
             area=self.first_floor_area,
             owner_user=self.user,
-            booking_level=ensure_default_levels()[GENERAL_LEVEL],
             responsible_name="Test User",
             responsible_email="test.user@example.com",
             responsible_phone="41234567",
@@ -2480,7 +2467,6 @@ class JanHusMailTestCase(TestCase):
 class JanHusRulesTestCase(TestCase):
     def setUp(self) -> None:
         self.settings = get_or_create_settings()
-        self.levels = ensure_default_levels(self.settings)
         self.entire_house, _ = JanHusArea.objects.get_or_create(name="Hele huset")
         self.first_floor, _ = JanHusArea.objects.get_or_create(name="1. etasje", defaults={"parent": self.entire_house})
         self.second_floor, _ = JanHusArea.objects.get_or_create(
@@ -2504,82 +2490,75 @@ class JanHusRulesTestCase(TestCase):
             status=status or JanHusBookingStatus.CONFIRMED,
         )
 
-    def test_booking_level_is_resolved_from_owner_and_assignment(self):
-        user = UserFactory(is_indok=True)
+    def test_initial_status_depends_on_the_owner_and_how_far_ahead_the_booking_is(self):
+        # The defaults: personal bookings open 4 weeks ahead, organisation bookings are confirmed from 6.
         organization = OrganizationFactory()
-        assigned_user = UserFactory(is_indok=True)
-        assigned_organization = OrganizationFactory()
-        JanHusUserBookingLevel.objects.create(user=assigned_user, level=self.levels[PRIORITY_LEVEL])
-        JanHusOrganizationBookingLevel.objects.create(
-            organization=assigned_organization, level=self.levels[PRIORITY_LEVEL]
-        )
-
         cases = [
-            ("external", user, None, True, EXTERNAL_LEVEL),
-            ("organization default", None, organization, False, ORGANIZATION_LEVEL),
-            ("organization assigned", None, assigned_organization, False, PRIORITY_LEVEL),
-            ("user default", user, None, False, GENERAL_LEVEL),
-            ("user assigned", assigned_user, None, False, PRIORITY_LEVEL),
+            ("external needs review", None, 14, True, False, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
+            ("personal inside the window", None, 14, False, False, JanHusBookingStatus.CONFIRMED),
+            ("personal waits for payment", None, 14, False, True, JanHusBookingStatus.PROVISIONAL),
+            ("organisation inside the window", organization, 14, False, False, JanHusBookingStatus.CONFIRMED),
+            ("organisation too early holds", organization, 70, False, False, JanHusBookingStatus.PROVISIONAL),
         ]
 
-        for label, owner, organization_owner, is_external, expected in cases:
+        for label, owner_organization, days, is_external, requires_payment, expected in cases:
             with self.subTest(case=label):
-                level = resolve_booking_level(
-                    user=owner,
-                    owner_organization=organization_owner,
-                    is_external_booking=is_external,
-                )
-                self.assertEqual(self.levels[expected], level)
-
-    def test_internal_booking_without_user_or_organization_is_rejected(self):
-        with self.assertRaises(GraphQLError):
-            resolve_booking_level(user=None, owner_organization=None, is_external_booking=False)
-
-    def test_initial_status_depends_on_level_and_how_far_ahead_the_booking_is(self):
-        # General opens 4 weeks ahead, organization 6.
-        cases = [
-            ("external needs review", EXTERNAL_LEVEL, 14, True, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
-            ("priority confirms anytime", PRIORITY_LEVEL, 365, False, JanHusBookingStatus.CONFIRMED),
-            ("inside the window confirms", GENERAL_LEVEL, 14, False, JanHusBookingStatus.CONFIRMED),
-            ("organization too early holds", ORGANIZATION_LEVEL, 70, False, JanHusBookingStatus.PROVISIONAL),
-        ]
-
-        for label, level, days, is_external, expected in cases:
-            with self.subTest(case=label):
-                status = determine_initial_status(
-                    booking_level=self.levels[level],
+                initial_status = determine_initial_status(
                     starts_at=self._at(days=days),
+                    owner_organization=owner_organization,
                     is_external_booking=is_external,
                     settings=self.settings,
+                    requires_payment=requires_payment,
                 )
-                self.assertEqual(expected, status)
+                self.assertEqual(expected, initial_status)
 
-    def test_a_level_that_cannot_hold_provisionals_may_not_book_early(self):
+    def test_personal_bookings_may_not_be_made_before_their_window(self):
         with self.assertRaises(GraphQLError):
             determine_initial_status(
-                booking_level=self.levels[GENERAL_LEVEL],
                 starts_at=self._at(days=70),
+                owner_organization=None,
                 is_external_booking=False,
                 settings=self.settings,
             )
 
-    def test_provisionals_are_only_overridable_by_priority_levels_booking_early(self):
-        cases = [
-            ("priority, before the organization window", PRIORITY_LEVEL, 70, True),
-            ("priority, inside the window", PRIORITY_LEVEL, 14, False),
-            ("organization has no override rights", ORGANIZATION_LEVEL, 70, False),
-        ]
+    def test_the_windows_follow_the_settings(self):
+        # The values used in production on 2026-10-31. A change counts at once.
+        self.settings.organization_booking_opens_weeks_before = 30
+        self.settings.general_booking_opens_weeks_before = 4
+        self.settings.save()
+        organization = OrganizationFactory()
 
-        for label, level, days, expected in cases:
-            with self.subTest(case=label):
-                self.assertEqual(
-                    expected,
-                    challenges_provisionals(
-                        booking_level=self.levels[level],
-                        starts_at=self._at(days=days),
-                        settings=self.settings,
-                    ),
-                )
+        def initial_status(days, owner_organization=None):
+            return determine_initial_status(
+                starts_at=self._at(days=days),
+                owner_organization=owner_organization,
+                is_external_booking=False,
+                settings=self.settings,
+            )
+
+        self.assertEqual(JanHusBookingStatus.CONFIRMED, initial_status(29 * 7, organization))
+        self.assertEqual(JanHusBookingStatus.PROVISIONAL, initial_status(31 * 7, organization))
+        with self.assertRaises(GraphQLError):
+            initial_status(5 * 7)
+
+        self.settings.general_booking_opens_weeks_before = 6
+        self.settings.save()
+        self.assertEqual(JanHusBookingStatus.CONFIRMED, initial_status(5 * 7))
+
+    def test_only_janhus_admins_may_book_over_another_booking(self):
+        existing = self._booking(area=self.first_floor, status=JanHusBookingStatus.PROVISIONAL)
+
+        def over_it():
+            return JanHusBooking(starts_at=existing.starts_at, ends_at=existing.ends_at, area=self.entire_house)
+
+        # Nobody moves a provisional booking to admin review any more: that was the priority booking level.
+        with self.assertRaises(GraphQLError):
+            _apply_overlap_rules(booking=over_it(), actor=UserFactory(is_indok=True), settings=self.settings)
+        existing.refresh_from_db()
+        self.assertEqual(JanHusBookingStatus.PROVISIONAL, existing.status)
+
+        admin = UserFactory(is_indok=True, is_superuser=True)
+        self.assertEqual([existing], _apply_overlap_rules(booking=over_it(), actor=admin, settings=self.settings))
 
     def test_overlap_covers_the_area_tree_but_not_siblings_or_dead_bookings(self):
         booking = self._booking(area=self.first_floor)
@@ -2712,45 +2691,6 @@ class JanHusRulesTestCase(TestCase):
 
         self.settings.buffer_minutes = 60
         self.settings.full_clean()
-
-    def test_a_level_only_challenges_strictly_lower_priorities(self):
-        far_ahead = self._at(days=70)
-        priority = self.levels[PRIORITY_LEVEL]
-
-        def provisional_at(level):
-            booking = self._booking(area=self.first_floor, status=JanHusBookingStatus.PROVISIONAL)
-            booking.booking_level = level
-            booking.save(update_fields=["booking_level"])
-            return booking
-
-        lower = provisional_at(self.levels[ORGANIZATION_LEVEL])
-        same = provisional_at(priority)
-
-        self.assertTrue(
-            challenges_provisionals(
-                booking_level=priority,
-                starts_at=far_ahead,
-                settings=self.settings,
-                provisionals=[lower],
-            )
-        )
-
-        self.assertFalse(
-            challenges_provisionals(
-                booking_level=priority,
-                starts_at=far_ahead,
-                settings=self.settings,
-                provisionals=[same],
-            )
-        )
-        self.assertFalse(
-            challenges_provisionals(
-                booking_level=priority,
-                starts_at=far_ahead,
-                settings=self.settings,
-                provisionals=[lower, same],
-            )
-        )
 
 
 class JanHusPermissionsTestCase(TestCase):
@@ -3185,7 +3125,7 @@ class JanHusDoorAccessFieldsTestCase(JanHusBaseTestCase):
         query = """
             query {
               adminJanhusBookings {
-                id area { id } ownerUser { id } ownerOrganization { id } bookingLevel { id }
+                id area { id } ownerUser { id } ownerOrganization { id }
                 bookerUser { id } responsibleUser { id } guestListEntries { displayName }
                 bookerEmail responsibleEmail doorAccessWarnings
               }

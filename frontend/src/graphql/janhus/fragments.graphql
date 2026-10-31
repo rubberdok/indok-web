@@ -33,11 +33,6 @@ fragment JanHusBooking on JanHusBookingType {
     id
     name
   }
-  bookingLevel {
-    id
-    name
-    priority
-  }
   isExternalBooking
   bookerName
   bookerEmail
@@ -171,16 +166,4 @@ fragment JanHusArea on JanHusAreaType {
   cleaningFee
   defaultDepositAmount
   conflictingAreaIds
-}
-
-fragment JanHusBookingLevel on JanHusBookingLevelType {
-  id
-  name
-  description
-  priority
-  canBookAnytime
-  canCreateProvisional
-  canCreateConfirmed
-  canChallengeProvisionals
-  bookingOpensWeeksBefore
 }

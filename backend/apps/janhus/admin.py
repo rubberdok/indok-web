@@ -3,11 +3,8 @@ from django.contrib import admin
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
-    JanHusBookingLevel,
     JanHusBookingRequest,
     JanHusBookingSettings,
-    JanHusOrganizationBookingLevel,
-    JanHusUserBookingLevel,
 )
 
 
@@ -45,7 +42,6 @@ class JanHusBookingAdmin(admin.ModelAdmin):
     raw_id_fields = (
         "owner_user",
         "owner_organization",
-        "booking_level",
         "created_by_user",
         "booker_user",
         "responsible_user",
@@ -75,45 +71,6 @@ class JanHusBookingRequestAdmin(admin.ModelAdmin):
     )
     raw_id_fields = ("requester_user", "owner_organization", "converted_booking", "area")
     list_select_related = ("area", "requester_user", "owner_organization")
-
-
-@admin.register(JanHusBookingLevel)
-class JanHusBookingLevelAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "priority",
-        "can_book_anytime",
-        "can_create_provisional",
-        "can_create_confirmed",
-        "can_challenge_provisionals",
-        "booking_opens_weeks_before",
-    )
-    list_filter = (
-        "can_book_anytime",
-        "can_create_provisional",
-        "can_create_confirmed",
-        "can_challenge_provisionals",
-    )
-    search_fields = ("name", "description")
-
-
-@admin.register(JanHusUserBookingLevel)
-class JanHusUserBookingLevelAdmin(admin.ModelAdmin):
-    list_display = ("user", "level")
-    search_fields = (
-        "user__username",
-        "user__first_name",
-        "user__last_name",
-        "level__name",
-    )
-    raw_id_fields = ("user", "level")
-
-
-@admin.register(JanHusOrganizationBookingLevel)
-class JanHusOrganizationBookingLevelAdmin(admin.ModelAdmin):
-    list_display = ("organization", "level")
-    search_fields = ("organization__name", "level__name")
-    raw_id_fields = ("organization", "level")
 
 
 @admin.register(JanHusBookingSettings)

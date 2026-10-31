@@ -217,9 +217,9 @@ NFC_PIN_ENCRYPTION_KEY = env("NFC_PIN_ENCRYPTION_KEY", default="")
 
 # ARX (JanHus door access). The backend holds no ARX credentials: the runner at
 # JanHus calls /arx-runner/v1/ with a token whose SHA-256 is listed here
-# (current, # next during a rotation). Without ARX_STATE_HMAC_KEY the runner
-# API answers 503 # and nothing is synced; the rest of the site is unaffected.
-# The runner IP allowlist # is set by superusers in Django admin
+# (current, next during a rotation). Without ARX_STATE_HMAC_KEY the runner
+# API answers 503 and nothing is synced; the rest of the site is unaffected.
+# The runner IP allowlist is set by superusers in Django admin
 # (ARX settings), not here.
 ARX_RUNNER_TOKEN_SHA256S = env.list("ARX_RUNNER_TOKEN_SHA256S", default=[])
 ARX_STATE_HMAC_KEY = env("ARX_STATE_HMAC_KEY", default="")

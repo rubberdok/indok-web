@@ -8,12 +8,9 @@ from apps.janhus.permissions import can_view_booking_details, has_view_all_booki
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
-    JanHusBookingLevel,
     JanHusBookingRequest,
     JanHusBookingSettings,
     JanHusBookingStatus,
-    JanHusOrganizationBookingLevel,
-    JanHusUserBookingLevel,
 )
 
 
@@ -155,21 +152,6 @@ class JanHusBookingRequestType(DjangoObjectType):
         if not has_view_all_bookings_permission(info.context.user):
             raise PermissionDenied(ADMIN_ONLY_MESSAGE)
         return parent.admin_comment
-
-
-class JanHusBookingLevelType(DjangoObjectType):
-    class Meta:
-        model = JanHusBookingLevel
-
-
-class JanHusUserBookingLevelType(DjangoObjectType):
-    class Meta:
-        model = JanHusUserBookingLevel
-
-
-class JanHusOrganizationBookingLevelType(DjangoObjectType):
-    class Meta:
-        model = JanHusOrganizationBookingLevel
 
 
 class JanHusBookingSettingsType(DjangoObjectType):

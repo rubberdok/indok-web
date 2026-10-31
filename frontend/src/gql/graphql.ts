@@ -340,7 +340,7 @@ export type CreateJanHusBooking = {
   __typename?: 'CreateJanHusBooking';
   booking: Maybe<JanHusBookingType>;
   ok: Maybe<Scalars['Boolean']['output']>;
-  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review. */
+  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked. */
   overlappingBookings: Maybe<Array<JanHusBookingType>>;
 };
 
@@ -694,23 +694,6 @@ export type JanHusBookingInput = {
   startsAt: Scalars['DateTime']['input'];
 };
 
-export type JanHusBookingLevelType = {
-  __typename?: 'JanHusBookingLevelType';
-  /** If empty, the level can create bookings all year according to its flags. */
-  bookingOpensWeeksBefore: Maybe<Scalars['Int']['output']>;
-  bookings: Array<JanHusBookingType>;
-  canBookAnytime: Scalars['Boolean']['output'];
-  canChallengeProvisionals: Scalars['Boolean']['output'];
-  canCreateConfirmed: Scalars['Boolean']['output'];
-  canCreateProvisional: Scalars['Boolean']['output'];
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  organizationAssignments: Array<JanHusOrganizationBookingLevelType>;
-  priority: Scalars['Int']['output'];
-  userAssignments: Array<JanHusUserBookingLevelType>;
-};
-
 export type JanHusBookingRequestInput = {
   area: Scalars['ID']['input'];
   cleaningRequested: InputMaybe<Scalars['Boolean']['input']>;
@@ -807,7 +790,6 @@ export type JanHusBookingType = {
   bookerName: Scalars['String']['output'];
   bookerPhone: Scalars['String']['output'];
   bookerUser: Maybe<UserType>;
-  bookingLevel: Maybe<JanHusBookingLevelType>;
   cleaningRequested: Scalars['Boolean']['output'];
   comment: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -852,20 +834,6 @@ export type JanHusGuestListEntryType = {
   __typename?: 'JanHusGuestListEntryType';
   displayName: Scalars['String']['output'];
   feideUserid: Scalars['String']['output'];
-};
-
-export type JanHusOrganizationBookingLevelType = {
-  __typename?: 'JanHusOrganizationBookingLevelType';
-  id: Scalars['ID']['output'];
-  level: JanHusBookingLevelType;
-  organization: OrganizationType;
-};
-
-export type JanHusUserBookingLevelType = {
-  __typename?: 'JanHusUserBookingLevelType';
-  id: Scalars['ID']['output'];
-  level: JanHusBookingLevelType;
-  user: UserType;
 };
 
 /** A website user a JanHus admin can link to a booking (booker or responsible). */
@@ -1596,13 +1564,11 @@ export type Queries = {
   hasPermission: Maybe<Scalars['Boolean']['output']>;
   janhusAreas: Maybe<Array<JanHusAreaType>>;
   janhusBookableOrganizations: Maybe<Array<OrganizationType>>;
-  janhusBookingLevels: Maybe<Array<JanHusBookingLevelType>>;
   janhusBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
   janhusBookingSettings: Maybe<JanHusBookingSettingsType>;
   janhusBookings: Maybe<Array<JanHusBookingType>>;
   janhusGuestSearch: Maybe<Array<JanHusGuestListEntryType>>;
   janhusGuestSearchForRequest: Maybe<Array<JanHusGuestListEntryType>>;
-  janhusMyBookingLevel: Maybe<JanHusBookingLevelType>;
   janhusMyBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
   janhusMyBookings: Maybe<Array<JanHusBookingType>>;
   /** Website users to link to a booking as booker or responsible. JanHus admins only. */
@@ -1918,7 +1884,7 @@ export type ReviewJanHusBookingRequest = {
   booking: Maybe<JanHusBookingType>;
   bookingRequest: Maybe<JanHusBookingRequestType>;
   ok: Maybe<Scalars['Boolean']['output']>;
-  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review. */
+  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked. */
   overlappingBookings: Maybe<Array<JanHusBookingType>>;
 };
 
@@ -2126,7 +2092,7 @@ export type UpdateJanHusBooking = {
   __typename?: 'UpdateJanHusBooking';
   booking: Maybe<JanHusBookingType>;
   ok: Maybe<Scalars['Boolean']['output']>;
-  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked, or when provisional bookings were moved to admin review. */
+  /** Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked. */
   overlappingBookings: Maybe<Array<JanHusBookingType>>;
 };
 
