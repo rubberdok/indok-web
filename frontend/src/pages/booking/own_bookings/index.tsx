@@ -64,6 +64,26 @@ const formatNok = (amount: number | null | undefined) =>
     maximumFractionDigits: 2,
   }).format(Number(amount ?? 0));
 
+function getPayableAmount(isOrganizationBooking: boolean, configuredAmount: number, fullPaymentAmount: number) {
+  if (isOrganizationBooking) {
+    return 0;
+  }
+  if (configuredAmount > 0) {
+    return configuredAmount;
+  }
+  return fullPaymentAmount;
+}
+
+function getBookingStatusText(isDeclined: boolean, isTentative: boolean) {
+  if (isDeclined) {
+    return "Avslått";
+  }
+  if (isTentative) {
+    return "Til behandling";
+  }
+  return "Godkjent";
+}
+
 const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
   const [paymentError, setPaymentError] = useState<string | undefined>();
@@ -253,11 +273,11 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                             const registeredDeposit = Number(booking.depositAmount ?? 0);
                             const configuredVippsAmount = Number(booking.vippsProduct?.price ?? 0);
                             const fullPaymentAmount = rentalPrice + registeredDeposit;
-                            const payableAmount = isOrganizationBooking
-                              ? 0
-                              : configuredVippsAmount > 0
-                                ? configuredVippsAmount
-                                : fullPaymentAmount;
+                            const payableAmount = getPayableAmount(
+                              isOrganizationBooking,
+                              configuredVippsAmount,
+                              fullPaymentAmount
+                            );
                             const guestEntries = guestListEdits[booking.id] ?? [];
 
                             const bookerName =
@@ -533,9 +553,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                           <TableCell>{formatDate(booking.checkIn)}</TableCell>
                           <TableCell>{formatDate(booking.checkOut)}</TableCell>
                           <TableCell>{booking.cabins.map((cabin) => cabin.name).join(", ")}</TableCell>
-                          <TableCell>
-                            {booking.isDeclined ? "Avslått" : booking.isTentative ? "Til behandling" : "Godkjent"}
-                          </TableCell>
+                          <TableCell>{getBookingStatusText(booking.isDeclined, booking.isTentative)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
