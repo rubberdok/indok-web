@@ -264,6 +264,51 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         content = json.loads(response.content)
         self.assertIn("Private JanHus-bookinger er midlertidig deaktivert", content["errors"][0]["message"])
 
+    def test_with_private_bookings_off_organisation_leaders_book_for_the_organisation(self):
+        JanHusBookingSettings.objects.create(private_bookings_enabled=False)
+        organization = OrganizationFactory()
+        MembershipFactory(organization=organization, user=self.user, group=organization.hr_group)
+
+        def request(user, *, for_organization, days):
+            owner = f'ownerOrganizationId: "{organization.id}"' if for_organization else ""
+            return self.query(
+                f"""
+                mutation {{
+                  createJanhusBookingRequest(requestData: {{
+                    startsAt: "{(self.start_dt + timedelta(days=days)).isoformat()}"
+                    endsAt: "{(self.end_dt + timedelta(days=days)).isoformat()}"
+                    area: "{self.first_floor_area.id}"
+                    {owner}
+                    responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
+                    eventType: "INTERNAL"
+                  }}) {{ ok }}
+                }}
+                """,
+                user=user,
+            )
+
+        personal = request(self.user, for_organization=False, days=0)
+        self.assertResponseHasErrors(personal)
+        self.assertIn("Book på vegne av foreningen din", json.loads(personal.content)["errors"][0]["message"])
+        self.assertResponseNoErrors(request(self.user, for_organization=True, days=1))
+        self.assertResponseNoErrors(request(self.other_user, for_organization=False, days=2))
+
+        direct = self.query(
+            f"""
+            mutation {{
+              createJanhusBooking(bookingData: {{
+                startsAt: "{(self.start_dt + timedelta(days=3)).isoformat()}"
+                endsAt: "{(self.end_dt + timedelta(days=3)).isoformat()}"
+                area: "{self.first_floor_area.id}"
+                responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
+                eventType: "INTERNAL"
+              }}) {{ ok }}
+            }}
+            """,
+            user=self.user,
+        )
+        self.assertResponseHasErrors(direct)
+
     def test_create_booking_request_rejects_external_event_type_when_disabled(self):
         JanHusBookingSettings.objects.create(external_bookings_enabled=False)
 

@@ -106,7 +106,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const { data: orgData } = useQuery(UserOrganizationsDocument, {
     fetchPolicy: "cache-and-network",
   });
-  const { data: bookableOrganizationsData } = useQuery(JanHusBookableOrganizationsDocument, {
+  const { data: bookableOrganizationsData, error: organizationsError } = useQuery(JanHusBookableOrganizationsDocument, {
     fetchPolicy: "cache-and-network",
   });
 
@@ -131,6 +131,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const isAuthenticated = Boolean(orgData?.user);
   const isIndokStudent = orgData?.user?.isIndok ?? false;
   const canCreateNonExternalBooking = isAuthenticated && isIndokStudent;
+  const hasResolvedOrganizations = bookableOrganizationsData !== undefined || organizationsError !== undefined;
   const organizations = useMemo(
     () => bookableOrganizationsData?.janhusBookableOrganizations ?? [],
     [bookableOrganizationsData]
@@ -140,6 +141,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const bookingSettings = settingsData?.janhusBookingSettings ?? DEFAULT_SETTINGS;
   const externalBookingsEnabled = bookingSettings.externalBookingsEnabled ?? true;
   const privateBookingsEnabled = bookingSettings.privateBookingsEnabled ?? true;
+  const canBookPersonally = canCreateNonExternalBooking && (privateBookingsEnabled || organizations.length === 0);
   const cleaningOptionEnabled = bookingSettings.cleaningOptionEnabled ?? true;
   const bufferMinutes = Math.max(bookingSettings.bufferMinutes ?? 0, 0);
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
@@ -263,15 +265,31 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   }, [canCreateNonExternalBooking, hasResolvedUser, ownerType]);
 
   useEffect(() => {
+    if (!hasResolvedOrganizations) {
+      return;
+    }
+
     if (ownerType === "ORGANIZATION" && organizations.length === 0) {
       setOwnerType(canCreateNonExternalBooking ? "PERSONAL" : "EXTERNAL");
+      return;
+    }
+
+    if (ownerType === "PERSONAL" && !canBookPersonally) {
+      setOwnerType("ORGANIZATION");
       return;
     }
 
     if (ownerType !== "ORGANIZATION" && organizationId) {
       setOrganizationId("");
     }
-  }, [canCreateNonExternalBooking, organizationId, organizations, ownerType]);
+  }, [
+    canBookPersonally,
+    canCreateNonExternalBooking,
+    hasResolvedOrganizations,
+    organizationId,
+    organizations,
+    ownerType,
+  ]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && !organizationId && organizations.length > 0) {
@@ -397,6 +415,11 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
+    if (ownerType === "PERSONAL" && !canBookPersonally) {
+      setErrorMessage("Private bookinger er midlertidig deaktivert. Book på vegne av foreningen din.");
+      return false;
+    }
+
     if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
       setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
       return false;
@@ -404,6 +427,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
 
     return true;
   }, [
+    canBookPersonally,
     canCreateNonExternalBooking,
     contactFieldErrors,
     externalBookingsEnabled,
@@ -600,6 +624,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               responsiblePhone={responsiblePhone}
               eventType={eventType}
               eventTypeOptions={eventTypeOptions}
+              canBookPersonally={canBookPersonally}
               comment={comment}
               guestListEntries={guestListEntries}
               cleaningRequested={cleaningRequested}

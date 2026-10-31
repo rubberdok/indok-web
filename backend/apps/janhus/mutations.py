@@ -50,6 +50,7 @@ from apps.janhus.types import (
 from apps.janhus.permissions import (
     can_book_for_organization as _can_book_for_organization,
     can_edit_guest_list as _can_edit_guest_list,
+    get_hr_organizations,
     has_manage_booking_permission as _has_manage_booking_permission,
     has_manage_settings_permission as _has_manage_settings_permission,
     is_booking_owner as _is_owner,
@@ -173,6 +174,27 @@ def _ensure_event_type_enabled(*, event_type: str, settings: JanHusBookingSettin
 
     if event_type == JanHusEventType.EXTERNAL and not settings.external_bookings_enabled:
         raise GraphQLError("Eksterne JanHus-bookinger er midlertidig deaktivert")
+
+
+PERSONAL_BOOKINGS_DISABLED_MESSAGE = (
+    "Private JanHus-bookinger er midlertidig deaktivert. Book på vegne av foreningen din."
+)
+
+
+def _ensure_personal_booking_allowed(
+    *, actor, owner_organization, is_external_booking: bool, settings: JanHusBookingSettings
+) -> None:
+    """
+    With private bookings turned off, someone who may book for an organisation books for it, whatever the
+    event type. Members who lead no organisation may still book personally for internal events and events
+    open to Indøk, as the booking page tells them. JanHus admins are not limited.
+    """
+    if settings.private_bookings_enabled or owner_organization is not None or is_external_booking:
+        return
+    if _has_manage_booking_permission(actor):
+        return
+    if get_hr_organizations(actor).exists():
+        raise GraphQLError(PERSONAL_BOOKINGS_DISABLED_MESSAGE)
 
 
 def _resolve_cleaning_requested(*, data: dict, settings: JanHusBookingSettings) -> bool:
@@ -510,6 +532,12 @@ class CreateJanHusBooking(graphene.Mutation):
             event_type=resolved_event_type,
             owner_organization=owner_organization,
         )
+        _ensure_personal_booking_allowed(
+            actor=actor,
+            owner_organization=owner_organization,
+            is_external_booking=is_external_booking,
+            settings=settings,
+        )
 
         owner_user = None
         owner_user_id = booking_data.get("owner_user_id")
@@ -821,11 +849,18 @@ class CreateJanHusBookingRequest(graphene.Mutation):
         resolved_event_type = request_data.get("event_type", JanHusEventType.INTERNAL)
         _ensure_event_type_enabled(event_type=resolved_event_type, settings=settings)
 
+        is_external_request = resolved_event_type == JanHusEventType.EXTERNAL and owner_organization is None
         _ensure_non_indok_external_only(
             actor=actor,
-            is_external_booking=(resolved_event_type == JanHusEventType.EXTERNAL and owner_organization is None),
+            is_external_booking=is_external_request,
             event_type=resolved_event_type,
             owner_organization=owner_organization,
+        )
+        _ensure_personal_booking_allowed(
+            actor=actor,
+            owner_organization=owner_organization,
+            is_external_booking=is_external_request,
+            settings=settings,
         )
 
         validate_time_rules(

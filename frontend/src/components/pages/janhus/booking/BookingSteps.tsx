@@ -77,6 +77,7 @@ type Props = {
 
   eventType: string;
   eventTypeOptions: SelectOption[];
+  canBookPersonally: boolean;
 
   comment: string;
   guestListEntries: string[];
@@ -166,6 +167,7 @@ export const BookingSteps: React.FC<Props> = ({
   responsiblePhone,
   eventType,
   eventTypeOptions,
+  canBookPersonally,
   comment,
   guestListEntries,
   cleaningRequested,
@@ -315,9 +317,7 @@ export const BookingSteps: React.FC<Props> = ({
                 label="Eiertype"
                 onChange={(event) => onOwnerTypeChange(event.target.value as JanHusOwnerType)}
               >
-                {canCreateNonExternalBooking ? (
-                  <MenuItem value="PERSONAL">{JANHUS_OWNER_TYPE_LABELS.PERSONAL}</MenuItem>
-                ) : null}
+                {canBookPersonally ? <MenuItem value="PERSONAL">{JANHUS_OWNER_TYPE_LABELS.PERSONAL}</MenuItem> : null}
                 {canCreateNonExternalBooking && organizations.length > 0 ? (
                   <MenuItem value="ORGANIZATION">{JANHUS_OWNER_TYPE_LABELS.ORGANIZATION}</MenuItem>
                 ) : null}
