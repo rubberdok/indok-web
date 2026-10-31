@@ -82,7 +82,7 @@ query JanHusMyBookingLevel {
 
 query JanHusBookingRequests($status: String) {
   janhusBookingRequests(status: $status) {
-    ...JanHusBookingRequest
+    ...JanHusAdminBookingRequest
   }
 }
 

@@ -15,6 +15,8 @@ from apps.janhus import mail
 from apps.janhus.mutations import _resolve_area
 from apps.janhus.mail import (
     send_booking_confirmation,
+    send_booking_declined,
+    send_booking_deleted,
     send_booking_request_received,
     send_booking_request_rejected,
 )
@@ -373,6 +375,128 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertIsNotNone(booking)
         self.assertEqual(guest_list_value, booking.guest_list)
         self.assertEqual(JanHusBookingStatus.PROVISIONAL, booking.status)
+
+    def test_an_approved_request_keeps_when_it_was_sent_and_the_messages(self):
+        self.add_booking_permission(self.user)
+        booking_request = JanHusBookingRequest.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            requester_user=self.other_user,
+            requester_name="Kari Nordmann",
+            requester_email="kari@example.com",
+            requester_phone="41234567",
+            responsible_name="Ola Nordmann",
+            responsible_email="ola@example.com",
+            responsible_phone="41234567",
+            admin_comment="Intern merknad",
+        )
+        query = f"""
+            mutation {{
+              reviewJanhusBookingRequest(
+                reviewData: {{
+                  id: "{booking_request.id}" status: "APPROVED" convertToBooking: true bookerMessage: "Velkommen!"
+                }}
+              ) {{ booking {{ id }} }}
+            }}
+        """
+        self.assertResponseNoErrors(self.query(query, user=self.user))
+
+        booking = JanHusBooking.objects.get()
+        self.assertEqual(booking_request.created_at, booking.requested_at)
+        self.assertEqual("Velkommen!", booking.booker_message)
+        self.assertEqual("Intern merknad", booking.admin_comment)
+
+    def test_a_booking_made_directly_was_requested_when_it_was_made(self):
+        self.add_booking_permission(self.user)
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            responsible_name="Ola",
+            responsible_email="ola@example.com",
+            responsible_phone="41234567",
+        )
+        self.assertIsNone(booking.requested_at)  # only the mutations set it
+
+        before = timezone.now()
+        response = self.query(
+            f"""
+            mutation {{
+              createJanhusBooking(bookingData: {{
+                startsAt: "{(self.start_dt + timedelta(days=1)).isoformat()}"
+                endsAt: "{(self.end_dt + timedelta(days=1)).isoformat()}"
+                area: "{self.first_floor_area.id}"
+                responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
+              }}) {{ booking {{ id requestedAt }} }}
+            }}
+            """,
+            user=self.user,
+        )
+        self.assertResponseNoErrors(response)
+        created_id = json.loads(response.content)["data"]["createJanhusBooking"]["booking"]["id"]
+        created = JanHusBooking.objects.get(pk=created_id)
+        self.assertGreaterEqual(created.requested_at, before)
+
+    def test_deleting_a_coming_booking_mails_the_booker(self):
+        self.add_booking_permission(self.user)
+
+        def booking(**overrides):
+            defaults = dict(
+                starts_at=self.start_dt,
+                ends_at=self.end_dt,
+                area=self.first_floor_area,
+                owner_user=self.other_user,
+                booker_email="booker@example.com",
+                responsible_name="Ola",
+                responsible_email="ola@example.com",
+                responsible_phone="41234567",
+                status=JanHusBookingStatus.CONFIRMED,
+            )
+            defaults.update(overrides)
+            return JanHusBooking.objects.create(**defaults)
+
+        past = timezone.now() - timedelta(days=2)
+        tomorrow = timedelta(days=1)
+        cases = [
+            ("coming", booking(), True),
+            (
+                "provisional",
+                booking(
+                    status=JanHusBookingStatus.PROVISIONAL,
+                    starts_at=self.start_dt + 2 * tomorrow,
+                    ends_at=self.end_dt + 2 * tomorrow,
+                ),
+                True,
+            ),
+            ("over", booking(starts_at=past, ends_at=past + timedelta(hours=2)), False),
+            (
+                "declined",
+                booking(
+                    status=JanHusBookingStatus.DECLINED,
+                    starts_at=self.start_dt + tomorrow,
+                    ends_at=self.end_dt + tomorrow,
+                ),
+                False,
+            ),
+        ]
+        mutation = """
+            mutation($id: ID!, $message: String) { deleteJanhusBooking(bookingId: $id, message: $message) { ok } }
+        """
+        for label, target, mailed in cases:
+            with self.subTest(label):
+                with patch("apps.janhus.mutations.send_booking_deleted") as sent:
+                    response = self.query(
+                        mutation, variables={"id": str(target.id), "message": " Huset er stengt. "}, user=self.user
+                    )
+                self.assertResponseNoErrors(response)
+                self.assertFalse(JanHusBooking.objects.filter(pk=target.pk).exists())
+                if mailed:
+                    sent.assert_called_once()
+                    self.assertEqual(target.reference, sent.call_args.args[0].reference)
+                    self.assertEqual("Huset er stengt.", sent.call_args.kwargs["message"])
+                else:
+                    sent.assert_not_called()
 
     def test_non_org_booking_requires_full_payment_before_confirmed(self):
         self.add_booking_permission(self.user)
@@ -1942,6 +2066,49 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
             )
         self.assertEqual(queries_for_calendar(), before)
 
+    def test_the_internal_comment_is_for_admins_and_the_message_for_the_booker(self):
+        self._booking_with_contact_details(admin_comment="Intern merknad", booker_message="Velkommen!")
+        JanHusBookingRequest.objects.create(
+            starts_at=self.start_dt + timedelta(days=1),
+            ends_at=self.end_dt + timedelta(days=1),
+            area=self.first_floor_area,
+            requester_user=self.user,
+            responsible_name="Ola",
+            responsible_email="ola@example.com",
+            responsible_phone="41234567",
+            admin_comment="Intern om forespørselen",
+            booker_message="Prøv en annen dag.",
+        )
+        admin = UserFactory(is_indok=True)
+        self.add_booking_permission(admin)
+
+        mine = self.query(
+            "query { janhusMyBookings { bookerMessage } janhusMyBookingRequests { bookerMessage } }", user=self.user
+        )
+        self.assertResponseNoErrors(mine)
+        data = json.loads(mine.content)["data"]
+        self.assertEqual([{"bookerMessage": "Velkommen!"}], data["janhusMyBookings"])
+        self.assertEqual([{"bookerMessage": "Prøv en annen dag."}], data["janhusMyBookingRequests"])
+        for query in (
+            "query { janhusMyBookings { adminComment } }",
+            "query { janhusMyBookingRequests { adminComment } }",
+        ):
+            with self.subTest(query):
+                response = self.query(query, user=self.user)
+                self.assertResponseHasErrors(response)
+                self.assertNotIn("Intern", response.content.decode())
+
+        admin_view = self.query(
+            "query { adminJanhusBookings { adminComment bookerMessage } janhusBookingRequests { adminComment } }",
+            user=admin,
+        )
+        self.assertResponseNoErrors(admin_view)
+        data = json.loads(admin_view.content)["data"]
+        self.assertEqual(
+            [{"adminComment": "Intern merknad", "bookerMessage": "Velkommen!"}], data["adminJanhusBookings"]
+        )
+        self.assertEqual([{"adminComment": "Intern om forespørselen"}], data["janhusBookingRequests"])
+
 
 class JanHusAreaTestCase(JanHusBaseTestCase):
     def test_conflicting_area_ids_include_ancestors_and_descendants(self):
@@ -2229,6 +2396,40 @@ class JanHusMailTestCase(TestCase):
         self.assertEqual("Kontrakt.pdf", name)
         self.assertEqual("application/pdf", mimetype)
         self.assertTrue(content.startswith(b"%PDF-"))
+
+    def test_the_status_mails_carry_the_message_to_the_booker_not_the_internal_comment(self):
+        booking = self._confirmed_booking(
+            booker_message="Nøkkelen ligger i postkassen.", admin_comment="Intern: sjekk depositum"
+        )
+        booking_request = self._booking_request(
+            booker_message="Prøv gjerne en annen dag.", admin_comment="Intern: dobbeltbooket"
+        )
+        cases = [
+            ("confirmed", lambda: send_booking_confirmation(booking), "Nøkkelen ligger i postkassen."),
+            ("declined", lambda: send_booking_declined(booking), "Nøkkelen ligger i postkassen."),
+            ("rejected", lambda: send_booking_request_rejected(booking_request), "Prøv gjerne en annen dag."),
+        ]
+        for label, send, message in cases:
+            with self.subTest(label):
+                with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+                    send()
+                body = mocked_email.call_args.kwargs["body"]
+                self.assertIn(message, body)
+                self.assertNotIn("Intern:", body)
+                html = mocked_email.return_value.attach_alternative.call_args.args[0]
+                self.assertNotIn("Intern:", html)
+
+    def test_the_deletion_mail_names_the_booking_and_the_message(self):
+        booking = self._confirmed_booking()
+
+        with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
+            send_booking_deleted(booking, message="Huset er stengt for vedlikehold.")
+
+        kwargs = mocked_email.call_args.kwargs
+        self.assertEqual(mail.SUBJECTS["deleted"] + booking.area.name, kwargs["subject"])
+        self.assertIn(booking.reference, kwargs["body"])
+        self.assertIn("Huset er stengt for vedlikehold.", kwargs["body"])
+        self.assertCountEqual(["booker@example.com", "responsible@example.com"], kwargs["bcc"])
 
 
 class JanHusRulesTestCase(TestCase):

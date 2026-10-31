@@ -6,14 +6,17 @@ import {
   REQUEST_STATUS_LABELS,
 } from "@/components/pages/janhus/constants";
 import { formatDate, formatTime, requestOwnerType, statusColor, statusLabel } from "@/components/pages/janhus/helpers";
-import { JanHusBookingRequestFragment } from "@/generated/graphql";
+import { JanHusAdminBookingRequestFragment } from "@/generated/graphql";
 
 type Props = {
-  requests: readonly JanHusBookingRequestFragment[];
+  requests: readonly JanHusAdminBookingRequestFragment[];
   comments: Record<string, string>;
+  /** Edited messages to the booker; a request without an entry shows the one it has. */
+  messages: Record<string, string>;
   reviewing: boolean;
   deleting: boolean;
   onCommentChange: (id: string, value: string) => void;
+  onMessageChange: (id: string, value: string) => void;
   onReview: (id: string, status: "APPROVED" | "REJECTED", convertToBooking: boolean) => void;
   onDelete: (id: string) => void;
   /** View-only users (janhus.view_all_bookings): the comment is shown disabled and every action is hidden. */
@@ -23,9 +26,11 @@ type Props = {
 export const RequestList: React.FC<Props> = ({
   requests,
   comments,
+  messages,
   reviewing,
   deleting,
   onCommentChange,
+  onMessageChange,
   onReview,
   onDelete,
   readOnly = false,
@@ -49,6 +54,9 @@ export const RequestList: React.FC<Props> = ({
               <Typography variant="body2" color="text.secondary">
                 {formatDate(request.startsAt)} kl. {formatTime(request.startsAt)}–{formatTime(request.endsAt)} ·{" "}
                 {request.area.name}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Sendt {formatDate(request.createdAt)} kl. {formatTime(request.createdAt)}
               </Typography>
               <Typography variant="body2">
                 Eiertype: {OWNER_TYPE_LABELS[requestOwnerType(request)]}
@@ -76,7 +84,16 @@ export const RequestList: React.FC<Props> = ({
               ) : null}
               <TextField
                 size="small"
-                label="Adminkommentar"
+                label="Melding til bestilleren"
+                helperText="Sendes med e-posten når forespørselen avvises, eller når bookingen blir godkjent."
+                multiline
+                disabled={readOnly}
+                value={messages[request.id] ?? request.bookerMessage}
+                onChange={(event) => onMessageChange(request.id, event.target.value)}
+              />
+              <TextField
+                size="small"
+                label="Intern kommentar (bare for admin)"
                 disabled={readOnly}
                 value={comments[request.id] ?? ""}
                 onChange={(event) => onCommentChange(request.id, event.target.value)}

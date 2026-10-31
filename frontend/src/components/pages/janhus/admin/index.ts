@@ -4,5 +4,6 @@ export { SemesterSettings } from "./SemesterSettings";
 export { AdminFilters } from "./AdminFilters";
 export { AvailabilityOverview } from "./AvailabilityOverview";
 export { BookingList } from "./BookingList";
+export { DeleteDialog } from "./DeleteDialog";
 export { RequestList } from "./RequestList";
 export type { BookingEdit } from "./BookingList";

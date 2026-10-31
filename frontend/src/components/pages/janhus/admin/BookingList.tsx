@@ -57,6 +57,7 @@ export type BookingEdit = {
   responsibleUser: PickedUser | null;
   comment: string;
   adminComment: string;
+  bookerMessage: string;
 };
 
 type Props = {
@@ -152,6 +153,11 @@ export const BookingList: React.FC<Props> = ({
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontFamily: "monospace" }}>
                   Referanse: {booking.reference}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {booking.requestedAt
+                    ? `Forespurt ${formatDate(booking.requestedAt)} kl. ${formatTime(booking.requestedAt)}`
+                    : `Opprettet ${formatDate(booking.createdAt)} kl. ${formatTime(booking.createdAt)}`}
                 </Typography>
               </Stack>
             </AccordionSummary>
@@ -477,7 +483,21 @@ export const BookingList: React.FC<Props> = ({
                 />
                 <TextField
                   disabled={readOnly}
-                  label="Adminkommentar"
+                  label="Melding til bestilleren"
+                  helperText="Sendes med e-posten når statusen endres til godkjent eller avslått. Bestilleren ser den også under «Mine bookinger»."
+                  multiline
+                  minRows={2}
+                  value={edit.bookerMessage}
+                  onChange={(event) =>
+                    setEdits((prev) => ({
+                      ...prev,
+                      [booking.id]: { ...prev[booking.id], bookerMessage: event.target.value },
+                    }))
+                  }
+                />
+                <TextField
+                  disabled={readOnly}
+                  label="Intern kommentar (bare for admin)"
                   multiline
                   minRows={2}
                   value={edit.adminComment}

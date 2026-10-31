@@ -732,6 +732,7 @@ export type JanHusBookingRequestType = {
   __typename?: 'JanHusBookingRequestType';
   adminComment: Scalars['String']['output'];
   area: JanHusAreaType;
+  bookerMessage: Scalars['String']['output'];
   cleaningRequested: Scalars['Boolean']['output'];
   comment: Scalars['String']['output'];
   convertedBooking: Maybe<JanHusBookingType>;
@@ -802,6 +803,7 @@ export type JanHusBookingType = {
   adminComment: Scalars['String']['output'];
   area: JanHusAreaType;
   bookerEmail: Scalars['String']['output'];
+  bookerMessage: Scalars['String']['output'];
   bookerName: Scalars['String']['output'];
   bookerPhone: Scalars['String']['output'];
   bookerUser: Maybe<UserType>;
@@ -832,6 +834,7 @@ export type JanHusBookingType = {
   priceOverrideAmount: Maybe<Scalars['Decimal']['output']>;
   priceOverrideTier: Maybe<JanhusJanHusBookingPriceOverrideTierChoices>;
   reference: Scalars['String']['output'];
+  requestedAt: Maybe<Scalars['DateTime']['output']>;
   responsibleEmail: Scalars['String']['output'];
   responsibleName: Scalars['String']['output'];
   responsiblePhone: Scalars['String']['output'];
@@ -1283,6 +1286,7 @@ export type MutationsDeleteJanhusAreaArgs = {
 
 export type MutationsDeleteJanhusBookingArgs = {
   bookingId: Scalars['ID']['input'];
+  message: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1902,6 +1906,7 @@ export type ReviewJanHusBooking = {
 
 export type ReviewJanHusBookingInput = {
   adminComment: InputMaybe<Scalars['String']['input']>;
+  bookerMessage: InputMaybe<Scalars['String']['input']>;
   depositAmount: InputMaybe<Scalars['Decimal']['input']>;
   depositStatus: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -1919,6 +1924,7 @@ export type ReviewJanHusBookingRequest = {
 
 export type ReviewJanHusBookingRequestInput = {
   adminComment: InputMaybe<Scalars['String']['input']>;
+  bookerMessage: InputMaybe<Scalars['String']['input']>;
   convertToBooking: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['ID']['input'];
   status: Scalars['String']['input'];
@@ -2128,6 +2134,7 @@ export type UpdateJanHusBookingInput = {
   adminComment: InputMaybe<Scalars['String']['input']>;
   area: InputMaybe<Scalars['ID']['input']>;
   bookerEmail: InputMaybe<Scalars['String']['input']>;
+  bookerMessage: InputMaybe<Scalars['String']['input']>;
   bookerName: InputMaybe<Scalars['String']['input']>;
   bookerPhone: InputMaybe<Scalars['String']['input']>;
   bookerUser: InputMaybe<Scalars['ID']['input']>;

@@ -18,7 +18,13 @@ import { useEffect, useMemo, useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
 import { TabPanel } from "@/components/pages/about/TabPanel";
-import { AdminFilters, AvailabilityOverview, BookingList, RequestList } from "@/components/pages/janhus/admin";
+import {
+  AdminFilters,
+  AvailabilityOverview,
+  BookingList,
+  DeleteDialog,
+  RequestList,
+} from "@/components/pages/janhus/admin";
 import {
   BOOKING_STATUS_LABELS,
   OwnerType,
@@ -77,6 +83,8 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   const areas = useMemo(() => areasData?.janhusAreas ?? [], [areasData]);
 
   const [requestComments, setRequestComments] = useState<Record<string, string>>({});
+  const [requestMessages, setRequestMessages] = useState<Record<string, string>>({});
+  const [pendingDelete, setPendingDelete] = useState<{ kind: "booking" | "request"; id: string } | undefined>();
   const [bookingEdits, setBookingEdits] = useState<
     Record<
       string,
@@ -105,6 +113,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
         responsibleUser: { id: string; displayName: string } | null;
         comment: string;
         adminComment: string;
+        bookerMessage: string;
       }
     >
   >({});
@@ -178,6 +187,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
             responsibleUser: pickedUser(booking.responsibleUser),
             comment: booking.comment ?? "",
             adminComment: booking.adminComment ?? "",
+            bookerMessage: booking.bookerMessage ?? "",
           };
         }
       });
@@ -375,6 +385,9 @@ const JanHusAdminPage: NextPageWithLayout = () => {
           status,
           convertToBooking,
           adminComment: requestComments[id] ?? "",
+          bookerMessage:
+            requestMessages[id] ??
+            requestsData?.janhusBookingRequests?.find((request) => request.id === id)?.bookerMessage,
         },
       },
     });
@@ -412,6 +425,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
           responsibleUser: edit.responsibleUser?.id ?? "",
           comment: edit.comment,
           adminComment: edit.adminComment,
+          bookerMessage: edit.bookerMessage,
         },
       },
     });
@@ -425,12 +439,24 @@ const JanHusAdminPage: NextPageWithLayout = () => {
     });
   }
 
-  async function handleDeleteBooking(id: string) {
-    await deleteBooking({ variables: { bookingId: id } });
-  }
+  // The backend mails the booker about a deleted booking only when it is still coming and not declined.
+  const bookingToDelete =
+    pendingDelete?.kind === "booking" ? bookings.find((booking) => booking.id === pendingDelete.id) : undefined;
+  const deletionIsMailed = Boolean(
+    bookingToDelete &&
+    ["PROVISIONAL", "PENDING_ADMIN_REVIEW", "CONFIRMED"].includes(bookingToDelete.status) &&
+    !isPast(bookingToDelete.endsAt)
+  );
 
-  async function handleDeleteRequest(id: string) {
-    await deleteRequest({ variables: { requestId: id } });
+  async function handleConfirmDelete(message: string) {
+    if (!pendingDelete) return;
+    const { kind, id } = pendingDelete;
+    setPendingDelete(undefined);
+    if (kind === "booking") {
+      await deleteBooking({ variables: { bookingId: id, message: deletionIsMailed ? message : undefined } });
+    } else {
+      await deleteRequest({ variables: { requestId: id } });
+    }
   }
 
   return (
@@ -527,8 +553,10 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                         reviewing={requestReviewing}
                         deleting={deletingRequest}
                         onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
+                        messages={requestMessages}
+                        onMessageChange={(id, value) => setRequestMessages((prev) => ({ ...prev, [id]: value }))}
                         onReview={handleReviewRequest}
-                        onDelete={handleDeleteRequest}
+                        onDelete={(id) => setPendingDelete({ kind: "request", id })}
                         readOnly={!canManage}
                       />
                     ) : (
@@ -554,8 +582,10 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                             reviewing={requestReviewing}
                             deleting={deletingRequest}
                             onCommentChange={(id, value) => setRequestComments((prev) => ({ ...prev, [id]: value }))}
+                            messages={requestMessages}
+                            onMessageChange={(id, value) => setRequestMessages((prev) => ({ ...prev, [id]: value }))}
                             onReview={handleReviewRequest}
-                            onDelete={handleDeleteRequest}
+                            onDelete={(id) => setPendingDelete({ kind: "request", id })}
                             readOnly={!canManage}
                           />
                         </AccordionDetails>
@@ -607,7 +637,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                         creatingPaymentProduct={creatingPaymentProduct}
                         onSave={handleSaveBooking}
                         onCreatePaymentProduct={handleCreatePaymentProduct}
-                        onDelete={handleDeleteBooking}
+                        onDelete={(id) => setPendingDelete({ kind: "booking", id })}
                         onOpenGuestList={setActiveGuestListBookingId}
                         readOnly={!canManage}
                       />
@@ -640,7 +670,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                             creatingPaymentProduct={creatingPaymentProduct}
                             onSave={handleSaveBooking}
                             onCreatePaymentProduct={handleCreatePaymentProduct}
-                            onDelete={handleDeleteBooking}
+                            onDelete={(id) => setPendingDelete({ kind: "booking", id })}
                             onOpenGuestList={setActiveGuestListBookingId}
                             readOnly={!canManage}
                           />
@@ -651,6 +681,29 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                 </TabPanel>
               </Box>
             </Box>
+
+            {canManage && pendingDelete ? (
+              <DeleteDialog
+                key={`${pendingDelete.kind}-${pendingDelete.id}`}
+                open
+                title={
+                  pendingDelete.kind === "booking"
+                    ? `Slette booking #${pendingDelete.id}?`
+                    : `Slette forespørsel #${pendingDelete.id}?`
+                }
+                description={
+                  pendingDelete.kind === "request"
+                    ? "Forespørselen slettes for godt, og bestilleren får ingen e-post. Vil du gi beskjed, bruk «Avvis»."
+                    : deletionIsMailed
+                      ? "Bookingen slettes for godt. Bestilleren og ansvarlig får en e-post om at den er slettet."
+                      : "Bookingen slettes for godt. Den er over, avslått eller kansellert, så ingen får e-post."
+                }
+                allowMessage={deletionIsMailed}
+                deleting={deletingBooking || deletingRequest}
+                onCancel={() => setPendingDelete(undefined)}
+                onConfirm={handleConfirmDelete}
+              />
+            ) : null}
 
             {canManage && activeGuestListBooking ? (
               <GuestListDialog

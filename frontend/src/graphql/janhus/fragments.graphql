@@ -61,7 +61,8 @@ fragment JanHusBooking on JanHusBookingType {
   depositAmount
   outstandingDepositAmount
   comment
-  adminComment
+  bookerMessage
+  requestedAt
   guestList
   guestListEntries {
     ...JanHusGuestListEntry
@@ -86,9 +87,10 @@ fragment JanHusBooking on JanHusBookingType {
   updatedAt
 }
 
-# The admin page also shows why the booker would not get the door.
+# The admin page also shows why the booker would not get the door, and the internal comment.
 fragment JanHusAdminBooking on JanHusBookingType {
   ...JanHusBooking
+  adminComment
   doorAccessWarnings
 }
 
@@ -121,13 +123,19 @@ fragment JanHusBookingRequest on JanHusBookingRequestType {
   comment
   guestList
   status
-  adminComment
+  bookerMessage
   convertedBooking {
     id
     status
   }
   createdAt
   updatedAt
+}
+
+# The internal comment is for the admins only.
+fragment JanHusAdminBookingRequest on JanHusBookingRequestType {
+  ...JanHusBookingRequest
+  adminComment
 }
 
 fragment JanHusBookingSettings on JanHusBookingSettingsType {

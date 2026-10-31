@@ -351,7 +351,12 @@ class JanHusBooking(models.Model):
     manually_marked_as_paid = models.BooleanField(default=False)
 
     comment = models.TextField(blank=True, default="")
+    # Internal to the JanHus admins. What the booker should read goes in booker_message.
     admin_comment = models.TextField(blank=True, default="")
+    # Sent with the mail when the booking is confirmed or declined, and shown to the booker.
+    booker_message = models.TextField(blank=True, default="")
+    # When the booker sent the request. Empty for bookings approved before this was kept.
+    requested_at = models.DateTimeField(null=True, blank=True)
 
     guest_list = models.TextField(blank=True, default="")
     door_access_policy = models.CharField(
@@ -509,6 +514,8 @@ class JanHusBookingRequest(models.Model):
 
     status = models.CharField(max_length=32, choices=RequestStatus.choices, default=RequestStatus.PENDING)
     admin_comment = models.TextField(blank=True, default="")
+    # Sent with the mail when the request is rejected, and copied to the booking when approved.
+    booker_message = models.TextField(blank=True, default="")
 
     converted_booking = models.ForeignKey(
         JanHusBooking,

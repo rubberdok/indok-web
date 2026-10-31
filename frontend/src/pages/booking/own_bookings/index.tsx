@@ -110,7 +110,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
           endsAt: booking.endsAt,
           areaName: booking.area.name,
           reference: booking.reference,
-          adminComment: booking.adminComment,
+          bookerMessage: booking.bookerMessage,
           chip: statusLabel(booking, BOOKING_STATUS_LABELS),
           color: statusColor(booking),
         })),
@@ -121,7 +121,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
           endsAt: request.endsAt,
           areaName: request.area.name,
           reference: request.reference,
-          adminComment: request.adminComment,
+          bookerMessage: request.bookerMessage,
           chip: statusLabel(request, REQUEST_STATUS_LABELS),
           color: statusColor(request),
         })),
@@ -390,6 +390,11 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                           Din kommentar: {booking.comment}
                                         </Typography>
                                       )}
+                                      {booking.bookerMessage ? (
+                                        <Typography variant="body2">
+                                          Melding fra Janus Eiendom: {booking.bookerMessage}
+                                        </Typography>
+                                      ) : null}
                                       {isOrganizationBooking ? (
                                         <Alert severity="info">
                                           Denne bookingen er gjort på vegne av forening. Kostnad håndteres internt.
@@ -482,9 +487,9 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                         <Typography variant="caption" color="text.secondary">
                                           Referanse: {entry.reference}
                                         </Typography>
-                                        {entry.adminComment ? (
+                                        {entry.bookerMessage ? (
                                           <Typography variant="body2" sx={{ mt: 1 }}>
-                                            Kommentar fra Janus Eiendom: {entry.adminComment}
+                                            Melding fra Janus Eiendom: {entry.bookerMessage}
                                           </Typography>
                                         ) : null}
                                       </CardContent>

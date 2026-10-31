@@ -5718,6 +5718,34 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
+              "name": "bookerMessage",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "requestedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
               "name": "guestList",
               "type": {
                 "kind": "NON_NULL",
@@ -6457,6 +6485,22 @@
               "description": null,
               "isDeprecated": false,
               "name": "adminComment",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "bookerMessage",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -9592,6 +9636,16 @@
                       "name": "ID",
                       "ofType": null
                     }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "Sent to the booker with the mail that the booking is deleted.",
+                  "name": "message",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
                   }
                 }
               ],
@@ -13088,6 +13142,16 @@
             {
               "defaultValue": null,
               "description": null,
+              "name": "bookerMessage",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
               "name": "bookerUser",
               "type": {
                 "kind": "SCALAR",
@@ -13189,6 +13253,16 @@
               "defaultValue": null,
               "description": null,
               "name": "adminComment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "bookerMessage",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
@@ -13558,6 +13632,16 @@
               "defaultValue": null,
               "description": null,
               "name": "adminComment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": null,
+              "name": "bookerMessage",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",

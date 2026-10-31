@@ -4,6 +4,7 @@ import graphene
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models import Sum
+from django.utils import timezone
 from graphql import GraphQLError
 
 from apps.ecommerce.models import Order, Product
@@ -16,6 +17,7 @@ from apps.janhus.guest_list import (
 from apps.janhus.mail import (
     send_booking_confirmation,
     send_booking_declined,
+    send_booking_deleted,
     send_booking_request_received,
     send_booking_request_rejected,
 )
@@ -394,6 +396,7 @@ class UpdateJanHusBookingInput(graphene.InputObjectType):
     door_access_policy = graphene.String(required=False)
     comment = graphene.String(required=False)
     admin_comment = graphene.String(required=False)
+    booker_message = graphene.String(required=False)
 
     # Door access at JanHus, for JanHus admins only. A user id; "" clears it.
     booker_user = graphene.ID(required=False)
@@ -405,6 +408,7 @@ class ReviewJanHusBookingInput(graphene.InputObjectType):
     id = graphene.ID(required=True)
     status = graphene.String(required=False)
     admin_comment = graphene.String(required=False)
+    booker_message = graphene.String(required=False)
     deposit_status = graphene.String(required=False)
     deposit_amount = graphene.Decimal(required=False)
 
@@ -434,6 +438,7 @@ class ReviewJanHusBookingRequestInput(graphene.InputObjectType):
     id = graphene.ID(required=True)
     status = graphene.String(required=True)
     admin_comment = graphene.String(required=False)
+    booker_message = graphene.String(required=False)
     convert_to_booking = graphene.Boolean(required=False)
 
 
@@ -557,6 +562,7 @@ class CreateJanHusBooking(graphene.Mutation):
             deposit_status=booking_data.get("deposit_status", JanHusDepositStatus.REQUIRED),
             deposit_amount=booking_data.get("deposit_amount", _get_default_deposit_amount(area)),
             comment=booking_data.get("comment", ""),
+            requested_at=timezone.now(),
         )
 
         validate_booking_semester_rules(
@@ -627,6 +633,7 @@ class UpdateJanHusBooking(graphene.Mutation):
                 "price_override_amount",
                 "manually_marked_as_paid",
                 "admin_comment",
+                "booker_message",
                 "door_access_policy",
                 "booker_user",
                 "responsible_user",
@@ -658,6 +665,7 @@ class UpdateJanHusBooking(graphene.Mutation):
             "booker_phone",
             "comment",
             "admin_comment",
+            "booker_message",
         ]:
             if field in booking_data and booking_data[field] is not None:
                 setattr(booking, field, booking_data[field])
@@ -767,6 +775,8 @@ class ReviewJanHusBooking(graphene.Mutation):
 
         if review_data.get("admin_comment") is not None:
             booking.admin_comment = review_data.get("admin_comment")
+        if review_data.get("booker_message") is not None:
+            booking.booker_message = review_data.get("booker_message")
 
         if review_data.get("deposit_status"):
             valid_deposit_statuses = {choice[0] for choice in JanHusDepositStatus.choices}
@@ -885,6 +895,8 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
         booking_request.status = status
         if review_data.get("admin_comment") is not None:
             booking_request.admin_comment = review_data.get("admin_comment")
+        if review_data.get("booker_message") is not None:
+            booking_request.booker_message = review_data.get("booker_message")
 
         created_booking = None
         if status == JanHusBookingRequest.RequestStatus.APPROVED and review_data.get("convert_to_booking", False):
@@ -933,6 +945,9 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 deposit_status=JanHusDepositStatus.REQUIRED,
                 deposit_amount=_get_default_deposit_amount(booking_request.area),
                 comment=booking_request.comment,
+                admin_comment=booking_request.admin_comment,
+                booker_message=booking_request.booker_message,
+                requested_at=booking_request.created_at,
                 guest_list=booking_request.guest_list,
                 status=initial_status,
             )
@@ -1099,20 +1114,40 @@ class CreateJanHusPaymentProduct(graphene.Mutation):
         return CreateJanHusPaymentProduct(ok=True, booking=booking, product_id=product.id)
 
 
+# A deleted booking the booker still expects to use; for the others they have heard enough.
+BOOKING_STATUSES_TO_NOTIFY_ON_DELETE = {
+    JanHusBookingStatus.PROVISIONAL,
+    JanHusBookingStatus.PENDING_ADMIN_REVIEW,
+    JanHusBookingStatus.CONFIRMED,
+}
+
+
+def booker_hears_of_deletion(booking: JanHusBooking) -> bool:
+    return booking.status in BOOKING_STATUSES_TO_NOTIFY_ON_DELETE and booking.ends_at > timezone.now()
+
+
 class DeleteJanHusBooking(graphene.Mutation):
     class Arguments:
         booking_id = graphene.ID(required=True)
+        message = graphene.String(
+            required=False, description="Sent to the booker with the mail that the booking is deleted."
+        )
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, booking_id):
+    def mutate(self, info, booking_id, message=None):
         actor = _get_actor(info)
         if not _has_manage_booking_permission(actor):
             raise GraphQLError("JanHus booking admin permission required")
 
-        deleted, _ = JanHusBooking.objects.filter(pk=booking_id).delete()
-        if not deleted:
+        booking = JanHusBooking.objects.select_related("area").filter(pk=booking_id).first()
+        if booking is None:
             raise GraphQLError("Booking not found")
+
+        notify = booker_hears_of_deletion(booking)
+        booking.delete()
+        if notify:
+            send_booking_deleted(booking, message=(message or "").strip())
 
         return DeleteJanHusBooking(ok=True)
 

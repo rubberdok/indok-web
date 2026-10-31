@@ -4,7 +4,7 @@ from graphene_django import DjangoObjectType
 
 from apps.janhus.door_access import door_access_warnings
 from apps.janhus.guest_list import GUEST_LIST_ENTRIES_ATTR, build_guest_list_entries
-from apps.janhus.permissions import can_view_booking_details
+from apps.janhus.permissions import can_view_booking_details, has_view_all_bookings_permission
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
@@ -31,6 +31,7 @@ class JanHusUserSearchResultType(graphene.ObjectType):
 
 
 NO_ACCESS_TO_BOOKING_MESSAGE = "Du har ikke tilgang til detaljene for denne bookingen"
+ADMIN_ONLY_MESSAGE = "Bare JanHus-admin kan se den interne kommentaren"
 PROTECTED_BOOKING_FIELDS = [
     "reference",
     "booker_name",
@@ -41,7 +42,8 @@ PROTECTED_BOOKING_FIELDS = [
     "responsible_phone",
     "guest_list",
     "comment",
-    "admin_comment",
+    "booker_message",
+    "requested_at",
     "owner_user",
     "owner_organization",
     "deposit_amount",
@@ -97,6 +99,12 @@ class JanHusBookingType(DjangoObjectType):
         return build_guest_list_entries(parent.guest_list)
 
     @staticmethod
+    def resolve_admin_comment(parent: JanHusBooking, info):
+        if not has_view_all_bookings_permission(info.context.user):
+            raise PermissionDenied(ADMIN_ONLY_MESSAGE)
+        return parent.admin_comment
+
+    @staticmethod
     def resolve_owner_display_name(parent: JanHusBooking, info):
         if not info.context.user.is_authenticated:
             return None
@@ -141,6 +149,12 @@ for _field_name in PROTECTED_BOOKING_FIELDS:
 class JanHusBookingRequestType(DjangoObjectType):
     class Meta:
         model = JanHusBookingRequest
+
+    @staticmethod
+    def resolve_admin_comment(parent: JanHusBookingRequest, info):
+        if not has_view_all_bookings_permission(info.context.user):
+            raise PermissionDenied(ADMIN_ONLY_MESSAGE)
+        return parent.admin_comment
 
 
 class JanHusBookingLevelType(DjangoObjectType):
