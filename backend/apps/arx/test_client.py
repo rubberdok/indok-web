@@ -13,6 +13,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 import requests
+from defusedxml.common import DTDForbidden
 
 try:
     from apps.arx import client as arx_client
@@ -39,13 +40,14 @@ class FakeResponse:
     def __init__(self, status=200, body=b"OK"):
         self.status_code = status
         self._body = body
+        self.closed = False
 
     def iter_content(self, size):
         for i in range(0, len(self._body), size):
             yield self._body[i : i + size]
 
     def close(self):
-        pass
+        self.closed = True
 
 
 def make_client(*responses, **kwargs):
@@ -80,6 +82,11 @@ class TransportTests(TestCase):
             with self.subTest(url=url, ca=ca), self.assertRaises(ArxConfigError):
                 ArxClient(url, "u", "p", ca)
 
+    def test_missing_credentials_are_refused(self):
+        for username, password in (("", "p"), ("u", "")):
+            with self.subTest(username=username), self.assertRaises(ArxConfigError):
+                ArxClient("https://arx:5003", username, password, CA)
+
     def test_verify_is_never_false_and_redirects_off(self):
         client, session = make_client(FakeResponse(200, b"OK"))
         client.import_people([PERSON])
@@ -101,11 +108,58 @@ class TransportTests(TestCase):
         )
         for status, error, call in cases:
             with self.subTest(status=status):
-                client, session = make_client(FakeResponse(status, b"bad card"))
+                response = FakeResponse(status, b"bad card")
+                client, session = make_client(response)
                 with self.assertRaises(error):
                     call(client)
                 self.assertEqual(session.request.call_count, 1)
                 self.assertFalse(client._breaker.is_open)
+                if status == 401:
+                    self.assertTrue(response.closed)
+
+    def test_tls_errors_are_not_retried_or_logged_with_details(self):
+        client, session = make_client(requests.exceptions.SSLError("private certificate detail"))
+        with self.assertLogs(arx_client.logger.name, level="WARNING") as logs:
+            with self.assertRaises(arx_client.ArxTransportError):
+                client.category_ids()
+        self.assertEqual(session.request.call_count, 1)
+        self.assertNotIn("private certificate detail", " ".join(logs.output))
+
+    def test_temporary_http_errors_retry_and_other_statuses_fail(self):
+        client, session = make_client(
+            FakeResponse(502, b"unavailable"),
+            FakeResponse(200, b"<access_categories><access_category><id>44</id></access_category></access_categories>"),
+        )
+        self.assertEqual(client.category_ids(), {"44"})
+        self.assertEqual(session.request.call_count, 2)
+
+        client, session = make_client(FakeResponse(302, b"redirect"))
+        with self.assertRaises(arx_client.ArxTransportError):
+            client.category_ids()
+        self.assertEqual(session.request.call_count, 1)
+
+    def test_repeated_temporary_http_errors_open_the_breaker(self):
+        client, session = make_client(
+            FakeResponse(502),
+            FakeResponse(503),
+            breaker_threshold=2,
+            max_retries=2,
+        )
+        with self.assertRaises(arx_client.ArxTransportError):
+            client.category_ids()
+        self.assertEqual(session.request.call_count, 2)
+        self.assertTrue(client._breaker.is_open)
+
+    def test_breaker_allows_one_attempt_after_cooldown(self):
+        now = [100.0]
+        breaker = arx_client._Breaker(threshold=2, cooldown=5.0, clock=lambda: now[0])
+        breaker.failure()
+        breaker.failure()
+        with self.assertRaises(ArxCircuitOpen):
+            breaker.before()
+        now[0] += 5.0
+        breaker.before()
+        self.assertFalse(breaker.is_open)
 
     def test_transport_errors_retry_then_five_failures_open_breaker(self):
         errors = [requests.ConnectionError()] * 6
@@ -154,6 +208,13 @@ class ImportXmlTests(TestCase):
         self.assertIn("<start_date>2026-10-10 12:00:00</start_date>", xml)
         self.assertIn("<end_date>2026-10-12 09:00:00</end_date>", xml)
 
+    def test_naive_window_datetime_is_refused(self):
+        person = PersonState(
+            "indok-2", "Kari", "Nord", "1234", "", "", (Window("cat1", datetime(2026, 10, 10), datetime(2026, 10, 11)),)
+        )
+        with self.assertRaises(ValueError):
+            build_import_xml([person])
+
     def test_characters_xml_forbids_are_removed_so_the_batch_is_not_refused(self):
         odd = PersonState("indok-2", "Ola\x00\x1b", "Nord\tline\nbreak￾\ud800", "", "", "", ())
         xml = build_import_xml([odd])
@@ -176,6 +237,17 @@ class ImportXmlTests(TestCase):
 
 
 class ParseTests(TestCase):
+    def test_export_helpers_skip_deleted_cards_and_missing_names(self):
+        snapshot = arx_client.ExportSnapshot(
+            cards=[
+                arx_client.ArxCardRow("000123", "Mifare", "deleted", True),
+                arx_client.ArxCardRow("00123", "Mifare", "active", False),
+            ]
+        )
+        self.assertEqual(snapshot.card_owner("123"), "active")
+        self.assertIsNone(snapshot.card_owner("456"))
+        self.assertEqual(snapshot.person_name("missing"), "")
+
     def test_export_keeps_names_and_cards_but_never_pins_or_deleted_people(self):
         snap = parse_export(
             b"<arxdata><persons>"
@@ -207,15 +279,35 @@ class ParseTests(TestCase):
             b'<argument value="Kari Styret" type="person" id="9"/>'
             b'<argument value="1234567890" type="card" id="1"/>'
             b'<argument value="DESFire CSN" type="card_format" id="2"/></event>'
-            b'<event id="" name="x" timestamp="abc"/></events>'
+            b'<event id="" name="x" timestamp="abc"/>'
+            b'<event id="" name="x" timestamp="1700000000000"/></events>'
         )
-        self.assertEqual(skipped, 1)
+        self.assertEqual(skipped, 2)
         (event,) = events
         self.assertEqual(
             (event.person_name, event.card_number, event.card_format, event.dac_external_id),
             ("Kari Styret", "1234567890", "DESFire CSN", "ID:1"),
         )
 
+    def test_export_snapshot_and_event_requests_parse_their_response(self):
+        export = (
+            b"<arxdata><persons><person><id>indok-1</id><first_name>Kari</first_name>"
+            b"<last_name>Nord</last_name></person></persons></arxdata>"
+        )
+        client, _ = make_client(FakeResponse(200, export))
+        snapshot = client.export_snapshot()
+        self.assertEqual(snapshot.person_name("indok-1"), "Kari Nord")
+
+        event_xml = (
+            b'<events><event id="e1" name="controller.access.card.duress" timestamp="1700000000000">'
+            b"</event></events>"
+        )
+        client, session = make_client(FakeResponse(200, event_xml))
+        events, skipped = client.events(1000, 2000)
+        self.assertEqual((len(events), skipped), (1, 0))
+        self.assertEqual(events[0].name, "controller.access.card.duress")
+        self.assertIn("filter", session.request.call_args.kwargs["params"])
+
     def test_xml_with_a_dtd_is_refused(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(DTDForbidden):
             parse_export(b'<!DOCTYPE a [<!ENTITY x "boom">]><arxdata><persons/></arxdata>')

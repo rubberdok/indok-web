@@ -1,17 +1,19 @@
 import hashlib
 import json
 from datetime import datetime, timedelta, timezone as dt_timezone
+from types import SimpleNamespace
 from unittest import TestCase as PlainTestCase
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
-from django.core.exceptions import ValidationError as DjangoValidationError
-from django.test import TestCase, override_settings
+from django.core.exceptions import ImproperlyConfigured, ValidationError as DjangoValidationError
+from django.db import DatabaseError, IntegrityError
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from apps.arx import alerts, services
+from apps.arx import alerts, services, views
 from apps.arx.services import arx_card_number, csn_candidates
 from apps.arx.models import (
     ArxAreaMapping,
@@ -80,6 +82,70 @@ class ArxServiceTests(TestCase):
             responsible_email="o@example.org",
             responsible_phone="40000000",
         )
+
+    def test_arx_settings_enable_timestamp_and_area_mapping_validation(self):
+        cfg = get_arx_settings()
+        cfg.sync_enabled = False
+        cfg.save(update_fields=["sync_enabled"])
+        cfg.sync_enabled = True
+        cfg.save(update_fields=["sync_enabled"])
+        self.assertIsNotNone(get_arx_settings().sync_enabled_at)
+        self.assertEqual(str(cfg), "ARX settings")
+
+        area = JanHusArea.objects.create(name="Ungrantable area")
+        mapping = ArxAreaMapping(area=area, grants_access=True)
+        with self.assertRaises(DjangoValidationError):
+            mapping.full_clean()
+        mapping.grants_access = False
+        mapping.full_clean()
+        self.assertIn("(off)", str(mapping))
+
+    def test_desired_state_digest_requires_the_hmac_key(self):
+        state = services.DesiredState("indok-1", "Ola", "Nord", "4321", "123", "Mifare", ())
+        with self.settings(ARX_STATE_HMAC_KEY=""), self.assertRaises(ImproperlyConfigured):
+            state.digest()
+
+    def test_missing_user_and_holder_rows_are_ignored_during_state_reconciliation(self):
+        states = services._states_for_known_people({-1}, {-1}, {}, {}, {}, get_arx_settings())
+        self.assertEqual(states, {})
+
+    def test_pending_work_respects_batch_limit(self):
+        second_user = User.objects.create(username="kari", first_name="Kari", last_name="Nord", feide_userid="f-2")
+        second_card = NfcCard.objects.create(mifare_csn="1234567891")
+        NfcCardAssignment.objects.create(card=second_card, user=second_user, pin_code="4321")
+        JanHusBooking.objects.create(
+            starts_at=timezone.now() + timedelta(days=3),
+            ends_at=timezone.now() + timedelta(days=4),
+            area=self.area,
+            status=JanHusBookingStatus.CONFIRMED,
+            owner_user=second_user,
+            responsible_name="Kari",
+            responsible_email="k@example.org",
+            responsible_phone="40000001",
+        )
+        self.assertEqual(len(services.pending_work(limit=1)), 1)
+
+    def test_external_booking_in_an_unmapped_area_grants_no_window(self):
+        area = JanHusArea.objects.create(name="Unmapped")
+        booking = JanHusBooking.objects.create(
+            starts_at=timezone.now() + timedelta(days=3),
+            ends_at=timezone.now() + timedelta(days=4),
+            area=area,
+            owner_user=None,
+            is_external_booking=True,
+            booker_name="External",
+            responsible_name="Responsible",
+            responsible_email="external@example.org",
+            responsible_phone="40000001",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+        holder = ExternalCardHolder(name="Guest", card=NfcCard.objects.create(mifare_csn="2222222222"))
+        holder.pin_code = "5555"
+        holder.save()
+        ExternalBookingAccess.objects.create(booking=booking, holder=holder)
+
+        work_ids = {item["external_id"] for item in services.pending_work()}
+        self.assertNotIn(f"indok-ext-{holder.pk}", work_ids)
 
     def test_confirmed_booking_yields_one_work_item_with_buffer(self):
         (item,) = services.pending_work()
@@ -226,6 +292,36 @@ class ArxServiceTests(TestCase):
         self.assertEqual(services.ingest_events([ev], recent)["created"], 1)
         self.assertEqual(services.ingest_events([ev], recent)["created"], 0)
         self.assertEqual(NfcAccessEvent.objects.get().resolved_user, self.user)
+
+    def test_event_ingest_skips_missing_ids_unknown_types_and_bad_timestamps(self):
+        now_ms = int(timezone.now().timestamp() * 1000)
+        events = [
+            {"id": "", "name": "controller.access.card.valid.standard", "timestamp_ms": now_ms},
+            {"id": "unknown", "name": "irrelevant.event", "timestamp_ms": now_ms},
+            {"id": "bad", "name": "controller.access.card.valid.standard", "timestamp_ms": "invalid"},
+            {"id": "zero", "name": "controller.access.card.valid.standard", "timestamp_ms": 0},
+        ]
+        result = services.ingest_events(events, now_ms)
+        self.assertEqual((result["created"], result["skipped"]), (0, 4))
+
+    def test_duress_event_is_treated_as_access_granted(self):
+        self.assertEqual(
+            services._event_type("controller.access.card.duress"),
+            NfcAccessEvent.EventType.ACCESS_GRANTED,
+        )
+
+    def test_event_ingest_skips_a_concurrent_duplicate(self):
+        now_ms = int(timezone.now().timestamp() * 1000)
+        event = {
+            "id": "concurrent",
+            "name": "controller.access.card.valid.standard",
+            "timestamp_ms": now_ms,
+            "card_number": "123456789",
+            "card_format": "unknown",
+        }
+        with patch("apps.arx.services.NfcAccessEvent.objects.create", side_effect=IntegrityError):
+            result = services.ingest_events([event], now_ms)
+        self.assertEqual((result["created"], result["skipped"]), (0, 1))
 
     def test_event_with_an_ambiguous_number_links_nobody(self):
         cfg = get_arx_settings()
@@ -702,6 +798,36 @@ class ArxServiceTests(TestCase):
             self.assertEqual(alerts.check_runner(later), alerts.STOPPED)
             self.assertEqual(mail.call_args.kwargs["to"], ["kontakt@rubberdok.no"])
 
+    @override_settings(ARX_STATE_HMAC_KEY="")
+    def test_alert_check_is_off_without_the_runner_hmac_key(self):
+        self.assertIsNone(alerts.check_runner())
+
+    def test_alert_check_waits_when_there_is_no_sync_timestamp(self):
+        self._alerts_on(runner_last_ok_at=None, sync_enabled_at=None)
+        self.assertIsNone(alerts.check_runner())
+
+    def test_alert_email_failure_is_logged_without_blocking_the_status_check(self):
+        now = timezone.now()
+        self._alerts_on(runner_last_ok_at=now - timedelta(hours=25))
+        with patch("apps.arx.alerts.TransactionalEmail") as email:
+            email.return_value.send.side_effect = RuntimeError("mail unavailable")
+            with self.assertLogs("apps.arx.alerts", level="ERROR"):
+                self.assertEqual(alerts.check_runner(now), alerts.STOPPED)
+        self.assertEqual(get_arx_settings().alert_stage, ArxSettings.AlertStage.AFTER_24_HOURS)
+
+    def test_only_one_process_sends_the_recovery_email(self):
+        now = timezone.now()
+        rows = Mock()
+        rows.first.return_value = SimpleNamespace(
+            alert_stage=ArxSettings.AlertStage.AFTER_24_HOURS,
+            recovery_started_at=now - timedelta(minutes=4),
+            recovery_good_syncs=2,
+        )
+        rows.exclude.return_value.update.return_value = 0
+        with patch("apps.arx.alerts._rows", return_value=rows), patch("apps.arx.alerts.TransactionalEmail") as email:
+            self.assertIsNone(alerts.record_runner_status(True, now=now))
+        email.assert_not_called()
+
     def test_traffic_checks_at_most_every_five_minutes_and_a_failure_breaks_nothing(self):
         from apps.arx import middleware
 
@@ -720,6 +846,11 @@ class ArxServiceTests(TestCase):
             with self.assertLogs("apps.arx.middleware", level="ERROR"):
                 self.assertEqual(handler(None), "response")
 
+            check.side_effect = DatabaseError("database down")
+            clock.return_value = 1000.0 + 11 * every
+            with self.assertLogs("apps.arx.middleware", level="WARNING"):
+                self.assertEqual(handler(None), "response")
+
     @override_settings(ARX_STATE_HMAC_KEY="")
     def test_without_the_hmac_key_the_runner_api_is_off(self):
         response = self.client.get("/arx-runner/v1/work", HTTP_AUTHORIZATION="Bearer tok")
@@ -731,6 +862,65 @@ class ArxServiceTests(TestCase):
         ok = self.client.get("/arx-runner/v1/work", HTTP_AUTHORIZATION="Bearer tok")
         self.assertEqual(ok.status_code, 200)
         self.assertEqual(ok["Cache-Control"], "no-store")
+
+    def test_machine_runner_post_uses_token_instead_of_csrf(self):
+        client = Client(enforce_csrf_checks=True)
+        payload = json.dumps({"ok": True})
+        self.assertEqual(
+            client.post("/arx-runner/v1/status", payload, content_type="application/json").status_code,
+            401,
+        )
+        response = client.post(
+            "/arx-runner/v1/status",
+            payload,
+            content_type="application/json",
+            HTTP_AUTHORIZATION="Bearer tok",
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_runner_endpoints_validate_payloads_and_accept_empty_batches(self):
+        cases = (
+            ("/arx-runner/v1/results", b"\xff"),
+            ("/arx-runner/v1/results", json.dumps({"results": "not a list"})),
+            ("/arx-runner/v1/status", json.dumps({"ok": "true"})),
+            ("/arx-runner/v1/events", json.dumps({"events": "not a list"})),
+            ("/arx-runner/v1/events", json.dumps({"events": [], "new_cursor_ms": "invalid"})),
+        )
+        for path, body in cases:
+            with self.subTest(path=path, body=body):
+                response = self.client.post(
+                    path,
+                    body,
+                    content_type="application/json",
+                    HTTP_AUTHORIZATION="Bearer tok",
+                )
+                self.assertEqual(response.status_code, 400)
+
+        results = self.client.post(
+            "/arx-runner/v1/results",
+            json.dumps({"results": []}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION="Bearer tok",
+        )
+        events = self.client.post(
+            "/arx-runner/v1/events",
+            json.dumps({"events": [], "new_cursor_ms": 1}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION="Bearer tok",
+        )
+        cursor = self.client.get("/arx-runner/v1/event-cursor", HTTP_AUTHORIZATION="Bearer tok")
+        self.assertEqual(results.status_code, 200)
+        self.assertEqual(events.status_code, 200)
+        self.assertEqual(cursor.status_code, 200)
+
+    def test_runner_rejects_oversized_request_bodies(self):
+        response = self.client.post(
+            "/arx-runner/v1/results",
+            b"x" * (views.MAX_BODY_BYTES + 1),
+            content_type="application/json",
+            HTTP_AUTHORIZATION="Bearer tok",
+        )
+        self.assertEqual(response.status_code, 413)
 
     def test_polling_survives_an_invalid_unrelated_setting(self):
         ArxSettings.objects.filter(pk=ArxSettings.SINGLETON_PK).update(horizon_days=0)  # fails full_clean
@@ -754,6 +944,7 @@ class ArxServiceTests(TestCase):
             # behind the load balancer the LAST X-Forwarded-For entry counts, never the first
             ("203.0.113.7", True, {"HTTP_X_FORWARDED_FOR": "203.0.113.7, 198.51.100.9"}, 403),
             ("203.0.113.7", True, {"HTTP_X_FORWARDED_FOR": "198.51.100.9, 203.0.113.7"}, 200),
+            ("203.0.113.7", True, {"HTTP_X_FORWARDED_FOR": "not-an-ip"}, 403),
             ("203.0.113.7", False, {"HTTP_X_FORWARDED_FOR": "198.51.100.9, 203.0.113.7"}, 403),
         )
         for allowed, trust, headers, status in cases:
@@ -824,6 +1015,20 @@ class ArxServiceTests(TestCase):
         self.assertAlmostEqual((booking.starts_at - start).total_seconds(), 3600, delta=1)
         self.assertEqual(ArxPersonSync.objects.get(external_id=item["external_id"]).external_holder, holder)
 
+    def test_external_holder_validation_and_access_string(self):
+        holder = ExternalCardHolder(name="Ekstern", card=self.card)
+        self.assertFalse(holder.has_pin)
+        holder.pin_code = "5555"
+        self.assertTrue(holder.has_pin)
+        self.assertEqual(str(holder), "Ekstern (external card)")
+        with self.assertRaises(DjangoValidationError):
+            holder.full_clean()
+
+        external_booking = self._external_booking()
+        external_holder = self._external_holder()
+        access = ExternalBookingAccess.objects.create(booking=external_booking, holder=external_holder)
+        self.assertEqual(str(access), f"Ekstern Gjest -> booking {external_booking.pk}")
+
     def test_external_card_without_access_or_booking_is_never_sent(self):
         holder = self._external_holder()  # no booking
         unconfirmed = self._external_booking()
@@ -871,6 +1076,16 @@ class ArxServiceTests(TestCase):
         holder = good.save()
         self.assertEqual((holder.card.mifare_csn, holder.pin_code), ("1234567893", "1234"))
         self.assertNotIn("1234", holder.pin_code_encrypted)
+
+    def test_external_card_holder_admin_pages_open(self):
+        admin_user = User.objects.create_superuser(
+            username="admin-probe",
+            email="a@example.org",
+            password="test-password",
+        )
+        self.client.force_login(admin_user, backend="django.contrib.auth.backends.ModelBackend")
+        response = self.client.get(reverse("admin:arx_externalcardholder_add"))
+        self.assertEqual(response.status_code, 200)
 
     def test_external_cards_admin_needs_its_permission(self):
         staff = User.objects.create(username="staff3", is_staff=True)

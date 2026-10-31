@@ -65,7 +65,9 @@ def _ip_allowed(request, cfg) -> bool:
 
 
 def runner_auth(view):
-    @csrf_exempt
+    # A machine API: only the bearer token and IP allowlist count, never browser cookies.
+    # See test_machine_runner_post_uses_token_instead_of_csrf.
+    @csrf_exempt  # NOSONAR
     @wraps(view)
     def wrapper(request, *args, **kwargs):
         if not _ip_allowed(request, get_arx_settings()):
@@ -89,7 +91,7 @@ def runner_auth(view):
 def _json_body(request):
     try:
         data = json.loads(request.body or b"{}")
-    except (ValueError, UnicodeDecodeError):
+    except ValueError:
         return None
     return data if isinstance(data, dict) else None
 

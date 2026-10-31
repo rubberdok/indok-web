@@ -381,6 +381,23 @@ class ArxClient:
 
     # ---- low level
 
+    def _read_response(self, resp, max_bytes: int) -> Optional[bytes]:
+        status = resp.status_code
+        if status == 200:
+            body = self._read_capped(resp, max_bytes)
+            self._breaker.success()
+            return body
+        if 400 <= status < 500:
+            resp.close()
+            raise ArxClientError(status)
+        if status == 500:
+            detail = self._read_capped(resp, 4096).decode("utf-8", "replace")
+            raise ArxRejected(detail)
+        resp.close()
+        if status in (502, 503, 504):
+            return None
+        raise ArxTransportError(f"unexpected HTTP {status}")
+
     def _request(self, method: str, path: str, *, params=None, files=None, max_bytes: int) -> bytes:
         if (method, path) not in ALLOWED:
             raise ArxConfigError("endpoint not allowed")
@@ -415,25 +432,15 @@ class ArxClient:
 
             status = resp.status_code
             logger.info("ARX %s %s -> %s in %.2fs", method, path, status, time.monotonic() - started)
-            if status == 200:
-                body = self._read_capped(resp, max_bytes)
-                self._breaker.success()
+            body = self._read_response(resp, max_bytes)
+            if body is not None:
                 return body
-            if 400 <= status < 500:
-                resp.close()
-                raise ArxClientError(status)
-            if status == 500:
-                detail = self._read_capped(resp, 4096).decode("utf-8", "replace")
-                raise ArxRejected(detail)
-            resp.close()
-            if status in (502, 503, 504):
-                self._breaker.failure()
-                last_exc = ArxTransportError(f"HTTP {status}")
-                if self._breaker.is_open:
-                    break
-                self._backoff(attempt)
-                continue
-            raise ArxTransportError(f"unexpected HTTP {status}")
+            self._breaker.failure()
+            last_exc = ArxTransportError(f"HTTP {status}")
+            if self._breaker.is_open:
+                break
+            self._backoff(attempt)
+            continue
         raise ArxTransportError("ARX unreachable after retries") from last_exc
 
     def _backoff(self, attempt: int) -> None:

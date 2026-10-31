@@ -93,7 +93,8 @@ AUTH_USER_MODEL = "users.User"
 SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default="localhost")
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["http://localhost:3000", "http://frontend:3000"])
+LOCALHOST_FRONTEND_ORIGIN = "http://localhost:3000"
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[LOCALHOST_FRONTEND_ORIGIN, "http://frontend:3000"])
 CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN", default="localhost")
 CSRF_COOKIE_NAME = env("CSRF_COOKIE_NAME", default="csrf")
 CSRF_FAILURE_VIEW = env("CSRF_FAILURE_VIEW", default="config.views.csrf.csrf_failure")
@@ -158,8 +159,8 @@ TEMPLATES = [
 
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default="http://localhost:3000")
-CORS_ALLOWED_ORIGIN_REGEXES = env.list("CORS_ALLOWED_ORIGIN_REGEXES", default=["http://localhost:3000"])
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[LOCALHOST_FRONTEND_ORIGIN])
+CORS_ALLOWED_ORIGIN_REGEXES = env.list("CORS_ALLOWED_ORIGIN_REGEXES", default=[LOCALHOST_FRONTEND_ORIGIN])
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 # URLS
@@ -186,7 +187,7 @@ ADMIN_URL = "admin/"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"}},
+    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"}},
     "handlers": {
         "console": {
             "level": "DEBUG",

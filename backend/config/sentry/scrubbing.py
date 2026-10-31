@@ -87,8 +87,7 @@ def _in_sensitive_module(module) -> bool:
 def _frames(event: dict):
     for container in ("exception", "threads"):
         for value in (event.get(container) or {}).get("values") or []:
-            for frame in (value.get("stacktrace") or {}).get("frames") or []:
-                yield frame
+            yield from (value.get("stacktrace") or {}).get("frames") or []
 
 
 def _mentions(pattern, value) -> bool:
@@ -111,29 +110,45 @@ def _filter_sensitive_keys(value) -> None:
             _filter_sensitive_keys(item)
 
 
-def scrub_event(event: dict, hint=None) -> dict:
-    request = event.get("request") or {}
+def _is_sensitive_request(request: dict) -> bool:
     url = str(request.get("url", ""))
-    on_runner_path = RUNNER_PATH in url
-    sensitive_request = on_runner_path or (
-        "graphql" in url.lower() and _mentions(SENSITIVE_GRAPHQL, request.get("data"))
-    )
-    if sensitive_request:
-        # headers: the runner token, the session cookie and any Authorization header
-        for key in ("data", "query_string", "cookies", "env", "headers"):
-            request.pop(key, None)
-        event.pop("extra", None)
+    return RUNNER_PATH in url or ("graphql" in url.lower() and _mentions(SENSITIVE_GRAPHQL, request.get("data")))
 
+
+def _scrub_sensitive_request(event: dict, request: dict) -> None:
+    for key in ("data", "query_string", "cookies", "env", "headers"):
+        request.pop(key, None)
+    event.pop("extra", None)
+
+
+def _scrub_frames(event: dict, sensitive_request: bool) -> None:
     for frame in _frames(event):
         if sensitive_request or _in_sensitive_module(frame.get("module")):
             frame.pop("vars", None)
 
+
+def _scrub_query_breadcrumbs(event: dict) -> None:
     for crumb in (event.get("breadcrumbs") or {}).get("values") or []:
         if crumb.get("category") == "query" and _mentions(SENSITIVE_SQL, crumb.get("message")):
             crumb.pop("data", None)
+
+
+def _scrub_sensitive_spans(event: dict) -> None:
     for span in event.get("spans") or []:
         if _mentions(SENSITIVE_SQL, span.get("description")):
             span.pop("data", None)
+
+
+# Sentry's before_send callback signature includes `hint`, even when this scrubber does not inspect it.
+def scrub_event(event: dict, hint=None) -> dict:  # NOSONAR
+    request = event.get("request") or {}
+    sensitive_request = _is_sensitive_request(request)
+    if sensitive_request:
+        # Runner credentials and GraphQL mutations never leave the event.
+        _scrub_sensitive_request(event, request)
+    _scrub_frames(event, sensitive_request)
+    _scrub_query_breadcrumbs(event)
+    _scrub_sensitive_spans(event)
 
     # The same keys Sentry's scrubber filters, in case it is not configured (build_event_scrubber).
     _filter_sensitive_keys(event)

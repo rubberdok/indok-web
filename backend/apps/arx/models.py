@@ -6,6 +6,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
+ARX_SETTINGS_VERBOSE_NAME = "ARX settings"
+NFC_CARD_MODEL = "nfc.NfcCard"
+
 
 class ArxSettings(models.Model):
     """Singleton, editable in Django admin. Same pattern as nfc.NfcSettings."""
@@ -87,8 +90,8 @@ class ArxSettings(models.Model):
     card_digits_warning_at = models.DateTimeField(null=True, blank=True, editable=False)
 
     class Meta:
-        verbose_name = "ARX settings"
-        verbose_name_plural = "ARX settings"
+        verbose_name = ARX_SETTINGS_VERBOSE_NAME
+        verbose_name_plural = ARX_SETTINGS_VERBOSE_NAME
 
     def clean(self):
         if self.sync_enabled and not (self.card_format_classic.strip() and self.card_format_desfire.strip()):
@@ -113,7 +116,7 @@ class ArxSettings(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return "ARX settings"
+        return ARX_SETTINGS_VERBOSE_NAME
 
 
 def get_arx_settings() -> ArxSettings:
@@ -195,7 +198,9 @@ class ArxPersonSync(models.Model):
 
     # Takeover approved in Django admin: this card may be moved away from that ARX person.
     takeover_from_arx_person_id = models.CharField(max_length=64, blank=True, default="")
-    takeover_card = models.ForeignKey("nfc.NfcCard", on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
+    takeover_card = models.ForeignKey(
+        NFC_CARD_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
     takeover_approved_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -227,7 +232,7 @@ class ArxObservedCardFormat(models.Model):
     right after its first failed attempt.
     """
 
-    card = models.OneToOneField("nfc.NfcCard", on_delete=models.CASCADE, related_name="arx_observed_format")
+    card = models.OneToOneField(NFC_CARD_MODEL, on_delete=models.CASCADE, related_name="arx_observed_format")
     format_name = models.CharField(max_length=100)
     observed_at = models.DateTimeField(auto_now=True)
 
@@ -256,7 +261,7 @@ class ExternalCardHolder(models.Model):
     """
 
     name = models.CharField(max_length=150, help_text="Shown in ARX and in the door log.")
-    card = models.OneToOneField("nfc.NfcCard", on_delete=models.PROTECT, related_name="external_holder")
+    card = models.OneToOneField(NFC_CARD_MODEL, on_delete=models.PROTECT, related_name="external_holder")
     # Encrypted like the website users' PINs; read and set through pin_code.
     pin_code_encrypted = models.TextField(blank=True, default="", editable=False)
     notes = models.CharField(max_length=300, blank=True, default="")

@@ -36,10 +36,10 @@ class SuperuserChangesOnly:
     def has_add_permission(self, request):
         return request.user.is_superuser
 
-    def has_change_permission(self, request, obj=None):
+    def has_change_permission(self, request, obj=None):  # NOSONAR
         return request.user.is_superuser
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request, obj=None):  # NOSONAR
         return request.user.is_superuser
 
 
@@ -119,16 +119,18 @@ class ManageExternalCards:
     def has_module_permission(self, request):
         return self._allowed(request) or super().has_module_permission(request)
 
-    def has_view_permission(self, request, obj=None):
+    # Django passes `obj` to object-level hooks; access is role-wide here.
+    def has_view_permission(self, request, obj=None):  # NOSONAR
         return self._allowed(request)
 
-    def has_add_permission(self, request, obj=None):
+    # ModelAdmin passes only the request; a TabularInline also supplies its parent object.
+    def has_add_permission(self, request, obj=None):  # NOSONAR
         return self._allowed(request)
 
-    def has_change_permission(self, request, obj=None):
+    def has_change_permission(self, request, obj=None):  # NOSONAR
         return self._allowed(request)
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request, obj=None):  # NOSONAR
         return self._allowed(request)
 
 
@@ -171,7 +173,7 @@ class ExternalCardHolderForm(forms.ModelForm):
 
     def clean_pin(self):
         pin = (self.cleaned_data.get("pin") or "").strip()
-        if pin and not re.fullmatch(r"[0-9]{4}", pin):
+        if pin and not re.fullmatch(r"\d{4}", pin, flags=re.ASCII):
             raise ValidationError("PIN-koden må være nøyaktig 4 sifre.")
         if not pin and not (self.instance.pk and self.instance.has_pin):
             raise ValidationError("Et nytt eksternt kort trenger en PIN-kode: døren krever kort og PIN.")
