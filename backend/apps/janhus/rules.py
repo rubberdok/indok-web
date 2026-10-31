@@ -46,10 +46,7 @@ def validate_booking_window(*, starts_at, owner_organization, settings: JanHusBo
 
 def determine_initial_status(
     *,
-    starts_at,
-    owner_organization,
     is_external_booking: bool,
-    settings: JanHusBookingSettings,
     requires_payment: bool = False,
 ) -> str:
     """

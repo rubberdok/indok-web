@@ -119,6 +119,7 @@ export const BookingCalendar: React.FC = () => {
 
   const listedBookings = useMemo(() => selectedBookings.filter(isListed), [selectedBookings]);
   const someAreWaiting = listedBookings.length < selectedBookings.length;
+  const emptyDayText = someAreWaiting ? "Ingen bekreftede bookinger denne dagen." : "Ingen bookinger denne dagen.";
   const namesHidden = listedBookings.some((booking) => !booking.ownerDisplayName && booking.status !== "BLOCKED");
 
   return (
@@ -129,7 +130,7 @@ export const BookingCalendar: React.FC = () => {
         startDate={selectedDate}
         endDate={selectedDate}
         isDateDisabled={(date) => date.isBefore(today, "day")}
-        getMarkerCount={(date) => bookingsOn(date).filter(isListed).length}
+        getMarkerCount={(date) => bookingsOn(date).length}
       />
       {selectedDate ? (
         <Stack spacing={2}>
@@ -172,7 +173,7 @@ export const BookingCalendar: React.FC = () => {
           <Stack spacing={0.5}>
             <Typography variant="subtitle2">Bookinger</Typography>
             {listedBookings.length === 0 ? (
-              <Typography color="text.secondary">Ingen bookinger denne dagen.</Typography>
+              <Typography color="text.secondary">{emptyDayText}</Typography>
             ) : (
               <List dense disablePadding>
                 {listedBookings.map((booking) => (

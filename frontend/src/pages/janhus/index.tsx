@@ -71,7 +71,7 @@ const JanHusPage: NextPageWithLayout = () => {
               </Card>
             </Grid>
 
-            {adminAccess?.canManage || adminAccess?.canView ? (
+            {(adminAccess?.canManage || adminAccess?.canView) && (
               <Grid item xs={12} md={6}>
                 <Card sx={{ height: "100%" }}>
                   <CardContent>
@@ -89,7 +89,9 @@ const JanHusPage: NextPageWithLayout = () => {
                   </CardActions>
                 </Card>
               </Grid>
-            ) : adminAccess?.canViewDoorLog ? (
+            )}
+
+            {!(adminAccess?.canManage || adminAccess?.canView) && adminAccess?.canViewDoorLog && (
               // Admins reach the door log from the admin page; this is for those who may only read the log.
               <Grid item xs={12} md={6}>
                 <Card sx={{ height: "100%" }}>
@@ -110,7 +112,7 @@ const JanHusPage: NextPageWithLayout = () => {
                   </CardActions>
                 </Card>
               </Grid>
-            ) : null}
+            )}
 
             <Grid item xs={12}>
               <Card>

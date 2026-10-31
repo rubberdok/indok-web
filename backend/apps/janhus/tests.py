@@ -1,6 +1,7 @@
 import json
 from decimal import Decimal
 from datetime import date, datetime, time, timedelta
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
@@ -8,11 +9,20 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
+from decorators import PermissionDenied
 from graphql import GraphQLError
 
-from apps.ecommerce.models import Order
+from apps.ecommerce.models import Order, Product
 from apps.janhus import mail
-from apps.janhus.mutations import _apply_overlap_rules, _resolve_area
+from apps.janhus.door_access import door_access_warnings, user_by_feide_email
+from apps.janhus.guest_list import build_guest_list_entries
+from apps.janhus.mutations import (
+    _apply_overlap_rules,
+    _ensure_personal_booking_allowed,
+    _resolve_area,
+    _resolve_payment_product_organization,
+    _resolve_user_or_none,
+)
 from apps.janhus.mail import (
     send_booking_confirmation,
     send_booking_declined,
@@ -28,7 +38,9 @@ from apps.janhus.models import (
     JanHusBookingSettings,
     JanHusBookingStatus,
     JanHusEventType,
+    JanHusOrganizationDoorAccess,
 )
+from apps.janhus.resolvers import _search_users_for_booking
 from apps.janhus.permissions import (
     can_book_for_organization,
     can_edit_guest_list,
@@ -53,11 +65,39 @@ from apps.janhus.rules import (
     validate_booking_window,
     validate_time_rules,
 )
+from apps.janhus.types import JanHusBookingType
 from apps.organizations.models import Organization
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.ecommerce import ProductFactory
 from utils.testing.factories.users import UserFactory
+
+
+class DoorAccessWarningTests(TestCase):
+    def test_warnings_cover_unlinked_bookers_and_no_owner(self):
+        self.assertIsNone(user_by_feide_email(" "))
+        self.assertTrue(door_access_warnings(SimpleNamespace(is_external_booking=True)))
+
+        organization = OrganizationFactory()
+        booker_only = SimpleNamespace(
+            is_external_booking=False,
+            owner_organization_id=organization.id,
+            organization_door_access=JanHusOrganizationDoorAccess.BOOKER_ONLY,
+            booker_user_id=None,
+        )
+        self.assertTrue(door_access_warnings(booker_only))
+
+        organization_without_leaders = SimpleNamespace(
+            is_external_booking=False,
+            owner_organization_id=organization.id,
+            organization_door_access=JanHusOrganizationDoorAccess.LEADERS,
+        )
+        self.assertTrue(door_access_warnings(organization_without_leaders))
+
+        ownerless = SimpleNamespace(is_external_booking=False, owner_organization_id=None, owner_user_id=None)
+        self.assertTrue(door_access_warnings(ownerless))
+        owner = SimpleNamespace(is_external_booking=False, owner_organization_id=None, owner_user_id=1)
+        self.assertEqual(door_access_warnings(owner), [])
 
 
 class JanHusBaseTestCase(ExtendedGraphQLTestCase):
@@ -84,7 +124,126 @@ class JanHusBaseTestCase(ExtendedGraphQLTestCase):
         user.user_permissions.add(Permission.objects.get(codename="manage_booking", content_type=content_type))
 
 
+class JanHusBookingFieldPermissionTestCase(JanHusBaseTestCase):
+    def test_booking_detail_resolvers_reject_unconnected_users(self):
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.CONFIRMED,
+        )
+        info = SimpleNamespace(context=SimpleNamespace(user=UserFactory(is_indok=True)))
+        resolvers = (
+            JanHusBookingType.resolve_guest_list_entries,
+            JanHusBookingType.resolve_door_access_warnings,
+            JanHusBookingType.resolve_total_price,
+            JanHusBookingType.resolve_outstanding_deposit_amount,
+        )
+        for resolver in resolvers:
+            with self.subTest(resolver=resolver.__name__), self.assertRaises(PermissionDenied):
+                resolver(booking, info)
+
+    def test_unowned_calendar_booking_uses_a_generic_display_name(self):
+        booking = SimpleNamespace(
+            status=JanHusBookingStatus.CONFIRMED,
+            owner_organization_id=None,
+            owner_user_id=None,
+            is_external_booking=False,
+            booker_name="",
+        )
+        info = SimpleNamespace(context=SimpleNamespace(user=self.user))
+        self.assertEqual(JanHusBookingType.resolve_owner_display_name(booking, info), "Booket")
+
+
 class JanHusMutationsTestCase(JanHusBaseTestCase):
+    def test_personal_booking_guard_allows_exempt_booking_types(self):
+        settings = JanHusBookingSettings(private_bookings_enabled=False)
+        # Returning without an exception is the assertion: organization and external bookings are exempt.
+        _ensure_personal_booking_allowed(
+            actor=self.user,
+            owner_organization=OrganizationFactory(),
+            is_external_booking=False,
+            settings=settings,
+        )
+        _ensure_personal_booking_allowed(
+            actor=self.user,
+            owner_organization=None,
+            is_external_booking=True,
+            settings=settings,
+        )
+
+    def test_empty_guest_list_skips_user_lookup(self):
+        with patch("apps.janhus.guest_list._users_by_feide_id") as users:
+            self.assertEqual(build_guest_list_entries(""), [])
+        users.assert_not_called()
+
+    def test_guest_user_search_handles_short_and_full_name_queries(self):
+        user = UserFactory(first_name="Olav", last_name="Nordmann")
+        self.assertEqual(_search_users_for_booking(" O "), [])
+        results = _search_users_for_booking("Olav Nordmann")
+        self.assertEqual([result["id"] for result in results], [user.id])
+
+    def test_create_booking_rejects_unknown_organization_and_non_admins(self):
+        JanHusBookingSettings.objects.create(private_bookings_enabled=True)
+        base = f"""
+            startsAt: "{self.start_dt.isoformat()}"
+            endsAt: "{self.end_dt.isoformat()}"
+            area: "{self.first_floor_area.id}"
+            responsibleName: "Responsible"
+            responsibleEmail: "responsible@example.com"
+            responsiblePhone: "41234567"
+        """
+        self.add_booking_permission(self.user)
+        unknown_organization = self.query(
+            f"""
+                mutation {{
+                  createJanhusBooking(bookingData: {{ {base} ownerOrganizationId: "999999" }}) {{ ok }}
+                }}
+            """,
+            user=self.user,
+        )
+        self.assertResponseHasErrors(unknown_organization)
+
+        non_admin = self.query(
+            f"""
+                mutation {{
+                  createJanhusBooking(bookingData: {{ {base} }}) {{ ok }}
+                }}
+            """,
+            user=self.other_user,
+        )
+        self.assertResponseHasErrors(non_admin)
+
+    def test_resolve_user_or_none_handles_empty_invalid_and_missing_ids(self):
+        self.assertIsNone(_resolve_user_or_none(None))
+        self.assertEqual(_resolve_user_or_none(self.user.pk), self.user)
+        for user_id in ("not-an-id", "999999"):
+            with self.subTest(user_id=user_id), self.assertRaises(GraphQLError):
+                _resolve_user_or_none(user_id)
+
+    def test_updating_booking_settings_creates_the_singleton(self):
+        content_type = ContentType.objects.get_for_model(JanHusBooking)
+        self.user.user_permissions.add(Permission.objects.get(codename="manage_settings", content_type=content_type))
+        response = self.query(
+            "mutation { updateJanhusBookingSettings(settingsData: { minDurationMinutes: 30 }) { ok } }",
+            user=self.user,
+        )
+        self.assertResponseNoErrors(response)
+        self.assertEqual(JanHusBookingSettings.objects.get().min_duration_minutes, 30)
+
+    def test_updating_booking_settings_rejects_invalid_duration_granularity(self):
+        content_type = ContentType.objects.get_for_model(JanHusBooking)
+        self.user.user_permissions.add(Permission.objects.get(codename="manage_settings", content_type=content_type))
+        response = self.query(
+            "mutation { updateJanhusBookingSettings(settingsData: { minDurationMinutes: 20 }) { ok } }",
+            user=self.user,
+        )
+        self.assertResponseHasErrors(response)
+
     def test_create_booking_request_anonymous(self):
         query = f"""
             mutation {{
@@ -1179,6 +1338,62 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
         self.assertEqual(expected_organization.id, booking.vipps_product.organization_id)
         self.assertEqual(fallback_organization.id, expected_organization.id)
 
+    def test_payment_product_creation_refreshes_an_existing_product(self):
+        self.add_booking_permission(self.user)
+        seller = OrganizationFactory()
+        JanHusBookingSettings.objects.create(payment_provider_organization=seller)
+        booking = self._payment_booking()
+        product = ProductFactory(name="Old", description="Old description", price=Decimal("1"), organization=seller)
+        booking.vipps_product = product
+        booking.save(update_fields=["vipps_product", "updated_at"])
+        product_count = Product.objects.count()
+
+        response = self.query(self._create_payment_product_query(booking), user=self.user)
+        self.assertResponseNoErrors(response)
+
+        booking.refresh_from_db()
+        product.refresh_from_db()
+        self.assertEqual(Product.objects.count(), product_count)
+        self.assertEqual(booking.vipps_product_id, product.id)
+        self.assertEqual(product.price, booking.total_price + booking.deposit_amount)
+
+    def test_payment_product_requires_a_seller_organization(self):
+        Organization.objects.all().delete()
+        settings = JanHusBookingSettings(payment_provider_organization=None)
+        with self.assertRaises(GraphQLError) as error:
+            _resolve_payment_product_organization(settings=settings)
+        self.assertIn("Kontakt Rubberdøk", str(error.exception))
+
+    def test_confirmation_mail_failure_does_not_revert_a_paid_booking(self):
+        self.first_floor_area.internal_price_per_hour = Decimal("100")
+        self.first_floor_area.save()
+        booking = JanHusBooking.objects.create(
+            starts_at=self.start_dt,
+            ends_at=self.end_dt,
+            area=self.first_floor_area,
+            owner_user=self.user,
+            responsible_name="Responsible",
+            responsible_email="responsible@example.com",
+            responsible_phone="41234567",
+            status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
+            deposit_status=JanHusDepositStatus.PAID,
+        )
+        product = ProductFactory(price=booking.total_price)
+        booking.vipps_product = product
+        booking.save(update_fields=["vipps_product", "updated_at"])
+
+        with patch("apps.janhus.signals.send_booking_confirmation", side_effect=RuntimeError("mail unavailable")):
+            with self.assertLogs("apps.janhus.signals", level="ERROR"):
+                Order.objects.create(
+                    product=product,
+                    user=self.user,
+                    quantity=1,
+                    total_price=booking.total_price,
+                    payment_status=Order.PaymentStatus.CAPTURED,
+                )
+        booking.refresh_from_db()
+        self.assertEqual(booking.status, JanHusBookingStatus.CONFIRMED)
+
     def test_payment_product_seller_ignores_booking_owner_organization(self):
         """
         Product.organization is the seller, never the buyer. A booking made by a
@@ -1629,6 +1844,41 @@ class JanHusMutationsTestCase(JanHusBaseTestCase):
                 self.assertResponseNoErrors(response)
                 self.assertEqual(expected, mocked_send.called)
 
+    def test_booking_review_updates_the_booker_message_and_deposit_status(self):
+        self.add_booking_permission(self.user)
+        booking = self._pending_booking()
+        response = self.query(
+            f"""
+                mutation {{
+                  reviewJanhusBooking(
+                    reviewData: {{
+                      id: "{booking.id}"
+                      status: "PENDING_ADMIN_REVIEW"
+                      bookerMessage: "Nøkkelen ligger i resepsjonen."
+                      depositStatus: "REQUESTED"
+                    }}
+                  ) {{ ok }}
+                }}
+            """,
+            user=self.user,
+        )
+        self.assertResponseNoErrors(response)
+        booking.refresh_from_db()
+        self.assertEqual(booking.booker_message, "Nøkkelen ligger i resepsjonen.")
+        self.assertEqual(booking.deposit_status, JanHusDepositStatus.REQUESTED)
+
+        invalid = self.query(
+            f"""
+                mutation {{
+                  reviewJanhusBooking(
+                    reviewData: {{ id: "{booking.id}" status: "PENDING_ADMIN_REVIEW" depositStatus: "INVALID" }}
+                  ) {{ ok }}
+                }}
+            """,
+            user=self.user,
+        )
+        self.assertResponseHasErrors(invalid)
+
     def test_rejecting_a_request_mails_the_requester_but_approving_does_not(self):
         self.add_booking_permission(self.user)
 
@@ -1999,7 +2249,11 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
             bookerEmail
             bookerPhone
             guestList
+            guestListEntries { displayName }
             comment
+            totalPrice
+            outstandingDepositAmount
+            doorAccessWarnings
           }
         }
     """
@@ -2114,6 +2368,11 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
             starts_at=self.start_dt + timedelta(days=3),
             ends_at=self.end_dt + timedelta(days=3),
         )
+        unowned = self._booking_with_contact_details(
+            owner_user=None,
+            starts_at=self.start_dt + timedelta(days=4),
+            ends_at=self.end_dt + timedelta(days=4),
+        )
 
         # anonymous first: self.query keeps the session
         anonymous = self.query(self.CALENDAR_QUERY)
@@ -2134,6 +2393,7 @@ class JanHusResolversTestCase(JanHusBaseTestCase):
                 str(for_organization.id): "Hyttestyret",
                 str(external.id): "Ekstern Person",
                 str(blocked.id): "Stengt",
+                str(unowned.id): "Booket",
             },
             names,
         )
@@ -2307,6 +2567,21 @@ class JanHusAreaTestCase(JanHusBaseTestCase):
 
         set_active(True)
         self.assertTrue(self.first_floor_area.is_active)
+
+    def test_area_cannot_be_moved_under_its_descendant(self):
+        content_type = ContentType.objects.get_for_model(JanHusBooking)
+        self.user.user_permissions.add(Permission.objects.get(codename="manage_settings", content_type=content_type))
+        response = self.query(
+            f"""
+                mutation {{
+                  updateJanhusArea(
+                    areaData: {{ id: "{self.entire_house_area.id}", parentId: "{self.first_floor_area.id}" }}
+                  ) {{ ok }}
+                }}
+            """,
+            user=self.user,
+        )
+        self.assertResponseHasErrors(response)
 
     def test_delete_area_soft_deletes_when_referenced(self):
         JanHusBooking.objects.create(
@@ -2557,23 +2832,17 @@ class JanHusRulesTestCase(TestCase):
             status=status or JanHusBookingStatus.CONFIRMED,
         )
 
-    def test_initial_status_depends_on_the_owner_and_how_far_ahead_the_booking_is(self):
-        # The defaults: personal bookings open 4 weeks ahead, organisation bookings 6.
-        organization = OrganizationFactory()
+    def test_initial_status_depends_on_booking_type_and_payment(self):
         cases = [
-            ("external needs review", None, 14, True, False, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
-            ("personal inside the window", None, 14, False, False, JanHusBookingStatus.CONFIRMED),
-            ("personal waits for payment", None, 14, False, True, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
-            ("organisation inside the window", organization, 14, False, False, JanHusBookingStatus.CONFIRMED),
+            ("external needs review", True, False, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
+            ("personal inside the window", False, False, JanHusBookingStatus.CONFIRMED),
+            ("personal waits for payment", False, True, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
         ]
 
-        for label, owner_organization, days, is_external, requires_payment, expected in cases:
+        for label, is_external, requires_payment, expected in cases:
             with self.subTest(case=label):
                 initial_status = determine_initial_status(
-                    starts_at=self._at(days=days),
-                    owner_organization=owner_organization,
                     is_external_booking=is_external,
-                    settings=self.settings,
                     requires_payment=requires_payment,
                 )
                 self.assertEqual(expected, initial_status)
@@ -2594,23 +2863,6 @@ class JanHusRulesTestCase(TestCase):
             with self.subTest(case=label):
                 with self.assertRaises(GraphQLError):
                     check(days, owner_organization)
-
-    def test_an_admins_booking_or_approval_is_never_refused_for_being_far_ahead(self):
-        organization = OrganizationFactory()
-        cases = [
-            ("personal", None, False, JanHusBookingStatus.CONFIRMED),
-            ("organisation", organization, False, JanHusBookingStatus.CONFIRMED),
-            ("external", None, True, JanHusBookingStatus.PENDING_ADMIN_REVIEW),
-        ]
-        for label, owner_organization, is_external, expected in cases:
-            with self.subTest(case=label):
-                initial_status = determine_initial_status(
-                    starts_at=self._at(days=365),
-                    owner_organization=owner_organization,
-                    is_external_booking=is_external,
-                    settings=self.settings,
-                )
-                self.assertEqual(expected, initial_status)
 
     def test_the_windows_follow_the_settings(self):
         self.settings.organization_booking_opens_weeks_before = 30
@@ -2900,6 +3152,20 @@ class JanHusPricingTestCase(TestCase):
         defaults.update(overrides)
         return JanHusBooking.objects.create(**defaults)
 
+    def test_booking_validation_rejects_conflicting_or_missing_owners(self):
+        organization = OrganizationFactory()
+        for booking in (
+            self._booking(owner_organization=organization),
+            self._booking(owner_user=None),
+        ):
+            with self.subTest(booking=booking):
+                with self.assertRaises(DjangoValidationError):
+                    booking.full_clean()
+
+    def test_ownerless_booking_string_has_a_safe_fallback(self):
+        booking = self._booking(owner_user=None, booker_name="")
+        self.assertIn("Unknown", str(booking))
+
     def test_external_pricing_is_chosen_by_booking_type_or_override(self):
         external = {"owner_user": None, "is_external_booking": True}
         cases = [
@@ -2929,6 +3195,24 @@ class JanHusPricingTestCase(TestCase):
         for label, minutes, overrides, expected in cases:
             with self.subTest(case=label):
                 self.assertEqual(expected, self._booking(minutes=minutes, **overrides).total_price)
+
+    def test_computed_price_is_rounded_up_to_a_whole_krone(self):
+        for minutes, expected in [(25, Decimal("42")), (20, Decimal("34")), (60, Decimal("100"))]:
+            with self.subTest(minutes=minutes):
+                self.assertEqual(expected, self._booking(minutes=minutes).total_price)
+
+    def test_hand_entered_amounts_keep_at_most_two_decimals(self):
+        booking = self._booking(
+            price_override_amount=Decimal("42.005"),
+            deposit_amount=Decimal("10.0049"),
+            deposit_status=JanHusDepositStatus.REQUIRED,
+        )
+        self.assertEqual(Decimal("42.01"), booking.total_price)
+        self.assertEqual(Decimal("10.00"), booking.outstanding_deposit_amount)
+
+        booking.refresh_from_db()
+        self.assertEqual(Decimal("42.01"), booking.price_override_amount)
+        self.assertEqual(Decimal("10.00"), booking.deposit_amount)
 
     def test_deposit_is_outstanding_only_while_required_or_requested(self):
         outstanding = [JanHusDepositStatus.REQUIRED, JanHusDepositStatus.REQUESTED]

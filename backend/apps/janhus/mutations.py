@@ -260,7 +260,7 @@ def _ensure_non_org_booking_paid_before_confirmation(booking: JanHusBooking) -> 
     if paid_amount < required_payment:
         missing_amount = required_payment - paid_amount
         raise GraphQLError(
-            f"Non-organization bookings must be fully paid before being confirmed. Missing amount: {missing_amount} NOK"
+            f"Bookinger uten forening må være fullt betalt før de kan bekreftes. Mangler: {missing_amount:.2f} kr"
         )
 
     _attach_latest_successful_order(booking)
@@ -307,7 +307,7 @@ def _resolve_payment_product_organization(*, settings: JanHusBookingSettings) ->
     if organization:
         return organization
 
-    raise GraphQLError("Ingen forening er satt som selger av JanHus-betalinger. " "Kontakt Rubberdøk")
+    raise GraphQLError("Ingen forening er satt som selger av JanHus-betalinger. Kontakt Rubberdøk")
 
 
 def _sync_existing_vipps_product(booking: JanHusBooking) -> None:
@@ -322,7 +322,7 @@ def _sync_existing_vipps_product(booking: JanHusBooking) -> None:
 
 
 OVERLAP_FIELD_DESCRIPTION = (
-    "Existing bookings this booking overlaps. Non-empty when an admin has " "deliberately double-booked."
+    "Existing bookings this booking overlaps. Non-empty when an admin has deliberately double-booked."
 )
 
 
@@ -537,10 +537,7 @@ class CreateJanHusBooking(graphene.Mutation):
             owner_user = actor
 
         status = determine_initial_status(
-            starts_at=booking_data["starts_at"],
-            owner_organization=owner_organization,
             is_external_booking=is_external_booking,
-            settings=settings,
             requires_payment=not is_external_booking and owner_organization is None,
         )
 
@@ -924,10 +921,7 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
             is_external_booking = booking_request.requester_user is None
 
             initial_status = determine_initial_status(
-                starts_at=booking_request.starts_at,
-                owner_organization=booking_request.owner_organization,
                 is_external_booking=is_external_booking,
-                settings=settings,
             )
 
             if _is_non_organization_booking(booking_request):

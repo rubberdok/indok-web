@@ -1,6 +1,6 @@
 import secrets
 from datetime import date
-from decimal import Decimal
+from decimal import ROUND_CEILING, ROUND_HALF_UP, Decimal
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -10,6 +10,16 @@ from apps.organizations.models import Organization
 
 BOOKING_REFERENCE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"
 BOOKING_REFERENCE_LENGTH = 8
+
+
+def round_up_to_whole_krone(amount: Decimal) -> Decimal:
+    """Vipps cannot take a price with a repeating decimal, so a computed price is rounded up to a whole krone."""
+    return amount.to_integral_value(rounding=ROUND_CEILING)
+
+
+def round_to_ore(amount: Decimal) -> Decimal:
+    """Amounts entered by hand keep their øre, but never more than the two decimals Vipps accepts."""
+    return amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
 
 def generate_unique_booking_reference() -> str:
@@ -313,6 +323,10 @@ class JanHusBooking(models.Model):
     def save(self, *args, **kwargs):
         if not self.reference:
             self.reference = generate_unique_booking_reference()
+        if self.deposit_amount is not None:
+            self.deposit_amount = round_to_ore(self.deposit_amount)
+        if self.price_override_amount is not None:
+            self.price_override_amount = round_to_ore(self.price_override_amount)
         return super().save(*args, **kwargs)
 
     def clean(self):
@@ -357,7 +371,7 @@ class JanHusBooking(models.Model):
     @property
     def total_price(self) -> Decimal:
         if self.price_override_amount is not None:
-            return self.price_override_amount
+            return round_to_ore(self.price_override_amount)
 
         if not self.area_id:
             return Decimal("0")
@@ -371,7 +385,7 @@ class JanHusBooking(models.Model):
         if self.cleaning_requested:
             base_price += self.area.cleaning_fee
 
-        return base_price
+        return round_up_to_whole_krone(base_price)
 
     @property
     def outstanding_deposit_amount(self) -> Decimal:
@@ -382,7 +396,7 @@ class JanHusBooking(models.Model):
             return Decimal("0")
         if self.deposit_amount <= 0:
             return Decimal("0")
-        return self.deposit_amount
+        return round_to_ore(self.deposit_amount)
 
     @property
     def payment_total_price(self) -> Decimal:
