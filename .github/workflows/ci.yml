@@ -64,6 +64,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Login to Amazon ECR Public
+        # The base images come from public.ecr.aws. Anonymous pulls share a monthly data limit per
+        # runner IP and then fail with 429; signed in, they count against the AWS account instead.
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+
       - name: Set image tag
         id: image-tag
         env:
@@ -203,6 +210,13 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Login to Amazon ECR Public
+        # The base images come from public.ecr.aws. Anonymous pulls share a monthly data limit per
+        # runner IP and then fail with 429; signed in, they count against the AWS account instead.
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
 
       - name: Set up Docker Buildx
         id: buildx
