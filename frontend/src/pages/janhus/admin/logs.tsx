@@ -30,7 +30,12 @@ const RESULTS: Record<string, { label: string; color: "success" | "error" | "inf
   ACCESS_GRANTED: { label: "Godkjent", color: "success" },
   ACCESS_DENIED: { label: "Avvist", color: "error" },
   DOOR_OPENED: { label: "Dør åpnet", color: "info" },
+  EXIT_BUTTON: { label: "UT-knapp", color: "info" },
+  FORCED_OPEN: { label: "Dør ugyldig åpnet", color: "error" },
 };
+
+// The door itself reported these, so no card or person belongs to them.
+const DOOR_ONLY_EVENTS = new Set(["DOOR_OPENED", "EXIT_BUTTON", "FORCED_OPEN"]);
 
 // Under the name: whose card it is. A card registered to a website user needs no note.
 const HOLDER_NOTES: Record<string, string> = {
@@ -135,6 +140,7 @@ const DoorLog: React.FC = () => {
           <TableBody>
             {events.map((event) => {
               const resultInfo = RESULTS[event.eventType] ?? { label: event.eventType, color: "info" as const };
+              const doorOnly = DOOR_ONLY_EVENTS.has(event.eventType);
               return (
                 <TableRow key={event.id} hover>
                   <TableCell sx={{ whiteSpace: "nowrap" }}>
@@ -144,12 +150,14 @@ const DoorLog: React.FC = () => {
                     <Chip size="small" label={resultInfo.label} color={resultInfo.color} variant="outlined" />
                   </TableCell>
                   <TableCell>
-                    {event.name || (
-                      <Typography variant="body2" color="text.secondary">
-                        Ukjent
-                      </Typography>
-                    )}
-                    {HOLDER_NOTES[event.holderKind] ? (
+                    {doorOnly
+                      ? "–"
+                      : event.name || (
+                          <Typography variant="body2" color="text.secondary">
+                            Ukjent
+                          </Typography>
+                        )}
+                    {!doorOnly && HOLDER_NOTES[event.holderKind] ? (
                       <Typography variant="caption" color="text.secondary" display="block">
                         {HOLDER_NOTES[event.holderKind]}
                       </Typography>

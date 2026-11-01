@@ -9,7 +9,7 @@ class NfcQueries(graphene.ObjectType, NfcResolvers):
         DoorLogPage,
         offset=graphene.Int(),
         limit=graphene.Int(),
-        result=graphene.String(description="ACCESS_GRANTED, ACCESS_DENIED or DOOR_OPENED"),
+        result=graphene.String(description="ACCESS_GRANTED, ACCESS_DENIED, DOOR_OPENED, EXIT_BUTTON or FORCED_OPEN"),
         search=graphene.String(description="Name, card number or door"),
         since=graphene.DateTime(),
         until=graphene.DateTime(),

@@ -63,6 +63,8 @@ DOOR_EVENT_NAMES = (
     "controller.access.card.invalid.pinAttempts",
     "controller.access.card.invalid.pinTimeout",
     "controller.door.opened",
+    "controller.door.requestToExit",  # the exit button or handle, from the inside
+    "controller.door.forcedOpen",  # opened with no valid reason
 )
 
 

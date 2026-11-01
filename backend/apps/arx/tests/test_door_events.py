@@ -129,3 +129,18 @@ class ArxDoorEventTests(ArxTestCase):
         ]
         self.assertEqual(services.ingest_events(events, recent)["pruned"], 1)  # 90 days > 60
         self.assertEqual(NfcAccessEvent.objects.count(), 1)
+
+    def test_ingest_stores_the_exit_button_with_no_card(self):
+        now_ms = int(timezone.now().timestamp() * 1000)
+        events = [{"id": "e-exit", "name": "controller.door.requestToExit", "timestamp_ms": now_ms, "dac_name": "Hus"}]
+        services.ingest_events(events, now_ms)
+        stored = NfcAccessEvent.objects.get()
+        self.assertEqual(stored.event_type, NfcAccessEvent.EventType.EXIT_BUTTON)
+        self.assertIsNone(stored.card)
+        self.assertEqual(stored.mifare_csn_reported, "")
+
+    def test_ingest_stores_a_forced_door(self):
+        now_ms = int(timezone.now().timestamp() * 1000)
+        events = [{"id": "e-forced", "name": "controller.door.forcedOpen", "timestamp_ms": now_ms, "dac_name": "Hus"}]
+        services.ingest_events(events, now_ms)
+        self.assertEqual(NfcAccessEvent.objects.get().event_type, NfcAccessEvent.EventType.FORCED_OPEN)

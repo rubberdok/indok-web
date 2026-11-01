@@ -651,6 +651,10 @@ def _event_type(name: str) -> Optional[str]:
         return NfcAccessEvent.EventType.ACCESS_GRANTED  # let in, under duress: raw name kept
     if name == "controller.door.opened":
         return NfcAccessEvent.EventType.DOOR_OPENED
+    if name == "controller.door.requestToExit":
+        return NfcAccessEvent.EventType.EXIT_BUTTON
+    if name == "controller.door.forcedOpen":
+        return NfcAccessEvent.EventType.FORCED_OPEN
     return None
 
 
