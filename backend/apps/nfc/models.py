@@ -280,6 +280,8 @@ class NfcAccessEvent(models.Model):
         ACCESS_GRANTED = "ACCESS_GRANTED", "Access granted"
         ACCESS_DENIED = "ACCESS_DENIED", "Access denied"
         DOOR_OPENED = "DOOR_OPENED", "Door opened"
+        EXIT_BUTTON = "EXIT_BUTTON", "Exit button"
+        FORCED_OPEN = "FORCED_OPEN", "Door forced open"
 
     class Source(models.TextChoices):
         NFC_READER = "NFC_READER", "NFC reader"

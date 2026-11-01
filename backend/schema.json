@@ -589,7 +589,7 @@
                 },
                 {
                   "defaultValue": null,
-                  "description": "ACCESS_GRANTED, ACCESS_DENIED or DOOR_OPENED",
+                  "description": "ACCESS_GRANTED, ACCESS_DENIED, DOOR_OPENED, EXIT_BUTTON or FORCED_OPEN",
                   "name": "result",
                   "type": {
                     "kind": "SCALAR",
@@ -5252,6 +5252,18 @@
               "description": "Door opened",
               "isDeprecated": false,
               "name": "DOOR_OPENED"
+            },
+            {
+              "deprecationReason": null,
+              "description": "Exit button",
+              "isDeprecated": false,
+              "name": "EXIT_BUTTON"
+            },
+            {
+              "deprecationReason": null,
+              "description": "Door forced open",
+              "isDeprecated": false,
+              "name": "FORCED_OPEN"
             }
           ],
           "fields": null,

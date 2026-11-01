@@ -1446,7 +1446,11 @@ export enum NfcNfcAccessEventEventTypeChoices {
   /** Access granted */
   AccessGranted = 'ACCESS_GRANTED',
   /** Door opened */
-  DoorOpened = 'DOOR_OPENED'
+  DoorOpened = 'DOOR_OPENED',
+  /** Exit button */
+  ExitButton = 'EXIT_BUTTON',
+  /** Door forced open */
+  ForcedOpen = 'FORCED_OPEN'
 }
 
 export type OptionInput = {

@@ -6,6 +6,8 @@ from unittest.mock import patch
 import requests
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
 from graphene.utils.str_converters import to_snake_case
 from utils.testing.base import ExtendedGraphQLTestCase
@@ -873,3 +875,62 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertResponseHasErrors(response)
         self.assertIn("Du kan bare registrere kortnummer én gang", response.json()["errors"][0]["message"])
         self.assertFalse(NfcCardAssignment.objects.filter(user=self.indok_user, revoked_at__isnull=True).exists())
+
+
+class UserAdminDoorPermissionTests(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.client.force_login(UserFactory(is_staff=True, is_superuser=True))
+        self.url = reverse("admin:users_user_change", args=[self.user.pk])
+
+    def _save(self, **ticked):
+        """Submits the real form as the page shows it, with these boxes changed."""
+        form = self.client.get(self.url).context["adminform"].form
+        data = {}
+        for name in form.fields:
+            value = form[name].value()
+            if name in ("last_login", "date_joined"):
+                local = timezone.localtime(value) if value else None
+                data[f"{name}_0"] = local.strftime("%Y-%m-%d") if local else ""
+                data[f"{name}_1"] = local.strftime("%H:%M:%S") if local else ""
+            elif value not in (None, False):
+                data[name] = value
+        for name, tick in ticked.items():
+            data.pop(name, None)
+            if tick:
+                data[name] = "on"
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302, getattr(response, "context", None) and response.context["errors"])
+        return User.objects.get(pk=self.user.pk)
+
+    def test_the_page_groups_the_door_permissions(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, "JanHus-dør")
+        self.assertContains(response, "Kan se dørloggen")
+        self.assertContains(response, "Kan godkjenne flytting av kort fra ARX-personer")
+
+    def test_ticking_gives_the_permission_and_unticking_removes_it(self):
+        cases = {
+            "can_view_all_janhus_bookings": "janhus.view_all_bookings",
+            "can_view_door_log": "nfc.view_door_log",
+            "can_manage_external_cards": "arx.manage_external_card_access",
+            "can_approve_card_takeover": "arx.approve_card_takeover",
+        }
+        for field, permission in cases.items():
+            with self.subTest(field=field):
+                self.assertTrue(self._save(**{field: True}).has_perm(permission))
+                form = self.client.get(self.url).context["adminform"].form
+                self.assertTrue(form[field].value())
+                self.assertFalse(self._save(**{field: False}).has_perm(permission))
+
+    def test_the_admin_permissions_also_give_admin_login(self):
+        self.assertFalse(self.user.is_staff)
+        self.assertTrue(self._save(can_approve_card_takeover=True).is_staff)
+
+    def test_the_read_permissions_do_not_give_admin_login(self):
+        self.assertFalse(self._save(can_view_door_log=True, can_view_all_janhus_bookings=True).is_staff)
+
+    def test_saving_keeps_a_permission_it_does_not_change(self):
+        door_log = Permission.objects.get(codename="view_door_log", content_type__app_label="nfc")
+        self.user.user_permissions.add(door_log)
+        self.assertTrue(self._save().has_perm("nfc.view_door_log"))

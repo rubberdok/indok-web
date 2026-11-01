@@ -5,6 +5,23 @@ from typing import Optional
 
 from .models import User
 
+# The JanHus door and its bookings: form field -> (app label, permission codename).
+DOOR_PERMISSION_FIELDS = {
+    "can_view_all_janhus_bookings": ("janhus", "view_all_bookings"),
+    "can_view_door_log": ("nfc", "view_door_log"),
+    "can_manage_external_cards": ("arx", "manage_external_card_access"),
+    "can_approve_card_takeover": ("arx", "approve_card_takeover"),
+}
+# These two are used in Django admin, so they need admin login as well.
+STAFF_DOOR_PERMISSION_FIELDS = ("can_manage_external_cards", "can_approve_card_takeover")
+
+
+def _door_permission(field_name: str) -> Optional[Permission]:
+    app_label, codename = DOOR_PERMISSION_FIELDS[field_name]
+    return Permission.objects.filter(
+        codename=codename, content_type__app_label=app_label
+    ).first()
+
 
 class UserAdminForm(forms.ModelForm):
     can_edit_nfc_cards = forms.BooleanField(
@@ -49,6 +66,26 @@ class UserAdminForm(forms.ModelForm):
             "archive.add_archivedocument + archive.change_archivedocument + "
             "archive.delete_archivedocument + archive.view_archivedocument"
         ),
+    )
+    can_view_all_janhus_bookings = forms.BooleanField(
+        required=False,
+        label="Kan se alle JanHus-bookinger, uten å endre dem",
+        help_text="janhus.view_all_bookings",
+    )
+    can_view_door_log = forms.BooleanField(
+        required=False,
+        label="Kan se dørloggen",
+        help_text="nfc.view_door_log",
+    )
+    can_manage_external_cards = forms.BooleanField(
+        required=False,
+        label="Kan gi eksterne kort dørtilgang",
+        help_text="arx.manage_external_card_access. Gir også admin-innlogging.",
+    )
+    can_approve_card_takeover = forms.BooleanField(
+        required=False,
+        label="Kan godkjenne flytting av kort fra ARX-personer",
+        help_text="arx.approve_card_takeover. Gir også admin-innlogging.",
     )
     is_indok_norwegian = forms.BooleanField(
         required=False,
@@ -195,6 +232,15 @@ class UserAdminForm(forms.ModelForm):
         else:
             self.fields["can_archive_documents"].initial = False
 
+        for field_name in DOOR_PERMISSION_FIELDS:
+            permission = _door_permission(field_name)
+            self.fields[field_name].initial = bool(
+                self.instance
+                and self.instance.pk
+                and permission
+                and self.instance.user_permissions.filter(pk=permission.pk).exists()
+            )
+
         is_indok_norwegian = (
             self.instance.is_indok if self.instance and self.instance.pk else False
         )
@@ -215,8 +261,10 @@ class UserAdminForm(forms.ModelForm):
 
         # Hvis en bruker har "is_superuser" eller "can_archive_documents",
         # bør de også ha "is_staff" for å kunne logge inn på admin, dette fikser dette.
-        if cleaned_data.get("is_superuser") or cleaned_data.get(
-            "can_archive_documents"
+        if (
+            cleaned_data.get("is_superuser")
+            or cleaned_data.get("can_archive_documents")
+            or any(cleaned_data.get(field) for field in STAFF_DOOR_PERMISSION_FIELDS)
         ):
             cleaned_data["is_staff"] = True
 
@@ -257,6 +305,16 @@ class UserAdmin(admin.ModelAdmin):
                     ("can_edit_nfc_cards", "can_archive_documents"),
                     "groups",
                     "user_permissions",
+                ),
+                "classes": ("wide",),
+            },
+        ),
+        (
+            "JanHus-dør",
+            {
+                "fields": (
+                    ("can_view_all_janhus_bookings", "can_view_door_log"),
+                    ("can_manage_external_cards", "can_approve_card_takeover"),
                 ),
                 "classes": ("wide",),
             },
@@ -412,3 +470,10 @@ class UserAdmin(admin.ModelAdmin):
             should_have=should_have_direct_perm,
             permissions=archive_permissions,
         )
+
+        for field_name in DOOR_PERMISSION_FIELDS:
+            self._sync_direct_permission(
+                user=user,
+                should_have=form.cleaned_data.get(field_name, False),
+                permission=_door_permission(field_name),
+            )
