@@ -1,19 +1,17 @@
 import re
-from inspect import signature
-from typing import Any, Optional, cast
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
+from cryptography.fernet import Fernet, MultiFernet
+from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 
-
 # Per nå er det kun 10-digit MIFARE CSN, men vi skal over til DESFire kort i framtiden, usikker på situasjonen da.
-PIN_CODE_RE = re.compile(r"^\d{4}$")
-MIFARE_CSN_10_DIGIT_RE = re.compile(r"^\d{10}$")
-LEGACY_MIFARE_IDENTIFIER_HEX_RE = re.compile(r"^[0-9A-Fa-f]+$")
+PIN_CODE_RE = re.compile(r"^\d{4}$", flags=re.ASCII)
+MIFARE_CSN_10_DIGIT_RE = re.compile(r"^\d{10}$", flags=re.ASCII)
+PRINTED_UID_RE = re.compile(r"^\d{15,17}$", flags=re.ASCII)
+CARD_NUMBER_SEPARATORS_RE = re.compile(r"[\s.\-]")
 MAX_CARD_IDENTIFIER_LENGTH = 64
 
 
@@ -50,38 +48,42 @@ def is_user_mifare_csn_self_service_enabled() -> bool:
     return get_or_create_nfc_settings().allow_user_mifare_csn_self_service
 
 
+NXP_MANUFACTURER_BYTE = 0x04  # byte 0 of every NXP 7-byte UID (DESFire NTNU cards)
+CSN_LIMIT = 2**32
+UID7_LIMIT = 2**56
+CARD_NUMBER_NOT_RECOGNISED = "Kortnummeret ble ikke gjenkjent. Skriv det inn slik det står på kortet ditt."
+
+
+def display_card_number(raw_identifier: str) -> str:
+    """The digits from the card as the user typed them, without spaces, dots or dashes."""
+    return CARD_NUMBER_SEPARATORS_RE.sub("", raw_identifier or "")
+
+
 def normalize_mifare_csn(raw_identifier: str) -> str:
     """
-    Canonicalize card identifier to a 10-digit MIFARE CSN.
+    The 10-digit CSN the door reads (ARX formats "Mifare CSN" and "DESFire CSN"),
+    from the digits printed on an NTNU card. Users only ever have these digits.
 
-    Accepted inputs:
-    - 10-digit card number (with optional non-digit separators)
-    - 4-byte legacy MIFARE identifier (converted to CSN with little-endian byte order)
+    - Older cards: the 10 digits after "mS" (or "M") are the CSN itself.
+    - Newer DESFire cards: the 15-17 digits after "UID" are the 7-byte UID read
+      as one little-endian number N. The door reads its first 4 bytes: N mod 2^32.
+      Byte 0 of an NXP UID is always 0x04, so N mod 256 must be 4.
+    Anything else comes back unchanged, so validation refuses it.
 
-    Examples:
-    - "1234 567-890" -> "1234567890"
-    - "ABCD1234" -> "0873647531"
+    Examples (made up): "1234 567-890" -> "1234567890";
+    "14392683656882692" (UID 04 AA BB CC 11 22 33) -> "3434850820".
     """
-    digits_only = re.sub(r"\D", "", raw_identifier)
-    if MIFARE_CSN_10_DIGIT_RE.fullmatch(digits_only):
-        return digits_only
-
-    compact_legacy_identifier = re.sub(r"[^0-9A-Fa-f]", "", raw_identifier)
-    if len(compact_legacy_identifier) in (8, 14) and LEGACY_MIFARE_IDENTIFIER_HEX_RE.fullmatch(compact_legacy_identifier):
-        legacy_identifier_for_conversion = compact_legacy_identifier[:8]
-        csn_value = int.from_bytes(
-            bytes.fromhex(legacy_identifier_for_conversion), byteorder="little"
-        )
-        return f"{csn_value:010d}"
-
-    return digits_only
+    digits = display_card_number(raw_identifier)
+    if PRINTED_UID_RE.fullmatch(digits):
+        uid = int(digits)
+        if uid < UID7_LIMIT and uid % 256 == NXP_MANUFACTURER_BYTE:
+            return f"{uid % CSN_LIMIT:010d}"
+    return digits
 
 
 def validate_mifare_csn(mifare_csn: str) -> None:
-    if not MIFARE_CSN_10_DIGIT_RE.fullmatch(mifare_csn):
-        raise ValidationError(
-            "Kortnummer må være nøyaktig 10 sifre."
-        )
+    if not MIFARE_CSN_10_DIGIT_RE.fullmatch(mifare_csn) or int(mifare_csn) >= CSN_LIMIT:
+        raise ValidationError(CARD_NUMBER_NOT_RECOGNISED)
 
 
 def normalize_card_identifier(raw_identifier: str) -> str:
@@ -100,9 +102,7 @@ def validate_card_identifier(card_identifier: str) -> None:
     Project-wide entry point for card identifier validation.
     """
     if len(card_identifier) > MAX_CARD_IDENTIFIER_LENGTH:
-        raise ValidationError(
-            f"Kortnummer er for langt. Maks lengde er {MAX_CARD_IDENTIFIER_LENGTH} tegn"
-        )
+        raise ValidationError(f"Kortnummer er for langt. Maks lengde er {MAX_CARD_IDENTIFIER_LENGTH} tegn")
     validate_mifare_csn(card_identifier)
 
 
@@ -111,24 +111,39 @@ def validate_pin_code(pin_code: str) -> None:
         raise ValidationError("PIN code must be exactly 4 digits (0-9)")
 
 
-def build_check_constraint(*, condition: Q, name: str) -> models.CheckConstraint:
+def pin_encryption_keys() -> list:
     """
-    Django 3.2 uses CheckConstraint(check=...), while newer stubs can require
-    CheckConstraint(condition=...). Resolve this at runtime for compatibility.
+    NFC_PIN_ENCRYPTION_KEY: one Fernet key, or several separated by commas while the
+    key is being changed. The first encrypts; every key in the list still decrypts,
+    so no PIN is lost and nobody has to type theirs again (manage.py nfc_pin_key).
     """
-    supports_condition = "condition" in signature(models.CheckConstraint.__init__).parameters
-    constraint_kwargs: dict[str, Any] = {"name": name}
-    if supports_condition:
-        constraint_kwargs["condition"] = condition
-    else:
-        constraint_kwargs["check"] = condition
-    return models.CheckConstraint(**cast(Any, constraint_kwargs))
+    raw = getattr(settings, "NFC_PIN_ENCRYPTION_KEY", "") or ""
+    return [key.strip() for key in raw.split(",") if key.strip()]
+
+
+def pin_cipher() -> MultiFernet:
+    keys = pin_encryption_keys()
+    if not keys:
+        raise ImproperlyConfigured("NFC_PIN_ENCRYPTION_KEY is not set")
+    return MultiFernet([Fernet(key) for key in keys])
+
+
+def encrypt_pin(pin_code: str) -> str:
+    """Door PINs are stored encrypted, so a leaked database or backup does not reveal them."""
+    return pin_cipher().encrypt(pin_code.encode()).decode() if pin_code else ""
+
+
+def decrypt_pin(token: str) -> str:
+    return pin_cipher().decrypt(token.encode()).decode() if token else ""
 
 
 class NfcCard(models.Model):
-    mifare_csn = models.CharField(
-        max_length=MAX_CARD_IDENTIFIER_LENGTH, unique=True, db_index=True
-    )
+    # The number the door reads (first 4 UID bytes, little-endian). Derived from
+    # card_number when that is set; it is what ARX and the door logs use.
+    mifare_csn = models.CharField(max_length=MAX_CARD_IDENTIFIER_LENGTH, unique=True, db_index=True)
+    # What the user sees on their card, e.g. the 17-digit number on a DESFire
+    # NTNU card. Shown back to the user so it matches the card in their hand.
+    card_number = models.CharField(max_length=32, blank=True, default="")
     label = models.CharField(max_length=120, blank=True, default="")
     notes = models.CharField(max_length=500, blank=True, default="")
     is_enabled = models.BooleanField(default=True)
@@ -140,11 +155,25 @@ class NfcCard(models.Model):
             ("manage_nfc", "Can manage NFC cards, assignments, and access grants"),
         ]
 
+    def _derive_door_number(self) -> None:
+        """When the number from the card is known, the door number always follows from it."""
+        if self.card_number:
+            self.card_number = display_card_number(self.card_number)
+            self.mifare_csn = normalize_card_identifier(self.card_number)
+
     def clean(self):
-        self.mifare_csn = normalize_card_identifier(self.mifare_csn)
+        self._derive_door_number()
+        if not self.card_number:
+            self.mifare_csn = normalize_card_identifier(self.mifare_csn)
         validate_card_identifier(self.mifare_csn)
 
+    @property
+    def number_for_display(self) -> str:
+        """What to show the user: the number from their card, or the door number for older registrations."""
+        return self.card_number or self.mifare_csn
+
     def save(self, *args, **kwargs):
+        self._derive_door_number()  # before full_clean, which checks fields before clean()
         self.full_clean()
         return super().save(*args, **kwargs)
 
@@ -153,9 +182,7 @@ class NfcCard(models.Model):
 
 
 class NfcCardAssignment(models.Model):
-    card = models.ForeignKey(
-        NfcCard, on_delete=models.CASCADE, related_name="assignments"
-    )
+    card = models.ForeignKey(NfcCard, on_delete=models.CASCADE, related_name="assignments")
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -163,7 +190,6 @@ class NfcCardAssignment(models.Model):
         blank=True,
         related_name="nfc_card_assignments",
     )
-    external_holder_name = models.CharField(max_length=150, blank=True, default="")
 
     assigned_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -174,17 +200,13 @@ class NfcCardAssignment(models.Model):
     )
     assigned_at = models.DateTimeField(auto_now_add=True)
 
-    access_start = models.DateTimeField(null=True, blank=True)
-    access_end = models.DateTimeField(null=True, blank=True)
+    # Door access at all times (board, caretaker and the like), not only during bookings.
+    # apps.arx turns it into a rolling access window in ARX.
     permanent_access = models.BooleanField(default=False)
-    pin_code = models.CharField(
-        max_length=4,
-        blank=True,
-        default="",
-        validators=[
-            RegexValidator(r"^\d{4}$", "PIN code must be exactly 4 digits (0-9)")
-        ],
-    )
+
+    # The PIN is needed in plain text only when it is sent to the door system.
+    # Read and set it through the pin_code property.
+    pin_code_encrypted = models.TextField(blank=True, default="", editable=False)
 
     revoked_at = models.DateTimeField(null=True, blank=True)
     revoked_by = models.ForeignKey(
@@ -195,8 +217,6 @@ class NfcCardAssignment(models.Model):
         related_name="nfc_card_assignments_revoked",
     )
     revocation_reason = models.CharField(max_length=300, blank=True, default="")
-
-    metadata = models.JSONField(default=dict, blank=True)
 
     class Meta:
         constraints = [
@@ -210,31 +230,16 @@ class NfcCardAssignment(models.Model):
                 condition=Q(revoked_at__isnull=True, user__isnull=False),
                 name="unique_active_nfc_assignment_per_user",
             ),
-            build_check_constraint(
-                condition=Q(access_end__isnull=True)
-                | Q(access_start__isnull=True)
-                | Q(access_end__gte=models.F("access_start")),
-                name="nfc_assignment_access_end_after_start",
-            ),
         ]
         indexes = [
             models.Index(fields=["user", "revoked_at"]),
             models.Index(fields=["card", "revoked_at"]),
-            models.Index(fields=["access_start", "access_end"]),
         ]
 
     def clean(self):
-        if self.user is None and not self.external_holder_name:
-            raise ValidationError(
-                "Assignment must have either a user or an external_holder_name"
-            )
-
-        if (
-            self.access_start
-            and self.access_end
-            and self.access_end < self.access_start
-        ):
-            raise ValidationError("access_end must be later than access_start")
+        # Door access is per user; user only becomes empty when the user is deleted.
+        if self._state.adding and self.user is None:
+            raise ValidationError("Assignment must have a user")
 
         if self.revoked_at and self.revoked_at < self.assigned_at:
             raise ValidationError("revoked_at cannot be before assigned_at")
@@ -242,25 +247,22 @@ class NfcCardAssignment(models.Model):
         validate_pin_code(self.pin_code)
 
     @property
+    def pin_code(self) -> str:
+        return decrypt_pin(self.pin_code_encrypted)
+
+    @pin_code.setter
+    def pin_code(self, value: str) -> None:
+        value = (value or "").strip()
+        validate_pin_code(value)
+        self.pin_code_encrypted = encrypt_pin(value)
+
+    @property
+    def has_pin(self) -> bool:
+        return bool(self.pin_code_encrypted)
+
+    @property
     def is_active_assignment(self) -> bool:
         return self.revoked_at is None
-
-    def has_access_at(self, when: Optional[timezone.datetime] = None) -> bool:
-        when = when or timezone.now()
-
-        if self.revoked_at is not None:
-            return False
-
-        if self.permanent_access:
-            return True
-
-        if self.access_start and when < self.access_start:
-            return False
-
-        if self.access_end and when > self.access_end:
-            return False
-
-        return True
 
     def revoke(self, revoked_by=None, reason: str = "") -> None:
         self.revoked_at = timezone.now()
@@ -269,130 +271,8 @@ class NfcCardAssignment(models.Model):
         self.save(update_fields=["revoked_at", "revoked_by", "revocation_reason"])
 
     def __str__(self) -> str:
-        holder = self.user.username if self.user else self.external_holder_name
+        holder = self.user.username if self.user else "(deleted user)"
         return f"NfcCardAssignment(card={self.card.mifare_csn}, holder={holder})"
-
-
-class NfcAccessGrant(models.Model):
-    class Scope(models.TextChoices):
-        MANUAL = "MANUAL", "Manual"
-        BOOKING = "BOOKING", "Booking"
-
-    class ParticipantPolicy(models.TextChoices):
-        BOOKER_ONLY = "BOOKER_ONLY", "Booker only"
-        ALL_PARTICIPANTS = "ALL_PARTICIPANTS", "All participants"
-
-    scope = models.CharField(max_length=25, choices=Scope.choices, default=Scope.MANUAL)
-    participant_policy = models.CharField(
-        max_length=25,
-        choices=ParticipantPolicy.choices,
-        default=ParticipantPolicy.BOOKER_ONLY,
-    )
-
-    booking = models.ForeignKey(
-        "cabins.Booking",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="nfc_access_grants",
-    )
-
-    granted_to_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="nfc_access_grants",
-    )
-    granted_to_card = models.ForeignKey(
-        NfcCard,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="access_grants",
-    )
-
-    granted_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="nfc_access_grants_created",
-    )
-
-    access_start = models.DateTimeField(null=True, blank=True)
-    access_end = models.DateTimeField(null=True, blank=True)
-    permanent_access = models.BooleanField(default=False)
-
-    revoked_at = models.DateTimeField(null=True, blank=True)
-    revoked_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="nfc_access_grants_revoked",
-    )
-
-    notes = models.TextField(blank=True, default="")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        constraints = [
-            build_check_constraint(
-                condition=Q(access_end__isnull=True)
-                | Q(access_start__isnull=True)
-                | Q(access_end__gte=models.F("access_start")),
-                name="nfc_grant_access_end_after_start",
-            ),
-        ]
-        indexes = [
-            models.Index(fields=["scope", "booking"]),
-            models.Index(fields=["granted_to_user", "revoked_at"]),
-            models.Index(fields=["granted_to_card", "revoked_at"]),
-        ]
-
-    def clean(self):
-        if self.granted_to_user is None and self.granted_to_card is None:
-            raise ValidationError("Grant must have granted_to_user or granted_to_card")
-
-        if self.granted_to_user is not None and self.granted_to_card is not None:
-            raise ValidationError("Grant can target either user or card, not both")
-
-        if (
-            self.access_start
-            and self.access_end
-            and self.access_end < self.access_start
-        ):
-            raise ValidationError("access_end must be later than access_start")
-
-        if self.scope == self.Scope.BOOKING and self.booking is None:
-            raise ValidationError("BOOKING scope grants must reference a booking")
-
-    @property
-    def is_active(self) -> bool:
-        return self.revoked_at is None
-
-    def has_access_at(self, when: Optional[timezone.datetime] = None) -> bool:
-        when = when or timezone.now()
-
-        if self.revoked_at is not None:
-            return False
-
-        if self.permanent_access:
-            return True
-
-        if self.access_start and when < self.access_start:
-            return False
-
-        if self.access_end and when > self.access_end:
-            return False
-
-        return True
-
-    def __str__(self) -> str:
-        target = self.granted_to_user or self.granted_to_card
-        return f"NfcAccessGrant(scope={self.scope}, target={target})"
 
 
 class NfcAccessEvent(models.Model):
@@ -400,6 +280,8 @@ class NfcAccessEvent(models.Model):
         ACCESS_GRANTED = "ACCESS_GRANTED", "Access granted"
         ACCESS_DENIED = "ACCESS_DENIED", "Access denied"
         DOOR_OPENED = "DOOR_OPENED", "Door opened"
+        EXIT_BUTTON = "EXIT_BUTTON", "Exit button"
+        FORCED_OPEN = "FORCED_OPEN", "Door forced open"
 
     class Source(models.TextChoices):
         NFC_READER = "NFC_READER", "NFC reader"
@@ -408,14 +290,13 @@ class NfcAccessEvent(models.Model):
         UNKNOWN = "UNKNOWN", "Unknown"
 
     event_type = models.CharField(max_length=30, choices=EventType.choices)
-    source = models.CharField(
-        max_length=20, choices=Source.choices, default=Source.UNKNOWN
-    )
+    source = models.CharField(max_length=20, choices=Source.choices, default=Source.UNKNOWN)
 
     door_identifier = models.CharField(max_length=120, blank=True, default="")
-    mifare_csn_reported = models.CharField(
-        max_length=MAX_CARD_IDENTIFIER_LENGTH, blank=True, default=""
-    )
+    mifare_csn_reported = models.CharField(max_length=MAX_CARD_IDENTIFIER_LENGTH, blank=True, default="")
+    # The name the door system has for the card's holder, also for people
+    # outside indok-web. Shown in the door log; deleted with the event.
+    person_name = models.CharField(max_length=200, blank=True, default="")
 
     card = models.ForeignKey(
         NfcCard,
@@ -444,6 +325,9 @@ class NfcAccessEvent(models.Model):
     raw_payload = models.JSONField(default=dict, blank=True)
 
     class Meta:
+        permissions = [
+            ("view_door_log", "Can view the JanHus door log"),
+        ]
         indexes = [
             models.Index(fields=["occurred_at"]),
             models.Index(fields=["door_identifier", "occurred_at"]),
@@ -452,9 +336,7 @@ class NfcAccessEvent(models.Model):
 
     def clean(self):
         if self.mifare_csn_reported:
-            self.mifare_csn_reported = normalize_card_identifier(
-                self.mifare_csn_reported
-            )
+            self.mifare_csn_reported = normalize_card_identifier(self.mifare_csn_reported)
             validate_card_identifier(self.mifare_csn_reported)
 
     def save(self, *args, **kwargs):

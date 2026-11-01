@@ -94,8 +94,8 @@ mutation CreateJanhusPaymentProduct($bookingId: ID!) {
   }
 }
 
-mutation DeleteJanhusBooking($bookingId: ID!) {
-  deleteJanhusBooking(bookingId: $bookingId) {
+mutation DeleteJanhusBooking($bookingId: ID!, $message: String) {
+  deleteJanhusBooking(bookingId: $bookingId, message: $message) {
     ok
   }
 }

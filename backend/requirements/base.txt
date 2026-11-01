@@ -1,5 +1,6 @@
 coverage==7.2.7
 cryptography==42.0.8
+defusedxml==0.7.1
 django-alive==1.2.1
 django-anymail[postmark]==11.1
 django-cors-headers==4.5.0
@@ -22,6 +23,7 @@ promise==2.3
 psycopg2-binary==2.9.12
 PyJWT==2.8.0
 PyYAML==6.0.1
+requests==2.32.3
 typing-extensions==4.15.0
 WeasyPrint==64.1
 whitenoise==6.7.0

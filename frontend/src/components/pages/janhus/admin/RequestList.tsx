@@ -6,26 +6,34 @@ import {
   REQUEST_STATUS_LABELS,
 } from "@/components/pages/janhus/constants";
 import { formatDate, formatTime, requestOwnerType, statusColor, statusLabel } from "@/components/pages/janhus/helpers";
-import { JanHusBookingRequestFragment } from "@/generated/graphql";
+import { JanHusAdminBookingRequestFragment } from "@/generated/graphql";
 
 type Props = {
-  requests: readonly JanHusBookingRequestFragment[];
+  requests: readonly JanHusAdminBookingRequestFragment[];
   comments: Record<string, string>;
+  /** Edited messages to the booker; a request without an entry shows the one it has. */
+  messages: Record<string, string>;
   reviewing: boolean;
   deleting: boolean;
   onCommentChange: (id: string, value: string) => void;
+  onMessageChange: (id: string, value: string) => void;
   onReview: (id: string, status: "APPROVED" | "REJECTED", convertToBooking: boolean) => void;
   onDelete: (id: string) => void;
+  /** View-only users (janhus.view_all_bookings): the comment is shown disabled and every action is hidden. */
+  readOnly?: boolean;
 };
 
 export const RequestList: React.FC<Props> = ({
   requests,
   comments,
+  messages,
   reviewing,
   deleting,
   onCommentChange,
+  onMessageChange,
   onReview,
   onDelete,
+  readOnly = false,
 }) => (
   <Grid container spacing={2} justifyContent="center" alignItems="flex-start" sx={{ width: "100%", m: 0 }}>
     {requests.map((request) => (
@@ -46,6 +54,9 @@ export const RequestList: React.FC<Props> = ({
               <Typography variant="body2" color="text.secondary">
                 {formatDate(request.startsAt)} kl. {formatTime(request.startsAt)}–{formatTime(request.endsAt)} ·{" "}
                 {request.area.name}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Sendt {formatDate(request.createdAt)} kl. {formatTime(request.createdAt)}
               </Typography>
               <Typography variant="body2">
                 Eiertype: {OWNER_TYPE_LABELS[requestOwnerType(request)]}
@@ -73,38 +84,50 @@ export const RequestList: React.FC<Props> = ({
               ) : null}
               <TextField
                 size="small"
-                label="Adminkommentar"
+                label="Melding til bestilleren"
+                helperText="Sendes med e-posten når forespørselen avvises, eller når bookingen blir godkjent."
+                multiline
+                disabled={readOnly}
+                value={messages[request.id] ?? request.bookerMessage}
+                onChange={(event) => onMessageChange(request.id, event.target.value)}
+              />
+              <TextField
+                size="small"
+                label="Intern kommentar (bare for admin)"
+                disabled={readOnly}
                 value={comments[request.id] ?? ""}
                 onChange={(event) => onCommentChange(request.id, event.target.value)}
               />
-              <Stack direction="row" spacing={1} flexWrap="wrap">
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => onReview(request.id, "APPROVED", true)}
-                  disabled={reviewing}
-                >
-                  Godkjenn + booking (Foreløpig)
-                </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  variant="outlined"
-                  onClick={() => onReview(request.id, "REJECTED", false)}
-                  disabled={reviewing}
-                >
-                  Avvis
-                </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  variant="text"
-                  onClick={() => onDelete(request.id)}
-                  disabled={deleting}
-                >
-                  Slett
-                </Button>
-              </Stack>
+              {readOnly ? null : (
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => onReview(request.id, "APPROVED", true)}
+                    disabled={reviewing}
+                  >
+                    Godkjenn + lag booking
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    onClick={() => onReview(request.id, "REJECTED", false)}
+                    disabled={reviewing}
+                  >
+                    Avvis
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="text"
+                    onClick={() => onDelete(request.id)}
+                    disabled={deleting}
+                  >
+                    Slett
+                  </Button>
+                </Stack>
+              )}
             </Stack>
           </CardContent>
         </Card>

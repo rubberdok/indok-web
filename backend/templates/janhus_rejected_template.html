@@ -39,9 +39,9 @@
         <span><strong>{{ ends_at }}</strong> har dessverre blitt <strong>underkjent</strong> av Janus Eiendom.</span>
       </p>
 
-      {% if admin_comment %}
-      <p><strong>Bookingen din ble underkjent av følgende grunn:</strong></p>
-      <p>{{ admin_comment }}</p>
+      {% if booker_message %}
+      <p><strong>Melding fra Janus Eiendom:</strong></p>
+      <p>{{ booker_message|linebreaksbr }}</p>
       {% endif %}
 
       <p>Du er velkommen til å søke om et annet tidspunkt.</p>

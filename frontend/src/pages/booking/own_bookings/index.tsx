@@ -29,6 +29,7 @@ import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
 import {
   BOOKING_STATUS_LABELS,
   DEPOSIT_STATUS_LABELS,
+  DOOR_ACCESS_POLICY_LABELS,
   JANHUS_EVENT_TYPE_LABELS,
   REQUEST_STATUS_LABELS,
 } from "@/components/pages/janhus/constants";
@@ -55,11 +56,6 @@ import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
-const DOOR_ACCESS_POLICY_LABELS: Record<string, string> = {
-  BOOKER_ONLY: "Kun bestiller",
-  ALL_PARTICIPANTS: "Bestiller + gjesteliste",
-};
-
 const formatNok = (amount: number | null | undefined) =>
   new Intl.NumberFormat("nb-NO", {
     style: "currency",
@@ -67,6 +63,26 @@ const formatNok = (amount: number | null | undefined) =>
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(Number(amount ?? 0));
+
+function getPayableAmount(isOrganizationBooking: boolean, configuredAmount: number, fullPaymentAmount: number) {
+  if (isOrganizationBooking) {
+    return 0;
+  }
+  if (configuredAmount > 0) {
+    return configuredAmount;
+  }
+  return fullPaymentAmount;
+}
+
+function getBookingStatusText(isDeclined: boolean, isTentative: boolean) {
+  if (isDeclined) {
+    return "Avslått";
+  }
+  if (isTentative) {
+    return "Til behandling";
+  }
+  return "Godkjent";
+}
 
 const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
@@ -114,7 +130,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
           endsAt: booking.endsAt,
           areaName: booking.area.name,
           reference: booking.reference,
-          adminComment: booking.adminComment,
+          bookerMessage: booking.bookerMessage,
           chip: statusLabel(booking, BOOKING_STATUS_LABELS),
           color: statusColor(booking),
         })),
@@ -125,7 +141,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
           endsAt: request.endsAt,
           areaName: request.area.name,
           reference: request.reference,
-          adminComment: request.adminComment,
+          bookerMessage: request.bookerMessage,
           chip: statusLabel(request, REQUEST_STATUS_LABELS),
           color: statusColor(request),
         })),
@@ -257,11 +273,11 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                             const registeredDeposit = Number(booking.depositAmount ?? 0);
                             const configuredVippsAmount = Number(booking.vippsProduct?.price ?? 0);
                             const fullPaymentAmount = rentalPrice + registeredDeposit;
-                            const payableAmount = isOrganizationBooking
-                              ? 0
-                              : configuredVippsAmount > 0
-                                ? configuredVippsAmount
-                                : fullPaymentAmount;
+                            const payableAmount = getPayableAmount(
+                              isOrganizationBooking,
+                              configuredVippsAmount,
+                              fullPaymentAmount
+                            );
                             const guestEntries = guestListEdits[booking.id] ?? [];
 
                             const bookerName =
@@ -394,6 +410,11 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                           Din kommentar: {booking.comment}
                                         </Typography>
                                       )}
+                                      {booking.bookerMessage ? (
+                                        <Typography variant="body2">
+                                          Melding fra Janus Eiendom: {booking.bookerMessage}
+                                        </Typography>
+                                      ) : null}
                                       {isOrganizationBooking ? (
                                         <Alert severity="info">
                                           Denne bookingen er gjort på vegne av forening. Kostnad håndteres internt.
@@ -486,9 +507,9 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                                         <Typography variant="caption" color="text.secondary">
                                           Referanse: {entry.reference}
                                         </Typography>
-                                        {entry.adminComment ? (
+                                        {entry.bookerMessage ? (
                                           <Typography variant="body2" sx={{ mt: 1 }}>
-                                            Kommentar fra Janus Eiendom: {entry.adminComment}
+                                            Melding fra Janus Eiendom: {entry.bookerMessage}
                                           </Typography>
                                         ) : null}
                                       </CardContent>
@@ -532,9 +553,7 @@ const OwnBookingsPage: NextPageWithLayout<InferGetServerSidePropsType<typeof get
                           <TableCell>{formatDate(booking.checkIn)}</TableCell>
                           <TableCell>{formatDate(booking.checkOut)}</TableCell>
                           <TableCell>{booking.cabins.map((cabin) => cabin.name).join(", ")}</TableCell>
-                          <TableCell>
-                            {booking.isDeclined ? "Avslått" : booking.isTentative ? "Til behandling" : "Godkjent"}
-                          </TableCell>
+                          <TableCell>{getBookingStatusText(booking.isDeclined, booking.isTentative)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

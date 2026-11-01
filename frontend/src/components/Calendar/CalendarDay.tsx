@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import clsx from "clsx";
 
 type Props = {
@@ -9,7 +9,11 @@ type Props = {
   value: number | string;
   onClick?: () => void;
   isInRange?: boolean;
+  /** Dots under the date, e.g. one per booking. At most three are drawn. */
+  markers?: number;
 };
+
+const MAX_MARKERS = 3;
 
 export const CalendarDay: React.VFC<Props> = ({
   onClick,
@@ -19,6 +23,7 @@ export const CalendarDay: React.VFC<Props> = ({
   isToDate,
   isInRange,
   isFromDate,
+  markers,
 }) => {
   const isSingleDate = Boolean(isFromDate && isToDate);
 
@@ -49,6 +54,21 @@ export const CalendarDay: React.VFC<Props> = ({
         minWidth="3rem"
       >
         <Typography variant="subtitle2">{value}</Typography>
+        {markers && !isHidden ? (
+          <Stack
+            direction="row"
+            spacing={0.25}
+            position="absolute"
+            bottom={2}
+            left="50%"
+            sx={{ transform: "translateX(-50%)" }}
+            aria-hidden
+          >
+            {Array.from({ length: Math.min(markers, MAX_MARKERS) }, (_, index) => (
+              <Box key={index} width={4} height={4} borderRadius="50%" bgcolor="currentColor" />
+            ))}
+          </Stack>
+        ) : null}
       </Box>
     </Grid>
   );

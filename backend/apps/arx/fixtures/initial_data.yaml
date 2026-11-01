@@ -1,0 +1,47 @@
+# Development data for apps.arx. Not real ARX ids: nothing here may reach a real ARX.
+- model: arx.arxsettings
+  pk: 1
+  fields:
+    sync_enabled: false
+    buffer_before_minutes: 60
+    buffer_after_minutes: 60
+    horizon_days: 7
+    event_retention_days: 60
+    card_format_classic: Mifare CSN
+    card_format_desfire: DESFire CSN
+    card_number_digits: 0
+    runner_allowed_ips: ""
+    trust_x_forwarded_for: false
+    card_digits_warning: ""
+    runner_last_error: ""
+
+# "Hele huset" (janhus fixture, pk 1) opens the door; its child areas are covered too.
+- model: arx.arxareamapping
+  pk: 1
+  fields:
+    area: 1
+    grants_access: true
+    # ARX ids look like ID:3_1984 (export_accesscategory); this one is made up
+    arx_category_id: "ID:dev_janhus"
+    notes: "Utvikling: ikke en ekte ARX-kategori"
+
+# An external card (nfc fixture card 2, not assigned to any user) with access during
+# the external booking (janhus fixture booking 4). No PIN: PINs are stored encrypted,
+# so set one in Django admin (External card holders) to see the holder synced.
+- model: arx.externalcardholder
+  pk: 1
+  fields:
+    name: Ekstern Testgjest
+    card: 2
+    pin_code_encrypted: ""
+    notes: Utviklingsdata
+    created_by: 4
+    created_at: 2026-05-23 10:00:00+00:00
+
+- model: arx.externalbookingaccess
+  pk: 1
+  fields:
+    booking: 4
+    holder: 1
+    added_by: 4
+    added_at: 2026-05-23 10:00:00+00:00

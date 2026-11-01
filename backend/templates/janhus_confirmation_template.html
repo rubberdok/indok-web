@@ -39,6 +39,11 @@
         <span><strong>{{ ends_at }}</strong> har blitt <strong>godkjent</strong> av Janus Eiendom.</span>
       </p>
 
+      {% if booker_message %}
+      <p><strong>Melding fra Janus Eiendom:</strong></p>
+      <p>{{ booker_message|linebreaksbr }}</p>
+      {% endif %}
+
       <p>Referansen din er:</p>
       <p style="font-size: 24px; letter-spacing: 2px"><strong>{{ reference }}</strong></p>
       <p>Ta vare på denne. Oppgi den hvis du kontakter oss om bookingen.</p>

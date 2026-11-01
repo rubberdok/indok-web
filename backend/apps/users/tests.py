@@ -6,14 +6,26 @@ from unittest.mock import patch
 import requests
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
 from graphene.utils.str_converters import to_snake_case
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.users import IndokUserFactory, UserFactory
 
-from apps.nfc.models import NfcCardAssignment, NfcSettings
+from apps.nfc.models import NfcCard, NfcCardAssignment, NfcSettings
 
 User = get_user_model()
+
+ADMIN_UPDATE_USER_NFC_MUTATION = """
+    mutation AdminUpdateUserNfc($userId: ID!, $nfcData: AdminUserNfcInput!) {
+        adminUpdateUserNfc(userId: $userId, nfcData: $nfcData) {
+            user {
+                id
+            }
+        }
+    }
+"""
 
 
 def setup_mock_requests(
@@ -57,10 +69,7 @@ def setup_mock_requests(
                 200,
             )
 
-        if (
-            args[0]
-            == "https://groups-api.dataporten.no/groups/me/groups/fc:fs:fs:prg:ntnu.no:MTIØT"
-        ):
+        if args[0] == "https://groups-api.dataporten.no/groups/me/groups/fc:fs:fs:prg:ntnu.no:MTIØT":
             if indok:
                 return MockResponse(
                     {
@@ -178,6 +187,40 @@ class UsersResolversTestCase(UsersBaseTestCase):
                 continue
             self.assertEqual(str(v), str(value))
 
+    def test_nfc_user_fields_use_active_assignment_and_hide_other_users_from_staff(self):
+        card = NfcCard.objects.create(mifare_csn="1234567893")
+        NfcCardAssignment.objects.create(card=card, user=self.indok_user, pin_code="4321", permanent_access=True)
+        own_response = self.query(
+            "query { user { nfcMifareCsn nfcCardNumber nfcHasPin nfcPermanentAccess } }",
+            user=self.indok_user,
+        )
+        self.assertResponseNoErrors(own_response)
+        own_fields = json.loads(own_response.content)["data"]["user"]
+        self.assertEqual(own_fields["nfcMifareCsn"], card.mifare_csn)
+        self.assertTrue(own_fields["nfcHasPin"])
+        self.assertTrue(own_fields["nfcPermanentAccess"])
+
+        staff = UserFactory(is_staff=True)
+        staff_response = self.query(
+            "query { allUsers { id nfcMifareCsn nfcCardNumber nfcHasPin nfcPermanentAccess } }",
+            user=staff,
+        )
+        self.assertResponseNoErrors(staff_response)
+        other_user_fields = next(
+            user
+            for user in json.loads(staff_response.content)["data"]["allUsers"]
+            if user["id"] == str(self.indok_user.id)
+        )
+        self.assertEqual(
+            (
+                other_user_fields["nfcMifareCsn"],
+                other_user_fields["nfcCardNumber"],
+                other_user_fields["nfcHasPin"],
+                other_user_fields["nfcPermanentAccess"],
+            ),
+            (None, None, None, None),
+        )
+
     def test_resolve_user_search(self):
         query = """
             query SearchUsers($query: String!) {
@@ -203,9 +246,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["userSearch"]
-        self.assertTrue(
-            any(user["username"] == self.indok_user.username for user in data)
-        )
+        self.assertTrue(any(user["username"] == self.indok_user.username for user in data))
 
         permission = Permission.objects.get(codename="manage_user_profiles")
         self.indok_user.user_permissions.add(permission)
@@ -218,9 +259,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["userSearch"]
-        self.assertTrue(
-            any(user["username"] == self.super_user.username for user in data)
-        )
+        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
 
     def test_profile_permission_allows_nfc_user_search(self):
         query = """
@@ -251,9 +290,47 @@ class UsersResolversTestCase(UsersBaseTestCase):
         )
         self.assertResponseNoErrors(response)
         data = response.json()["data"]["nfcUserSearch"]
-        self.assertTrue(
-            any(user["username"] == self.super_user.username for user in data)
-        )
+        self.assertTrue(any(user["username"] == self.super_user.username for user in data))
+
+    def test_nfc_user_search_costs_the_same_for_many_users(self):
+        """The four nfc fields used to cost four queries per user found."""
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+
+        from apps.nfc.models import NfcCard
+
+        query = """
+            query SearchNfcUsers($query: String!) {
+                nfcUserSearch(query: $query) {
+                    id
+                    nfcMifareCsn
+                    nfcCardNumber
+                    nfcHasPin
+                    nfcPermanentAccess
+                }
+            }
+        """
+
+        def search_with(count):
+            for i in range(count):
+                user = UserFactory(username=f"nplusone{count}x{i}")
+                card = NfcCard.objects.create(mifare_csn=f"{count * 100 + i:010d}")
+                NfcCardAssignment.objects.create(card=card, user=user, pin_code="1234")
+            with CaptureQueriesContext(connection) as queries:
+                response = self.query(
+                    query,
+                    user=self.super_user,
+                    operation_name="SearchNfcUsers",
+                    variables={"query": f"nplusone{count}x"},
+                )
+            self.assertResponseNoErrors(response)
+            found = response.json()["data"]["nfcUserSearch"]
+            self.assertEqual(len(found), count)
+            self.assertTrue(all(user["nfcHasPin"] for user in found))
+            return len(queries)
+
+        search_with(1)  # warms caches that are filled once per test
+        self.assertEqual(search_with(2), search_with(5))
 
 
 class UsersMutationsTestCase(UsersBaseTestCase):
@@ -292,16 +369,12 @@ class UsersMutationsTestCase(UsersBaseTestCase):
                 }
             }
         """
-        self.registered_indok_user = IndokUserFactory(
-            feide_userid="a random ID", first_login=False
-        )
+        self.registered_indok_user = IndokUserFactory(feide_userid="a random ID", first_login=False)
         return super().setUp()
 
     @patch("requests.get", side_effect=setup_mock_requests())
     @patch("requests.post", side_effect=setup_mock_requests())
-    @patch(
-        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
-    )
+    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
     def test_register_new_indok_user(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -323,9 +396,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
 
     @patch("requests.get", side_effect=setup_mock_requests(indok=False))
     @patch("requests.post", side_effect=setup_mock_requests(indok=False))
-    @patch(
-        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
-    )
+    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
     def test_register_new_non_indok_user(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -347,9 +418,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
 
     @patch("requests.get", side_effect=setup_mock_requests(id="a random ID"))
     @patch("requests.post", side_effect=setup_mock_requests(id="a random ID"))
-    @patch(
-        "api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None
-    )
+    @patch("api.auth.dataporten_auth.DataportenAuth.validate_response", return_value=None)
     def test_registered_user_authentication(self, *args, **kwargs):
         response = self.query(self.auth_user_mutation)
         self.assertResponseNoErrors(response)
@@ -404,9 +473,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         )
 
     def test_update_graduation_year_after_registering(self):
-        newly_registered_user = IndokUserFactory(
-            first_login=True, graduation_year=timezone.now().year + 3
-        )
+        newly_registered_user = IndokUserFactory(first_login=True, graduation_year=timezone.now().year + 3)
         today = timezone.now().year
         query = self.mutation(today + 1)
         res = self.query(query, user=newly_registered_user)
@@ -463,6 +530,149 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertEqual(self.indok_user.first_name, "Oppdatert")
         self.assertEqual(self.indok_user.last_name, "Bruker")
 
+    def test_admin_can_update_nfc_card_pin_and_permanent_access(self):
+        response = self.query(
+            ADMIN_UPDATE_USER_NFC_MUTATION,
+            user=self.super_user,
+            operation_name="AdminUpdateUserNfc",
+            variables={
+                "userId": str(self.indok_user.id),
+                "nfcData": {
+                    "mifareCsn": "14392683656882692",
+                    "pinCode": "4321",
+                    "permanentAccess": True,
+                },
+            },
+        )
+        self.assertResponseNoErrors(response)
+
+        assignment = NfcCardAssignment.objects.get(user=self.indok_user, revoked_at__isnull=True)
+        self.assertEqual(assignment.card.mifare_csn, "3434850820")
+        self.assertEqual(assignment.card.card_number, "14392683656882692")
+        self.assertEqual(assignment.pin_code, "4321")
+        self.assertTrue(assignment.permanent_access)
+
+    def test_admin_nfc_card_reassignment_revokes_old_card_assignments(self):
+        old_card = NfcCard.objects.create(mifare_csn="1234567890")
+        old_assignment = NfcCardAssignment.objects.create(card=old_card, user=self.indok_user, pin_code="4321")
+        other_user = UserFactory()
+        new_card = NfcCard.objects.create(mifare_csn="3434850820")
+        other_assignment = NfcCardAssignment.objects.create(card=new_card, user=other_user, pin_code="1234")
+
+        response = self.query(
+            ADMIN_UPDATE_USER_NFC_MUTATION,
+            user=self.super_user,
+            operation_name="AdminUpdateUserNfc",
+            variables={
+                "userId": str(self.indok_user.id),
+                "nfcData": {"mifareCsn": "14392683656882692"},
+            },
+        )
+        self.assertResponseNoErrors(response)
+
+        old_assignment.refresh_from_db()
+        other_assignment.refresh_from_db()
+        current_assignment = NfcCardAssignment.objects.get(user=self.indok_user, revoked_at__isnull=True)
+        self.assertIsNotNone(old_assignment.revoked_at)
+        self.assertIsNotNone(other_assignment.revoked_at)
+        self.assertEqual(current_assignment.card_id, new_card.id)
+        self.assertEqual(current_assignment.card.card_number, "14392683656882692")
+
+    def test_admin_nfc_update_requires_permission_target_and_fields(self):
+        variables = {
+            "userId": str(self.indok_user.id),
+            "nfcData": {"mifareCsn": "1234567890"},
+        }
+        denied = self.query(
+            ADMIN_UPDATE_USER_NFC_MUTATION,
+            user=self.indok_user,
+            operation_name="AdminUpdateUserNfc",
+            variables=variables,
+        )
+        self.assertResponseHasErrors(denied)
+
+        missing_user = self.query(
+            ADMIN_UPDATE_USER_NFC_MUTATION,
+            user=self.super_user,
+            operation_name="AdminUpdateUserNfc",
+            variables={"userId": "99999999", "nfcData": {"mifareCsn": "1234567890"}},
+        )
+        self.assertResponseHasErrors(missing_user)
+
+        empty_input = self.query(
+            ADMIN_UPDATE_USER_NFC_MUTATION,
+            user=self.super_user,
+            operation_name="AdminUpdateUserNfc",
+            variables={"userId": str(self.indok_user.id), "nfcData": {}},
+        )
+        self.assertResponseHasErrors(empty_input)
+
+    def test_admin_nfc_update_rejects_empty_card_invalid_pin_and_missing_assignment(self):
+        for nfc_data in ({"mifareCsn": ""}, {"pinCode": "4321"}, {"permanentAccess": True}):
+            with self.subTest(nfc_data=nfc_data):
+                response = self.query(
+                    ADMIN_UPDATE_USER_NFC_MUTATION,
+                    user=self.super_user,
+                    operation_name="AdminUpdateUserNfc",
+                    variables={"userId": str(self.indok_user.id), "nfcData": nfc_data},
+                )
+                self.assertResponseHasErrors(response)
+
+        NfcCardAssignment.objects.create(
+            card=NfcCard.objects.create(mifare_csn="1234567890"),
+            user=self.indok_user,
+            pin_code="4321",
+        )
+        invalid_pin = self.query(
+            ADMIN_UPDATE_USER_NFC_MUTATION,
+            user=self.super_user,
+            operation_name="AdminUpdateUserNfc",
+            variables={"userId": str(self.indok_user.id), "nfcData": {"pinCode": "12345"}},
+        )
+        self.assertResponseHasErrors(invalid_pin)
+
+    def test_self_service_pin_requires_a_card_and_accepts_only_ascii_digits(self):
+        mutation = """
+            mutation UpdateOwnUserNfc($userData: UserInput) {
+                updateUser(userData: $userData) {
+                    user { id }
+                }
+            }
+        """
+        variables = {"userData": {"nfcPinCode": "4321"}}
+        without_card = self.query(
+            mutation,
+            user=self.indok_user,
+            operation_name="UpdateOwnUserNfc",
+            variables=variables,
+        )
+        self.assertResponseHasErrors(without_card)
+
+        assignment = NfcCardAssignment.objects.create(
+            card=NfcCard.objects.create(mifare_csn="1234567893"),
+            user=self.indok_user,
+            pin_code="4321",
+        )
+        invalid_digits = self.query(
+            mutation,
+            user=self.indok_user,
+            operation_name="UpdateOwnUserNfc",
+            variables={"userData": {"nfcPinCode": "١٢٣٤"}},
+        )
+        self.assertResponseHasErrors(invalid_digits)
+        assignment.refresh_from_db()
+        self.assertEqual(assignment.pin_code, "4321")
+
+        valid = self.query(
+            mutation,
+            user=self.indok_user,
+            operation_name="UpdateOwnUserNfc",
+            variables={"userData": {"nfcPinCode": "9876"}},
+        )
+        self.assertResponseNoErrors(valid)
+        assignment.refresh_from_db()
+        self.assertEqual(assignment.pin_code, "9876")
+
     def test_invalid_update_user(self):
         pass
 
@@ -500,11 +710,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             "Egenregistrering av kortnummer er deaktivert",
             content["errors"][0]["message"],
         )
-        self.assertFalse(
-            NfcCardAssignment.objects.filter(
-                user=self.indok_user, revoked_at__isnull=True
-            ).exists()
-        )
+        self.assertFalse(NfcCardAssignment.objects.filter(user=self.indok_user, revoked_at__isnull=True).exists())
 
     def test_update_user_nfc_mifare_csn_when_self_service_enabled(self):
         self.indok_user.first_name = "Ola"
@@ -551,7 +757,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertEqual(assignment.card.mifare_csn, "1234567890")
         self.assertEqual(assignment.card.label, "Ola Nordmann sitt kort (E)")
 
-    def test_update_user_nfc_mifare_csn_converts_hex_to_csn(self):
+    def test_update_user_nfc_mifare_csn_converts_printed_uid_to_door_number(self):
         settings_obj = NfcSettings.objects.create()
         settings_obj.allow_user_mifare_csn_self_service = True
         settings_obj.save(update_fields=["allow_user_mifare_csn_self_service"])
@@ -572,7 +778,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             operation_name="UpdateOwnUserNfc",
             variables={
                 "userData": {
-                    "nfcMifareCsn": "9B87BA1C",
+                    "nfcMifareCsn": "14392683656882692",  # made-up UID 04 AA BB CC 11 22 33
                 },
             },
         )
@@ -587,9 +793,30 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             .first()
         )
         if assignment is None:
-            self.fail("Expected active NFC assignment after hex to CSN conversion")
+            self.fail("Expected active NFC assignment after UID conversion")
         assignment = cast(NfcCardAssignment, assignment)
-        self.assertEqual(assignment.card.mifare_csn, "0481986459")
+        self.assertEqual(assignment.card.mifare_csn, "3434850820")
+        self.assertEqual(assignment.card.card_number, "14392683656882692")
+
+    def test_reentering_the_same_card_remembers_its_printed_uid(self):
+        card = NfcCard.objects.create(mifare_csn="3434850820")
+        NfcCardAssignment.objects.create(card=card, user=self.indok_user, pin_code="4321")
+        mutation = """
+            mutation UpdateOwnUserNfc($userData: UserInput) {
+                updateUser(userData: $userData) {
+                    user { id }
+                }
+            }
+        """
+        response = self.query(
+            mutation,
+            user=self.indok_user,
+            operation_name="UpdateOwnUserNfc",
+            variables={"userData": {"nfcMifareCsn": "14392683656882692"}},
+        )
+        self.assertResponseNoErrors(response)
+        card.refresh_from_db()
+        self.assertEqual(card.card_number, "14392683656882692")
 
     def test_update_user_nfc_mifare_csn_can_only_be_set_once(self):
         settings_obj = NfcSettings.objects.create()
@@ -629,3 +856,81 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             },
         )
         self.assertResponseHasErrors(second_response)
+
+    def test_revoked_card_assignment_still_prevents_self_service_reassignment(self):
+        NfcSettings.objects.create(allow_user_mifare_csn_self_service=True)
+        card = NfcCard.objects.create(mifare_csn="1234567890")
+        assignment = NfcCardAssignment.objects.create(card=card, user=self.indok_user, pin_code="4321")
+        assignment.revoke(reason="Card replaced")
+        response = self.query(
+            """
+                mutation UpdateOwnUserNfc($userData: UserInput) {
+                    updateUser(userData: $userData) { user { id } }
+                }
+            """,
+            user=self.indok_user,
+            operation_name="UpdateOwnUserNfc",
+            variables={"userData": {"nfcMifareCsn": "1234567891"}},
+        )
+        self.assertResponseHasErrors(response)
+        self.assertIn("Du kan bare registrere kortnummer én gang", response.json()["errors"][0]["message"])
+        self.assertFalse(NfcCardAssignment.objects.filter(user=self.indok_user, revoked_at__isnull=True).exists())
+
+
+class UserAdminDoorPermissionTests(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.client.force_login(UserFactory(is_staff=True, is_superuser=True))
+        self.url = reverse("admin:users_user_change", args=[self.user.pk])
+
+    def _save(self, **ticked):
+        """Submits the real form as the page shows it, with these boxes changed."""
+        form = self.client.get(self.url).context["adminform"].form
+        data = {}
+        for name in form.fields:
+            value = form[name].value()
+            if name in ("last_login", "date_joined"):
+                local = timezone.localtime(value) if value else None
+                data[f"{name}_0"] = local.strftime("%Y-%m-%d") if local else ""
+                data[f"{name}_1"] = local.strftime("%H:%M:%S") if local else ""
+            elif value not in (None, False):
+                data[name] = value
+        for name, tick in ticked.items():
+            data.pop(name, None)
+            if tick:
+                data[name] = "on"
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302, getattr(response, "context", None) and response.context["errors"])
+        return User.objects.get(pk=self.user.pk)
+
+    def test_the_page_groups_the_door_permissions(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, "JanHus-dør")
+        self.assertContains(response, "Kan se dørloggen")
+        self.assertContains(response, "Kan godkjenne flytting av kort fra ARX-personer")
+
+    def test_ticking_gives_the_permission_and_unticking_removes_it(self):
+        cases = {
+            "can_view_all_janhus_bookings": "janhus.view_all_bookings",
+            "can_view_door_log": "nfc.view_door_log",
+            "can_manage_external_cards": "arx.manage_external_card_access",
+            "can_approve_card_takeover": "arx.approve_card_takeover",
+        }
+        for field, permission in cases.items():
+            with self.subTest(field=field):
+                self.assertTrue(self._save(**{field: True}).has_perm(permission))
+                form = self.client.get(self.url).context["adminform"].form
+                self.assertTrue(form[field].value())
+                self.assertFalse(self._save(**{field: False}).has_perm(permission))
+
+    def test_the_admin_permissions_also_give_admin_login(self):
+        self.assertFalse(self.user.is_staff)
+        self.assertTrue(self._save(can_approve_card_takeover=True).is_staff)
+
+    def test_the_read_permissions_do_not_give_admin_login(self):
+        self.assertFalse(self._save(can_view_door_log=True, can_view_all_janhus_bookings=True).is_staff)
+
+    def test_saving_keeps_a_permission_it_does_not_change(self):
+        door_log = Permission.objects.get(codename="view_door_log", content_type__app_label="nfc")
+        self.user.user_permissions.add(door_log)
+        self.assertTrue(self._save().has_perm("nfc.view_door_log"))

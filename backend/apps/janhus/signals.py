@@ -18,11 +18,12 @@ logger = logging.getLogger(__name__)
 @receiver(post_save, sender=Order)
 def confirm_paid_janhus_bookings(sender, instance: Order, **kwargs):
     """
-    A personal JanHus booking is created PROVISIONAL because nobody has paid for it
-    yet. Confirm it as soon as its payment succeeds, so the booker gets their
+    A personal JanHus booking waits (PENDING_ADMIN_REVIEW) because nobody has paid for
+    it yet. Confirm it as soon as its payment succeeds, so the booker gets their
     confirmation and contract without waiting for an admin to notice.
 
-    Organization bookings never pay through Vipps and are not affected.
+    Organization bookings never pay through Vipps and are not affected. External
+    bookings wait for an admin's review, paid or not.
     """
     if instance.payment_status not in SUCCESSFUL_PAYMENT_STATUSES:
         return
@@ -32,7 +33,8 @@ def confirm_paid_janhus_bookings(sender, instance: Order, **kwargs):
 
     bookings = JanHusBooking.objects.filter(
         vipps_product_id=instance.product_id,
-        status=JanHusBookingStatus.PROVISIONAL,
+        status=JanHusBookingStatus.PENDING_ADMIN_REVIEW,
+        is_external_booking=False,
     )
 
     for booking in bookings:
@@ -46,13 +48,9 @@ def confirm_paid_janhus_bookings(sender, instance: Order, **kwargs):
             JanHusDepositStatus.REQUESTED,
         ]:
             booking.deposit_status = JanHusDepositStatus.PAID
-        booking.save(
-            update_fields=["status", "deposit_status", "vipps_order", "updated_at"]
-        )
+        booking.save(update_fields=["status", "deposit_status", "vipps_order", "updated_at"])
 
         try:
             send_booking_confirmation(booking)
         except Exception:
-            logger.exception(
-                "Failed to send JanHus confirmation for booking %s", booking.id
-            )
+            logger.exception("Failed to send JanHus confirmation for booking %s", booking.id)

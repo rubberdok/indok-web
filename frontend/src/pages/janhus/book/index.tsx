@@ -106,7 +106,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const { data: orgData } = useQuery(UserOrganizationsDocument, {
     fetchPolicy: "cache-and-network",
   });
-  const { data: bookableOrganizationsData } = useQuery(JanHusBookableOrganizationsDocument, {
+  const { data: bookableOrganizationsData, error: organizationsError } = useQuery(JanHusBookableOrganizationsDocument, {
     fetchPolicy: "cache-and-network",
   });
 
@@ -131,6 +131,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const isAuthenticated = Boolean(orgData?.user);
   const isIndokStudent = orgData?.user?.isIndok ?? false;
   const canCreateNonExternalBooking = isAuthenticated && isIndokStudent;
+  const hasResolvedOrganizations = bookableOrganizationsData !== undefined || organizationsError !== undefined;
   const organizations = useMemo(
     () => bookableOrganizationsData?.janhusBookableOrganizations ?? [],
     [bookableOrganizationsData]
@@ -140,6 +141,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const bookingSettings = settingsData?.janhusBookingSettings ?? DEFAULT_SETTINGS;
   const externalBookingsEnabled = bookingSettings.externalBookingsEnabled ?? true;
   const privateBookingsEnabled = bookingSettings.privateBookingsEnabled ?? true;
+  const canBookPersonally = canCreateNonExternalBooking && (privateBookingsEnabled || organizations.length === 0);
   const cleaningOptionEnabled = bookingSettings.cleaningOptionEnabled ?? true;
   const bufferMinutes = Math.max(bookingSettings.bufferMinutes ?? 0, 0);
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
@@ -155,15 +157,33 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     return bookingDate.tz("Europe/Oslo").startOf("day");
   }, [bookingDate]);
 
+  const loadedSettings = settingsData?.janhusBookingSettings;
+  const windowWeeks =
+    ownerType === "ORGANIZATION"
+      ? loadedSettings?.organizationBookingOpensWeeksBefore
+      : loadedSettings?.generalBookingOpensWeeksBefore;
+  const lastBookableDate = useMemo(
+    () => (windowWeeks == null ? undefined : dayjs().tz("Europe/Oslo").startOf("day").add(windowWeeks, "week")),
+    [windowWeeks]
+  );
+  const isOutsideWindow = useCallback(
+    (date: dayjs.Dayjs) => Boolean(lastBookableDate && date.tz("Europe/Oslo").isAfter(lastBookableDate, "day")),
+    [lastBookableDate]
+  );
+  const windowMessage =
+    ownerType === "ORGANIZATION"
+      ? `Foreninger kan booke inntil ${windowWeeks} uker fram i tid.`
+      : `Du kan booke inntil ${windowWeeks} uker fram i tid.`;
+
   const isBookingDateDisabled = useCallback(
     (date: dayjs.Dayjs) => {
-      if (date.isBefore(dayjs().tz("Europe/Oslo"), "day")) {
+      if (date.isBefore(dayjs().tz("Europe/Oslo"), "day") || isOutsideWindow(date)) {
         return true;
       }
 
       return !isDateInActiveSemester(date, bookingSettings as SemesterAvailabilitySettings);
     },
-    [bookingSettings]
+    [bookingSettings, isOutsideWindow]
   );
 
   const { startOptions, endOptions } = useBookingSlots({
@@ -263,15 +283,31 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   }, [canCreateNonExternalBooking, hasResolvedUser, ownerType]);
 
   useEffect(() => {
+    if (!hasResolvedOrganizations) {
+      return;
+    }
+
     if (ownerType === "ORGANIZATION" && organizations.length === 0) {
       setOwnerType(canCreateNonExternalBooking ? "PERSONAL" : "EXTERNAL");
+      return;
+    }
+
+    if (ownerType === "PERSONAL" && !canBookPersonally) {
+      setOwnerType("ORGANIZATION");
       return;
     }
 
     if (ownerType !== "ORGANIZATION" && organizationId) {
       setOrganizationId("");
     }
-  }, [canCreateNonExternalBooking, organizationId, organizations, ownerType]);
+  }, [
+    canBookPersonally,
+    canCreateNonExternalBooking,
+    hasResolvedOrganizations,
+    organizationId,
+    organizations,
+    ownerType,
+  ]);
 
   useEffect(() => {
     if (ownerType === "ORGANIZATION" && !organizationId && organizations.length > 0) {
@@ -344,13 +380,18 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
+    if (isOutsideWindow(startDate)) {
+      setErrorMessage(windowMessage);
+      return false;
+    }
+
     if (!dayjs(endsAt).isAfter(dayjs(startsAt))) {
       setErrorMessage("Sluttid må være etter starttid.");
       return false;
     }
 
     return true;
-  }, [bookingDate, bookingSettings, endsAt, startsAt]);
+  }, [bookingDate, bookingSettings, endsAt, isOutsideWindow, startsAt, windowMessage]);
 
   const contactFieldErrors: ContactFieldErrors = useMemo(
     () =>
@@ -397,19 +438,33 @@ const JanHusBookingPage: NextPageWithLayout = () => {
       return false;
     }
 
+    if (ownerType === "PERSONAL" && !canBookPersonally) {
+      setErrorMessage("Private bookinger er midlertidig deaktivert. Book på vegne av foreningen din.");
+      return false;
+    }
+
     if (ownerType === "EXTERNAL" && !externalBookingsEnabled) {
       setErrorMessage("Eksterne forespørsler er midlertidig deaktivert.");
       return false;
     }
 
+    if (startsAt && isOutsideWindow(dayjs(startsAt))) {
+      setErrorMessage(windowMessage);
+      return false;
+    }
+
     return true;
   }, [
+    canBookPersonally,
     canCreateNonExternalBooking,
     contactFieldErrors,
     externalBookingsEnabled,
     eventType,
+    isOutsideWindow,
     ownerType,
     privateBookingsEnabled,
+    startsAt,
+    windowMessage,
   ]);
 
   const validateContractStep = useCallback(() => {
@@ -581,7 +636,6 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               startOptions={startOptions}
               endOptions={endOptions}
               minDurationMinutes={minDurationMinutes}
-              slotGranularityMinutes={slotGranularityMinutes}
               openingHour={openingHour}
               closingHour={closingHour}
               selectedDurationMinutes={selectedDurationMinutes}
@@ -600,6 +654,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               responsiblePhone={responsiblePhone}
               eventType={eventType}
               eventTypeOptions={eventTypeOptions}
+              canBookPersonally={canBookPersonally}
               comment={comment}
               guestListEntries={guestListEntries}
               cleaningRequested={cleaningRequested}
@@ -611,6 +666,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               contactFieldErrors={contactFieldErrors}
               showAllContactErrors={showAllContactErrors}
               isBookingDateDisabled={isBookingDateDisabled}
+              lastBookableDate={lastBookableDate}
               onAreaChange={setArea}
               onBookingDateChange={setBookingDate}
               onStartsAtChange={setStartsAt}

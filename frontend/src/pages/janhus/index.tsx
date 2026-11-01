@@ -1,18 +1,20 @@
-// import { useQuery } from "@apollo/client/react";
+import { useQuery } from "@apollo/client/react";
 import { ArrowForward } from "@mui/icons-material";
 // import { Alert } from "@mui/material";
 import { Button, Card, CardActions, CardContent, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 
-import { PermissionRequired } from "@/components/Auth";
 import { NextLinkComposed } from "@/components/Link";
+import { BookingCalendar } from "@/components/pages/janhus/BookingCalendar";
 import { Title } from "@/components/Title";
-import { JanHusAreasDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
+import { JanHusAdminAccessDocument, JanHusAreasDocument, JanHusBookingSettingsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/lib/next";
 
 const JanHusPage: NextPageWithLayout = () => {
+  // The admin page is open to managers and to read-only viewers (janhus.view_all_bookings).
+  const { data: adminAccess } = useQuery(JanHusAdminAccessDocument);
   // const { data: settingsData } = useQuery(JanHusBookingSettingsDocument);
   // const settings = settingsData?.janhusBookingSettings;
   // const { data: areaData } = useQuery(JanHusAreasDocument);
@@ -69,7 +71,7 @@ const JanHusPage: NextPageWithLayout = () => {
               </Card>
             </Grid>
 
-            <PermissionRequired permission="janhus.manage_booking">
+            {(adminAccess?.canManage || adminAccess?.canView) && (
               <Grid item xs={12} md={6}>
                 <Card sx={{ height: "100%" }}>
                   <CardContent>
@@ -87,7 +89,44 @@ const JanHusPage: NextPageWithLayout = () => {
                   </CardActions>
                 </Card>
               </Grid>
-            </PermissionRequired>
+            )}
+
+            {!(adminAccess?.canManage || adminAccess?.canView) && adminAccess?.canViewDoorLog && (
+              // Admins reach the door log from the admin page; this is for those who may only read the log.
+              <Grid item xs={12} md={6}>
+                <Card sx={{ height: "100%" }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Dørlogg
+                    </Typography>
+                    <Typography color="text.secondary">Se hvem som har brukt kortleseren på JanHus.</Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      component={NextLinkComposed}
+                      to={{ pathname: "/janhus/admin/logs" }}
+                      endIcon={<ArrowForward />}
+                    >
+                      Gå til dørloggen
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            )}
+
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Kommende bookinger
+                  </Typography>
+                  <Typography color="text.secondary" gutterBottom>
+                    Trykk på en dato for å se hvilke områder som er ledige, og hvem som har booket når.
+                  </Typography>
+                  <BookingCalendar />
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Stack>
       </Container>
