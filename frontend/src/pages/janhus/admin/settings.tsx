@@ -3,7 +3,12 @@ import { Alert, Container, Divider, Stack } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { AreaSettings, BookingRulesSettings, SemesterSettings } from "@/components/pages/janhus/admin";
+import {
+  AreaSettings,
+  BookingRulesSettings,
+  SemesterSettings,
+  adminPanelStyles,
+} from "@/components/pages/janhus/admin";
 import type { AreaForm, SettingsForm } from "@/components/pages/janhus/constants";
 import { Title } from "@/components/Title";
 import {
@@ -248,7 +253,7 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
         ]}
       />
 
-      <Container>
+      <Container sx={adminPanelStyles}>
         <PermissionRequired permission="janhus.manage_settings">
           <Stack direction="column" spacing={4}>
             {alert ? <Alert severity={alert.severity}>{alert.message}</Alert> : null}

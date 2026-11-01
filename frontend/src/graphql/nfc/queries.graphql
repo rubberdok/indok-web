@@ -1,35 +1,17 @@
-query nfcCards {
-	nfcCards {
-		...NfcCard
-	}
-}
-
-query nfcCard($mifareCsn: String!) {
-	nfcCard(mifareCsn: $mifareCsn) {
-		...NfcCard
-	}
-}
-
-query nfcCardAssignments($activeOnly: Boolean) {
-	nfcCardAssignments(activeOnly: $activeOnly) {
-		...NfcCardAssignment
-	}
-}
-
-query myNfcCardAssignment {
-	myNfcCardAssignment {
-		...NfcCardAssignment
-	}
-}
-
-query nfcAccessGrants($activeOnly: Boolean) {
-	nfcAccessGrants(activeOnly: $activeOnly) {
-		...NfcAccessGrant
-	}
-}
-
-query nfcAccessEvents($limit: Int, $doorIdentifier: String) {
-	nfcAccessEvents(limit: $limit, doorIdentifier: $doorIdentifier) {
-		...NfcAccessEvent
-	}
+query DoorLog($offset: Int, $limit: Int, $result: String, $search: String, $since: DateTime, $until: DateTime) {
+  doorLog(offset: $offset, limit: $limit, result: $result, search: $search, since: $since, until: $until) {
+    total
+    events {
+      id
+      eventType
+      occurredAt
+      doorIdentifier
+      name
+      isWebsiteUser
+      holderKind
+      mifareCsnReported
+      cardFormat
+      arxEvent
+    }
+  }
 }

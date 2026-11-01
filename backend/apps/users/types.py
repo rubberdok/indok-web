@@ -5,15 +5,56 @@ from graphene_django import DjangoObjectType
 from decorators import login_required, get_resolver_parent, permission_required_or_none
 from apps.users.permissions import can_manage_user_nfc
 
+ACTIVE_NFC_ASSIGNMENTS = "active_nfc_assignments"
+
+
+def with_active_nfc_assignment(users):
+    """
+    Fetches every user's active card assignment in one query. The four nfc fields
+    below each need it, so a user search would otherwise cost four queries per user.
+    """
+    from django.db.models import Prefetch
+
+    from apps.nfc.models import NfcCardAssignment
+
+    return users.prefetch_related(
+        Prefetch(
+            "nfc_card_assignments",
+            queryset=NfcCardAssignment.objects.filter(revoked_at__isnull=True).select_related("card").order_by("pk"),
+            to_attr=ACTIVE_NFC_ASSIGNMENTS,
+        )
+    )
+
+
+def active_nfc_assignment(user):
+    """The user's active card assignment, looked up at most once per user object."""
+    if "_active_nfc_assignment" not in user.__dict__:
+        prefetched = getattr(user, ACTIVE_NFC_ASSIGNMENTS, None)
+        if prefetched is None:
+            from apps.nfc.models import NfcCardAssignment
+
+            prefetched = list(
+                NfcCardAssignment.objects.select_related("card")
+                .filter(user=user, revoked_at__isnull=True)
+                .order_by("pk")[:1]
+            )
+        user.__dict__["_active_nfc_assignment"] = prefetched[0] if prefetched else None
+    return user.__dict__["_active_nfc_assignment"]
+
 
 class UserType(DjangoObjectType):
     grade_year = graphene.Int(source="grade_year")
     events = graphene.List(NonNull("apps.events.types.EventType"), source="events")
     allergies = graphene.String(required=False)
     can_update_year = graphene.Boolean()
-    nfc_mifare_csn = graphene.String()
-    nfc_pin_code = graphene.String()
+    nfc_mifare_csn = graphene.String(
+        description="The number the door reads (10 digits). For admins and troubleshooting."
+    )
+    nfc_card_number = graphene.String(
+        description="The card number as it appears on the user's card. Show this to the user."
+    )
     nfc_permanent_access = graphene.Boolean()
+    nfc_has_pin = graphene.Boolean(description="Whether a door PIN is set. The PIN itself is never returned.")
 
     class Meta:
         model = get_user_model()
@@ -53,46 +94,35 @@ class UserType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_nfc_mifare_csn(parent, info):
-        if info.context.user.pk != parent.pk and not can_manage_user_nfc(
-            info.context.user
-        ):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
             return None
 
-        from apps.nfc.models import NfcCardAssignment
-
-        active_assignment = (
-            NfcCardAssignment.objects.select_related("card")
-            .filter(user=parent, revoked_at__isnull=True)
-            .first()
-        )
+        active_assignment = active_nfc_assignment(parent)
         return active_assignment.card.mifare_csn if active_assignment else None
 
     @staticmethod
     @login_required
-    def resolve_nfc_pin_code(parent, info):
-        if info.context.user.pk != parent.pk and not can_manage_user_nfc(
-            info.context.user
-        ):
+    def resolve_nfc_card_number(parent, info):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
             return None
 
-        from apps.nfc.models import NfcCardAssignment
-
-        active_assignment = NfcCardAssignment.objects.filter(
-            user=parent, revoked_at__isnull=True
-        ).first()
-        return active_assignment.pin_code if active_assignment else None
+        active_assignment = active_nfc_assignment(parent)
+        return active_assignment.card.number_for_display if active_assignment else None
 
     @staticmethod
     @login_required
     def resolve_nfc_permanent_access(parent, info):
-        if info.context.user.pk != parent.pk and not can_manage_user_nfc(
-            info.context.user
-        ):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
             return None
 
-        from apps.nfc.models import NfcCardAssignment
-
-        active_assignment = NfcCardAssignment.objects.filter(
-            user=parent, revoked_at__isnull=True
-        ).first()
+        active_assignment = active_nfc_assignment(parent)
         return active_assignment.permanent_access if active_assignment else False
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_has_pin(parent, info):
+        if info.context.user.pk != parent.pk and not can_manage_user_nfc(info.context.user):
+            return None
+
+        active_assignment = active_nfc_assignment(parent)
+        return active_assignment.has_pin if active_assignment else False

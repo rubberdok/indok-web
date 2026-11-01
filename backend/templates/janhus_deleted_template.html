@@ -1,0 +1,56 @@
+{% load email_branding %}<!doctype html>
+
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      font-family:
+        Open Sans,
+        sans-serif;
+    "
+  >
+    <div
+      style="border: 5px solid {% email_color 'primary' %}; text-align: center; padding: 50px; background-color: {% email_color 'surface' %}; width: 80%"
+      class="contentDiv"
+    >
+      <h2>Hei {{ booker_name }}!</h2>
+      <p>
+        Bookingen din av <strong>{{ area_name }}</strong> fra
+        <span><strong>{{ starts_at }}</strong></span> til
+        <span><strong>{{ ends_at }}</strong> er <strong>slettet</strong> av Janus Eiendom.</span>
+      </p>
+      <p>Referanse: <strong>{{ reference }}</strong></p>
+
+      {% if booker_message %}
+      <p><strong>Melding fra Janus Eiendom:</strong></p>
+      <p>{{ booker_message|linebreaksbr }}</p>
+      {% endif %}
+
+      <p>
+        Ta kontakt på <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> og oppgi referansen hvis du har
+        spørsmål.
+      </p>
+
+      {% include "janhus_signature.html" %}
+    </div>
+  </body>
+</html>

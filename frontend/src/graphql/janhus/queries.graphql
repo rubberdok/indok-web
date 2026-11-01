@@ -4,6 +4,13 @@ query JanHusBookings($startsAt: DateTime, $endsAt: DateTime, $area: ID) {
   }
 }
 
+query JanHusBookingCalendar($startsAt: DateTime) {
+  janhusBookings(startsAt: $startsAt) {
+    ...JanHusBookingAvailability
+    ownerDisplayName
+  }
+}
+
 query JanHusMyBookings {
   janhusMyBookings {
     ...JanHusBooking
@@ -30,7 +37,15 @@ query JanHusGuestSearchForRequest($query: String!, $limit: Int) {
 
 query AdminJanHusBookings($status: String) {
   adminJanhusBookings(status: $status) {
-    ...JanHusBooking
+    ...JanHusAdminBooking
+  }
+}
+
+query JanHusUserSearch($query: String!, $limit: Int) {
+  janhusUserSearch(query: $query, limit: $limit) {
+    id
+    displayName
+    email
   }
 }
 
@@ -53,20 +68,14 @@ query JanHusAreas($includeInactive: Boolean) {
   }
 }
 
-query JanHusBookingLevels {
-  janhusBookingLevels {
-    ...JanHusBookingLevel
-  }
-}
-
-query JanHusMyBookingLevel {
-  janhusMyBookingLevel {
-    ...JanHusBookingLevel
-  }
-}
-
 query JanHusBookingRequests($status: String) {
   janhusBookingRequests(status: $status) {
-    ...JanHusBookingRequest
+    ...JanHusAdminBookingRequest
   }
+}
+
+query JanHusAdminAccess {
+  canManage: hasPermission(permission: "janhus.manage_booking")
+  canView: hasPermission(permission: "janhus.view_all_bookings")
+  canViewDoorLog: hasPermission(permission: "nfc.view_door_log")
 }

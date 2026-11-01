@@ -20,6 +20,12 @@ export const Input: ThemeOptions["components"] = {
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: theme.shape.borderRadius,
+        ...theme.applyStyles("light", {
+          backgroundColor: "rgba(128, 128, 128, 0.08)",
+          "&:hover": { backgroundColor: "rgba(128, 128, 128, 0.12)" },
+          "&.Mui-focused": { backgroundColor: "rgba(128, 128, 128, 0.1)" },
+          "&.Mui-disabled": { backgroundColor: "rgba(128, 128, 128, 0.05)" },
+        }),
         "&.Mui-error": {
           backgroundColor: `rgba(${theme.vars.palette.error.mainChannel} / 0.08)`,
         },

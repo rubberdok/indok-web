@@ -22,6 +22,14 @@ export const isVegetarian = (allergies: string | null): boolean => {
   return options.some((option) => allergies?.toLowerCase().includes(option));
 };
 
+/**
+ * Rough check before the backend decides: the digits printed on an NTNU card,
+ * 10 after "mS" (or "M") on older cards, 15-17 after "UID" on newer cards.
+ */
+export function isAcceptedCardNumber(value: string): boolean {
+  return /^(\d{10}|\d{15,17})$/.test(value.replace(/[\s.-]/g, ""));
+}
+
 export type IUserForm = {
   firstName: string;
   lastName: string;
@@ -46,23 +54,13 @@ export const validationSchema: Yup.ObjectSchema<IUserForm> = Yup.object({
     .matches(/^(0047|\+47|47)?[49]\d{7}$/, { message: "Må være et gyldig telefonnummer.", excludeEmptyString: true })
     .ensure(),
   nfcMifareCsn: Yup.string()
-    .matches(/^[0-9a-fA-F\s-]*$/, {
-      message: "Kortnummer kan kun inneholde sifre.",
+    .matches(/^[\d\s.-]*$/, {
+      message: "Kortnummer kan bare inneholde sifre.",
       excludeEmptyString: true,
     })
-    .test("nfc-card-number-or-hex", "Oppgi 10 sifre (mS på NTNU kortet ditt).", (value) => {
-      if (!value) {
-        return true;
-      }
-
-      const digitsOnly = value.replace(/\D/g, "");
-      if (/^\d{10}$/.test(digitsOnly)) {
-        return true;
-      }
-
-      const compactHex = value.replace(/[^0-9a-fA-F]/g, "");
-      return /^[0-9a-fA-F]{8}$/.test(compactHex);
-    })
+    .test("nfc-card-number", "Skriv inn kortnummeret slik det står på NTNU-kortet ditt.", (value) =>
+      value ? isAcceptedCardNumber(value) : true
+    )
     .optional(),
   nfcPinCode: Yup.string()
     .matches(/^\d{4}$/, { message: "PIN-kode må være nøyaktig 4 sifre.", excludeEmptyString: true })

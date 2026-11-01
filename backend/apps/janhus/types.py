@@ -2,16 +2,15 @@ import graphene
 from decorators import PermissionDenied
 from graphene_django import DjangoObjectType
 
-from apps.janhus.guest_list import build_guest_list_entries
-from apps.janhus.permissions import can_view_booking_details
+from apps.janhus.door_access import door_access_warnings
+from apps.janhus.guest_list import GUEST_LIST_ENTRIES_ATTR, build_guest_list_entries
+from apps.janhus.permissions import can_view_booking_details, has_view_all_bookings_permission
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
-    JanHusBookingLevel,
     JanHusBookingRequest,
     JanHusBookingSettings,
-    JanHusOrganizationBookingLevel,
-    JanHusUserBookingLevel,
+    JanHusBookingStatus,
 )
 
 
@@ -20,7 +19,16 @@ class JanHusGuestListEntryType(graphene.ObjectType):
     display_name = graphene.String(required=True)
 
 
+class JanHusUserSearchResultType(graphene.ObjectType):
+    """A website user a JanHus admin can link to a booking (booker or responsible)."""
+
+    id = graphene.ID(required=True)
+    display_name = graphene.String(required=True)
+    email = graphene.String(required=True)
+
+
 NO_ACCESS_TO_BOOKING_MESSAGE = "Du har ikke tilgang til detaljene for denne bookingen"
+ADMIN_ONLY_MESSAGE = "Bare JanHus-admin kan se den interne kommentaren"
 PROTECTED_BOOKING_FIELDS = [
     "reference",
     "booker_name",
@@ -31,7 +39,8 @@ PROTECTED_BOOKING_FIELDS = [
     "responsible_phone",
     "guest_list",
     "comment",
-    "admin_comment",
+    "booker_message",
+    "requested_at",
     "owner_user",
     "owner_organization",
     "deposit_amount",
@@ -40,6 +49,12 @@ PROTECTED_BOOKING_FIELDS = [
     "manually_marked_as_paid",
     "vipps_product",
     "vipps_order",
+    # who created, booked and is responsible, and who opens the door
+    "created_by_user",
+    "booker_user",
+    "responsible_user",
+    "door_access_policy",
+    "organization_door_access",
 ]
 
 
@@ -47,9 +62,7 @@ def _protected_booking_field_resolver(field_name):
     @staticmethod
     def resolver(parent: JanHusBooking, info):
         if not can_view_booking_details(info.context.user, parent):
-            raise PermissionDenied(
-                NO_ACCESS_TO_BOOKING_MESSAGE
-            )
+            raise PermissionDenied(NO_ACCESS_TO_BOOKING_MESSAGE)
         return getattr(parent, field_name)
 
     return resolver
@@ -59,7 +72,16 @@ class JanHusBookingType(DjangoObjectType):
     total_price = graphene.Decimal(source="total_price")
     duration_minutes = graphene.Int(source="duration_minutes")
     outstanding_deposit_amount = graphene.Decimal(source="outstanding_deposit_amount")
+    door_access_warnings = graphene.List(
+        graphene.NonNull(graphene.String),
+        required=True,
+        description="Why the booker will not get the door, for JanHus admins. Empty when they will.",
+    )
     guest_list_entries = graphene.List(graphene.NonNull(JanHusGuestListEntryType))
+    owner_display_name = graphene.String(
+        description="Who has the booking, for the calendar: the organisation, the owner's first and last name, "
+        "or the booker's name for an external booking. Only for logged-in users."
+    )
 
     class Meta:
         model = JanHusBooking
@@ -67,25 +89,49 @@ class JanHusBookingType(DjangoObjectType):
     @staticmethod
     def resolve_guest_list_entries(parent, info):
         if not can_view_booking_details(info.context.user, parent):
-            raise PermissionDenied(
-                NO_ACCESS_TO_BOOKING_MESSAGE
-            )
+            raise PermissionDenied(NO_ACCESS_TO_BOOKING_MESSAGE)
+        prefetched = getattr(parent, GUEST_LIST_ENTRIES_ATTR, None)
+        if prefetched is not None:
+            return prefetched
         return build_guest_list_entries(parent.guest_list)
+
+    @staticmethod
+    def resolve_admin_comment(parent: JanHusBooking, info):
+        if not has_view_all_bookings_permission(info.context.user):
+            raise PermissionDenied(ADMIN_ONLY_MESSAGE)
+        return parent.admin_comment
+
+    @staticmethod
+    def resolve_owner_display_name(parent: JanHusBooking, info):
+        if not info.context.user.is_authenticated:
+            return None
+        if parent.status == JanHusBookingStatus.BLOCKED:
+            return "Stengt"
+        if parent.owner_organization_id:
+            return parent.owner_organization.name
+        if parent.owner_user_id:
+            return parent.owner_user.get_full_name() or parent.owner_user.username
+        # External bookers have no website user: the name they gave when booking.
+        if parent.is_external_booking and parent.booker_name.strip():
+            return parent.booker_name.strip()
+        return "Booket"
+
+    @staticmethod
+    def resolve_door_access_warnings(parent: JanHusBooking, info):
+        if not can_view_booking_details(info.context.user, parent):
+            raise PermissionDenied(NO_ACCESS_TO_BOOKING_MESSAGE)
+        return door_access_warnings(parent)
 
     @staticmethod
     def resolve_total_price(parent: JanHusBooking, info):
         if not can_view_booking_details(info.context.user, parent):
-            raise PermissionDenied(
-                NO_ACCESS_TO_BOOKING_MESSAGE
-            )
+            raise PermissionDenied(NO_ACCESS_TO_BOOKING_MESSAGE)
         return parent.total_price
 
     @staticmethod
     def resolve_outstanding_deposit_amount(parent: JanHusBooking, info):
         if not can_view_booking_details(info.context.user, parent):
-            raise PermissionDenied(
-                NO_ACCESS_TO_BOOKING_MESSAGE
-            )
+            raise PermissionDenied(NO_ACCESS_TO_BOOKING_MESSAGE)
         return parent.outstanding_deposit_amount
 
 
@@ -101,20 +147,11 @@ class JanHusBookingRequestType(DjangoObjectType):
     class Meta:
         model = JanHusBookingRequest
 
-
-class JanHusBookingLevelType(DjangoObjectType):
-    class Meta:
-        model = JanHusBookingLevel
-
-
-class JanHusUserBookingLevelType(DjangoObjectType):
-    class Meta:
-        model = JanHusUserBookingLevel
-
-
-class JanHusOrganizationBookingLevelType(DjangoObjectType):
-    class Meta:
-        model = JanHusOrganizationBookingLevel
+    @staticmethod
+    def resolve_admin_comment(parent: JanHusBookingRequest, info):
+        if not has_view_all_bookings_permission(info.context.user):
+            raise PermissionDenied(ADMIN_ONLY_MESSAGE)
+        return parent.admin_comment
 
 
 class JanHusBookingSettingsType(DjangoObjectType):

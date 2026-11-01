@@ -27,6 +27,7 @@ import { Link } from "@/components";
 import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
 import dayjs from "@/lib/date";
 
+import { CardNumberHelp } from "./CardNumberHelp";
 import {
   IUserForm,
   currentGradeYear,
@@ -52,6 +53,40 @@ type Props = {
 type UserNfcSettingsQuery = {
   nfcSelfServiceEnabled?: boolean | null;
 };
+
+function getCardNumberHelperText(
+  errorMessage: string | undefined,
+  hasRegisteredCard: boolean,
+  selfServiceEnabled: boolean
+): string {
+  if (errorMessage) {
+    return errorMessage;
+  }
+  if (hasRegisteredCard) {
+    return "Kontakt Rubberdøk for endring av kort.";
+  }
+  if (selfServiceEnabled) {
+    return "Sifrene etter «UID» på NTNU-kortet ditt. På eldre kort: de 10 sifrene etter «mS» eller «M».";
+  }
+  return "Egenregistrering av kortnummer er deaktivert.";
+}
+
+function getPinCodeHelperText(
+  errorMessage: string | undefined,
+  hasCard: boolean,
+  hasPin: boolean | null | undefined
+): string {
+  if (errorMessage) {
+    return errorMessage;
+  }
+  if (!hasCard) {
+    return "PIN-kode kan kun settes når du har et aktivt kort.";
+  }
+  if (hasPin) {
+    return "PIN-koden er satt. Skriv inn en ny PIN-kode for å endre den.";
+  }
+  return "Denne PIN-koden brukes til å låse opp JanHus, når du skal ha tilgang.";
+}
 
 export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
   const [submitError, setSubmitError] = useState<string | undefined>();
@@ -83,8 +118,11 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
     if (rawMessage.includes("UID kan ikke være tom") || rawMessage.includes("Kortnummer kan ikke være tomt")) {
       return "Kortnummer kan ikke være tomt. Skriv inn kortnummer eller la feltet stå urørt.";
     }
-    if (rawMessage.includes("Kortnummer må være nøyaktig 10 sifre")) {
-      return "Kortnummer må være nøyaktig 10 sifre.";
+    if (
+      rawMessage.includes("Kortnummeret ble ikke gjenkjent") ||
+      rawMessage.includes("Kortnummer må være nøyaktig 10 sifre")
+    ) {
+      return "Kortnummeret ble ikke gjenkjent. Skriv det inn slik det står på NTNU-kortet ditt.";
     }
     if (rawMessage.includes("PIN-kode må være nøyaktig 4 sifre")) {
       return "PIN-kode må være nøyaktig 4 sifre.";
@@ -127,8 +165,8 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
-      nfcMifareCsn: data?.user?.nfcMifareCsn || "",
-      nfcPinCode: data?.user?.nfcPinCode || "",
+      nfcMifareCsn: data?.user?.nfcCardNumber || data?.user?.nfcMifareCsn || "",
+      nfcPinCode: "",
     },
     values: {
       firstName: data?.user?.firstName || "",
@@ -137,8 +175,8 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
-      nfcMifareCsn: data?.user?.nfcMifareCsn || "",
-      nfcPinCode: data?.user?.nfcPinCode || "",
+      nfcMifareCsn: data?.user?.nfcCardNumber || data?.user?.nfcMifareCsn || "",
+      nfcPinCode: "",
     },
     resolver: yupResolver(validationSchema),
   });
@@ -157,6 +195,11 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
           delete userData.nfcMifareCsn;
         } else {
           userData.nfcMifareCsn = normalizedMifareCsnInput;
+        }
+
+        // The PIN is never shown again once saved: an empty field means "keep the PIN".
+        if (!userData.nfcPinCode?.trim()) {
+          delete userData.nfcPinCode;
         }
 
         if (!hasMifareCsnForPin && !userData.nfcMifareCsn) {
@@ -325,17 +368,16 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                   InputProps={{
                     readOnly: hasRegisteredMifareCsn,
                   }}
+                  inputProps={{ inputMode: "numeric" }}
                   error={Boolean(errors.nfcMifareCsn)}
-                  helperText={
-                    errors.nfcMifareCsn?.message ||
-                    (hasRegisteredMifareCsn
-                      ? "Kontakt Rubberdøk for endring av kort."
-                      : nfcSelfServiceEnabled
-                        ? "Skriv inn MIFARE kortnummer (10 sifre). Dette står som 'mS' på NTNU-kortet ditt."
-                        : "Egenregistrering av kortnummer er deaktivert.")
-                  }
+                  helperText={getCardNumberHelperText(
+                    errors.nfcMifareCsn?.message,
+                    hasRegisteredMifareCsn,
+                    nfcSelfServiceEnabled
+                  )}
                   data-test-id={`${ID_PREFIX}nfcMifareCsnTextField`}
                 />
+                {!hasRegisteredMifareCsn && <CardNumberHelp />}
               </Grid>
               <Grid item>
                 <TextField
@@ -348,12 +390,11 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
                   {...register("nfcPinCode")}
                   label="PIN-kode (4 sifre)"
                   error={Boolean(errors.nfcPinCode)}
-                  helperText={
-                    errors.nfcPinCode?.message ||
-                    (hasMifareCsnForPin
-                      ? "Denne PIN-koden brukes til å låse opp JanHus, når du skal ha tilgang."
-                      : "PIN-kode kan kun settes når du har et aktivt kort.")
-                  }
+                  helperText={getPinCodeHelperText(
+                    errors.nfcPinCode?.message,
+                    hasMifareCsnForPin,
+                    data?.user?.nfcHasPin
+                  )}
                   inputProps={{
                     inputMode: "numeric",
                     maxLength: 4,

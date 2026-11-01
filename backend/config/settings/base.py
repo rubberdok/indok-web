@@ -14,9 +14,7 @@ env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
-    DOT_ENV_FILES = env.list(
-        "DJANGO_DOT_ENV_FILES", default=[".env", ".env.development"]
-    )
+    DOT_ENV_FILES = env.list("DJANGO_DOT_ENV_FILES", default=[".env", ".env.development"])
     # OS environment variables take precedence over variables from .env
     for file in DOT_ENV_FILES:
         env.read_env(str(ROOT_DIR / file))
@@ -74,6 +72,7 @@ LOCAL_APPS = [
     "apps.janhus",
     "apps.events",
     "apps.nfc",
+    "apps.arx",
     "apps.organizations",
     "apps.users",
     "apps.forms",
@@ -94,9 +93,8 @@ AUTH_USER_MODEL = "users.User"
 SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default="localhost")
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = env.list(
-    "CSRF_TRUSTED_ORIGINS", default=["http://localhost:3000", "http://frontend:3000"]
-)
+LOCALHOST_FRONTEND_ORIGIN = "http://localhost:3000"
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[LOCALHOST_FRONTEND_ORIGIN, "http://frontend:3000"])
 CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN", default="localhost")
 CSRF_COOKIE_NAME = env("CSRF_COOKIE_NAME", default="csrf")
 CSRF_FAILURE_VIEW = env("CSRF_FAILURE_VIEW", default="config.views.csrf.csrf_failure")
@@ -109,9 +107,7 @@ DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 
 # PASSWORDS
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -119,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # MIDDLEWARE
 MIDDLEWARE = [
+    "apps.arx.middleware.ArxAlertMiddleware",
     "config.middleware.health.HealthcheckMiddleware",
     "django_alive.middleware.healthcheck_bypass_host_check",
     "django.middleware.security.SecurityMiddleware",
@@ -162,10 +159,8 @@ TEMPLATES = [
 
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default="http://localhost:3000")
-CORS_ALLOWED_ORIGIN_REGEXES = env.list(
-    "CORS_ALLOWED_ORIGIN_REGEXES", default=["http://localhost:3000"]
-)
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[LOCALHOST_FRONTEND_ORIGIN])
+CORS_ALLOWED_ORIGIN_REGEXES = env.list("CORS_ALLOWED_ORIGIN_REGEXES", default=[LOCALHOST_FRONTEND_ORIGIN])
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 # URLS
@@ -173,12 +168,8 @@ FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="https://www.indokntnu.no")
 
 
 # EMAIL
-EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
-)
-DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default="Indøk <no-reply@indokntnu.no>"
-)
+EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="Indøk <no-reply@indokntnu.no>")
 CONTACT_EMAIL = env("CONTACT_EMAIL", default="kontakt@rubberdok.no")
 EMAIL_MAX_RECIPIENTS = env.int("EMAIL_MAX_RECIPIENTS", 50)
 
@@ -196,12 +187,7 @@ ADMIN_URL = "admin/"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
-        }
-    },
+    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"}},
     "handlers": {
         "console": {
             "level": "DEBUG",
@@ -220,6 +206,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # GOOGLE DRIVE
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
+
+# NFC
+# Encrypts the door PINs stored in the database (a Fernet key). Generate one
+# with
+# python -c "from cryptography.fernet import Fernet;
+# print(Fernet.generate_key().decode())"
+# To change it: "new,old" (the first encrypts, all decrypt),
+# then manage.py nfc_pin_key --reencrypt.
+NFC_PIN_ENCRYPTION_KEY = env("NFC_PIN_ENCRYPTION_KEY", default="")
+
+# ARX (JanHus door access). The backend holds no ARX credentials: the runner at
+# JanHus calls /arx-runner/v1/ with a token whose SHA-256 is listed here
+# (current, next during a rotation). Without ARX_STATE_HMAC_KEY the runner
+# API answers 503 and nothing is synced; the rest of the site is unaffected.
+# The runner IP allowlist is set by superusers in Django admin
+# (ARX settings), not here.
+ARX_RUNNER_TOKEN_SHA256S = env.list("ARX_RUNNER_TOKEN_SHA256S", default=[])
+ARX_STATE_HMAC_KEY = env("ARX_STATE_HMAC_KEY", default="")
 
 
 # GRAPHENE
@@ -245,7 +249,5 @@ VIPPS_CALLBACK_PREFIX = env(
     "VIPPS_CALLBACK_PREFIX",
     default="https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback",
 )
-VIPPS_FALLBACK_PREFIX = env(
-    "VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback"
-)
+VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
 VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")

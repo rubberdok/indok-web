@@ -4,7 +4,6 @@ from django.urls import reverse
 
 from .models import (
     NfcAccessEvent,
-    NfcAccessGrant,
     NfcCard,
     NfcCardAssignment,
     NfcSettings,
@@ -13,8 +12,8 @@ from .models import (
 
 @admin.register(NfcCard)
 class NfcCardAdmin(admin.ModelAdmin):
-    list_display = ("mifare_csn", "label", "is_enabled", "created_at", "updated_at")
-    search_fields = ("mifare_csn", "label")
+    list_display = ("card_number", "mifare_csn", "label", "is_enabled", "created_at", "updated_at")
+    search_fields = ("card_number", "mifare_csn", "label")
 
 
 @admin.register(NfcCardAssignment)
@@ -22,32 +21,15 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
     list_display = (
         "card",
         "user",
-        "external_holder_name",
-        "access_start",
-        "access_end",
+        "has_pin",
         "permanent_access",
+        "assigned_at",
         "revoked_at",
     )
-    search_fields = ("card__mifare_csn", "user__username", "external_holder_name")
+    search_fields = ("card__card_number", "card__mifare_csn", "user__username")
+    list_select_related = ("card", "user")  # one query for the list, not two per row
     list_filter = ("permanent_access", "revoked_at")
     raw_id_fields = ("user", "assigned_by", "revoked_by")
-
-
-@admin.register(NfcAccessGrant)
-class NfcAccessGrantAdmin(admin.ModelAdmin):
-    list_display = (
-        "scope",
-        "booking",
-        "granted_to_user",
-        "granted_to_card",
-        "participant_policy",
-        "access_start",
-        "access_end",
-        "permanent_access",
-        "revoked_at",
-    )
-    list_filter = ("scope", "participant_policy", "permanent_access", "revoked_at")
-    raw_id_fields = ("granted_to_user", "granted_by", "revoked_by")
 
 
 @admin.register(NfcAccessEvent)

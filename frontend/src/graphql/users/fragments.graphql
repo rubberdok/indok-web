@@ -38,7 +38,8 @@ fragment UserToEdit on UserType {
   canUpdateYear
   yearUpdatedAt
   nfcMifareCsn
-  nfcPinCode
+  nfcCardNumber
+  nfcHasPin
   nfcPermanentAccess
 }
 
@@ -57,7 +58,8 @@ fragment UserNfcSearch on UserType {
   lastName
   feideEmail
   nfcMifareCsn
-  nfcPinCode
+  nfcCardNumber
+  nfcHasPin
   nfcPermanentAccess
 }
 
