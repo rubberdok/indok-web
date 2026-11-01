@@ -215,6 +215,31 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
         self.assertResponseHasErrors(direct)
         self.assertIn("JanHus booking admin permission required", json.loads(direct.content)["errors"][0]["message"])
 
+    def test_with_private_bookings_off_janhus_admins_may_still_book_personally(self):
+        JanHusBookingSettings.objects.create(private_bookings_enabled=False)
+        organization = OrganizationFactory()
+        # A leader without the permission is refused a personal booking, so the exemption lets this through.
+        MembershipFactory(organization=organization, user=self.user, group=organization.hr_group)
+        self.add_booking_permission(self.user)
+
+        response = self.query(
+            f"""
+            mutation {{
+              createJanhusBookingRequest(requestData: {{
+                startsAt: "{self.start_dt.isoformat()}"
+                endsAt: "{self.end_dt.isoformat()}"
+                area: "{self.first_floor_area.id}"
+                responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
+                eventType: "INTERNAL"
+              }}) {{ ok }}
+            }}
+            """,
+            user=self.user,
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertEqual(1, JanHusBookingRequest.objects.count())
+
     def test_create_booking_request_rejects_external_event_type_when_disabled(self):
         JanHusBookingSettings.objects.create(external_bookings_enabled=False)
 

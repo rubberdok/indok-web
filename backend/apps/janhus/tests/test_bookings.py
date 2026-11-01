@@ -43,6 +43,34 @@ class JanHusBookingMutationsTestCase(JanHusBaseTestCase):
         )
         self.assertResponseHasErrors(non_admin)
 
+    def test_owner_user_is_refused_without_the_admin_permission(self):
+        JanHusBookingSettings.objects.create(private_bookings_enabled=True)
+        # createJanhusBooking already refuses non-admins before it reads ownerUserId, so a real non-admin
+        # never gets as far as the owner_user guard. Grant the first check and deny the second to reach it.
+        with patch("apps.janhus.mutations._has_manage_booking_permission", side_effect=[True, False]):
+            response = self.query(
+                f"""
+                    mutation {{
+                      createJanhusBooking(bookingData: {{
+                        startsAt: "{self.start_dt.isoformat()}"
+                        endsAt: "{self.end_dt.isoformat()}"
+                        area: "{self.first_floor_area.id}"
+                        responsibleName: "Responsible"
+                        responsibleEmail: "responsible@example.com"
+                        responsiblePhone: "41234567"
+                        ownerUserId: "{self.other_user.id}"
+                      }}) {{ ok }}
+                    }}
+                """,
+                user=self.user,
+            )
+
+        self.assertResponseHasErrors(response)
+        self.assertIn(
+            "Only JanHus booking admins may set owner_user", json.loads(response.content)["errors"][0]["message"]
+        )
+        self.assertFalse(JanHusBooking.objects.exists())
+
     def test_resolve_user_or_none_handles_empty_invalid_and_missing_ids(self):
         self.assertIsNone(_resolve_user_or_none(None))
         self.assertEqual(_resolve_user_or_none(self.user.pk), self.user)
