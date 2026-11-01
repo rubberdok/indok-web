@@ -440,7 +440,6 @@ class ArxClient:
             if self._breaker.is_open:
                 break
             self._backoff(attempt)
-            continue
         raise ArxTransportError("ARX unreachable after retries") from last_exc
 
     def _backoff(self, attempt: int) -> None:

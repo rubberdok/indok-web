@@ -65,9 +65,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Login to Amazon ECR Public
-        # The base images come from public.ecr.aws. Anonymous pulls share a monthly data limit per
-        # runner IP and then fail with 429; signed in, they count against the AWS account instead.
-        uses: aws-actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2
         with:
           registry-type: public
 
@@ -212,9 +210,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Login to Amazon ECR Public
-        # The base images come from public.ecr.aws. Anonymous pulls share a monthly data limit per
-        # runner IP and then fail with 429; signed in, they count against the AWS account instead.
-        uses: aws-actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2
         with:
           registry-type: public
 

@@ -146,9 +146,7 @@ type PendingDelete = { kind: "booking" | "request"; id: string };
 function mergeRequestComments(current: Record<string, string>, requests: readonly AdminBookingRequest[]) {
   const next = { ...current };
   for (const request of requests) {
-    if (next[request.id] === undefined) {
-      next[request.id] = request.adminComment || "";
-    }
+    next[request.id] ??= request.adminComment || "";
   }
   return next;
 }
@@ -189,9 +187,7 @@ function bookingEditFrom(booking: AdminBooking): BookingEdit {
 function mergeBookingEdits(current: Record<string, BookingEdit>, bookings: readonly AdminBooking[]) {
   const next = { ...current };
   for (const booking of bookings) {
-    if (next[booking.id] === undefined) {
-      next[booking.id] = bookingEditFrom(booking);
-    }
+    next[booking.id] ??= bookingEditFrom(booking);
   }
   return next;
 }
@@ -291,7 +287,7 @@ function useFilteredAdminRows<T extends AdminFilterableRow>(
   };
 }
 
-type JanHusAdminDialogsProps = {
+type JanHusAdminDialogsProps = Readonly<{
   canManage: boolean;
   pendingDelete: PendingDelete | undefined;
   deletionIsMailed: boolean;
@@ -304,9 +300,9 @@ type JanHusAdminDialogsProps = {
   onConfirmDelete: (message: string) => void | Promise<void>;
   onCloseGuestList: () => void;
   onSaveGuestList: (bookingId: string, guests: JanHusGuestListEntry[]) => void;
-};
+}>;
 
-type BookingRequestTabProps = {
+type BookingRequestTabProps = Readonly<{
   areas: AdminFilterAreas;
   filters: AdminFilterState<AdminBookingRequest>;
   openRequests: AdminBookingRequest[];
@@ -321,7 +317,7 @@ type BookingRequestTabProps = {
   onMessageChange: (id: string, value: string) => void;
   onReview: (id: string, status: "APPROVED" | "REJECTED", convertToBooking: boolean) => void;
   onDelete: (id: string) => void;
-};
+}>;
 
 function BookingRequestTab({
   areas,
@@ -405,7 +401,7 @@ function BookingRequestTab({
   );
 }
 
-type BookingTabProps = {
+type BookingTabProps = Readonly<{
   areas: AdminFilterAreas;
   filters: AdminFilterState<AdminBooking>;
   bookings: AdminBooking[];
@@ -424,7 +420,7 @@ type BookingTabProps = {
   onCreatePaymentProduct: (id: string) => void | Promise<void>;
   onDelete: (id: string) => void;
   onOpenGuestList: (id: string) => void;
-};
+}>;
 
 function BookingTab({
   areas,

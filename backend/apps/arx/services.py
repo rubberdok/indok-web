@@ -317,7 +317,7 @@ def _booking_access_windows(
     return windows
 
 
-def _permanent_access_windows(now, cfg, mappings) -> dict:
+def _permanent_access_windows(now, mappings) -> dict:
     windows: dict = {}
     if not mappings:
         return windows
@@ -491,7 +491,7 @@ def compute_desired_states(now=None, cfg: Optional[ArxSettings] = None) -> dict:
     windows = _booking_access_windows(
         bookings, mappings, descendants, before, after, users_by_feide, leaders_by_org, members_by_org
     )
-    for user_id, permanent_windows in _permanent_access_windows(now, cfg, mappings).items():
+    for user_id, permanent_windows in _permanent_access_windows(now, mappings).items():
         windows.setdefault(user_id, set()).update(permanent_windows)
     holder_windows = _external_booking_windows(bookings, mappings, descendants, before, after)
 
