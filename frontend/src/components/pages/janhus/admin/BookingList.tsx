@@ -25,40 +25,11 @@ import {
   JANHUS_EVENT_TYPE_LABELS,
   OWNER_TYPE_LABELS,
 } from "@/components/pages/janhus/constants";
-import { JanHusGuestListEntry } from "@/components/pages/janhus/GuestListDialog";
 import { bookingOwnerType, formatDate, formatTime, statusColor, statusLabel } from "@/components/pages/janhus/helpers";
 import { JanhusJanHusBookingDepositStatusChoices, JanHusAdminBookingFragment } from "@/generated/graphql";
 
+import type { BookingEdit } from "./adminTypes";
 import { DoorAccessFields } from "./DoorAccessFields";
-import { PickedUser } from "./UserPicker";
-
-export type BookingEdit = {
-  startsAt: string;
-  endsAt: string;
-  area: string;
-  status: string;
-  eventType: string;
-  cleaningRequested: boolean;
-  responsibleName: string;
-  responsibleEmail: string;
-  responsiblePhone: string;
-  bookerName: string;
-  bookerEmail: string;
-  bookerPhone: string;
-  depositStatus: string;
-  depositAmount: string;
-  priceOverrideTier: string;
-  priceOverrideAmount: string;
-  manuallyMarkedAsPaid: boolean;
-  guestListEntries: JanHusGuestListEntry[];
-  doorAccessPolicy: string;
-  organizationDoorAccess: string;
-  bookerUser: PickedUser | null;
-  responsibleUser: PickedUser | null;
-  comment: string;
-  adminComment: string;
-  bookerMessage: string;
-};
 
 type Props = {
   bookings: readonly JanHusAdminBookingFragment[];
