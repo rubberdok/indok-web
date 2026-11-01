@@ -636,7 +636,6 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               startOptions={startOptions}
               endOptions={endOptions}
               minDurationMinutes={minDurationMinutes}
-              slotGranularityMinutes={slotGranularityMinutes}
               openingHour={openingHour}
               closingHour={closingHour}
               selectedDurationMinutes={selectedDurationMinutes}
