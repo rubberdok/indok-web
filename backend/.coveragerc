@@ -3,6 +3,7 @@ omit =
         */migrations/*
         manage.py
         */test*.py
+        */tests/*
         source=.
         */admin.py
         */apps.py
