@@ -96,7 +96,7 @@ export type AdminUserInput = {
 
 export type AdminUserNfcInput = {
   mifareCsn: InputMaybe<Scalars['String']['input']>;
-  /** Why this person has permanent access. Empty removes it. */
+  /** Begrunnelse for permanent tilgang. */
   note: InputMaybe<Scalars['String']['input']>;
   permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
   pinCode: InputMaybe<Scalars['String']['input']>;
@@ -688,6 +688,7 @@ export type JanHusBookingInput = {
   endsAt: Scalars['DateTime']['input'];
   eventType: InputMaybe<Scalars['String']['input']>;
   isExternalBooking: InputMaybe<Scalars['Boolean']['input']>;
+  occasion: InputMaybe<Scalars['String']['input']>;
   ownerOrganizationId: InputMaybe<Scalars['ID']['input']>;
   ownerUserId: InputMaybe<Scalars['ID']['input']>;
   responsibleEmail: Scalars['String']['input'];
@@ -703,6 +704,7 @@ export type JanHusBookingRequestInput = {
   endsAt: Scalars['DateTime']['input'];
   eventType: InputMaybe<Scalars['String']['input']>;
   guestList: InputMaybe<Scalars['String']['input']>;
+  occasion: InputMaybe<Scalars['String']['input']>;
   ownerOrganizationId: InputMaybe<Scalars['ID']['input']>;
   requesterEmail: InputMaybe<Scalars['String']['input']>;
   requesterName: InputMaybe<Scalars['String']['input']>;
@@ -726,6 +728,7 @@ export type JanHusBookingRequestType = {
   eventType: JanhusJanHusBookingRequestEventTypeChoices;
   guestList: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  occasion: Scalars['String']['output'];
   ownerOrganization: Maybe<OrganizationType>;
   reference: Scalars['String']['output'];
   requesterEmail: Scalars['String']['output'];
@@ -741,14 +744,21 @@ export type JanHusBookingRequestType = {
 };
 
 export type JanHusBookingSettingsInput = {
+  bookingContactName: InputMaybe<Scalars['String']['input']>;
+  bookingContactPhone: InputMaybe<Scalars['String']['input']>;
   bufferMinutes: InputMaybe<Scalars['Int']['input']>;
   cleaningOptionEnabled: InputMaybe<Scalars['Boolean']['input']>;
   closingHour: InputMaybe<Scalars['Int']['input']>;
+  contractAddress: InputMaybe<Scalars['String']['input']>;
+  contractCleaningDeadlineHours: InputMaybe<Scalars['Int']['input']>;
+  contractMaxFee: InputMaybe<Scalars['Int']['input']>;
+  contractRentAmount: InputMaybe<Scalars['Int']['input']>;
   externalBookingsEnabled: InputMaybe<Scalars['Boolean']['input']>;
   fallEndDate: InputMaybe<Scalars['Date']['input']>;
   fallSemesterActive: InputMaybe<Scalars['Boolean']['input']>;
   fallStartDate: InputMaybe<Scalars['Date']['input']>;
   generalBookingOpensWeeksBefore: InputMaybe<Scalars['Int']['input']>;
+  keyBoxCode: InputMaybe<Scalars['String']['input']>;
   minDurationMinutes: InputMaybe<Scalars['Int']['input']>;
   openingHour: InputMaybe<Scalars['Int']['input']>;
   organizationBookingOpensWeeksBefore: InputMaybe<Scalars['Int']['input']>;
@@ -766,12 +776,20 @@ export type JanHusBookingSettingsType = {
   bufferMinutes: Scalars['Int']['output'];
   cleaningOptionEnabled: Scalars['Boolean']['output'];
   closingHour: Scalars['Int']['output'];
+  contractAddress: Scalars['String']['output'];
+  contractCleaningDeadlineHours: Scalars['Int']['output'];
+  contractMaxFee: Scalars['Int']['output'];
+  contractRentAmount: Scalars['Int']['output'];
   externalBookingsEnabled: Scalars['Boolean']['output'];
   fallEndDate: Scalars['Date']['output'];
   fallSemesterActive: Scalars['Boolean']['output'];
   fallStartDate: Scalars['Date']['output'];
   generalBookingOpensWeeksBefore: Scalars['Int']['output'];
+  guidelinesTitle: Maybe<Scalars['String']['output']>;
+  guidelinesUrl: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  /** Only for people with permission. */
+  keyBoxCode: Maybe<Scalars['String']['output']>;
   minDurationMinutes: Scalars['Int']['output'];
   openingHour: Scalars['Int']['output'];
   organizationBookingOpensWeeksBefore: Scalars['Int']['output'];
@@ -809,6 +827,7 @@ export type JanHusBookingType = {
   id: Scalars['ID']['output'];
   isExternalBooking: Scalars['Boolean']['output'];
   manuallyMarkedAsPaid: Scalars['Boolean']['output'];
+  occasion: Scalars['String']['output'];
   organizationDoorAccess: JanhusJanHusBookingOrganizationDoorAccessChoices;
   outstandingDepositAmount: Maybe<Scalars['Decimal']['output']>;
   /** Who has the booking, for the calendar: the organisation, the owner's first and last name, or the booker's name for an external booking. Only for logged-in users. */
@@ -830,6 +849,16 @@ export type JanHusBookingType = {
   updatedAt: Scalars['DateTime']['output'];
   vippsOrder: Maybe<OrderType>;
   vippsProduct: Maybe<ProductType>;
+};
+
+export type JanHusContractPreviewInput = {
+  area: Scalars['ID']['input'];
+  endsAt: Scalars['DateTime']['input'];
+  occasion: InputMaybe<Scalars['String']['input']>;
+  requesterEmail: InputMaybe<Scalars['String']['input']>;
+  requesterName: InputMaybe<Scalars['String']['input']>;
+  requesterPhone: InputMaybe<Scalars['String']['input']>;
+  startsAt: Scalars['DateTime']['input'];
 };
 
 export type JanHusGuestListEntryType = {
@@ -1455,6 +1484,17 @@ export enum NfcNfcAccessEventEventTypeChoices {
   ForcedOpen = 'FORCED_OPEN'
 }
 
+/** One change of someone's permanent door access. */
+export type NfcPermanentAccessChangeType = {
+  __typename?: 'NfcPermanentAccessChangeType';
+  changedAt: Scalars['DateTime']['output'];
+  /** The name of the person who made the change. */
+  changedBy: Maybe<Scalars['String']['output']>;
+  /** True if access was given, False if it was removed. */
+  given: Scalars['Boolean']['output'];
+  reason: Scalars['String']['output'];
+};
+
 export type OptionInput = {
   answer: Scalars['String']['input'];
   id: InputMaybe<Scalars['ID']['input']>;
@@ -1572,6 +1612,8 @@ export type Queries = {
   janhusBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
   janhusBookingSettings: Maybe<JanHusBookingSettingsType>;
   janhusBookings: Maybe<Array<JanHusBookingType>>;
+  /** The contract as HTML, filled in with what the booker has entered. Everything in it is escaped. */
+  janhusContractPreview: Maybe<Scalars['String']['output']>;
   janhusGuestSearch: Maybe<Array<JanHusGuestListEntryType>>;
   janhusGuestSearchForRequest: Maybe<Array<JanHusGuestListEntryType>>;
   janhusMyBookingRequests: Maybe<Array<JanHusBookingRequestType>>;
@@ -1583,7 +1625,7 @@ export type Queries = {
   logout: Scalars['String']['output'];
   memberships: Maybe<Array<MembershipType>>;
   myCabinBookings: Maybe<Array<AdminBookingType>>;
-  /** Everyone with the permanent access box ticked on an active card, or with a note about it. */
+  /** Everyone with the permanent access box ticked. */
   nfcPermanentAccessUsers: Maybe<Array<UserType>>;
   nfcSelfServiceEnabled: Scalars['Boolean']['output'];
   nfcUser: Maybe<UserType>;
@@ -1715,6 +1757,11 @@ export type QueriesJanhusBookingsArgs = {
   area: InputMaybe<Scalars['ID']['input']>;
   endsAt: InputMaybe<Scalars['DateTime']['input']>;
   startsAt: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+
+export type QueriesJanhusContractPreviewArgs = {
+  contractData: JanHusContractPreviewInput;
 };
 
 
@@ -2133,6 +2180,7 @@ export type UpdateJanHusBookingInput = {
   guestListUserFeideIds: InputMaybe<Array<Scalars['String']['input']>>;
   id: Scalars['ID']['input'];
   manuallyMarkedAsPaid: InputMaybe<Scalars['Boolean']['input']>;
+  occasion: InputMaybe<Scalars['String']['input']>;
   organizationDoorAccess: InputMaybe<Scalars['String']['input']>;
   priceOverrideAmount: InputMaybe<Scalars['Decimal']['input']>;
   priceOverrideTier: InputMaybe<Scalars['String']['input']>;
@@ -2223,15 +2271,17 @@ export type UserType = {
   nfcHasPin: Maybe<Scalars['Boolean']['output']>;
   /** The number the door reads (10 digits). For admins and troubleshooting. */
   nfcMifareCsn: Maybe<Scalars['String']['output']>;
-  /** Why this person has permanent access. For those managing door access. */
+  /** Why this person has permanent access. */
   nfcNote: Maybe<Scalars['String']['output']>;
   nfcNoteUpdatedAt: Maybe<Scalars['DateTime']['output']>;
   /** The name of the person who last changed the note. */
   nfcNoteUpdatedBy: Maybe<Scalars['String']['output']>;
   nfcPermanentAccess: Maybe<Scalars['Boolean']['output']>;
-  /** When permanent access ends by itself, if it does. */
+  /** Date when permanent access ends. */
   nfcPermanentAccessEnds: Maybe<Scalars['DateTime']['output']>;
-  /** ACTIVE, NOT_GRANTED, INACTIVE_USER, ENDED, CARD_DISABLED or NO_PIN. For those managing door access. */
+  /** Newest first. */
+  nfcPermanentAccessHistory: Maybe<Array<NfcPermanentAccessChangeType>>;
+  /** ACTIVE, NOT_GRANTED, INACTIVE_USER, ENDED, CARD_DISABLED or NO_PIN. For door access admins. */
   nfcPermanentAccessStatus: Maybe<Scalars['String']['output']>;
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars['String']['output'];

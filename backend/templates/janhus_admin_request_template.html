@@ -48,6 +48,7 @@
       <h3>Bookinginfo</h3>
       <p>Område: {{ area_name }}</p>
       <p>Arrangementstype: {{ event_type }}</p>
+      <p>Anledning: {{ occasion|default:"Ikke oppgitt" }}</p>
       {% if show_cleaning %}
       <p>Innleid renhold: {{ cleaning_requested }}</p>
       {% endif %}

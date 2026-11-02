@@ -38,6 +38,8 @@ const DEFAULT_SETTINGS = {
   externalBookingsEnabled: true,
   privateBookingsEnabled: true,
   cleaningOptionEnabled: true,
+  guidelinesUrl: null,
+  guidelinesTitle: null,
 };
 
 const toManualGuestEntry = (displayName: string): JanHusGuestListEntry => ({
@@ -97,11 +99,12 @@ const JanHusBookingPage: NextPageWithLayout = () => {
 
   const [eventType, setEventType] = useState("INTERNAL");
   const [cleaningRequested, setCleaningRequested] = useState(false);
+  const [occasion, setOccasion] = useState("");
   const [comment, setComment] = useState("");
   const [guestList, setGuestList] = useState("");
   const [isGuestListDialogOpen, setIsGuestListDialogOpen] = useState(false);
   const [acceptedGuidelines, setAcceptedGuidelines] = useState(false);
-  const [acceptedContractPlaceholder, setAcceptedContractPlaceholder] = useState(false);
+  const [acceptedContractDetails, setAcceptedContractDetails] = useState<string | undefined>();
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [submittedBookingReference, setSubmittedBookingReference] = useState<string | undefined>();
@@ -149,6 +152,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const privateBookingsEnabled = bookingSettings.privateBookingsEnabled ?? true;
   const canBookPersonally = canCreateNonExternalBooking && (privateBookingsEnabled || organizations.length === 0);
   const cleaningOptionEnabled = bookingSettings.cleaningOptionEnabled ?? true;
+  const guidelinesUrl = bookingSettings.guidelinesUrl ?? undefined;
   const bufferMinutes = Math.max(bookingSettings.bufferMinutes ?? 0, 0);
   const minDurationMinutes = Math.max(bookingSettings.minDurationMinutes, 1);
   const slotGranularityMinutes = Math.max(bookingSettings.slotGranularityMinutes, 1);
@@ -474,19 +478,33 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     windowMessage,
   ]);
 
+  // Accepting covers the contract as it read then. Changing what it says takes accepting again.
+  const contractDetails = [startsAt, endsAt, area, requesterName, requesterEmail, requesterPhone, occasion].join("|");
+  const acceptedContract = acceptedContractDetails === contractDetails;
+  const setAcceptedContract = (accepted: boolean) => setAcceptedContractDetails(accepted ? contractDetails : undefined);
+
+  const validateExtraInfoStep = useCallback(() => {
+    if (!occasion.trim()) {
+      setErrorMessage("Du må oppgi anledningen for bookingen.");
+      return false;
+    }
+
+    return true;
+  }, [occasion]);
+
   const validateContractStep = useCallback(() => {
-    if (!acceptedGuidelines) {
+    if (guidelinesUrl && !acceptedGuidelines) {
       setErrorMessage("Du må bekrefte at du har lest JanHus retningslinjer.");
       return false;
     }
 
-    if (!acceptedContractPlaceholder) {
+    if (!acceptedContract) {
       setErrorMessage("Du må bekrefte kontraktsvilkårene før innsending.");
       return false;
     }
 
     return true;
-  }, [acceptedContractPlaceholder, acceptedGuidelines]);
+  }, [acceptedContract, acceptedGuidelines, guidelinesUrl]);
 
   const handleSubmit = useCallback(async () => {
     setErrorMessage(undefined);
@@ -496,6 +514,10 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     }
 
     if (!validateContactStep()) {
+      return;
+    }
+
+    if (!validateExtraInfoStep()) {
       return;
     }
 
@@ -526,6 +548,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
           responsiblePhone: normalizedResponsiblePhone,
           eventType: ownerType === "EXTERNAL" ? "EXTERNAL" : eventType,
           cleaningRequested: cleaningOptionEnabled && cleaningRequested,
+          occasion,
           comment,
           guestList,
         },
@@ -541,6 +564,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     eventType,
     guestList,
     hasDifferentResponsible,
+    occasion,
     organizationId,
     ownerType,
     requesterEmail,
@@ -553,6 +577,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     validateBookingStep,
     validateContactStep,
     validateContractStep,
+    validateExtraInfoStep,
   ]);
 
   const handleBookingStepNext = useCallback(() => {
@@ -572,6 +597,15 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     setErrorMessage(undefined);
     setActiveStep((prev) => prev + 1);
   }, [validateContactStep]);
+
+  const handleExtraInfoStepNext = useCallback(() => {
+    if (!validateExtraInfoStep()) {
+      return;
+    }
+
+    setErrorMessage(undefined);
+    setActiveStep((prev) => prev + 1);
+  }, [validateExtraInfoStep]);
 
   const handleContractStepNext = useCallback(() => {
     if (!validateContractStep()) {
@@ -662,11 +696,13 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               eventType={eventType}
               eventTypeOptions={eventTypeOptions}
               canBookPersonally={canBookPersonally}
+              occasion={occasion}
+              guidelinesUrl={guidelinesUrl}
               comment={comment}
               guestListEntries={guestListEntries}
               cleaningRequested={cleaningRequested}
               acceptedGuidelines={acceptedGuidelines}
-              acceptedContractPlaceholder={acceptedContractPlaceholder}
+              acceptedContract={acceptedContract}
               selectedAreaLabel={selectedAreaLabel}
               loading={loading}
               submittedBookingReference={submittedBookingReference}
@@ -688,13 +724,15 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               onResponsibleEmailChange={setResponsibleEmail}
               onResponsiblePhoneChange={setResponsiblePhone}
               onEventTypeChange={setEventType}
+              onOccasionChange={setOccasion}
               onCommentChange={setComment}
               onCleaningRequestedChange={setCleaningRequested}
               onAcceptedGuidelinesChange={setAcceptedGuidelines}
-              onAcceptedContractPlaceholderChange={setAcceptedContractPlaceholder}
+              onAcceptedContractChange={setAcceptedContract}
               onOpenGuestListDialog={openGuestListDialog}
               onBookingStepNext={handleBookingStepNext}
               onContactStepNext={handleContactStepNext}
+              onExtraInfoStepNext={handleExtraInfoStepNext}
               onContractStepNext={handleContractStepNext}
               onSubmitBooking={handleSubmit}
             />

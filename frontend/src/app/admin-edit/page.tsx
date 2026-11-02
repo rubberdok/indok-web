@@ -1,10 +1,12 @@
 "use client";
 
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
-import { Alert, Box, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
+import { Nfc } from "@mui/icons-material";
+import { Alert, Box, Button, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { Link } from "@/app/components/Link";
 import {
   AdminEditCapabilitiesDocument,
   AdminUpdateUserDocument,
@@ -167,7 +169,27 @@ export default function AdminEditPage() {
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Typography variant="h4">Generell bruker og Forening/Organisasjon administasjon</Typography>
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        justifyContent="space-between"
+        alignItems={{ md: "center" }}
+        spacing={2}
+      >
+        <Typography variant="h4">Generell bruker og Forening/Organisasjon administrasjon</Typography>
+        {canManageNfc && (
+          <Button
+            component={Link}
+            noLinkStyle
+            href="/admin-edit/nfc"
+            color="inherit"
+            variant="outlined"
+            startIcon={<Nfc />}
+            sx={{ flexShrink: 0 }}
+          >
+            NFC-edit
+          </Button>
+        )}
+      </Stack>
       <Alert severity="info">Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon.</Alert>
 
       <UserSearchCard canManageProfiles selectedUser={selectedUser} onSelectUser={onSelectUser} />

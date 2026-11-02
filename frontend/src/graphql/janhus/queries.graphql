@@ -67,6 +67,23 @@ query JanHusBookableOrganizations {
   }
 }
 
+query JanHusContractPreview($contractData: JanHusContractPreviewInput!) {
+  janhusContractPreview(contractData: $contractData)
+}
+
+query JanHusContractSettings {
+  janhusBookingSettings {
+    id
+    keyBoxCode
+    bookingContactName
+    bookingContactPhone
+    contractAddress
+    contractRentAmount
+    contractMaxFee
+    contractCleaningDeadlineHours
+  }
+}
+
 query JanHusBookingSettings {
   janhusBookingSettings {
     ...JanHusBookingSettings

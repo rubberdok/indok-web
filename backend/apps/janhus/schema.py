@@ -20,6 +20,7 @@ from apps.janhus.types import (
     JanHusAreaType,
     JanHusBookingRequestType,
     JanHusBookingSettingsType,
+    JanHusContractPreviewInput,
     JanHusBookingType,
     JanHusGuestListEntryType,
     JanHusUserSearchResultType,
@@ -77,6 +78,10 @@ class JanHusQueries(graphene.ObjectType, JanHusResolvers):
     janhus_bookable_organizations = graphene.List(NonNull(OrganizationType))
 
     janhus_booking_settings = graphene.Field(JanHusBookingSettingsType)
+    janhus_contract_preview = graphene.String(
+        contract_data=JanHusContractPreviewInput(required=True),
+        description="The contract as HTML, filled in with what the booker has entered. Everything in it is escaped.",
+    )
     janhus_areas = graphene.List(NonNull(JanHusAreaType), include_inactive=graphene.Boolean(required=False))
 
     janhus_booking_requests = graphene.List(

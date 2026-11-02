@@ -325,6 +325,27 @@ class NfcUserNote(models.Model):
         return f"NfcUserNote(user={self.user_id})"
 
 
+class NfcPermanentAccessChange(models.Model):
+    """
+    One change of someone's permanent door access: who gave or removed it, and when. A new
+    card with the access kept is no change. Removed along with the person it is about.
+    """
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="nfc_permanent_access_changes"
+    )
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="+")
+    given = models.BooleanField()
+    reason = models.CharField(max_length=200, blank=True, default="")
+    changed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-changed_at", "-pk"]
+
+    def __str__(self) -> str:
+        return f"NfcPermanentAccessChange(user={self.user_id}, given={self.given})"
+
+
 class NfcAccessEvent(models.Model):
     class EventType(models.TextChoices):
         ACCESS_GRANTED = "ACCESS_GRANTED", "Access granted"

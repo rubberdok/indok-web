@@ -1,15 +1,23 @@
 import json
 from datetime import datetime
 
+from django.contrib import admin
 from django.contrib.auth.models import Permission
 from django.db import connection
+from django.test import RequestFactory
 from django.test.utils import CaptureQueriesContext
 from django.utils import timezone
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.users import IndokUserFactory, UserFactory
 
 from apps.forms.models import Answer, Form, Question, Response
-from apps.nfc.models import NfcCard, NfcCardAssignment, NfcUserNote, permanent_access_ends
+from apps.nfc.models import (
+    NfcCard,
+    NfcCardAssignment,
+    NfcPermanentAccessChange,
+    NfcUserNote,
+    permanent_access_ends,
+)
 from apps.organizations.models import Organization
 
 UPDATE_NFC = """
@@ -255,6 +263,18 @@ class OtherRolesTests(NfcPermissionBase):
 
 
 class ExactLookupTests(NfcPermissionBase):
+    def test_something_that_only_looks_like_a_number_finds_nobody(self):
+        for user_id in ["²", "٣", "abc", "", "-1", "99999999999999999999999"]:
+            with self.subTest(user_id):
+                response = self.query(
+                    "query L($id: ID!) { nfcUser(id: $id) { id } }",
+                    user=self.nfc_admin,
+                    operation_name="L",
+                    variables={"id": user_id},
+                )
+                self.assertResponseNoErrors(response)
+                self.assertIsNone(json.loads(response.content)["data"]["nfcUser"])
+
     def test_adminuser_finds_only_the_exact_id(self):
         admin = with_permission(UserFactory(), "manage_user_profiles")
         # A search for the id also matches this user, whose phone number contains it.
@@ -414,11 +434,129 @@ class NoteTests(NfcPermissionBase):
         self.assertTrue(assignment.permanent_access)
         self.assertEqual(self.note().note, "Vaktmester")
 
-    def test_changing_permanent_access_is_logged_without_the_note(self):
-        self.give_card(permanent=False)
-        with self.assertLogs("apps.users.mutations", level="INFO") as logs:
-            self.assertResponseNoErrors(self.update_nfc({"permanentAccess": True, "note": "Vaktmester"}))
-        self.assertEqual(
-            logs.records[0].getMessage(),
-            f"Permanent door access given for user {self.target.pk} by user {self.nfc_admin.pk}",
+
+class PermanentAccessHistoryTests(NfcPermissionBase):
+    HISTORY = (
+        "query L($id: ID!) { nfcUser(id: $id) { nfcPermanentAccessHistory { given changedBy reason changedAt } } }"
+    )
+
+    def changes(self, user=None):
+        return list(
+            NfcPermanentAccessChange.objects.filter(user=user or self.target)
+            .order_by("pk")
+            .values_list("given", "changed_by", "reason")
         )
+
+    def test_giving_and_removing_is_recorded_with_who_did_it(self):
+        self.give_card(permanent=False)
+        self.assertResponseNoErrors(self.update_nfc({"permanentAccess": True}))
+        self.assertResponseNoErrors(self.update_nfc({"permanentAccess": False}))
+        self.assertEqual(self.changes(), [(True, self.nfc_admin.pk, ""), (False, self.nfc_admin.pk, "")])
+
+    def test_saving_without_a_change_records_nothing(self):
+        self.give_card(permanent=True)
+        self.assertResponseNoErrors(self.update_nfc({"permanentAccess": True, "pinCode": "1111"}))
+        self.assertEqual(self.changes(), [])
+
+    def test_a_save_that_fails_records_nothing(self):
+        assignment = self.give_card(permanent=False)
+        too_long = "x" * (NfcUserNote.MAX_LENGTH + 1)
+        self.assertResponseHasErrors(self.update_nfc({"permanentAccess": True, "note": too_long}))
+        assignment.refresh_from_db()
+        self.assertFalse(assignment.permanent_access)
+        self.assertEqual(self.changes(), [])
+
+    def test_a_new_card_with_the_access_kept_is_no_change(self):
+        self.give_card(permanent=True)
+        self.assertResponseNoErrors(self.update_nfc({"mifareCsn": "1234567899", "permanentAccess": True}))
+        self.assertEqual(self.changes(), [])
+
+    def test_a_new_card_without_the_access_is_recorded(self):
+        self.give_card(permanent=True)
+        NfcUserNote.objects.create(user=self.target, note="Vaktmester")
+        self.assertResponseNoErrors(self.update_nfc({"mifareCsn": "1234567899"}))
+        self.assertEqual(self.changes(), [(False, self.nfc_admin.pk, "")])
+        self.assertFalse(NfcUserNote.objects.filter(user=self.target).exists())
+
+    def test_taking_someone_elses_card_is_recorded_for_them(self):
+        holder = IndokUserFactory()
+        self.give_card(user=holder, csn="1234567899", permanent=True)
+        NfcUserNote.objects.create(user=holder, note="Vaktmester")
+
+        self.assertResponseNoErrors(self.update_nfc({"mifareCsn": "1234567899"}))
+
+        self.assertEqual(
+            self.changes(holder),
+            [(False, self.nfc_admin.pk, "Kortet ble flyttet til en annen bruker")],
+        )
+        self.assertEqual(self.changes(), [])
+        self.assertTrue(NfcUserNote.objects.filter(user=holder).exists())
+
+    def test_django_admin_changes_are_recorded(self):
+        superuser = UserFactory(is_staff=True, is_superuser=True)
+        request = RequestFactory().post("/")
+        request.user = superuser
+        model_admin = admin.site._registry[NfcCardAssignment]
+        reason = "Endret i Django admin"
+
+        assignment = self.give_card(permanent=False)
+        assignment.permanent_access = True
+        model_admin.save_model(request, assignment, form=None, change=True)
+        self.assertEqual(self.changes(), [(True, superuser.pk, reason)])
+
+        model_admin.save_model(request, assignment, form=None, change=True)
+        self.assertEqual(len(self.changes()), 1)
+
+        model_admin.delete_model(request, assignment)
+        self.assertEqual(self.changes()[-1], (False, superuser.pk, reason))
+
+        other = IndokUserFactory()
+        self.give_card(user=other, csn="1234567899", permanent=True)
+        model_admin.delete_queryset(request, NfcCardAssignment.objects.filter(user=other))
+        self.assertEqual(self.changes(other), [(False, superuser.pk, reason)])
+
+    def test_moving_a_card_with_permanent_access_in_django_admin_is_recorded_for_both(self):
+        superuser = UserFactory(is_superuser=True, is_staff=True)
+        request = RequestFactory().post("/")
+        request.user = superuser
+        model_admin = admin.site._registry[NfcCardAssignment]
+        reason = "Endret i Django admin"
+        new_owner = IndokUserFactory()
+
+        assignment = self.give_card(permanent=True)
+        NfcPermanentAccessChange.objects.all().delete()
+        assignment.user = new_owner
+        model_admin.save_model(request, assignment, form=None, change=True)
+
+        self.assertEqual(self.changes(), [(False, superuser.pk, reason)])
+        self.assertEqual(self.changes(new_owner), [(True, superuser.pk, reason)])
+
+    def test_door_admins_see_the_history_newest_first(self):
+        self.give_card(permanent=False)
+        self.nfc_admin.first_name, self.nfc_admin.last_name = "Dør", "Admin"
+        self.nfc_admin.save(update_fields=["first_name", "last_name"])
+        self.update_nfc({"permanentAccess": True})
+        self.update_nfc({"permanentAccess": False})
+
+        response = self.query(
+            self.HISTORY, user=self.nfc_admin, operation_name="L", variables={"id": str(self.target.id)}
+        )
+        history = self.data(response, "nfcUser")["nfcPermanentAccessHistory"]
+        self.assertEqual([change["given"] for change in history], [False, True])
+        self.assertEqual(history[0]["changedBy"], "Dør Admin")
+
+    def test_the_person_and_others_do_not_see_the_history(self):
+        self.give_card(permanent=False)
+        self.update_nfc({"permanentAccess": True})
+        own = self.query("query { user { nfcPermanentAccessHistory { given } } }", user=self.target)
+        self.assertEqual(self.data(own, "user"), {"nfcPermanentAccessHistory": None})
+
+        other = self.query(self.HISTORY, user=self.no_access, operation_name="L", variables={"id": str(self.target.id)})
+        self.assertResponseHasErrors(other)
+
+    def test_the_history_goes_with_the_person(self):
+        self.give_card(permanent=False)
+        self.update_nfc({"permanentAccess": True})
+        target_id = self.target.pk
+        self.target.delete()
+        self.assertFalse(NfcPermanentAccessChange.objects.filter(user_id=target_id).exists())

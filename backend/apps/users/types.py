@@ -42,6 +42,19 @@ def active_nfc_assignment(user):
     return user.__dict__["_active_nfc_assignment"]
 
 
+class NfcPermanentAccessChangeType(graphene.ObjectType):
+    """One change of someone's permanent door access."""
+
+    given = graphene.Boolean(required=True, description="True if access was given, False if it was removed.")
+    changed_at = graphene.DateTime(required=True)
+    changed_by = graphene.String(description="The name of the person who made the change.")
+    reason = graphene.String(required=True)
+
+    @staticmethod
+    def resolve_changed_by(change, info):
+        return change.changed_by.get_full_name() if change.changed_by else None
+
+
 class UserType(DjangoObjectType):
     grade_year = graphene.Int(source="grade_year")
     events = graphene.List(NonNull("apps.events.types.EventType"), source="events")
@@ -59,6 +72,7 @@ class UserType(DjangoObjectType):
         description="ACTIVE, NOT_GRANTED, INACTIVE_USER, ENDED, CARD_DISABLED or NO_PIN. For door access admins."
     )
     nfc_permanent_access_ends = graphene.DateTime(description="Date when permanent access ends.")
+    nfc_permanent_access_history = graphene.List(NonNull(NfcPermanentAccessChangeType), description="Newest first.")
     nfc_note = graphene.String(description="Why this person has permanent access.")
     nfc_note_updated_at = graphene.DateTime()
     nfc_note_updated_by = graphene.String(description="The name of the person who last changed the note.")
@@ -161,6 +175,14 @@ class UserType(DjangoObjectType):
         from apps.nfc.models import permanent_access_ends
 
         return permanent_access_ends(parent.graduation_year)
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_permanent_access_history(parent, info):
+        if not can_manage_user_nfc(info.context.user):
+            return None
+
+        return parent.nfc_permanent_access_changes.select_related("changed_by")
 
     @staticmethod
     @login_required

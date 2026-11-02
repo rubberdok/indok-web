@@ -39,7 +39,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: \"External User\"
                   requesterEmail: \"external@example.com\"
                   requesterPhone: \"41234567\"
-                  responsibleName: \"Responsible User\"
+                  occasion: \"Bursdag\" responsibleName: \"Responsible User\"
                   responsibleEmail: \"responsible@example.com\"
                   responsiblePhone: \"41234567\"
                   eventType: \"EXTERNAL\"
@@ -80,7 +80,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Non Indok User"
                   requesterEmail: "non-indok@example.com"
                   requesterPhone: "41234567"
-                  responsibleName: "Responsible User"
+                  occasion: "Bursdag" responsibleName: "Responsible User"
                   responsibleEmail: "responsible@example.com"
                   responsiblePhone: "41234567"
                   eventType: "INTERNAL"
@@ -113,7 +113,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Non Indok User"
                   requesterEmail: "non-indok@example.com"
                   requesterPhone: "41234567"
-                  responsibleName: "Responsible User"
+                  occasion: "Bursdag" responsibleName: "Responsible User"
                   responsibleEmail: "responsible@example.com"
                   responsiblePhone: "41234567"
                   eventType: "EXTERNAL"
@@ -150,7 +150,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Indok User"
                   requesterEmail: "indok@example.com"
                   requesterPhone: "41234567"
-                  responsibleName: "Indok User"
+                  occasion: "Bursdag" responsibleName: "Indok User"
                   responsibleEmail: "indok@example.com"
                   responsiblePhone: "41234567"
                   eventType: "PRIVATE"
@@ -183,7 +183,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                     endsAt: "{(self.end_dt + timedelta(days=days)).isoformat()}"
                     area: "{self.first_floor_area.id}"
                     {owner}
-                    responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
+                    occasion: "Bursdag" responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
                     eventType: "INTERNAL"
                   }}) {{ ok }}
                 }}
@@ -204,7 +204,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                 startsAt: "{(self.start_dt + timedelta(days=3)).isoformat()}"
                 endsAt: "{(self.end_dt + timedelta(days=3)).isoformat()}"
                 area: "{self.first_floor_area.id}"
-                responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
+                occasion: "Bursdag" responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
                 eventType: "INTERNAL"
               }}) {{ ok }}
             }}
@@ -229,7 +229,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                 startsAt: "{self.start_dt.isoformat()}"
                 endsAt: "{self.end_dt.isoformat()}"
                 area: "{self.first_floor_area.id}"
-                responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
+                occasion: "Bursdag" responsibleName: "Ola" responsibleEmail: "ola@example.com" responsiblePhone: "41234567"
                 eventType: "INTERNAL"
               }}) {{ ok }}
             }}
@@ -253,7 +253,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: \"External User\"
                   requesterEmail: \"external@example.com\"
                   requesterPhone: \"41234567\"
-                  responsibleName: \"Responsible User\"
+                  occasion: \"Bursdag\" responsibleName: \"Responsible User\"
                   responsibleEmail: \"responsible@example.com\"
                   responsiblePhone: \"41234567\"
                   eventType: \"EXTERNAL\"
@@ -324,7 +324,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: \"Internal User\"
                   requesterEmail: \"internal@example.com\"
                   requesterPhone: \"41234567\"
-                  responsibleName: \"Responsible User\"
+                  occasion: \"Bursdag\" responsibleName: \"Responsible User\"
                   responsibleEmail: \"responsible@example.com\"
                   responsiblePhone: \"41234567\"
                   eventType: \"INTERNAL\"
@@ -368,7 +368,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: \"Internal User\"
                   requesterEmail: \"internal@example.com\"
                   requesterPhone: \"41234567\"
-                  responsibleName: \"Responsible User\"
+                  occasion: \"Bursdag\" responsibleName: \"Responsible User\"
                   responsibleEmail: \"responsible@example.com\"
                   responsiblePhone: \"41234567\"
                   eventType: \"INTERNAL\"
@@ -402,7 +402,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                       requesterName: \"Some User\"
                       requesterEmail: \"someone@example.com\"
                       requesterPhone: \"41234567\"
-                      responsibleName: \"Responsible User\"
+                      occasion: \"Bursdag\" responsibleName: \"Responsible User\"
                       responsibleEmail: \"responsible@example.com\"
                       responsiblePhone: \"41234567\"
                       eventType: \"{event_type}\"
@@ -467,7 +467,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Requester"
                   requesterEmail: "requester@example.com"
                   requesterPhone: "41234567"
-                  responsibleName: "Responsible User"
+                  occasion: "Bursdag" responsibleName: "Responsible User"
                   responsibleEmail: "responsible@example.com"
                   responsiblePhone: "41234567"
                 }}
@@ -527,7 +527,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Indok User"
                   requesterEmail: "indok@example.com"
                   requesterPhone: "41234567"
-                  responsibleName: "Responsible User"
+                  occasion: "Bursdag" responsibleName: "Responsible User"
                   responsibleEmail: "responsible@example.com"
                   responsiblePhone: "41234567"
                 }}
@@ -555,7 +555,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Requester"
                   requesterEmail: "requester@example.com"
                   requesterPhone: "41234567"
-                  responsibleName: "Responsible User"
+                  occasion: "Bursdag" responsibleName: "Responsible User"
                   responsibleEmail: "responsible@example.com"
                   responsiblePhone: "41234567"
                   cleaningRequested: true
@@ -582,7 +582,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Requester"
                   requesterEmail: "not-an-email"
                   requesterPhone: "41234567"
-                  responsibleName: "Responsible User"
+                  occasion: "Bursdag" responsibleName: "Responsible User"
                   responsibleEmail: "responsible@example.com"
                   responsiblePhone: "41234567"
                 }}
@@ -640,7 +640,7 @@ class JanHusBookingRequestMutationsTestCase(JanHusBaseTestCase):
                   requesterName: "Kari"
                   requesterEmail: "kari@example.com"
                   requesterPhone: "41234567"
-                  responsibleName: "Ola"
+                  occasion: "Bursdag" responsibleName: "Ola"
                   responsibleEmail: "ola@example.com"
                   responsiblePhone: "41234567"
                 }}

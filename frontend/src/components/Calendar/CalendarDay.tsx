@@ -51,7 +51,7 @@ export const CalendarDay: React.VFC<Props> = ({
         variant={(isFromDate || isToDate || isInRange) && !isHidden ? "contained" : "text"}
         onClick={onClick}
         width={1}
-        minWidth="3rem"
+        minWidth={0}
       >
         <Typography variant="subtitle2">{value}</Typography>
         {markers && !isHidden ? (

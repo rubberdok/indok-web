@@ -35,13 +35,19 @@ export function NfcUserEditor({ user, onSaved }: Readonly<Props>) {
       await adminUpdateUserNfc({
         variables: { userId: user.id, nfcData: nfcInputFor(user, formData, { withNote: true }) },
       });
+    } catch (error) {
+      setSaveNfcError(toErrorMessage(error, "Klarte ikke å lagre."));
+      return;
+    }
+
+    try {
       const saved = await onSaved();
       if (saved) {
         setFormData(adminEditFormFor(saved));
       }
       setSaveNfcSuccess("Lagret.");
-    } catch (error) {
-      setSaveNfcError(toErrorMessage(error, "Klarte ikke å lagre."));
+    } catch {
+      setSaveNfcError("Lagret, men klarte ikke å hente det oppdaterte. Last inn siden på nytt.");
     }
   };
 
@@ -77,6 +83,22 @@ export function NfcUserEditor({ user, onSaved }: Readonly<Props>) {
             savingNfc={savingNfc}
             onSaveNfc={onSaveNfc}
           />
+
+          <Typography variant="subtitle1">Historikk for permanent tilgang</Typography>
+          {(user.nfcPermanentAccessHistory ?? []).length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              Ingen endringer registrert.
+            </Typography>
+          ) : (
+            <Stack component="ul" spacing={0.5} sx={{ m: 0, pl: 2 }}>
+              {(user.nfcPermanentAccessHistory ?? []).map((change, index) => (
+                <Typography component="li" variant="body2" key={`${change.changedAt}-${index}`}>
+                  {formatDate(change.changedAt)}: {change.given ? "Gitt" : "Fjernet"} av {change.changedBy || "ukjent"}
+                  {change.reason ? ` (${change.reason})` : ""}
+                </Typography>
+              ))}
+            </Stack>
+          )}
         </Stack>
       </CardContent>
     </Card>

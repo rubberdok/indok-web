@@ -20,6 +20,9 @@ export type AdminEditableUser = {
   nfcPermanentAccess?: boolean | null;
   nfcPermanentAccessStatus?: string | null;
   nfcPermanentAccessEnds?: string | null;
+  nfcPermanentAccessHistory?:
+    | readonly { given: boolean; changedAt: string; changedBy?: string | null; reason: string }[]
+    | null;
   nfcNote?: string | null;
   nfcNoteUpdatedAt?: string | null;
   nfcNoteUpdatedBy?: string | null;

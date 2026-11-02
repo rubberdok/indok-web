@@ -87,6 +87,7 @@ VALIDATION_FIELD_LABELS = {
     "ends_at": "Sluttid",
     "area": "Område",
     "event_type": "Arrangementstype",
+    "occasion": "Anledning",
     "comment": "Kommentar",
 }
 
@@ -369,6 +370,7 @@ class JanHusBookingInput(graphene.InputObjectType):
     cleaning_requested = graphene.Boolean(required=False)
     deposit_status = graphene.String(required=False)
     deposit_amount = graphene.Decimal(required=False)
+    occasion = graphene.String(required=False)
     comment = graphene.String(required=False)
 
 
@@ -397,6 +399,7 @@ class UpdateJanHusBookingInput(graphene.InputObjectType):
     guest_list = graphene.String(required=False)
     guest_list_user_feide_ids = graphene.List(graphene.NonNull(graphene.String), required=False)
     door_access_policy = graphene.String(required=False)
+    occasion = graphene.String(required=False)
     comment = graphene.String(required=False)
     admin_comment = graphene.String(required=False)
     booker_message = graphene.String(required=False)
@@ -433,6 +436,7 @@ class JanHusBookingRequestInput(graphene.InputObjectType):
 
     event_type = graphene.String(required=False)
     cleaning_requested = graphene.Boolean(required=False)
+    occasion = graphene.String(required=False)
     comment = graphene.String(required=False)
     guest_list = graphene.String(required=False)
 
@@ -466,6 +470,13 @@ class JanHusBookingSettingsInput(graphene.InputObjectType):
     external_bookings_enabled = graphene.Boolean(required=False)
     private_bookings_enabled = graphene.Boolean(required=False)
     cleaning_option_enabled = graphene.Boolean(required=False)
+    key_box_code = graphene.String(required=False)
+    booking_contact_name = graphene.String(required=False)
+    booking_contact_phone = graphene.String(required=False)
+    contract_address = graphene.String(required=False)
+    contract_rent_amount = graphene.Int(required=False)
+    contract_max_fee = graphene.Int(required=False)
+    contract_cleaning_deadline_hours = graphene.Int(required=False)
 
 
 class UpdateJanHusAreaInput(graphene.InputObjectType):
@@ -564,6 +575,7 @@ class CreateJanHusBooking(graphene.Mutation):
             cleaning_requested=_resolve_cleaning_requested(data=booking_data, settings=settings),
             deposit_status=booking_data.get("deposit_status", JanHusDepositStatus.REQUIRED),
             deposit_amount=booking_data.get("deposit_amount", _get_default_deposit_amount(area)),
+            occasion=booking_data.get("occasion", ""),
             comment=booking_data.get("comment", ""),
             requested_at=timezone.now(),
         )
@@ -634,6 +646,7 @@ class UpdateJanHusBooking(graphene.Mutation):
                 "price_override_tier",
                 "price_override_amount",
                 "manually_marked_as_paid",
+                "occasion",
                 "admin_comment",
                 "booker_message",
                 "door_access_policy",
@@ -665,6 +678,7 @@ class UpdateJanHusBooking(graphene.Mutation):
             "booker_name",
             "booker_email",
             "booker_phone",
+            "occasion",
             "comment",
             "admin_comment",
             "booker_message",
@@ -853,6 +867,10 @@ class CreateJanHusBookingRequest(graphene.Mutation):
             settings=settings,
         )
 
+        occasion = (request_data.get("occasion") or "").strip()
+        if not occasion:
+            raise GraphQLError("Du må oppgi anledningen for bookingen")
+
         actor_phone = ""
         if actor:
             actor_phone = str(getattr(actor, "phone_number", "") or "")
@@ -871,6 +889,7 @@ class CreateJanHusBookingRequest(graphene.Mutation):
             responsible_phone=request_data["responsible_phone"],
             event_type=resolved_event_type,
             cleaning_requested=_resolve_cleaning_requested(data=request_data, settings=settings),
+            occasion=occasion,
             comment=request_data.get("comment", ""),
             guest_list=request_data.get("guest_list", ""),
         )
@@ -948,6 +967,7 @@ class ReviewJanHusBookingRequest(graphene.Mutation):
                 cleaning_requested=booking_request.cleaning_requested,
                 deposit_status=JanHusDepositStatus.REQUIRED,
                 deposit_amount=_get_default_deposit_amount(booking_request.area),
+                occasion=booking_request.occasion,
                 comment=booking_request.comment,
                 admin_comment=booking_request.admin_comment,
                 booker_message=booking_request.booker_message,

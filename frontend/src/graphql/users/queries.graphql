@@ -40,6 +40,12 @@ query nfcUserSearch($query: String!, $limit: Int) {
 query nfcUser($id: ID!) {
   nfcUser(id: $id) {
     ...UserNfcDetail
+    nfcPermanentAccessHistory {
+      given
+      changedAt
+      changedBy
+      reason
+    }
   }
 }
 

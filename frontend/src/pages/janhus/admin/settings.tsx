@@ -6,6 +6,7 @@ import { PermissionRequired } from "@/components/Auth";
 import {
   AreaSettings,
   BookingRulesSettings,
+  ContractSettings,
   SemesterSettings,
   adminPanelStyles,
 } from "@/components/pages/janhus/admin";
@@ -275,6 +276,10 @@ const JanHusSettingsPage: NextPageWithLayout = () => {
               settingsSaving={settingsSaving}
               saveSettings={saveSettings}
             />
+
+            <Divider />
+
+            <ContractSettings />
 
             <Divider />
 

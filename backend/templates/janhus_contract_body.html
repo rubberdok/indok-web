@@ -1,0 +1,91 @@
+{% comment %}
+The contract itself, shown on the booking page and in the PDF (janhus_contract_template.html). See apps/janhus/contract.py.
+The code to the key box does not belong in this file: the repository is public. It is a setting on JanHusBookingSettings.
+{% endcomment %}
+<h3>1. Parter</h3>
+<p>
+  <strong>Utleier:</strong> Janus Eiendom, Linjeforeningen ved Industriell økonomi og teknologiledelse.{% if contact_name %}
+  Kontaktperson: {{ contact_name }}{% if contact_phone %}, tlf. {{ contact_phone }}{% endif %}.{% endif %}
+</p>
+<p>
+  <strong>Leietaker:</strong> {{ tenant_name }}{% if tenant_phone %}, tlf. {{ tenant_phone }}{% endif %}{% if tenant_email %},
+  e-post {{ tenant_email }}{% endif %}.
+</p>
+<p>
+  Leietaker er personlig ansvarlig for at kontrakten overholdes, også for gjester som oppholder seg på huset i
+  leieperioden.
+</p>
+
+<h3>2. Leieobjekt og leieperiode</h3>
+<p>Kontrakten gjelder leie av Janhus, {{ address }}, inkludert inventar.</p>
+<ul>
+  <li><strong>Område:</strong> {{ area_name }}</li>
+  <li><strong>Fra:</strong> {{ start_date }} kl. {{ start_time }}</li>
+  <li><strong>Til:</strong> {{ end_date }} kl. {{ end_time }}</li>
+  <li><strong>Anledning:</strong> {{ occasion|default:"Ikke oppgitt" }}</li>
+  {% if reference %}<li><strong>Bookingreferanse:</strong> {{ reference }}</li>{% endif %}
+</ul>
+<p>
+  Huset kan kun brukes til anledningen som er oppgitt over. Fremleie eller overdragelse av kontrakten til andre er ikke
+  tillatt.
+</p>
+
+<h3>3. Leiepris og betaling</h3>
+<p>Leieprisen for perioden er kroner {{ rent_amount }}.</p>
+{% comment %}
+The same price for every booking for now. For a price per booking, use this instead, with the values in contract_context():
+<p>
+  Leieprisen for perioden er kroner {{ total_price|floatformat:"-2" }}.{% if deposit_amount %} I tillegg kommer et
+  depositum på kroner {{ deposit_amount|floatformat:"-2" }}.{% endif %}
+</p>
+{% endcomment %}
+
+<h3>4. Nøkkel og tilgang</h3>
+<p>
+  Nøkkelen til huset ligger i en nøkkelboks som henger på stolpen utenfor huset.
+  {% if not reveal_key_box_code %}Koden til nøkkelboksen står i kontrakten du får på e-post når bookingen er godkjent.
+  {% elif key_box_code %}Koden til nøkkelboksen er <strong>{{ key_box_code }}</strong>.
+  {% else %}Kontaktpersonen gir deg koden til nøkkelboksen.{% endif %}
+</p>
+<p>
+  Nøkkelen skal til enhver tid ligge i nøkkelboksen når den ikke er i bruk. Ved tap av nøkkel er leietaker ansvarlig for
+  kostnaden ved ny nøkkel og eventuelt bytte av lås.
+</p>
+<p>Koden til nøkkelboksen skal ikke deles med andre.</p>
+
+<h3>5. Bruk av huset og inventar</h3>
+<p>
+  Leietaker plikter å behandle huset og inventaret med forsiktighet. Klappstoler og klappbord finnes på loftet og kan
+  brukes i leieperioden.
+</p>
+<p>
+  Leietaker skal vise hensyn til naboer, særlig med tanke på støy. Eventuelle skader eller feil som oppdages ved ankomst
+  eller i løpet av leieperioden, skal meldes til utleier så snart som mulig, gjerne med bilder.
+</p>
+
+<h3>6. Rydding og rengjøring</h3>
+<p>
+  Leietaker skal rydde og vaske huset innen {{ cleaning_deadline_hours }} timer etter at leieperioden er slutt, med mindre annet er avtalt.
+  Følgende skal gjøres:
+</p>
+<ul>
+  <li>Søppel skal samles og kastes i søppelkassene på baksiden av huset</li>
+  <li>Gulvet skal vaskes i alle rom som er brukt</li>
+  <li>Kjøkken skal vaskes</li>
+  <li>Bad, inkludert toalett</li>
+  <li>Sofaer skal tørkes av</li>
+  <li>Klappstoler/-bord som er brukt skal tørkes av og legges tilbake på loftet</li>
+</ul>
+
+<h3>7. Konsekvenser ved mangelfull rengjøring eller skader</h3>
+<p>
+  Dersom huset ikke er tilstrekkelig rengjort innen fristen i punkt 6, eller det oppstår vesentlige skader i
+  leieperioden, kan utleier kreve et gebyr på inntil <strong>{{ max_fee }}&nbsp;kr</strong> for å dekke kostnadene dette medfører.
+</p>
+<p>
+  Skader som overstiger dette beløpet, kan kreves erstattet i sin helhet. Utleier skal dokumentere mangler eller skader
+  med bilder før gebyr ilegges.
+</p>
+
+<h3>8. Ansvar</h3>
+<p>Leietaker er ansvarlig for leieforholdet på vegne av alle gjester som oppholder seg i huset i leieperioden.</p>

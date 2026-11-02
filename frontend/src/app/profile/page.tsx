@@ -13,6 +13,7 @@ import { PermissionRequired } from "../components/PermissionRequired";
 import { LogoutButton } from "./components/LogoutButton";
 import {
   AdminPage,
+  NfcAdmin,
   Event,
   Form,
   Orders,
@@ -78,7 +79,7 @@ function getUserInitials(firstName: string, lastName: string): string {
 
   if (lastName) {
     const lastNames = lastName.split(" ");
-    initials += lastNames[lastNames.length - 1][0];
+    initials += lastNames.at(-1)?.[0] ?? "";
   }
 
   return initials;
@@ -176,9 +177,15 @@ export default function ProfilePage() {
           <Grid item xs={12} md={6} lg={5}>
             <PermissionRequired
               queryRef={adminCapabilitiesQueryRef}
-              isAllowed={(capabilities) => capabilities.canManageUserProfiles || capabilities.canManageUserNfc}
+              isAllowed={(capabilities) => capabilities.canManageUserProfiles}
             >
               <AdminPage data-test-id={`${ID_PREFIX}admin-page-`} />
+            </PermissionRequired>
+            <PermissionRequired
+              queryRef={adminCapabilitiesQueryRef}
+              isAllowed={(capabilities) => !capabilities.canManageUserProfiles && capabilities.canManageUserNfc}
+            >
+              <NfcAdmin data-test-id={`${ID_PREFIX}nfc-admin-`} />
             </PermissionRequired>
           </Grid>
         </Grid>

@@ -83,7 +83,7 @@ class UserResolvers:
 
 
 def _user_by_id(user_id: str):
-    if not str(user_id).isdigit():
+    if not (str(user_id).isascii() and str(user_id).isdigit()):
         return None
     return with_active_nfc_assignment(get_user_model().objects.filter(pk=user_id)).first()
 

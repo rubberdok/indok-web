@@ -1,4 +1,3 @@
-import logging
 import re
 from typing import TYPE_CHECKING, Optional, cast
 
@@ -18,8 +17,6 @@ from .types import UserType
 
 if TYPE_CHECKING:
     from apps.users import models
-
-logger = logging.getLogger(__name__)
 
 
 class AuthUser(graphene.Mutation):
@@ -247,6 +244,7 @@ class AdminUpdateUserNfc(graphene.Mutation):
         from apps.nfc.models import (
             NfcCard,
             NfcCardAssignment,
+            NfcPermanentAccessChange,
             display_card_number,
             normalize_card_identifier,
             validate_card_identifier,
@@ -265,6 +263,13 @@ class AdminUpdateUserNfc(graphene.Mutation):
 
         card_assignment = NfcCardAssignment.objects.filter(card=card, revoked_at__isnull=True).first()
         if card_assignment and card_assignment.user and card_assignment.user.pk != target_user.pk:
+            if card_assignment.permanent_access:
+                NfcPermanentAccessChange.objects.create(
+                    user=card_assignment.user,
+                    changed_by=acting_user,
+                    given=False,
+                    reason="Kortet ble flyttet til en annen bruker",
+                )
             card_assignment.revoke(revoked_by=acting_user, reason="Auto-revoked due to reassignment")
 
         if assignment and assignment.card and assignment.card.pk != card.pk:
@@ -290,26 +295,27 @@ class AdminUpdateUserNfc(graphene.Mutation):
         return assignment
 
     @classmethod
-    def _update_permanent_access(cls, target_user, acting_user, assignment, permanent_access):
-        from apps.nfc.models import NfcUserNote
-
+    def _update_permanent_access(cls, target_user, assignment, permanent_access):
         if assignment is None:
             assignment = cls._active_assignment(target_user)
         if assignment is None:
             raise GraphQLError("Kan ikke oppdatere permanent tilgang uten aktivt NFC-kort")
-        if assignment.permanent_access != permanent_access:
-            logger.info(
-                "Permanent door access %s for user %s by user %s",
-                "given" if permanent_access else "removed",
-                target_user.pk,
-                acting_user.pk,
-            )
-            if not permanent_access:
-                NfcUserNote.objects.filter(user=target_user).delete()
         assignment.permanent_access = permanent_access
         assignment.full_clean()
         assignment.save(update_fields=["permanent_access"])
         return assignment
+
+    @staticmethod
+    def _record_permanent_access_change(target_user, acting_user, had_access, assignment):
+        """It opens the door at all hours, so keep a history of who gave or removed it."""
+        from apps.nfc.models import NfcPermanentAccessChange, NfcUserNote
+
+        has_access = bool(assignment and assignment.permanent_access)
+        if has_access == had_access:
+            return
+        NfcPermanentAccessChange.objects.create(user=target_user, changed_by=acting_user, given=has_access)
+        if not has_access:
+            NfcUserNote.objects.filter(user=target_user).delete()
 
     @staticmethod
     def _update_note(target_user, acting_user, note):
@@ -353,6 +359,7 @@ class AdminUpdateUserNfc(graphene.Mutation):
         try:
             with transaction.atomic():
                 assignment = AdminUpdateUserNfc._active_assignment(target_user, select_card=True)
+                had_access = bool(assignment and assignment.permanent_access)
 
                 if mifare_csn is not None:
                     assignment = AdminUpdateUserNfc._update_card_assignment(
@@ -363,7 +370,9 @@ class AdminUpdateUserNfc(graphene.Mutation):
                     assignment = AdminUpdateUserNfc._update_pin_code(target_user, assignment, pin_code)
 
                 if permanent_access is not None:
-                    AdminUpdateUserNfc._update_permanent_access(target_user, acting_user, assignment, permanent_access)
+                    assignment = AdminUpdateUserNfc._update_permanent_access(target_user, assignment, permanent_access)
+
+                AdminUpdateUserNfc._record_permanent_access_change(target_user, acting_user, had_access, assignment)
 
                 if note is not None:
                     AdminUpdateUserNfc._update_note(target_user, acting_user, note)

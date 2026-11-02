@@ -1,10 +1,12 @@
 "use client";
 
 import { useQuery } from "@apollo/client/react";
-import { Alert, Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { ManageAccounts } from "@mui/icons-material";
+import { Alert, Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { Link } from "@/app/components/Link";
 import { AdminEditCapabilitiesDocument, NfcPermanentAccessUsersDocument, NfcUserDocument } from "@/generated/graphql";
 
 import { NfcUserEditor } from "../components/NfcUserEditor";
@@ -40,7 +42,11 @@ export default function AdminEditNfcPage() {
     fetchPolicy: "network-only",
   });
 
-  const { data: selectedData, refetch: refetchSelected } = useQuery(NfcUserDocument, {
+  const {
+    data: selectedData,
+    loading: loadingSelected,
+    refetch: refetchSelected,
+  } = useQuery(NfcUserDocument, {
     ssr: false,
     variables: { id: selectedUserId ?? "" },
     skip: !selectedUserId,
@@ -70,7 +76,27 @@ export default function AdminEditNfcPage() {
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Typography variant="h4">NFC-kort og permanent tilgang</Typography>
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        justifyContent="space-between"
+        alignItems={{ md: "center" }}
+        spacing={2}
+      >
+        <Typography variant="h4">NFC-kort og permanent tilgang</Typography>
+        {capabilityData?.canManageUserProfiles && (
+          <Button
+            component={Link}
+            noLinkStyle
+            href="/admin-edit"
+            color="inherit"
+            variant="outlined"
+            startIcon={<ManageAccounts />}
+            sx={{ flexShrink: 0 }}
+          >
+            Brukeradministrasjon
+          </Button>
+        )}
+      </Stack>
       <Alert severity="info">
         Her kan du søke opp brukere og endre kortnummer, PIN og permanent tilgang. Permanent tilgang åpner døra 24/7.
       </Alert>
@@ -82,6 +108,10 @@ export default function AdminEditNfcPage() {
           onSelectUser={(user) => setSelectedUserId(user?.id ?? null)}
         />
       </div>
+
+      {selectedUserId && !loadingSelected && !selectedUser && (
+        <Alert severity="error">Kunne ikke hente brukeren.</Alert>
+      )}
 
       {selectedUser && (
         <NfcUserEditor

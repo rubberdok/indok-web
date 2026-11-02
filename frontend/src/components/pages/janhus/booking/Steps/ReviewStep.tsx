@@ -17,6 +17,7 @@ export const ReviewStep: React.FC<BookingStepsProps> = ({
   requesterEmail,
   requesterPhone,
   eventType,
+  occasion,
   comment,
   guestListEntries,
   cleaningRequested,
@@ -75,6 +76,9 @@ export const ReviewStep: React.FC<BookingStepsProps> = ({
             {ownerType === "EXTERNAL"
               ? JANHUS_EVENT_TYPE_LABELS.EXTERNAL
               : (JANHUS_EVENT_TYPE_LABELS[eventType] ?? eventType)}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Anledning:</strong> {occasion}
           </Typography>
           {cleaningOptionEnabled ? (
             <Typography variant="body1">

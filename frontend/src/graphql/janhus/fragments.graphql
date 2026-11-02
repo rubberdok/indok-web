@@ -52,6 +52,7 @@ fragment JanHusBooking on JanHusBookingType {
   }
   eventType
   cleaningRequested
+  occasion
   depositStatus
   depositAmount
   outstandingDepositAmount
@@ -115,6 +116,7 @@ fragment JanHusBookingRequest on JanHusBookingRequestType {
   responsiblePhone
   eventType
   cleaningRequested
+  occasion
   comment
   guestList
   status
@@ -151,6 +153,8 @@ fragment JanHusBookingSettings on JanHusBookingSettingsType {
   externalBookingsEnabled
   privateBookingsEnabled
   cleaningOptionEnabled
+  guidelinesUrl
+  guidelinesTitle
 }
 
 fragment JanHusArea on JanHusAreaType {

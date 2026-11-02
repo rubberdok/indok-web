@@ -216,6 +216,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
           organizationDoorAccess: edit.organizationDoorAccess,
           bookerUser: edit.bookerUser?.id ?? "",
           responsibleUser: edit.responsibleUser?.id ?? "",
+          occasion: edit.occasion,
           comment: edit.comment,
           adminComment: edit.adminComment,
           bookerMessage: edit.bookerMessage,
