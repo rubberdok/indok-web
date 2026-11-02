@@ -37,6 +37,24 @@ query nfcUserSearch($query: String!, $limit: Int) {
   }
 }
 
+query nfcUser($id: ID!) {
+  nfcUser(id: $id) {
+    ...UserNfcDetail
+  }
+}
+
+query nfcPermanentAccessUsers {
+  nfcPermanentAccessUsers {
+    ...UserNfcDetail
+  }
+}
+
+query adminUser($id: ID!) {
+  adminUser(id: $id) {
+    ...UserAdminSearch
+  }
+}
+
 query userSearch($query: String!, $limit: Int) {
   userSearch(query: $query, limit: $limit) {
     ...UserAdminSearch

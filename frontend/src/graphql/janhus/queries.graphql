@@ -41,6 +41,17 @@ query AdminJanHusBookings($status: String) {
   }
 }
 
+query JanHusBookerDetails {
+  user {
+    id
+    firstName
+    lastName
+    email
+    feideEmail
+    phoneNumber
+  }
+}
+
 query JanHusUserSearch($query: String!, $limit: Int) {
   janhusUserSearch(query: $query, limit: $limit) {
     id

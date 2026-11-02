@@ -7,6 +7,7 @@ from .models import (
     NfcCard,
     NfcCardAssignment,
     NfcSettings,
+    NfcUserNote,
 )
 
 
@@ -27,9 +28,17 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
         "revoked_at",
     )
     search_fields = ("card__card_number", "card__mifare_csn", "user__username")
-    list_select_related = ("card", "user")  # one query for the list, not two per row
+    list_select_related = ("card", "user")
     list_filter = ("permanent_access", "revoked_at")
     raw_id_fields = ("user", "assigned_by", "revoked_by")
+
+
+@admin.register(NfcUserNote)
+class NfcUserNoteAdmin(admin.ModelAdmin):
+    list_display = ("user", "updated_by", "updated_at")
+    list_select_related = ("user", "updated_by")
+    raw_id_fields = ("user", "updated_by")
+    search_fields = ("user__username",)
 
 
 @admin.register(NfcAccessEvent)

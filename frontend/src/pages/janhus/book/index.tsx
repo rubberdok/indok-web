@@ -12,6 +12,7 @@ import { ContactFieldErrors, normalizePhoneNumber, validateContactFields } from 
 import {
   CreateJanhusBookingRequestDocument,
   JanHusAreasDocument,
+  JanHusBookerDetailsDocument,
   JanHusBookableOrganizationsDocument,
   JanHusBookingSettingsDocument,
   UserOrganizationsDocument,
@@ -80,9 +81,14 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [ownerType, setOwnerType] = useState<JanHusOwnerType>("ORGANIZATION");
   const [organizationId, setOrganizationId] = useState("");
 
-  const [requesterName, setRequesterName] = useState("");
-  const [requesterEmail, setRequesterEmail] = useState("");
-  const [requesterPhone, setRequesterPhone] = useState("");
+  const [typedRequesterName, setRequesterName] = useState<string | null>(null);
+  const [typedRequesterEmail, setRequesterEmail] = useState<string | null>(null);
+  const [typedRequesterPhone, setRequesterPhone] = useState<string | null>(null);
+  const { data: bookerData } = useQuery(JanHusBookerDetailsDocument, { fetchPolicy: "cache-and-network" });
+  const booker = bookerData?.user;
+  const requesterName = typedRequesterName ?? (booker ? `${booker.firstName} ${booker.lastName}`.trim() : "");
+  const requesterEmail = typedRequesterEmail ?? (booker?.feideEmail || booker?.email || "");
+  const requesterPhone = typedRequesterPhone ?? booker?.phoneNumber ?? "";
   const [hasDifferentResponsible, setHasDifferentResponsible] = useState(false);
 
   const [responsibleName, setResponsibleName] = useState("");
@@ -283,7 +289,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   }, [canCreateNonExternalBooking, hasResolvedUser, ownerType]);
 
   useEffect(() => {
-    if (!hasResolvedOrganizations) {
+    if (!hasResolvedOrganizations || !hasResolvedUser) {
       return;
     }
 
@@ -304,6 +310,7 @@ const JanHusBookingPage: NextPageWithLayout = () => {
     canBookPersonally,
     canCreateNonExternalBooking,
     hasResolvedOrganizations,
+    hasResolvedUser,
     organizationId,
     organizations,
     ownerType,

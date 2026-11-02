@@ -96,6 +96,8 @@ export type AdminUserInput = {
 
 export type AdminUserNfcInput = {
   mifareCsn: InputMaybe<Scalars['String']['input']>;
+  /** Why this person has permanent access. Empty removes it. */
+  note: InputMaybe<Scalars['String']['input']>;
   permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
   pinCode: InputMaybe<Scalars['String']['input']>;
 };
@@ -1535,6 +1537,7 @@ export type Queries = {
   activeBookingResponsible: Maybe<BookingResponsibleType>;
   adminAllBookings: Maybe<Array<AdminBookingType>>;
   adminJanhusBookings: Maybe<Array<JanHusBookingType>>;
+  adminUser: Maybe<UserType>;
   allBlogPosts: Maybe<Array<BlogPostType>>;
   allBlogs: Maybe<Array<BlogType>>;
   allBookings: Maybe<Array<AllBookingsType>>;
@@ -1580,7 +1583,10 @@ export type Queries = {
   logout: Scalars['String']['output'];
   memberships: Maybe<Array<MembershipType>>;
   myCabinBookings: Maybe<Array<AdminBookingType>>;
+  /** Everyone with the permanent access box ticked on an active card, or with a note about it. */
+  nfcPermanentAccessUsers: Maybe<Array<UserType>>;
   nfcSelfServiceEnabled: Scalars['Boolean']['output'];
+  nfcUser: Maybe<UserType>;
   nfcUserSearch: Maybe<Array<UserType>>;
   order: Maybe<OrderType>;
   ordersByStatus: Maybe<OrdersByStatusType>;
@@ -1606,6 +1612,11 @@ export type QueriesAdminAllBookingsArgs = {
 
 export type QueriesAdminJanhusBookingsArgs = {
   status: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueriesAdminUserArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -1738,6 +1749,11 @@ export type QueriesListingsArgs = {
 
 export type QueriesMembershipsArgs = {
   organizationId: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueriesNfcUserArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -2207,7 +2223,16 @@ export type UserType = {
   nfcHasPin: Maybe<Scalars['Boolean']['output']>;
   /** The number the door reads (10 digits). For admins and troubleshooting. */
   nfcMifareCsn: Maybe<Scalars['String']['output']>;
+  /** Why this person has permanent access. For those managing door access. */
+  nfcNote: Maybe<Scalars['String']['output']>;
+  nfcNoteUpdatedAt: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the person who last changed the note. */
+  nfcNoteUpdatedBy: Maybe<Scalars['String']['output']>;
   nfcPermanentAccess: Maybe<Scalars['Boolean']['output']>;
+  /** When permanent access ends by itself, if it does. */
+  nfcPermanentAccessEnds: Maybe<Scalars['DateTime']['output']>;
+  /** ACTIVE, NOT_GRANTED, INACTIVE_USER, ENDED, CARD_DISABLED or NO_PIN. For those managing door access. */
+  nfcPermanentAccessStatus: Maybe<Scalars['String']['output']>;
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars['String']['output'];
   responses: Array<ResponseType>;

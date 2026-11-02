@@ -6,7 +6,7 @@ type Props = {
   selectedUser: AdminEditableUser;
   formData: AdminEditForm;
   setFormData: SetAdminEditForm;
-  canManageProfiles: boolean;
+  showNote?: boolean;
   saveNfcError: string;
   setSaveNfcError: (message: string) => void;
   saveNfcSuccess: string;
@@ -19,7 +19,7 @@ export function NfcFields({
   selectedUser,
   formData,
   setFormData,
-  canManageProfiles,
+  showNote = false,
   saveNfcError,
   setSaveNfcError,
   saveNfcSuccess,
@@ -69,34 +69,48 @@ export function NfcFields({
           />
         </Grid>
       </Grid>
-      {canManageProfiles && (
-        <Box>
-          <Typography variant="subtitle1">Permanent tilgang</Typography>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={Boolean(formData.nfcPermanentAccess)}
-                onChange={(_, checked) => {
-                  setSaveNfcError("");
-                  setSaveNfcSuccess("");
-                  setFormData((prev) => ({ ...prev, nfcPermanentAccess: checked }));
-                }}
-              />
-            }
-            label={
-              formData.nfcPermanentAccess
-                ? "Tilgang til JanHus hele tiden (krever kort og PIN)"
-                : "Bare tilgang under egne bookinger"
-            }
-          />
-        </Box>
+      <Box>
+        <Typography variant="subtitle1">Permanent tilgang</Typography>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={Boolean(formData.nfcPermanentAccess)}
+              onChange={(_, checked) => {
+                setSaveNfcError("");
+                setSaveNfcSuccess("");
+                setFormData((prev) => ({ ...prev, nfcPermanentAccess: checked }));
+              }}
+            />
+          }
+          label={
+            formData.nfcPermanentAccess
+              ? "Tilgang til JanHus hele tiden (krever kort og PIN)"
+              : "Bare tilgang under egne bookinger"
+          }
+        />
+      </Box>
+      {showNote && (formData.nfcPermanentAccess || selectedUser.nfcNote) && (
+        <TextField
+          label="Notat"
+          fullWidth
+          multiline
+          minRows={2}
+          value={formData.nfcNote}
+          onChange={(e) => {
+            setSaveNfcError("");
+            setSaveNfcSuccess("");
+            setFormData((prev) => ({ ...prev, nfcNote: e.target.value }));
+          }}
+          inputProps={{ maxLength: 500 }}
+          helperText="Hvorfor personen har permanent tilgang, for eksempel verv. Slettes når permanent tilgang fjernes."
+        />
       )}
       {saveNfcError && <Alert severity="error">{saveNfcError}</Alert>}
       {saveNfcSuccess && <Alert severity="success">{saveNfcSuccess}</Alert>}
 
       <Box>
         <Button variant="contained" onClick={onSaveNfc} disabled={savingNfc}>
-          {savingNfc ? "Lagrer MIFARE..." : "Lagret MIFARE kortnummer/PIN"}
+          {savingNfc ? "Lagrer..." : "Lagre NFC-informasjon"}
         </Button>
       </Box>
     </>

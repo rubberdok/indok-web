@@ -55,6 +55,13 @@ class UserType(DjangoObjectType):
     )
     nfc_permanent_access = graphene.Boolean()
     nfc_has_pin = graphene.Boolean(description="Whether a door PIN is set. The PIN itself is never returned.")
+    nfc_permanent_access_status = graphene.String(
+        description="ACTIVE, NOT_GRANTED, INACTIVE_USER, ENDED, CARD_DISABLED or NO_PIN. For door access admins."
+    )
+    nfc_permanent_access_ends = graphene.DateTime(description="Date when permanent access ends.")
+    nfc_note = graphene.String(description="Why this person has permanent access.")
+    nfc_note_updated_at = graphene.DateTime()
+    nfc_note_updated_by = graphene.String(description="The name of the person who last changed the note.")
 
     class Meta:
         model = get_user_model()
@@ -80,6 +87,14 @@ class UserType(DjangoObjectType):
             "responses",
             "year_updated_at",
         ]
+
+    @staticmethod
+    def resolve_responses(parent, info):
+        return parent.responses.all() if info.context.user.pk == parent.pk else parent.responses.none()
+
+    @staticmethod
+    def resolve_id_token(parent, info):
+        return parent.id_token if info.context.user.pk == parent.pk else ""
 
     @staticmethod
     @login_required
@@ -126,3 +141,50 @@ class UserType(DjangoObjectType):
 
         active_assignment = active_nfc_assignment(parent)
         return active_assignment.has_pin if active_assignment else False
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_permanent_access_status(parent, info):
+        if not can_manage_user_nfc(info.context.user):
+            return None
+
+        from apps.nfc.models import permanent_access_status
+
+        return permanent_access_status(parent, active_nfc_assignment(parent))
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_permanent_access_ends(parent, info):
+        if not can_manage_user_nfc(info.context.user):
+            return None
+
+        from apps.nfc.models import permanent_access_ends
+
+        return permanent_access_ends(parent.graduation_year)
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_note(parent, info):
+        if not can_manage_user_nfc(info.context.user):
+            return None
+
+        note = getattr(parent, "nfc_note", None)
+        return note.note if note else None
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_note_updated_at(parent, info):
+        if not can_manage_user_nfc(info.context.user):
+            return None
+
+        note = getattr(parent, "nfc_note", None)
+        return note.updated_at if note else None
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_note_updated_by(parent, info):
+        if not can_manage_user_nfc(info.context.user):
+            return None
+
+        note = getattr(parent, "nfc_note", None)
+        return note.updated_by.get_full_name() if note and note.updated_by else None

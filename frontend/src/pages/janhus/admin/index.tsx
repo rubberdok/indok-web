@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client/react";
-import { History, Settings } from "@mui/icons-material";
+import { History, Nfc, Settings } from "@mui/icons-material";
 import { Alert, Box, Button, Container, Stack, Tab, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -28,6 +28,7 @@ import {
 } from "@/components/pages/janhus/helpers";
 import { Title } from "@/components/Title";
 import {
+  AdminEditCapabilitiesDocument,
   AdminJanHusBookingsDocument,
   CreateJanhusPaymentProductDocument,
   DeleteJanhusBookingDocument,
@@ -52,6 +53,7 @@ const JanHusAdminPage: NextPageWithLayout = () => {
   const { data: accessData } = useQuery(JanHusAdminAccessDocument);
   const canManage = accessData?.canManage ?? false;
   const canView = canManage || (accessData?.canView ?? false);
+  const { data: capabilityData } = useQuery(AdminEditCapabilitiesDocument);
 
   const { data: bookingsData, refetch: refetchBookings } = useQuery(AdminJanHusBookingsDocument);
   const { data: requestsData, refetch: refetchRequests } = useQuery(JanHusBookingRequestsDocument);
@@ -303,6 +305,11 @@ const JanHusAdminPage: NextPageWithLayout = () => {
                     Dørlogg
                   </Button>
                 </PermissionRequired>
+                {capabilityData?.canManageUserNfc ? (
+                  <Button startIcon={<Nfc />} onClick={() => router.push("/admin-edit/nfc")}>
+                    NFC-kort
+                  </Button>
+                ) : null}
               </Box>
             </Stack>
 

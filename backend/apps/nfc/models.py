@@ -1,4 +1,6 @@
 import re
+from datetime import datetime
+from typing import Optional
 
 from django.conf import settings
 from cryptography.fernet import Fernet, MultiFernet
@@ -7,7 +9,6 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 
-# Per nå er det kun 10-digit MIFARE CSN, men vi skal over til DESFire kort i framtiden, usikker på situasjonen da.
 PIN_CODE_RE = re.compile(r"^\d{4}$", flags=re.ASCII)
 MIFARE_CSN_10_DIGIT_RE = re.compile(r"^\d{10}$", flags=re.ASCII)
 PRINTED_UID_RE = re.compile(r"^\d{15,17}$", flags=re.ASCII)
@@ -273,6 +274,55 @@ class NfcCardAssignment(models.Model):
     def __str__(self) -> str:
         holder = self.user.username if self.user else "(deleted user)"
         return f"NfcCardAssignment(card={self.card.mifare_csn}, holder={holder})"
+
+
+def permanent_access_ends(graduation_year) -> Optional[datetime]:
+    """
+    Permanent access ends six months after graduation, which is in June of
+    graduation_year: at the start of the next year, Oslo time.
+    The card opens nothing after that date.
+    """
+    if not graduation_year:
+        return None
+    return timezone.make_aware(datetime(graduation_year + 1, 1, 1))
+
+
+def permanent_access_status(user, assignment) -> str:
+    """
+    Whether the permanent access box really opens the door for this person. The same rules
+    as apps.arx, so the admin page can explain why someone with the box ticked cannot get in.
+    """
+    if assignment is None or not assignment.permanent_access:
+        return "NOT_GRANTED"
+    if not user.is_active:
+        return "INACTIVE_USER"
+    ends = permanent_access_ends(user.graduation_year)
+    if ends is not None and ends <= timezone.now():
+        return "ENDED"
+    if not assignment.card.is_enabled:
+        return "CARD_DISABLED"
+    if not assignment.has_pin:
+        return "NO_PIN"
+    return "ACTIVE"
+
+
+class NfcUserNote(models.Model):
+
+    MAX_LENGTH = 500
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="nfc_note")
+    note = models.CharField(max_length=MAX_LENGTH)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="nfc_notes_written",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f"NfcUserNote(user={self.user_id})"
 
 
 class NfcAccessEvent(models.Model):

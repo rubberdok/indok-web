@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import TYPE_CHECKING, Optional, cast
 
@@ -17,6 +18,8 @@ from .types import UserType
 
 if TYPE_CHECKING:
     from apps.users import models
+
+logger = logging.getLogger(__name__)
 
 
 class AuthUser(graphene.Mutation):
@@ -56,6 +59,7 @@ class AdminUserNfcInput(graphene.InputObjectType):
     mifare_csn = graphene.String(required=False)
     pin_code = graphene.String(required=False)
     permanent_access = graphene.Boolean(required=False)
+    note = graphene.String(required=False, description="Begrunnelse for permanent tilgang.")
 
 
 def _get_self_registered_card_label(user: "models.User") -> str:
@@ -286,15 +290,43 @@ class AdminUpdateUserNfc(graphene.Mutation):
         return assignment
 
     @classmethod
-    def _update_permanent_access(cls, target_user, assignment, permanent_access):
+    def _update_permanent_access(cls, target_user, acting_user, assignment, permanent_access):
+        from apps.nfc.models import NfcUserNote
+
         if assignment is None:
             assignment = cls._active_assignment(target_user)
         if assignment is None:
             raise GraphQLError("Kan ikke oppdatere permanent tilgang uten aktivt NFC-kort")
+        if assignment.permanent_access != permanent_access:
+            logger.info(
+                "Permanent door access %s for user %s by user %s",
+                "given" if permanent_access else "removed",
+                target_user.pk,
+                acting_user.pk,
+            )
+            if not permanent_access:
+                NfcUserNote.objects.filter(user=target_user).delete()
         assignment.permanent_access = permanent_access
         assignment.full_clean()
         assignment.save(update_fields=["permanent_access"])
         return assignment
+
+    @staticmethod
+    def _update_note(target_user, acting_user, note):
+        from apps.nfc.models import NfcCardAssignment, NfcUserNote
+
+        note = note.strip()
+        if not note:
+            NfcUserNote.objects.filter(user=target_user).delete()
+            return
+        if len(note) > NfcUserNote.MAX_LENGTH:
+            raise GraphQLError(f"Notatet kan ikke være lengre enn {NfcUserNote.MAX_LENGTH} tegn")
+        if not NfcCardAssignment.objects.filter(
+            user=target_user, revoked_at__isnull=True, permanent_access=True
+        ).exists():
+            raise GraphQLError("Notat kan bare skrives for personer med permanent tilgang")
+        if not NfcUserNote.objects.filter(user=target_user, note=note).exists():
+            NfcUserNote.objects.update_or_create(user=target_user, defaults={"note": note, "updated_by": acting_user})
 
     @login_required
     def mutate(self, info: ResolveInfo, user_id: str, nfc_data: dict) -> "AdminUpdateUserNfc":
@@ -313,9 +345,10 @@ class AdminUpdateUserNfc(graphene.Mutation):
         mifare_csn = nfc_data.get("mifare_csn")
         pin_code = nfc_data.get("pin_code")
         permanent_access = nfc_data.get("permanent_access")
+        note = nfc_data.get("note")
 
-        if mifare_csn is None and pin_code is None and permanent_access is None:
-            raise GraphQLError("Du må sette kortnummer, PIN-kode eller permanent tilgang.")
+        if mifare_csn is None and pin_code is None and permanent_access is None and note is None:
+            raise GraphQLError("Du må sette kortnummer, PIN-kode, permanent tilgang eller notat.")
 
         try:
             with transaction.atomic():
@@ -330,7 +363,10 @@ class AdminUpdateUserNfc(graphene.Mutation):
                     assignment = AdminUpdateUserNfc._update_pin_code(target_user, assignment, pin_code)
 
                 if permanent_access is not None:
-                    AdminUpdateUserNfc._update_permanent_access(target_user, assignment, permanent_access)
+                    AdminUpdateUserNfc._update_permanent_access(target_user, acting_user, assignment, permanent_access)
+
+                if note is not None:
+                    AdminUpdateUserNfc._update_note(target_user, acting_user, note)
 
         except (ValidationError, IntegrityError) as e:
             raise GraphQLError(str(e))
