@@ -16,7 +16,6 @@ export const REQUEST_STATUS_LABELS: Record<string, string> = {
 };
 
 export const BOOKING_STATUS_LABELS: Record<string, string> = {
-  PROVISIONAL: "Foreløpig",
   PENDING_ADMIN_REVIEW: "Venter behandling",
   CONFIRMED: "Godkjent",
   DECLINED: "Avslått",
@@ -37,6 +36,11 @@ export const DOOR_ACCESS_POLICY_LABELS: Record<string, string> = {
   BOOKER_ONLY: "Kun bestiller",
   BOOKER_AND_RESPONSIBLE: "Bestiller og ansvarlig",
   ALL_PARTICIPANTS: "Bestiller, ansvarlig og gjesteliste",
+};
+
+export const ORGANIZATION_DOOR_ACCESS_LABELS: Record<string, string> = {
+  LEADERS: "Organisasjonens ledere (HR)",
+  BOOKER_ONLY: "Kun personen som bestilte",
 };
 
 export const OWNER_TYPE_LABELS: Record<OwnerType, string> = {

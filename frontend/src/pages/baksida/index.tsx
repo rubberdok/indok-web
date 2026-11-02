@@ -19,8 +19,9 @@ import { useRef, useState } from "react";
 import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import Martin from "~/public/img/Martin Bore.jpg";
-import Solveig from "~/public/img/Solveig Lund Christiansen.jpg";
+
+import Felix from "~/public/img/baksida/FelixSun.jpg";
+import Ingebjoerg from "~/public/img/baksida/IngebjørgBjoernaraa-Svenningsen.jpg";
 
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
@@ -31,19 +32,19 @@ const ReportsPage: NextPageWithLayout = () => {
   const responsibles = [
     {
       id: 1,
-      name: "Solveig L. Christiansen",
-      initials: "SLC",
+      name: "Felix Sun",
+      initials: "FS",
       color: red[800],
-      image: Solveig,
-      email: "solveilc@stud.ntnu.no",
+      image: Felix,
+      email: "felixrs@stud.ntnu.no",
     },
     {
       id: 2,
-      name: "Martin Bore",
-      initials: "MB",
+      name: "Ingebjørg Bjørnaraa-Svenningsen",
+      initials: "IBS",
       color: amber[500],
-      image: Martin,
-      email: "martbore@stud.ntnu.no",
+      image: Ingebjoerg,
+      email: "ingebjbj@stud.ntnu.no",
     },
   ];
 

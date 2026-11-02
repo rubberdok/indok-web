@@ -33,30 +33,37 @@ fragment JanHusBooking on JanHusBookingType {
     id
     name
   }
-  bookingLevel {
-    id
-    name
-    priority
-  }
   isExternalBooking
   bookerName
   bookerEmail
   bookerPhone
+  bookerUser {
+    id
+    firstName
+    lastName
+  }
   responsibleName
   responsibleEmail
   responsiblePhone
+  responsibleUser {
+    id
+    firstName
+    lastName
+  }
   eventType
   cleaningRequested
   depositStatus
   depositAmount
   outstandingDepositAmount
   comment
-  adminComment
+  bookerMessage
+  requestedAt
   guestList
   guestListEntries {
     ...JanHusGuestListEntry
   }
   doorAccessPolicy
+  organizationDoorAccess
   totalPrice
   durationMinutes
   priceOverrideTier
@@ -73,6 +80,13 @@ fragment JanHusBooking on JanHusBookingType {
   }
   createdAt
   updatedAt
+}
+
+# The admin page also shows why the booker would not get the door, and the internal comment.
+fragment JanHusAdminBooking on JanHusBookingType {
+  ...JanHusBooking
+  adminComment
+  doorAccessWarnings
 }
 
 fragment JanHusBookingRequest on JanHusBookingRequestType {
@@ -104,13 +118,19 @@ fragment JanHusBookingRequest on JanHusBookingRequestType {
   comment
   guestList
   status
-  adminComment
+  bookerMessage
   convertedBooking {
     id
     status
   }
   createdAt
   updatedAt
+}
+
+# The internal comment is for the admins only.
+fragment JanHusAdminBookingRequest on JanHusBookingRequestType {
+  ...JanHusBookingRequest
+  adminComment
 }
 
 fragment JanHusBookingSettings on JanHusBookingSettingsType {
@@ -146,16 +166,4 @@ fragment JanHusArea on JanHusAreaType {
   cleaningFee
   defaultDepositAmount
   conflictingAreaIds
-}
-
-fragment JanHusBookingLevel on JanHusBookingLevelType {
-  id
-  name
-  description
-  priority
-  canBookAnytime
-  canCreateProvisional
-  canCreateConfirmed
-  canChallengeProvisionals
-  bookingOpensWeeksBefore
 }

@@ -18,11 +18,11 @@ from apps.janhus.resolvers import JanHusResolvers
 from apps.organizations.types import OrganizationType
 from apps.janhus.types import (
     JanHusAreaType,
-    JanHusBookingLevelType,
     JanHusBookingRequestType,
     JanHusBookingSettingsType,
     JanHusBookingType,
     JanHusGuestListEntryType,
+    JanHusUserSearchResultType,
 )
 
 
@@ -67,16 +67,17 @@ class JanHusQueries(graphene.ObjectType, JanHusResolvers):
         NonNull(JanHusBookingType),
         status=graphene.String(required=False),
     )
+    janhus_user_search = graphene.List(
+        NonNull(JanHusUserSearchResultType),
+        query=graphene.String(required=True),
+        limit=graphene.Int(required=False),
+        description="Website users to link to a booking as booker or responsible. JanHus admins only.",
+    )
 
     janhus_bookable_organizations = graphene.List(NonNull(OrganizationType))
 
     janhus_booking_settings = graphene.Field(JanHusBookingSettingsType)
-    janhus_areas = graphene.List(
-        NonNull(JanHusAreaType), include_inactive=graphene.Boolean(required=False)
-    )
-
-    janhus_booking_levels = graphene.List(NonNull(JanHusBookingLevelType))
-    janhus_my_booking_level = graphene.Field(JanHusBookingLevelType)
+    janhus_areas = graphene.List(NonNull(JanHusAreaType), include_inactive=graphene.Boolean(required=False))
 
     janhus_booking_requests = graphene.List(
         NonNull(JanHusBookingRequestType),

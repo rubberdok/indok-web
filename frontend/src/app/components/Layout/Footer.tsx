@@ -70,6 +70,7 @@ export const Footer: React.FC = () => {
                 <LinkItem href="https://drive.google.com/file/d/13bOYLhCvhgWReODUv1CN9E3TlenNvW44/view">
                   IØT adferdskodeks
                 </LinkItem>
+                <LinkItem href="/minneside">Til Minne</LinkItem>
                 <LinkItem href="https://www.indøk.no">Studieside</LinkItem>
                 <LinkItem href="https://github.com/rubberdok/indok-web/issues/new/choose">Oppdaget en feil?</LinkItem>
                 <Box mt={2}>

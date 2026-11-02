@@ -54,7 +54,8 @@ const cabinPermissionDocument = graphql(/* GraphQL */ `
 
 const janhusPermissionDocument = graphql(/* GraphQL */ `
   query JanHusPermission {
-    hasPermission(permission: "janhus.manage_booking")
+    canManage: hasPermission(permission: "janhus.manage_booking")
+    canView: hasPermission(permission: "janhus.view_all_bookings")
   }
 `);
 
@@ -165,7 +166,10 @@ export default function ProfilePage() {
             </PermissionRequired>
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
-            <PermissionRequired queryRef={janhusQueryRef}>
+            <PermissionRequired
+              queryRef={janhusQueryRef}
+              isAllowed={(janhus) => janhus.canManage === true || janhus.canView === true}
+            >
               <JanHusAdmin data-test-id={`${ID_PREFIX}janhus-admin-`} />
             </PermissionRequired>
           </Grid>

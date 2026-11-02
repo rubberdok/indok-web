@@ -43,9 +43,7 @@ def parse_guest_list_user_feide_ids(raw_guest_list: str) -> list[str]:
 
 
 def serialize_guest_list_user_feide_ids(feide_ids: Iterable[str]) -> str:
-    return json.dumps(
-        normalize_guest_list_user_feide_ids(feide_ids), ensure_ascii=False
-    )
+    return json.dumps(normalize_guest_list_user_feide_ids(feide_ids), ensure_ascii=False)
 
 
 def find_missing_guest_feide_ids(feide_ids: Iterable[str]) -> list[str]:
@@ -55,25 +53,22 @@ def find_missing_guest_feide_ids(feide_ids: Iterable[str]) -> list[str]:
 
     user_model = get_user_model()
     existing_feide_ids = set(
-        user_model.objects.filter(feide_userid__in=normalized_feide_ids).values_list(
-            "feide_userid", flat=True
-        )
+        user_model.objects.filter(feide_userid__in=normalized_feide_ids).values_list("feide_userid", flat=True)
     )
 
-    return [
-        feide_id
-        for feide_id in normalized_feide_ids
-        if feide_id not in existing_feide_ids
-    ]
+    return [feide_id for feide_id in normalized_feide_ids if feide_id not in existing_feide_ids]
 
 
-def build_guest_list_entries(raw_guest_list: str) -> list[dict[str, str]]:
-    feide_ids = parse_guest_list_user_feide_ids(raw_guest_list)
+# Set by prefetch_guest_list_entries, read by JanHusBookingType.guest_list_entries.
+GUEST_LIST_ENTRIES_ATTR = "_prefetched_guest_list_entries"
+
+
+def _users_by_feide_id(feide_ids) -> dict:
     if not feide_ids:
-        return []
+        return {}
 
     user_model = get_user_model()
-    users = user_model.objects.filter(feide_userid__in=feide_ids).only(
+    users = user_model.objects.filter(feide_userid__in=list(feide_ids)).only(
         "feide_userid",
         "first_name",
         "last_name",
@@ -84,7 +79,34 @@ def build_guest_list_entries(raw_guest_list: str) -> list[dict[str, str]]:
     for user in users:
         if user.feide_userid and user.feide_userid not in user_by_feide_id:
             user_by_feide_id[user.feide_userid] = user
+    return user_by_feide_id
 
+
+def build_guest_list_entries(raw_guest_list: str) -> list[dict[str, str]]:
+    feide_ids = parse_guest_list_user_feide_ids(raw_guest_list)
+    if not feide_ids:
+        return []
+    return _guest_list_entries(feide_ids, _users_by_feide_id(feide_ids))
+
+
+def prefetch_guest_list_entries(bookings) -> list:
+    """
+    The guest list entries of many bookings with one user query instead of one
+    per booking. Returns the bookings as a list, each with its entries attached.
+    """
+    bookings = list(bookings)
+    feide_ids_by_booking = {booking.pk: parse_guest_list_user_feide_ids(booking.guest_list) for booking in bookings}
+    users = _users_by_feide_id({feide_id for ids in feide_ids_by_booking.values() for feide_id in ids})
+    for booking in bookings:
+        setattr(
+            booking,
+            GUEST_LIST_ENTRIES_ATTR,
+            _guest_list_entries(feide_ids_by_booking[booking.pk], users),
+        )
+    return bookings
+
+
+def _guest_list_entries(feide_ids, user_by_feide_id) -> list[dict[str, str]]:
     entries: list[dict[str, str]] = []
     for feide_id in feide_ids:
         user = user_by_feide_id.get(feide_id)
@@ -97,9 +119,7 @@ def build_guest_list_entries(raw_guest_list: str) -> list[dict[str, str]]:
             )
             continue
 
-        display_name = (
-            f"{user.first_name} {user.last_name}".strip() or user.username or feide_id
-        )
+        display_name = f"{user.first_name} {user.last_name}".strip() or user.username or feide_id
         entries.append(
             {
                 "feide_userid": feide_id,

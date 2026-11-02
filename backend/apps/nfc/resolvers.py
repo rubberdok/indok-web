@@ -1,61 +1,50 @@
 from typing import Optional
 
-from decorators import login_required, permission_required
+from django.db.models import Q, Value
+from django.db.models.functions import Concat
 
-from .models import (
-    NfcAccessEvent,
-    NfcAccessGrant,
-    NfcCard,
-    NfcCardAssignment,
-    normalize_card_identifier,
-)
+from decorators import permission_required
+
+from .models import NfcAccessEvent, NfcCard
+from .types import DoorLogPage
+
+MAX_PAGE_SIZE = 200
 
 
 class NfcResolvers:
-    @permission_required("nfc.manage_nfc")
-    def resolve_nfc_cards(self, info):
-        return NfcCard.objects.all().order_by("mifare_csn")
-
-    @permission_required("nfc.manage_nfc")
-    def resolve_nfc_card(self, info, mifare_csn: str):
-        normalized_mifare_csn = normalize_card_identifier(mifare_csn)
-        return NfcCard.objects.filter(mifare_csn=normalized_mifare_csn).first()
-
-    @permission_required("nfc.manage_nfc")
-    def resolve_nfc_card_assignments(self, info, active_only: bool = True):
-        query = NfcCardAssignment.objects.select_related(
-            "card", "user", "assigned_by", "revoked_by"
-        )
-        if active_only:
-            query = query.filter(revoked_at__isnull=True)
-        return query.order_by("-assigned_at")
-
-    @login_required
-    def resolve_my_nfc_card_assignment(self, info):
-        return (
-            NfcCardAssignment.objects.select_related("card")
-            .filter(user=info.context.user, revoked_at__isnull=True)
-            .first()
-        )
-
-    @permission_required("nfc.manage_nfc")
-    def resolve_nfc_access_grants(self, info, active_only: bool = True):
-        query = NfcAccessGrant.objects.select_related(
-            "granted_to_user", "granted_to_card", "booking"
-        )
-        if active_only:
-            query = query.filter(revoked_at__isnull=True)
-        return query.order_by("-created_at")
-
-    @permission_required("nfc.manage_nfc")
-    def resolve_nfc_access_events(
-        self, info, limit: int = 200, door_identifier: Optional[str] = None
+    @permission_required("nfc.view_door_log")
+    def resolve_door_log(
+        self,
+        info,
+        offset: int = 0,
+        limit: int = 50,
+        result: Optional[str] = None,
+        search: Optional[str] = None,
+        since=None,
+        until=None,
     ):
-        query = NfcAccessEvent.objects.select_related(
-            "card", "card_assignment", "resolved_user"
+        related = ["resolved_user", "card"]
+        if any(rel.name == "external_holder" for rel in NfcCard._meta.related_objects):
+            related.append("card__external_holder")  # apps.arx; one query for the whole page
+        events = (
+            NfcAccessEvent.objects.select_related(*related)
+            .annotate(user_full_name=Concat("resolved_user__first_name", Value(" "), "resolved_user__last_name"))
+            .order_by("-occurred_at")
         )
-        if door_identifier:
-            query = query.filter(door_identifier=door_identifier)
-
-        safe_limit = max(1, min(limit, 1000))
-        return query.order_by("-occurred_at")[:safe_limit]
+        if result in NfcAccessEvent.EventType.values:
+            events = events.filter(event_type=result)
+        if since:
+            events = events.filter(occurred_at__gte=since)
+        if until:
+            events = events.filter(occurred_at__lt=until)
+        term = (search or "").strip()[:100]
+        if term:
+            events = events.filter(
+                Q(user_full_name__icontains=term)
+                | Q(person_name__icontains=term)
+                | Q(mifare_csn_reported__icontains=term)
+                | Q(door_identifier__icontains=term)
+            )
+        limit = max(1, min(limit, MAX_PAGE_SIZE))
+        offset = max(0, offset)
+        return DoorLogPage(total=events.count(), events=list(events[offset : offset + limit]))

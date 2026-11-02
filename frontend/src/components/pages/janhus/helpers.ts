@@ -12,7 +12,7 @@ export const statusChipColor = (status: string): "default" | "success" | "warnin
   if (status === "CONFIRMED" || status === "APPROVED") {
     return "success";
   }
-  if (status === "PENDING_ADMIN_REVIEW" || status === "PENDING" || status === "PROVISIONAL") {
+  if (status === "PENDING_ADMIN_REVIEW" || status === "PENDING") {
     return "warning";
   }
   if (status === "DECLINED" || status === "REJECTED" || status === "CANCELLED") {

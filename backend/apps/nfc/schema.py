@@ -1,49 +1,17 @@
 import graphene
-from graphene import NonNull
 
-from .mutations import (
-    AssignNfcCard,
-    CreateNfcAccessGrant,
-    LogNfcAccessEvent,
-    RevokeNfcAccessGrant,
-    RevokeNfcAssignment,
-    UpsertNfcCard,
-)
 from .resolvers import NfcResolvers
-from .types import (
-    NfcAccessEventType,
-    NfcAccessGrantType,
-    NfcCardAssignmentType,
-    NfcCardType,
-)
-
-
-class NfcMutations(graphene.ObjectType):
-    upsert_nfc_card = UpsertNfcCard.Field()
-    assign_nfc_card = AssignNfcCard.Field()
-    revoke_nfc_assignment = RevokeNfcAssignment.Field()
-
-    create_nfc_access_grant = CreateNfcAccessGrant.Field()
-    revoke_nfc_access_grant = RevokeNfcAccessGrant.Field()
-
-    log_nfc_access_event = LogNfcAccessEvent.Field()
+from .types import DoorLogPage
 
 
 class NfcQueries(graphene.ObjectType, NfcResolvers):
-    nfc_cards = graphene.List(NonNull(NfcCardType))
-    nfc_card = graphene.Field(NfcCardType, mifare_csn=graphene.String(required=True))
-
-    nfc_card_assignments = graphene.List(
-        NonNull(NfcCardAssignmentType), active_only=graphene.Boolean(required=False)
-    )
-    my_nfc_card_assignment = graphene.Field(NfcCardAssignmentType)
-
-    nfc_access_grants = graphene.List(
-        NonNull(NfcAccessGrantType), active_only=graphene.Boolean(required=False)
-    )
-
-    nfc_access_events = graphene.List(
-        NonNull(NfcAccessEventType),
-        limit=graphene.Int(required=False),
-        door_identifier=graphene.String(required=False),
+    door_log = graphene.Field(
+        DoorLogPage,
+        offset=graphene.Int(),
+        limit=graphene.Int(),
+        result=graphene.String(description="ACCESS_GRANTED, ACCESS_DENIED, DOOR_OPENED, EXIT_BUTTON or FORCED_OPEN"),
+        search=graphene.String(description="Name, card number or door"),
+        since=graphene.DateTime(),
+        until=graphene.DateTime(),
+        description="Door events from ARX, newest first. Needs nfc.view_door_log.",
     )

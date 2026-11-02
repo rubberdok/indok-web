@@ -7,6 +7,8 @@ import Image from "next/image";
 import { Link } from "@/app/components/Link";
 import Hero from "~/public/static/landing/hero.webp";
 
+import { LandingMinneside } from "../LandingMinneside";
+
 const OrganizationsSlider = dynamic(() => import("./OrganizationsSlider"), { ssr: false });
 
 export const LandingHero: React.FC = () => {
@@ -98,6 +100,7 @@ export const LandingHero: React.FC = () => {
           />
         </Box>
       </Box>
+      <LandingMinneside />
       <OrganizationsSlider />
     </>
   );

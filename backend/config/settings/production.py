@@ -6,6 +6,8 @@ from corsheaders.defaults import default_headers
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 
+from config.sentry.scrubbing import build_event_scrubber, scrub_event
+
 from .base import *  # noqa
 from .base import env
 
@@ -43,9 +45,7 @@ DATABASES = {
 ROOT_URLCONF = env("ROOT_URLCONF", default="config.urls.production")
 
 # EMAIL
-EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="anymail.backends.postmark.EmailBackend"
-)
+EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="anymail.backends.postmark.EmailBackend")
 
 
 AWS_SES_REGION_NAME = env("AWS_SES_REGION_NAME")
@@ -57,12 +57,7 @@ AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
-    "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
-        }
-    },
+    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"}},
     "handlers": {
         "console": {
             "level": "DEBUG",
@@ -97,9 +92,7 @@ CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", True)
 
 # SENTRY
 SENTRY_DSN: Optional[str] = env("SENTRY_DSN", default=None)
-SENTRY_LOG_LEVEL: int = cast(
-    int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO)
-)
+SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
 SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 
 sentry_logging = LoggingIntegration(
@@ -116,5 +109,9 @@ sentry_sdk.init(
     traces_sample_rate=cast(float, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
     send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
     release=SENTRY_RELEASE,
+    # Door PINs and card numbers never reach Sentry (config/sentry/scrubbing.py)
+    event_scrubber=build_event_scrubber(),
+    before_send=scrub_event,
+    before_send_transaction=scrub_event,
 )
 ignore_logger("graphql.execution.utils")

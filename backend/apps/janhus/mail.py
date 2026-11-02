@@ -17,6 +17,7 @@ CONFIRMATION_TEMPLATE = "janhus_confirmation_template.html"
 REQUEST_RECEIVED_TEMPLATE = "janhus_request_received_template.html"
 ADMIN_REQUEST_TEMPLATE = "janhus_admin_request_template.html"
 REJECTED_TEMPLATE = "janhus_rejected_template.html"
+DELETED_TEMPLATE = "janhus_deleted_template.html"
 CONTRACT_TEMPLATE = "janhus_contract_template.html"
 CONFIRMATION_STREAM = "janhus-booking-confirmations"
 TIME_FORMAT_TEXT = "%d.%m.%Y kl. %H:%M"
@@ -25,6 +26,7 @@ SUBJECTS = {
     "reserve": "Bekreftelse på mottatt søknad om booking av ",
     "admin_reserve": "Booking av ",
     "decision": "Janus Eiendom har tatt stilling til søknaden din om booking av ",
+    "deleted": "Bookingen din er slettet: ",
 }
 
 EVENT_TYPE_LABELS = {
@@ -54,9 +56,7 @@ def _html_to_plain_text(html: str) -> str:
     strip_tags leaves the contents of <style> behind, so drop those blocks first;
     otherwise the plain-text part of the mail starts with CSS.
     """
-    without_style = re.sub(
-        r"<style.*?</style>", "", html, flags=re.DOTALL | re.IGNORECASE
-    )
+    without_style = re.sub(r"<style.*?</style>", "", html, flags=re.DOTALL | re.IGNORECASE)
     with_breaks = re.sub(r"<br\s*/?>|</p>", "\n", without_style, flags=re.IGNORECASE)
     text = strip_tags(with_breaks)
     lines = [line.strip() for line in text.splitlines()]
@@ -71,9 +71,7 @@ def _signature_context() -> dict:
     booking_settings = get_or_create_settings()
     return {
         "contact_name": booking_settings.booking_contact_name,
-        "contact_email": (
-            booking_settings.booking_contact_email or settings.CONTACT_EMAIL
-        ),
+        "contact_email": (booking_settings.booking_contact_email or settings.CONTACT_EMAIL),
         "contact_phone": booking_settings.booking_contact_phone,
     }
 
@@ -127,9 +125,7 @@ def _cleaning_context(*, cleaning_requested: bool) -> dict:
     requested cleaning still shows it, so a service the booker is paying for is
     never hidden if an admin turns the option off afterwards.
     """
-    show_cleaning = (
-        get_or_create_settings().cleaning_option_enabled or cleaning_requested
-    )
+    show_cleaning = get_or_create_settings().cleaning_option_enabled or cleaning_requested
     return {
         "show_cleaning": show_cleaning,
         "cleaning_requested": "Ja" if cleaning_requested else "Nei",
@@ -148,17 +144,13 @@ def _request_recipients(booking_request) -> list:
 
 def _request_content(booking_request) -> dict:
     return {
-        "requester_name": (
-            booking_request.requester_name or booking_request.responsible_name or ""
-        ).strip(),
+        "requester_name": (booking_request.requester_name or booking_request.responsible_name or "").strip(),
         "requester_email": booking_request.requester_email or "-",
         "requester_phone": booking_request.requester_phone or "-",
         "area_name": booking_request.area.name,
         "starts_at": booking_request.starts_at.strftime(TIME_FORMAT_TEXT),
         "ends_at": booking_request.ends_at.strftime(TIME_FORMAT_TEXT),
-        "event_type": EVENT_TYPE_LABELS.get(
-            booking_request.event_type, booking_request.event_type
-        ),
+        "event_type": EVENT_TYPE_LABELS.get(booking_request.event_type, booking_request.event_type),
         "responsible_name": booking_request.responsible_name,
         "responsible_email": booking_request.responsible_email,
         "responsible_phone": booking_request.responsible_phone,
@@ -192,9 +184,7 @@ def send_booking_request_received(booking_request) -> None:
         recipients=[admin_email],
         content={
             **content,
-            "owner_label": (
-                owner_organization.name if owner_organization else "Personlig"
-            ),
+            "owner_label": (owner_organization.name if owner_organization else "Personlig"),
         },
     )
 
@@ -210,7 +200,7 @@ def send_booking_request_rejected(booking_request) -> None:
         template=REJECTED_TEMPLATE,
         subject=SUBJECTS["decision"] + content["area_name"],
         recipients=_request_recipients(booking_request),
-        content={**content, "admin_comment": booking_request.admin_comment},
+        content={**content, "booker_message": booking_request.booker_message},
     )
 
 
@@ -223,13 +213,31 @@ def send_booking_declined(booking: JanHusBooking) -> None:
         subject=SUBJECTS["decision"] + booking.area.name,
         recipients=_booking_recipients(booking),
         content={
-            "requester_name": (
-                booking.booker_name or booking.responsible_name or ""
-            ).strip(),
+            "requester_name": (booking.booker_name or booking.responsible_name or "").strip(),
             "area_name": booking.area.name,
             "starts_at": booking.starts_at.strftime(TIME_FORMAT_TEXT),
             "ends_at": booking.ends_at.strftime(TIME_FORMAT_TEXT),
-            "admin_comment": booking.admin_comment,
+            "booker_message": booking.booker_message,
+        },
+    )
+
+
+def send_booking_deleted(booking: JanHusBooking, *, message: str = "") -> None:
+    """
+    Sent when an admin deletes a coming booking, so the booker does not show up to a booking that is gone.
+    `booking` is the deleted instance: it still holds its fields.
+    """
+    _send(
+        template=DELETED_TEMPLATE,
+        subject=SUBJECTS["deleted"] + booking.area.name,
+        recipients=_booking_recipients(booking),
+        content={
+            "booker_name": (booking.booker_name or booking.responsible_name or "").strip(),
+            "reference": booking.reference,
+            "area_name": booking.area.name,
+            "starts_at": booking.starts_at.strftime(TIME_FORMAT_TEXT),
+            "ends_at": booking.ends_at.strftime(TIME_FORMAT_TEXT),
+            "booker_message": message,
         },
     )
 
@@ -256,12 +264,11 @@ def send_booking_confirmation(booking: JanHusBooking) -> None:
         "show_price": booking.owner_organization_id is None,
         "total_price": booking.total_price,
         "deposit_amount": booking.outstanding_deposit_amount or None,
+        "booker_message": booking.booker_message,
         **_cleaning_context(cleaning_requested=booking.cleaning_requested),
     }
 
-    html_content = get_template(CONFIRMATION_TEMPLATE).render(
-        {**_signature_context(), **content}
-    )
+    html_content = get_template(CONFIRMATION_TEMPLATE).render({**_signature_context(), **content})
 
     email = TransactionalEmail(
         stream=CONFIRMATION_STREAM,

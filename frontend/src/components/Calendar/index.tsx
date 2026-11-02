@@ -14,9 +14,18 @@ type Props = {
   startDate: dayjs.Dayjs | undefined;
   endDate: dayjs.Dayjs | undefined;
   isDateDisabled: (date: dayjs.Dayjs) => boolean;
+  /** How many dots to draw under a date (at most three). */
+  getMarkerCount?: (date: dayjs.Dayjs) => number;
 };
 
-export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDate, isDateDisabled }) => {
+export const Calendar: React.FC<Props> = ({
+  title,
+  onDateClick,
+  startDate,
+  endDate,
+  isDateDisabled,
+  getMarkerCount,
+}) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs().tz("Europe/Oslo"));
 
   const isHidden = (date: dayjs.Dayjs, month: dayjs.Dayjs) => {
@@ -114,9 +123,11 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
 
   return (
     <Stack spacing={2} width={1} justifyContent="center">
-      <Typography variant="h5" align="center">
-        {title}
-      </Typography>
+      {title ? (
+        <Typography variant="h5" align="center">
+          {title}
+        </Typography>
+      ) : null}
       <Stack
         spacing={5}
         direction="row"
@@ -176,6 +187,7 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
                       onClick={() => onDateClick(date)}
                       isDisabled={isDateDisabled(date)}
                       isHidden={isHidden(date, selectedMonth)}
+                      markers={getMarkerCount?.(date)}
                       isInRange={startDate && endDate && date.isAfter(startDate) && date.isBefore(endDate)}
                     />
                   )}
@@ -219,6 +231,7 @@ export const Calendar: React.FC<Props> = ({ title, onDateClick, startDate, endDa
                         onClick={() => onDateClick(date)}
                         isDisabled={isDateDisabled(date)}
                         isHidden={isHidden(date, nextMonth)}
+                        markers={getMarkerCount?.(date)}
                         isInRange={startDate && endDate && date.isAfter(startDate) && date.isBefore(endDate)}
                       />
                     )}
