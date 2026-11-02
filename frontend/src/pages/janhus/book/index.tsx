@@ -83,9 +83,9 @@ const JanHusBookingPage: NextPageWithLayout = () => {
   const [ownerType, setOwnerType] = useState<JanHusOwnerType>("ORGANIZATION");
   const [organizationId, setOrganizationId] = useState("");
 
-  const [typedRequesterName, setRequesterName] = useState<string | null>(null);
-  const [typedRequesterEmail, setRequesterEmail] = useState<string | null>(null);
-  const [typedRequesterPhone, setRequesterPhone] = useState<string | null>(null);
+  const [typedRequesterName, setTypedRequesterName] = useState<string | null>(null);
+  const [typedRequesterEmail, setTypedRequesterEmail] = useState<string | null>(null);
+  const [typedRequesterPhone, setTypedRequesterPhone] = useState<string | null>(null);
   const { data: bookerData } = useQuery(JanHusBookerDetailsDocument, { fetchPolicy: "cache-and-network" });
   const booker = bookerData?.user;
   const requesterName = typedRequesterName ?? (booker ? `${booker.firstName} ${booker.lastName}`.trim() : "");
@@ -716,9 +716,9 @@ const JanHusBookingPage: NextPageWithLayout = () => {
               onEndsAtChange={setEndsAt}
               onOwnerTypeChange={setOwnerType}
               onOrganizationChange={setOrganizationId}
-              onRequesterNameChange={setRequesterName}
-              onRequesterEmailChange={setRequesterEmail}
-              onRequesterPhoneChange={setRequesterPhone}
+              onRequesterNameChange={setTypedRequesterName}
+              onRequesterEmailChange={setTypedRequesterEmail}
+              onRequesterPhoneChange={setTypedRequesterPhone}
               onHasDifferentResponsibleChange={setHasDifferentResponsible}
               onResponsibleNameChange={setResponsibleName}
               onResponsibleEmailChange={setResponsibleEmail}

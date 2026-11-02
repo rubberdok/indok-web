@@ -239,7 +239,7 @@ class JanHusResolvers:
     def resolve_janhus_booking_settings(self, info):
         return get_or_create_settings()
 
-    def resolve_janhus_contract_preview(self, info, contract_data):
+    def resolve_janhus_contract_preview(self, _info, contract_data):
         try:
             area = JanHusArea.objects.filter(pk=contract_data["area"]).first()
         except ValueError:
