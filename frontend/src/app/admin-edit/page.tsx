@@ -1,60 +1,31 @@
 "use client";
 
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
-import { Alert, Box, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
+import { Nfc } from "@mui/icons-material";
+import { Alert, Box, Button, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { isAcceptedCardNumber } from "@/components/pages/profile/UserForm/helpers";
+import { Link } from "@/app/components/Link";
 import {
   AdminEditCapabilitiesDocument,
   AdminUpdateUserDocument,
   AdminUpdateUserNfcDocument,
-  NfcUserSearchDocument,
-  UserSearchDocument,
+  AdminUserDocument,
 } from "@/generated/graphql";
 
+import { adminEditFormFor, nfcInputFor, toErrorMessage, validateNfcInput } from "./components/helpers";
 import { MembershipCard } from "./components/MembershipCard";
 import { NfcFields } from "./components/NfcFields";
 import { ProfileFields } from "./components/ProfileFields";
-import {
-  EMPTY_ADMIN_EDIT_FORM,
-  MIFARE_CSN_RULE_TEXT,
-  type AdminEditableUser,
-  type AdminEditForm,
-} from "./components/types";
+import { EMPTY_ADMIN_EDIT_FORM, type AdminEditableUser, type AdminEditForm } from "./components/types";
 import { UserSearchCard } from "./components/UserSearchCard";
-
-function toErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof CombinedGraphQLErrors) {
-    if (error.errors.length > 0) {
-      return error.errors.map((e) => e.message).join(" · ");
-    }
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return fallback;
-}
-
-function getAdminAccessDescription(canManageProfiles: boolean): string {
-  if (canManageProfiles) {
-    return "Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon. ";
-  }
-  return "NFC-modus: Her kan du kun søke opp bruker og oppdatere kortnummer/PIN.";
-}
 
 export default function AdminEditPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const nfcMode = searchParams?.get("mode") === "nfc";
-  const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<AdminEditableUser | null>(null);
-  const [preselectedUserId, setPreselectedUserId] = useState<string>("");
+  const preselectedUserId = useRef("");
 
   const [saveUserError, setSaveUserError] = useState<string>("");
   const [saveNfcError, setSaveNfcError] = useState<string>("");
@@ -72,171 +43,55 @@ export default function AdminEditPage() {
 
   const canManageProfiles = Boolean(capabilityData?.canManageUserProfiles);
   const canManageNfc = Boolean(capabilityData?.canManageUserNfc);
-  const hasAnyAccess = canManageProfiles || canManageNfc;
-  const nfcOnlyMode = canManageNfc && !canManageProfiles;
 
   useEffect(() => {
-    if (!loadingCapabilities && !capabilityError && !hasAnyAccess) {
-      router.replace("/");
-    }
-  }, [loadingCapabilities, capabilityError, hasAnyAccess, router]);
-
-  useEffect(() => {
-    if (loadingCapabilities || capabilityError || !hasAnyAccess) {
+    if (loadingCapabilities || capabilityError || canManageProfiles) {
       return;
     }
 
-    if (nfcOnlyMode && !nfcMode) {
-      router.replace("/admin-edit/nfc");
-    }
-  }, [capabilityError, hasAnyAccess, loadingCapabilities, nfcMode, nfcOnlyMode, router]);
+    router.replace(canManageNfc ? "/admin-edit/nfc" : "/");
+  }, [capabilityError, canManageNfc, canManageProfiles, loadingCapabilities, router]);
 
-  const {
-    data: userSearchData,
-    loading: searchingProfileUsers,
-    error: userSearchError,
-  } = useQuery(UserSearchDocument, {
-    ssr: false,
-    variables: { query: searchQuery, limit: 30 },
-    skip: !canManageProfiles || searchQuery.trim().length === 0,
-  });
-
-  const {
-    data: nfcUserSearchData,
-    loading: searchingNfcUsers,
-    error: nfcUserSearchError,
-  } = useQuery(NfcUserSearchDocument, {
-    ssr: false,
-    variables: { query: searchQuery, limit: 30 },
-    skip: !canManageNfc || canManageProfiles || searchQuery.trim().length === 0,
-  });
-
-  const [runUserSearchById] = useLazyQuery(UserSearchDocument);
-  const [runNfcUserSearchById] = useLazyQuery(NfcUserSearchDocument);
+  const [runAdminUser] = useLazyQuery(AdminUserDocument, { fetchPolicy: "network-only" });
 
   const [adminUpdateUser, { loading: savingUser }] = useMutation(AdminUpdateUserDocument);
   const [adminUpdateUserNfc, { loading: savingNfc }] = useMutation(AdminUpdateUserNfcDocument);
 
-  const searchResults: readonly AdminEditableUser[] =
-    (canManageProfiles ? userSearchData?.userSearch : nfcUserSearchData?.nfcUserSearch) ?? [];
-
-  const onSearch = () => {
-    setSearchQuery(searchInput.trim());
-  };
-
-  const onSelectUser = (user: AdminEditableUser) => {
+  const onSelectUser = (user: AdminEditableUser | null) => {
     setSelectedUser(user);
     setSaveNfcError("");
     setSaveNfcSuccess("");
     setSaveUserError("");
-
-    setFormData({
-      username: user.username ?? "",
-      firstName: user.firstName ?? "",
-      lastName: user.lastName ?? "",
-      email: user.email ?? "",
-      phoneNumber: user.phoneNumber ?? "",
-      allergies: user.allergies ?? "",
-      graduationYear: user.graduationYear?.toString() ?? "",
-      nfcMifareCsn: user.nfcCardNumber ?? user.nfcMifareCsn ?? "",
-      nfcPinCode: "",
-      nfcPermanentAccess: Boolean(user.nfcPermanentAccess),
-    });
+    setFormData(user ? adminEditFormFor(user) : EMPTY_ADMIN_EDIT_FORM);
   };
 
-  const onSelectMembershipUser = async (userId: string, username: string) => {
-    if (!canManageProfiles) {
-      return;
+  const selectUserById = async (userId: string) => {
+    const result = await runAdminUser({ variables: { id: userId } });
+    if (result.data?.adminUser) {
+      onSelectUser(result.data.adminUser);
     }
-
-    let result = await runUserSearchById({ variables: { query: username, limit: 10 } });
-    let user = result.data?.userSearch?.find((candidate) => candidate.id === userId);
-
-    if (!user) {
-      result = await runUserSearchById({ variables: { query: userId, limit: 10 } });
-      user = result.data?.userSearch?.find((candidate) => candidate.id === userId);
-    }
-
-    if (!user) {
-      return;
-    }
-
-    onSelectUser(user);
   };
 
   useEffect(() => {
     const userIdToSelect = (searchParams?.get("userId") || "").trim();
-    if (!userIdToSelect) {
+    if (!userIdToSelect || !canManageProfiles || preselectedUserId.current === userIdToSelect) {
       return;
     }
 
-    if (loadingCapabilities || capabilityError || !hasAnyAccess) {
-      return;
-    }
+    preselectedUserId.current = userIdToSelect;
 
-    if (preselectedUserId === userIdToSelect) {
-      return;
-    }
-
-    const selectUserFromQuery = async () => {
-      let foundUser: AdminEditableUser | null = null;
-
-      if (canManageProfiles) {
-        const result = await runUserSearchById({ variables: { query: userIdToSelect, limit: 1 } });
-        foundUser = result.data?.userSearch?.find((candidate) => candidate.id === userIdToSelect) ?? null;
-      } else if (canManageNfc) {
-        const result = await runNfcUserSearchById({ variables: { query: userIdToSelect, limit: 1 } });
-        foundUser = result.data?.nfcUserSearch?.find((candidate) => candidate.id === userIdToSelect) ?? null;
-      }
-
-      if (foundUser) {
-        onSelectUser(foundUser);
-        setSearchInput(userIdToSelect);
-        setSearchQuery(userIdToSelect);
-      }
-
-      setPreselectedUserId(userIdToSelect);
-    };
-
-    void selectUserFromQuery();
-  }, [
-    capabilityError,
-    canManageNfc,
-    canManageProfiles,
-    hasAnyAccess,
-    loadingCapabilities,
-    preselectedUserId,
-    runNfcUserSearchById,
-    runUserSearchById,
-    searchParams,
-  ]);
-
-  const validateNfcInput = (): string | null => {
-    if (!selectedUser) {
-      return "Velg en bruker først.";
-    }
-
-    const hasNewMifareCsn = formData.nfcMifareCsn.trim().length > 0;
-    const hasExistingMifareCsn = Boolean(selectedUser.nfcMifareCsn);
-    const pin = formData.nfcPinCode.trim();
-
-    if (hasNewMifareCsn && !isAcceptedCardNumber(formData.nfcMifareCsn)) {
-      return MIFARE_CSN_RULE_TEXT;
-    }
-
-    if (pin.length > 0 && !/^\d{4}$/.test(pin)) {
-      return "PIN-kode må være nøyaktig 4 sifre.";
-    }
-
-    if (pin.length > 0 && !hasNewMifareCsn && !hasExistingMifareCsn) {
-      return "Du må sette et kortnummer før PIN-kode kan lagres.";
-    }
-
-    return null;
-  };
+    runAdminUser({ variables: { id: userIdToSelect } })
+      .then((result) => {
+        if (result.data?.adminUser) {
+          setSelectedUser(result.data.adminUser);
+          setFormData(adminEditFormFor(result.data.adminUser));
+        }
+      })
+      .catch(() => undefined);
+  }, [canManageProfiles, runAdminUser, searchParams]);
 
   const onSaveUser = async () => {
-    if (!selectedUser || !canManageProfiles) {
+    if (!selectedUser) {
       return;
     }
 
@@ -263,14 +118,15 @@ export default function AdminEditPage() {
   };
 
   const onSaveNfc = async () => {
-    if (!selectedUser || !canManageNfc) {
-      return;
-    }
-
     setSaveNfcError("");
     setSaveNfcSuccess("");
 
-    const validationMessage = validateNfcInput();
+    if (!selectedUser) {
+      setSaveNfcError("Velg en bruker først.");
+      return;
+    }
+
+    const validationMessage = validateNfcInput(selectedUser, formData);
     if (validationMessage) {
       setSaveNfcError(validationMessage);
       return;
@@ -280,23 +136,12 @@ export default function AdminEditPage() {
       await adminUpdateUserNfc({
         variables: {
           userId: selectedUser.id,
-          nfcData: {
-            mifareCsn: formData.nfcMifareCsn.trim() || null,
-            pinCode: formData.nfcPinCode.trim() || null, // empty = keep the current PIN
-            permanentAccess: formData.nfcPermanentAccess,
-          },
+          nfcData: nfcInputFor(selectedUser, formData, { withNote: false }),
         },
       });
 
+      await selectUserById(selectedUser.id);
       setSaveNfcSuccess("MIFARE kortnummer/PIN lagret.");
-
-      if (canManageProfiles) {
-        const updated = await runUserSearchById({ variables: { query: selectedUser.id, limit: 1 } });
-        const updatedUser = updated.data?.userSearch?.find((candidate) => candidate.id === selectedUser.id);
-        if (updatedUser) {
-          onSelectUser(updatedUser);
-        }
-      }
     } catch (error) {
       setSaveNfcError(toErrorMessage(error, "Klarte ikke å lagre MIFARE kortnummer/PIN."));
     }
@@ -318,68 +163,74 @@ export default function AdminEditPage() {
     );
   }
 
-  if (!hasAnyAccess) {
-    return null;
+  if (!canManageProfiles) {
+    return null; // on the way to the NFC page or the front page
   }
-
-  const searchingUsers = searchingProfileUsers || searchingNfcUsers;
-  const searchError = userSearchError ?? nfcUserSearchError;
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Typography variant="h4">Generell bruker og Forening/Organisasjon administasjon</Typography>
-      <Alert severity="info">{getAdminAccessDescription(canManageProfiles)}</Alert>
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        justifyContent="space-between"
+        alignItems={{ md: "center" }}
+        spacing={2}
+      >
+        <Typography variant="h4">Generell bruker og Forening/Organisasjon administrasjon</Typography>
+        {canManageNfc && (
+          <Button
+            component={Link}
+            noLinkStyle
+            href="/admin-edit/nfc"
+            color="inherit"
+            variant="outlined"
+            startIcon={<Nfc />}
+            sx={{ flexShrink: 0 }}
+          >
+            NFC-edit
+          </Button>
+        )}
+      </Stack>
+      <Alert severity="info">Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon.</Alert>
 
-      <UserSearchCard
-        searchInput={searchInput}
-        setSearchInput={setSearchInput}
-        onSearch={onSearch}
-        searchingUsers={searchingUsers}
-        searchFailed={Boolean(searchError)}
-        searchResults={searchResults}
-        selectedUser={selectedUser}
-        onSelectUser={onSelectUser}
-      />
+      <UserSearchCard canManageProfiles selectedUser={selectedUser} onSelectUser={onSelectUser} />
 
       {selectedUser && (
         <Card>
           <CardContent>
             <Stack spacing={2}>
-              {canManageProfiles && <Typography variant="h6">Rediger bruker</Typography>}
+              <Typography variant="h6">Rediger bruker</Typography>
 
-              {canManageProfiles && (
-                <ProfileFields
-                  selectedUser={selectedUser}
-                  formData={formData}
-                  setFormData={setFormData}
-                  saveUserError={saveUserError}
-                  savingUser={savingUser}
-                  onSaveUser={onSaveUser}
-                />
-              )}
+              <ProfileFields
+                selectedUser={selectedUser}
+                formData={formData}
+                setFormData={setFormData}
+                saveUserError={saveUserError}
+                savingUser={savingUser}
+                onSaveUser={onSaveUser}
+              />
 
-              {canManageNfc && (
-                <NfcFields
-                  selectedUser={selectedUser}
-                  formData={formData}
-                  setFormData={setFormData}
-                  canManageProfiles={canManageProfiles}
-                  saveNfcError={saveNfcError}
-                  setSaveNfcError={setSaveNfcError}
-                  saveNfcSuccess={saveNfcSuccess}
-                  setSaveNfcSuccess={setSaveNfcSuccess}
-                  savingNfc={savingNfc}
-                  onSaveNfc={onSaveNfc}
-                />
-              )}
+              <NfcFields
+                selectedUser={selectedUser}
+                formData={formData}
+                setFormData={setFormData}
+                saveNfcError={saveNfcError}
+                setSaveNfcError={setSaveNfcError}
+                saveNfcSuccess={saveNfcSuccess}
+                setSaveNfcSuccess={setSaveNfcSuccess}
+                savingNfc={savingNfc}
+                onSaveNfc={onSaveNfc}
+              />
             </Stack>
           </CardContent>
         </Card>
       )}
 
-      {canManageProfiles && (
-        <MembershipCard selectedUser={selectedUser} onSelectMembershipUser={onSelectMembershipUser} />
-      )}
+      <MembershipCard
+        selectedUser={selectedUser}
+        onSelectMembershipUser={(userId) => {
+          selectUserById(userId).catch(() => undefined);
+        }}
+      />
     </Stack>
   );
 }

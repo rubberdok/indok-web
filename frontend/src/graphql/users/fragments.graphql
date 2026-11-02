@@ -63,6 +63,21 @@ fragment UserNfcSearch on UserType {
   nfcPermanentAccess
 }
 
+fragment UserNfcDetail on UserType {
+  ...UserNfcSearch
+  email
+  graduationYear
+  nfcPermanentAccessStatus
+  nfcPermanentAccessEnds
+  nfcNote
+  nfcNoteUpdatedAt
+  nfcNoteUpdatedBy
+  organizations {
+    id
+    name
+  }
+}
+
 fragment UserAdminSearch on UserType {
   ...UserNfcSearch
   email

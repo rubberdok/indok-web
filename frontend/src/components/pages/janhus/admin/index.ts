@@ -1,5 +1,6 @@
 export { AreaSettings } from "./AreaSettings";
 export { BookingRulesSettings } from "./BookingRulesSettings";
+export { ContractSettings } from "./ContractSettings";
 export { SemesterSettings } from "./SemesterSettings";
 export { AdminFilters } from "./AdminFilters";
 export { adminPanelStyles } from "./adminPanelStyles";

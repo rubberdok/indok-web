@@ -4,6 +4,7 @@ from django.db.models import Q
 from graphql import GraphQLError
 from apps.permissions.constants import HR_TYPE
 
+from apps.janhus.contract import render_contract_preview
 from apps.janhus.door_access import with_leader_count
 from apps.janhus.guest_list import prefetch_guest_list_entries
 from apps.janhus.models import (
@@ -237,6 +238,15 @@ class JanHusResolvers:
 
     def resolve_janhus_booking_settings(self, info):
         return get_or_create_settings()
+
+    def resolve_janhus_contract_preview(self, _info, contract_data):
+        try:
+            area = JanHusArea.objects.filter(pk=contract_data["area"]).first()
+        except ValueError:
+            area = None
+        if area is None:
+            raise GraphQLError("Area not found")
+        return render_contract_preview(contract_data, area=area)
 
     def resolve_janhus_areas(self, _info, include_inactive=False):
         ensure_default_areas()

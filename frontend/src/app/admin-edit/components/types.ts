@@ -18,6 +18,15 @@ export type AdminEditableUser = {
   nfcCardNumber?: string | null;
   nfcHasPin?: boolean | null;
   nfcPermanentAccess?: boolean | null;
+  nfcPermanentAccessStatus?: string | null;
+  nfcPermanentAccessEnds?: string | null;
+  nfcPermanentAccessHistory?:
+    | readonly { given: boolean; changedAt: string; changedBy?: string | null; reason: string }[]
+    | null;
+  nfcNote?: string | null;
+  nfcNoteUpdatedAt?: string | null;
+  nfcNoteUpdatedBy?: string | null;
+  organizations?: readonly { id: string; name: string }[] | null;
 };
 
 export type AdminEditForm = {
@@ -31,6 +40,7 @@ export type AdminEditForm = {
   nfcMifareCsn: string;
   nfcPinCode: string;
   nfcPermanentAccess: boolean;
+  nfcNote: string;
 };
 
 export type SetAdminEditForm = Dispatch<SetStateAction<AdminEditForm>>;
@@ -46,6 +56,7 @@ export const EMPTY_ADMIN_EDIT_FORM: AdminEditForm = {
   nfcMifareCsn: "",
   nfcPinCode: "",
   nfcPermanentAccess: false,
+  nfcNote: "",
 };
 
 export const MIFARE_CSN_RULE_TEXT =

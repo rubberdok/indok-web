@@ -355,7 +355,7 @@ export const UserForm: React.FC<Props> = ({ kind, title, onCompleted, "data-test
             </Grid>
 
             <Grid item>
-              <Typography variant="subtitle2">Adgangskort</Typography>
+              <Typography variant="subtitle2">NTNU-kort</Typography>
             </Grid>
             <Grid container item direction="row" spacing={1}>
               <Grid item>

@@ -37,6 +37,7 @@ export type BookingEdit = {
   organizationDoorAccess: string;
   bookerUser: PickedUser | null;
   responsibleUser: PickedUser | null;
+  occasion: string;
   comment: string;
   adminComment: string;
   bookerMessage: string;

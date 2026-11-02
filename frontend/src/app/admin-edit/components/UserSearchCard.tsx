@@ -1,82 +1,60 @@
-import {
-  Alert,
-  Button,
-  Card,
-  CardContent,
-  CircularProgress,
-  Grid,
-  List,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { useLazyQuery } from "@apollo/client/react";
+import { Alert, Card, CardContent, Stack, Typography } from "@mui/material";
+import { useCallback } from "react";
+
+import { UserAutocomplete, type UserOption } from "@/components/UserAutocomplete";
+import { NfcUserSearchDocument, UserSearchDocument } from "@/generated/graphql";
 
 import type { AdminEditableUser } from "./types";
 
+const SEARCH_LIMIT = 30;
+
+function toOption(user: AdminEditableUser): UserOption {
+  return {
+    id: user.id,
+    displayName: `${user.firstName} ${user.lastName} (${user.username})`,
+    detail: `ID: ${user.id} ・ Epost/Feide: ${user.feideUserid || user.feideEmail || "-"} ・ Kortnummer: ${user.nfcCardNumber || user.nfcMifareCsn || "-"}`,
+  };
+}
+
 type Props = {
-  searchInput: string;
-  setSearchInput: (value: string) => void;
-  onSearch: () => void;
-  searchingUsers: boolean;
-  searchFailed: boolean;
-  searchResults: readonly AdminEditableUser[];
+  canManageProfiles: boolean;
   selectedUser: AdminEditableUser | null;
-  onSelectUser: (user: AdminEditableUser) => void;
+  onSelectUser: (user: AdminEditableUser | null) => void;
 };
 
-export function UserSearchCard({
-  searchInput,
-  setSearchInput,
-  onSearch,
-  searchingUsers,
-  searchFailed,
-  searchResults,
-  selectedUser,
-  onSelectUser,
-}: Readonly<Props>) {
+export function UserSearchCard({ canManageProfiles, selectedUser, onSelectUser }: Readonly<Props>) {
+  const [searchProfiles, profiles] = useLazyQuery(UserSearchDocument, { fetchPolicy: "network-only" });
+  const [searchNfc, nfc] = useLazyQuery(NfcUserSearchDocument, { fetchPolicy: "network-only" });
+
+  const onSearch = useCallback(
+    (query: string) => {
+      const variables = { query, limit: SEARCH_LIMIT };
+      const search = canManageProfiles ? searchProfiles({ variables }) : searchNfc({ variables });
+      search.catch(() => undefined); // shown from the query's error below
+    },
+    [canManageProfiles, searchNfc, searchProfiles]
+  );
+
+  const results: readonly AdminEditableUser[] =
+    (canManageProfiles ? profiles.data?.userSearch : nfc.data?.nfcUserSearch) ?? [];
+
   return (
     <Card>
       <CardContent>
         <Stack spacing={2}>
           <Typography variant="h6">Finn bruker</Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} md={8}>
-              <TextField
-                fullWidth
-                label="Søk"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="ID, navn, brukernavn, Feide-id/e-post eller telefon"
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Button variant="contained" onClick={onSearch} fullWidth>
-                Søk
-              </Button>
-            </Grid>
-          </Grid>
-
-          {searchingUsers && <CircularProgress size={24} />}
-          {searchFailed && <Alert severity="error">Kunne ikke søke i brukere.</Alert>}
-
-          {searchResults.length > 0 && (
-            <List dense>
-              {searchResults.map((user) => (
-                <ListItemButton
-                  key={user.id}
-                  selected={selectedUser?.id === user.id}
-                  onClick={() => onSelectUser(user)}
-                >
-                  <ListItemText
-                    primary={`${user.firstName} ${user.lastName} (${user.username})`}
-                    secondary={`ID: ${user.id} ・ Epost/Feide: ${user.feideUserid || user.feideEmail || "-"} ・ Kortnummer: ${user.nfcCardNumber || user.nfcMifareCsn || "-"}`}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
-          )}
+          <UserAutocomplete
+            label="Søk"
+            placeholder="ID, navn, brukernavn, Feide-id/e-post eller telefon"
+            minLength={1}
+            value={selectedUser ? toOption(selectedUser) : null}
+            options={results.map(toOption)}
+            loading={profiles.loading || nfc.loading}
+            onSearch={onSearch}
+            onChange={(option) => onSelectUser(results.find((user) => user.id === option?.id) ?? null)}
+          />
+          {(profiles.error ?? nfc.error) && <Alert severity="error">Kunne ikke søke i brukere.</Alert>}
         </Stack>
       </CardContent>
     </Card>

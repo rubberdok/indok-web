@@ -45,16 +45,18 @@ SENSITIVE_KEYS = (
     "person_name",
     "nfc_pin_encryption_key",
     "arx_state_hmac_key",
+    "key_box_code",
+    "keyboxcode",
 )
 
-# Locals in these modules can hold a PIN or card number under any name.
-SENSITIVE_MODULES = ("apps.nfc", "apps.users", "apps.arx")
+# Locals in these modules can hold a PIN or card number under any name, or the rendered contract with the key box code.
+SENSITIVE_MODULES = ("apps.nfc", "apps.users", "apps.arx", "apps.janhus.contract", "apps.janhus.mail")
 RUNNER_PATH = "/arx-runner/"
 FILTERED = "[Filtered]"  # what Sentry's own scrubber puts in place of a value
 # A GraphQL body that mentions any of these may carry a PIN or card number.
-SENSITIVE_GRAPHQL = re.compile(r"pin_?code|nfc|card_?number|mifare|csn", re.IGNORECASE)
+SENSITIVE_GRAPHQL = re.compile(r"pin_?code|nfc|card_?number|mifare|csn|key_?box", re.IGNORECASE)
 # SQL that touches these tables can carry card numbers in its parameters.
-SENSITIVE_SQL = re.compile(r"\b(nfc|arx)_", re.IGNORECASE)
+SENSITIVE_SQL = re.compile(r"\b(nfc|arx)_|key_box_code", re.IGNORECASE)
 
 
 def build_event_scrubber():

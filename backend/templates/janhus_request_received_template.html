@@ -53,6 +53,7 @@
       <p>
         <strong>Område:</strong> {{ area_name }}<br />
         <strong>Arrangementstype:</strong> {{ event_type }}<br />
+        <strong>Anledning:</strong> {{ occasion|default:"Ikke oppgitt" }}<br />
         {% if show_cleaning %}<strong>Innleid renhold:</strong> {{ cleaning_requested }}<br />{% endif %}
         <strong>Ansvarlig person oppgitt:</strong> {{ responsible_name }} ({{ responsible_email }})
       </p>

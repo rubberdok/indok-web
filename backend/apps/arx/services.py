@@ -34,7 +34,7 @@ from apps.janhus.models import (
     JanHusDoorAccessPolicy,
     JanHusOrganizationDoorAccess,
 )
-from apps.nfc.models import NfcAccessEvent, NfcCard, NfcCardAssignment
+from apps.nfc.models import NfcAccessEvent, NfcCard, NfcCardAssignment, permanent_access_ends
 from apps.organizations.models import Membership
 from apps.permissions.constants import HR_TYPE
 
@@ -217,18 +217,6 @@ def permanent_window(now) -> tuple:
         start.astimezone(dt_timezone.utc).strftime(UTC_FMT),
         end.astimezone(dt_timezone.utc).strftime(UTC_FMT),
     )
-
-
-def permanent_access_ends(graduation_year) -> Optional[datetime]:
-    """
-    Permanent access ends six months after graduation, which is in May or June of
-    graduation_year: at the start of the next year, Oslo time (decided 2026-10-30). No
-    graduation year, no end. The flag on the card assignment stays ticked; it opens
-    nothing after that date.
-    """
-    if not graduation_year:
-        return None
-    return timezone.make_aware(datetime(graduation_year + 1, 1, 1))
 
 
 def _area_descendants() -> dict:

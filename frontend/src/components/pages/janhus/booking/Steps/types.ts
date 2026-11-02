@@ -51,11 +51,13 @@ export type BookingStepsProps = {
   eventTypeOptions: SelectOption[];
   canBookPersonally: boolean;
 
+  occasion: string;
+  guidelinesUrl: string | undefined;
   comment: string;
   guestListEntries: string[];
   cleaningRequested: boolean;
   acceptedGuidelines: boolean;
-  acceptedContractPlaceholder: boolean;
+  acceptedContract: boolean;
 
   selectedAreaLabel: string;
   loading: boolean;
@@ -82,15 +84,17 @@ export type BookingStepsProps = {
   onResponsiblePhoneChange: (value: string) => void;
 
   onEventTypeChange: (value: string) => void;
+  onOccasionChange: (value: string) => void;
   onCommentChange: (value: string) => void;
   onCleaningRequestedChange: (value: boolean) => void;
   onAcceptedGuidelinesChange: (value: boolean) => void;
-  onAcceptedContractPlaceholderChange: (value: boolean) => void;
+  onAcceptedContractChange: (value: boolean) => void;
 
   onOpenGuestListDialog: () => void;
 
   onBookingStepNext: () => void;
   onContactStepNext: () => void;
+  onExtraInfoStepNext: () => void;
   onContractStepNext: () => void;
   onSubmitBooking: () => Promise<void>;
 };

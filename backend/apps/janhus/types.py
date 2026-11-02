@@ -4,7 +4,11 @@ from graphene_django import DjangoObjectType
 
 from apps.janhus.door_access import door_access_warnings
 from apps.janhus.guest_list import GUEST_LIST_ENTRIES_ATTR, build_guest_list_entries
-from apps.janhus.permissions import can_view_booking_details, has_view_all_bookings_permission
+from apps.janhus.permissions import (
+    can_view_booking_details,
+    has_manage_settings_permission,
+    has_view_all_bookings_permission,
+)
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
@@ -38,6 +42,7 @@ PROTECTED_BOOKING_FIELDS = [
     "responsible_email",
     "responsible_phone",
     "guest_list",
+    "occasion",
     "comment",
     "booker_message",
     "requested_at",
@@ -155,9 +160,30 @@ class JanHusBookingRequestType(DjangoObjectType):
 
 
 class JanHusBookingSettingsType(DjangoObjectType):
+    guidelines_url = graphene.String(source="guidelines_url")
+    guidelines_title = graphene.String(source="guidelines_title")
+    key_box_code = graphene.String(description="Only for people with permission.")
+
     class Meta:
         model = JanHusBookingSettings
-        exclude = ("booking_contact_email",)
+        # Anyone can read these settings, also those who are not logged in.
+        exclude = ("booking_contact_email", "guidelines_document")
+
+    @staticmethod
+    def resolve_key_box_code(parent: JanHusBookingSettings, info):
+        if not has_manage_settings_permission(info.context.user):
+            return None
+        return parent.key_box_code
+
+
+class JanHusContractPreviewInput(graphene.InputObjectType):
+    starts_at = graphene.DateTime(required=True)
+    ends_at = graphene.DateTime(required=True)
+    area = graphene.ID(required=True)
+    requester_name = graphene.String(required=False)
+    requester_email = graphene.String(required=False)
+    requester_phone = graphene.String(required=False)
+    occasion = graphene.String(required=False)
 
 
 class JanHusAreaType(DjangoObjectType):

@@ -26,8 +26,8 @@ def _door_permission(field_name: str) -> Optional[Permission]:
 class UserAdminForm(forms.ModelForm):
     can_edit_nfc_cards = forms.BooleanField(
         required=False,
-        label="Kan redigere NFC-kort",
-        help_text="users.manage_user_nfc",
+        label="Kan redigere NFC-kort og permanent tilgang",
+        help_text="users.manage_user_nfc. Permanent tilgang kan åpne døra når som helst.",
     )
     can_view_sensitive_info = forms.BooleanField(
         required=False,
