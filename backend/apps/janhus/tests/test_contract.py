@@ -4,6 +4,7 @@ from decimal import Decimal
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.template.loader import render_to_string
 
@@ -19,6 +20,7 @@ from apps.janhus.models import (
 )
 from apps.janhus.tests.base import JanHusBaseTestCase
 from utils.testing.factories.organizations import OrganizationFactory
+from utils.testing.factories.users import UserFactory
 
 OSLO = ZoneInfo("Europe/Oslo")
 TEST_CODE = "TEST-KODE-77"
@@ -91,6 +93,9 @@ class JanHusContractTestCase(JanHusBaseTestCase):
         data.update(overrides)
         return self.query(PREVIEW_QUERY, variables={"contractData": data})
 
+    def test_booking_settings_have_a_readable_name(self):
+        self.assertEqual("JanHus booking settings", str(self.booking_settings))
+
     def test_the_contract_is_filled_in_from_the_booking_and_the_settings(self):
         html = self._render(self._booking())
 
@@ -155,8 +160,10 @@ class JanHusContractTestCase(JanHusBaseTestCase):
 
     def test_booked_cleaning_stays_out_of_the_contract(self):
         booking = self._booking(cleaning_requested=True)
+        contract_with_cleaning = self._render(booking)
+        booking.cleaning_requested = False
 
-        self.assertNotIn("renhold", self._render(booking))
+        self.assertEqual(contract_with_cleaning, self._render(booking))
         self.assertNotIn("cleaning_fee", contract_context(booking, reveal_key_box_code=True))
 
     def test_the_archive_document_itself_is_not_on_the_api(self):
@@ -305,12 +312,14 @@ class JanHusContractTestCase(JanHusBaseTestCase):
         mocked_email.return_value.send.assert_called_once()
         mocked_email.return_value.attach.assert_not_called()
         self.assertNotIn("vedlagt", mocked_email.call_args.kwargs["body"])
+        self.assertIn("Kontrakten kunne ikke legges ved", mocked_email.call_args.kwargs["body"])
 
     def test_the_confirmation_mail_says_the_contract_is_attached(self):
         with patch("apps.janhus.mail.TransactionalEmail") as mocked_email:
             send_booking_confirmation(self._booking())
 
         self.assertIn("Kontrakten ligger vedlagt", mocked_email.call_args.kwargs["body"])
+        self.assertNotIn("Kontrakten kunne ikke legges ved", mocked_email.call_args.kwargs["body"])
 
     def test_empty_contact_details_are_saved_as_empty(self):
         self.user.user_permissions.add(Permission.objects.get(codename="manage_settings"))
@@ -441,6 +450,20 @@ class JanHusContractTestCase(JanHusBaseTestCase):
         self.assertNotIn("Bursdagsfeiring", response.content.decode())
 
         self.client.force_login(self.user)
+        response = self.query(read)
+        self.assertResponseNoErrors(response)
+        self.assertIn("Bursdagsfeiring", response.content.decode())
+
+        self.client.logout()
+        response = self.query(read)
+        self.assertNotIn("Bursdagsfeiring", response.content.decode())
+
+        booking_admin = UserFactory(is_indok=True)
+        booking_admin.user_permissions.add(
+            Permission.objects.get(codename="view_all_bookings", content_type__app_label="janhus")
+        )
+        booking_admin = get_user_model().objects.get(pk=booking_admin.pk)
+        self.client.force_login(booking_admin)
         response = self.query(read)
         self.assertResponseNoErrors(response)
         self.assertIn("Bursdagsfeiring", response.content.decode())

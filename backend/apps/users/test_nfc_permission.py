@@ -392,6 +392,26 @@ class NoteTests(NfcPermissionBase):
     def note(self):
         return NfcUserNote.objects.filter(user=self.target).first()
 
+    def test_nfc_note_updated_at_is_visible_to_nfc_admins(self):
+        query = "query User($id: ID!) { nfcUser(id: $id) { nfcNoteUpdatedAt } }"
+        NfcUserNote.objects.create(user=self.target, note="Vaktmester")
+
+        with_note = self.query(query, user=self.nfc_admin, operation_name="User", variables={"id": str(self.target.pk)})
+        updated_at = self.data(with_note, "nfcUser")["nfcNoteUpdatedAt"]
+        self.assertIsNotNone(datetime.fromisoformat(updated_at.replace("Z", "+00:00")))
+
+        without_note = self.query(
+            query, user=self.nfc_admin, operation_name="User", variables={"id": str(self.no_access.pk)}
+        )
+        self.assertIsNone(self.data(without_note, "nfcUser")["nfcNoteUpdatedAt"])
+
+    def test_note_and_access_history_have_readable_names(self):
+        note = NfcUserNote.objects.create(user=self.target, note="Vaktmester")
+        change = NfcPermanentAccessChange.objects.create(user=self.target, changed_by=self.nfc_admin, given=True)
+
+        self.assertEqual(f"NfcUserNote(user={self.target.pk})", str(note))
+        self.assertEqual(f"NfcPermanentAccessChange(user={self.target.pk}, given=True)", str(change))
+
     def test_note_is_saved_with_who_wrote_it(self):
         self.give_card(permanent=True)
         self.assertResponseNoErrors(self.update_nfc({"note": "  Vaktmester  "}))
