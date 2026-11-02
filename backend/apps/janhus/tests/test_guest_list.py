@@ -37,7 +37,7 @@ class JanHusGuestListMutationsTestCase(JanHusBaseTestCase):
                   requesterName: \"Requester User\"
                   requesterEmail: \"requester@example.com\"
                   requesterPhone: \"41234567\"
-                  responsibleName: \"Responsible User\"
+                  occasion: \"Bursdag\" responsibleName: \"Responsible User\"
                   responsibleEmail: \"responsible@example.com\"
                   responsiblePhone: \"41234567\"
                   eventType: \"INTERNAL\"

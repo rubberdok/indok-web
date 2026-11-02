@@ -42,6 +42,7 @@ function bookingEditFrom(booking: AdminBooking): BookingEdit {
     organizationDoorAccess: booking.organizationDoorAccess,
     bookerUser: pickedUser(booking.bookerUser),
     responsibleUser: pickedUser(booking.responsibleUser),
+    occasion: booking.occasion ?? "",
     comment: booking.comment ?? "",
     adminComment: booking.adminComment ?? "",
     bookerMessage: booking.bookerMessage ?? "",

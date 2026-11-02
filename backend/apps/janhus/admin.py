@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from apps.archive.models import ArchiveDocument
 from apps.janhus.models import (
     JanHusArea,
     JanHusBooking,
@@ -91,8 +92,14 @@ class JanHusBookingSettingsAdmin(admin.ModelAdmin):
         "booking_contact_email",
         "booking_contact_phone",
         "payment_provider_organization",
+        "guidelines_document",
     )
     raw_id_fields = ("payment_provider_organization",)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "guidelines_document":
+            kwargs["queryset"] = ArchiveDocument.objects.order_by("-year", "title")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(JanHusArea)

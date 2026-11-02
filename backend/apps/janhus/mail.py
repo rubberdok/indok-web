@@ -1,12 +1,15 @@
 import io
 import logging
 import re
+from typing import Optional
 
 from django.conf import settings
 from django.template.loader import get_template, render_to_string
+from django.utils import timezone
 from django.utils.html import strip_tags
 from weasyprint import HTML
 
+from apps.janhus.contract import contract_context
 from apps.janhus.models import JanHusBooking
 from apps.janhus.rules import get_or_create_settings
 from utils.mail.streams import TransactionalEmail
@@ -49,6 +52,11 @@ def _booking_recipients(booking: JanHusBooking) -> list[str]:
             recipients_by_key[clean_email.lower()] = clean_email
 
     return list(recipients_by_key.values())
+
+
+def _local_time_text(value) -> str:
+    """The database hands times back in UTC, one or two hours from the time in Norway."""
+    return timezone.localtime(value).strftime(TIME_FORMAT_TEXT)
 
 
 def _html_to_plain_text(html: str) -> str:
@@ -148,12 +156,13 @@ def _request_content(booking_request) -> dict:
         "requester_email": booking_request.requester_email or "-",
         "requester_phone": booking_request.requester_phone or "-",
         "area_name": booking_request.area.name,
-        "starts_at": booking_request.starts_at.strftime(TIME_FORMAT_TEXT),
-        "ends_at": booking_request.ends_at.strftime(TIME_FORMAT_TEXT),
+        "starts_at": _local_time_text(booking_request.starts_at),
+        "ends_at": _local_time_text(booking_request.ends_at),
         "event_type": EVENT_TYPE_LABELS.get(booking_request.event_type, booking_request.event_type),
         "responsible_name": booking_request.responsible_name,
         "responsible_email": booking_request.responsible_email,
         "responsible_phone": booking_request.responsible_phone,
+        "occasion": booking_request.occasion,
         "comment": booking_request.comment,
         **_cleaning_context(cleaning_requested=booking_request.cleaning_requested),
     }
@@ -215,8 +224,8 @@ def send_booking_declined(booking: JanHusBooking) -> None:
         content={
             "requester_name": (booking.booker_name or booking.responsible_name or "").strip(),
             "area_name": booking.area.name,
-            "starts_at": booking.starts_at.strftime(TIME_FORMAT_TEXT),
-            "ends_at": booking.ends_at.strftime(TIME_FORMAT_TEXT),
+            "starts_at": _local_time_text(booking.starts_at),
+            "ends_at": _local_time_text(booking.ends_at),
             "booker_message": booking.booker_message,
         },
     )
@@ -235,11 +244,19 @@ def send_booking_deleted(booking: JanHusBooking, *, message: str = "") -> None:
             "booker_name": (booking.booker_name or booking.responsible_name or "").strip(),
             "reference": booking.reference,
             "area_name": booking.area.name,
-            "starts_at": booking.starts_at.strftime(TIME_FORMAT_TEXT),
-            "ends_at": booking.ends_at.strftime(TIME_FORMAT_TEXT),
+            "starts_at": _local_time_text(booking.starts_at),
+            "ends_at": _local_time_text(booking.ends_at),
             "booker_message": message,
         },
     )
+
+
+def _contract_pdf(booking: JanHusBooking) -> Optional[bytes]:
+    try:
+        return html_to_pdf(CONTRACT_TEMPLATE, contract_context(booking, reveal_key_box_code=True))
+    except Exception:
+        logger.exception("Could not build the JanHus contract for booking %s", booking.pk)
+        return None
 
 
 def send_booking_confirmation(booking: JanHusBooking) -> None:
@@ -251,13 +268,17 @@ def send_booking_confirmation(booking: JanHusBooking) -> None:
     if not recipients:
         return
 
+    booking_settings = get_or_create_settings()
+    contract_pdf = _contract_pdf(booking)
     content = {
+        "contract_attached": contract_pdf is not None,
         "booker_name": (booking.booker_name or booking.responsible_name or "").strip(),
         "reference": booking.reference,
         "area_name": booking.area.name,
-        "starts_at": booking.starts_at.strftime(TIME_FORMAT_TEXT),
-        "ends_at": booking.ends_at.strftime(TIME_FORMAT_TEXT),
+        "starts_at": _local_time_text(booking.starts_at),
+        "ends_at": _local_time_text(booking.ends_at),
         "event_type": EVENT_TYPE_LABELS.get(booking.event_type, booking.event_type),
+        "guidelines_url": booking_settings.guidelines_url,
         "responsible_name": booking.responsible_name,
         "responsible_email": booking.responsible_email,
         # Organization bookings are settled internally, so no price is quoted here.
@@ -278,14 +299,7 @@ def send_booking_confirmation(booking: JanHusBooking) -> None:
     )
     email.attach_alternative(html_content, "text/html")
 
-    contract_pdf = html_to_pdf(CONTRACT_TEMPLATE, content)
-    email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
-
-    # TODO: attach the remaining JanHus documents once they exist, the way the
-    # cabins approval mail does. Both files still need adding to the repo:
-    #   static/janhus/Reglement.pdf   - house rules
-    #   static/janhus/Sjekkliste.pdf  - cleaning/checkout checklist
-    # email.attach_file("static/janhus/Reglement.pdf")
-    # email.attach_file("static/janhus/Sjekkliste.pdf")
+    if contract_pdf is not None:
+        email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
 
     _deliver(email)

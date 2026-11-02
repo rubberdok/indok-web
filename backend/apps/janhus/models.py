@@ -1,6 +1,7 @@
 import secrets
 from datetime import date
 from decimal import ROUND_CEILING, ROUND_HALF_UP, Decimal
+from typing import Optional
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -10,6 +11,7 @@ from apps.organizations.models import Organization
 
 BOOKING_REFERENCE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"
 BOOKING_REFERENCE_LENGTH = 8
+JANHUS_BOOKING_SETTINGS_LABEL = "JanHus booking settings"
 
 
 def round_up_to_whole_krone(amount: Decimal) -> Decimal:
@@ -123,11 +125,50 @@ class JanHusBookingSettings(models.Model):
         related_name="janhus_payment_settings",
     )
 
+    guidelines_document = models.ForeignKey(
+        "archive.ArchiveDocument",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+        help_text="Arkivdokumentet bookingsiden og bekreftelsen lenker til som JanHus retningslinjer. "
+        "Dokumentet må kunne åpnes av alle med lenken, siden også eksterne booker.",
+    )
+
+    key_box_code = models.CharField(
+        max_length=32,
+        blank=True,
+        default="",
+        help_text="Står i kontrakten som sendes når en booking blir godkjent. "
+        "På nettsiden vises den bare for dem som kan endre innstillingene.",
+    )
+    contract_address = models.CharField(max_length=200, default="Klostergata 26")
+    contract_rent_amount = models.PositiveIntegerField(default=0)
+    contract_max_fee = models.PositiveIntegerField(default=3000)
+    contract_cleaning_deadline_hours = models.PositiveIntegerField(default=24)
+
     class Meta:
-        verbose_name = "JanHus booking settings"
-        verbose_name_plural = "JanHus booking settings"
+        verbose_name = JANHUS_BOOKING_SETTINGS_LABEL
+        verbose_name_plural = JANHUS_BOOKING_SETTINGS_LABEL
+
+    @property
+    def guidelines_title(self) -> Optional[str]:
+        return self.guidelines_document.title if self.guidelines_document else None
+
+    @property
+    def guidelines_url(self) -> Optional[str]:
+        document = self.guidelines_document
+        if document is None:
+            return None
+        # web_link is free text in the archive, and this one ends up as a link on a public page.
+        if document.web_link and document.web_link.startswith("https://"):
+            return document.web_link
+        return f"https://drive.google.com/file/d/{document.file_location}/view"
 
     def clean(self):
+        self.key_box_code = (self.key_box_code or "").strip()
+        self.booking_contact_name = self.booking_contact_name or ""
+        self.booking_contact_phone = self.booking_contact_phone or ""
         if self.min_duration_minutes == 0:
             raise ValidationError("Minimum duration must be greater than 0 minutes")
         if self.slot_granularity_minutes == 0:
@@ -144,7 +185,7 @@ class JanHusBookingSettings(models.Model):
             raise ValidationError("Spring semester end date must be after start date")
 
     def __str__(self):
-        return "JanHus booking settings"
+        return JANHUS_BOOKING_SETTINGS_LABEL
 
 
 class JanHusArea(models.Model):
@@ -263,6 +304,7 @@ class JanHusBooking(models.Model):
 
     event_type = models.CharField(max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL)
     cleaning_requested = models.BooleanField(default=False)
+    occasion = models.CharField(max_length=200, blank=True, default="")
 
     deposit_status = models.CharField(
         max_length=32,
@@ -444,6 +486,7 @@ class JanHusBookingRequest(models.Model):
 
     event_type = models.CharField(max_length=32, choices=JanHusEventType.choices, default=JanHusEventType.INTERNAL)
     cleaning_requested = models.BooleanField(default=False)
+    occasion = models.CharField(max_length=200, blank=True, default="")
     comment = models.TextField(blank=True, default="")
     guest_list = models.TextField(blank=True, default="")
 

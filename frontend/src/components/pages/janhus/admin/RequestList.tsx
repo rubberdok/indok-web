@@ -72,6 +72,7 @@ export const RequestList: React.FC<Props> = ({
               <Typography variant="body2">
                 Ansvarlig: {request.responsibleName} ({request.responsibleEmail})
               </Typography>
+              <Typography variant="body2">Anledning: {request.occasion || "Ikke oppgitt"}</Typography>
               {request.comment ? (
                 <>
                   <Typography variant="body2">Kommentar fra bestiller:</Typography>

@@ -42,7 +42,7 @@ const JanHusPage: NextPageWithLayout = () => {
       />
 
       <Container sx={{ py: 4 }}>
-        <Stack spacing={3}>
+        <Stack spacing={3} useFlexGap>
           <Typography variant="h4">Book JanHus</Typography>
           <Typography color="text.secondary">Her kan du sende bookingforespørsler for JanHus.</Typography>
 

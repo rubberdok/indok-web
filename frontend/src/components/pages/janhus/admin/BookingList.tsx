@@ -316,6 +316,14 @@ export const BookingList: React.FC<Props> = ({
 
                 <TextField
                   disabled={readOnly}
+                  label="Anledning"
+                  helperText="Står i kontrakten. Huset kan kun brukes til dette formålet."
+                  inputProps={{ maxLength: 200 }}
+                  value={edit.occasion}
+                  onChange={(event) => updateEdit({ occasion: event.target.value })}
+                />
+                <TextField
+                  disabled={readOnly}
                   label="Kommentar"
                   multiline
                   minRows={2}

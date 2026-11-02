@@ -6,7 +6,9 @@ from .models import (
     NfcAccessEvent,
     NfcCard,
     NfcCardAssignment,
+    NfcPermanentAccessChange,
     NfcSettings,
+    NfcUserNote,
 )
 
 
@@ -27,9 +29,47 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
         "revoked_at",
     )
     search_fields = ("card__card_number", "card__mifare_csn", "user__username")
-    list_select_related = ("card", "user")  # one query for the list, not two per row
+    list_select_related = ("card", "user")
     list_filter = ("permanent_access", "revoked_at")
     raw_id_fields = ("user", "assigned_by", "revoked_by")
+
+    @staticmethod
+    def _opens_the_door_at_all_hours(assignment) -> bool:
+        return bool(assignment and assignment.permanent_access and assignment.revoked_at is None)
+
+    def _record_change(self, request, assignment, given):
+        if assignment.user_id:
+            NfcPermanentAccessChange.objects.create(
+                user_id=assignment.user_id, changed_by=request.user, given=given, reason="Endret i Django admin"
+            )
+
+    def save_model(self, request, obj, form, change):
+        before = NfcCardAssignment.objects.filter(pk=obj.pk).first() if change else None
+        super().save_model(request, obj, form, change)
+        if before and before.user_id != obj.user_id and self._opens_the_door_at_all_hours(before):
+            self._record_change(request, before, given=False)
+            before = None
+        given = self._opens_the_door_at_all_hours(obj)
+        if given != self._opens_the_door_at_all_hours(before):
+            self._record_change(request, obj, given)
+
+    def delete_model(self, request, obj):
+        if self._opens_the_door_at_all_hours(obj):
+            self._record_change(request, obj, False)
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        for assignment in queryset.filter(permanent_access=True, revoked_at__isnull=True):
+            self._record_change(request, assignment, False)
+        super().delete_queryset(request, queryset)
+
+
+@admin.register(NfcUserNote)
+class NfcUserNoteAdmin(admin.ModelAdmin):
+    list_display = ("user", "updated_by", "updated_at")
+    list_select_related = ("user", "updated_by")
+    raw_id_fields = ("user", "updated_by")
+    search_fields = ("user__username",)
 
 
 @admin.register(NfcAccessEvent)

@@ -56,6 +56,7 @@ class AdminUserNfcInput(graphene.InputObjectType):
     mifare_csn = graphene.String(required=False)
     pin_code = graphene.String(required=False)
     permanent_access = graphene.Boolean(required=False)
+    note = graphene.String(required=False, description="Begrunnelse for permanent tilgang.")
 
 
 def _get_self_registered_card_label(user: "models.User") -> str:
@@ -243,6 +244,7 @@ class AdminUpdateUserNfc(graphene.Mutation):
         from apps.nfc.models import (
             NfcCard,
             NfcCardAssignment,
+            NfcPermanentAccessChange,
             display_card_number,
             normalize_card_identifier,
             validate_card_identifier,
@@ -261,6 +263,13 @@ class AdminUpdateUserNfc(graphene.Mutation):
 
         card_assignment = NfcCardAssignment.objects.filter(card=card, revoked_at__isnull=True).first()
         if card_assignment and card_assignment.user and card_assignment.user.pk != target_user.pk:
+            if card_assignment.permanent_access:
+                NfcPermanentAccessChange.objects.create(
+                    user=card_assignment.user,
+                    changed_by=acting_user,
+                    given=False,
+                    reason="Kortet ble flyttet til en annen bruker",
+                )
             card_assignment.revoke(revoked_by=acting_user, reason="Auto-revoked due to reassignment")
 
         if assignment and assignment.card and assignment.card.pk != card.pk:
@@ -296,6 +305,35 @@ class AdminUpdateUserNfc(graphene.Mutation):
         assignment.save(update_fields=["permanent_access"])
         return assignment
 
+    @staticmethod
+    def _record_permanent_access_change(target_user, acting_user, had_access, assignment):
+        """It opens the door at all hours, so keep a history of who gave or removed it."""
+        from apps.nfc.models import NfcPermanentAccessChange, NfcUserNote
+
+        has_access = bool(assignment and assignment.permanent_access)
+        if has_access == had_access:
+            return
+        NfcPermanentAccessChange.objects.create(user=target_user, changed_by=acting_user, given=has_access)
+        if not has_access:
+            NfcUserNote.objects.filter(user=target_user).delete()
+
+    @staticmethod
+    def _update_note(target_user, acting_user, note):
+        from apps.nfc.models import NfcCardAssignment, NfcUserNote
+
+        note = note.strip()
+        if not note:
+            NfcUserNote.objects.filter(user=target_user).delete()
+            return
+        if len(note) > NfcUserNote.MAX_LENGTH:
+            raise GraphQLError(f"Notatet kan ikke være lengre enn {NfcUserNote.MAX_LENGTH} tegn")
+        if not NfcCardAssignment.objects.filter(
+            user=target_user, revoked_at__isnull=True, permanent_access=True
+        ).exists():
+            raise GraphQLError("Notat kan bare skrives for personer med permanent tilgang")
+        if not NfcUserNote.objects.filter(user=target_user, note=note).exists():
+            NfcUserNote.objects.update_or_create(user=target_user, defaults={"note": note, "updated_by": acting_user})
+
     @login_required
     def mutate(self, info: ResolveInfo, user_id: str, nfc_data: dict) -> "AdminUpdateUserNfc":
         acting_user: "models.User" = info.context.user
@@ -313,13 +351,15 @@ class AdminUpdateUserNfc(graphene.Mutation):
         mifare_csn = nfc_data.get("mifare_csn")
         pin_code = nfc_data.get("pin_code")
         permanent_access = nfc_data.get("permanent_access")
+        note = nfc_data.get("note")
 
-        if mifare_csn is None and pin_code is None and permanent_access is None:
-            raise GraphQLError("Du må sette kortnummer, PIN-kode eller permanent tilgang.")
+        if mifare_csn is None and pin_code is None and permanent_access is None and note is None:
+            raise GraphQLError("Du må sette kortnummer, PIN-kode, permanent tilgang eller notat.")
 
         try:
             with transaction.atomic():
                 assignment = AdminUpdateUserNfc._active_assignment(target_user, select_card=True)
+                had_access = bool(assignment and assignment.permanent_access)
 
                 if mifare_csn is not None:
                     assignment = AdminUpdateUserNfc._update_card_assignment(
@@ -330,7 +370,12 @@ class AdminUpdateUserNfc(graphene.Mutation):
                     assignment = AdminUpdateUserNfc._update_pin_code(target_user, assignment, pin_code)
 
                 if permanent_access is not None:
-                    AdminUpdateUserNfc._update_permanent_access(target_user, assignment, permanent_access)
+                    assignment = AdminUpdateUserNfc._update_permanent_access(target_user, assignment, permanent_access)
+
+                AdminUpdateUserNfc._record_permanent_access_change(target_user, acting_user, had_access, assignment)
+
+                if note is not None:
+                    AdminUpdateUserNfc._update_note(target_user, acting_user, note)
 
         except (ValidationError, IntegrityError) as e:
             raise GraphQLError(str(e))

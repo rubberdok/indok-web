@@ -23,6 +23,12 @@ class UserQueries(graphene.ObjectType, UserResolvers):
     nfc_user_search = graphene.List(
         NonNull(UserType), query=graphene.String(required=True), limit=graphene.Int()
     )
+    admin_user = graphene.Field(UserType, id=graphene.ID(required=True))
+    nfc_user = graphene.Field(UserType, id=graphene.ID(required=True))
+    nfc_permanent_access_users = graphene.List(
+        NonNull(UserType),
+        description="Everyone with the permanent access box ticked.",
+    )
     can_manage_user_profiles = graphene.Boolean(required=True)
     can_manage_user_nfc = graphene.Boolean(required=True)
     nfc_self_service_enabled = graphene.Boolean(required=True)

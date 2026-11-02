@@ -1,3 +1,4 @@
+import { KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Checkbox, FormControlLabel, Paper, Stack, TextField, Typography } from "@mui/material";
 
 import { Stepper as BookingStepNavigation } from "@/components/pages/cabins/booking/Steps/Stepper";
@@ -6,17 +7,29 @@ import type { BookingStepsProps } from "./types";
 
 export const ExtraInfoStep: React.FC<BookingStepsProps> = ({
   cleaningOptionEnabled,
+  occasion,
   comment,
   guestListEntries,
   cleaningRequested,
+  onOccasionChange,
   onCommentChange,
   onCleaningRequestedChange,
   onOpenGuestListDialog,
+  onExtraInfoStepNext,
 }) => {
   return (
     <Paper sx={{ p: 3, bgcolor: "background.elevated" }} elevation={0}>
       <Stack spacing={2}>
         <Typography variant="h5">Ekstra info</Typography>
+
+        <TextField
+          required
+          label="Anledning"
+          helperText="Hva skal huset brukes til? Dette står i kontrakten, og huset kan bare brukes til det."
+          inputProps={{ maxLength: 200 }}
+          value={occasion}
+          onChange={(event) => onOccasionChange(event.target.value)}
+        />
 
         <TextField
           label="Kommentar"
@@ -57,7 +70,13 @@ export const ExtraInfoStep: React.FC<BookingStepsProps> = ({
           />
         ) : null}
 
-        <BookingStepNavigation />
+        <BookingStepNavigation
+          nextButton={
+            <Button variant="contained" endIcon={<KeyboardArrowRight />} onClick={onExtraInfoStepNext}>
+              Neste
+            </Button>
+          }
+        />
       </Stack>
     </Paper>
   );

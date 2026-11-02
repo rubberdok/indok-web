@@ -67,6 +67,15 @@
         som måtte forekomme.
       </p>
 
+      {% if contract_attached %}
+      <p>Kontrakten ligger vedlagt.</p>
+      {% else %}
+      <p>Kontrakten kunne ikke legges ved. Ta kontakt med oss, så får du den tilsendt.</p>
+      {% endif %}
+      {% if guidelines_url %}
+      <p>Les også <a href="{{ guidelines_url }}">JanHus retningslinjer</a> ({{ guidelines_url }}).</p>
+      {% endif %}
+
       <p>
         Dette er en "no-reply"-mail. Ved spørsmål om booking, send mail til
         <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> og oppgi referansen
