@@ -72,6 +72,7 @@ class UserType(DjangoObjectType):
         description="ACTIVE, NOT_GRANTED, INACTIVE_USER, ENDED, CARD_DISABLED or NO_PIN. For door access admins."
     )
     nfc_permanent_access_ends = graphene.DateTime(description="Date when permanent access ends.")
+    nfc_permanent_access_until = graphene.DateTime(description="The end date an admin has set, if any.")
     nfc_permanent_access_history = graphene.List(NonNull(NfcPermanentAccessChangeType), description="Newest first.")
     nfc_note = graphene.String(description="Why this person has permanent access.")
     nfc_note_updated_at = graphene.DateTime()
@@ -174,7 +175,17 @@ class UserType(DjangoObjectType):
 
         from apps.nfc.models import permanent_access_ends
 
-        return permanent_access_ends(parent.graduation_year)
+        assignment = active_nfc_assignment(parent)
+        return permanent_access_ends(parent.graduation_year, assignment.permanent_access_until if assignment else None)
+
+    @staticmethod
+    @login_required
+    def resolve_nfc_permanent_access_until(parent, info):
+        if not can_manage_user_nfc(info.context.user):
+            return None
+
+        assignment = active_nfc_assignment(parent)
+        return assignment.permanent_access_until if assignment else None
 
     @staticmethod
     @login_required

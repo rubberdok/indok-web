@@ -1,7 +1,8 @@
 import graphene
+from graphene import NonNull
 from graphene_django import DjangoObjectType
 
-from .models import NfcAccessEvent
+from .models import NfcAccessEvent, NfcManualAccess
 
 
 def external_holder(event: NfcAccessEvent):
@@ -70,3 +71,64 @@ class DoorLogEventType(DjangoObjectType):
 class DoorLogPage(graphene.ObjectType):
     total = graphene.Int(required=True)
     events = graphene.List(graphene.NonNull(DoorLogEventType), required=True)
+
+
+class NfcAccessPeriodType(graphene.ObjectType):
+    kind = graphene.String(required=True, description="PERMANENT, TEMPORARY, BOOKING, MANUAL or EXTERNAL")
+    starts_at = graphene.DateTime(description="Empty when not known, for access given before this was recorded.")
+    ends_at = graphene.DateTime(description="Empty when it does not end by itself.")
+    detail = graphene.String(required=True)
+
+
+class NfcDoorAccessPersonType(graphene.ObjectType):
+    key = graphene.String(required=True)
+    user = graphene.Field("apps.users.types.UserType", description="Empty for an external card.")
+    holder_name = graphene.String(required=True)
+    card_number = graphene.String(required=True)
+    state = graphene.String(required=True, description="NOW, UPCOMING, PAST or NOTE_ONLY")
+    blocked_reason = graphene.String(
+        required=True,
+        description="Why door access is blocked: INACTIVE_USER, NO_CARD, CARD_DISABLED, NO_PIN or CARD_AMBIGUOUS.",
+    )
+    periods = graphene.List(NonNull(NfcAccessPeriodType), required=True)
+
+
+class NfcDoorAccessOverviewType(graphene.ObjectType):
+    people = graphene.List(NonNull(NfcDoorAccessPersonType), required=True)
+    past_days = graphene.Int(required=True)
+    max_past_days = graphene.Int(required=True, description="How long door events are kept (ARX settings).")
+    areas_connected = graphene.Boolean(required=True, description="Whether any JanHus area opens a door in ARX.")
+
+
+class NfcManualAccessType(DjangoObjectType):
+    target_name = graphene.String(required=True)
+    people_count = graphene.Int(required=True, description="How many people this gives access to now.")
+    created_by_name = graphene.String()
+    is_organization = graphene.Boolean(required=True)
+
+    class Meta:
+        model = NfcManualAccess
+        fields = ["id", "organization_people", "starts_at", "ends_at", "reason", "created_at"]
+
+    @staticmethod
+    def resolve_is_organization(access: NfcManualAccess, info):
+        return access.organization_id is not None
+
+    @staticmethod
+    def resolve_target_name(access: NfcManualAccess, info):
+        if access.user_id:
+            return access.user.get_full_name() or access.user.username
+        return access.organization.name
+
+    @staticmethod
+    def resolve_people_count(access: NfcManualAccess, info):
+        counted = getattr(access, "people_count", None)
+        if counted is not None:
+            return counted
+        from apps.arx.services import manual_access_people
+
+        return len(manual_access_people([access])[access.pk])
+
+    @staticmethod
+    def resolve_created_by_name(access: NfcManualAccess, info):
+        return access.created_by.get_full_name() if access.created_by else None

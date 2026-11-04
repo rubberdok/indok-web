@@ -88,6 +88,22 @@ export function NfcFields({
               : "Bare tilgang under egne bookinger"
           }
         />
+        {formData.nfcPermanentAccess && (
+          <TextField
+            fullWidth
+            type="datetime-local"
+            label="Sluttdato (valgfri)"
+            sx={{ mt: 1 }}
+            InputLabelProps={{ shrink: true }}
+            value={formData.nfcPermanentAccessUntil}
+            onChange={(e) => {
+              setSaveNfcError("");
+              setSaveNfcSuccess("");
+              setFormData((prev) => ({ ...prev, nfcPermanentAccessUntil: e.target.value }));
+            }}
+            helperText="Automatisk stenges døra når personen er ferdig med studiene. Uansett valg."
+          />
+        )}
       </Box>
       {showNote && (formData.nfcPermanentAccess || selectedUser.nfcNote) && (
         <TextField

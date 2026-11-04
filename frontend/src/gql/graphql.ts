@@ -99,6 +99,8 @@ export type AdminUserNfcInput = {
   /** Begrunnelse for permanent tilgang. */
   note: InputMaybe<Scalars['String']['input']>;
   permanentAccess: InputMaybe<Scalars['Boolean']['input']>;
+  /** Når permanent tilgang slutter. Tom fjerner sluttdatoen. */
+  permanentAccessUntil: InputMaybe<Scalars['DateTime']['input']>;
   pinCode: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -379,6 +381,11 @@ export type CreateListingInput = {
   readMoreUrl: InputMaybe<Scalars['String']['input']>;
   startDatetime: InputMaybe<Scalars['DateTime']['input']>;
   title: Scalars['String']['input'];
+};
+
+export type CreateNfcManualAccess = {
+  __typename?: 'CreateNfcManualAccess';
+  manualAccess: Maybe<NfcManualAccessType>;
 };
 
 export type CreateOrganization = {
@@ -1032,6 +1039,7 @@ export type Mutations = {
   createJanhusPaymentProduct: Maybe<CreateJanHusPaymentProduct>;
   /** Creates a new listing */
   createListing: Maybe<CreateListing>;
+  createNfcManualAccess: Maybe<CreateNfcManualAccess>;
   createOrganization: Maybe<CreateOrganization>;
   createProduct: Maybe<CreateProduct>;
   createQuestion: Maybe<CreateQuestion>;
@@ -1073,6 +1081,7 @@ export type Mutations = {
   refundOrder: Maybe<RefundOrder>;
   refundOrderAttempt: Maybe<RefundOrderAttempt>;
   removeMembership: Maybe<RemoveMembership>;
+  removeNfcManualAccess: Maybe<RemoveNfcManualAccess>;
   reviewJanhusBooking: Maybe<ReviewJanHusBooking>;
   reviewJanhusBookingRequest: Maybe<ReviewJanHusBookingRequest>;
   /** Sends email to the user or an admin (or both) */
@@ -1206,6 +1215,11 @@ export type MutationsCreateJanhusPaymentProductArgs = {
 
 export type MutationsCreateListingArgs = {
   listingData: CreateListingInput;
+};
+
+
+export type MutationsCreateNfcManualAccessArgs = {
+  accessData: NfcManualAccessInput;
 };
 
 
@@ -1346,6 +1360,11 @@ export type MutationsRemoveMembershipArgs = {
 };
 
 
+export type MutationsRemoveNfcManualAccessArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationsReviewJanhusBookingArgs = {
   reviewData: ReviewJanHusBookingInput;
 };
@@ -1470,6 +1489,66 @@ export type MutationsUpsertMembershipArgs = {
   membershipData: MembershipInput;
 };
 
+export type NfcAccessPeriodType = {
+  __typename?: 'NfcAccessPeriodType';
+  detail: Scalars['String']['output'];
+  /** Empty when it does not end by itself. */
+  endsAt: Maybe<Scalars['DateTime']['output']>;
+  /** PERMANENT, TEMPORARY, BOOKING, MANUAL or EXTERNAL */
+  kind: Scalars['String']['output'];
+  /** Empty when not known, for access given before this was recorded. */
+  startsAt: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type NfcDoorAccessOverviewType = {
+  __typename?: 'NfcDoorAccessOverviewType';
+  /** Whether any JanHus area opens a door in ARX. */
+  areasConnected: Scalars['Boolean']['output'];
+  /** How long door events are kept (ARX settings). */
+  maxPastDays: Scalars['Int']['output'];
+  pastDays: Scalars['Int']['output'];
+  people: Array<NfcDoorAccessPersonType>;
+};
+
+export type NfcDoorAccessPersonType = {
+  __typename?: 'NfcDoorAccessPersonType';
+  /** Why the door stays shut: INACTIVE_USER, NO_CARD, CARD_DISABLED, NO_PIN or CARD_AMBIGUOUS. */
+  blockedReason: Scalars['String']['output'];
+  cardNumber: Scalars['String']['output'];
+  holderName: Scalars['String']['output'];
+  key: Scalars['String']['output'];
+  periods: Array<NfcAccessPeriodType>;
+  /** NOW, UPCOMING, PAST or NOTE_ONLY */
+  state: Scalars['String']['output'];
+  /** Empty for an external card. */
+  user: Maybe<UserType>;
+};
+
+export type NfcManualAccessInput = {
+  endsAt: Scalars['DateTime']['input'];
+  organizationId: InputMaybe<Scalars['ID']['input']>;
+  /** LEADERS or MEMBERS */
+  organizationPeople: InputMaybe<Scalars['String']['input']>;
+  reason: InputMaybe<Scalars['String']['input']>;
+  startsAt: Scalars['DateTime']['input'];
+  userId: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type NfcManualAccessType = {
+  __typename?: 'NfcManualAccessType';
+  createdAt: Scalars['DateTime']['output'];
+  createdByName: Maybe<Scalars['String']['output']>;
+  endsAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  isOrganization: Scalars['Boolean']['output'];
+  organizationPeople: NfcNfcManualAccessOrganizationPeopleChoices;
+  /** How many people this gives access to now. */
+  peopleCount: Scalars['Int']['output'];
+  reason: Scalars['String']['output'];
+  startsAt: Scalars['DateTime']['output'];
+  targetName: Scalars['String']['output'];
+};
+
 /** An enumeration. */
 export enum NfcNfcAccessEventEventTypeChoices {
   /** Access denied */
@@ -1482,6 +1561,14 @@ export enum NfcNfcAccessEventEventTypeChoices {
   ExitButton = 'EXIT_BUTTON',
   /** Door forced open */
   ForcedOpen = 'FORCED_OPEN'
+}
+
+/** An enumeration. */
+export enum NfcNfcManualAccessOrganizationPeopleChoices {
+  /** The organisation's leaders (HR) */
+  Leaders = 'LEADERS',
+  /** All members of the organisation */
+  Members = 'MEMBERS'
 }
 
 /** One change of someone's permanent door access. */
@@ -1625,8 +1712,10 @@ export type Queries = {
   logout: Scalars['String']['output'];
   memberships: Maybe<Array<MembershipType>>;
   myCabinBookings: Maybe<Array<AdminBookingType>>;
-  /** Everyone with the permanent access box ticked. */
-  nfcPermanentAccessUsers: Maybe<Array<UserType>>;
+  /** Everyone with door access now, later and lately. For those managing door access. */
+  nfcDoorAccess: Maybe<NfcDoorAccessOverviewType>;
+  /** Manual door access that has not ended or been removed. For those managing door access. */
+  nfcManualAccesses: Maybe<Array<NfcManualAccessType>>;
   nfcSelfServiceEnabled: Scalars['Boolean']['output'];
   nfcUser: Maybe<UserType>;
   nfcUserSearch: Maybe<Array<UserType>>;
@@ -1799,6 +1888,11 @@ export type QueriesMembershipsArgs = {
 };
 
 
+export type QueriesNfcDoorAccessArgs = {
+  pastDays: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueriesNfcUserArgs = {
   id: Scalars['ID']['input'];
 };
@@ -1905,6 +1999,11 @@ export type RemoveMembership = {
   __typename?: 'RemoveMembership';
   ok: Maybe<Scalars['Boolean']['output']>;
   removedMember: Maybe<UserType>;
+};
+
+export type RemoveNfcManualAccess = {
+  __typename?: 'RemoveNfcManualAccess';
+  ok: Maybe<Scalars['Boolean']['output']>;
 };
 
 /** A response instance that contains information about a user's response to a form. */
@@ -2283,6 +2382,8 @@ export type UserType = {
   nfcPermanentAccessHistory: Maybe<Array<NfcPermanentAccessChangeType>>;
   /** ACTIVE, NOT_GRANTED, INACTIVE_USER, ENDED, CARD_DISABLED or NO_PIN. For door access admins. */
   nfcPermanentAccessStatus: Maybe<Scalars['String']['output']>;
+  /** The end date an admin has set, if any. */
+  nfcPermanentAccessUntil: Maybe<Scalars['DateTime']['output']>;
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars['String']['output'];
   responses: Array<ResponseType>;

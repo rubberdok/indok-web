@@ -1,10 +1,17 @@
 import graphene
 
 from .resolvers import NfcResolvers
-from .types import DoorLogPage
+from .types import DoorLogPage, NfcDoorAccessOverviewType, NfcManualAccessType
 
 
 class NfcQueries(graphene.ObjectType, NfcResolvers):
+    nfc_door_access = graphene.Field(
+        NfcDoorAccessOverviewType,
+        past_days=graphene.Int(),
+    )
+    nfc_manual_accesses = graphene.List(
+        graphene.NonNull(NfcManualAccessType),
+    )
     door_log = graphene.Field(
         DoorLogPage,
         offset=graphene.Int(),

@@ -32,16 +32,20 @@ UPDATE_PROFILE = """
 """
 PERMANENT_LIST = """
     query {
-        nfcPermanentAccessUsers {
-            id
-            nfcCardNumber
-            nfcHasPin
-            nfcPermanentAccess
-            nfcPermanentAccessStatus
-            nfcPermanentAccessEnds
-            nfcNote
-            nfcNoteUpdatedBy
-            organizations { name }
+        nfcDoorAccess {
+            people {
+                user {
+                    id
+                    nfcCardNumber
+                    nfcHasPin
+                    nfcPermanentAccess
+                    nfcPermanentAccessStatus
+                    nfcPermanentAccessEnds
+                    nfcNote
+                    nfcNoteUpdatedBy
+                    organizations { name }
+                }
+            }
         }
     }
 """
@@ -300,11 +304,44 @@ class ExactLookupTests(NfcPermissionBase):
                 self.assertIsNone(self.data(response, "nfcUser"))
 
 
+class CardSearchTests(NfcPermissionBase):
+    SEARCHES = {
+        "manage_user_nfc": "query S($q: String!) { found: nfcUserSearch(query: $q) { id } }",
+        "manage_user_profiles": "query S($q: String!) { found: userSearch(query: $q) { id } }",
+    }
+
+    def search(self, permission, text):
+        admin = with_permission(UserFactory(), permission)
+        response = self.query(self.SEARCHES[permission], user=admin, operation_name="S", variables={"q": text})
+        return self.data(response, "found")
+
+    def test_finds_the_holder_by_door_number_or_printed_number(self):
+        assignment = self.give_card(csn="1234567890")
+        NfcCard.objects.filter(pk=assignment.card_id).update(card_number="04112233445566")
+        expected = [{"id": str(self.target.id)}]
+
+        for permission in self.SEARCHES:
+            for text in ("1234567890", "04112233445566", "11223344"):
+                with self.subTest(permission=permission, text=text):
+                    self.assertEqual(self.search(permission, text), expected)
+
+    def test_does_not_find_someone_who_no_longer_holds_the_card(self):
+        self.give_card(csn="1234567890").revoke(reason="test")
+
+        self.assertEqual(self.search("manage_user_nfc", "1234567890"), [])
+
+    def test_a_person_with_two_old_cards_is_listed_once(self):
+        self.give_card(csn="1234567890").revoke(reason="test")
+        self.give_card(csn="1234567891")
+
+        self.assertEqual(self.search("manage_user_nfc", "12345678"), [{"id": str(self.target.id)}])
+
+
 class PermanentAccessListTests(NfcPermissionBase):
     def list_users(self):
         return {
-            user["id"]: user
-            for user in self.data(self.query(PERMANENT_LIST, user=self.nfc_admin), "nfcPermanentAccessUsers")
+            person["user"]["id"]: person["user"]
+            for person in self.data(self.query(PERMANENT_LIST, user=self.nfc_admin), "nfcDoorAccess")["people"]
         }
 
     def test_lists_only_those_with_permanent_access_or_a_note(self):
@@ -377,7 +414,7 @@ class PermanentAccessListTests(NfcPermissionBase):
                 organization.users.add(user)
             with CaptureQueriesContext(connection) as queries:
                 response = self.query(PERMANENT_LIST, user=self.nfc_admin)
-            found = self.data(response, "nfcPermanentAccessUsers")
+            found = [person["user"] for person in self.data(response, "nfcDoorAccess")["people"]]
             self.assertTrue(all(user["nfcHasPin"] and user["nfcNote"] and user["organizations"] for user in found))
             return len(found), len(queries)
 

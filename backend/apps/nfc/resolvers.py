@@ -3,15 +3,44 @@ from typing import Optional
 from django.db.models import Q, Value
 from django.db.models.functions import Concat
 
-from decorators import permission_required
+from decorators import login_required, permission_required
+from django.utils import timezone
 
-from .models import NfcAccessEvent, NfcCard
+from apps.users.permissions import can_manage_user_nfc
+
+from .models import NfcAccessEvent, NfcCard, NfcManualAccess
 from .types import DoorLogPage
 
 MAX_PAGE_SIZE = 200
 
 
 class NfcResolvers:
+    @login_required
+    def resolve_nfc_door_access(self, info, past_days: Optional[int] = None):
+        if not can_manage_user_nfc(info.context.user):
+            raise PermissionError("Du har ikke tilgang til å se hvem som har adgang til JanHus")
+
+        from apps.arx.overview import door_access_overview
+
+        return door_access_overview(past_days=past_days)
+
+    @login_required
+    def resolve_nfc_manual_accesses(self, info):
+        if not can_manage_user_nfc(info.context.user):
+            raise PermissionError("Du har ikke tilgang til å se hvem som har adgang til JanHus")
+
+        from apps.arx.services import manual_access_people
+
+        accesses = list(
+            NfcManualAccess.objects.filter(removed_at__isnull=True, ends_at__gt=timezone.now()).select_related(
+                "user", "organization", "created_by"
+            )
+        )
+        people = manual_access_people(accesses)
+        for access in accesses:
+            access.people_count = len(people[access.pk])
+        return accesses
+
     @permission_required("nfc.view_door_log")
     def resolve_door_log(
         self,

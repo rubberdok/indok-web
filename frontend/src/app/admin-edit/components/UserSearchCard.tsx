@@ -46,7 +46,7 @@ export function UserSearchCard({ canManageProfiles, selectedUser, onSelectUser }
           <Typography variant="h6">Finn bruker</Typography>
           <UserAutocomplete
             label="Søk"
-            placeholder="ID, navn, brukernavn, Feide-id/e-post eller telefon"
+            placeholder="ID, navn, brukernavn, Feide-id/e-post, telefon eller kortnummer"
             minLength={1}
             value={selectedUser ? toOption(selectedUser) : null}
             options={results.map(toOption)}

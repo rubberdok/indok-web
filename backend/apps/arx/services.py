@@ -34,7 +34,7 @@ from apps.janhus.models import (
     JanHusDoorAccessPolicy,
     JanHusOrganizationDoorAccess,
 )
-from apps.nfc.models import NfcAccessEvent, NfcCard, NfcCardAssignment, permanent_access_ends
+from apps.nfc.models import NfcAccessEvent, NfcCard, NfcCardAssignment, NfcManualAccess, permanent_access_ends
 from apps.organizations.models import Membership
 from apps.permissions.constants import HR_TYPE
 
@@ -203,15 +203,19 @@ def _policy_holders(booking: JanHusBooking, users_by_feide: dict, members_by_org
     return holders
 
 
+def _start_of_week(now):
+    local = timezone.localtime(now)
+    monday = local.date() - timedelta(days=local.weekday())
+    return timezone.make_aware(datetime.combine(monday, dt_time.min))
+
+
 def permanent_window(now) -> tuple:
     """
     (start, end) in UTC for permanent access: Monday 00:00 Oslo time of the current
     week plus PERMANENT_WINDOW_DAYS. The window moves once a week, so each such
     person is sent again weekly, and has at least three weeks left if the sync stops.
     """
-    local = timezone.localtime(now)
-    monday = local.date() - timedelta(days=local.weekday())
-    start = timezone.make_aware(datetime.combine(monday, dt_time.min))
+    start = _start_of_week(now)
     end = start + timedelta(days=PERMANENT_WINDOW_DAYS)
     return (
         start.astimezone(dt_timezone.utc).strftime(UTC_FMT),
@@ -314,14 +318,65 @@ def _permanent_access_windows(now, mappings) -> dict:
     categories = set(mappings.values())
     assignments = NfcCardAssignment.objects.filter(
         permanent_access=True, revoked_at__isnull=True, user__is_active=True
-    ).values_list("user_id", "user__graduation_year")
-    for user_id, graduation_year in assignments:
-        graduation_end = permanent_access_ends(graduation_year)
-        until = (
-            end if graduation_end is None else min(end, graduation_end.astimezone(dt_timezone.utc).strftime(UTC_FMT))
-        )
+    ).values_list("user_id", "user__graduation_year", "permanent_access_until")
+    for user_id, graduation_year, set_end in assignments:
+        access_end = permanent_access_ends(graduation_year, set_end)
+        until = end if access_end is None else min(end, access_end.astimezone(dt_timezone.utc).strftime(UTC_FMT))
         if until > now_utc:
             windows.setdefault(user_id, set()).update((category, start, until) for category in categories)
+    return windows
+
+
+def manual_access_people(grants) -> dict:
+    """{grant pk: ids of the active users it covers}, from at most two queries however many grants there are."""
+    org_ids = {grant.organization_id for grant in grants if grant.organization_id}
+    member_org_ids = {
+        grant.organization_id
+        for grant in grants
+        if grant.organization_id and grant.organization_people == NfcManualAccess.OrganizationPeople.MEMBERS
+    }
+    leaders_by_org, members_by_org = _organization_people(org_ids, member_org_ids)
+    active_users = set(
+        get_user_model()
+        .objects.filter(id__in={grant.user_id for grant in grants if grant.user_id}, is_active=True)
+        .values_list("id", flat=True)
+    )
+    people = {}
+    for grant in grants:
+        if grant.user_id:
+            people[grant.pk] = {grant.user_id} & active_users
+        elif grant.organization_people == NfcManualAccess.OrganizationPeople.MEMBERS:
+            people[grant.pk] = set(members_by_org.get(grant.organization_id, ()))
+        else:
+            people[grant.pk] = set(leaders_by_org.get(grant.organization_id, ()))
+    return people
+
+
+def _manual_access_windows(now, horizon_days, mappings) -> dict:
+    """
+    A long period goes to ARX a piece at a time, like permanent access, since the runner refuses long windows.
+    The pieces follow the week, so ARX is updated once a week and not on every poll.
+    """
+    windows: dict = {}
+    if not mappings:
+        return windows
+    grants = list(
+        NfcManualAccess.objects.filter(
+            removed_at__isnull=True, ends_at__gt=now, starts_at__lt=now + timedelta(days=horizon_days)
+        )
+    )
+    people = manual_access_people(grants)
+    categories = set(mappings.values())
+    week_start = _start_of_week(now)
+    for grant in grants:
+        start = max(grant.starts_at, week_start)
+        end = min(grant.ends_at, start + timedelta(days=PERMANENT_WINDOW_DAYS))
+        window = (
+            start.astimezone(dt_timezone.utc).strftime(UTC_FMT),
+            end.astimezone(dt_timezone.utc).strftime(UTC_FMT),
+        )
+        for user_id in people[grant.pk]:
+            windows.setdefault(user_id, set()).update((category, *window) for category in categories)
     return windows
 
 
@@ -428,6 +483,16 @@ def _desired_holder_states(holder_ids, holders, holder_windows, rows, cfg, obser
     return states
 
 
+def shared_card_numbers(cfg) -> Counter:
+    """How many enabled cards in use give each ARX number. More than one means the door cannot tell them apart."""
+    in_use = list(
+        NfcCardAssignment.objects.filter(revoked_at__isnull=True, card__is_enabled=True).values_list(
+            "card__mifare_csn", flat=True
+        )
+    ) + list(ExternalCardHolder.objects.filter(card__is_enabled=True).values_list("card__mifare_csn", flat=True))
+    return Counter(arx_card_number(csn, cfg.card_number_digits) for csn in in_use if csn.isdigit())
+
+
 def _states_for_known_people(user_ids, holder_ids, windows, holder_windows, rows, cfg) -> dict:
     users = {user.id: user for user in get_user_model().objects.filter(id__in=user_ids)}
     assignments: dict = {}
@@ -442,12 +507,7 @@ def _states_for_known_people(user_ids, holder_ids, windows, holder_windows, rows
         holder.card_id for holder in holders.values()
     ]
     observed = dict(ArxObservedCardFormat.objects.filter(card_id__in=card_ids).values_list("card_id", "format_name"))
-    in_use = list(
-        NfcCardAssignment.objects.filter(revoked_at__isnull=True, card__is_enabled=True).values_list(
-            "card__mifare_csn", flat=True
-        )
-    ) + list(ExternalCardHolder.objects.filter(card__is_enabled=True).values_list("card__mifare_csn", flat=True))
-    shared_numbers = Counter(arx_card_number(csn, cfg.card_number_digits) for csn in in_use if csn.isdigit())
+    shared_numbers = shared_card_numbers(cfg)
 
     states = _desired_user_states(user_ids, users, assignments, windows, rows, cfg, observed, shared_numbers)
     states.update(_desired_holder_states(holder_ids, holders, holder_windows, rows, cfg, observed, shared_numbers))
@@ -481,6 +541,8 @@ def compute_desired_states(now=None, cfg: Optional[ArxSettings] = None) -> dict:
     )
     for user_id, permanent_windows in _permanent_access_windows(now, mappings).items():
         windows.setdefault(user_id, set()).update(permanent_windows)
+    for user_id, manual_windows in _manual_access_windows(now, cfg.horizon_days, mappings).items():
+        windows.setdefault(user_id, set()).update(manual_windows)
     holder_windows = _external_booking_windows(bookings, mappings, descendants, before, after)
 
     rows = {
@@ -774,7 +836,7 @@ def ingest_events(events: list, new_cursor_ms: int) -> dict:
     if candidate > cursor.last_timestamp_ms:
         cursor.last_timestamp_ms = candidate
         cursor.save(update_fields=["last_timestamp_ms"])
-    # Retention is enforced here, every 30 minutes, so no scheduled AWS task is needed.
+    # Retention is enforced here, every 30 minutes, so scheduled AWS task is not needed.
     pruned = prune_events()
     return {"created": created, "skipped": skipped, "pruned": pruned}
 
@@ -786,4 +848,5 @@ def prune_events(now=None) -> int:
     qs = NfcAccessEvent.objects.filter(arx_import__isnull=False, occurred_at__lt=cutoff)
     count = qs.count()
     qs.delete()
+    NfcManualAccess.objects.filter(Q(ends_at__lt=cutoff) | Q(removed_at__lt=cutoff)).delete()
     return count

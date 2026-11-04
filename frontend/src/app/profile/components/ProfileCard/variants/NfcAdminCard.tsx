@@ -8,7 +8,7 @@ export const NfcAdminCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
       title="NFC-kort"
-      actionText="Gå til NFC-kort og permanent tilgang"
+      actionText="Gå til NFC-kort og adgang"
       actionLink="/admin-edit/nfc"
       image={Bug}
       alt="Admin illustration"
@@ -16,9 +16,7 @@ export const NfcAdminCard: React.VFC = ({ ...props }) => {
     >
       <Grid container direction="column">
         <Grid item>
-          <Typography variant="body2">
-            Her kan du administrere NFC-kort, PIN og permanent tilgang til JanHus.
-          </Typography>
+          <Typography variant="body2">Her kan du administrere NFC-kort, PIN og adgang til JanHus.</Typography>
         </Grid>
       </Grid>
     </ProfileCardBase>

@@ -48,21 +48,6 @@ class UserResolvers:
         return _user_by_id(id)
 
     @login_required
-    def resolve_nfc_permanent_access_users(self, info):
-        if not can_manage_user_nfc(info.context.user):
-            raise PermissionError("Du har ikke tilgang til å se hvem som har permanent tilgang")
-
-        holders = Q(nfc_card_assignments__permanent_access=True, nfc_card_assignments__revoked_at__isnull=True)
-        return with_active_nfc_assignment(
-            get_user_model()
-            .objects.filter(holders | Q(nfc_note__isnull=False))
-            .distinct()
-            .select_related("nfc_note__updated_by")
-            .prefetch_related("organizations")
-            .order_by("first_name", "last_name", "username")
-        )
-
-    @login_required
     def resolve_can_manage_user_profiles(self, info):
         return can_manage_user_profiles(info.context.user)
 
@@ -103,6 +88,14 @@ def _search_users(query: str, limit: int = 25):
         | Q(feide_email__icontains=normalized_query)
         | Q(feide_userid__icontains=normalized_query)
         | Q(phone_number__icontains=normalized_query)
+        | Q(
+            nfc_card_assignments__revoked_at__isnull=True,
+            nfc_card_assignments__card__mifare_csn__icontains=normalized_query,
+        )
+        | Q(
+            nfc_card_assignments__revoked_at__isnull=True,
+            nfc_card_assignments__card__card_number__icontains=normalized_query,
+        )
     )
 
     if normalized_query.isdigit():

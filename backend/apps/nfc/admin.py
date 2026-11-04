@@ -6,6 +6,7 @@ from .models import (
     NfcAccessEvent,
     NfcCard,
     NfcCardAssignment,
+    NfcManualAccess,
     NfcPermanentAccessChange,
     NfcSettings,
     NfcUserNote,
@@ -25,6 +26,7 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
         "user",
         "has_pin",
         "permanent_access",
+        "permanent_access_until",
         "assigned_at",
         "revoked_at",
     )
@@ -52,6 +54,8 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
         given = self._opens_the_door_at_all_hours(obj)
         if given != self._opens_the_door_at_all_hours(before):
             self._record_change(request, obj, given)
+        elif given and before and before.permanent_access_until != obj.permanent_access_until:
+            self._record_change(request, obj, True)
 
     def delete_model(self, request, obj):
         if self._opens_the_door_at_all_hours(obj):
@@ -62,6 +66,14 @@ class NfcCardAssignmentAdmin(admin.ModelAdmin):
         for assignment in queryset.filter(permanent_access=True, revoked_at__isnull=True):
             self._record_change(request, assignment, False)
         super().delete_queryset(request, queryset)
+
+
+@admin.register(NfcManualAccess)
+class NfcManualAccessAdmin(admin.ModelAdmin):
+    list_display = ("user", "organization", "organization_people", "starts_at", "ends_at", "removed_at")
+    search_fields = ("user__username", "organization__name", "reason")
+    list_select_related = ("user", "organization")
+    raw_id_fields = ("user", "organization", "created_by", "removed_by")
 
 
 @admin.register(NfcUserNote)

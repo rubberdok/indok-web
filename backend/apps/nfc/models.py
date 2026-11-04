@@ -14,6 +14,7 @@ MIFARE_CSN_10_DIGIT_RE = re.compile(r"^\d{10}$", flags=re.ASCII)
 PRINTED_UID_RE = re.compile(r"^\d{15,17}$", flags=re.ASCII)
 CARD_NUMBER_SEPARATORS_RE = re.compile(r"[\s.\-]")
 MAX_CARD_IDENTIFIER_LENGTH = 64
+NFC_SETTINGS_NAME = "NFC settings"
 
 
 class NfcSettings(models.Model):
@@ -22,8 +23,8 @@ class NfcSettings(models.Model):
     allow_user_mifare_csn_self_service = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "NFC settings"
-        verbose_name_plural = "NFC settings"
+        verbose_name = NFC_SETTINGS_NAME
+        verbose_name_plural = NFC_SETTINGS_NAME
 
     def save(self, *args, **kwargs):
         self.pk = self.SINGLETON_PK
@@ -31,7 +32,7 @@ class NfcSettings(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return "NFC settings"
+        return NFC_SETTINGS_NAME
 
 
 def get_or_create_nfc_settings() -> NfcSettings:
@@ -204,6 +205,7 @@ class NfcCardAssignment(models.Model):
     # Door access at all times (board, caretaker and the like), not only during bookings.
     # apps.arx turns it into a rolling access window in ARX.
     permanent_access = models.BooleanField(default=False)
+    permanent_access_until = models.DateTimeField(null=True, blank=True)
 
     # The PIN is needed in plain text only when it is sent to the door system.
     # Read and set it through the pin_code property.
@@ -276,15 +278,16 @@ class NfcCardAssignment(models.Model):
         return f"NfcCardAssignment(card={self.card.mifare_csn}, holder={holder})"
 
 
-def permanent_access_ends(graduation_year) -> Optional[datetime]:
+def permanent_access_ends(graduation_year, until=None) -> Optional[datetime]:
     """
     Permanent access ends six months after graduation, which is in June of
-    graduation_year: at the start of the next year, Oslo time.
-    The card opens nothing after that date.
+    graduation_year: at the start of the next year, Oslo time. An admin can set an
+    earlier end date.
     """
-    if not graduation_year:
-        return None
-    return timezone.make_aware(datetime(graduation_year + 1, 1, 1))
+    ends = [until] if until else []
+    if graduation_year:
+        ends.append(timezone.make_aware(datetime(graduation_year + 1, 1, 1)))
+    return min(ends, default=None)
 
 
 def permanent_access_status(user, assignment) -> str:
@@ -296,7 +299,7 @@ def permanent_access_status(user, assignment) -> str:
         return "NOT_GRANTED"
     if not user.is_active:
         return "INACTIVE_USER"
-    ends = permanent_access_ends(user.graduation_year)
+    ends = permanent_access_ends(user.graduation_year, assignment.permanent_access_until)
     if ends is not None and ends <= timezone.now():
         return "ENDED"
     if not assignment.card.is_enabled:
@@ -346,6 +349,61 @@ class NfcPermanentAccessChange(models.Model):
         return f"NfcPermanentAccessChange(user={self.user_id}, given={self.given})"
 
 
+class NfcManualAccess(models.Model):
+    """Door access for a set period, given by hand to one person or to the people of an organisation."""
+
+    class OrganizationPeople(models.TextChoices):
+        LEADERS = "LEADERS", "The organisation's leaders (HR)"
+        MEMBERS = "MEMBERS", "All members of the organisation"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name="nfc_manual_access"
+    )
+    organization = models.ForeignKey(
+        "organizations.Organization", on_delete=models.CASCADE, null=True, blank=True, related_name="+"
+    )
+    organization_people = models.CharField(
+        max_length=16, choices=OrganizationPeople.choices, default=OrganizationPeople.LEADERS
+    )
+    starts_at = models.DateTimeField()
+    ends_at = models.DateTimeField()
+    reason = models.CharField(max_length=200, blank=True, default="")
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="+")
+    created_at = models.DateTimeField(auto_now_add=True)
+    removed_at = models.DateTimeField(null=True, blank=True)
+    removed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+
+    class Meta:
+        ordering = ["starts_at", "pk"]
+        indexes = [models.Index(fields=["ends_at"])]
+        constraints = [
+            models.CheckConstraint(
+                check=(
+                    Q(user__isnull=False, organization__isnull=True) | Q(user__isnull=True, organization__isnull=False)
+                ),
+                name="nfc_manual_access_one_target",
+            ),
+            models.CheckConstraint(
+                check=Q(ends_at__gt=models.F("starts_at")), name="nfc_manual_access_ends_after_start"
+            ),
+        ]
+
+    def clean(self):
+        if bool(self.user_id) == bool(self.organization_id):
+            raise ValidationError("Velg enten en person eller en forening")
+        if self.starts_at and self.ends_at and self.ends_at <= self.starts_at:
+            raise ValidationError("Sluttidspunktet må være etter starttidspunktet")
+
+    @property
+    def effective_end(self):
+        return min(self.ends_at, self.removed_at) if self.removed_at else self.ends_at
+
+    def __str__(self) -> str:
+        return f"NfcManualAccess(user={self.user_id}, organization={self.organization_id})"
+
+
 class NfcAccessEvent(models.Model):
     class EventType(models.TextChoices):
         ACCESS_GRANTED = "ACCESS_GRANTED", "Access granted"
@@ -366,7 +424,7 @@ class NfcAccessEvent(models.Model):
     door_identifier = models.CharField(max_length=120, blank=True, default="")
     mifare_csn_reported = models.CharField(max_length=MAX_CARD_IDENTIFIER_LENGTH, blank=True, default="")
     # The name the door system has for the card's holder, also for people
-    # outside indok-web. Shown in the door log; deleted with the event.
+    # outside indok-web. Shown in the door log.
     person_name = models.CharField(max_length=200, blank=True, default="")
 
     card = models.ForeignKey(
