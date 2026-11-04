@@ -22,6 +22,7 @@ from .models import (
     NfcAccessEvent,
     NfcCard,
     NfcCardAssignment,
+    NfcManualAccess,
     NfcSettings,
     get_or_create_nfc_settings,
     normalize_card_identifier,
@@ -100,6 +101,20 @@ class NfcSettingsModelTests(TestCase):
         settings_obj = get_or_create_nfc_settings()
 
         self.assertTrue(settings_obj.allow_user_mifare_csn_self_service)
+        self.assertEqual("NFC settings", str(settings_obj))
+
+
+class NfcManualAccessModelTests(TestCase):
+    def test_string_representation(self):
+        user = UserFactory()
+        starts_at = timezone.now()
+        access = NfcManualAccess.objects.create(
+            user=user,
+            starts_at=starts_at,
+            ends_at=starts_at + timedelta(hours=1),
+        )
+
+        self.assertEqual(f"NfcManualAccess(user={user.pk}, organization=None)", str(access))
 
 
 class CardNumberTests(TestCase):

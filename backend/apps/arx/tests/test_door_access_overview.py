@@ -12,7 +12,7 @@ from utils.testing.factories.users import IndokUserFactory, UserFactory
 from apps.arx import services
 from apps.arx.models import ArxAreaMapping, ExternalBookingAccess, ExternalCardHolder, get_arx_settings
 from apps.arx.overview import door_access_overview
-from apps.janhus.models import JanHusArea, JanHusBooking, JanHusBookingStatus
+from apps.janhus.models import JanHusArea, JanHusBooking, JanHusBookingStatus, JanHusDoorAccessPolicy
 from apps.nfc.models import NfcCard, NfcCardAssignment, NfcManualAccess, NfcPermanentAccessChange, NfcUserNote
 from apps.organizations.models import Membership
 from apps.permissions.constants import HR_TYPE
@@ -41,7 +41,9 @@ CREATE_ACCESS = """
     }
 """
 REMOVE_ACCESS = "mutation Remove($id: ID!) { removeNfcManualAccess(id: $id) { ok } }"
-MANUAL_LIST = "query { nfcManualAccesses { id targetName peopleCount organizationPeople reason createdByName } }"
+MANUAL_LIST = (
+    "query { nfcManualAccesses { id targetName peopleCount organizationPeople reason createdByName isOrganization } }"
+)
 UPDATE_NFC = """
     mutation AdminUpdateUserNfc($userId: ID!, $nfcData: AdminUserNfcInput!) {
       adminUpdateUserNfc(userId: $userId, nfcData: $nfcData) { user { id } }
@@ -185,6 +187,35 @@ class OverviewStatesTests(OverviewBase):
         self.person.is_active = False
         self.person.save()
         self.assertEqual("INACTIVE_USER", self.row(door_access_overview(now=self.now)).blocked_reason)
+
+    def test_an_indistinguishable_card_and_guest_access_are_reported(self):
+        cfg = get_arx_settings()
+        cfg.card_number_digits = 9
+        cfg.save()
+        NfcCardAssignment.objects.create(
+            card=NfcCard.objects.create(mifare_csn="1234567890"),
+            user=self.person,
+            pin_code="4321",
+        )
+        other = IndokUserFactory()
+        NfcCardAssignment.objects.create(
+            card=NfcCard.objects.create(mifare_csn="2234567890"),
+            user=other,
+            pin_code="4321",
+        )
+        guest = IndokUserFactory(feide_userid="door-overview-guest")
+        self.booking(
+            self.now - timedelta(hours=1),
+            self.now + timedelta(hours=1),
+            guest_list=json.dumps([guest.feide_userid]),
+            door_access_policy=JanHusDoorAccessPolicy.ALL_PARTICIPANTS,
+        )
+
+        overview = door_access_overview(now=self.now)
+
+        self.assertEqual("CARD_AMBIGUOUS", self.row(overview).blocked_reason)
+        guest_person = self.row(overview, guest)
+        self.assertIn("Gjest", guest_person.periods[0].detail)
 
     def test_a_booking_in_an_area_without_a_door_gives_no_access(self):
         other = JanHusArea.objects.create(name="Uten dør")
@@ -393,6 +424,7 @@ class ManualAccessTests(OverviewBase):
         listed = json.loads(self.query(MANUAL_LIST, user=self.nfc_admin).content)["data"]["nfcManualAccesses"]
         self.assertEqual(organization.name, listed[0]["targetName"])
         self.assertEqual(0, listed[0]["peopleCount"])
+        self.assertTrue(listed[0]["isOrganization"])
 
         response = self.query(
             REMOVE_ACCESS, user=self.nfc_admin, operation_name="Remove", variables={"id": str(access.pk)}
@@ -403,6 +435,24 @@ class ManualAccessTests(OverviewBase):
         self.assertEqual(
             [], json.loads(self.query(MANUAL_LIST, user=self.nfc_admin).content)["data"]["nfcManualAccesses"]
         )
+
+    def test_manual_access_list_shows_individual_targets(self):
+        NfcManualAccess.objects.create(
+            user=self.person,
+            starts_at=self.now,
+            ends_at=self.now + timedelta(days=1),
+            created_by=self.nfc_admin,
+        )
+
+        listed = json.loads(self.query(MANUAL_LIST, user=self.nfc_admin).content)["data"]["nfcManualAccesses"]
+
+        self.assertEqual(self.person.get_full_name() or self.person.username, listed[0]["targetName"])
+        self.assertFalse(listed[0]["isOrganization"])
+
+    def test_removing_an_unknown_manual_access_is_rejected(self):
+        response = self.query(REMOVE_ACCESS, user=self.nfc_admin, operation_name="Remove", variables={"id": "999999"})
+
+        self.assertResponseHasErrors(response)
 
     def test_bad_input_is_refused(self):
         organization = OrganizationFactory()
@@ -442,6 +492,12 @@ class PermanentAccessEndDateTests(OverviewBase):
             operation_name="AdminUpdateUserNfc",
             variables={"userId": str(self.person.pk), "nfcData": nfc_data},
         )
+
+    def test_clearing_an_end_date_without_an_assignment_is_a_no_op(self):
+        response = self.update({"permanentAccessUntil": None})
+
+        self.assertResponseNoErrors(response)
+        self.assertFalse(NfcCardAssignment.objects.filter(user=self.person, revoked_at__isnull=True).exists())
 
     def test_the_door_closes_at_the_end_date(self):
         until = self.now + timedelta(days=3)

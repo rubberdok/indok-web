@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import admin
 from django.contrib.auth.models import Permission
@@ -41,6 +41,7 @@ PERMANENT_LIST = """
                     nfcPermanentAccess
                     nfcPermanentAccessStatus
                     nfcPermanentAccessEnds
+                    nfcPermanentAccessUntil
                     nfcNote
                     nfcNoteUpdatedBy
                     organizations { name }
@@ -243,7 +244,14 @@ class OtherRolesTests(NfcPermissionBase):
         own = self.query(
             """
             query {
-                user { nfcNote nfcNoteUpdatedAt nfcNoteUpdatedBy nfcPermanentAccessStatus nfcPermanentAccessEnds }
+                user {
+                    nfcNote
+                    nfcNoteUpdatedAt
+                    nfcNoteUpdatedBy
+                    nfcPermanentAccessStatus
+                    nfcPermanentAccessEnds
+                    nfcPermanentAccessUntil
+                }
             }
             """,
             user=self.target,
@@ -256,6 +264,7 @@ class OtherRolesTests(NfcPermissionBase):
                 "nfcNoteUpdatedBy": None,
                 "nfcPermanentAccessStatus": None,
                 "nfcPermanentAccessEnds": None,
+                "nfcPermanentAccessUntil": None,
             },
         )
 
@@ -388,15 +397,19 @@ class PermanentAccessListTests(NfcPermissionBase):
         self.assertEqual(status(), "INACTIVE_USER")
 
     def test_shows_when_access_ends_and_the_organisations(self):
-        self.give_card(permanent=True)
+        until = timezone.now() + timedelta(days=10)
+        assignment = self.give_card(permanent=True)
+        assignment.permanent_access_until = until
+        assignment.save(update_fields=["permanent_access_until"])
         organization = Organization.objects.create(name="Hyttestyret", slug="hyttestyret-test")
         organization.users.add(self.target)
 
         found = self.list_users()[str(self.target.id)]
         self.assertEqual(
             datetime.fromisoformat(found["nfcPermanentAccessEnds"]),
-            permanent_access_ends(self.target.graduation_year),
+            permanent_access_ends(self.target.graduation_year, until),
         )
+        self.assertEqual(datetime.fromisoformat(found["nfcPermanentAccessUntil"]), until)
         self.assertEqual(found["organizations"], [{"name": "Hyttestyret"}])
 
     def test_costs_the_same_for_many_people(self):
