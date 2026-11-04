@@ -1,0 +1,13 @@
+mutation createNfcManualAccess($accessData: NfcManualAccessInput!) {
+  createNfcManualAccess(accessData: $accessData) {
+    manualAccess {
+      id
+    }
+  }
+}
+
+mutation removeNfcManualAccess($id: ID!) {
+  removeNfcManualAccess(id: $id) {
+    ok
+  }
+}

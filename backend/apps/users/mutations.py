@@ -7,6 +7,7 @@ from decorators import login_required
 from django.contrib.auth import get_user_model, login, logout
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
+from django.utils import timezone
 from graphene import ResolveInfo
 from graphql import GraphQLError
 
@@ -56,6 +57,9 @@ class AdminUserNfcInput(graphene.InputObjectType):
     mifare_csn = graphene.String(required=False)
     pin_code = graphene.String(required=False)
     permanent_access = graphene.Boolean(required=False)
+    permanent_access_until = graphene.DateTime(
+        required=False, description="Når permanent tilgang slutter."
+    )
     note = graphene.String(required=False, description="Begrunnelse for permanent tilgang.")
 
 
@@ -301,20 +305,43 @@ class AdminUpdateUserNfc(graphene.Mutation):
         if assignment is None:
             raise GraphQLError("Kan ikke oppdatere permanent tilgang uten aktivt NFC-kort")
         assignment.permanent_access = permanent_access
+        if not permanent_access:
+            assignment.permanent_access_until = None
         assignment.full_clean()
-        assignment.save(update_fields=["permanent_access"])
+        assignment.save(update_fields=["permanent_access", "permanent_access_until"])
+        return assignment
+
+    @classmethod
+    def _update_permanent_access_until(cls, target_user, assignment, until, previous_until):
+        if assignment is None:
+            assignment = cls._active_assignment(target_user)
+        if assignment is None or not assignment.permanent_access:
+            if until is None:
+                return assignment
+            raise GraphQLError("Sluttdato kan bare settes for personer med permanent tilgang")
+        if until and until != previous_until and until <= timezone.now():
+            raise GraphQLError("Sluttdatoen må være frem i tid")
+        assignment.permanent_access_until = until
+        assignment.save(update_fields=["permanent_access_until"])
         return assignment
 
     @staticmethod
-    def _record_permanent_access_change(target_user, acting_user, had_access, assignment):
-        """It opens the door at all hours, so keep a history of who gave or removed it."""
+    def _record_permanent_access_change(target_user, acting_user, had_access, assignment, previous_until):
+        """It opens the door at all hours, so keep a history of who gave or removed it, and for how long."""
         from apps.nfc.models import NfcPermanentAccessChange, NfcUserNote
 
         has_access = bool(assignment and assignment.permanent_access)
-        if has_access == had_access:
-            return
-        NfcPermanentAccessChange.objects.create(user=target_user, changed_by=acting_user, given=has_access)
-        if not has_access:
+        until = assignment.permanent_access_until if assignment else None
+        reason = f"Til {timezone.localtime(until):%d.%m.%Y %H:%M}" if until and has_access else ""
+        if has_access != had_access:
+            NfcPermanentAccessChange.objects.create(
+                user=target_user, changed_by=acting_user, given=has_access, reason=reason
+            )
+        elif has_access and until != previous_until:
+            NfcPermanentAccessChange.objects.create(
+                user=target_user, changed_by=acting_user, given=True, reason=reason or "Sluttdato fjernet"
+            )
+        if had_access and not has_access:
             NfcUserNote.objects.filter(user=target_user).delete()
 
     @staticmethod
@@ -353,13 +380,15 @@ class AdminUpdateUserNfc(graphene.Mutation):
         permanent_access = nfc_data.get("permanent_access")
         note = nfc_data.get("note")
 
-        if mifare_csn is None and pin_code is None and permanent_access is None and note is None:
-            raise GraphQLError("Du må sette kortnummer, PIN-kode, permanent tilgang eller notat.")
+        sets_until = "permanent_access_until" in nfc_data
+        if not sets_until and mifare_csn is None and pin_code is None and permanent_access is None and note is None:
+            raise GraphQLError("Du må sette kortnummer, PIN-kode, permanent tilgang, sluttdato eller notat.")
 
         try:
             with transaction.atomic():
                 assignment = AdminUpdateUserNfc._active_assignment(target_user, select_card=True)
                 had_access = bool(assignment and assignment.permanent_access)
+                previous_until = assignment.permanent_access_until if assignment else None
 
                 if mifare_csn is not None:
                     assignment = AdminUpdateUserNfc._update_card_assignment(
@@ -372,7 +401,15 @@ class AdminUpdateUserNfc(graphene.Mutation):
                 if permanent_access is not None:
                     assignment = AdminUpdateUserNfc._update_permanent_access(target_user, assignment, permanent_access)
 
-                AdminUpdateUserNfc._record_permanent_access_change(target_user, acting_user, had_access, assignment)
+                until = nfc_data["permanent_access_until"] if sets_until else previous_until
+                if sets_until or (mifare_csn is not None and previous_until):
+                    assignment = AdminUpdateUserNfc._update_permanent_access_until(
+                        target_user, assignment, until, previous_until
+                    )
+
+                AdminUpdateUserNfc._record_permanent_access_change(
+                    target_user, acting_user, had_access, assignment, previous_until
+                )
 
                 if note is not None:
                     AdminUpdateUserNfc._update_note(target_user, acting_user, note)

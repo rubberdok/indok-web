@@ -20,6 +20,7 @@ export type AdminEditableUser = {
   nfcPermanentAccess?: boolean | null;
   nfcPermanentAccessStatus?: string | null;
   nfcPermanentAccessEnds?: string | null;
+  nfcPermanentAccessUntil?: string | null;
   nfcPermanentAccessHistory?:
     | readonly { given: boolean; changedAt: string; changedBy?: string | null; reason: string }[]
     | null;
@@ -40,6 +41,7 @@ export type AdminEditForm = {
   nfcMifareCsn: string;
   nfcPinCode: string;
   nfcPermanentAccess: boolean;
+  nfcPermanentAccessUntil: string;
   nfcNote: string;
 };
 
@@ -56,6 +58,7 @@ export const EMPTY_ADMIN_EDIT_FORM: AdminEditForm = {
   nfcMifareCsn: "",
   nfcPinCode: "",
   nfcPermanentAccess: false,
+  nfcPermanentAccessUntil: "",
   nfcNote: "",
 };
 

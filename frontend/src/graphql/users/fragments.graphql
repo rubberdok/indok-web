@@ -61,6 +61,7 @@ fragment UserNfcSearch on UserType {
   nfcCardNumber
   nfcHasPin
   nfcPermanentAccess
+  nfcPermanentAccessUntil
 }
 
 fragment UserNfcDetail on UserType {

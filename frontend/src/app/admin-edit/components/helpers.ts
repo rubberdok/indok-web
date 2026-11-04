@@ -1,6 +1,7 @@
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 
 import { isAcceptedCardNumber } from "@/components/pages/profile/UserForm/helpers";
+import dayjs from "@/lib/date";
 
 import { MIFARE_CSN_RULE_TEXT, type AdminEditableUser, type AdminEditForm } from "./types";
 
@@ -18,6 +19,16 @@ export function toErrorMessage(error: unknown, fallback: string): string {
   return fallback;
 }
 
+const OSLO = "Europe/Oslo";
+
+export function toOsloInput(value?: string | null): string {
+  return value ? dayjs(value).tz(OSLO).format("YYYY-MM-DDTHH:mm") : "";
+}
+
+export function fromOsloInput(value: string): string {
+  return dayjs.tz(value, OSLO).toISOString();
+}
+
 export function adminEditFormFor(user: AdminEditableUser): AdminEditForm {
   return {
     username: user.username ?? "",
@@ -30,6 +41,7 @@ export function adminEditFormFor(user: AdminEditableUser): AdminEditForm {
     nfcMifareCsn: user.nfcCardNumber ?? user.nfcMifareCsn ?? "",
     nfcPinCode: "",
     nfcPermanentAccess: Boolean(user.nfcPermanentAccess),
+    nfcPermanentAccessUntil: toOsloInput(user.nfcPermanentAccessUntil),
     nfcNote: user.nfcNote ?? "",
   };
 }
@@ -63,10 +75,15 @@ export function validateNfcInput(user: AdminEditableUser, form: AdminEditForm): 
 
 export function nfcInputFor(user: AdminEditableUser, form: AdminEditForm, { withNote }: { withNote: boolean }) {
   const removingAccess = Boolean(user.nfcPermanentAccess) && !form.nfcPermanentAccess;
+  const untilChanged = form.nfcPermanentAccessUntil !== toOsloInput(user.nfcPermanentAccessUntil);
+  const changedUntil = form.nfcPermanentAccess && untilChanged;
   return {
     mifareCsn: form.nfcMifareCsn.trim() || null,
     pinCode: form.nfcPinCode.trim() || null, // empty = keep the current PIN
     permanentAccess: hasCard(user, form) ? form.nfcPermanentAccess : null,
+    ...(changedUntil && {
+      permanentAccessUntil: form.nfcPermanentAccessUntil ? fromOsloInput(form.nfcPermanentAccessUntil) : null,
+    }),
     note: withNote && !removingAccess ? form.nfcNote : null,
   };
 }

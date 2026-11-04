@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { AdminUpdateUserNfcDocument } from "@/generated/graphql";
 
+import { PermanentAccessStatusChip, formatDate } from "./DoorAccessTable";
 import { adminEditFormFor, nfcInputFor, toErrorMessage, validateNfcInput } from "./helpers";
 import { NfcFields } from "./NfcFields";
-import { PermanentAccessStatusChip, formatDate } from "./PermanentAccessTable";
 import type { AdminEditableUser, AdminEditForm } from "./types";
 
 type Props = {

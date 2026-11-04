@@ -7,15 +7,19 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { Link } from "@/app/components/Link";
-import { AdminEditCapabilitiesDocument, NfcPermanentAccessUsersDocument, NfcUserDocument } from "@/generated/graphql";
+import { AdminEditCapabilitiesDocument, NfcDoorAccessDocument, NfcUserDocument } from "@/generated/graphql";
 
+import { DoorAccessTable } from "../components/DoorAccessTable";
+import { ManualAccessCard } from "../components/ManualAccessCard";
 import { NfcUserEditor } from "../components/NfcUserEditor";
-import { PermanentAccessTable } from "../components/PermanentAccessTable";
 import { UserSearchCard } from "../components/UserSearchCard";
+
+const DEFAULT_PAST_DAYS = 1;
 
 export default function AdminEditNfcPage() {
   const router = useRouter();
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [pastDays, setPastDays] = useState(DEFAULT_PAST_DAYS);
   const searchRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -32,13 +36,14 @@ export default function AdminEditNfcPage() {
   }, [capabilityError, canManageNfc, loadingCapabilities, router]);
 
   const {
-    data: holdersData,
-    loading: loadingHolders,
-    error: holdersError,
-    refetch: refetchHolders,
-  } = useQuery(NfcPermanentAccessUsersDocument, {
+    data: accessData,
+    loading: loadingAccess,
+    error: accessError,
+    refetch: refetchAccess,
+  } = useQuery(NfcDoorAccessDocument, {
     ssr: false,
     skip: !canManageNfc,
+    variables: { pastDays },
     fetchPolicy: "network-only",
   });
 
@@ -82,7 +87,7 @@ export default function AdminEditNfcPage() {
         alignItems={{ md: "center" }}
         spacing={2}
       >
-        <Typography variant="h4">NFC-kort og permanent tilgang</Typography>
+        <Typography variant="h4">NFC-kort og adgang til JanHus</Typography>
         {capabilityData?.canManageUserProfiles && (
           <Button
             component={Link}
@@ -98,7 +103,8 @@ export default function AdminEditNfcPage() {
         )}
       </Stack>
       <Alert severity="info">
-        Her kan du søke opp brukere og endre kortnummer, PIN og permanent tilgang. Permanent tilgang åpner døra 24/7.
+        Her ser du hvem som har adgang til JanHus, og kan endre kortnummer, PIN og tilgang. Permanent tilgang åpner døra
+        24/7.
       </Alert>
 
       <div ref={searchRef}>
@@ -118,16 +124,20 @@ export default function AdminEditNfcPage() {
           key={selectedUser.id}
           user={selectedUser}
           onSaved={async () => {
-            const [saved] = await Promise.all([refetchSelected(), refetchHolders()]);
+            const [saved] = await Promise.all([refetchSelected(), refetchAccess()]);
             return saved.data?.nfcUser;
           }}
         />
       )}
 
-      <PermanentAccessTable
-        users={holdersData?.nfcPermanentAccessUsers ?? []}
-        loading={loadingHolders}
-        failed={Boolean(holdersError)}
+      <ManualAccessCard onChanged={() => refetchAccess().catch(() => undefined)} />
+
+      <DoorAccessTable
+        overview={accessData?.nfcDoorAccess}
+        loading={loadingAccess}
+        failed={Boolean(accessError)}
+        pastDays={pastDays}
+        onPastDaysChange={setPastDays}
         onEdit={(userId) => {
           setSelectedUserId(userId);
           searchRef.current?.scrollIntoView({ behavior: "smooth" });

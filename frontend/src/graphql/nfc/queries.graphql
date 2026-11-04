@@ -15,3 +15,41 @@ query DoorLog($offset: Int, $limit: Int, $result: String, $search: String, $sinc
     }
   }
 }
+
+query nfcDoorAccess($pastDays: Int) {
+  nfcDoorAccess(pastDays: $pastDays) {
+    pastDays
+    maxPastDays
+    areasConnected
+    people {
+      key
+      holderName
+      cardNumber
+      state
+      blockedReason
+      user {
+        ...UserNfcDetail
+      }
+      periods {
+        kind
+        startsAt
+        endsAt
+        detail
+      }
+    }
+  }
+}
+
+query nfcManualAccesses {
+  nfcManualAccesses {
+    id
+    targetName
+    isOrganization
+    organizationPeople
+    peopleCount
+    startsAt
+    endsAt
+    reason
+    createdByName
+  }
+}

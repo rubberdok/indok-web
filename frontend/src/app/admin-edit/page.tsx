@@ -190,7 +190,9 @@ export default function AdminEditPage() {
           </Button>
         )}
       </Stack>
-      <Alert severity="info">Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post eller telefon.</Alert>
+      <Alert severity="info">
+        Søk etter bruker med ID, brukernavn, navn, Feide-ID/e-post, telefon eller kortnummer.
+      </Alert>
 
       <UserSearchCard canManageProfiles selectedUser={selectedUser} onSelectUser={onSelectUser} />
 

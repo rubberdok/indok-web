@@ -87,7 +87,7 @@ const DoorLog: React.FC = () => {
         />
         <TextField
           select
-          label="Resultat"
+          label="Hendelse"
           value={result}
           onChange={(e) => {
             setResult(e.target.value);
@@ -131,7 +131,7 @@ const DoorLog: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>Tid</TableCell>
-              <TableCell>Resultat</TableCell>
+              <TableCell>Hendelse</TableCell>
               <TableCell>Navn</TableCell>
               <TableCell>Kort</TableCell>
               <TableCell>Dør</TableCell>

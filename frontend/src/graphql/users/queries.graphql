@@ -49,12 +49,6 @@ query nfcUser($id: ID!) {
   }
 }
 
-query nfcPermanentAccessUsers {
-  nfcPermanentAccessUsers {
-    ...UserNfcDetail
-  }
-}
-
 query adminUser($id: ID!) {
   adminUser(id: $id) {
     ...UserAdminSearch
