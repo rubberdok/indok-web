@@ -10,6 +10,7 @@ export type CabinInfoForm = {
     internalPriceWeekend: number;
     externalPrice: number;
     externalPriceWeekend: number;
+    easterPrice: number;
     maxGuests: number;
   };
   bjornen?: {
@@ -17,6 +18,7 @@ export type CabinInfoForm = {
     internalPriceWeekend: number;
     externalPrice: number;
     externalPriceWeekend: number;
+    easterPrice: number;
     maxGuests: number;
   };
 };
@@ -27,6 +29,7 @@ const validationSchema: yup.ObjectSchema<CabinInfoForm> = yup.object({
     internalPriceWeekend: yup.number().positive().required().label("Internpris i helg"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
     externalPriceWeekend: yup.number().positive().required().label("Eksternpris i helg"),
+    easterPrice: yup.number().positive().required().label("Påskepris"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),
   }),
   bjornen: yup.object({
@@ -34,6 +37,7 @@ const validationSchema: yup.ObjectSchema<CabinInfoForm> = yup.object({
     internalPriceWeekend: yup.number().positive().required().label("Internpris i helg"),
     externalPrice: yup.number().positive().required().label("Eksternpris"),
     externalPriceWeekend: yup.number().positive().required().label("Eksternpris i helg"),
+    easterPrice: yup.number().positive().required().label("Påskepris"),
     maxGuests: yup.number().positive().required().label("Kapasitet (antall gjester)"),
   }),
 });
@@ -122,6 +126,20 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
                 }}
               />
             </Grid>
+              <Grid>
+              <TextField
+                {...register("bjornen.easterPrice")}
+                required
+                helperText={errors.bjornen?.easterPrice?.message}
+                error={Boolean(errors.bjornen?.easterPrice)}
+                type="number"
+                fullWidth
+                label="Påskepris"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
             <Grid>
               <TextField
                 {...register("bjornen.maxGuests")}
@@ -194,6 +212,20 @@ export const CabinInfoForm: React.FC<Props> = ({ defaultValues, values, onSubmit
                 type="number"
                 fullWidth
                 label="Eksternpris i helg"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                {...register("oksen.easterPrice")}
+                required
+                helperText={errors.oksen?.easterPrice?.message}
+                error={Boolean(errors.oksen?.easterPrice)}
+                type="number"
+                fullWidth
+                label="Påskepris"
                 InputLabelProps={{
                   shrink: true,
                 }}

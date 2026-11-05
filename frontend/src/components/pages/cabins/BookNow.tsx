@@ -28,6 +28,9 @@ export const BookNow: React.FC = () => {
             <Typography variant="subtitle2" gutterBottom>
               Ekstern Helg: {data?.cabins?.[0]?.externalPriceWeekend} kr
             </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Påske (Skjærtorsdag - 1. Påskedag): {data?.cabins?.[0]?.easterPrice} kr
+            </Typography>
           </Stack>
           <Button
             component={NextLinkComposed}

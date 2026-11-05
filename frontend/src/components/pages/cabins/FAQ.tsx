@@ -106,7 +106,7 @@ const faqs = [
     question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
     answer: (
       <Typography>
-        Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 5400,- per helgenatt og 3950,- per ukedag.
+        Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 1100- per helgenatt og 1100- per ukedag.
       </Typography>
     ),
   },
