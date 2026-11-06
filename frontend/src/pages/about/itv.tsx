@@ -16,7 +16,7 @@ const ItvPage: NextPageWithLayout = () => {
     },
     {
       rank: 2,
-      name: "Julie Holm Edvardsen",
+      name: "Julie Holm Edvardsen (endres til ny)",
       email: "itv@iot.ntnu.no",
     },
   ];
