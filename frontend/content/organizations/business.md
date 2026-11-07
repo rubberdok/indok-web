@@ -37,5 +37,5 @@ We meet regularly to solve cases, practise for interviews and prepare for workin
 
 Have a question, or want to get in touch? Send an email to [2006erikolsen@gmail.com](mailto:2006erikolsen@gmail.com) or [aleksander.linnbar@hotmail.com](mailto:aleksander.linnbar@hotmail.com).
 
-![IBC bilde](/img/ibcmote.png)
-![IBC bilde](/img/IBCmote.jpeg)
+![IBC bilde](/img/ibcmote.jpeg)
+![IBC bilde](/img/IBCmote.png)
