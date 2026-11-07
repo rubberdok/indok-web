@@ -6,17 +6,17 @@ import { ContactInfo } from "@/components/pages/Janus/ContactInfo";
 import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import Eventsjef from "~/public/img/JanusstyretsMedlemmer/Eventsjef.jpg";
-import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Faddersjef.jpg";
-import Festsjef from "~/public/img/JanusstyretsMedlemmer/Festsjef.jpg";
-import Hyttetursjef from "~/public/img/JanusstyretsMedlemmer/Hyttetursjef.jpg";
-import JanusScriptRedaktør from "~/public/img/JanusstyretsMedlemmer/JanusScriptRedaktør.jpg";
-import Kjellersjef from "~/public/img/JanusstyretsMedlemmer/Kjellersjef.jpg";
-import Nestleder from "~/public/img/JanusstyretsMedlemmer/Nestleder.jpg";
-import President from "~/public/img/JanusstyretsMedlemmer/President.jpg";
-import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpg";
-import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
-import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpg";
+import Eventsjef from "~/public/img/JanusstyretsMedlemmer/Eventsjef.jpeg";
+import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Faddersjef.jpeg";
+import Festsjef from "~/public/img/JanusstyretsMedlemmer/Festsjef.jpeg";
+import Hyttetursjef from "~/public/img/JanusstyretsMedlemmer/Hyttetursjef.jpeg";
+import JanusScriptRedaktør from "~/public/img/JanusstyretsMedlemmer/JanusScriptRedaktør.jpeg";
+import Kjellersjef from "~/public/img/JanusstyretsMedlemmer/Kjellersjef.jpeg";
+import Nestleder from "~/public/img/JanusstyretsMedlemmer/Nestleder.jpeg";
+import President from "~/public/img/JanusstyretsMedlemmer/President.jpeg";
+import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpeg";
+import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpeg";
+import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpeg";
 const JanusPage: NextPageWithLayout = () => {
   const responsibles = [
     {
