@@ -6,116 +6,116 @@ import { ContactInfo } from "@/components/pages/Janus/ContactInfo";
 import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/lib/next";
-import Eventsjef from "~/public/img/JanusstyretsMedlemmer/Eventsjef.jpg";
-import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Faddersjef.jpg";
-import Festsjef from "~/public/img/JanusstyretsMedlemmer/Festsjef.jpg";
-import Hyttetursjef from "~/public/img/JanusstyretsMedlemmer/Hyttetursjef.jpg";
-import JanusScriptRedaktør from "~/public/img/JanusstyretsMedlemmer/JanusScriptRedaktør.jpg";
-import Kjellersjef from "~/public/img/JanusstyretsMedlemmer/Kjellersjef.jpg";
-import Nestleder from "~/public/img/JanusstyretsMedlemmer/Nestleder.jpg";
-import President from "~/public/img/JanusstyretsMedlemmer/President.jpg";
-import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpg";
-import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpg";
-import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpg";
+import Eventsjef from "~/public/img/JanusstyretsMedlemmer/Eventsjef.jpeg";
+import Faddersjef from "~/public/img/JanusstyretsMedlemmer/Faddersjef.jpeg";
+import Festsjef from "~/public/img/JanusstyretsMedlemmer/Festsjef.jpeg";
+import Hyttetursjef from "~/public/img/JanusstyretsMedlemmer/Hyttetursjef.jpeg";
+import JanusScriptRedaktør from "~/public/img/JanusstyretsMedlemmer/JanusScriptRedaktør.jpeg";
+import Kjellersjef from "~/public/img/JanusstyretsMedlemmer/Kjellersjef.jpeg";
+import Nestleder from "~/public/img/JanusstyretsMedlemmer/Nestleder.jpeg";
+import President from "~/public/img/JanusstyretsMedlemmer/President.jpeg";
+import PRsjef from "~/public/img/JanusstyretsMedlemmer/PRsjef.jpeg";
+import Sekretær from "~/public/img/JanusstyretsMedlemmer/Sekretær.jpeg";
+import Sosialsjef from "~/public/img/JanusstyretsMedlemmer/Sosialsjef.jpeg";
 const JanusPage: NextPageWithLayout = () => {
   const responsibles = [
     {
       id: 1,
-      name: "Thomas Kallasten Pedersen",
+      name: "Filip Røttingen",
       position: "President",
       color: red[800],
       image: President,
-      phonenumber: "tlf: 472 73 906",
+      phonenumber: "tlf: 481 58 122",
       email: "president@janus.org.ntnu.no",
     },
     {
       id: 2,
-      name: "Oscar Tegneby",
+      name: "Amanda Strmoe",
       position: "Økonomisjef/Nestleder",
       color: red[500],
       image: Nestleder,
-      phonenumber: "tlf: 404 83 638",
+      phonenumber: "tlf: 902 26 033",
       email: "okonomi@janus.org.ntnu.no",
     },
     {
       id: 3,
-      name: "Julie Pape Bjørseth",
+      name: "Celina Malik",
       position: "Sosialsjef",
       color: red[500],
       image: Sosialsjef,
-      phonenumber: "tlf: 415 68 433",
+      phonenumber: "tlf: 922 58 662",
       email: "web@janus.org.ntnu.no",
     },
     {
       id: 4,
-      name: "Arthur Brunborg",
+      name: "Martin Buchholz",
       position: "Janu;Script-Redaktør",
       color: red[500],
       image: JanusScriptRedaktør,
-      phonenumber: "tlf: 923 45 672",
+      phonenumber: "tlf: 939 53 935",
       email: "jsredaktor@janus.org.ntnu.no",
     },
     {
       id: 5,
-      name: "Simen Øvreås",
+      name: "Akshan Vasanthakumar",
       position: "Hyttetursjef",
       color: red[500],
       image: Hyttetursjef,
-      phonenumber: "tlf: 904 11 446",
+      phonenumber: "tlf: 464 22 188",
       email: "hyttetursjef@janus.org.ntnu.no",
     },
     {
       id: 6,
-      name: "Herman Husebø",
-      position: "Kjellersjef",
+      name: "Victoria Lysnes-Steinbach",
+      position: "Geminus",
       color: red[500],
       image: Kjellersjef,
-      phonenumber: "tlf: 480 91 961",
+      phonenumber: "tlf: 400 54 020",
       email: "kjellersjef@janus.org.ntnu.no",
     },
     {
       id: 7,
-      name: "Kristina Lie",
+      name: "Martin Fasting",
       position: "Festsjef",
       color: red[500],
       image: Festsjef,
-      phonenumber: "tlf: 959 66 786",
+      phonenumber: "tlf: 970 98 142",
       email: "fest@janus.org.ntnu.no",
     },
     {
       id: 8,
-      name: "Brage Lind",
+      name: "Benedikte Austeng Andreassen",
       position: "Eventsjef",
       color: red[500],
       image: Eventsjef,
-      phonenumber: "tlf: 482 72 575",
+      phonenumber: "tlf: 900 21 866",
       email: "event@janus.org.ntnu.no",
     },
     {
       id: 9,
-      name: "Ida Forsmo",
+      name: "Marita Reine",
       position: "PR-sjef",
       color: red[500],
       image: PRsjef,
-      phonenumber: "tlf: 954 57 680",
+      phonenumber: "tlf: 480 74 758",
       email: "pr@janus.org.ntnu.no",
     },
     {
       id: 10,
-      name: "Hedda Kvåle",
+      name: "Sindre Jenssen",
       position: "Sekretær",
       color: red[500],
       image: Sekretær,
-      phonenumber: "tlf: 942 49 253",
+      phonenumber: "tlf: 454 42 010",
       email: "sekretaer@janus.org.ntnu.no",
     },
     {
       id: 11,
-      name: "Meimei Husemoen",
+      name: "Ottar Misund",
       position: "Faddersjef",
       color: red[500],
       image: Faddersjef,
-      phonenumber: "tlf: 481 89 468",
+      phonenumber: "tlf: 977 84 433",
       email: "fadder@janus.org.ntnu.no",
     },
   ];
