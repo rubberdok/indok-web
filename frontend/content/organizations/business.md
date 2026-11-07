@@ -2,7 +2,7 @@
 title: Indøk Business Club
 description: Indøks helt egne case-klubb
 logo: /img/IBClogo.png
-image: /img/IBCmote.jpeg
+image: /img/IBCmote.png
 board:
   leder1:
     name: Erik Olsen
