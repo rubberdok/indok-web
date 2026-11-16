@@ -126,7 +126,8 @@ def _send(cfg: ArxSettings, what: str, since: Optional[datetime] = None) -> None
         subject = "JanHus-døra: synkroniseringen med ARX virker igjen"
         body = (
             f"Runneren har meldt {GOOD_SYNCS_TO_RECOVER} vellykkede synkroniseringer på rad, "
-            f"sist {at(cfg.runner_last_ok_at)}. Du trenger ikke gjøre noe."
+            f"sist registrert: {at(cfg.runner_last_ok_at)}.\n\n"
+            f"Dette er en melding til Rubberdøk. Om noe, ta kontakt med {RUBBERDOK_EMAIL}."
         )
     else:
         hours = 24 if what == STOPPED else 72
@@ -142,11 +143,11 @@ def _send(cfg: ArxSettings, what: str, since: Optional[datetime] = None) -> None
         subject = f"JanHus-døra: synkroniseringen med ARX har stått i {hours} timer"
         body = (
             f"Runneren på JanHus har ikke meldt en vellykket synkronisering {started}.\n"
-            f"Siste feil runneren meldte: {cfg.runner_last_error or 'ingen (den har ikke svart)'}.\n\n"
+            f"Siste feil runneren meldte: {cfg.runner_last_error or 'ingen (manglende respons)'}.\n\n"
             "Døra virker fortsatt med tilgangene som allerede ligger i ARX. Nye bookinger, kort og PIN-er "
             "kommer ikke fram før synkroniseringen virker igjen.\n\n"
-            "Hva du gjør: flytskjemaet «When the runner goes silent», og manage.py arx_sync --status.\n"
-            f"{later} Dere får en e-post når den virker igjen."
+            f"{later} Dere får en e-post når den virker igjen.\n\n"
+            f"Dette er en melding til Rubberdøk. Om noe, ta kontakt med {RUBBERDOK_EMAIL}."
         )
     email = TransactionalEmail(stream=ALERT_STREAM, subject=subject, body=body, to=recipients())
     try:
